@@ -1,5 +1,22 @@
+# Core's dependencies are managed with Composer.
+# Except on Acquia – you'll need to force include /vendor
+vendor
+
+# Ignore configuration files that may contain sensitive information.
+docroot/sites/*/settings*.php
+docroot/sites/*/services*.yml
+docroot/sites/development.services.yml
+
 # Ignore paths that contain user-generated content.
 docroot/files
 docroot/sites/*/files
 docroot/sites/*/private
 
+# Ignore SimpleTest multi-site environment.
+docroot/sites/simpletest
+
+# Acquia
+acquia-files
+
+# Node
+node_modules

@@ -251,7 +251,8 @@ $databases = [];
  *   );
  * @endcode
  */
-$config_directories = [];
+ $config_directories['vcs'] = $app_root . '/../config/' . basename($site_path);
+ $config_directories[CONFIG_SYNC_DIRECTORY] = $app_root . '/../config/' . basename($site_path);
 
 /**
  * Settings:
@@ -280,7 +281,7 @@ $config_directories = [];
  *   $settings['hash_salt'] = file_get_contents('/home/example/salt.txt');
  * @endcode
  */
-$settings['hash_salt'] = '';
+$settings['hash_salt'] = '8yad9P8qy87e£^)issi8@54oHrq89e';
 
 /**
  * Deployment identifier.
