@@ -1,0 +1,16 @@
+services:
+  forms_steps.service.routes:
+    class: Drupal\node\Routing\RouteSubscriber
+    tags:
+      - { name: event_subscriber }
+  forms_steps.route_subscriber:
+    class: Drupal\forms_steps\EventSubscriber\RouteSubscriber
+    arguments: ['@entity.manager', '@state']
+    tags:
+      - { name: 'event_subscriber' }
+  forms_steps.manager:
+    class: Drupal\forms_steps\Service\FormsStepsManager
+    arguments: ['@entity.manager']
+  forms_steps.helper:
+    class: Drupal\forms_steps\Service\FormsStepsHelper
+    arguments: ['@forms_steps.manager']

@@ -26,7 +26,8 @@
     "drupal/search_api": "^1.9",
     "drupal/pathauto": "^1.2",
     "drupal/entity": "^1.0",
-    "drupal/addtoany": "^1.10"
+    "drupal/addtoany": "^1.10",
+    "drupal/forms_steps": "^1.0@RC"
   },
   "require-dev": {
     "drupal/devel": "^1.0",
