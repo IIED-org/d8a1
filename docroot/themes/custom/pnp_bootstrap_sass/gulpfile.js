@@ -4,14 +4,17 @@ var sass = require('gulp-sass');
 var concat = require("gulp-concat");
 var cleanCSS = require("gulp-clean-css");
 var uglify = require("gulp-uglify");
+var sourcemaps = require('gulp-sourcemaps');
 
 // Compile sass into CSS & auto-inject into browsers
 gulp.task('sass', function() {
     return gulp.src(['node_modules/bootstrap/scss/bootstrap.scss', 'scss/style.scss'])
+        .pipe(sourcemaps.init())
         .pipe(sass().on('error', sass.logError))
+        .pipe(sass({ outputStyle: 'nested' }))      // nested | compressed etc.
+        .pipe(sourcemaps.write())                   // Comment out in prod mode
+        //.pipe(cleanCSS({compatibility: 'ie10'}))  // Remove comment in prod mode
         .pipe(gulp.dest("css"))
-        .pipe(sass({ outputStyle: 'compressed' }))
-        .pipe(cleanCSS({compatibility: 'ie10'}))
         .pipe(browserSync.stream());
 });
 
