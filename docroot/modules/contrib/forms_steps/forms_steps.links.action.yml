@@ -1,0 +1,8 @@
+# Action links for Forms Steps.
+
+# Forms Steps related actions.
+forms_steps_add_action:
+  route_name: entity.forms_steps.add_form
+  title: 'Add a Forms Steps'
+  appears_on:
+    - entity.forms_steps.collection

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "efe26c8d013cedd25c42c8a784af2555",
+    "content-hash": "51543922883e4a43a9549b991ff61ac3",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -1794,6 +1794,61 @@
             "homepage": "https://www.drupal.org/project/entity_reference_revisions",
             "support": {
                 "source": "http://cgit.drupalcode.org/entity_reference_revisions"
+            }
+        },
+        {
+            "name": "drupal/forms_steps",
+            "version": "1.0.0-rc2",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupal.org/project/forms_steps",
+                "reference": "8.x-1.0-rc2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/forms_steps-8.x-1.0-rc2.zip",
+                "reference": "8.x-1.0-rc2",
+                "shasum": "94de6051e851ceb5c9470164ad8c312e6ea7fd6a"
+            },
+            "require": {
+                "drupal/core": "*"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "branch-alias": {
+                    "dev-1.x": "1.x-dev"
+                },
+                "drupal": {
+                    "version": "8.x-1.0-rc2",
+                    "datestamp": "1535570281",
+                    "security-coverage": {
+                        "status": "not-covered",
+                        "message": "Project has not opted into security advisory coverage!"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "HakimR",
+                    "homepage": "https://www.drupal.org/user/3008327"
+                },
+                {
+                    "name": "christophe.klein",
+                    "homepage": "https://www.drupal.org/user/1724590"
+                },
+                {
+                    "name": "nicoloye",
+                    "homepage": "https://www.drupal.org/user/315225"
+                }
+            ],
+            "description": "Provide Drupal forms steps capability using forms views.",
+            "homepage": "https://www.drupal.org/project/forms_steps",
+            "support": {
+                "source": "http://cgit.drupalcode.org/forms_steps"
             }
         },
         {
@@ -4943,7 +4998,9 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": [],
+    "stability-flags": {
+        "drupal/forms_steps": 5
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": [],

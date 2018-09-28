@@ -1,0 +1,16 @@
+type: module
+name: Forms Steps
+description: 'Provide Drupal forms steps capability using forms views.'
+package: Forms
+# core: 8.x
+configure: entity.forms_steps.collection
+dependencies:
+  - field
+  - field_ui
+  - block
+
+# Information added by Drupal.org packaging script on 2018-08-29
+version: '8.x-1.0-rc2'
+core: '8.x'
+project: 'forms_steps'
+datestamp: 1535570284
