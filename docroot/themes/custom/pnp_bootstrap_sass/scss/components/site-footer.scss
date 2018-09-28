@@ -4,9 +4,9 @@
  */
 
 .site-footer {
-    padding: $spacer 0;
+    padding: ($spacer * 2) 0;
     .layout-container {
-        padding: 0 $spacer;
+        padding: 0 ($spacer * 2);
     }
 }
 
