@@ -32,7 +32,7 @@ gulp.task('serve', ['sass'], function() {
         proxy: "http://pnp.dev.dd:8083",
     });
 
-    gulp.watch(['node_modules/bootstrap/scss/bootstrap.scss', 'scss/*.scss'], ['sass']);
+    gulp.watch(['node_modules/bootstrap/scss/bootstrap.scss', 'scss/*.scss', 'scss/components/*.scss'], ['sass']);
     //    gulp.watch("src/*.html").on('change', browserSync.reload);
 });
 
