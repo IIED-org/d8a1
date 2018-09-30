@@ -5,7 +5,7 @@ namespace Drupal\social_auth_google\Settings;
 use Drupal\social_api\Settings\SettingsBase;
 
 /**
- * Returns the client information.
+ * Defines methods to get Social Auth Google settings.
  */
 class GoogleAuthSettings extends SettingsBase implements GoogleAuthSettingsInterface {
 
@@ -22,6 +22,13 @@ class GoogleAuthSettings extends SettingsBase implements GoogleAuthSettingsInter
    * @var string
    */
   protected $clientSecret;
+
+  /**
+   * Restricted domain.
+   *
+   * @var string
+   */
+  protected $restrictedDomain;
 
   /**
    * {@inheritdoc}
@@ -41,6 +48,16 @@ class GoogleAuthSettings extends SettingsBase implements GoogleAuthSettingsInter
       $this->clientSecret = $this->config->get('client_secret');
     }
     return $this->clientSecret;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getRestrictedDomain() {
+    if (!$this->restrictedDomain) {
+      $this->restrictedDomain = $this->config->get('restricted_domain');
+    }
+    return $this->restrictedDomain;
   }
 
 }

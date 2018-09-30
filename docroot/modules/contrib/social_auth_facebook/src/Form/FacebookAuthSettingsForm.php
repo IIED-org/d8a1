@@ -131,6 +131,20 @@ class FacebookAuthSettingsForm extends SocialAuthSettingsForm {
       '#default_value' => $GLOBALS['base_url'],
     ];
 
+    $form['fb_settings']['scopes'] = [
+      '#type' => 'textarea',
+      '#title' => $this->t('Scopes for API call'),
+      '#default_value' => $config->get('scopes'),
+      '#description' => $this->t('Define the requested scopes to make API calls.'),
+    ];
+
+    $form['fb_settings']['api_calls'] = [
+      '#type' => 'textarea',
+      '#title' => $this->t('API calls to be made to collect data'),
+      '#default_value' => $config->get('api_calls'),
+      '#description' => $this->t('Define the API calls which will retrieve data from provider.'),
+    ];
+
     return parent::buildForm($form, $form_state);
   }
 
@@ -154,6 +168,8 @@ class FacebookAuthSettingsForm extends SocialAuthSettingsForm {
       ->set('app_id', $values['app_id'])
       ->set('app_secret', $values['app_secret'])
       ->set('graph_version', $values['graph_version'])
+      ->set('scopes', $values['scopes'])
+      ->set('api_calls', $values['api_calls'])
       ->save();
 
     parent::submitForm($form, $form_state);
