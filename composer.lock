@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ce20d58ea01d8096b307ea301c055076",
+    "content-hash": "7556b40c800b3c2d838f4b0d6c6693f8",
     "packages": [
         {
             "name": "abraham/twitteroauth",
@@ -1568,6 +1568,57 @@
             "homepage": "https://www.drupal.org/project/back_to_top",
             "support": {
                 "source": "http://cgit.drupalcode.org/back_to_top"
+            }
+        },
+        {
+            "name": "drupal/better_field_descriptions",
+            "version": "1.4.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupal.org/project/better_field_descriptions",
+                "reference": "8.x-1.4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/better_field_descriptions-8.x-1.4.zip",
+                "reference": "8.x-1.4",
+                "shasum": "61a691c8c1cd483b7b42f3828b344bd2d7e866ec"
+            },
+            "require": {
+                "drupal/core": "~8.0"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "branch-alias": {
+                    "dev-1.x": "1.x-dev"
+                },
+                "drupal": {
+                    "version": "8.x-1.4",
+                    "datestamp": "1536585481",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "odegard",
+                    "homepage": "https://www.drupal.org/user/703222"
+                },
+                {
+                    "name": "yogeshmpawar",
+                    "homepage": "https://www.drupal.org/user/2922907"
+                }
+            ],
+            "description": "Allows users with certain roles to add themeable descriptions to fields in forms",
+            "homepage": "https://www.drupal.org/project/better_field_descriptions",
+            "support": {
+                "source": "http://cgit.drupalcode.org/better_field_descriptions"
             }
         },
         {

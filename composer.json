@@ -51,7 +51,8 @@
     "drupal/shs": "^1.0@alpha",
     "drupal/conditional_fields": "^1.0@alpha",
     "drupal/chosen": "^2.6",
-    "drupal/synonyms": "^1.0@alpha"
+    "drupal/synonyms": "^1.0@alpha",
+    "drupal/better_field_descriptions": "^1.4"
   },
   "require-dev": {
     "drupal/devel": "^1.0",

@@ -1612,6 +1612,59 @@
         }
     },
     {
+        "name": "drupal/better_field_descriptions",
+        "version": "1.4.0",
+        "version_normalized": "1.4.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://git.drupal.org/project/better_field_descriptions",
+            "reference": "8.x-1.4"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://ftp.drupal.org/files/projects/better_field_descriptions-8.x-1.4.zip",
+            "reference": "8.x-1.4",
+            "shasum": "61a691c8c1cd483b7b42f3828b344bd2d7e866ec"
+        },
+        "require": {
+            "drupal/core": "~8.0"
+        },
+        "type": "drupal-module",
+        "extra": {
+            "branch-alias": {
+                "dev-1.x": "1.x-dev"
+            },
+            "drupal": {
+                "version": "8.x-1.4",
+                "datestamp": "1536585481",
+                "security-coverage": {
+                    "status": "covered",
+                    "message": "Covered by Drupal's security advisory policy"
+                }
+            }
+        },
+        "installation-source": "dist",
+        "notification-url": "https://packages.drupal.org/8/downloads",
+        "license": [
+            "GPL-2.0-or-later"
+        ],
+        "authors": [
+            {
+                "name": "odegard",
+                "homepage": "https://www.drupal.org/user/703222"
+            },
+            {
+                "name": "yogeshmpawar",
+                "homepage": "https://www.drupal.org/user/2922907"
+            }
+        ],
+        "description": "Allows users with certain roles to add themeable descriptions to fields in forms",
+        "homepage": "https://www.drupal.org/project/better_field_descriptions",
+        "support": {
+            "source": "http://cgit.drupalcode.org/better_field_descriptions"
+        }
+    },
+    {
         "name": "drupal/bootstrap_barrio",
         "version": "4.17.0",
         "version_normalized": "4.17.0.0",
