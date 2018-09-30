@@ -44,7 +44,8 @@
     "drupal/social_auth": "^2.0",
     "drupal/acquia_connector": "^1.14",
     "drupal/search_api_solr": "^2.2",
-    "drupal/facets": "^1.1"
+    "drupal/facets": "^1.1",
+    "drupal/video_embed_field": "^2.0"
   },
   "require-dev": {
     "drupal/devel": "^1.0",
