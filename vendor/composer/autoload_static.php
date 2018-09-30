@@ -44,7 +44,6 @@ class ComposerStaticInitd4b25c3c42fe54840614cd40d27e53a2
         ),
         'Z' => 
         array (
-            'ZipStream\\' => 10,
             'Zend\\Stdlib\\' => 12,
             'Zend\\Feed\\' => 10,
             'Zend\\Escaper\\' => 13,
@@ -86,7 +85,6 @@ class ComposerStaticInitd4b25c3c42fe54840614cd40d27e53a2
             'Symfony\\Component\\ClassLoader\\' => 30,
             'Symfony\\Cmf\\Component\\Routing\\' => 30,
             'Symfony\\Bridge\\PsrHttpMessage\\' => 30,
-            'Solarium\\' => 9,
         ),
         'P' => 
         array (
@@ -157,10 +155,6 @@ class ComposerStaticInitd4b25c3c42fe54840614cd40d27e53a2
         'cweagans\\Composer\\' => 
         array (
             0 => __DIR__ . '/..' . '/cweagans/composer-patches/src',
-        ),
-        'ZipStream\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/maennchen/zipstream-php/src',
         ),
         'Zend\\Stdlib\\' => 
         array (
@@ -277,10 +271,6 @@ class ComposerStaticInitd4b25c3c42fe54840614cd40d27e53a2
         'Symfony\\Bridge\\PsrHttpMessage\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/psr-http-message-bridge',
-        ),
-        'Solarium\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/solarium/solarium/src',
         ),
         'Psy\\' => 
         array (
@@ -426,6 +416,10 @@ class ComposerStaticInitd4b25c3c42fe54840614cd40d27e53a2
             'Stack' => 
             array (
                 0 => __DIR__ . '/..' . '/stack/builder/src',
+            ),
+            'Solarium\\' => 
+            array (
+                0 => __DIR__ . '/..' . '/solarium/solarium/library',
             ),
         ),
         'J' => 

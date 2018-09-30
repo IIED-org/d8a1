@@ -2,9 +2,6 @@
 
 namespace Drupal\Tests\search_api_solr\Functional;
 
-use Drupal\search_api\Entity\Index;
-use Drupal\search_api_solr\Utility\SolrCommitTrait;
-
 /**
  * Tests the overall functionality of the Search API framework and admin UI.
  *
@@ -12,7 +9,6 @@ use Drupal\search_api_solr\Utility\SolrCommitTrait;
  */
 class IntegrationTest extends \Drupal\Tests\search_api\Functional\IntegrationTest {
 
-  use SolrCommitTrait;
   /**
    * The backend of the search server used for this test.
    *
@@ -23,10 +19,10 @@ class IntegrationTest extends \Drupal\Tests\search_api\Functional\IntegrationTes
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  public static $modules = array(
     'search_api_solr',
     'search_api_solr_test',
-  ];
+  );
 
   /**
    * {@inheritdoc}
@@ -35,7 +31,7 @@ class IntegrationTest extends \Drupal\Tests\search_api\Functional\IntegrationTes
     if ($this->indexId) {
       if ($index = $this->getIndex()) {
         $index->clear();
-        $this->ensureCommit($index->getServerInstance());
+        sleep(2);
       }
     }
     parent::tearDown();
@@ -133,13 +129,10 @@ class IntegrationTest extends \Drupal\Tests\search_api\Functional\IntegrationTes
    *
    * @return int
    *   The number of successfully indexed items.
-   *
-   * @throws \Drupal\search_api\SearchApiException
    */
   protected function indexItems() {
     $index_status = parent::indexItems();
-    $index = Index::load($this->indexId);
-    $this->ensureCommit($index->getServerInstance());
+    sleep(2);
     return $index_status;
   }
 

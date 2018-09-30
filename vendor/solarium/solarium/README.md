@@ -11,8 +11,7 @@ Please see the docs for a more detailed description.
 
 ## Requirements
 
-Solarium only supports PHP 7.0 and up.
-
+Solarium only supports PHP 5.4 and up.
 It's highly recommended to have Curl enabled in your PHP environment. However if you don't have Curl available you can
 switch from using Curl (the default) to another client adapter. The other adapters don't support all the features of the
 Curl adapter.
@@ -20,11 +19,6 @@ Curl adapter.
 ## Getting started
 
 The preferred way to install Solarium is by using Composer. Solarium is available on Packagist.
-
-Example:
-```
- composer require solarium/solarium
-```
 
 ## More information
 
@@ -43,8 +37,10 @@ Example:
 
 ## Continuous Integration status
 
-* 4.x branch (master) [![Develop build status](https://secure.travis-ci.org/solariumphp/solarium.png?branch=master)](http://travis-ci.org/solariumphp/solarium?branch=master) [![Coverage Status](https://coveralls.io/repos/solariumphp/solarium/badge.png?branch=master)](https://coveralls.io/r/solariumphp/solarium?branch=master)
-* 3.x branch [![Develop build status](https://secure.travis-ci.org/solariumphp/solarium.png?branch=3.x)](http://travis-ci.org/solariumphp/solarium?branch=3.x) [![Coverage Status](https://coveralls.io/repos/solariumphp/solarium/badge.png?branch=3.x)](https://coveralls.io/r/solariumphp/solarium?branch=3.x)
+* Develop branch [![Develop build status](https://secure.travis-ci.org/solariumphp/solarium.png?branch=develop)](http://travis-ci.org/solariumphp/solarium)
+* Develop branch [![Coverage Status](https://coveralls.io/repos/solariumphp/solarium/badge.png?branch=develop)](https://coveralls.io/r/solariumphp/solarium?branch=develop)
+* Master branch [![Develop build status](https://secure.travis-ci.org/solariumphp/solarium.png?branch=master)](http://travis-ci.org/solariumphp/solarium)
+* Master branch [![Coverage Status](https://coveralls.io/repos/solariumphp/solarium/badge.png?branch=master)](https://coveralls.io/r/solariumphp/solarium?branch=master)
 * [![SensioLabsInsight](https://insight.sensiolabs.com/projects/292e29f7-10a9-4685-b9ac-37925ebef9ae/small.png)](https://insight.sensiolabs.com/projects/292e29f7-10a9-4685-b9ac-37925ebef9ae)
 * [![Total Downloads](https://poser.pugx.org/solarium/solarium/downloads.svg)](https://packagist.org/packages/solarium/solarium)
 
