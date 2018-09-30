@@ -49,7 +49,8 @@
     "drupal/field_group": "^3.0",
     "drupal/field_group_ajaxified_multipage": "^1.0",
     "drupal/shs": "^1.0@alpha",
-    "drupal/conditional_fields": "^1.0@alpha"
+    "drupal/conditional_fields": "^1.0@alpha",
+    "drupal/chosen": "^2.6"
   },
   "require-dev": {
     "drupal/devel": "^1.0",
