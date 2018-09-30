@@ -4198,6 +4198,63 @@
         }
     },
     {
+        "name": "drupal/synonyms",
+        "version": "1.0.0-alpha1",
+        "version_normalized": "1.0.0.0-alpha1",
+        "source": {
+            "type": "git",
+            "url": "https://git.drupal.org/project/synonyms",
+            "reference": "8.x-1.0-alpha1"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://ftp.drupal.org/files/projects/synonyms-8.x-1.0-alpha1.zip",
+            "reference": "8.x-1.0-alpha1",
+            "shasum": "98d39b5b0a26c7b5f9e6dfc4f72285ad014d14f4"
+        },
+        "require": {
+            "drupal/core": "~8.0"
+        },
+        "type": "drupal-module",
+        "extra": {
+            "branch-alias": {
+                "dev-1.x": "1.x-dev"
+            },
+            "drupal": {
+                "version": "8.x-1.0-alpha1",
+                "datestamp": "1477604941",
+                "security-coverage": {
+                    "status": "not-covered",
+                    "message": "Alpha releases are not covered by Drupal security advisories."
+                }
+            }
+        },
+        "installation-source": "dist",
+        "notification-url": "https://packages.drupal.org/8/downloads",
+        "license": [
+            "GPL-2.0-or-later"
+        ],
+        "authors": [
+            {
+                "name": "Zen",
+                "homepage": "https://www.drupal.org/user/21209"
+            },
+            {
+                "name": "bojanz",
+                "homepage": "https://www.drupal.org/user/86106"
+            },
+            {
+                "name": "bucefal91",
+                "homepage": "https://www.drupal.org/user/504128"
+            }
+        ],
+        "description": "Provides synonyms feature for content entities.",
+        "homepage": "https://www.drupal.org/project/synonyms",
+        "support": {
+            "source": "http://cgit.drupalcode.org/synonyms"
+        }
+    },
+    {
         "name": "drupal/token",
         "version": "1.5.0",
         "version_normalized": "1.5.0.0",
