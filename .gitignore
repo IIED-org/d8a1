@@ -1,6 +1,6 @@
 # Core's dependencies are managed with Composer.
 # Except on Acquia – you'll need to force include /vendor
-vendor
+vendor/*
 
 # Ignore configuration files that may contain sensitive information.
 docroot/sites/*/settings.local.php
