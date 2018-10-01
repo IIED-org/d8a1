@@ -53,7 +53,8 @@
     "drupal/chosen": "^2.6",
     "drupal/synonyms": "^1.0@alpha",
     "drupal/better_field_descriptions": "^1.4",
-    "drupal/taxonomy_moderator": "^1.0@alpha"
+    "drupal/taxonomy_moderator": "^1.0@alpha",
+    "drupal/menu_link_attributes": "^1.0"
   },
   "require-dev": {
     "drupal/devel": "^1.0",
