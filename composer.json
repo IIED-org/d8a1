@@ -54,7 +54,10 @@
     "drupal/synonyms": "^1.0@alpha",
     "drupal/better_field_descriptions": "^1.4",
     "drupal/taxonomy_moderator": "^1.0@alpha",
-    "drupal/menu_link_attributes": "^1.0"
+    "drupal/menu_link_attributes": "^1.0",
+    "drupal/leaflet": "^1.0@beta",
+    "drupal/geocoder": "^2.0@beta",
+    "drupal/leaflet_more_maps": "^1.0@alpha"
   },
   "require-dev": {
     "drupal/devel": "^1.0",
