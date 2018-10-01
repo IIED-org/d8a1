@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5d664a65cee35e9441a70798c50f48c2",
+    "content-hash": "547f112f1e69d57d583df55f10a62157",
     "packages": [
         {
             "name": "abraham/twitteroauth",
@@ -4380,18 +4380,18 @@
             }
         },
         {
-            "name": "drupal/taxonomy_moderator",
-            "version": "1.0.0-alpha1",
+            "name": "drupal/taxonomy_publish",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
-                "url": "https://git.drupal.org/project/taxonomy_moderator",
-                "reference": "8.x-1.0-alpha1"
+                "url": "https://git.drupal.org/project/taxonomy_publish",
+                "reference": "8.x-1.1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/taxonomy_moderator-8.x-1.0-alpha1.zip",
-                "reference": "8.x-1.0-alpha1",
-                "shasum": "e02fa5828bf643214947a762586e988556c6b297"
+                "url": "https://ftp.drupal.org/files/projects/taxonomy_publish-8.x-1.1.zip",
+                "reference": "8.x-1.1",
+                "shasum": "f5eba76528a0ca461737b88ed8ee088f6da99207"
             },
             "require": {
                 "drupal/core": "*"
@@ -4402,8 +4402,8 @@
                     "dev-1.x": "1.x-dev"
                 },
                 "drupal": {
-                    "version": "8.x-1.0-alpha1",
-                    "datestamp": "1502718544",
+                    "version": "8.x-1.1",
+                    "datestamp": "1528229880",
                     "security-coverage": {
                         "status": "not-covered",
                         "message": "Project has not opted into security advisory coverage!"
@@ -4412,22 +4412,18 @@
             },
             "notification-url": "https://packages.drupal.org/8/downloads",
             "license": [
-                "GPL-2.0+"
+                "GPL-2.0-or-later"
             ],
             "authors": [
                 {
-                    "name": "Anishnirmal",
-                    "homepage": "https://www.drupal.org/user/3100899"
+                    "name": "vslklv",
+                    "homepage": "https://www.drupal.org/user/3239737"
                 }
             ],
-            "description": "Create a approval process to publish taxonomy terms",
-            "homepage": "https://www.drupal.org/project/taxonomy_moderator",
-            "keywords": [
-                "Drupal"
-            ],
+            "description": "Option to unpublish content.",
+            "homepage": "https://www.drupal.org/project/taxonomy_publish",
             "support": {
-                "source": "http://cgit.drupalcode.org/taxonomy_moderator",
-                "issues": "https://www.drupal.org/project/issues/taxonomy_moderator"
+                "source": "http://cgit.drupalcode.org/taxonomy_publish"
             }
         },
         {
@@ -7971,7 +7967,6 @@
         "drupal/shs": 15,
         "drupal/conditional_fields": 15,
         "drupal/synonyms": 15,
-        "drupal/taxonomy_moderator": 15,
         "drupal/leaflet": 10,
         "drupal/geocoder": 10,
         "drupal/leaflet_more_maps": 15,
