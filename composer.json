@@ -54,7 +54,11 @@
     "drupal/synonyms": "^1.0@alpha",
     "drupal/better_field_descriptions": "^1.4",
     "drupal/taxonomy_moderator": "^1.0@alpha",
-    "drupal/menu_link_attributes": "^1.0"
+    "drupal/menu_link_attributes": "^1.0",
+    "drupal/leaflet": "^1.0@beta",
+    "drupal/geocoder": "^2.0@beta",
+    "drupal/leaflet_more_maps": "^1.0@alpha",
+    "drupal/better_exposed_filters": "^3.0@alpha"
   },
   "require-dev": {
     "drupal/devel": "^1.0",
@@ -72,6 +76,11 @@
       "docroot/modules/contrib/{$name}": ["type:drupal-module"],
       "docroot/profiles/contrib/{$name}": ["type:drupal-profile"],
       "docroot/themes/contrib/{$name}": ["type:drupal-theme"]
+    },
+    "patches": {
+      "drupal/address": {
+        "Integrate Address with Search API": "https://www.drupal.org/files/issues/2018-06-07/address-search-api-full-name-properties-2812659-37.patch"
+      }
     }
   },
   "scripts": {
@@ -85,10 +94,5 @@
       "DrupalComposer\\DrupalScaffold\\Plugin::scaffold"
     ]
   },
-  "enable-patching": true,
-  "patches": {
-    "drupal/[module_name]": {
-      "Note regarding the nature of the patch being applied": "https://www.drupal.org/files/issues/[patch_name].patch"
-    }
-  }
+  "enable-patching": true
 }
