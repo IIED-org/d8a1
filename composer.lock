@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5dcd7d3f09ec50a12c94d1fde5d2d7c9",
+    "content-hash": "b01a1b2f3fdd48b3c5ea072b3758cf9e",
     "packages": [
         {
             "name": "abraham/twitteroauth",
@@ -3376,6 +3376,58 @@
             }
         },
         {
+            "name": "drupal/hide_revision_field",
+            "version": "2.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupal.org/project/hide_revision_field",
+                "reference": "8.x-2.1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/hide_revision_field-8.x-2.1.zip",
+                "reference": "8.x-2.1",
+                "shasum": "1d924bdcda121b128176e99736537f04e069b316"
+            },
+            "require": {
+                "drupal/core": "^8.5"
+            },
+            "require-dev": {
+                "nickwilde1990/drupal-standards-composer-commands": "^1.0",
+                "nickwilde1990/php-composter-phpcs-drupal": "^1.0",
+                "squizlabs/php_codesniffer": "2.9.x-dev@dev"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "branch-alias": {
+                    "dev-2.x": "2.x-dev"
+                },
+                "drupal": {
+                    "version": "8.x-2.1",
+                    "datestamp": "1537427280",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "NickWilde",
+                    "homepage": "https://www.drupal.org/user/3094661"
+                }
+            ],
+            "description": "Controls visibility of the revision field on entity add/edit forms.",
+            "homepage": "https://www.drupal.org/project/hide_revision_field",
+            "support": {
+                "source": "http://cgit.drupalcode.org/hide_revision_field"
+            }
+        },
+        {
             "name": "drupal/imagemagick",
             "version": "2.3.0",
             "source": {
@@ -4191,56 +4243,6 @@
             "homepage": "https://www.drupal.org/project/shrinktheweb",
             "support": {
                 "source": "http://cgit.drupalcode.org/shrinktheweb"
-            }
-        },
-        {
-            "name": "drupal/shs",
-            "version": "1.0.0-alpha4",
-            "source": {
-                "type": "git",
-                "url": "https://git.drupal.org/project/shs",
-                "reference": "8.x-1.0-alpha4"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/shs-8.x-1.0-alpha4.zip",
-                "reference": "8.x-1.0-alpha4",
-                "shasum": "7c10a4ed872620ee05dbd082cc66021fc3ee3036"
-            },
-            "require": {
-                "drupal/core": "*"
-            },
-            "require-dev": {
-                "drupal/chosen": "*"
-            },
-            "type": "drupal-module",
-            "extra": {
-                "branch-alias": {
-                    "dev-1.x": "1.x-dev"
-                },
-                "drupal": {
-                    "version": "8.x-1.0-alpha4",
-                    "datestamp": "1536746285",
-                    "security-coverage": {
-                        "status": "not-covered",
-                        "message": "Alpha releases are not covered by Drupal security advisories."
-                    }
-                }
-            },
-            "notification-url": "https://packages.drupal.org/8/downloads",
-            "license": [
-                "GPL-2.0-or-later"
-            ],
-            "authors": [
-                {
-                    "name": "stBorchert",
-                    "homepage": "https://www.drupal.org/user/36942"
-                }
-            ],
-            "description": "Creates a simple hierarchical select widget for taxonomy fields.",
-            "homepage": "https://www.drupal.org/project/shs",
-            "support": {
-                "source": "http://cgit.drupalcode.org/shs"
             }
         },
         {
@@ -8261,7 +8263,6 @@
         "drupal/forms_steps": 5,
         "drupal/entity_usage": 15,
         "drupal/pdfpreview": 5,
-        "drupal/shs": 15,
         "drupal/conditional_fields": 15,
         "drupal/synonyms": 20,
         "drupal/leaflet": 10,
