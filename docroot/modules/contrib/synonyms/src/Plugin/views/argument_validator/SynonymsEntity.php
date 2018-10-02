@@ -71,11 +71,11 @@ class SynonymsEntity extends Entity {
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
 
-    $form['transform'] = array(
+    $form['transform'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Transform dashes in URL to spaces.'),
       '#default_value' => $this->options['transform'],
-    );
+    ];
   }
 
   /**
@@ -136,7 +136,7 @@ class SynonymsEntity extends Entity {
    */
   protected function defineOptions() {
     $options = parent::defineOptions();
-    $options['transform'] = array('default' => FALSE);
+    $options['transform'] = ['default' => FALSE];
 
     return $options;
   }

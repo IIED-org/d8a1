@@ -137,10 +137,10 @@ class SynonymForm extends EntityForm {
       $provider_plugin = $form_state->getValue('provider_plugin');
     }
 
-    $form['id'] = array(
+    $form['id'] = [
       '#type' => 'value',
       '#value' => str_replace(':', '.', $provider_plugin),
-    );
+    ];
 
     $options = [];
     foreach ($this->synonymsProviderPluginManager->getDefinitions() as $plugin_id => $plugin) {
@@ -149,7 +149,7 @@ class SynonymForm extends EntityForm {
       }
     }
 
-    $form['provider_plugin'] = array(
+    $form['provider_plugin'] = [
       '#type' => 'select',
       '#title' => $this->t('Synonyms provider'),
       '#description' => $this->t('Select what synonyms provider it should represent.'),
@@ -161,24 +161,24 @@ class SynonymForm extends EntityForm {
         'event' => 'change',
         'callback' => [$class, 'ajaxForm'],
       ],
-    );
+    ];
 
-    $form['ajax_wrapper'] = array(
+    $form['ajax_wrapper'] = [
       '#prefix' => '<div id="synonyms-entity-configuration-ajax-wrapper">',
       '#suffix' => '</div>',
-    );
+    ];
 
-    $form['ajax_wrapper']['provider_configuration'] = array(
+    $form['ajax_wrapper']['provider_configuration'] = [
       '#tree' => TRUE,
       '#title' => $this->t('Provider settings'),
       '#open' => TRUE,
-    );
+    ];
 
-    $form['ajax_wrapper']['behavior_configuration'] = array(
+    $form['ajax_wrapper']['behavior_configuration'] = [
       '#tree' => TRUE,
       '#title' => $this->t('Behavior settings'),
       '#open' => TRUE,
-    );
+    ];
 
     if ($provider_plugin) {
       $provider_plugin_instance = $this->entity->getProviderPluginInstance();
@@ -236,14 +236,14 @@ class SynonymForm extends EntityForm {
     $status = $this->entity->save();
 
     if ($status) {
-      drupal_set_message($this->t('Saved the %label synonym configuration.', array(
+      drupal_set_message($this->t('Saved the %label synonym configuration.', [
         '%label' => $this->entity->label(),
-      )));
+      ]));
     }
     else {
-      drupal_set_message($this->t('The %label synonym configuration was not saved.', array(
+      drupal_set_message($this->t('The %label synonym configuration was not saved.', [
         '%label' => $this->entity->label(),
-      )), 'error');
+      ]), 'error');
     }
 
     $form_state->setRedirect('entity.synonym.overview');

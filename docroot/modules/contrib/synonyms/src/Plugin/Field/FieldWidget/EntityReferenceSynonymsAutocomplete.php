@@ -70,29 +70,29 @@ class EntityReferenceSynonymsAutocomplete extends WidgetBase implements Containe
   public function settingsForm(array $form, FormStateInterface $form_state) {
     $elements = parent::settingsForm($form, $form_state);
 
-    $elements['suggestion_size'] = array(
+    $elements['suggestion_size'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Suggestions Size'),
       '#description' => $this->t('Please, enter how many suggested entities to show in the autocomplete textfield.'),
       '#required' => TRUE,
       '#default_value' => $this->getSetting('suggestion_size'),
-    );
+    ];
 
-    $elements['suggest_only_unique'] = array(
+    $elements['suggest_only_unique'] = [
       '#type' => 'checkbox',
       '#title' => t('Suggest only one entry per entity'),
       '#description' => t('If you want to include only name or a single synonym, suggesting a particular entity, while disregarding all ongoing ones, please, tick this checkbox on.'),
       '#default_value' => $this->getSetting('suggest_only_unique'),
-    );
+    ];
 
-    $elements['match'] = array(
+    $elements['match'] = [
       '#type' => 'radios',
       '#title' => $this->t('Match operator'),
       '#description' => $this->t('Choose how to match the keyword against existing data.'),
       '#options' => $this->getMatchOperatorOptions(),
       '#default_value' => $this->getSetting('match'),
       '#required' => TRUE,
-    );
+    ];
 
     return $elements;
   }
@@ -128,7 +128,7 @@ class EntityReferenceSynonymsAutocomplete extends WidgetBase implements Containe
         $default_value[] = $item->entity;
       }
     }
-    $element += array(
+    $element += [
       '#type' => 'synonyms_entity_autocomplete',
       '#target_type' => $this->getFieldSetting('target_type'),
       '#target_bundles' => $this->getFieldSetting('handler_settings')['target_bundles'],
@@ -136,7 +136,7 @@ class EntityReferenceSynonymsAutocomplete extends WidgetBase implements Containe
       '#suggest_only_unique' => $this->getSetting('suggest_only_unique'),
       '#match' => $this->getSetting('match'),
       '#default_value' => $default_value,
-    );
+    ];
 
     return $element;
   }

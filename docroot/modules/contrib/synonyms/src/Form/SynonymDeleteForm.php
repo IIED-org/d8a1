@@ -15,7 +15,7 @@ class SynonymDeleteForm extends EntityConfirmFormBase {
    * {@inheritdoc}
    */
   public function getQuestion() {
-    return $this->t('Are you sure you want to delete synonym configuration %name?', array('%name' => $this->entity->label()));
+    return $this->t('Are you sure you want to delete synonym configuration %name?', ['%name' => $this->entity->label()]);
   }
 
   /**
@@ -37,7 +37,7 @@ class SynonymDeleteForm extends EntityConfirmFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->entity->delete();
-    drupal_set_message($this->t('Synonym configuration %label has been deleted.', array('%label' => $this->entity->label())));
+    drupal_set_message($this->t('Synonym configuration %label has been deleted.', ['%label' => $this->entity->label()]));
 
     $form_state->setRedirectUrl($this->getCancelUrl());
   }

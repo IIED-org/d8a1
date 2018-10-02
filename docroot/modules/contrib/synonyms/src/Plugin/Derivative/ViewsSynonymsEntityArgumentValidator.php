@@ -56,19 +56,19 @@ class ViewsSynonymsEntityArgumentValidator extends DeriverBase implements Contai
    */
   public function getDerivativeDefinitions($base_plugin_definition) {
     $entity_types = $this->entityTypeManager->getDefinitions();
-    $this->derivatives = array();
+    $this->derivatives = [];
     foreach ($entity_types as $entity_type_id => $entity_type) {
       if ($entity_type instanceof ContentEntityTypeInterface) {
-        $this->derivatives[$entity_type_id] = array(
+        $this->derivatives[$entity_type_id] = [
           'id' => 'synonyms_entity:' . $entity_type_id,
           'provider' => 'synonyms',
           'title' => $this->t('Synonyms of @entity_type', [
             '@entity_type' => $entity_type->getLowercaseLabel(),
           ]),
-          'help' => $this->t('Validate @label', array('@label' => $entity_type->getLabel())),
+          'help' => $this->t('Validate @label', ['@label' => $entity_type->getLabel()]),
           'entity_type' => $entity_type_id,
           'class' => $base_plugin_definition['class'],
-        );
+        ];
       }
     }
 

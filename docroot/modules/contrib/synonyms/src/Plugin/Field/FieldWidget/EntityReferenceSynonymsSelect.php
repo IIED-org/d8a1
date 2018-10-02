@@ -32,15 +32,15 @@ class EntityReferenceSynonymsSelect extends WidgetBase {
       }
     }
 
-    $element += array(
+    $element += [
       '#type' => 'synonyms_entity_select',
       '#key_column' => $this->getKeyColumn(),
       '#target_type' => $this->getFieldSetting('target_type'),
       '#handler' => $this->fieldDefinition->getSetting('handler'),
-      '#handler_settings' => $this->fieldDefinition->getSetting('handler_settings') ?: array(),
+      '#handler_settings' => $this->fieldDefinition->getSetting('handler_settings') ?: [],
       '#multiple' => $this->fieldDefinition->getFieldStorageDefinition()->isMultiple(),
       '#default_value' => $this->fieldDefinition->getFieldStorageDefinition()->isMultiple() ? $default_value : reset($default_value),
-    );
+    ];
     return $element;
   }
 

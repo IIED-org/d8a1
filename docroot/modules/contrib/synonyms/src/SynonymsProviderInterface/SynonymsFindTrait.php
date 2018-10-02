@@ -32,10 +32,10 @@ trait SynonymsFindTrait {
           $this->synonymsFindProcessCondition($v['field'], $synonym_column, $entity_id_column);
         }
         else {
-          $replace = array(
+          $replace = [
             SynonymsFindProviderInterface::COLUMN_SYNONYM_PLACEHOLDER => $synonym_column,
             SynonymsFindProviderInterface::COLUMN_ENTITY_ID_PLACEHOLDER => $entity_id_column,
-          );
+          ];
           $v['field'] = str_replace(array_keys($replace), array_values($replace), $v['field']);
         }
       }

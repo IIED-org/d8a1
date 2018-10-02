@@ -88,7 +88,7 @@ class SynonymsEntity extends FilterPluginBase {
   public function buildExtraOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildExtraOptionsForm($form, $form_state);
 
-    $form['widget'] = array(
+    $form['widget'] = [
       '#type' => 'radios',
       '#title' => $this->t('Widget'),
       '#options' => [
@@ -98,20 +98,20 @@ class SynonymsEntity extends FilterPluginBase {
       '#default_value' => $this->options['widget'],
       '#required' => TRUE,
       '#description' => $this->t('Choose what widget to use in order to specify entity.'),
-    );
+    ];
 
     if ($this->entityTypeManager->getDefinition($this->definition['entity_type'])->hasKey('bundle')) {
       $options = array_map(function($item) {
         return $item['label'];
       }, $this->entityTypeBundleInfo->getBundleInfo($this->definition['entity_type']));
 
-      $form['target_bundles'] = array(
+      $form['target_bundles'] = [
         '#type' => 'checkboxes',
         '#title' => $this->t('Bundles'),
         '#description' => $this->t('Limit the possible values down to specific subset of bundles. Leave empty to have no filter by bundles.'),
         '#default_value' => $this->options['target_bundles'],
         '#options' => $options,
-      );
+      ];
     }
   }
 
@@ -193,17 +193,17 @@ class SynonymsEntity extends FilterPluginBase {
 
     switch ($this->options['widget']) {
       case 'autocomplete':
-        $form['value'] = array(
+        $form['value'] = [
           '#type' => 'synonyms_entity_autocomplete',
           '#title' => $this->t('Entity'),
           '#target_type' => $this->definition['entity_type'],
           '#target_bundles' => $this->options['target_bundles'],
           '#default_value' => $default_value,
-        );
+        ];
         break;
 
       case 'select':
-        $form['value'] = array(
+        $form['value'] = [
           '#type' => 'synonyms_entity_select',
           '#title' => $this->t('Entity'),
           '#target_type' => $this->definition['entity_type'],
@@ -213,7 +213,7 @@ class SynonymsEntity extends FilterPluginBase {
           '#default_value' => array_keys($default_value),
           '#multiple' => TRUE,
           '#empty_option' => '',
-        );
+        ];
         break;
     }
   }

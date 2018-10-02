@@ -81,7 +81,7 @@ class AutocompleteService implements SynonymsBehaviorConfigurableInterface {
 
     $replacements = $this->renderer->renderRoot($replacements);
 
-    $form['wording'] = array(
+    $form['wording'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Wording for autocomplete suggestion'),
       '#default_value' => $configuration['wording'],
@@ -89,7 +89,7 @@ class AutocompleteService implements SynonymsBehaviorConfigurableInterface {
         '@replacements' => $replacements,
       ]),
       '#required' => TRUE,
-    );
+    ];
 
     return $form;
   }
@@ -161,11 +161,11 @@ class AutocompleteService implements SynonymsBehaviorConfigurableInterface {
         $target_bundles = [$settings['target_type']];
       }
 
-      $options = array(
+      $options = [
         'target_type' => $settings['target_type'],
         'handler' => 'default',
         'handler_settings' => $handler_settings,
-      );
+      ];
       $handler = $this->selectionManager->getInstance($options);
 
       foreach ($handler->getReferenceableEntities($keyword, $settings['match'], $settings['suggestion_size']) as $suggested_entities) {

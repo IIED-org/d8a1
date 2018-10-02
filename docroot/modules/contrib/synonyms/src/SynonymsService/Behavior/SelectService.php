@@ -52,7 +52,7 @@ class SelectService implements SynonymsBehaviorConfigurableInterface {
 
     $replacements = $this->renderer->renderRoot($replacements);
 
-    $form['wording'] = array(
+    $form['wording'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Wording for select entry'),
       '#default_value' => $configuration['wording'],
@@ -60,7 +60,7 @@ class SelectService implements SynonymsBehaviorConfigurableInterface {
         '@replacements' => $replacements,
       ]),
       '#required' => TRUE,
-    );
+    ];
 
     return $form;
   }

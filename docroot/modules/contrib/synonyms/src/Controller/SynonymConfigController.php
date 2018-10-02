@@ -49,14 +49,14 @@ class SynonymConfigController extends ControllerBase {
    * Routing callback: show overview table of synonyms configuration.
    */
   public function overview() {
-    $render = array(
+    $render = [
       '#type' => 'table',
       '#header' => [
         $this->t('Entity type'),
         $this->t('Bundle'),
         $this->t('Manage'),
       ],
-    );
+    ];
 
     foreach ($this->entityTypeManager()->getDefinitions() as $entity_type) {
       if ($entity_type instanceof ContentEntityTypeInterface) {
