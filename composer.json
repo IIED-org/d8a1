@@ -60,7 +60,8 @@
     "drupal/better_exposed_filters": "^3.0@alpha",
     "drupal/taxonomy_publish": "^1.1",
     "drupal/content_moderation_notifications": "^3.0@RC",
-    "drupal/taxonomy_access_fix": "^2.6"
+    "drupal/taxonomy_access_fix": "^2.6",
+    "drupal/inline_entity_form": "^1.0@RC"
   },
   "require-dev": {
     "drupal/devel": "^1.0",
