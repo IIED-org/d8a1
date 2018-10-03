@@ -91,6 +91,10 @@
       },
       "drupal/label_help": {
         "Improve Drupal 8 field compatibility": "https://www.drupal.org/files/issues/2018-06-05/label_help-2948501-5.patch"
+      },
+      "drupal/conditional_fields": {
+        "Not working with checkboxes from widget":
+      "https://www.drupal.org/files/issues/2018-03-22/conditional_fields_fix_checkboxes_2912357_6.patch"
       }
     }
   },

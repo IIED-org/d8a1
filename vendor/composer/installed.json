@@ -2084,6 +2084,9 @@
                     "status": "not-covered",
                     "message": "Project has not opted into security advisory coverage!"
                 }
+            },
+            "patches_applied": {
+                "Not working with checkboxes from widget": "https://www.drupal.org/files/issues/2018-03-22/conditional_fields_fix_checkboxes_2912357_6.patch"
             }
         },
         "installation-source": "dist",

@@ -104,7 +104,11 @@ class OptionsButtons extends ConditionalFieldsHandlerBase {
       case CONDITIONAL_FIELDS_DEPENDENCY_VALUES_WIDGET:
         $selector = conditional_fields_field_selector($field);
         foreach ($options['value_form'] as $value) {
-          $selector_key = str_replace($field['#return_value'], current($value), $selector);
+          if(empty($field['#return_value']) && isset($field['#name'])) {
+            $selector_key = "[name=\"".$field['#name']."[".current($value)."]\"]";
+          } else {
+            $selector_key = str_replace($field['#return_value'], current($value), $selector);
+          }
           $checkboxes_selectors[$selector_key] = ['checked' => TRUE];
         }
         break;
