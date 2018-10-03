@@ -4038,6 +4038,53 @@
         }
     },
     {
+        "name": "drupal/label_help",
+        "version": "dev-1.x",
+        "version_normalized": "dev-1.x",
+        "source": {
+            "type": "git",
+            "url": "https://git.drupal.org/project/label_help",
+            "reference": "b91684450f0b2ca4765cdc1ab67ccaeb26919c71"
+        },
+        "require": {
+            "drupal/core": "~8.0"
+        },
+        "time": "2016-12-14T15:18:14+00:00",
+        "type": "drupal-module",
+        "extra": {
+            "branch-alias": {
+                "dev-1.x": "1.x-dev"
+            },
+            "drupal": {
+                "version": "8.x-1.x-dev",
+                "datestamp": "1481728982",
+                "security-coverage": {
+                    "status": "not-covered",
+                    "message": "Dev releases are not covered by Drupal security advisories."
+                }
+            },
+            "patches_applied": {
+                "Improve Drupal 8 field compatibility": "https://www.drupal.org/files/issues/2018-06-05/label_help-2948501-5.patch"
+            }
+        },
+        "installation-source": "source",
+        "notification-url": "https://packages.drupal.org/8/downloads",
+        "license": [
+            "GPL-2.0-or-later"
+        ],
+        "authors": [
+            {
+                "name": "Sheldon Rampton",
+                "homepage": "https://www.drupal.org/user/13085"
+            }
+        ],
+        "description": "Creates the help text directly below the label in form fields",
+        "homepage": "https://www.drupal.org/project/label_help",
+        "support": {
+            "source": "http://cgit.drupalcode.org/label_help"
+        }
+    },
+    {
         "name": "drupal/leaflet",
         "version": "1.0.0-beta15",
         "version_normalized": "1.0.0.0-beta15",
