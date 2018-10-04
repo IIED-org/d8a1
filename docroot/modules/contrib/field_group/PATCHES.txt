@@ -5,3 +5,7 @@ Hide group if all fields are hidden
 Source: https://www.drupal.org/files/issues/2018-09-06/hide-show-field-group-2978747-9.patch
 
 
+Error: Call to a member function process() on null
+Source: https://www.drupal.org/files/issues/2018-09-07/field_group-process.patch
+
+

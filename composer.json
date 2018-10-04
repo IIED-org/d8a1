@@ -98,8 +98,8 @@
         "https://www.drupal.org/files/issues/2018-03-22/conditional_fields_fix_checkboxes_2912357_6.patch"
       },
       "drupal/field_group": {
-        "Hide group if all fields are hidden":
-        "https://www.drupal.org/files/issues/2018-09-06/hide-show-field-group-2978747-9.patch"
+        "Hide group if all fields are hidden": "https://www.drupal.org/files/issues/2018-09-06/hide-show-field-group-2978747-9.patch",
+        "Error: Call to a member function process() on null": "https://www.drupal.org/files/issues/2018-09-07/field_group-process.patch"
       }
     }
   },

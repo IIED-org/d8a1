@@ -3260,6 +3260,7 @@
         "require": {
             "drupal/core": "*"
         },
+        "time": "2018-08-06T10:30:37+00:00",
         "type": "drupal-module",
         "extra": {
             "branch-alias": {
@@ -3274,7 +3275,8 @@
                 }
             },
             "patches_applied": {
-                "Hide group if all fields are hidden": "https://www.drupal.org/files/issues/2018-09-06/hide-show-field-group-2978747-9.patch"
+                "Hide group if all fields are hidden": "https://www.drupal.org/files/issues/2018-09-06/hide-show-field-group-2978747-9.patch",
+                "Error: Call to a member function process() on null": "https://www.drupal.org/files/issues/2018-09-07/field_group-process.patch"
             }
         },
         "installation-source": "source",
