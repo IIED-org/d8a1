@@ -11,6 +11,7 @@ Description: Bootstrap 4 with Sass
 
 body {
     background: $white;
+    font-family: $font-istok;
 }
 
 $primary: #3d9990;
@@ -27,7 +28,6 @@ $spring-green: #00ff56;
     padding-left: 0;
 }
 
-@import "_grid.scss";
 #block-aboutsubmenu { @extend .container; }
 
 /* PAGE STYLES
