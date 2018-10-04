@@ -46,7 +46,7 @@
     "drupal/facets": "^1.1",
     "drupal/video_embed_field": "^2.0",
     "drupal/search_api_solr": "^1.2",
-    "drupal/field_group": "^3.0",
+    "drupal/field_group": "3.x-dev",
     "drupal/field_group_ajaxified_multipage": "^1.0",
     "drupal/conditional_fields": "^1.0@alpha",
     "drupal/chosen": "^2.6",
@@ -66,7 +66,8 @@
     "drupal/hide_revision_field": "^2.1",
     "drupal/entity_browser": "^2.0",
     "drupal/content_browser": "^1.0@alpha",
-    "drupal/label_help": "1.x-dev"
+    "drupal/label_help": "1.x-dev",
+    "drupal/field_states_ui": "^1.0@RC"
   },
   "require-dev": {
     "drupal/devel": "^1.0",
@@ -94,7 +95,11 @@
       },
       "drupal/conditional_fields": {
         "Not working with checkboxes from widget":
-      "https://www.drupal.org/files/issues/2018-03-22/conditional_fields_fix_checkboxes_2912357_6.patch"
+        "https://www.drupal.org/files/issues/2018-03-22/conditional_fields_fix_checkboxes_2912357_6.patch"
+      },
+      "drupal/field_group": {
+        "Hide group if all fields are hidden":
+        "https://www.drupal.org/files/issues/2018-09-06/hide-show-field-group-2978747-9.patch"
       }
     }
   },

@@ -52,6 +52,35 @@
           window.location.hash = hashUrl;
         });
       });
+
+      $(document).ready(function () {
+        $(context).find('.field-group, .accordion-item').each(function() {
+          hideGroupIfEmpty($(this));
+        });
+      });
+
+      $(document).bind('state:visible', function(e) {
+        if ($(e.target).hasClass('field-group-child-field')) {
+          hideGroupIfEmpty($(e.target).closest('.field-group'));
+        }
+      });
+
+      // Check group's child fields state and hide/show group.
+      function hideGroupIfEmpty(group) {
+        var group_empty = true;
+        group.find('.field-group-child-field').each(function (i, el) {
+          if ($(el).css('display') !== 'none') {
+            group_empty = false;
+            return false;
+          }
+        });
+        if (group_empty) {
+          group.hide();
+        }
+        else {
+          group.show();
+        }
+      }
     }
   };
 

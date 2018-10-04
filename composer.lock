@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f1b7985ad80697b9fc3b08b47fb10d7c",
+    "content-hash": "9d9873b4b8491e2b5773e39f8a27b209",
     "packages": [
         {
             "name": "abraham/twitteroauth",
@@ -2029,6 +2029,9 @@
                         "status": "not-covered",
                         "message": "Project has not opted into security advisory coverage!"
                     }
+                },
+                "patches_applied": {
+                    "Not working with checkboxes from widget": "https://www.drupal.org/files/issues/2018-03-22/conditional_fields_fix_checkboxes_2912357_6.patch"
                 }
             },
             "notification-url": "https://packages.drupal.org/8/downloads",
@@ -3081,17 +3084,11 @@
         },
         {
             "name": "drupal/field_group",
-            "version": "3.0.0-beta1",
+            "version": "dev-3.x",
             "source": {
                 "type": "git",
                 "url": "https://git.drupal.org/project/field_group",
-                "reference": "8.x-3.0-beta1"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/field_group-8.x-3.0-beta1.zip",
-                "reference": "8.x-3.0-beta1",
-                "shasum": "a5dfb66385be7a1b3db232e49779d5bc530a048e"
+                "reference": "072bf212d8e13aa242a4e274e5a4837a0e0ffc5e"
             },
             "require": {
                 "drupal/core": "*"
@@ -3102,12 +3099,15 @@
                     "dev-3.x": "3.x-dev"
                 },
                 "drupal": {
-                    "version": "8.x-3.0-beta1",
-                    "datestamp": "1510352338",
+                    "version": "8.x-3.0-beta1+20-dev",
+                    "datestamp": "1533547380",
                     "security-coverage": {
                         "status": "not-covered",
-                        "message": "Beta releases are not covered by Drupal security advisories."
+                        "message": "Dev releases are not covered by Drupal security advisories."
                     }
+                },
+                "patches_applied": {
+                    "Hide group if all fields are hidden": "https://www.drupal.org/files/issues/2018-09-06/hide-show-field-group-2978747-9.patch"
                 }
             },
             "notification-url": "https://packages.drupal.org/8/downloads",
@@ -3140,7 +3140,8 @@
             "homepage": "https://www.drupal.org/project/field_group",
             "support": {
                 "source": "http://cgit.drupalcode.org/field_group"
-            }
+            },
+            "time": "2018-08-06T10:30:37+00:00"
         },
         {
             "name": "drupal/field_group_ajaxified_multipage",
@@ -3202,6 +3203,58 @@
             "homepage": "http://drupal.org/project/field_group_ajaxified_multipage",
             "support": {
                 "source": "http://cgit.drupalcode.org/field_group_ajaxified_multipage"
+            }
+        },
+        {
+            "name": "drupal/field_states_ui",
+            "version": "1.0.0-rc4",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupal.org/project/field_states_ui",
+                "reference": "8.x-1.0-rc4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/field_states_ui-8.x-1.0-rc4.zip",
+                "reference": "8.x-1.0-rc4",
+                "shasum": "b8e28db45156fa5cbddc6a3ea47865273e4adf7f"
+            },
+            "require": {
+                "drupal/core": "8.x"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "branch-alias": {
+                    "dev-1.x": "1.x-dev"
+                },
+                "drupal": {
+                    "version": "8.x-1.0-rc4",
+                    "datestamp": "1535491680",
+                    "security-coverage": {
+                        "status": "not-covered",
+                        "message": "Project has not opted into security advisory coverage!"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0+"
+            ],
+            "authors": [
+                {
+                    "name": "Nick Wilde",
+                    "homepage": "https://www.drupal.org/u/nickwilde"
+                },
+                {
+                    "name": "See other contributors",
+                    "homepage": "https://www.drupal.org/node/2776325/committers"
+                }
+            ],
+            "description": "Provides a UI for applying field states.",
+            "homepage": "https://www.drupal.org/project/field_states_ui",
+            "support": {
+                "source": "http://git.drupal.org/project/field_states_ui.git",
+                "issues": "https://www.drupal.org/project/issues/field_states_ui"
             }
         },
         {
@@ -3871,6 +3924,9 @@
                         "status": "not-covered",
                         "message": "Dev releases are not covered by Drupal security advisories."
                     }
+                },
+                "patches_applied": {
+                    "Improve Drupal 8 field compatibility": "https://www.drupal.org/files/issues/2018-06-05/label_help-2948501-5.patch"
                 }
             },
             "notification-url": "https://packages.drupal.org/8/downloads",
@@ -4932,8 +4988,7 @@
             "homepage": "https://www.drupal.org/project/synonyms",
             "support": {
                 "source": "http://cgit.drupalcode.org/synonyms"
-            },
-            "time": "2018-03-11T10:53:11+00:00"
+            }
         },
         {
             "name": "drupal/taxonomy_access_fix",
@@ -8571,6 +8626,7 @@
         "drupal/forms_steps": 5,
         "drupal/entity_usage": 15,
         "drupal/pdfpreview": 5,
+        "drupal/field_group": 20,
         "drupal/conditional_fields": 15,
         "drupal/synonyms": 20,
         "drupal/leaflet": 10,
@@ -8581,7 +8637,8 @@
         "drupal/inline_entity_form": 5,
         "drupal/masquerade": 10,
         "drupal/content_browser": 15,
-        "drupal/label_help": 20
+        "drupal/label_help": 20,
+        "drupal/field_states_ui": 5
     },
     "prefer-stable": true,
     "prefer-lowest": false,
