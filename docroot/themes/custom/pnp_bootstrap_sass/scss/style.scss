@@ -11,7 +11,6 @@ Description: Bootstrap 4 with Sass
 
 body {
     background: $white;
-    margin-top: 105px;
 }
 
 $primary: #3d9990;
@@ -22,6 +21,14 @@ $strawberry: #ff408e;
 $strawberry-overlay: rgba(255, 64, 142, 0.8);
 $spring-green: #00ff56;
 
+
+.container-fluid {
+    padding-right: 0;
+    padding-left: 0;
+}
+
+@import "_grid.scss";
+#block-aboutsubmenu { @extend .container; }
 
 /* PAGE STYLES
 --------------------------------------------------*/
@@ -179,6 +186,12 @@ form.form-search:before {
   }
 }
 
+/* EXPLORE
+--------------------------------------------------*/
+#leaflet-map {
+  min-width: 100% !important;
+  margin-bottom: 105px;
+}
 
 /* COLORS
 --------------------------------------------------*/
@@ -192,7 +205,7 @@ a {
 }
 
 .site-footer {
-    background: $primary-shade !important;
+    background: $strawberry !important;
 }
 
 .menu--main li a {

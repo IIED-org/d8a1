@@ -21,7 +21,7 @@ $spring-green: #00ff56 !default;
 $turquoise-tint: #b9f3ed !default;
 $red-violet: #cc14bb !default;
 $turquoise-shade: #123e39 !default;
-$theme-colors: ( primary: $primary-shade, secondary: $accent-shade, success: $green, info: $cyan, warning: $yellow, danger: $red, light: $gray-100, dark: $gray-800);
+$theme-colors: ( primary: $primary-shade, secondary: $red-violet, success: $green, info: $turquoise, warning: $yellow, danger: $red, light: $turquoise-tint, dark: $turquoise-shade, turquoise-tint: $turquoise-tint);
 $brand-primary: $accent-shade;
 //$brand-success: $green;
 //$brand-info: $teal;
