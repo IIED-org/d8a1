@@ -160,7 +160,6 @@ abstract class FieldGroupFormatterBase extends PluginSettingsBase implements Fie
   protected function getClasses() {
 
     $classes = [];
-    $classes[] = 'field-group';
     // Add a required-fields class to trigger the js.
     if ($this->getSetting('required_fields')) {
       $classes[] = 'required-fields';
@@ -226,19 +225,6 @@ abstract class FieldGroupFormatterBase extends PluginSettingsBase implements Fie
     if (!empty($form_state_values['fields'][$plugin_name]['settings_edit_form']['settings']['id']) && !preg_match('!^[A-Za-z0-9-_]+$!', $form_state_values['fields'][$plugin_name]['settings_edit_form']['settings']['id'])) {
       $form_state->setError($element, t('The id must include only letters, numbers, underscores and dashes.'));
     }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function process(&$element, $processed_object) {
-
-    $element['#group_name'] = $this->group->group_name;
-    $element['#entity_type'] = $this->group->entity_type;
-    $element['#bundle'] = $this->group->bundle;
-
-    // BC: Call the pre render layer to not break contrib plugins.
-    return $this->preRender($element, $processed_object);
   }
 
 }

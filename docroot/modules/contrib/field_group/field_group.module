@@ -294,7 +294,6 @@ function field_group_form_process(array &$element) {
       $group_children_parent_group = implode('][', $parents);
       foreach ($group->children as $child) {
         $element[$child]['#group'] = $group_children_parent_group;
-        $element[$child]['#attributes']['class'][] = 'field-group-child-field';
       }
     }
 
