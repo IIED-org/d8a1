@@ -9,3 +9,7 @@ Error: Call to a member function process() on null
 Source: https://www.drupal.org/files/issues/2018-09-07/field_group-process.patch
 
 
+Field layout issue
+Source: https://www.drupal.org/files/issues/2018-06-29/field_group-n2878359-72.patch
+
+

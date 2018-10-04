@@ -1,0 +1,50 @@
+***************
+*** 23,34 ****
+    /**
+     * {@inheritdoc}
+     */
+-   public function preRender(&$element, $rendering_object) {
+  
+      $element += [
+        '#type' => 'fieldset',
+        '#title' => Html::escape($this->t($this->getLabel())),
+-       '#pre_render' => [],
+        '#attributes' => [],
+      ];
+  
+--- 23,33 ----
+    /**
+     * {@inheritdoc}
+     */
++   public function process(&$element, $processed_object) {
+  
+      $element += [
+        '#type' => 'fieldset',
+        '#title' => Html::escape($this->t($this->getLabel())),
+        '#attributes' => [],
+      ];
+  
+***************
+*** 57,62 ****
+        $element['#attached']['library'][] = 'field_group/formatter.fieldset';
+        $element['#attached']['library'][] = 'field_group/core';
+      }
+    }
+  
+    /**
+--- 56,70 ----
+        $element['#attached']['library'][] = 'field_group/formatter.fieldset';
+        $element['#attached']['library'][] = 'field_group/core';
+      }
++ 
++   }
++ 
++   /**
++    * {@inheritdoc}
++    */
++   public function preRender(&$element, $rendering_object) {
++     parent::preRender($element, $rendering_object);
++     $this->process($element, $rendering_object);
+    }
+  
+    /**
