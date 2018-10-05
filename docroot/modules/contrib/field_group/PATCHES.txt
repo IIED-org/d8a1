@@ -5,3 +5,7 @@ Error: Call to a member function process() on null
 Source: https://www.drupal.org/files/issues/2018-09-07/field_group-process.patch
 
 
+Fix double escaping & config translation
+Source: https://www.drupal.org/files/issues/2018-07-12/field_group-use_config_translation-2846617-21.patch
+
+

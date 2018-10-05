@@ -3278,7 +3278,8 @@
                 }
             },
             "patches_applied": {
-                "Error: Call to a member function process() on null": "https://www.drupal.org/files/issues/2018-09-07/field_group-process.patch"
+                "Error: Call to a member function process() on null": "https://www.drupal.org/files/issues/2018-09-07/field_group-process.patch",
+                "Fix double escaping & config translation": "https://www.drupal.org/files/issues/2018-07-12/field_group-use_config_translation-2846617-21.patch"
             }
         },
         "installation-source": "source",

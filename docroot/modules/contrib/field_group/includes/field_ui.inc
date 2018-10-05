@@ -166,7 +166,7 @@ function field_group_field_ui_display_form_alter(&$form, FormStateInterface $for
       '#region_callback' => 'field_group_display_overview_row_region',
       '#js_settings' => ['rowHandler' => 'group'],
       'human_name' => [
-        '#markup' => Html::escape(t($group->label)),
+        '#markup' => $group->label,
         '#prefix' => '<span class="group-label">',
         '#suffix' => '</span>',
       ],
