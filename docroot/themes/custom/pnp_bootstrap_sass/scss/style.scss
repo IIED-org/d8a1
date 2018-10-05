@@ -12,6 +12,11 @@ Description: Bootstrap 4 with Sass
 body {
     background: $white;
     font-family: $font-istok;
+    font-size: 1.1rem;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 700;
 }
 
 $primary: #3d9990;
@@ -78,9 +83,6 @@ $spring-green: #00ff56;
     font-size: 1.6rem;
   }
 
-  .row {
-    margin-top: 270px;
-  }
 }
 
 #mission .lead {
@@ -93,15 +95,15 @@ $spring-green: #00ff56;
   min-height: 360px;
   background-repeat: no-repeat;
   background-size: cover;
+}
 
-  .secondary-overlay {
-    background: $secondary-overlay;
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-  }
+.secondary-overlay {
+  background: $secondary-overlay;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
 }
 
 #about-page-header {
@@ -110,7 +112,6 @@ $spring-green: #00ff56;
   background-size: cover;
   background-repeat: no-repeat;
   border-bottom: 1px #eee solid;
-  padding-top: 50px;
   position: relative;
 
   .strawberry-overlay {
