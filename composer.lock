@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9d9873b4b8491e2b5773e39f8a27b209",
+    "content-hash": "6089a84a543ba27d82eb23caf01928b5",
     "packages": [
         {
             "name": "abraham/twitteroauth",
@@ -2430,6 +2430,9 @@
                     "recurse": false,
                     "replace": false,
                     "merge-extra": false
+                },
+                "patches_applied": {
+                    "getEntityTranslation() throws exception on null": "https://www.drupal.org/files/issues/2018-09-05/2951493-15.patch"
                 }
             },
             "autoload": {
@@ -3107,7 +3110,7 @@
                     }
                 },
                 "patches_applied": {
-                    "Hide group if all fields are hidden": "https://www.drupal.org/files/issues/2018-09-06/hide-show-field-group-2978747-9.patch"
+                    "Error: Call to a member function process() on null": "https://www.drupal.org/files/issues/2018-09-07/field_group-process.patch"
                 }
             },
             "notification-url": "https://packages.drupal.org/8/downloads",
