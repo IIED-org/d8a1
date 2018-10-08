@@ -35,6 +35,24 @@ $spring-green: #00ff56;
 
 #block-aboutsubmenu { @extend .container; }
 
+
+/* NAV
+--------------------------------------------------*/
+
+.navbar-dark .nav-link:hover,
+.navbar-dark .nav-link:focus {
+    color: rgba(0, 0, 0, 0.7) !important;
+}
+
+.navbar-dark .nav-link {
+    color: rgba(0, 0, 0, 0.5) !important;
+}
+
+.navbar-brand img.img-fluid {
+    max-width: 75px;
+    max-height: 56px;
+}
+
 /* PAGE STYLES
 --------------------------------------------------*/
 
@@ -189,7 +207,7 @@ form.form-search:before {
 
 /* EXPLORE
 --------------------------------------------------*/
-#leaflet-map {
+.leaflet-container {
   min-width: 100% !important;
   margin-bottom: 105px;
 }
