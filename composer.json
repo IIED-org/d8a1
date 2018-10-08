@@ -68,7 +68,9 @@
     "drupal/content_browser": "^1.0@alpha",
     "drupal/label_help": "1.x-dev",
     "drupal/field_states_ui": "^1.0@RC",
-    "drupal/leaflet_markercluster": "^1.0@alpha"
+    "drupal/leaflet_markercluster": "^1.0@alpha",
+    "drupal/config_split": "^1.4",
+    "drupal/entity_reference_facet_link": "^1.0@beta"
   },
   "require-dev": {
     "drupal/devel": "^1.0",
