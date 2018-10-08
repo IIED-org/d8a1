@@ -1,0 +1,13 @@
+name: 'Content moderation notifications test'
+description: 'Functionality to assist content moderation notifications testing.'
+type: module
+# core: 8.x
+dependencies:
+  - content_moderation_notifications:content_moderation_notifications
+package: Testing
+
+# Information added by Drupal.org packaging script on 2018-01-30
+version: '8.x-3.0-rc2'
+core: '8.x'
+project: 'content_moderation_notifications'
+datestamp: 1517332392

@@ -1,0 +1,29 @@
+uuid: dad1bdee-d186-4b42-805a-f55f4d1265fe
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_interventions
+    - node.type.resource
+    - taxonomy.vocabulary.interventions
+id: node.resource.field_interventions
+field_name: field_interventions
+entity_type: node
+bundle: resource
+label: 'Interventions (Please select all the options that apply to this resource)'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      interventions: interventions
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

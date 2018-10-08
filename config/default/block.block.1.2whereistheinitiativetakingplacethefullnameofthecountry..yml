@@ -1,0 +1,29 @@
+uuid: d749cf16-0310-4ae7-bf02-ac15a4bdc6fa
+langcode: en
+status: true
+dependencies:
+  config:
+    - facets.facet.1_2_where_is_the_initiative_taking_place_the_full_
+  module:
+    - facets
+    - system
+  theme:
+    - pnp_bootstrap_sass
+id: 1.2whereistheinitiativetakingplacethefullnameofthecountry.
+theme: pnp_bootstrap_sass
+region: sidebar_second
+weight: -13
+provider: null
+plugin: 'facet_block:1_2_where_is_the_initiative_taking_place_the_full_'
+settings:
+  id: 'facet_block:1_2_where_is_the_initiative_taking_place_the_full_'
+  label: Country
+  provider: facets
+  label_display: visible
+  block_id: 1.2whereistheinitiativetakingplacethefullnameofthecountry.
+visibility:
+  request_path:
+    id: request_path
+    pages: /explore
+    negate: false
+    context_mapping: {  }

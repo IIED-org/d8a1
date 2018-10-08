@@ -1,0 +1,299 @@
+uuid: 6eff7d51-8e65-4159-a95f-fe4618851779
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_form_mode.node.admin
+    - core.entity_form_mode.taxonomy_term.ief
+    - field.field.node.initiative.body
+    - field.field.node.initiative.field_3_2_1_other
+    - field.field.node.initiative.field_3_2_2_details
+    - field.field.node.initiative.field_3_2_2_other
+    - field.field.node.initiative.field_3_2_3_details
+    - field.field.node.initiative.field_3_2_3_other
+    - field.field.node.initiative.field_3_2_4_details
+    - field.field.node.initiative.field_3_2_4_other
+    - field.field.node.initiative.field_add_species
+    - field.field.node.initiative.field_address
+    - field.field.node.initiative.field_area_description
+    - field.field.node.initiative.field_buyers
+    - field.field.node.initiative.field_community_level_benefits
+    - field.field.node.initiative.field_decreasing_living_costs
+    - field.field.node.initiative.field_ecosystem_service_payments
+    - field.field.node.initiative.field_education_and_awareness
+    - field.field.node.initiative.field_end_use
+    - field.field.node.initiative.field_financial_mitigation
+    - field.field.node.initiative.field_geofield
+    - field.field.node.initiative.field_illegal_disincentives
+    - field.field.node.initiative.field_in_kind_incentives
+    - field.field.node.initiative.field_in_kind_scouts
+    - field.field.node.initiative.field_initiative_introduction
+    - field.field.node.initiative.field_initiative_status
+    - field.field.node.initiative.field_intelligence_incentives
+    - field.field.node.initiative.field_lead_organisation
+    - field.field.node.initiative.field_lease_payments
+    - field.field.node.initiative.field_legal_trade
+    - field.field.node.initiative.field_non_wildlife_development
+    - field.field.node.initiative.field_non_wildlife_livelihoods
+    - field.field.node.initiative.field_paid_scouts
+    - field.field.node.initiative.field_performance_payments
+    - field.field.node.initiative.field_physical_separation
+    - field.field.node.initiative.field_policy_regulatory_change
+    - field.field.node.initiative.field_preventive_measures_deter
+    - field.field.node.initiative.field_problem_overview
+    - field.field.node.initiative.field_raising_awareness
+    - field.field.node.initiative.field_reactive_measures
+    - field.field.node.initiative.field_sense_of_ownership
+    - field.field.node.initiative.field_species_affected
+    - field.field.node.initiative.field_stewardship_incentives
+    - field.field.node.initiative.field_subsistence_resource_use
+    - field.field.node.initiative.field_supporting_sanctions
+    - field.field.node.initiative.field_tourism
+    - field.field.node.initiative.field_trophy_hunting
+    - field.field.node.initiative.field_voluntary_scouts
+    - field.field.node.initiative.field_which_products_are_in_trad
+    - field.field.node.initiative.field_year_finished
+    - node.type.initiative
+  module:
+    - address
+    - content_moderation
+    - field_layout
+    - geofield
+    - hide_revision_field
+    - inline_entity_form
+    - layout_discovery
+    - path
+    - synonyms
+    - text
+third_party_settings:
+  field_layout:
+    id: layout_onecol
+    settings: {  }
+id: node.initiative.admin
+targetEntityType: node
+bundle: initiative
+mode: admin
+content:
+  body:
+    type: text_textarea_with_summary
+    weight: 8
+    settings:
+      rows: 9
+      summary_rows: 3
+      placeholder: ''
+    third_party_settings: {  }
+    region: content
+  created:
+    type: datetime_timestamp
+    weight: 2
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_add_species:
+    weight: 16
+    settings:
+      form_mode: ief
+      override_labels: true
+      label_singular: Species
+      label_plural: Species
+      collapsible: true
+      collapsed: true
+      allow_new: true
+      match_operator: CONTAINS
+      allow_existing: false
+      allow_duplicate: false
+    third_party_settings: {  }
+    type: inline_entity_form_complex
+    region: content
+  field_address:
+    weight: 9
+    settings:
+      default_country: null
+    third_party_settings: {  }
+    type: address_default
+    region: content
+  field_area_description:
+    type: text_textarea
+    weight: 11
+    region: content
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+  field_buyers:
+    type: text_textarea
+    weight: 20
+    region: content
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+  field_end_use:
+    type: text_textarea
+    weight: 18
+    region: content
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+  field_geofield:
+    weight: 10
+    settings:
+      html5_geolocation: false
+    third_party_settings: {  }
+    type: geofield_latlon
+    region: content
+  field_initiative_introduction:
+    type: text_textarea
+    weight: 21
+    region: content
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+  field_initiative_status:
+    type: options_select
+    weight: 13
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_lead_organisation:
+    type: entity_reference_autocomplete
+    weight: 12
+    region: content
+    settings:
+      match_operator: CONTAINS
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_paid_scouts:
+    type: boolean_checkbox
+    weight: 23
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  field_problem_overview:
+    type: text_textarea
+    weight: 19
+    region: content
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+  field_species_affected:
+    weight: 15
+    settings: {  }
+    third_party_settings: {  }
+    type: synonyms_select
+    region: content
+  field_which_products_are_in_trad:
+    weight: 17
+    settings: {  }
+    third_party_settings: {  }
+    type: options_select
+    region: content
+  field_year_finished:
+    type: string_textfield
+    weight: 14
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  moderation_state:
+    type: moderation_state_default
+    weight: 6
+    settings: {  }
+    region: content
+    third_party_settings: {  }
+  path:
+    type: path
+    weight: 5
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  promote:
+    type: boolean_checkbox
+    settings:
+      display_label: true
+    weight: 3
+    region: content
+    third_party_settings: {  }
+  revision_log:
+    type: hide_revision_field_log_widget
+    weight: 25
+    region: content
+    settings:
+      show: true
+      default: ''
+      permission_based: false
+      allow_user_settings: true
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+  status:
+    type: boolean_checkbox
+    settings:
+      display_label: true
+    weight: 7
+    region: content
+    third_party_settings: {  }
+  sticky:
+    type: boolean_checkbox
+    settings:
+      display_label: true
+    weight: 4
+    region: content
+    third_party_settings: {  }
+  title:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  uid:
+    type: entity_reference_autocomplete
+    weight: 1
+    settings:
+      match_operator: CONTAINS
+      size: 60
+      placeholder: ''
+    region: content
+    third_party_settings: {  }
+hidden:
+  field_3_2_1_other: true
+  field_3_2_2_details: true
+  field_3_2_2_other: true
+  field_3_2_3_details: true
+  field_3_2_3_other: true
+  field_3_2_4_details: true
+  field_3_2_4_other: true
+  field_community_level_benefits: true
+  field_decreasing_living_costs: true
+  field_ecosystem_service_payments: true
+  field_education_and_awareness: true
+  field_financial_mitigation: true
+  field_illegal_disincentives: true
+  field_in_kind_incentives: true
+  field_in_kind_scouts: true
+  field_intelligence_incentives: true
+  field_lease_payments: true
+  field_legal_trade: true
+  field_non_wildlife_development: true
+  field_non_wildlife_livelihoods: true
+  field_performance_payments: true
+  field_physical_separation: true
+  field_policy_regulatory_change: true
+  field_preventive_measures_deter: true
+  field_raising_awareness: true
+  field_reactive_measures: true
+  field_sense_of_ownership: true
+  field_stewardship_incentives: true
+  field_subsistence_resource_use: true
+  field_supporting_sanctions: true
+  field_tourism: true
+  field_trophy_hunting: true
+  field_voluntary_scouts: true

@@ -1,0 +1,29 @@
+uuid: 253ebe1c-0162-45c6-9615-6a64cdb74bf8
+langcode: en
+status: true
+dependencies:
+  config:
+    - contact.form.about_contact
+  module:
+    - contact_block
+    - system
+  theme:
+    - pnp_bootstrap_sass
+id: contactblock
+theme: pnp_bootstrap_sass
+region: featured_bottom_first
+weight: -13
+provider: null
+plugin: contact_block
+settings:
+  id: contact_block
+  label: 'Contact block'
+  provider: contact_block
+  label_display: '0'
+  contact_form: about_contact
+visibility:
+  request_path:
+    id: request_path
+    pages: /about
+    negate: false
+    context_mapping: {  }

@@ -1,0 +1,57 @@
+uuid: fa480743-2a67-426a-b127-41a4c7cbc8d5
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+    - options
+id: node.field_organisation_type
+field_name: field_organisation_type
+entity_type: node
+type: list_string
+settings:
+  allowed_values:
+    -
+      value: '1'
+      label: 'Civil Society Organisation'
+    -
+      value: '2'
+      label: Funder
+    -
+      value: '3'
+      label: 'Government agency'
+    -
+      value: '4'
+      label: 'Intergovernmental organisation'
+    -
+      value: '5'
+      label: 'Local government'
+    -
+      value: '6'
+      label: Media
+    -
+      value: '7'
+      label: 'National government'
+    -
+      value: '8'
+      label: Not-for-profit
+    -
+      value: '9'
+      label: 'Private sector'
+    -
+      value: '10'
+      label: 'Research organisation'
+    -
+      value: '11'
+      label: 'Trusts / Foundations'
+    -
+      value: '12'
+      label: University
+  allowed_values_function: ''
+module: options
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

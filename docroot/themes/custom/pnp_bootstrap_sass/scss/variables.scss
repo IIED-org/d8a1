@@ -14,7 +14,14 @@ $green: #00FF56; //Spring green
 $cyan: #17a2b8;
 $gray-100: #f8f9fa !default;
 $gray-800: #343a40 !default;
-$theme-colors: ( primary: $primary-shade, secondary: $accent-shade, success: $green, info: $cyan, warning: $yellow, danger: $red, light: $gray-100, dark: $gray-800);
+$strawberry: #ff408e !default;
+$ocean-green: #3d9990 !default;
+$turquoise: #40e0d0 !default;
+$spring-green: #00ff56 !default;
+$turquoise-tint: #b9f3ed !default;
+$red-violet: #cc14bb !default;
+$turquoise-shade: #123e39 !default;
+$theme-colors: ( primary: $primary-shade, secondary: $red-violet, success: $green, info: $turquoise, warning: $yellow, danger: $red, light: $turquoise-tint, dark: $turquoise-shade, turquoise-tint: $turquoise-tint);
 $brand-primary: $accent-shade;
 //$brand-success: $green;
 //$brand-info: $teal;

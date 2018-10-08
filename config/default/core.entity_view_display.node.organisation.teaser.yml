@@ -1,0 +1,43 @@
+uuid: 21e05178-4913-41f3-b30f-38bd46ea93d3
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.organisation.body
+    - field.field.node.organisation.field_image
+    - field.field.node.organisation.field_link
+    - field.field.node.organisation.field_organisation_type
+    - image.style.thumbnail
+    - node.type.organisation
+  module:
+    - ds
+    - image
+    - user
+id: node.organisation.teaser
+targetEntityType: node
+bundle: organisation
+mode: teaser
+content:
+  field_image:
+    type: image
+    weight: 0
+    region: content
+    label: hidden
+    settings:
+      image_style: thumbnail
+      image_link: content
+    third_party_settings:
+      ds:
+        ft:
+          id: default
+          settings:
+            lb: ''
+            lb-col: false
+            classes: {  }
+hidden:
+  addtoany: true
+  body: true
+  field_link: true
+  field_organisation_type: true
+  links: true

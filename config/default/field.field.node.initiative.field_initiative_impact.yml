@@ -1,0 +1,25 @@
+uuid: 8d1f2e4c-0b13-4b49-ad99-a6c8eccd84e2
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_initiative_impact
+    - node.type.initiative
+  module:
+    - label_help
+    - text
+third_party_settings:
+  label_help:
+    label_help_description: "Consider the following:<br />\r\n• Have poaching rates decreased and what evidence is available that demonstrates this?<br />\r\n• Has it been effective in other ways? For example, decreasing habitat loss, or improving attitudes toward conservation, or meeting socio-economic needs?"
+id: node.initiative.field_initiative_impact
+field_name: field_initiative_impact
+entity_type: node
+bundle: initiative
+label: '4.1 Please summarise the effectiveness and impact of the initative.'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long

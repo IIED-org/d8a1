@@ -1,0 +1,23 @@
+uuid: b0634f51-633e-48b9-a3c2-999a53a9c6ed
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_in_kind_incentives
+    - node.type.initiative
+id: node.initiative.field_in_kind_incentives
+field_name: field_in_kind_incentives
+entity_type: node
+bundle: initiative
+label: '3.2.1f Non-monetary, in-kind incentives for community intelligence'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

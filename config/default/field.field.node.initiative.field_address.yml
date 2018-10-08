@@ -1,0 +1,51 @@
+uuid: a7aaa8ac-aabb-4e57-9e47-3b56fdb38869
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_address
+    - node.type.initiative
+  module:
+    - address
+    - label_help
+third_party_settings:
+  label_help:
+    label_help_description: 'Please select (at least) the country that your initiative includes. You can add more than one location, with as much detail of the address as possible.'
+id: node.initiative.field_address
+field_name: field_address
+entity_type: node
+bundle: initiative
+label: '1.2 Where is the initiative taking place?'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  available_countries: {  }
+  langcode_override: ''
+  field_overrides:
+    givenName:
+      override: hidden
+    additionalName:
+      override: hidden
+    familyName:
+      override: hidden
+    organization:
+      override: hidden
+    addressLine1:
+      override: optional
+    addressLine2:
+      override: optional
+    postalCode:
+      override: optional
+    sortingCode:
+      override: optional
+    dependentLocality:
+      override: optional
+    locality:
+      override: optional
+    administrativeArea:
+      override: optional
+  fields: {  }
+field_type: address

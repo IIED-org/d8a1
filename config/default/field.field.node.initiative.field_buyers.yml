@@ -1,0 +1,25 @@
+uuid: 5b9d92f9-79f6-4c71-a8b8-0c9ed501fb59
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_buyers
+    - node.type.initiative
+  module:
+    - label_help
+    - text
+third_party_settings:
+  label_help:
+    label_help_description: 'We are not looking for names of individuals, but broad identification of patterns. For example, local traders or visiting traders from outside the communities.'
+id: node.initiative.field_buyers
+field_name: field_buyers
+entity_type: node
+bundle: initiative
+label: '2.4 Who is buying the product (if known)?'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long

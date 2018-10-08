@@ -1,0 +1,23 @@
+uuid: 5dbdd4ec-c2c3-4fff-ac7a-0903f77d6924
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_document_url
+    - paragraphs.paragraphs_type.document
+  module:
+    - link
+id: paragraph.document.field_document_url
+field_name: field_document_url
+entity_type: paragraph
+bundle: document
+label: 'Document URL'
+description: '<big><strong>Enter web address if the document is available from the publishers website or other online location</big></strong>'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  link_type: 16
+  title: 0
+field_type: link

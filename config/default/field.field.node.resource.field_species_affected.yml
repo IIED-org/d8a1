@@ -1,0 +1,34 @@
+uuid: b99cacce-6c84-40ec-a0f4-4c147f3451ba
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_species_affected
+    - node.type.resource
+    - taxonomy.vocabulary.species
+  module:
+    - label_help
+third_party_settings:
+  label_help:
+    label_help_description: '(Start typing and/or select from the list that appears)'
+id: node.resource.field_species_affected
+field_name: field_species_affected
+entity_type: node
+bundle: resource
+label: 'Species affected'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      species: species
+    sort:
+      field: name
+      direction: asc
+    auto_create: true
+    auto_create_bundle: ''
+field_type: entity_reference

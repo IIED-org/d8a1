@@ -1,0 +1,21 @@
+uuid: 4433733e-84cb-4121-b6f9-1f0d01e7a7ad
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_success_factors
+    - node.type.initiative
+  module:
+    - options
+id: node.initiative.field_success_factors
+field_name: field_success_factors
+entity_type: node
+bundle: initiative
+label: '4.2.1 What are the three most important factors that you think helped your initiative to succeed?'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_string

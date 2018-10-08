@@ -1,0 +1,25 @@
+uuid: 0ae4c636-9761-4271-af4a-65e2a54e7cd8
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_what_worked
+    - node.type.initiative
+  module:
+    - label_help
+    - text
+third_party_settings:
+  label_help:
+    label_help_description: "Consider the following:<br />\r\n• Factors operating at the site level, for example community attributes, relationships, resource and tenure rights.<br />\r\n• Broader issues such as economic factors or government policies.<br />\r\n• Lessons learned"
+id: node.initiative.field_what_worked
+field_name: field_what_worked
+entity_type: node
+bundle: initiative
+label: '4.2 What worked, or is working, and why?'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long

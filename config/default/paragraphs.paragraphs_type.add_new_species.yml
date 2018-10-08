@@ -1,0 +1,9 @@
+uuid: 73bcd5b0-bb8e-4d60-80dc-7c614b195a2f
+langcode: en
+status: true
+dependencies: {  }
+id: add_new_species
+label: 'Add new species'
+icon_uuid: null
+description: 'Allows user to add new species (taxonomy term) not already listed. Will not appear until Administrator/Editor has approved/''published'' the term.'
+behavior_plugins: {  }

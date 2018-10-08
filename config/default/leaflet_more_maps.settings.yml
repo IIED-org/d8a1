@@ -1,0 +1,16 @@
+leaflet_more_maps_custom_maps:
+  1:
+    map-key: mapbox
+    layer-keys:
+      'mapbox-warden layer': 'mapbox-warden layer'
+    reverse-order: 0
+  2:
+    map-key: esri
+    layer-keys:
+      'esri-natgeo_world_map layer': 'esri-natgeo_world_map layer'
+      'esri-world_physical_map layer': 'esri-world_physical_map layer'
+    reverse-order: 0
+  3:
+    map-key: ''
+    layer-keys: {  }
+    reverse-order: 0

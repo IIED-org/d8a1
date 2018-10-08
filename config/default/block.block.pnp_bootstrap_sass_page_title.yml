@@ -1,0 +1,36 @@
+uuid: 07b59751-89a0-4bf7-8bdc-3ae9bd7c10f5
+langcode: en
+status: true
+dependencies:
+  module:
+    - ctools
+    - system
+  theme:
+    - pnp_bootstrap_sass
+_core:
+  default_config_hash: 7rR9chwXvdM2H8OYMAYx9Zj3GGlPMrZp_M3ZA4thYTk
+id: pnp_bootstrap_sass_page_title
+theme: pnp_bootstrap_sass
+region: content
+weight: -13
+provider: null
+plugin: page_title_block
+settings:
+  id: page_title_block
+  label: 'Page title'
+  provider: core
+  label_display: '0'
+visibility:
+  request_path:
+    id: request_path
+    pages: "/about\r\n/explore"
+    negate: true
+    context_mapping: {  }
+  'entity_bundle:node':
+    id: 'entity_bundle:node'
+    bundles:
+      organisation: organisation
+      resource: resource
+    negate: false
+    context_mapping:
+      node: '@node.node_route_context:node'

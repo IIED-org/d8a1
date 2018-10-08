@@ -1,0 +1,23 @@
+uuid: c8d09665-1c8a-430c-b9c5-b820f581f247
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_education_and_awareness
+    - node.type.initiative
+id: node.initiative.field_education_and_awareness
+field_name: field_education_and_awareness
+entity_type: node
+bundle: initiative
+label: '3.2.6 Improving education and awareness'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

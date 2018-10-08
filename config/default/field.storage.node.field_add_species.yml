@@ -1,0 +1,20 @@
+uuid: 95afcc77-17e5-480a-a764-5ecfa0188e1b
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+    - taxonomy
+id: node.field_add_species
+field_name: field_add_species
+entity_type: node
+type: entity_reference
+settings:
+  target_type: taxonomy_term
+module: core
+locked: false
+cardinality: -1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

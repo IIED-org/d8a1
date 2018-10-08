@@ -1,0 +1,25 @@
+uuid: 211566e2-5671-4689-8e58-42cb6bff7efd
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_initiative_introduction
+    - node.type.initiative
+  module:
+    - label_help
+    - text
+third_party_settings:
+  label_help:
+    label_help_description: "Please consider the following:<br />\r\n• Are local communities leading, or involved in the design/development of the initiative?<br />\r\n• If so, how are they involved and what are their motivations for being so?<br />\r\n• The strategies and approaches the initiative is using to reduce poaching. <br />\r\n• How will these strategies and approaches reduce poaching, or other related objectives.<br />\r\n• How the strategies and approaches have developed over time."
+id: node.initiative.field_initiative_introduction
+field_name: field_initiative_introduction
+entity_type: node
+bundle: initiative
+label: '3.1 Please introduce the initiative for tackling poaching.'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long

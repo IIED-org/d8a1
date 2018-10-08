@@ -1,0 +1,38 @@
+uuid: 7572819d-9b22-4e93-af1a-c1b93a81f77a
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph._link_to_document_hosted_on_anot.field_cover_image
+    - field.field.paragraph._link_to_document_hosted_on_anot.field_document_url
+    - paragraphs.paragraphs_type._link_to_document_hosted_on_anot
+  module:
+    - image
+    - link
+id: paragraph._link_to_document_hosted_on_anot.default
+targetEntityType: paragraph
+bundle: _link_to_document_hosted_on_anot
+mode: default
+content:
+  field_cover_image:
+    weight: 0
+    label: hidden
+    settings:
+      image_style: ''
+      image_link: ''
+    third_party_settings: {  }
+    type: image
+    region: content
+  field_document_url:
+    weight: 1
+    label: hidden
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+    type: link
+    region: content
+hidden: {  }

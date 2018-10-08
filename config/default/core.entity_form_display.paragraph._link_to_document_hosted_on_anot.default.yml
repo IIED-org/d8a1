@@ -1,0 +1,50 @@
+uuid: e9d41212-ba6c-47d9-9a17-cef87a176de3
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph._link_to_document_hosted_on_anot.field_cover_image
+    - field.field.paragraph._link_to_document_hosted_on_anot.field_document_url
+    - image.style.thumbnail
+    - paragraphs.paragraphs_type._link_to_document_hosted_on_anot
+  module:
+    - content_moderation
+    - field_layout
+    - image
+    - layout_discovery
+    - link
+third_party_settings:
+  field_layout:
+    id: layout_onecol
+    settings: {  }
+id: paragraph._link_to_document_hosted_on_anot.default
+targetEntityType: paragraph
+bundle: _link_to_document_hosted_on_anot
+mode: default
+content:
+  field_cover_image:
+    weight: 102
+    settings:
+      progress_indicator: throbber
+      preview_image_style: thumbnail
+    third_party_settings: {  }
+    type: image_image
+    region: content
+  field_document_url:
+    weight: 101
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: {  }
+    type: link_default
+    region: content
+  moderation_state:
+    type: moderation_state_default
+    weight: 100
+    settings: {  }
+    region: content
+    third_party_settings: {  }
+hidden:
+  created: true
+  status: true
+  uid: true

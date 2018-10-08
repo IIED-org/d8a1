@@ -1,0 +1,25 @@
+uuid: cf2257c9-a6ea-4163-907b-e6c735c74456
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_4_3_1_details
+    - node.type.initiative
+  module:
+    - label_help
+    - text
+third_party_settings:
+  label_help:
+    label_help_description: 'Further details about the key factors limiting success'
+id: node.initiative.field_4_3_1_details
+field_name: field_4_3_1_details
+entity_type: node
+bundle: initiative
+label: '4.3.1 Details'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long

@@ -1,0 +1,45 @@
+uuid: e199922b-ed2a-48fe-bbd8-8d91b51b2ca9
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_geofield
+    - node.type.initiative
+  module:
+    - geocoder_field
+    - geofield
+    - label_help
+third_party_settings:
+  geocoder_field:
+    method: source
+    weight: 0
+    geocode_field: field_address
+    reverse_geocode_field: ''
+    hidden: false
+    disabled: false
+    plugins:
+      - freegeoip
+      - geoip
+      - openstreetmap
+      - yandex
+    dumper: wkt
+    delta_handling: default
+    failure:
+      handling: preserve
+      status_message: true
+      log: true
+  label_help:
+    label_help_description: 'Please add GPS coordinates if known, otherwise these will be calculated from the location(s) given above. Only the first location will be shown on the map.'
+id: node.initiative.field_geofield
+field_name: field_geofield
+entity_type: node
+bundle: initiative
+label: '1.2.1 GPS coordinates'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  backend: geofield_backend_default
+field_type: geofield

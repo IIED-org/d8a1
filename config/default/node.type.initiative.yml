@@ -1,0 +1,18 @@
+uuid: a8703370-9673-4cb7-98ff-e1fa4f252c93
+langcode: en
+status: true
+dependencies:
+  module:
+    - menu_ui
+third_party_settings:
+  menu_ui:
+    available_menus:
+      - main
+    parent: 'main:'
+name: Initiative
+type: initiative
+description: 'Fill out this form to submit an initiative to engage communities in tackling illegal wildlife trade. Submissions can include photos, documents and links to related material. We will guide you through each step and you can enter as much detail as you like. '
+help: ''
+new_revision: true
+preview_mode: 1
+display_submitted: false

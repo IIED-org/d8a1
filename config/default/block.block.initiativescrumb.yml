@@ -1,0 +1,33 @@
+uuid: 6d4a67ae-89a1-4c22-9014-89d180606a44
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:basic:fd553d12-afd7-4ac1-8219-42fcfbad4bb3'
+  module:
+    - block_content
+    - ctools
+  theme:
+    - pnp_bootstrap_sass
+id: initiativescrumb
+theme: pnp_bootstrap_sass
+region: breadcrumb
+weight: 0
+provider: null
+plugin: 'block_content:fd553d12-afd7-4ac1-8219-42fcfbad4bb3'
+settings:
+  id: 'block_content:fd553d12-afd7-4ac1-8219-42fcfbad4bb3'
+  label: 'Initiatives crumb'
+  provider: block_content
+  label_display: '0'
+  status: true
+  info: ''
+  view_mode: full
+visibility:
+  'entity_bundle:node':
+    id: 'entity_bundle:node'
+    bundles:
+      initiative: initiative
+    negate: false
+    context_mapping:
+      node: '@node.node_route_context:node'

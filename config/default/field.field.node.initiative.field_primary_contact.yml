@@ -1,0 +1,26 @@
+uuid: 43ea439e-4db8-4ed0-b4a6-3d8ced006043
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_primary_contact
+    - node.type.initiative
+  module:
+    - label_help
+third_party_settings:
+  label_help:
+    label_help_description: 'The email address of the contact person'
+id: node.initiative.field_primary_contact
+field_name: field_primary_contact
+entity_type: node
+bundle: initiative
+label: '5.4a Email address'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: name@example.org
+default_value_callback: ''
+settings: {  }
+field_type: email

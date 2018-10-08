@@ -1,0 +1,75 @@
+uuid: 9cc8f239-1dc0-4e84-a75c-c675e18e4103
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_form_mode.node.popup
+    - field.field.node.organisation.body
+    - field.field.node.organisation.field_image
+    - field.field.node.organisation.field_link
+    - field.field.node.organisation.field_organisation_type
+    - image.style.thumbnail
+    - node.type.organisation
+  module:
+    - field_layout
+    - image
+    - layout_discovery
+    - link
+    - text
+third_party_settings:
+  field_layout:
+    id: layout_onecol
+    settings: {  }
+id: node.organisation.popup
+targetEntityType: node
+bundle: organisation
+mode: popup
+content:
+  body:
+    type: text_textarea_with_summary
+    weight: 1
+    settings:
+      rows: 4
+      placeholder: ''
+      summary_rows: 3
+    third_party_settings: {  }
+    region: content
+  field_image:
+    weight: 3
+    settings:
+      progress_indicator: throbber
+      preview_image_style: thumbnail
+    third_party_settings: {  }
+    type: image_image
+    region: content
+  field_link:
+    weight: 2
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: {  }
+    type: link_default
+    region: content
+  field_organisation_type:
+    weight: 4
+    settings: {  }
+    third_party_settings: {  }
+    type: options_select
+    region: content
+  title:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+hidden:
+  created: true
+  moderation_state: true
+  path: true
+  promote: true
+  revision_log: true
+  status: true
+  sticky: true
+  uid: true

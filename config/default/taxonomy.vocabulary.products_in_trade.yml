@@ -1,0 +1,9 @@
+uuid: bdd596a9-57bd-4c30-8e63-8f62e71989b5
+langcode: en
+status: true
+dependencies: {  }
+name: 'Products in trade'
+vid: products_in_trade
+description: 'Items in Illegal wildlife trade'
+hierarchy: 0
+weight: 0

@@ -1,0 +1,57 @@
+uuid: 7ee20b65-27ba-4b84-9eb1-4b1a3d7a914b
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+    - options
+id: node.field_limiting_factors
+field_name: field_limiting_factors
+entity_type: node
+type: list_string
+settings:
+  allowed_values:
+    -
+      value: 'Lack of supportive national policy/legislation for devolved governance of natural resources'
+      label: 'Lack of supportive national policy/legislation for devolved governance of natural resources'
+    -
+      value: 'Lack of supportive national policy/legislation on sustainable use of natural resources'
+      label: 'Lack of supportive national policy/legislation on sustainable use of natural resources'
+    -
+      value: 'Lack of coordinated and coherent sectoral policies/legislation (For example, land use planning, agricultural etc...)'
+      label: 'Lack of coordinated and coherent sectoral policies/legislation (For example, land use planning, agricultural etc...)'
+    -
+      value: 'Lack of long-term donor support that is flexible, adaptive and/or based on realistic time goals'
+      label: 'Lack of long-term donor support that is flexible, adaptive and/or based on realistic time goals'
+    -
+      value: 'Lack of supportive, multi-stakeholder partnerships with a shared vision'
+      label: 'Lack of supportive, multi-stakeholder partnerships with a shared vision'
+    -
+      value: 'Insufficient time investment in building relationships and trust between the initiative and local communities'
+      label: 'Insufficient time investment in building relationships and trust between the initiative and local communities'
+    -
+      value: 'Lack of devolved decision-making power so local communities have a voice in creating or co-creating solutions (as part of the initiative)'
+      label: 'Lack of devolved decision-making power so local communities have a voice in creating or co-creating solutions (as part of the initiative)'
+    -
+      value: 'Ineffective and unaccountable community-based natural resources management institutions'
+      label: 'Ineffective and unaccountable community-based natural resources management institutions'
+    -
+      value: 'Ineffective and/or untrustworthy community leaders'
+      label: 'Ineffective and/or untrustworthy community leaders'
+    -
+      value: 'Lack of transparent and accountable distribution of benefits to local communities'
+      label: 'Lack of transparent and accountable distribution of benefits to local communities'
+    -
+      value: 'Lack of clearly defined tenure or resource use rights'
+      label: 'Lack of clearly defined tenure or resource use rights'
+    -
+      value: 'Unclear and intangible benefits to local communities from wildlife (These may be financial and/or non-financial)'
+      label: 'Unclear and intangible benefits to local communities from wildlife (These may be financial and/or non-financial)'
+  allowed_values_function: ''
+module: options
+locked: false
+cardinality: 3
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

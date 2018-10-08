@@ -1,0 +1,21 @@
+uuid: a14f632a-c73d-4526-a910-2a0283991464
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_limiting_factors
+    - node.type.initiative
+  module:
+    - options
+id: node.initiative.field_limiting_factors
+field_name: field_limiting_factors
+entity_type: node
+bundle: initiative
+label: '4.3.1 What are the three most important factors that you think limited, or hindered your initiative’s success?'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_string

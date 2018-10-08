@@ -1,0 +1,46 @@
+uuid: 9c04743b-a93e-4962-986b-3a528d2c0d8f
+langcode: en
+status: true
+dependencies:
+  config:
+    - contact.form.about_contact
+  module:
+    - field_layout
+    - field_states_ui
+    - layout_discovery
+third_party_settings:
+  field_layout:
+    id: layout_onecol
+    settings: {  }
+id: contact_message.about_contact.default
+targetEntityType: contact_message
+bundle: about_contact
+mode: default
+content:
+  mail:
+    weight: -40
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  message:
+    type: string_textarea
+    weight: 0
+    settings:
+      rows: 12
+      placeholder: Message
+    region: content
+    third_party_settings:
+      field_states_ui:
+        form:
+          type: ''
+          list: ''
+          add: Add
+  name:
+    weight: -50
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  copy: true
+  preview: true
+  subject: true

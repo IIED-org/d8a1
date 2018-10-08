@@ -1,0 +1,29 @@
+uuid: e2b315a4-4d13-45fc-a38c-38f0926b5588
+langcode: en
+status: true
+dependencies:
+  config:
+    - facets.facet.strategy
+  module:
+    - facets
+    - system
+  theme:
+    - pnp_bootstrap_sass
+id: strategy
+theme: pnp_bootstrap_sass
+region: content
+weight: -5
+provider: null
+plugin: 'facet_block:strategy'
+settings:
+  id: 'facet_block:strategy'
+  label: Strategy
+  provider: facets
+  label_display: visible
+  block_id: strategy
+visibility:
+  request_path:
+    id: request_path
+    pages: /explore1
+    negate: false
+    context_mapping: {  }

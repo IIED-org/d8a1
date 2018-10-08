@@ -1,0 +1,10 @@
+uuid: 44a469ab-0be5-40ae-a467-2ef3ebc69624
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: node.map_
+label: 'Map card'
+targetEntityType: node
+cache: true

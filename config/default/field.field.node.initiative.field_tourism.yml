@@ -1,0 +1,23 @@
+uuid: be683b53-d919-40b7-a6f6-9f30c5e5effe
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_tourism
+    - node.type.initiative
+id: node.initiative.field_tourism
+field_name: field_tourism
+entity_type: node
+bundle: initiative
+label: '3.2.2a Tourism'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

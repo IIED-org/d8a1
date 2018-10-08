@@ -1,4 +1,4 @@
-/* 
+/*
 Theme Name: Bootstrap 4 Sass
 Description: Bootstrap 4 with Sass
 */
@@ -11,10 +11,208 @@ Description: Bootstrap 4 with Sass
 
 body {
     background: $white;
+    font-family: $font-istok;
+    font-size: 1.1rem;
 }
 
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 700;
+}
 
-/* COLORS 
+$primary: #3d9990;
+$primary-overlay: rgba(61, 153, 144, 0.9);
+$secondary: #cc14bb;
+$secondary-overlay: rgba(204, 20, 187, 0.8);
+$strawberry: #ff408e;
+$strawberry-overlay: rgba(255, 64, 142, 0.8);
+$spring-green: #00ff56;
+
+
+.container-fluid {
+    padding-right: 0;
+    padding-left: 0;
+}
+
+#block-aboutsubmenu { @extend .container; }
+
+
+/* NAV
+--------------------------------------------------*/
+
+.navbar-dark .nav-link:hover,
+.navbar-dark .nav-link:focus {
+    color: rgba(0, 0, 0, 0.7) !important;
+}
+
+.navbar-dark .nav-link {
+    color: rgba(0, 0, 0, 0.5) !important;
+}
+
+.navbar-brand img.img-fluid {
+    max-width: 75px;
+    max-height: 56px;
+}
+
+/* PAGE STYLES
+--------------------------------------------------*/
+
+.navbar {
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+  opacity: 0.9;
+  background: #fff;
+
+  .nav-item {
+    font-size: 1.25rem;
+    padding-right: 1.2rem;
+  }
+}
+
+.btn {
+  padding: 0.5rem 1.5rem;
+  border-radius: 2rem;
+}
+
+#hero {
+  position: relative;
+  background: url("/sites/default/files/theme-images/hero.jpg");
+  min-height: 530px;
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+
+  .primary-overlay {
+    background: linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0) 20%,
+      rgba(0, 0, 0, 0.8) 100%
+    );
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  h1 {
+    font-size: 3.3rem;
+  }
+
+  .lead {
+    font-size: 1.6rem;
+  }
+
+}
+
+#mission .lead {
+  font-size: 1.5rem;
+}
+
+#explore {
+  position: relative;
+  background: url("/sites/default/files/theme-images/usiel-team.jpg");
+  min-height: 360px;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.secondary-overlay {
+  background: $secondary-overlay;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+#about-page-header {
+  height: 200px;
+  background: url("/sites/default/files/theme-images/chon-kemin-about.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  border-bottom: 1px #eee solid;
+  position: relative;
+
+  .strawberry-overlay {
+    background: $strawberry-overlay;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.card-footer {
+  background-color: #fff;
+}
+
+#footer-top {
+  position: relative;
+  background: url("/sites/default/files/theme-images/footer-background.png");
+  min-height: 312px;
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+
+  .primary-overlay {
+    background: $primary-overlay;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+input.search-query {
+  padding-left: 26px;
+}
+
+form.form-search {
+  position: relative;
+}
+
+form.form-search:before {
+  content: "";
+  display: block;
+  width: 14px;
+  height: 14px;
+  background-image: url(http://getbootstrap.com/2.3.2/assets/img/glyphicons-halflings.png);
+  background-position: -48px 0;
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  opacity: 0.5;
+  z-index: 1000;
+}
+
+#i-header {
+  padding-top: 50px;
+}
+
+.i-section-count {
+  .list-count {
+    height: 40px;
+    width: 40px;
+    font-size: 1.5rem;
+    border-radius: 25px;
+    padding-top: 7px;
+    margin-right: 25px;
+  }
+
+  a.d-block {
+    margin-left: 70px;
+  }
+}
+
+/* EXPLORE
+--------------------------------------------------*/
+.leaflet-container {
+  min-width: 100% !important;
+  margin-bottom: 105px;
+}
+
+/* COLORS
 --------------------------------------------------*/
 
 a {
@@ -26,7 +224,7 @@ a {
 }
 
 .site-footer {
-    background: $accent-shade !important;
+    background: $strawberry !important;
 }
 
 .menu--main li a {
@@ -57,4 +255,35 @@ a {
 
 .slick>div {
     margin: 0 15px;
+}
+
+
+/* @MEDIA
+--------------------------------------------------*/
+
+@media (max-width: 768px) {
+  #hero {
+    min-height: 500px;
+  }
+
+  .mb-resp {
+    margin-bottom: 2rem;
+  }
+
+  body {
+    font-size: 1rem;
+  }
+}
+
+
+/* Node edit forms
+--------------------------------------------------*/
+
+.node-form {
+  .field--type-address.form-group {
+    overflow-y: hidden;
+  }
+  .field-multiple-table {
+    min-height: 500px;
+  }
 }

@@ -1,0 +1,23 @@
+uuid: 027e781e-d951-4f77-a528-bc2433a10406
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_subsistence_resource_use
+    - node.type.initiative
+id: node.initiative.field_subsistence_resource_use
+field_name: field_subsistence_resource_use
+entity_type: node
+bundle: initiative
+label: '3.2.2c Subsistence resource access/use'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

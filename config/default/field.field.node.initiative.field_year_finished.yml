@@ -1,0 +1,19 @@
+uuid: 83f6e782-d7dd-4f0e-bab5-cb0f84803c55
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_year_finished
+    - node.type.initiative
+id: node.initiative.field_year_finished
+field_name: field_year_finished
+entity_type: node
+bundle: initiative
+label: '1.5.1 Year initiative finished'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

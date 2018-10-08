@@ -1,0 +1,23 @@
+uuid: 09ccb7a6-5375-4ea6-9df7-b218ca05033c
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_document_url
+    - paragraphs.paragraphs_type._link_to_document_hosted_on_anot
+  module:
+    - link
+id: paragraph._link_to_document_hosted_on_anot.field_document_url
+field_name: field_document_url
+entity_type: paragraph
+bundle: _link_to_document_hosted_on_anot
+label: 'Document URL'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  link_type: 16
+  title: 1
+field_type: link

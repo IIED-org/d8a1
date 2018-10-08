@@ -1,0 +1,30 @@
+uuid: 02dfd64b-3bed-4e9f-bd1b-25729a858449
+langcode: en
+status: true
+dependencies:
+  module:
+    - file
+    - image
+    - paragraphs
+id: paragraph.field_cover_image
+field_name: field_cover_image
+entity_type: paragraph
+type: image
+settings:
+  uri_scheme: public
+  default_image:
+    uuid: bd563512-9da6-4c7e-96bd-b6d1e4b8f791
+    alt: 'Cover image'
+    title: ''
+    width: 79
+    height: 105
+  target_type: file
+  display_field: false
+  display_default: false
+module: image
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

@@ -1,0 +1,31 @@
+uuid: e0425522-e17e-4cbf-b78c-d058d5c4b838
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:basic:caac4db9-e74c-4f2b-a085-3b50b481e854'
+  module:
+    - block_content
+    - system
+  theme:
+    - pnp_bootstrap_sass
+id: homefeedback_2
+theme: pnp_bootstrap_sass
+region: featured_bottom_third
+weight: 0
+provider: null
+plugin: 'block_content:caac4db9-e74c-4f2b-a085-3b50b481e854'
+settings:
+  id: 'block_content:caac4db9-e74c-4f2b-a085-3b50b481e854'
+  label: 'Home feedback'
+  provider: block_content
+  label_display: '0'
+  status: true
+  info: ''
+  view_mode: full
+visibility:
+  request_path:
+    id: request_path
+    pages: "<front>\r\n/about\r\n/our-approach"
+    negate: false
+    context_mapping: {  }

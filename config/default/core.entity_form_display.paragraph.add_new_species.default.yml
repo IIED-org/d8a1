@@ -1,0 +1,39 @@
+uuid: 64481dab-695e-4f8d-ba31-fe07e745a074
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.add_new_species.field_new
+    - paragraphs.paragraphs_type.add_new_species
+  module:
+    - content_moderation
+    - field_layout
+    - layout_discovery
+third_party_settings:
+  field_layout:
+    id: layout_onecol
+    settings: {  }
+id: paragraph.add_new_species.default
+targetEntityType: paragraph
+bundle: add_new_species
+mode: default
+content:
+  field_new:
+    weight: 102
+    settings:
+      match_operator: CONTAINS
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
+    region: content
+  moderation_state:
+    type: moderation_state_default
+    weight: 100
+    settings: {  }
+    region: content
+    third_party_settings: {  }
+hidden:
+  created: true
+  status: true
+  uid: true

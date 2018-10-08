@@ -1,0 +1,21 @@
+uuid: ea79ad33-55eb-432e-97ab-b474757485ea
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.add_new_species.field_new
+    - paragraphs.paragraphs_type.add_new_species
+id: paragraph.add_new_species.default
+targetEntityType: paragraph
+bundle: add_new_species
+mode: default
+content:
+  field_new:
+    weight: 1
+    label: hidden
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+hidden: {  }

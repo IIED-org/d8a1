@@ -1,0 +1,25 @@
+uuid: 53303beb-1edf-4b98-931f-e202a5d97751
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_problem_overview
+    - node.type.initiative
+  module:
+    - label_help
+    - text
+third_party_settings:
+  label_help:
+    label_help_description: "Please consider the following:<br />\r\n• Who is poaching and why? For instance, are local people involved, or poachers from outside the community? Are particular groups involved?<br />\r\n• If local people are involved, can you summarise their motivations? For example, retalitory killings in response to human-wildlife conflict, lack of alternative income, \r\nconflict with conservation authorities, cultural reasons."
+id: node.initiative.field_problem_overview
+field_name: field_problem_overview
+entity_type: node
+bundle: initiative
+label: '2.3 Please give an overview of the kind of poaching that is (or was) occurring in the case study area'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long

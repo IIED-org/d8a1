@@ -6,13 +6,15 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\search_api\Entity\Index;
 use Drupal\search_api\Entity\Server;
+use Drupal\search_api_solr_test\Logger\InMemoryLogger;
+use Drupal\Tests\search_api\Kernel\BackendTestBase;
 
 /**
  * Tests location searches and distance facets using the Solr search backend.
  *
  * @group search_api_solr
  */
-class SearchApiSolrLocationTest extends SolrBackendTestBase {
+class SearchApiSolrLocationTest extends BackendTestBase {
 
   /**
    * Modules to enable for this test.
@@ -20,22 +22,55 @@ class SearchApiSolrLocationTest extends SolrBackendTestBase {
    * @var string[]
    */
   public static $modules = [
+    'system',
+    'search_api',
+    'search_api_solr',
     'search_api_location',
     'search_api_test_example_content',
     'search_api_solr_test',
     'entity_test',
     'geofield',
+    'field',
   ];
+
+  /**
+   * A Search API server ID.
+   *
+   * @var string
+   */
+  protected $serverId = 'solr_search_server';
+
+  /**
+   * A Search API index ID.
+   *
+   * @var string
+   */
+  protected $indexId = 'solr_search_index';
+
+  /**
+   * Seconds to wait for a soft commit on Solr.
+   *
+   * @var int
+   */
+  protected $waitForCommit = 2;
+
+  /**
+   * @var \Drupal\search_api_solr_test\Logger\InMemoryLogger
+   */
+  protected $logger;
 
   /**
    * {@inheritdoc}
    */
-  protected function installConfigs() {
-    parent::installConfigs();
+  public function setUp() {
+    parent::setUp();
 
     $this->installConfig([
+      'search_api_solr',
       'search_api_solr_test',
     ]);
+
+    $this->commonSolrBackendSetUp();
   }
 
   /**
@@ -91,6 +126,34 @@ class SearchApiSolrLocationTest extends SolrBackendTestBase {
     $server->save();
 
     $this->indexItems($this->indexId);
+
+    $this->logger = new InMemoryLogger();
+      /** @var \Drupal\Core\Logger\LoggerChannelInterface $loggerChannel */
+    $loggerChannel = \Drupal::service('logger.factory')->get('search_api_solr');
+    $loggerChannel->addLogger($this->logger);
+  }
+
+  protected function assertLogMessage($level, $message) {
+    $last_message = $this->logger->getLastMessage();
+    $this->assertEquals($level, $last_message['level']);
+    $this->assertEquals($message, $last_message['message']);
+  }
+
+  /**
+   * Clear the index after every test.
+   */
+  public function tearDown() {
+    $this->clearIndex();
+    parent::tearDown();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function indexItems($index_id) {
+    $index_status = parent::indexItems($index_id);
+    sleep($this->waitForCommit);
+    return $index_status;
   }
 
   /**
@@ -123,6 +186,8 @@ class SearchApiSolrLocationTest extends SolrBackendTestBase {
    * Tests location searches and distance facets.
    */
   public function testBackend() {
+    $solr_version = $this->getServer()->getBackend()->getSolrConnector()->getSolrVersion();
+
     // Search 500km from Antwerp.
     $location_options = [
       [
@@ -293,8 +358,13 @@ class SearchApiSolrLocationTest extends SolrBackendTestBase {
       ],
     ];
 
-    $facets = $result->getExtraData('search_api_facets', [])['rpt'];
-    $this->assertEquals($expected, $facets, 'The correct location facets are returned');
+    if (version_compare($solr_version, 5.1, '>=')) {
+      $facets = $result->getExtraData('search_api_facets', [])['rpt'];
+      $this->assertEquals($expected, $facets, 'The correct location facets are returned');
+    }
+    else {
+      $this->assertLogMessage(LOG_ERR, 'Rpt data type feature is only supported by Solr version 5.1 or higher.');
+    }
 
     $query = $this->buildSearch(NULL, [], NULL, FALSE);
     $options = &$query->getOptions();
@@ -339,8 +409,34 @@ class SearchApiSolrLocationTest extends SolrBackendTestBase {
       ],
     ];
 
-    $facets = $result->getExtraData('search_api_facets', [])['rpt'];
-    $this->assertEquals($expected, $facets, 'The correct location facets are returned');
+    if (version_compare($solr_version, 5.1, '>=')) {
+      $facets = $result->getExtraData('search_api_facets', [])['rpt'];
+      $this->assertEquals($expected, $facets, 'The correct location facets are returned');
+    }
+    else {
+      $this->assertLogMessage(LOG_ERR, 'Rpt data type feature is only supported by Solr version 5.1 or higher.');
+    }
+
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function checkServerBackend() {}
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function updateIndex() {}
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function checkSecondServer() {}
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function checkModuleUninstall() {}
 
 }
