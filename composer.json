@@ -107,6 +107,9 @@
       },
       "drupal/paragraphs": {
         "Error on upload via entity browser": "https://www.drupal.org/files/issues/paragraphs-missing-langcode-2901390-9.patch"
+      },
+      "drupal/ds": {
+        "Class in layout attributes": "https://www.drupal.org/files/issues/2018-08-27/ds-class_in_layout_attributes-2880080-10.patch"
       }
     }
   },

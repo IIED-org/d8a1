@@ -2735,6 +2735,9 @@
                     "status": "covered",
                     "message": "Covered by Drupal's security advisory policy"
                 }
+            },
+            "patches_applied": {
+                "Class in layout attributes": "https://www.drupal.org/files/issues/2018-08-27/ds-class_in_layout_attributes-2880080-10.patch"
             }
         },
         "installation-source": "dist",
