@@ -1,0 +1,31 @@
+uuid: 0b161d05-e934-45cc-b6d5-52194ecce308
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:basic:b6ce0f73-9efd-46de-b2e9-86eb92f5bdbd'
+  module:
+    - block_content
+    - system
+  theme:
+    - pnp_bootstrap_sass
+id: homeexplore
+theme: pnp_bootstrap_sass
+region: content
+weight: -8
+provider: null
+plugin: 'block_content:b6ce0f73-9efd-46de-b2e9-86eb92f5bdbd'
+settings:
+  id: 'block_content:b6ce0f73-9efd-46de-b2e9-86eb92f5bdbd'
+  label: 'Home explore'
+  provider: block_content
+  label_display: '0'
+  status: true
+  info: ''
+  view_mode: full
+visibility:
+  request_path:
+    id: request_path
+    pages: '<front>'
+    negate: false
+    context_mapping: {  }

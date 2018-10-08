@@ -1,0 +1,57 @@
+uuid: f86d9cd2-baee-4009-8c8d-78b97709bf39
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.document.field_document_url
+    - field.field.paragraph.document.field_file_upload
+    - image.style.uploaded_pdf_cover_thumbnail
+    - paragraphs.paragraphs_type.document
+  module:
+    - ds
+    - link
+    - pdfpreview
+id: paragraph.document.default
+targetEntityType: paragraph
+bundle: document
+mode: default
+content:
+  field_document_url:
+    weight: 1
+    label: hidden
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: '0'
+      target: '0'
+    third_party_settings:
+      ds:
+        ft:
+          id: default
+          settings:
+            lb: ''
+            lb-col: false
+            classes: {  }
+    type: link
+    region: content
+  field_file_upload:
+    weight: 2
+    label: hidden
+    settings:
+      image_style: uploaded_pdf_cover_thumbnail
+      image_link: file
+      show_description: '1'
+      tag: span
+      fallback_formatter: file_default
+    third_party_settings:
+      ds:
+        ft:
+          id: default
+          settings:
+            lb: ''
+            lb-col: false
+            classes: {  }
+    type: pdfpreview
+    region: content
+hidden: {  }

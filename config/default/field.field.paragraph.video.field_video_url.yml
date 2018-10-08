@@ -1,0 +1,25 @@
+uuid: 9280280e-eaf2-4e80-b5c7-a3c83d24b3f4
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_video_url
+    - paragraphs.paragraphs_type.video
+  module:
+    - video_embed_field
+id: paragraph.video.field_video_url
+field_name: field_video_url
+entity_type: paragraph
+bundle: video
+label: 'Video URL'
+description: 'Enter link to YouTube or Vimeo content'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  allowed_providers:
+    youtube_playlist: '0'
+    vimeo: '0'
+    youtube: '0'
+field_type: video_embed_field

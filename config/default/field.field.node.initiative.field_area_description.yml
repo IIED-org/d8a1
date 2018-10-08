@@ -1,0 +1,25 @@
+uuid: c2eccce0-3768-4140-8c40-f0d2e50889fe
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_area_description
+    - node.type.initiative
+  module:
+    - label_help
+    - text
+third_party_settings:
+  label_help:
+    label_help_description: 'If possible, please include a description of the ecosystems and local communities where the initiative is taking place, and other key features important to understand as background.'
+id: node.initiative.field_area_description
+field_name: field_area_description
+entity_type: node
+bundle: initiative
+label: '1.3 Please describe the area where the initiative is taking place'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long

@@ -1,0 +1,48 @@
+uuid: 30c53052-3413-41c2-a798-2733867dddf8
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.taxonomy_term.species.field_scientific_name
+    - field.field.taxonomy_term.species.field_synonyms
+    - field.field.taxonomy_term.species.field_workflow
+    - taxonomy.vocabulary.species
+  module:
+    - text
+id: taxonomy_term.species.default
+targetEntityType: taxonomy_term
+bundle: species
+mode: default
+content:
+  description:
+    label: hidden
+    type: text_default
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_scientific_name:
+    weight: 1
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_synonyms:
+    weight: 2
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_workflow:
+    weight: 3
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+hidden: {  }

@@ -1,0 +1,23 @@
+uuid: 5d5914e7-3744-4127-b15b-cb543be69a2c
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_personal_data
+    - node.type.initiative
+id: node.initiative.field_personal_data
+field_name: field_personal_data
+entity_type: node
+bundle: initiative
+label: '6.4 I give permission for my name and email address to be made available to the users of People not Poaching'
+description: ''
+required: true
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

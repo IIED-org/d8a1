@@ -1,0 +1,49 @@
+uuid: 3e61ab63-9028-4326-afbf-cea418135666
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_form_mode.taxonomy_term.ief
+    - field.field.taxonomy_term.species.field_scientific_name
+    - field.field.taxonomy_term.species.field_synonyms
+    - field.field.taxonomy_term.species.field_workflow
+    - taxonomy.vocabulary.species
+  module:
+    - field_layout
+    - layout_discovery
+third_party_settings:
+  field_layout:
+    id: layout_onecol
+    settings: {  }
+id: taxonomy_term.species.ief
+targetEntityType: taxonomy_term
+bundle: species
+mode: ief
+content:
+  field_scientific_name:
+    weight: 1
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  name:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  tid:
+    third_party_settings:
+      conditional_fields: {  }
+    weight: 4
+    settings: {  }
+    region: content
+hidden:
+  description: true
+  field_synonyms: true
+  field_workflow: true
+  path: true

@@ -1,0 +1,23 @@
+uuid: a2320bcb-6c8b-46ef-a4e7-4dc337cc78e6
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_decreasing_living_costs
+    - node.type.initiative
+id: node.initiative.field_decreasing_living_costs
+field_name: field_decreasing_living_costs
+entity_type: node
+bundle: initiative
+label: '3.2.3 Decreasing the costs of living with wildlife'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

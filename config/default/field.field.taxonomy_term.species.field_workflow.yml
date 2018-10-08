@@ -1,0 +1,25 @@
+uuid: cf13dd8c-6ab1-4357-a0d1-b3b157f2a62e
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.taxonomy_term.field_workflow
+    - taxonomy.vocabulary.species
+id: taxonomy_term.species.field_workflow
+field_name: field_workflow
+entity_type: taxonomy_term
+bundle: species
+label: Workflow
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:content_moderation_state'
+  handler_settings:
+    target_bundles: null
+    sort:
+      field: _none
+    auto_create: false
+field_type: entity_reference

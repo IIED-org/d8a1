@@ -1,0 +1,22 @@
+uuid: f594e59d-8972-4709-8395-cf02a54197f2
+langcode: en
+status: true
+dependencies:
+  theme:
+    - pnp_bootstrap_sass
+_core:
+  default_config_hash: X9I1OB0W3WlWtrK-CNcg6hNWwa8wficanpH8pYnDZDE
+id: pnp_bootstrap_sass_local_tasks
+theme: pnp_bootstrap_sass
+region: content
+weight: -12
+provider: null
+plugin: local_tasks_block
+settings:
+  id: local_tasks_block
+  label: Tabs
+  provider: core
+  label_display: '0'
+  primary: true
+  secondary: true
+visibility: {  }

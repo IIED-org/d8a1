@@ -1,0 +1,24 @@
+uuid: fb290383-c39f-4168-942d-06e8083c8175
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_primary_contact_name
+    - node.type.initiative
+  module:
+    - label_help
+third_party_settings:
+  label_help:
+    label_help_description: 'The name of the contact person if others would like to get in contact or to get updates on the initiative. '
+id: node.initiative.field_primary_contact_name
+field_name: field_primary_contact_name
+entity_type: node
+bundle: initiative
+label: '5.4 Who is the primary contact for this initiative?'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

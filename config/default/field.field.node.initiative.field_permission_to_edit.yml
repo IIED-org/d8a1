@@ -1,0 +1,28 @@
+uuid: 69706402-69b4-4958-bb95-ecea5532f2c1
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_permission_to_edit
+    - node.type.initiative
+  module:
+    - label_help
+third_party_settings:
+  label_help:
+    label_help_description: 'I give permission for IUCN/IIED/TRAFFIC to edit and reorganise the information provided for inclusion on the People not Poaching Platform and understand that the material will be publicly accessible.'
+id: node.initiative.field_permission_to_edit
+field_name: field_permission_to_edit
+entity_type: node
+bundle: initiative
+label: '6.1 Permission to edit and publish'
+description: ''
+required: true
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

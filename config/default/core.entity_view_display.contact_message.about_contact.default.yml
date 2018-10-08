@@ -1,0 +1,55 @@
+uuid: 9c11bce7-1bd8-4018-b5bc-e1dccb90a9ee
+langcode: en
+status: true
+dependencies:
+  config:
+    - contact.form.about_contact
+  module:
+    - ds
+    - field_group
+third_party_settings:
+  ds:
+    layout:
+      id: layout_onecol
+      library: layout_discovery/onecol
+      disable_css: false
+      entity_classes: all_classes
+      settings: {  }
+    regions:
+      content:
+        - group_message
+        - message
+  field_group:
+    group_message:
+      children:
+        - message
+      parent_name: ''
+      weight: -1
+      format_type: html_element
+      format_settings:
+        label: 'Message group'
+        element: div
+        show_label: false
+        label_element: h3
+        label_element_classes: ''
+        attributes: ''
+        effect: none
+        speed: fast
+        id: ''
+        classes: col-md-6
+        description: ''
+      label: 'Message group'
+      region: content
+id: contact_message.about_contact.default
+targetEntityType: contact_message
+bundle: about_contact
+mode: default
+content:
+  message:
+    type: basic_string
+    weight: 0
+    label: hidden
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden: {  }

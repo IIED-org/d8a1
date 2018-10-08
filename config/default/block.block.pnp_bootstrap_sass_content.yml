@@ -1,0 +1,22 @@
+uuid: 49e4ee2b-56a8-4e81-94a8-50506c06949a
+langcode: en
+status: true
+dependencies:
+  module:
+    - system
+  theme:
+    - pnp_bootstrap_sass
+_core:
+  default_config_hash: 9EoWV2Lot6FVSr50t4hoKgiz1LIXYWNG-IIPYsWxBqo
+id: pnp_bootstrap_sass_content
+theme: pnp_bootstrap_sass
+region: content
+weight: -4
+provider: null
+plugin: system_main_block
+settings:
+  id: system_main_block
+  label: 'Main page content'
+  provider: system
+  label_display: '0'
+visibility: {  }

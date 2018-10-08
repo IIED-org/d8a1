@@ -1,0 +1,28 @@
+uuid: 2f928c15-41c3-4216-b8e9-c2b1221bcb6a
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_physical_separation
+    - node.type.initiative
+  module:
+    - label_help
+third_party_settings:
+  label_help:
+    label_help_description: 'For example, land use zoning'
+id: node.initiative.field_physical_separation
+field_name: field_physical_separation
+entity_type: node
+bundle: initiative
+label: '3.2.3d Physical separation of people/livestock and wildlife'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

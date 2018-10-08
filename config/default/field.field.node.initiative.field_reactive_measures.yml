@@ -1,0 +1,28 @@
+uuid: c8785083-ea57-4102-b682-1953ae86f6bd
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_reactive_measures
+    - node.type.initiative
+  module:
+    - label_help
+third_party_settings:
+  label_help:
+    label_help_description: 'For example, removal, culling...'
+id: node.initiative.field_reactive_measures
+field_name: field_reactive_measures
+entity_type: node
+bundle: initiative
+label: '3.2.3b Reactive measures to deal with problem animals '
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

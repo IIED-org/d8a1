@@ -1,0 +1,21 @@
+uuid: 5abbdb27-6153-4043-adfc-432efc6ece69
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_date_published
+    - node.type.resource
+  module:
+    - datetime
+id: node.resource.field_date_published
+field_name: field_date_published
+entity_type: node
+bundle: resource
+label: 'Date published (Format: ''dd-mmm-yyyy''. Only Month and Year published will be displayed)'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: datetime

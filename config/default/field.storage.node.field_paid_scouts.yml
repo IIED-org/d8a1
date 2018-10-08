@@ -1,0 +1,18 @@
+uuid: 7c0d9cfd-7560-4084-8a6c-4080d8d8aead
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: node.field_paid_scouts
+field_name: field_paid_scouts
+entity_type: node
+type: boolean
+settings: {  }
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

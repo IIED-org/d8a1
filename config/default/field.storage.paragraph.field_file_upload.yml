@@ -1,0 +1,23 @@
+uuid: 79d93b4f-2a97-4e85-8cfe-33ebb5ed6a9d
+langcode: en
+status: true
+dependencies:
+  module:
+    - file
+    - paragraphs
+id: paragraph.field_file_upload
+field_name: field_file_upload
+entity_type: paragraph
+type: file
+settings:
+  display_field: false
+  display_default: false
+  uri_scheme: public
+  target_type: file
+module: file
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

@@ -1,0 +1,104 @@
+uuid: 0f4072c9-5c25-4c7a-8ff0-d5aae9a9dabd
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.search_result
+    - field.field.node.resource.body
+    - field.field.node.resource.field_add_species
+    - field.field.node.resource.field_address
+    - field.field.node.resource.field_author
+    - field.field.node.resource.field_date_published
+    - field.field.node.resource.field_geofield
+    - field.field.node.resource.field_interventions
+    - field.field.node.resource.field_language
+    - field.field.node.resource.field_publisher
+    - field.field.node.resource.field_related_initiative
+    - field.field.node.resource.field_resource_type
+    - field.field.node.resource.field_species_affected
+    - node.type.resource
+  module:
+    - entity_reference_revisions
+    - geofield
+    - text
+    - user
+id: node.resource.search_result
+targetEntityType: node
+bundle: resource
+mode: search_result
+content:
+  body:
+    label: hidden
+    type: text_default
+    weight: 101
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+  field_geofield:
+    weight: 110
+    label: above
+    settings:
+      output_format: wkt
+    third_party_settings: {  }
+    type: geofield_default
+    region: content
+  field_interventions:
+    weight: 108
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+  field_language:
+    weight: 105
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_publisher:
+    weight: 103
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_related_initiative:
+    weight: 109
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+  field_resource_type:
+    type: entity_reference_revisions_entity_view
+    weight: 102
+    label: above
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    region: content
+  field_species_affected:
+    weight: 107
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+  links:
+    weight: 100
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  addtoany: true
+  field_add_species: true
+  field_address: true
+  field_author: true
+  field_date_published: true

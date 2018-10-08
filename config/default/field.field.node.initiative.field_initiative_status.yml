@@ -1,0 +1,27 @@
+uuid: ad401b77-433a-4c26-8e48-8e7e17508e2f
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_initiative_status
+    - node.type.initiative
+  module:
+    - label_help
+    - options
+third_party_settings:
+  label_help:
+    label_help_description: 'Leave blank if unknown (label)'
+id: node.initiative.field_initiative_status
+field_name: field_initiative_status
+entity_type: node
+bundle: initiative
+label: '1.5 Has the initiative finished?'
+description: 'Leave blank if unknown'
+required: true
+translatable: false
+default_value:
+  -
+    value: Unknown
+default_value_callback: ''
+settings: {  }
+field_type: list_string

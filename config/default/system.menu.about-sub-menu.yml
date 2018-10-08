@@ -1,0 +1,8 @@
+uuid: 2300a3c1-d34f-424a-bce6-d81c1d8c5770
+langcode: en
+status: true
+dependencies: {  }
+id: about-sub-menu
+label: 'About sub menu'
+description: 'Sub menu for about section'
+locked: false

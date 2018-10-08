@@ -1,0 +1,42 @@
+uuid: ec7cced1-1997-4c11-b607-7aaf608bca98
+langcode: en
+status: true
+dependencies:
+  module:
+    - taxonomy
+    - search_api
+  config:
+    - search_api.server.search_server
+id: species_index
+name: 'Species index'
+description: ''
+read_only: false
+field_settings:
+  name:
+    label: Name
+    datasource_id: 'entity:taxonomy_term'
+    property_path: name
+    type: string
+    dependencies:
+      module:
+        - taxonomy
+datasource_settings:
+  'entity:taxonomy_term':
+    bundles:
+      default: false
+      selected:
+        - species
+    languages:
+      default: true
+      selected: {  }
+processor_settings:
+  add_url: {  }
+  aggregated_field: {  }
+  rendered_item: {  }
+tracker_settings:
+  default:
+    indexing_order: fifo
+options:
+  index_directly: true
+  cron_limit: 50
+server: search_server

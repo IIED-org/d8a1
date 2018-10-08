@@ -1,0 +1,37 @@
+uuid: a5c44a65-0c92-40f8-947d-7d4bb3c20da4
+langcode: en
+status: true
+dependencies: {  }
+id: editor
+label: Contributor
+weight: -8
+is_admin: null
+permissions:
+  - 'access add_species entity browser pages'
+  - 'access content'
+  - 'access organisation entity browser pages'
+  - 'access shortcuts'
+  - 'access species entity browser pages'
+  - 'create file media'
+  - 'create image media'
+  - 'create initiative content'
+  - 'create media'
+  - 'create organisation content'
+  - 'create remote_video media'
+  - 'create resource content'
+  - 'create terms in species'
+  - 'create video media'
+  - 'edit own initiative content'
+  - 'edit own organisation content'
+  - 'edit own resource content'
+  - 'use add_species_via_ief transition create_new_draft'
+  - 'use editorial transition create_new_draft'
+  - 'use new_species_added transition create_new_draft'
+  - 'use node.default form mode'
+  - 'use node.popup form mode'
+  - 'use taxonomy_term.ief form mode'
+  - 'use text format basic_html'
+  - 'view conditional fields'
+  - 'view media'
+  - 'view own unpublished content'
+  - 'view unpublished terms'

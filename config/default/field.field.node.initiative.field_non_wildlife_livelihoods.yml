@@ -1,0 +1,23 @@
+uuid: a18e2692-64fb-474d-9b2a-997db49bcdf1
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_non_wildlife_livelihoods
+    - node.type.initiative
+id: node.initiative.field_non_wildlife_livelihoods
+field_name: field_non_wildlife_livelihoods
+entity_type: node
+bundle: initiative
+label: '3.2.4 Increasing livelihoods that are not related to wildlife'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

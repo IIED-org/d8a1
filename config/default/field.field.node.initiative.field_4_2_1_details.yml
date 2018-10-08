@@ -1,0 +1,25 @@
+uuid: 8f2e0d8f-ffc9-4bc8-a45c-49d924f2cdb3
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_4_2_1_details
+    - node.type.initiative
+  module:
+    - label_help
+    - text
+third_party_settings:
+  label_help:
+    label_help_description: 'Please consider adding a brief explanation to help us understand how the above factors influenced your project.'
+id: node.initiative.field_4_2_1_details
+field_name: field_4_2_1_details
+entity_type: node
+bundle: initiative
+label: '4.2.1 Details'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long

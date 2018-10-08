@@ -1,0 +1,31 @@
+uuid: c156769c-6fe3-402b-83ba-244858d4b95b
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:basic:e488f85c-4abe-446e-9e84-0a7100768587'
+  module:
+    - block_content
+    - system
+  theme:
+    - pnp_bootstrap_sass
+id: aboutgetintouch
+theme: pnp_bootstrap_sass
+region: featured_bottom_first
+weight: -14
+provider: null
+plugin: 'block_content:e488f85c-4abe-446e-9e84-0a7100768587'
+settings:
+  id: 'block_content:e488f85c-4abe-446e-9e84-0a7100768587'
+  label: 'About get in touch'
+  provider: block_content
+  label_display: '0'
+  status: true
+  info: ''
+  view_mode: full
+visibility:
+  request_path:
+    id: request_path
+    pages: /about
+    negate: false
+    context_mapping: {  }

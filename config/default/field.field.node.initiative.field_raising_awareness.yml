@@ -1,0 +1,23 @@
+uuid: 2b4b9f2d-e776-42b4-8f02-bba1e5439a8b
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_raising_awareness
+    - node.type.initiative
+id: node.initiative.field_raising_awareness
+field_name: field_raising_awareness
+entity_type: node
+bundle: initiative
+label: '3.2.1g Raising community awareness about wildlife crime penalties and sanctions'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

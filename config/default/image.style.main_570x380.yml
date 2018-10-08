@@ -1,0 +1,15 @@
+uuid: 6f0400bc-8ba8-4e7b-9450-e39f6473ffbd
+langcode: en
+status: true
+dependencies: {  }
+name: main_570x380
+label: 'Main 570x380'
+effects:
+  293186e0-f4a1-4be6-981b-9243cb658cbe:
+    uuid: 293186e0-f4a1-4be6-981b-9243cb658cbe
+    id: image_scale_and_crop
+    weight: 1
+    data:
+      width: 570
+      height: 380
+      anchor: center-center

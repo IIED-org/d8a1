@@ -1,0 +1,8 @@
+uuid: a5432300-b01d-40a9-b129-a93190dc4e85
+langcode: en
+status: true
+dependencies: {  }
+id: basic_with_image
+label: 'Basic with image'
+revision: 1
+description: 'A basic block contains a title, body and image'

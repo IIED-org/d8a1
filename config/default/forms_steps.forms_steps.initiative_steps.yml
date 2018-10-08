@@ -1,0 +1,9 @@
+uuid: aeba41b9-b831-4c87-923a-91f4b9e0a278
+langcode: en
+status: true
+dependencies: {  }
+id: initiative_steps
+label: 'Initiative steps'
+description: ''
+steps: {  }
+progress_steps: {  }

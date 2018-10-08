@@ -1,0 +1,50 @@
+uuid: 00ca24f9-4149-4730-a59f-b5d323a036d0
+langcode: en
+status: true
+dependencies:
+  config:
+    - views.view.select_organisation
+  module:
+    - entity_browser_entity_form
+    - views
+name: organisation
+label: Organisation
+display: modal
+display_configuration:
+  width: '800'
+  height: '600'
+  link_text: 'Select lead organisation'
+  auto_open: false
+selection_display: multi_step_display
+selection_display_configuration:
+  entity_type: node
+  display: label
+  display_settings:
+    view_mode: teaser
+  select_text: Submit
+  selection_hidden: false
+  view: select_organisation
+  view_display: entity_browser_2
+widget_selector: tabs
+widget_selector_configuration: {  }
+widgets:
+  c5cceafd-c9ae-4e48-8fc2-6b5c35991eaf:
+    settings:
+      view: select_organisation
+      view_display: entity_browser_1
+      submit_text: Submit
+      auto_select: true
+    uuid: c5cceafd-c9ae-4e48-8fc2-6b5c35991eaf
+    weight: -10
+    label: 'Select existing'
+    id: view
+  251e2cbe-57d3-4cde-b2b7-a82ae694027d:
+    settings:
+      entity_type: node
+      bundle: organisation
+      form_mode: popup
+      submit_text: 'Create organisation'
+    uuid: 251e2cbe-57d3-4cde-b2b7-a82ae694027d
+    weight: 2
+    label: 'Add new'
+    id: entity_form

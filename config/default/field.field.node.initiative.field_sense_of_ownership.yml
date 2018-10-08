@@ -1,0 +1,23 @@
+uuid: 48abec39-01ba-46ed-9eb7-8da3562d25cd
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_sense_of_ownership
+    - node.type.initiative
+id: node.initiative.field_sense_of_ownership
+field_name: field_sense_of_ownership
+entity_type: node
+bundle: initiative
+label: '3.2.5 Build/and or support sense of community ownership or stewardship'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

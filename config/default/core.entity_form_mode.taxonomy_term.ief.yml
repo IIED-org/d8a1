@@ -1,0 +1,10 @@
+uuid: 9eda1669-9edb-4d44-b21c-230b69860d77
+langcode: en
+status: true
+dependencies:
+  module:
+    - taxonomy
+id: taxonomy_term.ief
+label: IEF
+targetEntityType: taxonomy_term
+cache: true

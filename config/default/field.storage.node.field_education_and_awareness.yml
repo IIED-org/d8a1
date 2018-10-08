@@ -1,0 +1,18 @@
+uuid: f1e10d1e-dd51-4d7e-a9b1-1ef2a31d3c4b
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: node.field_education_and_awareness
+field_name: field_education_and_awareness
+entity_type: node
+type: boolean
+settings: {  }
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false
