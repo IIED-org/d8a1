@@ -4221,6 +4221,60 @@
         }
     },
     {
+        "name": "drupal/leaflet_markercluster",
+        "version": "1.0.0-alpha2",
+        "version_normalized": "1.0.0.0-alpha2",
+        "source": {
+            "type": "git",
+            "url": "https://git.drupal.org/project/leaflet_markercluster",
+            "reference": "8.x-1.0-alpha2"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://ftp.drupal.org/files/projects/leaflet_markercluster-8.x-1.0-alpha2.zip",
+            "reference": "8.x-1.0-alpha2",
+            "shasum": "b3a21debe5ee38d3395ab49cb1a6ac53694db26f"
+        },
+        "require": {
+            "drupal/core": "~8.0",
+            "drupal/leaflet": "*"
+        },
+        "type": "drupal-module",
+        "extra": {
+            "branch-alias": {
+                "dev-1.x": "1.x-dev"
+            },
+            "drupal": {
+                "version": "8.x-1.0-alpha2",
+                "datestamp": "1456186439",
+                "security-coverage": {
+                    "status": "not-covered",
+                    "message": "Alpha releases are not covered by Drupal security advisories."
+                }
+            }
+        },
+        "installation-source": "dist",
+        "notification-url": "https://packages.drupal.org/8/downloads",
+        "license": [
+            "GPL-2.0-or-later"
+        ],
+        "authors": [
+            {
+                "name": "RdeBoer",
+                "homepage": "https://www.drupal.org/user/404007"
+            },
+            {
+                "name": "pvhee",
+                "homepage": "https://www.drupal.org/user/108811"
+            }
+        ],
+        "description": "Extends Leaflet with the Markercluster library.",
+        "homepage": "https://www.drupal.org/project/leaflet_markercluster",
+        "support": {
+            "source": "http://cgit.drupalcode.org/leaflet_markercluster"
+        }
+    },
+    {
         "name": "drupal/leaflet_more_maps",
         "version": "1.0.0-alpha3",
         "version_normalized": "1.0.0.0-alpha3",
