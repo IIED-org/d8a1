@@ -1,7 +1,7 @@
 {#
 /**
  * @file
- * Default theme implementation to display a view of unformatted rows.
+ * Theme override to display a view of unformatted rows.
  *
  * Available variables:
  * - title: The title of this group of rows. May be empty.
@@ -13,8 +13,6 @@
  *   used on rows.
  *
  * @see template_preprocess_views_view_unformatted()
- *
- * @ingroup themeable
  */
 #}
 {% if title %}
@@ -27,10 +25,10 @@
     ]
   %}
   {% if default_row_class or row.attributes is not empty %}
-    <div{{ row.attributes.addClass(row_classes) }}>
-      {{- row.content -}}
-    </div>
+  <div{{ row.attributes.addClass(row_classes) }}>
+    {{ row.content }}
+  </div>
   {% else %}
-    {{- row.content -}}
+    {{ row.content }}
   {% endif %}
 {% endfor %}
