@@ -25,3 +25,10 @@ form .filter-wrapper {
 form .form-type-textarea {
     margin-bottom: 0;
 }
+
+.views-exposed-form {
+    .form-check {
+      display: inline-block;
+      margin: 2.5em 1em 0;
+    }
+}
