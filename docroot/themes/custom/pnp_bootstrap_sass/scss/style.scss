@@ -358,8 +358,8 @@ a {
 .node-form {
   .field--type-address.form-group {
     overflow-y: hidden;
-  }
-  .field-multiple-table {
-    min-height: 500px;
+    .field-multiple-table {
+      min-height: 500px;
+    }
   }
 }
