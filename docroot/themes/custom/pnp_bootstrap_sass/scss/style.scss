@@ -35,24 +35,28 @@ $spring-green: #00ff56;
 
 #block-aboutsubmenu { @extend .container; }
 #i-header img { @extend .img-fluid; }
-#block-country { @extend .col-md-3; }
-#block-species { @extend .col-md-3; }
-#block-strategy { @extend .col-md-3; }
-.path-explore .featured-top__inner { @extend .row; }
-.path-explore .featured-top { @extend .container; }
 
+.block-facet--dropdown {
+  @extend .col-md-3;
+}
 
-.path-explore .featured-top {
-  margin-bottom: 50px;
- }
+.path-explore {
+  .featured-top__inner {
+    @extend .row;
+  }
+  .featured-top {
+    @extend .container;
+    margin-bottom: 50px;
+  }
+  .facets-dropdown {
+     max-width: 260px;
+  }
+}
 
- #block-country h2, #block-species h2, #block-strategy h2 {
+ .block-facet--dropdown h2 {
    font-size: 1.1rem;
  }
 
- .path-explore .facets-dropdown {
-    max-width: 260px;
-}
 
 fieldset.js-form-item.js-form-type-textfield.form-type-textfield.js-form-item-search.form-item-search.form-group.col-auto {
     width: 50%;
