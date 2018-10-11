@@ -108,6 +108,22 @@ fieldset.js-form-item.js-form-type-textfield.form-type-textfield.js-form-item-se
   }
 }
 
+.navbar-nav {
+  .nav-item a:before {
+    font-family: "Font Awesome 5 Free";
+    font-weight: 700;
+    display: inline-block;
+    padding-right: .5rem;
+    vertical-align: middle;
+  }
+  .nav-item:nth-of-type(1) a:before {
+    content: '\f002';
+  }
+  .nav-item:nth-of-type(2) a:before {
+    content: '\f067';
+  }
+}
+
 /* PAGE STYLES
 --------------------------------------------------*/
 
@@ -304,6 +320,24 @@ form.form-search:before {
 .path-explore .tabs {
   @extend .bg-light;
   min-width: 100%;
+}
+
+button#edit-submit-explore- {
+  background-color: white;
+  border: none;
+  display: inline;
+  width: 1rem;
+  &::before {
+    font-family: "Font Awesome 5 Free";
+    font-weight: 700;
+    font-size: 1.8rem;
+    line-height: 2rem;
+    display: inline-block;
+    padding-right: 5rem;
+    margin-left: -1rem;
+    content: "\f002";
+    color: $primary;
+  }
 }
 
 /* COLORS
