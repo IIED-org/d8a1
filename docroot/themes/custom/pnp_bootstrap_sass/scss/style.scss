@@ -168,6 +168,15 @@ fieldset.js-form-item.js-form-type-textfield.form-type-textfield.js-form-item-se
   height: 100%;
 }
 
+.facets-widget-checkbox ul {
+  padding: 0;
+  li {
+    list-style: none;
+  }
+  label {
+    padding: 0 .5rem;
+  }
+}
 
 #about-page-header {
   height: 200px;
@@ -290,6 +299,11 @@ form.form-search:before {
 .leaflet-container {
   min-width: 100% !important;
   margin-bottom: 105px;
+}
+
+.path-explore .tabs {
+  @extend .bg-light;
+  min-width: 100%;
 }
 
 /* COLORS
