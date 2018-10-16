@@ -415,7 +415,15 @@ button#edit-submit-explore-::before {
   margin-bottom: 1rem;
 }
 
-.col-sm-1 i.fa-3x {
+.path-explore .views-element-container.col-auto {
+  @extend .bg-light;
+  padding-top: 2rem;
+}
+.path-explore .card-body p {
+  overflow: auto;
+}
+
+i.fa-3x {
     color: #ababab;
 }
 
