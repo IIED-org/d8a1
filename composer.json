@@ -73,7 +73,9 @@
     "drupal/menu_link_attributes": "^1.0",
     "drupal/readonlymode": "^1.0@RC",
     "drupal/facets_pretty_paths": "^1.0@beta",
-    "drupal/redirect": "^1.2"
+    "drupal/redirect": "^1.2",
+    "drupal/views_infinite_scroll": "^1.5",
+    "drupal/google_analytics": "^2.3"
   },
   "require-dev": {
     "drupal/devel": "^1.0",
