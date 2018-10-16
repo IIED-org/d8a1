@@ -46,7 +46,8 @@ $spring-green: #00ff56;
   }
   .featured-top {
     @extend .container;
-    margin-bottom: 50px;
+    height: 100px;
+    font-size: 1rem;
   }
   .facets-dropdown {
      max-width: 260px;
@@ -56,11 +57,6 @@ $spring-green: #00ff56;
  .block-facet--dropdown h2 {
    font-size: 1.1rem;
  }
-
-
-fieldset.js-form-item.js-form-type-textfield.form-type-textfield.js-form-item-search.form-item-search.form-group.col-auto {
-    width: 50%;
-}
 
 .views-element-container.col-auto {
     padding: 0;
@@ -111,10 +107,11 @@ fieldset.js-form-item.js-form-type-textfield.form-type-textfield.js-form-item-se
 .navbar-nav {
   .nav-item a:before {
     font-family: "Font Awesome 5 Free";
+    font-size: 1rem;
     font-weight: 700;
     display: inline-block;
     padding-right: .5rem;
-    vertical-align: middle;
+    vertical-align: baseline;
   }
   .nav-item:nth-of-type(1) a:before {
     content: '\f002';
@@ -175,6 +172,12 @@ fieldset.js-form-item.js-form-type-textfield.form-type-textfield.js-form-item-se
   background-size: cover;
 }
 
+#explore {
+    @include media-breakpoint-down(sm) {
+          min-height: 500px;
+    }
+  }
+
 .secondary-overlay {
   background: $secondary-overlay;
   position: absolute;
@@ -182,6 +185,20 @@ fieldset.js-form-item.js-form-type-textfield.form-type-textfield.js-form-item-se
   left: 0;
   width: 100%;
   height: 100%;
+}
+
+.view-home-promoted {
+    @include media-breakpoint-up(md) {
+    .card {
+  height: 100%;
+  padding-bottom:50px;
+    }
+.card-footer {
+  position:absolute;
+  bottom:0;
+  width:100%;
+}
+}
 }
 
 .facets-widget-checkbox ul {
@@ -211,6 +228,28 @@ fieldset.js-form-item.js-form-type-textfield.form-type-textfield.js-form-item-se
     height: 100%;
   }
 }
+
+/* form padding */
+#block-contactblock .form-group {
+    padding: 0;
+  }
+
+  .form-actions btn:nth-of-type(2) {
+    display: none;
+  }
+
+  .nav-item.menu-item--active-trail {
+    border-bottom: 2px solid $secondary;
+  }
+
+  .node--type-page h1.title {
+    text-align: center;
+    margin: 3rem 0;
+  }
+
+button#edit-preview {
+      display: none;
+  }
 
 .card-footer {
   background-color: #fff;
@@ -255,6 +294,8 @@ form.form-search:before {
   opacity: 0.5;
   z-index: 1000;
 }
+
+
 
 /* INITIATIVE
 --------------------------------------------------*/
@@ -330,7 +371,7 @@ button#edit-submit-explore- {
   &::before {
     font-family: "Font Awesome 5 Free";
     font-weight: 700;
-    font-size: 1.8rem;
+    font-size: 1.2rem;
     line-height: 2rem;
     display: inline-block;
     padding-right: 5rem;
@@ -338,6 +379,67 @@ button#edit-submit-explore- {
     content: "\f002";
     color: $primary;
   }
+}
+
+.path-explore .facets-dropdown {
+    width: 170px;
+}
+.block-facets h2 {
+    font-size: 1rem;
+    font-weight: normal;
+    display: inline-block;
+    float: left;
+    margin-right: 1rem;
+}
+
+.facets-widget-checkbox {
+    margin-left: 1rem;
+}
+
+button#edit-submit-explore-::before {
+    font-size: 1.2rem;
+}
+
+.pagination {
+   font-size: 1.3rem;
+   margin: 3rem 0;
+   justify-content: center;
+}
+
+.path-explore .featured-top__inner {
+    justify-content: center !important;
+}
+
+.path-explore .views-exposed-form .form-row {
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.col-sm-1 i.fa-3x {
+    color: #ababab;
+}
+
+.video-embed-field-launch-modal.col-auto {
+    margin-left: -16px;
+}
+
+.i-p-container {
+    position: relative;
+}
+
+.list-map .fa {
+  font-size: 1.3rem;
+  padding: 0;
+  width: 36px;
+  height: 36px;
+  line-height: 37px;
+  border-radius: 40px;
+  background-color: #efefef;
+}
+
+.list-map .fa-map-marker-alt {
+  background-color: $secondary;
+  color: #fff;
 }
 
 /* COLORS
@@ -403,6 +505,31 @@ a {
   }
 }
 
+
+@media (min-width: 1200px) {
+.block-facet--dropdown {
+    flex: 0 0 18%;
+    max-width: 18%;
+}
+}
+
+@media (min-width: 992px) {
+  .page-node-16 .msg-section-col {
+      column-count: 2;
+      margin-bottom: 3rem;
+  }
+  #block-contactblock {
+      break-after: right;
+      display: inline-block;
+  }
+
+}
+
+@media (min-width: 768px) {
+  fieldset.js-form-item.js-form-type-textfield.form-type-textfield.js-form-item-search.form-item-search.form-group.col-auto {
+    width: 50%;
+}
+}
 
 /* Node edit forms
 --------------------------------------------------*/
