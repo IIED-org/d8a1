@@ -363,32 +363,38 @@ form.form-search:before {
   margin-bottom: 105px;
 }
 
-.path-explore .tabs {
+/* .path-explore .tabs {
   @extend .bg-light;
-  min-width: 100%;
-}
+} */
 
-button#edit-submit-explore- {
-  background-color: white;
+button#edit-submit-explore {
+  background-color: transparent;
   border: none;
   display: inline;
   width: 1rem;
+  padding: 0.3rem 1.3rem;
+  margin-left: -3.3rem;
+  overflow: hidden;
   &::before {
     font-family: "Font Awesome 5 Free";
     font-weight: 700;
     font-size: 1.2rem;
-    line-height: 2rem;
-    display: inline-block;
-    padding-right: 5rem;
-    margin-left: -1rem;
+    /* line-height: 2rem; */
+    /* display: inline-block;*/
+    padding: 0;
+    padding-right: 1rem;
+    /* margin-left: -1rem; */
     content: "\f002";
     color: $primary;
+    margin-left: -0.5rem;
+    vertical-align: middle;
+  }
+  &:focus, &:hover, &:active  {
+    box-shadow: none;
+    outline: none !important;
   }
 }
 
-.path-explore .facets-dropdown {
-    width: 170px;
-}
 .block-facets h2 {
     font-size: 1rem;
     font-weight: normal;
@@ -411,21 +417,26 @@ button#edit-submit-explore-::before {
    justify-content: center;
 }
 
-.path-explore .featured-top__inner {
-    justify-content: center !important;
-}
-
-.path-explore .views-exposed-form .form-row {
-  justify-content: center;
-  margin-bottom: 1rem;
-}
-
-.path-explore .views-element-container.col-auto {
-  @extend .bg-light;
-  padding-top: 2rem;
-}
-.path-explore .card-body p {
-  overflow: auto;
+.path-explore {
+  .facets-dropdown {
+      width: 170px;
+  }
+  .featured-top__inner {
+      justify-content: center !important;
+  }
+  .views-exposed-form .form-row {
+    justify-content: center;
+    margin-bottom: 1rem;
+  }
+  .views-element-container.col-auto {
+    @extend .bg-light;
+  }
+  .card-body p {
+    overflow: auto;
+  }
+  .form-control {
+      border-radius: 1.25rem;
+  }
 }
 
 i.fa-3x {
@@ -449,11 +460,16 @@ i.fa-3x {
   border-radius: 40px;
   background-color: #efefef;
 }
-
-.list-map .fa-map-marker-alt {
-  background-color: $secondary;
-  color: #fff;
+  .map-view .fa-map-marker-alt {
+    background-color: $secondary;
+    color: #fff;
 }
+  .list-view .fa-list-ul {
+    background-color: $secondary;
+    color: #fff;
+}
+
+
 
 /* COLORS
 --------------------------------------------------*/
@@ -541,6 +557,10 @@ a {
 @media (min-width: 768px) {
   fieldset.js-form-item.js-form-type-textfield.form-type-textfield.js-form-item-search.form-item-search.form-group.col-auto {
     width: 50%;
+}
+h2.i-r-r {
+  position: absolute;
+  width: 260px;
 }
 }
 
