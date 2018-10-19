@@ -13,10 +13,10 @@ settings:
   allowed_values:
     -
       value: 'Yes'
-      label: 'Yes'
+      label: Completed
     -
       value: 'No'
-      label: 'No'
+      label: Current
     -
       value: Unknown
       label: Unknown

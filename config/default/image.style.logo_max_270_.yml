@@ -1,0 +1,23 @@
+uuid: d9ee0d1c-8007-40f8-b966-8f277b5a31a5
+langcode: en
+status: true
+dependencies: {  }
+name: logo_max_270_
+label: 'Logo (max-270)'
+effects:
+  20402b71-88e7-4a26-ac98-fc98a8361309:
+    uuid: 20402b71-88e7-4a26-ac98-fc98a8361309
+    id: image_scale
+    weight: 1
+    data:
+      width: 270
+      height: null
+      upscale: false
+  0b1bbb5b-01da-4839-b921-59511d8ba33a:
+    uuid: 0b1bbb5b-01da-4839-b921-59511d8ba33a
+    id: image_scale
+    weight: 2
+    data:
+      width: null
+      height: 150
+      upscale: false

@@ -1,0 +1,23 @@
+uuid: 63073dd2-571b-4c84-907b-f6ecbde171dc
+langcode: en
+status: true
+dependencies:
+  config:
+    - facets.facet.country_2
+  module:
+    - facets
+  theme:
+    - pnp_bootstrap_sass
+id: country_2
+theme: pnp_bootstrap_sass
+region: featured_top
+weight: 0
+provider: null
+plugin: 'facet_block:country_2'
+settings:
+  id: 'facet_block:country_2'
+  label: Country
+  provider: facets
+  label_display: visible
+  block_id: country_2
+visibility: {  }

@@ -1,16 +1,16 @@
-uuid: abd17bea-8a98-47f6-8f4f-b046c4ea7ef0
+uuid: 726b5165-b935-44ac-8690-190dca73cdd5
 langcode: en
 status: true
 dependencies:
   module:
     - node
-id: node.field_related_initiative
-field_name: field_related_initiative
+    - text
+id: node.field_products_in_trade
+field_name: field_products_in_trade
 entity_type: node
-type: entity_reference
-settings:
-  target_type: node
-module: core
+type: text_long
+settings: {  }
+module: text
 locked: false
 cardinality: 1
 translatable: true

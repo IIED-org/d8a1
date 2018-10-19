@@ -17,11 +17,11 @@ third_party_settings:
     hidden: true
     disabled: false
     plugins:
+      - openstreetmap
+      - yandex
       - freegeoip
       - geoplugin
       - geoip
-      - openstreetmap
-      - yandex
     dumper: wkt
     delta_handling: default
     failure:

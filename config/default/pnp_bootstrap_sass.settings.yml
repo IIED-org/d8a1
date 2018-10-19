@@ -12,10 +12,10 @@ bootstrap_barrio_button_outline: 0
 bootstrap_barrio_navbar_toggle: navbar-toggleable-lg
 bootstrap_barrio_navbar_container: 1
 bootstrap_barrio_navbar_top_position: ''
-bootstrap_barrio_navbar_top_color: navbar-dark
+bootstrap_barrio_navbar_top_color: navbar-light
 bootstrap_barrio_navbar_top_background: bg-white
 bootstrap_barrio_navbar_position: ''
-bootstrap_barrio_navbar_color: navbar-dark
+bootstrap_barrio_navbar_color: navbar-light
 bootstrap_barrio_navbar_background: bg-white
 bootstrap_barrio_table_hover: 1
 _core:
@@ -47,8 +47,8 @@ bootstrap_barrio_region_clean_page_top: 0
 bootstrap_barrio_region_class_page_top: row
 bootstrap_barrio_region_clean_page_bottom: 0
 bootstrap_barrio_region_class_page_bottom: row
-bootstrap_barrio_region_clean_highlighted: 1
-bootstrap_barrio_region_class_highlighted: ''
+bootstrap_barrio_region_clean_highlighted: 0
+bootstrap_barrio_region_class_highlighted: container
 bootstrap_barrio_region_clean_featured_top: 1
 bootstrap_barrio_region_class_featured_top: ''
 bootstrap_barrio_region_clean_breadcrumb: 0
@@ -60,9 +60,9 @@ bootstrap_barrio_region_class_sidebar_first: ''
 bootstrap_barrio_region_clean_sidebar_second: 1
 bootstrap_barrio_region_class_sidebar_second: ''
 bootstrap_barrio_region_clean_featured_bottom_first: 0
-bootstrap_barrio_region_class_featured_bottom_first: container
+bootstrap_barrio_region_class_featured_bottom_first: 'container msg-section-col'
 bootstrap_barrio_region_clean_featured_bottom_second: 0
-bootstrap_barrio_region_class_featured_bottom_second: container
+bootstrap_barrio_region_class_featured_bottom_second: bg-light
 bootstrap_barrio_region_clean_featured_bottom_third: 1
 bootstrap_barrio_region_class_featured_bottom_third: ''
 bootstrap_barrio_region_clean_footer_first: 0

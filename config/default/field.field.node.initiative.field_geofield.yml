@@ -18,8 +18,6 @@ third_party_settings:
     hidden: false
     disabled: false
     plugins:
-      - freegeoip
-      - geoip
       - openstreetmap
       - yandex
     dumper: wkt

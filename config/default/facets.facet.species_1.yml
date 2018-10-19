@@ -1,0 +1,65 @@
+uuid: cdc1fb74-0bec-4cd9-938d-ab09a2d741e5
+langcode: en
+status: true
+dependencies:
+  config:
+    - search_api.index.acquia_search_index
+    - views.view.explore_
+  module:
+    - facets_pretty_paths
+    - search_api
+third_party_settings:
+  facets_pretty_paths:
+    coder: default_coder
+id: species_1
+name: Species
+url_alias: species
+weight: 0
+min_count: 1
+show_only_one_result: true
+field_identifier: field_species_affected
+facet_source_id: 'search_api:views_page__explore___page_2'
+widget:
+  type: dropdown
+  config:
+    show_numbers: false
+    default_option_label: '– Any –'
+query_operator: and
+use_hierarchy: true
+expand_hierarchy: true
+enable_parent_when_child_gets_disabled: false
+hard_limit: 0
+exclude: false
+only_visible_when_facet_source_is_visible: true
+processor_configs:
+  display_value_widget_order:
+    processor_id: display_value_widget_order
+    weights:
+      sort: -7
+    settings:
+      sort: ASC
+  show_only_deepest_level_items_processor:
+    processor_id: show_only_deepest_level_items_processor
+    weights:
+      build: 40
+    settings: {  }
+  term_weight_widget_order:
+    processor_id: term_weight_widget_order
+    weights:
+      sort: -8
+    settings:
+      sort: ASC
+  translate_entity:
+    processor_id: translate_entity
+    weights:
+      build: -7
+    settings: {  }
+  url_processor_handler:
+    processor_id: url_processor_handler
+    weights:
+      pre_query: 50
+      build: -6
+    settings: {  }
+empty_behavior:
+  behavior: none
+show_title: false

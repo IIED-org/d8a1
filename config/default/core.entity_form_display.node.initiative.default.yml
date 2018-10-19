@@ -13,6 +13,8 @@ dependencies:
     - field.field.node.initiative.field_3_2_3_other
     - field.field.node.initiative.field_3_2_4_details
     - field.field.node.initiative.field_3_2_4_other
+    - field.field.node.initiative.field_3_2_5_details
+    - field.field.node.initiative.field_3_2_6_details
     - field.field.node.initiative.field_4_2_1_details
     - field.field.node.initiative.field_4_3_1_details
     - field.field.node.initiative.field_add_species
@@ -55,6 +57,7 @@ dependencies:
     - field.field.node.initiative.field_primary_contact
     - field.field.node.initiative.field_primary_contact_name
     - field.field.node.initiative.field_problem_overview
+    - field.field.node.initiative.field_products_in_trade
     - field.field.node.initiative.field_raising_awareness
     - field.field.node.initiative.field_reactive_measures
     - field.field.node.initiative.field_related_resources
@@ -70,7 +73,6 @@ dependencies:
     - field.field.node.initiative.field_voluntary_scouts
     - field.field.node.initiative.field_what_isnt_working
     - field.field.node.initiative.field_what_worked
-    - field.field.node.initiative.field_which_products_are_in_trad
     - field.field.node.initiative.field_year_finished
     - image.style.thumbnail
     - node.type.initiative
@@ -140,10 +142,10 @@ third_party_settings:
       children:
         - field_species_affected
         - field_add_species
-        - field_which_products_are_in_trad
+        - field_products_in_trade
         - field_end_use
-        - field_problem_overview
         - field_buyers
+        - field_problem_overview
       parent_name: group_multi
       weight: 16
       format_type: multipage
@@ -324,7 +326,9 @@ third_party_settings:
         - field_non_wildlife_livelihoods
         - group_3_2_4
         - field_sense_of_ownership
+        - field_3_2_5_details
         - field_education_and_awareness
+        - field_3_2_6_details
       parent_name: group_3_2
       weight: 1
       format_type: html_element
@@ -607,6 +611,56 @@ content:
           bundle: initiative
     type: boolean_checkbox
     region: content
+  field_3_2_5_details:
+    weight: 30
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings:
+      conditional_fields:
+        11d4662b-898e-4a2e-8308-9ecd1f720fdf:
+          dependee: field_sense_of_ownership
+          settings:
+            state: visible
+            condition: checked
+            grouping: AND
+            values_set: 1
+            value: ''
+            values: {  }
+            value_form:
+              value: false
+            effect: show
+            effect_options: {  }
+            selector: ''
+          entity_type: node
+          bundle: initiative
+    type: text_textarea
+    region: content
+  field_3_2_6_details:
+    weight: 32
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings:
+      conditional_fields:
+        5d573fc6-b170-4423-a523-46af7c13aace:
+          dependee: field_education_and_awareness
+          settings:
+            state: visible
+            condition: checked
+            grouping: AND
+            values_set: 1
+            value: ''
+            values: {  }
+            value_form:
+              value: false
+            effect: show
+            effect_options: {  }
+            selector: ''
+          entity_type: node
+          bundle: initiative
+    type: text_textarea
+    region: content
   field_4_2_1_details:
     weight: 54
     settings:
@@ -653,7 +707,7 @@ content:
     type: text_textarea
     region: content
   field_buyers:
-    weight: 6
+    weight: 5
     settings:
       rows: 3
       placeholder: ''
@@ -717,7 +771,7 @@ content:
     region: content
   field_education_and_awareness:
     type: boolean_checkbox
-    weight: 30
+    weight: 31
     region: content
     settings:
       display_label: true
@@ -1206,9 +1260,17 @@ content:
     type: string_textfield
     region: content
   field_problem_overview:
-    weight: 5
+    weight: 6
     settings:
       rows: 3
+      placeholder: ''
+    third_party_settings: {  }
+    type: text_textarea
+    region: content
+  field_products_in_trade:
+    weight: 3
+    settings:
+      rows: 5
       placeholder: ''
     third_party_settings: {  }
     type: text_textarea
@@ -1468,12 +1530,6 @@ content:
     third_party_settings: {  }
     type: text_textarea
     region: content
-  field_which_products_are_in_trad:
-    weight: 3
-    settings: {  }
-    third_party_settings: {  }
-    type: options_select
-    region: content
   field_year_finished:
     weight: 29
     settings:
@@ -1508,6 +1564,11 @@ content:
       size: 60
       placeholder: ''
     third_party_settings: {  }
+  url_redirects:
+    weight: 50
+    settings: {  }
+    third_party_settings: {  }
+    region: content
 hidden:
   created: true
   field_geofield: true

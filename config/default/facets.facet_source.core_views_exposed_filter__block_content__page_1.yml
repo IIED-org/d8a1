@@ -1,0 +1,9 @@
+uuid: 8102d816-731a-4204-96f1-978d263facae
+langcode: en
+status: true
+dependencies: {  }
+id: core_views_exposed_filter__block_content__page_1
+name: 'core_views_exposed_filter:block_content__page_1'
+filter_key: null
+url_processor: query_string
+breadcrumb: {  }

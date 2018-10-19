@@ -6,7 +6,7 @@ dependencies:
     - field.field.paragraph.online_article_or_blog.field_article_url
     - paragraphs.paragraphs_type.online_article_or_blog
   module:
-    - shrinktheweb
+    - link
 id: paragraph.online_article_or_blog.default
 targetEntityType: paragraph
 bundle: online_article_or_blog
@@ -16,14 +16,12 @@ content:
     weight: 0
     label: hidden
     settings:
-      custom_width: null
-      full_length: null
-      max_height: null
-      native_resolution: null
-      widescreen_resolution_y: null
-      delay: null
-      quality: null
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
     third_party_settings: {  }
-    type: shrinktheweb_link_url
+    type: link
     region: content
 hidden: {  }

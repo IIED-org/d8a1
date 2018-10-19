@@ -1,0 +1,23 @@
+uuid: 4af0efc4-2089-4258-b68d-7da995629eb3
+langcode: en
+status: true
+dependencies:
+  config:
+    - facets.facet.type_0
+  module:
+    - facets
+  theme:
+    - pnp_bootstrap_sass
+id: type
+theme: pnp_bootstrap_sass
+region: featured_top
+weight: 0
+provider: null
+plugin: 'facet_block:type_0'
+settings:
+  id: 'facet_block:type_0'
+  label: Type
+  provider: facets
+  label_display: '0'
+  block_id: type
+visibility: {  }

@@ -1,4 +1,4 @@
-uuid: 3b11b579-fd4a-43bb-9b6e-909022f11473
+uuid: d2e73a50-7444-44af-b671-a607ab2e417f
 langcode: en
 status: true
 dependencies:
@@ -9,22 +9,21 @@ dependencies:
     - views
   theme:
     - pnp_bootstrap_sass
-id: views_block__explore_block_1
+id: exposedformexplorepage_2
 theme: pnp_bootstrap_sass
-region: content
+region: highlighted
 weight: 0
 provider: null
-plugin: 'views_block:explore-block_1'
+plugin: 'views_exposed_filter_block:explore-page_2'
 settings:
-  id: 'views_block:explore-block_1'
+  id: 'views_exposed_filter_block:explore-page_2'
   label: ''
   provider: views
-  label_display: '0'
+  label_display: visible
   views_label: ''
-  items_per_page: none
 visibility:
   request_path:
     id: request_path
-    pages: /explore
+    pages: '/explore*'
     negate: false
     context_mapping: {  }

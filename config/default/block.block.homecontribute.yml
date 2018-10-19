@@ -11,8 +11,8 @@ dependencies:
     - pnp_bootstrap_sass
 id: homecontribute
 theme: pnp_bootstrap_sass
-region: content
-weight: 1
+region: featured_bottom_second
+weight: -15
 provider: null
 plugin: 'block_content:f11c65d2-e0c2-42b7-b77b-c9e0dc130b95'
 settings:

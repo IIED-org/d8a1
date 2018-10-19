@@ -3,12 +3,13 @@ langcode: en
 status: true
 dependencies: {  }
 id: editor
-label: Contributor
-weight: -8
+label: Editor
+weight: -7
 is_admin: null
 permissions:
   - 'access add_species entity browser pages'
   - 'access content'
+  - 'access content overview'
   - 'access organisation entity browser pages'
   - 'access shortcuts'
   - 'access species entity browser pages'
@@ -21,12 +22,17 @@ permissions:
   - 'create resource content'
   - 'create terms in species'
   - 'create video media'
+  - 'edit any initiative content'
+  - 'edit any organisation content'
+  - 'edit any page content'
+  - 'edit any resource content'
   - 'edit own initiative content'
   - 'edit own organisation content'
   - 'edit own resource content'
   - 'use add_species_via_ief transition create_new_draft'
   - 'use editorial transition create_new_draft'
   - 'use new_species_added transition create_new_draft'
+  - 'use node.admin form mode'
   - 'use node.default form mode'
   - 'use node.popup form mode'
   - 'use taxonomy_term.ief form mode'

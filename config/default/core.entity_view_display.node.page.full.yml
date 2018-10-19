@@ -53,7 +53,7 @@ content:
             lbw-at: ''
             ow: true
             ow-el: div
-            ow-cl: container
+            ow-cl: 'container mb-5 pb-5'
             ow-at: ''
             fis: true
             fis-el: div

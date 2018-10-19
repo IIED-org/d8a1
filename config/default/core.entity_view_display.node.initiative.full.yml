@@ -13,6 +13,8 @@ dependencies:
     - field.field.node.initiative.field_3_2_3_other
     - field.field.node.initiative.field_3_2_4_details
     - field.field.node.initiative.field_3_2_4_other
+    - field.field.node.initiative.field_3_2_5_details
+    - field.field.node.initiative.field_3_2_6_details
     - field.field.node.initiative.field_4_2_1_details
     - field.field.node.initiative.field_4_3_1_details
     - field.field.node.initiative.field_add_species
@@ -55,6 +57,7 @@ dependencies:
     - field.field.node.initiative.field_primary_contact
     - field.field.node.initiative.field_primary_contact_name
     - field.field.node.initiative.field_problem_overview
+    - field.field.node.initiative.field_products_in_trade
     - field.field.node.initiative.field_raising_awareness
     - field.field.node.initiative.field_reactive_measures
     - field.field.node.initiative.field_related_resources
@@ -70,7 +73,6 @@ dependencies:
     - field.field.node.initiative.field_voluntary_scouts
     - field.field.node.initiative.field_what_isnt_working
     - field.field.node.initiative.field_what_worked
-    - field.field.node.initiative.field_which_products_are_in_trad
     - field.field.node.initiative.field_year_finished
     - node.type.initiative
   module:
@@ -96,11 +98,12 @@ third_party_settings:
         - 'dynamic_block_field:node-initiative_prob_overview'
         - 'dynamic_block_field:node-initiative_section_3'
         - 'dynamic_block_field:node-initiative_section_4'
+        - 'dynamic_block_field:node-initiative_resources'
         - 'dynamic_block_field:node-initiative_section_5'
     fields:
       'dynamic_block_field:node-initiative_gallery':
         plugin_id: 'dynamic_block_field:node-initiative_gallery'
-        weight: 5
+        weight: 6
         label: hidden
         formatter: default
       'dynamic_block_field:node-initiative_header':
@@ -115,37 +118,42 @@ third_party_settings:
         formatter: default
       'dynamic_block_field:node-initiative_lead_location':
         plugin_id: 'dynamic_block_field:node-initiative_lead_location'
-        weight: 2
+        weight: 3
         label: hidden
         formatter: default
       'dynamic_block_field:node-initiative_map':
         plugin_id: 'dynamic_block_field:node-initiative_map'
-        weight: 3
+        weight: 4
         label: hidden
         formatter: default
       'dynamic_block_field:node-initiative_prob_overview':
         plugin_id: 'dynamic_block_field:node-initiative_prob_overview'
-        weight: 6
+        weight: 7
+        label: hidden
+        formatter: default
+      'dynamic_block_field:node-initiative_resources':
+        plugin_id: 'dynamic_block_field:node-initiative_resources'
+        weight: 10
         label: hidden
         formatter: default
       'dynamic_block_field:node-initiative_section_2':
         plugin_id: 'dynamic_block_field:node-initiative_section_2'
-        weight: 4
+        weight: 5
         label: hidden
         formatter: default
       'dynamic_block_field:node-initiative_section_3':
         plugin_id: 'dynamic_block_field:node-initiative_section_3'
-        weight: 7
+        weight: 8
         label: hidden
         formatter: default
       'dynamic_block_field:node-initiative_section_4':
         plugin_id: 'dynamic_block_field:node-initiative_section_4'
-        weight: 8
+        weight: 9
         label: hidden
         formatter: default
       'dynamic_block_field:node-initiative_section_5':
         plugin_id: 'dynamic_block_field:node-initiative_section_5'
-        weight: 9
+        weight: 11
         label: hidden
         formatter: default
   field_group:
@@ -154,7 +162,7 @@ third_party_settings:
         - node_link
         - node_title
       parent_name: ''
-      weight: 87
+      weight: 91
       format_type: html_element
       format_settings:
         id: ''
@@ -184,6 +192,8 @@ hidden:
   field_3_2_3_other: true
   field_3_2_4_details: true
   field_3_2_4_other: true
+  field_3_2_5_details: true
+  field_3_2_6_details: true
   field_4_2_1_details: true
   field_4_3_1_details: true
   field_add_species: true
@@ -226,6 +236,7 @@ hidden:
   field_primary_contact: true
   field_primary_contact_name: true
   field_problem_overview: true
+  field_products_in_trade: true
   field_raising_awareness: true
   field_reactive_measures: true
   field_related_resources: true
@@ -241,6 +252,5 @@ hidden:
   field_voluntary_scouts: true
   field_what_isnt_working: true
   field_what_worked: true
-  field_which_products_are_in_trad: true
   field_year_finished: true
   links: true
