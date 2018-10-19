@@ -13,6 +13,8 @@ dependencies:
     - field.field.node.initiative.field_3_2_3_other
     - field.field.node.initiative.field_3_2_4_details
     - field.field.node.initiative.field_3_2_4_other
+    - field.field.node.initiative.field_3_2_5_details
+    - field.field.node.initiative.field_3_2_6_details
     - field.field.node.initiative.field_4_2_1_details
     - field.field.node.initiative.field_4_3_1_details
     - field.field.node.initiative.field_add_species
@@ -70,12 +72,12 @@ dependencies:
     - field.field.node.initiative.field_voluntary_scouts
     - field.field.node.initiative.field_what_isnt_working
     - field.field.node.initiative.field_what_worked
-    - field.field.node.initiative.field_which_products_are_in_trad
     - field.field.node.initiative.field_year_finished
+    - image.style.card_270x130_
     - node.type.initiative
   module:
     - ds
-    - responsive_image
+    - image
     - user
 third_party_settings:
   ds:
@@ -96,25 +98,90 @@ third_party_settings:
         weight: 0
         label: hidden
         formatter: default
+        settings:
+          wrapper: h4
+          class: card-title
+          link: false
+        ft:
+          id: default
+          settings:
+            lb: ''
+            lb-col: false
+            classes: {  }
       'bundle_field:node':
         plugin_id: 'bundle_field:node'
         weight: 0
         label: hidden
         formatter: default
+        ft:
+          id: expert
+          settings:
+            lb: ''
+            prefix: ''
+            lbw-el: ''
+            lbw-cl: ''
+            lbw-at: ''
+            ow-el: ''
+            ow-cl: ''
+            ow-at: ''
+            fis-el: ''
+            fis-cl: ''
+            fis-at: ''
+            fi: true
+            fi-el: span
+            fi-cl: text-muted
+            fi-at: ''
+            suffix: ''
+            lbw: false
+            lb-col: false
+            ow: false
+            ow-def-at: false
+            ow-def-cl: false
+            fis: false
+            fis-def-at: false
+            fi-def-at: false
 id: node.initiative.card
 targetEntityType: node
 bundle: initiative
 mode: card
 content:
   field_image:
-    type: responsive_image
+    type: image
     weight: 0
     region: content
     label: hidden
     settings:
-      responsive_image_style: ''
-      image_link: ''
-    third_party_settings: {  }
+      image_style: card_270x130_
+      image_link: content
+    third_party_settings:
+      ds:
+        ft:
+          id: expert
+          settings:
+            lb: ''
+            prefix: ''
+            lbw-el: ''
+            lbw-cl: ''
+            lbw-at: ''
+            ow-el: ''
+            ow-cl: ''
+            ow-at: ''
+            fis-el: ''
+            fis-cl: ''
+            fis-at: ''
+            fi: true
+            fi-el: div
+            fi-cl: 'img-fluid card-img-top'
+            fi-at: ''
+            suffix: ''
+            lbw: false
+            lb-col: false
+            ow: false
+            ow-def-at: false
+            ow-def-cl: false
+            fis: false
+            fis-def-at: false
+            fi-def-at: false
 hidden:
   addtoany: true
   body: true
@@ -126,6 +193,8 @@ hidden:
   field_3_2_3_other: true
   field_3_2_4_details: true
   field_3_2_4_other: true
+  field_3_2_5_details: true
+  field_3_2_6_details: true
   field_4_2_1_details: true
   field_4_3_1_details: true
   field_add_species: true
@@ -182,6 +251,5 @@ hidden:
   field_voluntary_scouts: true
   field_what_isnt_working: true
   field_what_worked: true
-  field_which_products_are_in_trad: true
   field_year_finished: true
   links: true

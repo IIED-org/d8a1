@@ -1,17 +1,16 @@
 uuid: 3f3e9786-64be-4304-9314-e1abde6c2024
 langcode: en
-status: true
+status: false
 dependencies:
   config:
-    - field.storage.node.body
     - field.storage.node.field_address
-    - field.storage.node.field_lead_organisation
-    - field.storage.node.field_species_affected
-    - field.storage.node.field_which_products_are_in_trad
-    - field.storage.node.field_problem_overview
+    - field.storage.node.body
+    - field.storage.node.field_author
     - field.storage.node.field_initiative_introduction
     - field.storage.node.field_interventions
-    - field.storage.node.field_author
+    - field.storage.node.field_lead_organisation
+    - field.storage.node.field_problem_overview
+    - field.storage.node.field_species_affected
     - search_api.server.search_server
   module:
     - node
@@ -93,14 +92,6 @@ field_settings:
     dependencies:
       config:
         - field.storage.node.field_species_affected
-  field_which_products_are_in_trad:
-    label: '2.2 Which products are in trade?'
-    datasource_id: 'entity:node'
-    property_path: field_which_products_are_in_trad
-    type: text
-    dependencies:
-      config:
-        - field.storage.node.field_which_products_are_in_trad
   title:
     label: Title
     datasource_id: 'entity:node'

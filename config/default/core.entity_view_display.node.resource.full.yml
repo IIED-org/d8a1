@@ -1,6 +1,6 @@
 uuid: 41b5be47-c842-4df3-abbc-68623cb0337c
 langcode: en
-status: false
+status: true
 dependencies:
   config:
     - core.entity_view_mode.node.full
@@ -13,15 +13,33 @@ dependencies:
     - field.field.node.resource.field_interventions
     - field.field.node.resource.field_language
     - field.field.node.resource.field_publisher
-    - field.field.node.resource.field_related_initiative
     - field.field.node.resource.field_resource_type
     - field.field.node.resource.field_species_affected
     - node.type.resource
   module:
+    - datetime
+    - ds
     - entity_reference_revisions
-    - geofield
     - text
     - user
+third_party_settings:
+  ds:
+    layout:
+      id: layout_onecol
+      library: layout_discovery/onecol
+      disable_css: false
+      entity_classes: all_classes
+      settings: {  }
+    regions:
+      content:
+        - field_author
+        - field_date_published
+        - links
+        - body
+        - field_resource_type
+        - field_publisher
+        - field_language
+        - field_related_initiative
 id: node.resource.full
 targetEntityType: node
 bundle: resource
@@ -34,22 +52,24 @@ content:
     settings: {  }
     third_party_settings: {  }
     region: content
-  field_geofield:
-    weight: 12
+  field_author:
+    type: string
+    weight: 0
+    region: content
     label: above
     settings:
-      output_format: wkt
+      link_to_entity: false
     third_party_settings: {  }
-    type: geofield_default
+  field_date_published:
+    type: datetime_time_ago
+    weight: 0
     region: content
-  field_interventions:
-    weight: 9
     label: above
     settings:
-      link: true
+      future_format: '@interval hence'
+      past_format: '@interval ago'
+      granularity: 2
     third_party_settings: {  }
-    type: entity_reference_label
-    region: content
   field_language:
     weight: 5
     label: above
@@ -66,14 +86,6 @@ content:
     third_party_settings: {  }
     type: string
     region: content
-  field_related_initiative:
-    weight: 10
-    label: above
-    settings:
-      link: true
-    third_party_settings: {  }
-    type: entity_reference_label
-    region: content
   field_resource_type:
     type: entity_reference_revisions_entity_view
     weight: 2
@@ -82,14 +94,6 @@ content:
       view_mode: default
       link: ''
     third_party_settings: {  }
-    region: content
-  field_species_affected:
-    weight: 7
-    label: above
-    settings:
-      link: true
-    third_party_settings: {  }
-    type: entity_reference_label
     region: content
   links:
     weight: 0
@@ -100,5 +104,6 @@ hidden:
   addtoany: true
   field_add_species: true
   field_address: true
-  field_author: true
-  field_date_published: true
+  field_geofield: true
+  field_interventions: true
+  field_species_affected: true

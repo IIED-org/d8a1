@@ -1,0 +1,23 @@
+uuid: 781e9503-948c-4379-9e9e-9f9ed63a3fbe
+langcode: en
+status: true
+dependencies:
+  config:
+    - facets.facet.species_0
+  module:
+    - facets
+  theme:
+    - pnp_bootstrap_sass
+id: species
+theme: pnp_bootstrap_sass
+region: featured_top
+weight: 0
+provider: null
+plugin: 'facet_block:species_0'
+settings:
+  id: 'facet_block:species_0'
+  label: Species
+  provider: facets
+  label_display: visible
+  block_id: species
+visibility: {  }

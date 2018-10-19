@@ -1,0 +1,31 @@
+uuid: 6c59454a-6e44-4d95-93e7-d5becce0f655
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:basic:89dec9d4-d978-49cf-b543-d5e51a05f504'
+  module:
+    - block_content
+    - system
+  theme:
+    - pnp_bootstrap_sass
+id: aboutdonors
+theme: pnp_bootstrap_sass
+region: content
+weight: -7
+provider: null
+plugin: 'block_content:89dec9d4-d978-49cf-b543-d5e51a05f504'
+settings:
+  id: 'block_content:89dec9d4-d978-49cf-b543-d5e51a05f504'
+  label: 'About donors'
+  provider: block_content
+  label_display: '0'
+  status: true
+  info: ''
+  view_mode: full
+visibility:
+  request_path:
+    id: request_path
+    pages: /node/16
+    negate: false
+    context_mapping: {  }

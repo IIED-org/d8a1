@@ -3,8 +3,8 @@ name: 'People not poaching'
 mail: webmaster@iied.org
 slogan: ''
 page:
-  403: ''
-  404: ''
+  403: /user/login
+  404: /node/571
   front: /node
 admin_compact_mode: false
 weight_select_max: 100

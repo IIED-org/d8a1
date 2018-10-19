@@ -6,6 +6,7 @@ id: about_contact
 label: 'About contact'
 recipients:
   - nick.turner@iied.org
+  - info@peoplenotpoaching.org
 reply: ''
 weight: 0
 message: ''

@@ -1,0 +1,33 @@
+uuid: c49d56e9-a4ea-48d2-a7e5-67cf7cdc370b
+langcode: en
+status: true
+dependencies:
+  module:
+    - acquia_search
+    - search_api_solr
+_core:
+  default_config_hash: tv2n9Pdm-aIIVzg6puM4sqDShEWXgfbQnAf7p-zls2Q
+id: acquia_search_server
+name: 'Acquia Search API Solr server'
+description: ''
+backend: search_api_solr
+backend_config:
+  connector: solr_acquia_connector
+  connector_config:
+    scheme: http
+    timeout: '5'
+    index_timeout: '10'
+    optimize_timeout: '15'
+    commit_within: '1000'
+    solr_version: ''
+    http_method: AUTO
+  retrieve_data: false
+  highlight_data: false
+  excerpt: false
+  skip_schema_check: false
+  site_hash: true
+  suggest_suffix: true
+  suggest_corrections: true
+  suggest_words: false
+  acquia_search_possible_cores: {  }
+  overridden_by_acquia_search: 2

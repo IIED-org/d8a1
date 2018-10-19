@@ -11,7 +11,10 @@ auth:
 post_login: /user
 redirect_user_form: false
 disable_admin_login: true
-disabled_roles: {  }
+disabled_roles:
+  contributor: '0'
+  editor: '0'
+  administrator: '0'
 user_allowed: register
 _core:
   default_config_hash: 0E8z47ONguVcapiw1PGWDRs6g0NRDCzrym4mP_jcELU

@@ -15,7 +15,7 @@ id: node.initiative.field_problem_overview
 field_name: field_problem_overview
 entity_type: node
 bundle: initiative
-label: '2.3 Please give an overview of the kind of poaching that is (or was) occurring in the case study area'
+label: '2.4 Please give an overview of the kind of poaching that is (or was) occurring in the case study area'
 description: ''
 required: false
 translatable: false

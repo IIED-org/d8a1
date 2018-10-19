@@ -1,15 +1,14 @@
 uuid: 3c49daca-968e-4ee3-939d-de9332e166d1
 langcode: en
-status: true
+status: false
 dependencies:
   config:
-    - core.entity_view_mode.node.list_card
+    - core.entity_view_mode.node.card
     - field.storage.node.body
     - field.storage.node.field_image
     - image.style.thumbnail
     - node.type.initiative
   module:
-    - ds
     - image
     - node
     - text
@@ -499,35 +498,22 @@ display:
       style:
         type: grid
         options:
-          grouping: {  }
+          uses_fields: false
           columns: 4
-          automatic_width: true
+          automatic_width: false
           alignment: horizontal
-          col_class_default: true
-          col_class_custom: ''
-          row_class_default: true
-          row_class_custom: ''
+          col_class_default: false
+          col_class_custom: 'col col-12 col-sm-4 col-md-3'
+          row_class_default: false
+          row_class_custom: row
       defaults:
         style: false
         row: false
       row:
-        type: 'ds_entity:node'
+        type: 'entity:node'
         options:
           relationship: none
-          view_mode: list_card
-          alternating_fieldset:
-            alternating: false
-            allpages: false
-            item_0: teaser
-            item_1: teaser
-            item_2: teaser
-            item_3: teaser
-          grouping_fieldset:
-            group: false
-            group_field: node_field_data|created
-            group_field_function: ''
-          advanced_fieldset:
-            advanced: false
+          view_mode: card
     cache_metadata:
       max-age: -1
       contexts:

@@ -1,21 +1,26 @@
 uuid: bebbc34c-a57e-4438-aa7f-7faaa234ea4e
 langcode: en
-status: true
+status: false
 dependencies:
   module:
     - node
     - user
+    - paragraphs
     - taxonomy
     - synonyms
     - search_api
     - media
-    - paragraphs
   config:
     - field.storage.node.field_address
+    - field.storage.node.field_resource_type
+    - field.storage.paragraph.field_article_url
+    - field.storage.paragraph.field_document_url
+    - field.storage.paragraph.field_file_upload
+    - field.storage.node.field_geofield
     - field.storage.node.field_interventions
     - field.storage.node.field_species_affected
     - field.storage.node.field_tags
-    - field.storage.node.field_which_products_are_in_trad
+    - field.storage.paragraph.field_video_url
     - search_api.server.default_server
     - core.entity_view_mode.node.search_index
 _core:
@@ -25,19 +30,6 @@ name: 'Default content index'
 description: 'Default content index created by the Database Search Defaults module'
 read_only: false
 field_settings:
-  aggregated_strategy:
-    label: 'Strategy (agg)'
-    property_path: aggregated_field
-    type: string
-    configuration:
-      type: concat
-      fields:
-        - 'entity:node/field_decreasing_living_costs'
-        - 'entity:node/field_education_and_awareness'
-        - 'entity:node/field_illegal_disincentives'
-        - 'entity:node/field_non_wildlife_livelihoods'
-        - 'entity:node/field_sense_of_ownership'
-        - 'entity:node/field_stewardship_incentives'
   author:
     label: 'Author name'
     datasource_id: 'entity:node'
@@ -80,6 +72,47 @@ field_settings:
     dependencies:
       module:
         - node
+  field_article_url:
+    label: 'Paragraph » Article URL'
+    datasource_id: 'entity:node'
+    property_path: 'field_resource_type:entity:field_article_url'
+    type: string
+    dependencies:
+      config:
+        - field.storage.node.field_resource_type
+        - field.storage.paragraph.field_article_url
+      module:
+        - paragraphs
+  field_document_url:
+    label: 'Paragraph » Document URL'
+    datasource_id: 'entity:node'
+    property_path: 'field_resource_type:entity:field_document_url'
+    type: string
+    dependencies:
+      config:
+        - field.storage.node.field_resource_type
+        - field.storage.paragraph.field_document_url
+      module:
+        - paragraphs
+  field_file_upload:
+    label: 'Paragraph » File upload'
+    datasource_id: 'entity:node'
+    property_path: 'field_resource_type:entity:field_file_upload'
+    type: integer
+    dependencies:
+      config:
+        - field.storage.node.field_resource_type
+        - field.storage.paragraph.field_file_upload
+      module:
+        - paragraphs
+  field_geofield:
+    label: Geofield
+    datasource_id: 'entity:node'
+    property_path: field_geofield
+    type: string
+    dependencies:
+      config:
+        - field.storage.node.field_geofield
   field_interventions:
     label: Interventions
     datasource_id: 'entity:node'
@@ -104,14 +137,17 @@ field_settings:
     dependencies:
       config:
         - field.storage.node.field_tags
-  field_which_products_are_in_trad:
-    label: 'Which products are in trade?'
+  field_video_url:
+    label: 'Paragraph » Video URL'
     datasource_id: 'entity:node'
-    property_path: field_which_products_are_in_trad
-    type: integer
+    property_path: 'field_resource_type:entity:field_video_url'
+    type: string
     dependencies:
       config:
-        - field.storage.node.field_which_products_are_in_trad
+        - field.storage.node.field_resource_type
+        - field.storage.paragraph.field_video_url
+      module:
+        - paragraphs
   name:
     label: Name
     datasource_id: 'entity:taxonomy_term'
@@ -127,6 +163,14 @@ field_settings:
     indexed_locked: true
     type_locked: true
     hidden: true
+  parent_id:
+    label: 'Parent ID'
+    datasource_id: 'entity:paragraph'
+    property_path: parent_id
+    type: string
+    dependencies:
+      module:
+        - paragraphs
   rendered_item:
     label: 'Rendered item'
     property_path: rendered_item
@@ -164,6 +208,14 @@ field_settings:
     dependencies:
       module:
         - synonyms
+  target_revision_id:
+    label: 'Paragraph revision ID'
+    datasource_id: 'entity:node'
+    property_path: 'field_resource_type:target_revision_id'
+    type: integer
+    dependencies:
+      config:
+        - field.storage.node.field_resource_type
   title:
     label: Title
     datasource_id: 'entity:node'
@@ -209,7 +261,8 @@ datasource_settings:
   'entity:paragraph':
     bundles:
       default: true
-      selected: {  }
+      selected:
+        - add_new_species
     languages:
       default: true
       selected: {  }
@@ -239,14 +292,28 @@ processor_settings:
       field_species_affected: taxonomy_term-parent
     weights:
       preprocess_index: -44
+  highlight:
+    highlight: always
+    highlight_partial: false
+    excerpt: true
+    excerpt_length: 256
+    exclude_fields: {  }
+    prefix: '<strong>'
+    suffix: '</strong>'
+    weights:
+      postprocess_query: 0
   html_filter:
     all_fields: true
     fields:
-      - aggregated_strategy
       - author
       - country_code
       - country_name
+      - field_article_url
+      - field_document_url
+      - field_geofield
+      - field_video_url
       - name
+      - parent_id
       - rendered_item
       - synonyms
       - title

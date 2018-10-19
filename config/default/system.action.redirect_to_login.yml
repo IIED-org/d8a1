@@ -1,0 +1,12 @@
+uuid: 56410928-0664-4a3a-a88e-2d8e4d5ec6b0
+langcode: en
+status: true
+dependencies:
+  module:
+    - action
+id: redirect_to_login
+label: 'Redirect to login'
+type: system
+plugin: action_goto_action
+configuration:
+  url: /user/login

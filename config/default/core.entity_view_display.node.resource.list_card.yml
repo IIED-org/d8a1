@@ -1,0 +1,84 @@
+uuid: bcc7d6a6-6a54-41a3-84ea-97440ff964e4
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.list_card
+    - field.field.node.resource.body
+    - field.field.node.resource.field_add_species
+    - field.field.node.resource.field_address
+    - field.field.node.resource.field_author
+    - field.field.node.resource.field_date_published
+    - field.field.node.resource.field_geofield
+    - field.field.node.resource.field_interventions
+    - field.field.node.resource.field_language
+    - field.field.node.resource.field_publisher
+    - field.field.node.resource.field_resource_type
+    - field.field.node.resource.field_species_affected
+    - node.type.resource
+  module:
+    - ds
+    - user
+third_party_settings:
+  ds:
+    layout:
+      id: layout_onecol
+      library: layout_discovery/onecol
+      disable_css: false
+      entity_classes: all_classes
+      settings: {  }
+    regions:
+      content:
+        - 'dynamic_block_field:node-resource_list_card'
+    fields:
+      'dynamic_block_field:node-resource_list_card':
+        plugin_id: 'dynamic_block_field:node-resource_list_card'
+        weight: 0
+        label: hidden
+        formatter: default
+        ft:
+          id: expert
+          settings:
+            lb: ''
+            prefix: ''
+            lbw-el: ''
+            lbw-cl: ''
+            lbw-at: ''
+            ow-el: ''
+            ow-cl: ''
+            ow-at: ''
+            fis-el: ''
+            fis-cl: ''
+            fis-at: ''
+            fi-el: ''
+            fi-cl: ''
+            fi-at: ''
+            suffix: ''
+            lbw: false
+            lb-col: false
+            ow: false
+            ow-def-at: false
+            ow-def-cl: false
+            fis: false
+            fis-def-at: false
+            fi: false
+            fi-def-at: false
+id: node.resource.list_card
+targetEntityType: node
+bundle: resource
+mode: list_card
+content: {  }
+hidden:
+  addtoany: true
+  body: true
+  field_add_species: true
+  field_address: true
+  field_author: true
+  field_date_published: true
+  field_geofield: true
+  field_interventions: true
+  field_language: true
+  field_publisher: true
+  field_resource_type: true
+  field_species_affected: true
+  links: true

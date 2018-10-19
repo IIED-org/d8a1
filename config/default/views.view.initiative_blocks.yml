@@ -12,6 +12,8 @@ dependencies:
     - field.storage.node.field_3_2_3_other
     - field.storage.node.field_3_2_4_details
     - field.storage.node.field_3_2_4_other
+    - field.storage.node.field_3_2_5_details
+    - field.storage.node.field_3_2_6_details
     - field.storage.node.field_4_2_1_details
     - field.storage.node.field_4_3_1_details
     - field.storage.node.field_add_species
@@ -49,6 +51,7 @@ dependencies:
     - field.storage.node.field_primary_contact
     - field.storage.node.field_primary_contact_name
     - field.storage.node.field_problem_overview
+    - field.storage.node.field_products_in_trade
     - field.storage.node.field_raising_awareness
     - field.storage.node.field_reactive_measures
     - field.storage.node.field_sense_of_ownership
@@ -62,11 +65,10 @@ dependencies:
     - field.storage.node.field_voluntary_scouts
     - field.storage.node.field_what_isnt_working
     - field.storage.node.field_what_worked
-    - field.storage.node.field_which_products_are_in_trad
     - field.storage.node.field_year_finished
+    - image.style.gallery_270x270_
     - image.style.main_570x380
     - image.style.max_1300x1300
-    - image.style.medium
     - node.type.initiative
   module:
     - address
@@ -2886,7 +2888,7 @@ display:
           exclude: true
           alter:
             alter_text: true
-            text: "    <!-- WHAT DOES SECTION  -->\r\n    <section class=\"py-5 mb-5 i-section\">\r\n        <div class=\"container\">\r\n            <div class=\"row\">\r\n                <div class=\"col-md-3\">\r\n                    <h3>What works and why</h3>\r\n                </div>\r\n                <div class=\"col-md-9\">\r\n                    {{ field_what_worked }}\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </section>"
+            text: "    <!-- WHAT DOES SECTION  -->\r\n    <section class=\"py-4 mb-4 i-section\">\r\n        <div class=\"container\">\r\n            <div class=\"row\">\r\n                <div class=\"col-md-3\">\r\n                    <h3>What works and why</h3>\r\n                </div>\r\n                <div class=\"col-md-9\">\r\n                    {{ field_what_worked }}\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </section>"
             make_link: false
             path: ''
             absolute: false
@@ -2947,8 +2949,8 @@ display:
           label: ''
           exclude: true
           alter:
-            alter_text: false
-            text: ''
+            alter_text: true
+            text: '<p class="i-s-point"><i class="fas fa-circle fa-lg"></i>{{ field_success_factors_1 }}<p>'
             make_link: false
             path: ''
             absolute: false
@@ -2980,7 +2982,7 @@ display:
           element_label_colon: false
           element_wrapper_type: ''
           element_wrapper_class: ''
-          element_default_classes: true
+          element_default_classes: false
           empty: ''
           hide_empty: false
           empty_zero: false
@@ -2991,12 +2993,12 @@ display:
           group_column: value
           group_columns: {  }
           group_rows: true
-          delta_limit: 3
+          delta_limit: 5
           delta_offset: 0
           delta_reversed: false
           delta_first_last: false
-          multi_type: ul
-          separator: ', '
+          multi_type: separator
+          separator: ''
           field_api_classes: false
           plugin_id: field
         field_4_2_1_details:
@@ -3067,12 +3069,12 @@ display:
           field: field_success_factors
           relationship: none
           group_type: group
-          admin_label: ''
+          admin_label: '4.2.1 What are the three... field output'
           label: ''
           exclude: true
           alter:
             alter_text: true
-            text: "    <!-- FACTORS SUCCESS SECTION  -->\r\n    <section class=\"py-5 mb-5 i-section\">\r\n        <div class=\"container\">\r\n            <div class=\"row\">\r\n                <div class=\"col-md-3\">\r\n                    <h3>Factors for success</h3>\r\n                </div>\r\n                <div class=\"col-md-9\">\r\n                    {{ field_success_factors_1 }}\r\n                    {{ field_4_2_1_details }}\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </section>"
+            text: "    <!-- FACTORS SUCCESS SECTION  -->\r\n    <section class=\"py-4 mb-4 i-section\">\r\n        <div class=\"container\">\r\n            <div class=\"row\">\r\n                <div class=\"col-md-3\">\r\n                    <h3>Factors for success</h3>\r\n                </div>\r\n                <div class=\"col-md-9\">\r\n                    {{ field_success_factors_1 }}\r\n                    {{ field_4_2_1_details }}\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </section>"
             make_link: false
             path: ''
             absolute: false
@@ -3134,7 +3136,7 @@ display:
           exclude: true
           alter:
             alter_text: true
-            text: "    <!-- WHAT DOESNT SECTION  -->\r\n    <section class=\"py-5 mb-5 i-section\">\r\n        <div class=\"container\">\r\n            <div class=\"row\">\r\n                <div class=\"col-md-3\">\r\n                    <h3>What doesn’t work and why</h3>\r\n                </div>\r\n                <div class=\"col-md-9\">\r\n                    {{ field_what_isnt_working }}\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </section>"
+            text: "    <!-- WHAT DOESNT SECTION  -->\r\n    <section class=\"py-4 mb-4 i-section\">\r\n        <div class=\"container\">\r\n            <div class=\"row\">\r\n                <div class=\"col-md-3\">\r\n                    <h3>What doesn’t work and why</h3>\r\n                </div>\r\n                <div class=\"col-md-9\">\r\n                    {{ field_what_isnt_working }}\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </section>"
             make_link: false
             path: ''
             absolute: false
@@ -3195,8 +3197,8 @@ display:
           label: ''
           exclude: true
           alter:
-            alter_text: false
-            text: ''
+            alter_text: true
+            text: '<p class="i-s-point"><i class="fas fa-circle fa-lg"></i>{{ field_limiting_factors_1 }}<p>'
             make_link: false
             path: ''
             absolute: false
@@ -3239,12 +3241,12 @@ display:
           group_column: value
           group_columns: {  }
           group_rows: true
-          delta_limit: 3
+          delta_limit: 5
           delta_offset: 0
           delta_reversed: false
           delta_first_last: false
-          multi_type: ul
-          separator: ', '
+          multi_type: separator
+          separator: ''
           field_api_classes: false
           plugin_id: field
         field_4_3_1_details:
@@ -3257,8 +3259,8 @@ display:
           label: ''
           exclude: true
           alter:
-            alter_text: false
-            text: ''
+            alter_text: true
+            text: " <a class=\"d-block\" href=\"#collapse\" data-toggle=\"collapse\" data-target=\"#collapse-431-details\">Further detail</a>\r\n<div class=\"collapse mt-4\" id=\"collapse-431-details\">\r\n{{ field_4_3_1_details }} \r\n</div>"
             make_link: false
             path: ''
             absolute: false
@@ -3315,12 +3317,12 @@ display:
           field: field_limiting_factors
           relationship: none
           group_type: group
-          admin_label: ''
+          admin_label: '4.3.1 What are the three... field output'
           label: ''
           exclude: true
           alter:
             alter_text: true
-            text: "    <!-- FACTORS HINDERED SECTION  -->\r\n    <section class=\"py-5 mb-5 i-section\">\r\n        <div class=\"container\">\r\n            <div class=\"row\">\r\n                <div class=\"col-md-3\">\r\n                    <h3>Factors that limited or hindered success</h3>\r\n                </div>\r\n                <div class=\"col-md-9\">\r\n                   {{ field_limiting_factors_1 }}\r\n                    {{ field_4_3_1_details }}\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </section>"
+            text: "    <!-- FACTORS HINDERED SECTION  -->\r\n    <section class=\"py-4 mb-4 i-section\">\r\n        <div class=\"container\">\r\n            <div class=\"row\">\r\n                <div class=\"col-md-3\">\r\n                    <h3 class=\"pr-1\">Factors that limited or hindered success</h3>\r\n                </div>\r\n                <div class=\"col-md-9\">\r\n                   {{ field_limiting_factors_1 }}\r\n                    {{ field_4_3_1_details }}\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </section>"
             make_link: false
             path: ''
             absolute: false
@@ -3363,7 +3365,7 @@ display:
           group_column: value
           group_columns: {  }
           group_rows: true
-          delta_limit: 3
+          delta_limit: 1
           delta_offset: 0
           delta_reversed: false
           delta_first_last: false
@@ -3377,12 +3379,12 @@ display:
           field: nothing
           relationship: none
           group_type: group
-          admin_label: ''
+          admin_label: 'Field output'
           label: ''
           exclude: false
           alter:
             alter_text: true
-            text: " <!-- DIFFERENCE SECTION  -->\r\n    <section class=\"py-5 mb-5 i-section\">\r\n        <div class=\"container\">\r\n            <div class=\"row\">\r\n                <div class=\"col-md-3\">\r\n                    <h2>Has the initiative made a difference?</h2>\r\n                </div>\r\n                <div class=\"col-md-9\">\r\n                    {{ field_initiative_impact }}\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </section>\r\n\r\n\r\n                    {{ field_what_worked }}\r\n                    {{ field_success_factors }}\r\n                    {{ field_what_isnt_working }}\r\n                    {{ field_limiting_factors }}"
+            text: " <!-- DIFFERENCE SECTION  -->\r\n    <section class=\"py-4 mb-4 i-section\">\r\n        <div class=\"container\">\r\n            <div class=\"row\">\r\n                <div class=\"col-md-3\">\r\n                    <h2>Has the initiative made a difference?</h2>\r\n                </div>\r\n                <div class=\"col-md-9\">\r\n                    {{ field_initiative_impact }}\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </section>\r\n\r\n\r\n                    {{ field_what_worked }}\r\n                    {{ field_success_factors }}\r\n                    {{ field_what_isnt_working }}\r\n                    {{ field_limiting_factors }}"
             make_link: false
             path: ''
             absolute: false
@@ -3456,10 +3458,10 @@ display:
           group_type: group
           admin_label: ''
           label: ''
-          exclude: false
+          exclude: true
           alter:
-            alter_text: true
-            text: "    <!-- ORGS SECTION  -->\r\n    <section class=\"py-5 mb-5 i-section\">\r\n        <div class=\"container\">\r\n            <div class=\"row\">\r\n                <div class=\"col-md-3\">\r\n                    <h2>Organisers, donors and partners</h2>\r\n                </div>\r\n                <div class=\"col-md-9\">\r\n                    {{ field_organisers_donors_partners }}\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </section>"
+            alter_text: false
+            text: ''
             make_link: false
             path: ''
             absolute: false
@@ -3510,6 +3512,180 @@ display:
           separator: ', '
           field_api_classes: false
           plugin_id: field
+        field_primary_contact_name:
+          id: field_primary_contact_name
+          table: node__field_primary_contact_name
+          field: field_primary_contact_name
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: ''
+          exclude: true
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: value
+          type: string
+          settings:
+            link_to_entity: false
+          group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+          plugin_id: field
+        field_primary_contact:
+          id: field_primary_contact
+          table: node__field_primary_contact
+          field: field_primary_contact
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: ''
+          exclude: true
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: value
+          type: basic_string
+          settings: {  }
+          group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+          plugin_id: field
+        nothing:
+          id: nothing
+          table: views
+          field: nothing
+          relationship: none
+          group_type: group
+          admin_label: 'Field output'
+          label: ''
+          exclude: false
+          alter:
+            alter_text: true
+            text: "<!-- ORGS SECTION  -->\r\n    <section class=\"py-4 mb-4 i-section\">\r\n        <div class=\"container\">\r\n            <div class=\"row\">\r\n                <div class=\"col-md-3\">\r\n                    <h2>Organisers, donors and partners</h2>\r\n                </div>\r\n                <div class=\"col-md-9\">\r\n                    {{ field_organisers_donors_partners }}\r\n                  <p>For further information contact {{ field_primary_contact_name }} ({{ field_primary_contact }}).</p>\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </section>"
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: false
+          plugin_id: custom
       defaults:
         fields: false
     cache_metadata:
@@ -3522,6 +3698,8 @@ display:
         - user.permissions
       tags:
         - 'config:field.storage.node.field_organisers_donors_partners'
+        - 'config:field.storage.node.field_primary_contact'
+        - 'config:field.storage.node.field_primary_contact_name'
   block_2:
     display_plugin: block
     id: block_2
@@ -3988,7 +4166,7 @@ display:
           exclude: false
           alter:
             alter_text: true
-            text: "    <!-- PAGE HEADER -->\r\n    <header id=\"i-header\">\r\n        <div class=\"container\">\r\n            <div class=\"row\">\r\n                <div class=\"col-md-6\">\r\n                    <h1>{{ title }}</h1>\r\n                  <p> {{ field_primary_contact_name }} {{ field_primary_contact }}</p>\r\n                   <p>{{ field_initiative_status }} {{ field_year_finished }}</p>\r\n                   <p> {{ status }}</p>\r\n                   <p> {{ created }} </p>\r\n                </div>\r\n                <div class=\"col-md-6\">\r\n                    {{ field_image }}\r\n                </div>\r\n            </div>\r\n        </div>\r\n        </div>\r\n    </header>"
+            text: "    <!-- PAGE HEADER -->\r\n    <header id=\"i-header\">\r\n        <div class=\"container\">\r\n            <div class=\"row\">\r\n                <div class=\"col-md-6\">\r\n                    <h1>{{ title }}</h1>\r\n                   <p>{{ field_initiative_status }} {{ field_year_finished }}</p>\r\n                   <p> {{ status }}</p>\r\n                   <p>Published {{ created }}</p>\r\n                </div>\r\n                <div class=\"col-md-6\">\r\n                    {{ field_image }}\r\n                </div>\r\n            </div>\r\n        </div>\r\n        </div>\r\n    </header>"
             make_link: false
             path: ''
             absolute: false
@@ -4064,7 +4242,7 @@ display:
           exclude: false
           alter:
             alter_text: true
-            text: "    <!-- INTRO SECTION  -->\r\n    <section class=\"py-5 mb-5 bg-light\">\r\n        <div class=\"container\">\r\n            <div class=\"row\">\r\n                <div class=\"col-md-9 m-auto\">\r\n                    <p class=\"lead\">{{ body }}</p>\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </section>"
+            text: "    <!-- INTRO SECTION  -->\r\n    <section class=\"py-4 mb-4 bg-light\">\r\n        <div class=\"container\">\r\n            <div class=\"row\">\r\n                <div class=\"col-md-9 m-auto\">\r\n                    <p class=\"lead\">{{ body }}</p>\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </section>"
             make_link: false
             path: ''
             absolute: false
@@ -4145,7 +4323,7 @@ display:
           group_type: group
           admin_label: ''
           label: ''
-          exclude: false
+          exclude: true
           alter:
             alter_text: false
             text: ''
@@ -4173,14 +4351,14 @@ display:
             trim: false
             preserve_tags: ''
             html: false
-          element_type: ''
-          element_class: ''
+          element_type: div
+          element_class: card
           element_label_type: ''
           element_label_class: ''
           element_label_colon: false
           element_wrapper_type: ''
           element_wrapper_class: ''
-          element_default_classes: true
+          element_default_classes: false
           empty: ''
           hide_empty: false
           empty_zero: false
@@ -4208,7 +4386,7 @@ display:
           group_type: group
           admin_label: ''
           label: ''
-          exclude: false
+          exclude: true
           alter:
             alter_text: false
             text: ''
@@ -4262,6 +4440,55 @@ display:
           separator: ', '
           field_api_classes: false
           plugin_id: field
+        nothing:
+          id: nothing
+          table: views
+          field: nothing
+          relationship: none
+          group_type: group
+          admin_label: 'Field output'
+          label: ''
+          exclude: false
+          alter:
+            alter_text: true
+            text: "    <!-- LEAD SECTION  -->\r\n    <section class=\"py-4 mb-4\">\r\n        <div class=\"container\">\r\n            <div class=\"row\">\r\n                <div class=\"col-md-2\">\r\n                    <h2>Lead</h2>\r\n                </div>\r\n                <div class=\"col-md-10\">\r\n                    <div class=\"card\"><div class=\"card-body\">{{ field_lead_organisation }}</div></div>\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </section>\r\n\r\n    <!-- LOCATION SECTION  -->\r\n    <section class=\"py-4 mb-4\">\r\n        <div class=\"container\">\r\n            <div class=\"row\">\r\n                <div class=\"col-md-2\">\r\n                    <h2>Location</h2>\r\n                </div>\r\n                <div class=\"col-md-10\">\r\n                    {{ field_area_description }}\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </section>"
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: false
+          plugin_id: custom
       defaults:
         fields: false
     cache_metadata:
@@ -4350,15 +4577,15 @@ display:
           entity_type: node
           entity_field: title
           plugin_id: field
-        field_address:
-          id: field_address
-          table: node__field_address
-          field: field_address
+        type:
+          id: type
+          table: node_field_data
+          field: type
           relationship: none
           group_type: group
           admin_label: ''
           label: ''
-          exclude: false
+          exclude: true
           alter:
             alter_text: false
             text: ''
@@ -4398,8 +4625,73 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
-          click_sort_column: langcode
-          type: address_default
+          click_sort_column: target_id
+          type: entity_reference_label
+          settings:
+            link: false
+          group_column: target_id
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+          entity_type: node
+          entity_field: type
+          plugin_id: field
+        field_address:
+          id: field_address
+          table: node__field_address
+          field: field_address
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: ''
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: true
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: true
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: country_code
+          type: address_plain
           settings: {  }
           group_column: ''
           group_columns: {  }
@@ -4510,13 +4802,13 @@ display:
           grouping:
             -
               field: field_geofield
-              rendered: true
+              rendered: false
               rendered_strip: false
           data_source: field_geofield
           name_field: title
           description_field: field_address
           view_mode: full
-          leaflet_map: 'OSM Mapnik'
+          leaflet_map: esri-world_street_map
           height: '358'
           hide_empty_map: 0
           map_position:
@@ -4528,20 +4820,20 @@ display:
             minZoom: '1'
             maxZoom: '18'
           icon:
-            iconUrl: ''
-            shadowUrl: ''
+            iconUrl: '/sites/default/files/markers/{{ type }}.png'
+            shadowUrl: /sites/default/files/markers/pin-shadow.png
             iconSize:
-              x: ''
-              'y': ''
+              x: '25'
+              'y': '40'
             iconAnchor:
-              x: ''
-              'y': ''
+              x: '12'
+              'y': '40'
             shadowAnchor:
-              x: ''
-              'y': ''
+              x: '12'
+              'y': '40'
             popupAnchor:
-              x: ''
-              'y': ''
+              x: '0'
+              'y': '-30'
       row:
         type: fields
         options:
@@ -4581,7 +4873,7 @@ display:
           exclude: true
           alter:
             alter_text: false
-            text: ''
+            text: '<p><strong>Species affected:</strong> {{ field_species_affected }} </p>'
             make_link: false
             path: ''
             absolute: false
@@ -4608,14 +4900,14 @@ display:
             html: false
           element_type: ''
           element_class: ''
-          element_label_type: ''
-          element_label_class: ''
+          element_label_type: span
+          element_label_class: strong
           element_label_colon: false
           element_wrapper_type: ''
           element_wrapper_class: ''
-          element_default_classes: true
+          element_default_classes: false
           empty: ''
-          hide_empty: false
+          hide_empty: true
           empty_zero: false
           hide_alter_empty: true
           click_sort_column: target_id
@@ -4639,12 +4931,12 @@ display:
           field: delta
           relationship: none
           group_type: group
-          admin_label: ''
+          admin_label: ' 2.1 Species affected rewrite'
           label: ''
           exclude: true
           alter:
-            alter_text: false
-            text: ''
+            alter_text: true
+            text: '<p><strong>Species affected</strong> {{ field_species_affected }} </p>'
             make_link: false
             path: ''
             absolute: false
@@ -4810,126 +5102,6 @@ display:
           prefix: ''
           suffix: ''
           plugin_id: numeric
-        field_which_products_are_in_trad:
-          id: field_which_products_are_in_trad
-          table: node__field_which_products_are_in_trad
-          field: field_which_products_are_in_trad
-          relationship: none
-          group_type: group
-          admin_label: ''
-          label: ''
-          exclude: true
-          alter:
-            alter_text: false
-            text: ''
-            make_link: false
-            path: ''
-            absolute: false
-            external: false
-            replace_spaces: false
-            path_case: none
-            trim_whitespace: false
-            alt: ''
-            rel: ''
-            link_class: ''
-            prefix: ''
-            suffix: ''
-            target: ''
-            nl2br: false
-            max_length: 0
-            word_boundary: true
-            ellipsis: true
-            more_link: false
-            more_link_text: ''
-            more_link_path: ''
-            strip_tags: false
-            trim: false
-            preserve_tags: ''
-            html: false
-          element_type: ''
-          element_class: ''
-          element_label_type: ''
-          element_label_class: ''
-          element_label_colon: false
-          element_wrapper_type: ''
-          element_wrapper_class: ''
-          element_default_classes: true
-          empty: ''
-          hide_empty: false
-          empty_zero: false
-          hide_alter_empty: true
-          click_sort_column: target_id
-          type: entity_reference_label
-          settings:
-            link: false
-          group_column: target_id
-          group_columns: {  }
-          group_rows: true
-          delta_limit: 0
-          delta_offset: 0
-          delta_reversed: false
-          delta_first_last: false
-          multi_type: separator
-          separator: ', '
-          field_api_classes: false
-          plugin_id: field
-        delta_2:
-          id: delta_2
-          table: node__field_which_products_are_in_trad
-          field: delta
-          relationship: none
-          group_type: group
-          admin_label: ''
-          label: ''
-          exclude: true
-          alter:
-            alter_text: false
-            text: ''
-            make_link: false
-            path: ''
-            absolute: false
-            external: false
-            replace_spaces: false
-            path_case: none
-            trim_whitespace: false
-            alt: ''
-            rel: ''
-            link_class: ''
-            prefix: ''
-            suffix: ''
-            target: ''
-            nl2br: false
-            max_length: 0
-            word_boundary: true
-            ellipsis: true
-            more_link: false
-            more_link_text: ''
-            more_link_path: ''
-            strip_tags: false
-            trim: false
-            preserve_tags: ''
-            html: false
-          element_type: ''
-          element_class: ''
-          element_label_type: ''
-          element_label_class: ''
-          element_label_colon: false
-          element_wrapper_type: ''
-          element_wrapper_class: ''
-          element_default_classes: true
-          empty: ''
-          hide_empty: false
-          empty_zero: false
-          hide_alter_empty: true
-          set_precision: false
-          precision: 0
-          decimal: .
-          separator: ','
-          format_plural: false
-          format_plural_string: !!binary MQNAY291bnQ=
-          prefix: ''
-          suffix: ''
-          plugin_id: numeric
         field_end_use:
           id: field_end_use
           table: node__field_end_use
@@ -4940,8 +5112,8 @@ display:
           label: ''
           exclude: true
           alter:
-            alter_text: false
-            text: ''
+            alter_text: true
+            text: '<strong>End use</strong> {{ field_end_use }} '
             make_link: false
             path: ''
             absolute: false
@@ -4992,18 +5164,18 @@ display:
           separator: ', '
           field_api_classes: false
           plugin_id: field
-        field_problem_overview:
-          id: field_problem_overview
-          table: node__field_problem_overview
-          field: field_problem_overview
+        field_products_in_trade:
+          id: field_products_in_trade
+          table: node__field_products_in_trade
+          field: field_products_in_trade
           relationship: none
           group_type: group
           admin_label: ''
           label: ''
           exclude: true
           alter:
-            alter_text: false
-            text: ''
+            alter_text: true
+            text: '<strong>Products in trade</strong> {{ field_products_in_trade }} '
             make_link: false
             path: ''
             absolute: false
@@ -5058,6 +5230,68 @@ display:
           id: field_buyers
           table: node__field_buyers
           field: field_buyers
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: ''
+          exclude: true
+          alter:
+            alter_text: true
+            text: '<strong>Who is buying the product</strong>{{ field_buyers }} '
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: value
+          type: text_default
+          settings: {  }
+          group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+          plugin_id: field
+        field_problem_overview:
+          id: field_problem_overview
+          table: node__field_problem_overview
+          field: field_problem_overview
           relationship: none
           group_type: group
           admin_label: ''
@@ -5122,12 +5356,12 @@ display:
           field: nothing
           relationship: none
           group_type: group
-          admin_label: ''
+          admin_label: 'Field output'
           label: ''
           exclude: false
           alter:
             alter_text: true
-            text: "    <!-- PROBLEM SECTION  -->\r\n    <section class=\"py-5 mb-5\">\r\n        <div class=\"container\">\r\n            <div class=\"row\">\r\n                <div class=\"col-md-3\">\r\n                    <h2>The Poaching and Wildlife Trade Problem</h2>\r\n                </div>\r\n                <div class=\"col-md-9\">\r\n                    <p>{{ field_species_affected }}</p>\r\n                    <p>{{ field_add_species }}</p>\r\n                    <p>{{ field_which_products_are_in_trad }}</p>\r\n                    <p>{{ field_end_use }}</p>\r\n                    <p>{{ field_buyers }}</p>\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </section>"
+            text: "    <!-- PROBLEM SECTION  -->\r\n    <section class=\"py-4 mb-4\">\r\n        <div class=\"container\">\r\n            <div class=\"row\">\r\n                <div class=\"col-md-3\">\r\n                    <h2>The Poaching and Wildlife Trade Problem</h2>\r\n                </div>\r\n                <div class=\"col-md-9\">\r\n{{ delta }}\r\n{{ field_add_species }}\r\n{{ field_products_in_trade }} \r\n{{ field_end_use }}\r\n{{ field_buyers }}\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </section>"
             make_link: false
             path: ''
             absolute: false
@@ -5180,8 +5414,8 @@ display:
         - 'config:field.storage.node.field_buyers'
         - 'config:field.storage.node.field_end_use'
         - 'config:field.storage.node.field_problem_overview'
+        - 'config:field.storage.node.field_products_in_trade'
         - 'config:field.storage.node.field_species_affected'
-        - 'config:field.storage.node.field_which_products_are_in_trad'
   block_7:
     display_plugin: block
     id: block_7
@@ -5199,7 +5433,7 @@ display:
           group_type: group
           admin_label: ''
           label: ''
-          exclude: false
+          exclude: true
           alter:
             alter_text: false
             text: ''
@@ -5242,12 +5476,12 @@ display:
           click_sort_column: target_id
           type: colorbox
           settings:
-            colorbox_node_style: medium
+            colorbox_node_style: gallery_270x270_
             colorbox_node_style_first: ''
             colorbox_image_style: max_1300x1300
             colorbox_gallery: post
             colorbox_gallery_custom: ''
-            colorbox_caption: auto
+            colorbox_caption: title
             colorbox_caption_custom: ''
           group_column: ''
           group_columns: {  }
@@ -5260,6 +5494,55 @@ display:
           separator: ''
           field_api_classes: false
           plugin_id: field
+        nothing:
+          id: nothing
+          table: views
+          field: nothing
+          relationship: none
+          group_type: group
+          admin_label: 'Field output'
+          label: ''
+          exclude: false
+          alter:
+            alter_text: true
+            text: "    <section id=\"i-gallery\" class=\"py-4 mb-4\">\r\n        <div class=\"container\">\r\n            <div class=\"row\">\r\n                <div class=\"col\">\r\n                    {{ field_image_gallery }} \r\n\r\n                </div>\r\n            </div>\r\n    </section>"
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: false
+          plugin_id: custom
       defaults:
         fields: false
       block_description: 'Initiative gallery'
@@ -5294,7 +5577,7 @@ display:
           exclude: false
           alter:
             alter_text: true
-            text: "    <!-- OVERVIEW SECTION  -->\r\n    <section class=\"py-5 mb-5\">\r\n        <div class=\"container\">\r\n            <div class=\"row\">\r\n                <div class=\"col-md-3\">\r\n                    <h2>Overview of the problem</h2>\r\n                </div>\r\n                <div class=\"col-md-9\">\r\n                    {{ field_problem_overview }}\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </section>"
+            text: "    <!-- OVERVIEW SECTION  -->\r\n    <section class=\"py-4 mb-4\">\r\n        <div class=\"container\">\r\n            <div class=\"row\">\r\n                <div class=\"col-md-3\">\r\n                    <h2>Overview of the problem</h2>\r\n                </div>\r\n                <div class=\"col-md-9\">\r\n                    {{ field_problem_overview }}\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </section>"
             make_link: false
             path: ''
             absolute: false
@@ -6087,7 +6370,7 @@ display:
           exclude: true
           alter:
             alter_text: true
-            text: "<p class=\"d-inline-block\">Strengthening disincentives for illegal behaviour</p>\r\n{{ field_paid_scouts }} \r\n{{ field_performance_payments }} \r\n{{ field_voluntary_scouts }} \r\n{{ field_in_kind_scouts }} \r\n{{ field_intelligence_incentives }} \r\n{{ field_in_kind_incentives }} \r\n{{ field_raising_awareness }} \r\n{{ field_supporting_sanctions }} \r\n{{ field_3_2_1_other }} \r\n{{ field_3_2_1_details }}"
+            text: "<p class=\"i-strategy\"><i class=\"fas fa-circle fa-lg\"></i>Strengthening disincentives for illegal behaviour</p>\r\n{{ field_paid_scouts }} \r\n{{ field_performance_payments }} \r\n{{ field_voluntary_scouts }} \r\n{{ field_in_kind_scouts }} \r\n{{ field_intelligence_incentives }} \r\n{{ field_in_kind_incentives }} \r\n{{ field_raising_awareness }} \r\n{{ field_supporting_sanctions }} \r\n{{ field_3_2_1_other }} \r\n{{ field_3_2_1_details }}"
             make_link: false
             path: ''
             absolute: false
@@ -6734,7 +7017,7 @@ display:
           exclude: true
           alter:
             alter_text: true
-            text: "<p>Increasing incentives for wildlife stewardship</p>\r\n{{ field_tourism }} \r\n{{ field_trophy_hunting }} \r\n{{ field_subsistence_resource_use }} \r\n{{ field_lease_payments }} \r\n{{ field_ecosystem_service_payments }} \r\n{{ field_legal_trade }} \r\n{{ field_policy_regulatory_change }} \r\n{{ field_3_2_2_other }}\r\n{{ field_3_2_2_details }}"
+            text: "<p class=\"i-strategy\"><i class=\"fas fa-circle fa-lg\"></i>Increasing incentives for wildlife stewardship</p>\r\n{{ field_tourism }} \r\n{{ field_trophy_hunting }} \r\n{{ field_subsistence_resource_use }} \r\n{{ field_lease_payments }} \r\n{{ field_ecosystem_service_payments }} \r\n{{ field_legal_trade }} \r\n{{ field_policy_regulatory_change }} \r\n{{ field_3_2_2_other }}\r\n{{ field_3_2_2_details }}"
             make_link: false
             path: ''
             absolute: false
@@ -7186,7 +7469,7 @@ display:
           exclude: true
           alter:
             alter_text: true
-            text: "<p>Decreasing the costs of living with wildlife</p>\r\n{{ field_preventive_measures_deter }} \r\n{{ field_reactive_measures }} \r\n{{ field_financial_mitigation }} \r\n{{ field_physical_separation }} \r\n{{ field_3_2_3_other }} \r\n{{ field_3_2_3_details }} "
+            text: "<p class=\"i-strategy\"><i class=\"fas fa-circle fa-lg\"></i>Decreasing the costs of living with wildlife</p>\r\n{{ field_preventive_measures_deter }} \r\n{{ field_reactive_measures }} \r\n{{ field_financial_mitigation }} \r\n{{ field_physical_separation }} \r\n{{ field_3_2_3_other }} \r\n{{ field_3_2_3_details }} "
             make_link: false
             path: ''
             absolute: false
@@ -7508,7 +7791,7 @@ display:
           exclude: true
           alter:
             alter_text: true
-            text: "<p>Increasing livelihoods that are not related to wildlife</p>\r\n{{ field_non_wildlife_development }} \r\n{{ field_community_level_benefits }} \r\n{{ field_3_2_4_other }} \r\n{{ field_3_2_4_details }} "
+            text: "<p class=\"i-strategy\"><i class=\"fas fa-circle fa-lg\"></i>Increasing livelihoods that are not related to wildlife</p>\r\n{{ field_non_wildlife_development }} \r\n{{ field_community_level_benefits }} \r\n{{ field_3_2_4_other }} \r\n{{ field_3_2_4_details }} "
             make_link: false
             path: ''
             absolute: false
@@ -7551,6 +7834,68 @@ display:
             format: boolean
             format_custom_true: ''
             format_custom_false: ''
+          group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+          plugin_id: field
+        field_3_2_5_details:
+          id: field_3_2_5_details
+          table: node__field_3_2_5_details
+          field: field_3_2_5_details
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: ''
+          exclude: true
+          alter:
+            alter_text: true
+            text: " <a class=\"d-block\" href=\"#collapse\" data-toggle=\"collapse\" data-target=\"#collapse-325-details\">Further detail</a>\r\n<div class=\"collapse mt-4\" id=\"collapse-325-details\">\r\n{{ field_3_2_5_details }} \r\n</div>"
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: value
+          type: text_default
+          settings: {  }
           group_column: value
           group_columns: {  }
           group_rows: true
@@ -7573,7 +7918,7 @@ display:
           exclude: true
           alter:
             alter_text: true
-            text: '<p>Build/and or support sense of community ownership or stewardship</p>'
+            text: "<p class=\"i-strategy\"><i class=\"fas fa-circle fa-lg\"></i>Build/and or support sense of community ownership or stewardship</p>\r\n{{ field_3_2_5_details }} "
             make_link: false
             path: ''
             absolute: false
@@ -7627,6 +7972,68 @@ display:
           separator: ', '
           field_api_classes: false
           plugin_id: field
+        field_3_2_6_details:
+          id: field_3_2_6_details
+          table: node__field_3_2_6_details
+          field: field_3_2_6_details
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: ''
+          exclude: true
+          alter:
+            alter_text: true
+            text: " <a class=\"d-block\" href=\"#collapse\" data-toggle=\"collapse\" data-target=\"#collapse-326-details\">Further detail</a>\r\n<div class=\"collapse mt-4\" id=\"collapse-326-details\">\r\n{{ field_3_2_6_details }} \r\n</div>"
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: value
+          type: text_default
+          settings: {  }
+          group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+          plugin_id: field
         field_education_and_awareness:
           id: field_education_and_awareness
           table: node__field_education_and_awareness
@@ -7638,7 +8045,7 @@ display:
           exclude: true
           alter:
             alter_text: true
-            text: '<p>Improving education and awareness</p>'
+            text: "<p class=\"i-strategy\"><i class=\"fas fa-circle fa-lg\"></i>Improving education and awareness</p>\r\n{{ field_3_2_6_details }}"
             make_link: false
             path: ''
             absolute: false
@@ -7753,7 +8160,7 @@ display:
           exclude: false
           alter:
             alter_text: true
-            text: "<div class=\"py-5 mb-5 bg-light\">    \r\n<!-- OVERVIEW SECTION  -->\r\n    <section class=\"py-5 mb-5 i-section\">\r\n        <div class=\"container\">\r\n            <div class=\"row\">\r\n                <div class=\"col-md-3\">\r\n                    <h2>The Anti-IWT Initiative</h2>\r\n                </div>\r\n                <div class=\"col-md-9\">\r\n                   {{ field_initiative_introduction }}\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </section>\r\n\r\n<!-- STRATEGY SECTION  -->\r\n<section class=\"py-5 mb-5 i-section-count\">\r\n    <div class=\"container\">\r\n        <div class=\"row\">\r\n            <div class=\"col-md-3\">\r\n                <h2>The strategy</h2>\r\n            </div>\r\n            <div class=\"col-md-9\">\r\n                <div class=\"d-block\">\r\n                    {{ field_illegal_disincentives }}\r\n                </div>\r\n                <div class=\"d-block\">\r\n                    {{ field_stewardship_incentives }}\r\n                </div>\r\n                <div class=\"d-block\">\r\n                    {{ field_decreasing_living_costs }}\r\n                </div>\r\n                <div class=\"d-block\">\r\n                    {{ field_non_wildlife_livelihoods }}\r\n                </div>\r\n                <div class=\"d-block\">\r\n                    {{ field_sense_of_ownership }}\r\n                </div>\r\n                <div class=\"d-block\">\r\n                    {{ field_education_and_awareness }}\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </div>\r\n    </div>\r\n</section>\r\n</div>"
+            text: "<div class=\"py-4 mb-4 bg-light\">    \r\n<!-- OVERVIEW SECTION  -->\r\n    <section class=\"py-5 mb-5 i-section\">\r\n        <div class=\"container\">\r\n            <div class=\"row\">\r\n                <div class=\"col-md-3\">\r\n                    <h2>The Anti-IWT Initiative</h2>\r\n                </div>\r\n                <div class=\"col-md-9\">\r\n                   {{ field_initiative_introduction }}\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </section>\r\n\r\n<!-- STRATEGY SECTION  -->\r\n<section class=\"py-4 mb-4 i-section-count\" id=\"i-strategy\">\r\n    <div class=\"container\">\r\n        <div class=\"row\">\r\n            <div class=\"col-md-3\">\r\n                <h2>The strategy</h2>\r\n            </div>\r\n            <div class=\"col-md-9\">\r\n                <div class=\"d-block ipoint\">\r\n                    {{ field_illegal_disincentives }}\r\n                </div>\r\n                <div class=\"d-block ipoint\">\r\n                    {{ field_stewardship_incentives }}\r\n                </div>\r\n                <div class=\"d-block ipoint\">\r\n                    {{ field_decreasing_living_costs }}\r\n                </div>\r\n                <div class=\"d-block ipoint\">\r\n                    {{ field_non_wildlife_livelihoods }}\r\n                </div>\r\n                <div class=\"d-block ipoint\">\r\n                    {{ field_sense_of_ownership }}\r\n                </div>\r\n                <div class=\"d-block ipoint\">\r\n                    {{ field_education_and_awareness }}\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </div>\r\n    </div>\r\n</section>\r\n</div>"
             make_link: false
             path: ''
             absolute: false
@@ -7825,6 +8232,8 @@ display:
         - 'config:field.storage.node.field_3_2_3_other'
         - 'config:field.storage.node.field_3_2_4_details'
         - 'config:field.storage.node.field_3_2_4_other'
+        - 'config:field.storage.node.field_3_2_5_details'
+        - 'config:field.storage.node.field_3_2_6_details'
         - 'config:field.storage.node.field_community_level_benefits'
         - 'config:field.storage.node.field_decreasing_living_costs'
         - 'config:field.storage.node.field_ecosystem_service_payments'

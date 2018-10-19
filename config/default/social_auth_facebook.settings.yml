@@ -1,1 +1,5 @@
-endpoints: null
+endpoints: ''
+app_id: '480929555750570'
+app_secret: '480929555750570'
+graph_version: '3.1'
+scopes: ''

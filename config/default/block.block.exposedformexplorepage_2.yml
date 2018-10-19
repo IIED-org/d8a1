@@ -1,0 +1,29 @@
+uuid: d2e73a50-7444-44af-b671-a607ab2e417f
+langcode: en
+status: true
+dependencies:
+  config:
+    - views.view.explore
+  module:
+    - system
+    - views
+  theme:
+    - pnp_bootstrap_sass
+id: exposedformexplorepage_2
+theme: pnp_bootstrap_sass
+region: highlighted
+weight: 0
+provider: null
+plugin: 'views_exposed_filter_block:explore-page_2'
+settings:
+  id: 'views_exposed_filter_block:explore-page_2'
+  label: ''
+  provider: views
+  label_display: visible
+  views_label: ''
+visibility:
+  request_path:
+    id: request_path
+    pages: '/explore*'
+    negate: false
+    context_mapping: {  }
