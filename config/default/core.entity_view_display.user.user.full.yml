@@ -1,8 +1,9 @@
-uuid: 8db98e83-e4be-4d68-bc7c-a0f495b8792c
+uuid: 14e52a00-d0c2-4b44-9834-6137ec107ee5
 langcode: en
 status: true
 dependencies:
   config:
+    - core.entity_view_mode.user.full
     - field.field.user.user.user_picture
     - image.style.thumbnail
   module:
@@ -45,10 +46,10 @@ third_party_settings:
         formatter: default
 _core:
   default_config_hash: '-cLsS3M3JycipXQt9rEb81_HxKneReoGuRh8ijcOPXs'
-id: user.user.default
+id: user.user.full
 targetEntityType: user
 bundle: user
-mode: default
+mode: full
 content:
   masquerade:
     weight: 3
