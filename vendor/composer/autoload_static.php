@@ -99,6 +99,7 @@ class ComposerStaticInitd4b25c3c42fe54840614cd40d27e53a2
         ),
         'J' => 
         array (
+            'JakubOnderka\\PhpConsoleHighlighter\\' => 35,
             'JakubOnderka\\PhpConsoleColor\\' => 29,
         ),
         'I' => 
@@ -296,6 +297,10 @@ class ComposerStaticInitd4b25c3c42fe54840614cd40d27e53a2
             1 => __DIR__ . '/..' . '/league/oauth2-facebook/src',
             2 => __DIR__ . '/..' . '/league/oauth2-google/src',
         ),
+        'JakubOnderka\\PhpConsoleHighlighter\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/jakub-onderka/php-console-highlighter/src',
+        ),
         'JakubOnderka\\PhpConsoleColor\\' => 
         array (
             0 => __DIR__ . '/..' . '/jakub-onderka/php-console-color/src',
@@ -404,13 +409,6 @@ class ComposerStaticInitd4b25c3c42fe54840614cd40d27e53a2
                 0 => __DIR__ . '/..' . '/solarium/solarium/library',
             ),
         ),
-        'J' => 
-        array (
-            'JakubOnderka\\PhpConsoleHighlighter' => 
-            array (
-                0 => __DIR__ . '/..' . '/jakub-onderka/php-console-highlighter/src',
-            ),
-        ),
         'G' => 
         array (
             'Geocoder' => 
@@ -442,6 +440,10 @@ class ComposerStaticInitd4b25c3c42fe54840614cd40d27e53a2
             'Doctrine\\Common\\Collections\\' => 
             array (
                 0 => __DIR__ . '/..' . '/doctrine/collections/lib',
+            ),
+            'Dflydev\\DotAccessData' => 
+            array (
+                0 => __DIR__ . '/..' . '/dflydev/dot-access-data/src',
             ),
         ),
         'C' => 

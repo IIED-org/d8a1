@@ -12,7 +12,7 @@ dependencies:
 id: homehero
 theme: pnp_bootstrap_sass
 region: featured_top
-weight: -18
+weight: -19
 provider: null
 plugin: 'block_content:c1adc312-0d0d-4267-92ac-9ae80c0b25ae'
 settings:

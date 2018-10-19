@@ -6,4 +6,25 @@ id: contributor
 label: Contributor
 weight: -8
 is_admin: null
-permissions: {  }
+permissions:
+  - 'access organisation entity browser pages'
+  - 'access resource entity browser pages'
+  - 'access shortcuts'
+  - 'access species entity browser pages'
+  - 'create audio media'
+  - 'create file media'
+  - 'create image media'
+  - 'create initiative content'
+  - 'create media'
+  - 'create organisation content'
+  - 'create remote_video media'
+  - 'create resource content'
+  - 'create video media'
+  - 'use add_species_via_ief transition create_new_draft'
+  - 'use editorial transition create_new_draft'
+  - 'use new_species_added transition create_new_draft'
+  - 'use node.default form mode'
+  - 'use node.popup form mode'
+  - 'use taxonomy_term.ief form mode'
+  - 'view conditional fields'
+  - 'view own unpublished content'
