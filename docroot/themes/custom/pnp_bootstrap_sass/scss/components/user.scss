@@ -93,6 +93,10 @@
     border-radius: $border-radius-lg;
 }
 
+.account-modal {
+    z-index: 500 !important;
+}
+
 .account-modal-header h2 {
   font-size: inherit;
   margin: 0 $spacer;

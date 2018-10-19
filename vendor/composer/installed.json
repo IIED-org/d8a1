@@ -4672,6 +4672,9 @@
                     "status": "not-covered",
                     "message": "Beta releases are not covered by Drupal security advisories."
                 }
+            },
+            "patches_applied": {
+                "Disable scroll zoom": "https://www.drupal.org/files/issues/2018-10-13/3006497-disable-zoom-wheel_0.patch"
             }
         },
         "installation-source": "dist",

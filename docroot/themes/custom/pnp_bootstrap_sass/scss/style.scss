@@ -363,6 +363,10 @@ form.form-search:before {
   margin-bottom: 105px;
 }
 
+.leaflet-touch-zoom  {
+  touch-action: none;
+}
+
 /* .path-explore .tabs {
   @extend .bg-light;
 } */
