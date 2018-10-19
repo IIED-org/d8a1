@@ -11,7 +11,7 @@ dependencies:
 id: country_2
 theme: pnp_bootstrap_sass
 region: featured_top
-weight: 0
+weight: -17
 provider: null
 plugin: 'facet_block:country_2'
 settings:

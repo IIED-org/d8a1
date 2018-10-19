@@ -12,7 +12,7 @@ dependencies:
 id: exposedformexplorepage_2
 theme: pnp_bootstrap_sass
 region: highlighted
-weight: 0
+weight: -18
 provider: null
 plugin: 'views_exposed_filter_block:explore-page_2'
 settings:

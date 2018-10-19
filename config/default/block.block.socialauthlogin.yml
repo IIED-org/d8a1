@@ -1,0 +1,20 @@
+uuid: 24b790c6-dc9f-41da-a0bc-73c5694ae692
+langcode: en
+status: false
+dependencies:
+  module:
+    - social_auth
+  theme:
+    - pnp_bootstrap_sass
+id: socialauthlogin
+theme: pnp_bootstrap_sass
+region: top_header
+weight: -20
+provider: null
+plugin: social_auth_login
+settings:
+  id: social_auth_login
+  label: 'Login via'
+  provider: social_auth
+  label_display: visible
+visibility: {  }

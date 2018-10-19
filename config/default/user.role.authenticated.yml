@@ -12,6 +12,7 @@ permissions:
   - 'access comments'
   - 'access content'
   - 'access site-wide contact form'
+  - 'access synonyms entity autocomplete'
   - 'post comments'
   - 'search content'
   - 'skip comment approval'

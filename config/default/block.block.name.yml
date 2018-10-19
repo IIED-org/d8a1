@@ -1,0 +1,29 @@
+uuid: eef97d5b-c47a-4ab8-b8b8-43779071bbb6
+langcode: en
+status: true
+dependencies:
+  module:
+    - ctools_block
+  theme:
+    - pnp_bootstrap_sass
+id: name
+theme: pnp_bootstrap_sass
+region: primary_menu
+weight: -18
+provider: null
+plugin: 'entity_field:user:name'
+settings:
+  id: 'entity_field:user:name'
+  label: Name
+  provider: ctools_block
+  label_display: '0'
+  formatter:
+    label: hidden
+    type: string
+    settings:
+      link_to_entity: true
+    third_party_settings: {  }
+    weight: 0
+  context_mapping:
+    entity: '@user.current_user_context:current_user'
+visibility: {  }

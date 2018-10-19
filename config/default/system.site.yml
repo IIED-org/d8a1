@@ -3,7 +3,7 @@ name: 'People not poaching'
 mail: webmaster@iied.org
 slogan: ''
 page:
-  403: /user/login
+  403: ''
   404: /node/571
   front: /node
 admin_compact_mode: false
@@ -12,3 +12,4 @@ langcode: en
 default_langcode: en
 _core:
   default_config_hash: yXadRE77Va-G6dxhd2kPYapAvbnSvTF6hO4oXiOEynI
+mail_notification: info@peoplenotpoaching.org

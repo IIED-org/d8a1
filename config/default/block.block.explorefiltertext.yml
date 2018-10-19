@@ -12,7 +12,7 @@ dependencies:
 id: explorefiltertext
 theme: pnp_bootstrap_sass
 region: featured_top
-weight: -17
+weight: -18
 provider: null
 plugin: 'block_content:5a0fe900-edff-404a-9278-4f60cb399195'
 settings:

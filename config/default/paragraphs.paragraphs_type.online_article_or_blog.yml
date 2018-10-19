@@ -3,7 +3,7 @@ langcode: en
 status: true
 dependencies: {  }
 id: online_article_or_blog
-label: '- Link to article or blog published on another web site'
+label: 'Link to online article or blog'
 icon_uuid: null
 description: 'An article or blog published on an external website'
 behavior_plugins: {  }

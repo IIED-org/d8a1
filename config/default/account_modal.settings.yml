@@ -1,0 +1,16 @@
+enabled_pages:
+  login: login
+  register: register
+  password: password
+  page: 0
+  cancel: 0
+reload_on_success: 1
+dialog_width: '600'
+dialog_height: auto
+create_profile_after_registration: false
+profile_type: customer
+hide_field_descriptions: 0
+header_blocks: socialauthlogin
+footer_blocks: ''
+_core:
+  default_config_hash: sJoXmaMmB3Nwd8-q46lzcLZlLrQJ1HaiXuD5Ys5zYMY

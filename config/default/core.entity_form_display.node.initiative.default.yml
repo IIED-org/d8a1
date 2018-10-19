@@ -109,13 +109,13 @@ third_party_settings:
         classes: ''
         page_header: 2
         page_counter: 1
-        move_button: 1
+        move_button: 0
         ajaxify: 1
         nonjs_multistep: false
         scroll_top: 1
+        button_label: '1'
         button_label_next: ''
         button_label_prev: ''
-        button_label: '0'
       label: Multipage
       region: content
     group_step_1:
@@ -1566,9 +1566,9 @@ content:
     third_party_settings: {  }
   url_redirects:
     weight: 50
+    region: content
     settings: {  }
     third_party_settings: {  }
-    region: content
 hidden:
   created: true
   field_geofield: true

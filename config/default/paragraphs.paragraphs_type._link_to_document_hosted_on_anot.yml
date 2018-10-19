@@ -3,7 +3,7 @@ langcode: en
 status: true
 dependencies: {  }
 id: _link_to_document_hosted_on_anot
-label: '- Link to document file hosted on another web site'
+label: 'Document (pdf)'
 icon_uuid: null
 description: ''
 behavior_plugins: {  }
