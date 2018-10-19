@@ -75,7 +75,13 @@
     "drupal/facets_pretty_paths": "^1.0@beta",
     "drupal/redirect": "^1.2",
     "drupal/views_infinite_scroll": "^1.5",
-    "drupal/google_analytics": "^2.3"
+    "drupal/google_analytics": "^2.3",
+    "league/oauth2-client": "^2.3",
+    "drupal/account_modal": "^1.0@beta",
+    "drupal/super_login": "^1.2",
+    "drupal/r4032login": "^1.1",
+    "drupal/registration_role": "^1.0@beta",
+    "drupal/recaptcha": "^2.3"
   },
   "require-dev": {
     "drupal/devel": "^1.0",
@@ -117,6 +123,9 @@
       },
       "drupal/ds": {
         "Class in layout attributes": "https://www.drupal.org/files/issues/2018-08-27/ds-class_in_layout_attributes-2880080-10.patch"
+      },
+      "drupal/masquerade": {
+        "Unmasquerade link always appears": "https://www.drupal.org/files/issues/2018-07-11/unmasquerade_link-2695779-17.patch"
       }
     }
   },
