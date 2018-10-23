@@ -5,3 +5,7 @@ getEntityTranslation() throws exception on null
 Source: https://www.drupal.org/files/issues/2018-09-05/2951493-15.patch
 
 
+Undefined index: #type in drupal_process_states
+Source: https://www.drupal.org/files/issues/2018-04-17/drupal-process-states-notice-2700667-41.patch
+
+

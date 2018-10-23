@@ -9,3 +9,7 @@ Fix double escaping & config translation
 Source: https://www.drupal.org/files/issues/2018-07-12/field_group-use_config_translation-2846617-21.patch
 
 
+Empty groups showing
+Source: https://www.drupal.org/files/issues/2018-07-17/field_group-empty-fieldgroups-showing-bug-2986455-2.patch
+
+

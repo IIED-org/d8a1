@@ -82,7 +82,10 @@
     "drupal/r4032login": "^1.1",
     "drupal/registration_role": "^1.0@beta",
     "drupal/recaptcha": "^2.3",
-    "league/oauth2-google": "^2.2"
+    "league/oauth2-google": "^2.2",
+    "drupal/menu_token": "^1.0@alpha",
+    "drupal/simplify": "^1.0",
+    "drupal/rules": "^3.0@alpha"
   },
   "require-dev": {
     "drupal/devel": "^1.0",
@@ -103,7 +106,8 @@
     },
     "patches": {
       "drupal/core": {
-        "getEntityTranslation() throws exception on null": "https://www.drupal.org/files/issues/2018-09-05/2951493-15.patch"
+        "getEntityTranslation() throws exception on null": "https://www.drupal.org/files/issues/2018-09-05/2951493-15.patch",
+        "Undefined index: #type in drupal_process_states": "https://www.drupal.org/files/issues/2018-04-17/drupal-process-states-notice-2700667-41.patch"
       },
       "drupal/address": {
         "Integrate Address with Search API": "https://www.drupal.org/files/issues/2018-06-07/address-search-api-full-name-properties-2812659-37.patch"
@@ -113,11 +117,14 @@
       },
       "drupal/conditional_fields": {
         "Not working with checkboxes from widget":
-        "https://www.drupal.org/files/issues/2018-03-22/conditional_fields_fix_checkboxes_2912357_6.patch"
+        "https://www.drupal.org/files/issues/2018-03-22/conditional_fields_fix_checkboxes_2912357_6.patch",
+        "Uninitialised string offset":
+        "https://www.drupal.org/files/issues/conditional_fields-uninitialized_string_offset_in_conditional_fields_evaluate_dependency-2834358.patch"
       },
       "drupal/field_group": {
         "Error: Call to a member function process() on null": "https://www.drupal.org/files/issues/2018-09-07/field_group-process.patch",
-        "Fix double escaping & config translation": "https://www.drupal.org/files/issues/2018-07-12/field_group-use_config_translation-2846617-21.patch"
+        "Fix double escaping & config translation": "https://www.drupal.org/files/issues/2018-07-12/field_group-use_config_translation-2846617-21.patch",
+        "Empty groups showing": "https://www.drupal.org/files/issues/2018-07-17/field_group-empty-fieldgroups-showing-bug-2986455-2.patch"
       },
       "drupal/paragraphs": {
         "Error on upload via entity browser": "https://www.drupal.org/files/issues/paragraphs-missing-langcode-2901390-9.patch"
@@ -130,6 +137,9 @@
       },
       "drupal/leaflet": {
         "Disable scroll zoom": "https://www.drupal.org/files/issues/2018-10-13/3006497-disable-zoom-wheel_0.patch"
+      },
+      "drupal/rules": {
+        "Condition UserHasRole throws an error": "https://www.drupal.org/files/issues/2816157-10.patch"
       }
     }
   },

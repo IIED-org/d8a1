@@ -252,9 +252,6 @@ $spring-green: #00ff56;
     margin: 3rem 0;
   }
 
-button#edit-preview {
-      display: none;
-  }
 
 .card-footer {
   background-color: #fff;
@@ -585,8 +582,8 @@ label.js-form-required,
   margin-top: 2rem;
 }
 
-.node-resource-form label {
-
+.node-form label {
+  display: flex;
 }
 
 .label-description, .field--type-entity-reference legend, #edit-field-resource-type--description {
@@ -611,10 +608,12 @@ label.js-form-required,
   display: none;
 }
 
-.node-form #edit-submit {
-  @extend .btn-secondary;
+.node-form {
+  #edit-submit,
+  .layout-region-node-footer button:last-of-type {
+    @extend .btn-secondary;
+  }
 }
-
 
 /* ANIMALS
 --------------------------------------------------*/

@@ -2270,7 +2270,8 @@
                 }
             },
             "patches_applied": {
-                "Not working with checkboxes from widget": "https://www.drupal.org/files/issues/2018-03-22/conditional_fields_fix_checkboxes_2912357_6.patch"
+                "Not working with checkboxes from widget": "https://www.drupal.org/files/issues/2018-03-22/conditional_fields_fix_checkboxes_2912357_6.patch",
+                "Uninitialised string offset": "https://www.drupal.org/files/issues/conditional_fields-uninitialized_string_offset_in_conditional_fields_evaluate_dependency-2834358.patch"
             }
         },
         "installation-source": "dist",
@@ -2609,6 +2610,63 @@
         }
     },
     {
+        "name": "drupal/contribute",
+        "version": "5.0.0-beta3",
+        "version_normalized": "5.0.0.0-beta3",
+        "source": {
+            "type": "git",
+            "url": "https://git.drupal.org/project/contribute",
+            "reference": "8.x-5.0-beta3"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://ftp.drupal.org/files/projects/contribute-8.x-5.0-beta3.zip",
+            "reference": "8.x-5.0-beta3",
+            "shasum": "8ee067c4b9472b51af90b9481e4302527080129c"
+        },
+        "require": {
+            "drupal/core": "~8.0"
+        },
+        "type": "drupal-module",
+        "extra": {
+            "branch-alias": {
+                "dev-5.x": "5.x-dev"
+            },
+            "drupal": {
+                "version": "8.x-5.0-beta3",
+                "datestamp": "1515761285",
+                "security-coverage": {
+                    "status": "not-covered",
+                    "message": "Beta releases are not covered by Drupal security advisories."
+                }
+            }
+        },
+        "installation-source": "dist",
+        "notification-url": "https://packages.drupal.org/8/downloads",
+        "license": [
+            "GPL-2.0+"
+        ],
+        "authors": [
+            {
+                "name": "adriancid",
+                "homepage": "https://www.drupal.org/user/1962106"
+            },
+            {
+                "name": "jrockowitz",
+                "homepage": "https://www.drupal.org/user/371407"
+            }
+        ],
+        "description": "Provides status report message which encourage users or organizations to join the Drupal community, become a member of Drupal Association, and contribute back to Drupal.",
+        "homepage": "https://www.drupal.org/project/contribute",
+        "keywords": [
+            "Drupal"
+        ],
+        "support": {
+            "source": "http://cgit.drupalcode.org/contribute",
+            "issues": "https://www.drupal.org/project/issues/contribute"
+        }
+    },
+    {
         "name": "drupal/core",
         "version": "8.6.2",
         "version_normalized": "8.6.2.0",
@@ -2825,7 +2883,8 @@
                 "merge-extra": false
             },
             "patches_applied": {
-                "getEntityTranslation() throws exception on null": "https://www.drupal.org/files/issues/2018-09-05/2951493-15.patch"
+                "getEntityTranslation() throws exception on null": "https://www.drupal.org/files/issues/2018-09-05/2951493-15.patch",
+                "Undefined index: #type in drupal_process_states": "https://www.drupal.org/files/issues/2018-04-17/drupal-process-states-notice-2700667-41.patch"
             }
         },
         "installation-source": "dist",
@@ -3719,7 +3778,8 @@
             },
             "patches_applied": {
                 "Error: Call to a member function process() on null": "https://www.drupal.org/files/issues/2018-09-07/field_group-process.patch",
-                "Fix double escaping & config translation": "https://www.drupal.org/files/issues/2018-07-12/field_group-use_config_translation-2846617-21.patch"
+                "Fix double escaping & config translation": "https://www.drupal.org/files/issues/2018-07-12/field_group-use_config_translation-2846617-21.patch",
+                "Empty groups showing": "https://www.drupal.org/files/issues/2018-07-17/field_group-empty-fieldgroups-showing-bug-2986455-2.patch"
             }
         },
         "installation-source": "source",
@@ -4964,6 +5024,83 @@
         }
     },
     {
+        "name": "drupal/menu_token",
+        "version": "1.0.0-alpha2",
+        "version_normalized": "1.0.0.0-alpha2",
+        "source": {
+            "type": "git",
+            "url": "https://git.drupal.org/project/menu_token",
+            "reference": "8.x-1.0-alpha2"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://ftp.drupal.org/files/projects/menu_token-8.x-1.0-alpha2.zip",
+            "reference": "8.x-1.0-alpha2",
+            "shasum": "261510a3db4018849acfa70e62879d1a084ff320"
+        },
+        "require": {
+            "drupal/contribute": "*",
+            "drupal/core": "~8.0",
+            "drupal/token": "^1.0"
+        },
+        "type": "drupal-module",
+        "extra": {
+            "branch-alias": {
+                "dev-1.x": "1.x-dev"
+            },
+            "drupal": {
+                "version": "8.x-1.0-alpha2",
+                "datestamp": "1516392484",
+                "security-coverage": {
+                    "status": "not-covered",
+                    "message": "Alpha releases are not covered by Drupal security advisories."
+                }
+            }
+        },
+        "installation-source": "dist",
+        "notification-url": "https://packages.drupal.org/8/downloads",
+        "license": [
+            "GPL-2.0+"
+        ],
+        "authors": [
+            {
+                "name": "See contributors",
+                "homepage": "https://www.drupal.org/node/353073/committers",
+                "role": "Developer"
+            },
+            {
+                "name": "dealancer",
+                "homepage": "https://www.drupal.org/user/243418"
+            },
+            {
+                "name": "develCuy",
+                "homepage": "https://www.drupal.org/user/125473"
+            },
+            {
+                "name": "fubhy",
+                "homepage": "https://www.drupal.org/user/761344"
+            },
+            {
+                "name": "nhaarish",
+                "homepage": "https://www.drupal.org/user/3388728"
+            },
+            {
+                "name": "peter.draucbaher",
+                "homepage": "https://www.drupal.org/user/2409142"
+            },
+            {
+                "name": "ygerasimov",
+                "homepage": "https://www.drupal.org/user/257311"
+            }
+        ],
+        "description": "Menu Token module provides tokens, that can be used in title or in path of menu items (links).",
+        "homepage": "http://drupal.org/project/menu_token",
+        "support": {
+            "source": "http://cgit.drupalcode.org/menu_token",
+            "issues": "http://drupal.org/project/issues/menu_token"
+        }
+    },
+    {
         "name": "drupal/paragraphs",
         "version": "1.3.0",
         "version_normalized": "1.3.0.0",
@@ -5513,6 +5650,72 @@
         }
     },
     {
+        "name": "drupal/rules",
+        "version": "3.0.0-alpha4",
+        "version_normalized": "3.0.0.0-alpha4",
+        "source": {
+            "type": "git",
+            "url": "https://git.drupal.org/project/rules",
+            "reference": "8.x-3.0-alpha4"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://ftp.drupal.org/files/projects/rules-8.x-3.0-alpha4.zip",
+            "reference": "8.x-3.0-alpha4",
+            "shasum": "d6f11a6bd867b3479504b00278b4465a5b138d3a"
+        },
+        "require": {
+            "drupal/core": "~8.0",
+            "drupal/typed_data": "*"
+        },
+        "require-dev": {
+            "dealerdirect/phpcodesniffer-composer-installer": "dev-master",
+            "drupal/coder": "8.2.*",
+            "squizlabs/php_codesniffer": "2.9.*"
+        },
+        "type": "drupal-module",
+        "extra": {
+            "branch-alias": {
+                "dev-3.x": "3.x-dev"
+            },
+            "drupal": {
+                "version": "8.x-3.0-alpha4",
+                "datestamp": "1526654284",
+                "security-coverage": {
+                    "status": "not-covered",
+                    "message": "Alpha releases are not covered by Drupal security advisories."
+                }
+            },
+            "patches_applied": {
+                "Condition UserHasRole throws an error": "https://www.drupal.org/files/issues/2816157-10.patch"
+            }
+        },
+        "installation-source": "dist",
+        "notification-url": "https://packages.drupal.org/8/downloads",
+        "license": [
+            "GPL-2.0+"
+        ],
+        "authors": [
+            {
+                "name": "TR",
+                "homepage": "https://www.drupal.org/user/202830"
+            },
+            {
+                "name": "fago",
+                "homepage": "https://www.drupal.org/user/16747"
+            },
+            {
+                "name": "klausi",
+                "homepage": "https://www.drupal.org/user/262198"
+            }
+        ],
+        "description": "React on events and conditionally evaluate actions.",
+        "homepage": "https://www.drupal.org/project/rules",
+        "support": {
+            "source": "http://cgit.drupalcode.org/rules"
+        }
+    },
+    {
         "name": "drupal/search_api",
         "version": "1.10.0",
         "version_normalized": "1.10.0.0",
@@ -5724,6 +5927,63 @@
         "homepage": "https://www.drupal.org/project/shrinktheweb",
         "support": {
             "source": "http://cgit.drupalcode.org/shrinktheweb"
+        }
+    },
+    {
+        "name": "drupal/simplify",
+        "version": "1.0.0",
+        "version_normalized": "1.0.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://git.drupal.org/project/simplify",
+            "reference": "8.x-1.0"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://ftp.drupal.org/files/projects/simplify-8.x-1.0.zip",
+            "reference": "8.x-1.0",
+            "shasum": "dc33a1253b5a4c714ade8494241e7386f7d03939"
+        },
+        "require": {
+            "drupal/core": "~8.0"
+        },
+        "type": "drupal-module",
+        "extra": {
+            "branch-alias": {
+                "dev-1.x": "1.x-dev"
+            },
+            "drupal": {
+                "version": "8.x-1.0",
+                "datestamp": "1450359239",
+                "security-coverage": {
+                    "status": "covered",
+                    "message": "Covered by Drupal's security advisory policy"
+                }
+            }
+        },
+        "installation-source": "dist",
+        "notification-url": "https://packages.drupal.org/8/downloads",
+        "license": [
+            "GPL-2.0-or-later"
+        ],
+        "authors": [
+            {
+                "name": "BWPanda",
+                "homepage": "https://www.drupal.org/user/289407"
+            },
+            {
+                "name": "Dom.",
+                "homepage": "https://www.drupal.org/user/801982"
+            },
+            {
+                "name": "markoshust",
+                "homepage": "https://www.drupal.org/user/524308"
+            }
+        ],
+        "description": "Simplifies the user interface by hiding particular fields.",
+        "homepage": "https://www.drupal.org/project/simplify",
+        "support": {
+            "source": "http://cgit.drupalcode.org/simplify"
         }
     },
     {
@@ -6414,6 +6674,65 @@
         "homepage": "https://www.drupal.org/project/token",
         "support": {
             "source": "http://cgit.drupalcode.org/token"
+        }
+    },
+    {
+        "name": "drupal/typed_data",
+        "version": "1.0.0-alpha2",
+        "version_normalized": "1.0.0.0-alpha2",
+        "source": {
+            "type": "git",
+            "url": "https://git.drupal.org/project/typed_data",
+            "reference": "8.x-1.0-alpha2"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://ftp.drupal.org/files/projects/typed_data-8.x-1.0-alpha2.zip",
+            "reference": "8.x-1.0-alpha2",
+            "shasum": "a4e5f9fe5ad5842c335414ae2cbfb2aed69ef0fe"
+        },
+        "require": {
+            "drupal/core": "~8.0"
+        },
+        "require-dev": {
+            "dealerdirect/phpcodesniffer-composer-installer": "dev-master",
+            "drupal/coder": "8.2.*",
+            "squizlabs/php_codesniffer": "2.9.*",
+            "symfony/yaml": "3.*"
+        },
+        "type": "drupal-module",
+        "extra": {
+            "branch-alias": {
+                "dev-1.x": "1.x-dev"
+            },
+            "drupal": {
+                "version": "8.x-1.0-alpha2",
+                "datestamp": "1536437580",
+                "security-coverage": {
+                    "status": "not-covered",
+                    "message": "Alpha releases are not covered by Drupal security advisories."
+                }
+            }
+        },
+        "installation-source": "dist",
+        "notification-url": "https://packages.drupal.org/8/downloads",
+        "license": [
+            "GPL-2.0+"
+        ],
+        "authors": [
+            {
+                "name": "TR",
+                "homepage": "https://www.drupal.org/user/202830"
+            },
+            {
+                "name": "fago",
+                "homepage": "https://www.drupal.org/user/16747"
+            }
+        ],
+        "description": "Extends the core Typed Data API with new APIS and features.",
+        "homepage": "https://www.drupal.org/project/typed_data",
+        "support": {
+            "source": "http://cgit.drupalcode.org/typed_data"
         }
     },
     {
