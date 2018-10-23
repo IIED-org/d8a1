@@ -10,7 +10,7 @@ dependencies:
     - text
 third_party_settings:
   label_help:
-    label_help_description: '(A brief description or summary of the resource)'
+    label_help_description: 'A brief description or summary of the resource'
 id: node.resource.body
 field_name: body
 entity_type: node

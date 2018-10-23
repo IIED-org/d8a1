@@ -9,7 +9,7 @@ id: node.initiative.field_voluntary_scouts
 field_name: field_voluntary_scouts
 entity_type: node
 bundle: initiative
-label: '3.2.1c Un-paid (voluntary) community scouts'
+label: 'Un-paid (voluntary) community scouts'
 description: ''
 required: false
 translatable: false

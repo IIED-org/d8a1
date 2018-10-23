@@ -14,7 +14,7 @@ id: node.initiative.field_in_kind_scouts
 field_name: field_in_kind_scouts
 entity_type: node
 bundle: initiative
-label: '3.2.1d Paid in kind community scouts'
+label: 'Paid in kind community scouts'
 description: 'For example, uniforms and equipment'
 required: false
 translatable: false

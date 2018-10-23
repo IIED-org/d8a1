@@ -14,7 +14,7 @@ id: node.initiative.field_preventive_measures_deter
 field_name: field_preventive_measures_deter
 entity_type: node
 bundle: initiative
-label: '3.2.3a Preventive measures to deter wildlife '
+label: 'Preventive measures to deter wildlife '
 description: ''
 required: false
 translatable: false

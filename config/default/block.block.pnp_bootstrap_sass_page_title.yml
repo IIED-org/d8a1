@@ -23,7 +23,7 @@ settings:
 visibility:
   request_path:
     id: request_path
-    pages: "/about\r\n/explore\r\n/contribute"
+    pages: "/about\r\n/explore\r\n/contribute\r\n/node/add/resource"
     negate: true
     context_mapping: {  }
   'entity_bundle:node':

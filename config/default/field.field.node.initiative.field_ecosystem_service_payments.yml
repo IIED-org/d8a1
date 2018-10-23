@@ -9,7 +9,7 @@ id: node.initiative.field_ecosystem_service_payments
 field_name: field_ecosystem_service_payments
 entity_type: node
 bundle: initiative
-label: '3.2.2e Payments for ecosystem services'
+label: 'Payments for ecosystem services'
 description: ''
 required: false
 translatable: false

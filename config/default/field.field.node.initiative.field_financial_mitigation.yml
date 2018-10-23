@@ -14,7 +14,7 @@ id: node.initiative.field_financial_mitigation
 field_name: field_financial_mitigation
 entity_type: node
 bundle: initiative
-label: '3.2.3c Financial mitigation measures '
+label: 'Financial mitigation measures '
 description: ''
 required: false
 translatable: false

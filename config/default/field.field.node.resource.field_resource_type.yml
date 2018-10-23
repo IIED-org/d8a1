@@ -6,7 +6,6 @@ dependencies:
     - field.storage.node.field_resource_type
     - node.type.resource
     - paragraphs.paragraphs_type._link_to_document_hosted_on_anot
-    - paragraphs.paragraphs_type.document
     - paragraphs.paragraphs_type.online_article_or_blog
     - paragraphs.paragraphs_type.video
   module:
@@ -16,7 +15,7 @@ field_name: field_resource_type
 entity_type: node
 bundle: resource
 label: 'Resource type'
-description: 'Choose a type of resource to add'
+description: ''
 required: false
 translatable: false
 default_value: {  }
@@ -26,14 +25,13 @@ settings:
   handler_settings:
     negate: 0
     target_bundles:
-      document: document
       _link_to_document_hosted_on_anot: _link_to_document_hosted_on_anot
       online_article_or_blog: online_article_or_blog
       video: video
     target_bundles_drag_drop:
       document:
-        enabled: true
         weight: -11
+        enabled: false
       add_new_species:
         weight: -10
         enabled: false

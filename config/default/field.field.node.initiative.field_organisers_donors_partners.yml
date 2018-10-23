@@ -11,7 +11,7 @@ id: node.initiative.field_organisers_donors_partners
 field_name: field_organisers_donors_partners
 entity_type: node
 bundle: initiative
-label: '5.1 Organisers, donors and partners'
+label: 'Organisers, donors and partners'
 description: ''
 required: false
 translatable: false

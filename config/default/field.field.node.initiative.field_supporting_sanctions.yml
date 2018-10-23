@@ -9,7 +9,7 @@ id: node.initiative.field_supporting_sanctions
 field_name: field_supporting_sanctions
 entity_type: node
 bundle: initiative
-label: '3.2.1h Strengthening and supporting traditional norms and sanctions against IWT'
+label: 'Strengthening and supporting traditional norms and sanctions against IWT'
 description: ''
 required: false
 translatable: false

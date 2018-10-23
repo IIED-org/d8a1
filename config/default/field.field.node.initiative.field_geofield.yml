@@ -32,7 +32,7 @@ id: node.initiative.field_geofield
 field_name: field_geofield
 entity_type: node
 bundle: initiative
-label: '1.2.1 GPS coordinates'
+label: 'GPS coordinates'
 description: ''
 required: false
 translatable: true

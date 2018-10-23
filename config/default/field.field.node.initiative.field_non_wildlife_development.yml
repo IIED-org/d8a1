@@ -9,7 +9,7 @@ id: node.initiative.field_non_wildlife_development
 field_name: field_non_wildlife_development
 entity_type: node
 bundle: initiative
-label: '3.2.4a (Non-wildlife-based) enterprise development/support'
+label: 'Non-wildlife-based enterprise development/support'
 description: ''
 required: false
 translatable: false

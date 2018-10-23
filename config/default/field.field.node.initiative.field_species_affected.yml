@@ -10,12 +10,12 @@ dependencies:
     - label_help
 third_party_settings:
   label_help:
-    label_help_description: 'Start typing common or scientific name. You can add multiple species, but please try and restrict this list to the key focal species.'
+    label_help_description: 'What species, affected by illegal wildlife trade, is the initiative is focussing on? Start typing common or scientific name. You can add multiple species, but please try and restrict this list to the key focal species.'
 id: node.initiative.field_species_affected
 field_name: field_species_affected
 entity_type: node
 bundle: initiative
-label: '2.1 Species affected'
+label: 'Species affected'
 description: ''
 required: false
 translatable: true

@@ -9,7 +9,7 @@ id: node.initiative.field_trophy_hunting
 field_name: field_trophy_hunting
 entity_type: node
 bundle: initiative
-label: '3.2.2b Trophy hunting'
+label: 'Trophy hunting'
 description: ''
 required: false
 translatable: false

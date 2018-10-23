@@ -14,7 +14,7 @@ id: node.initiative.field_community_level_benefits
 field_name: field_community_level_benefits
 entity_type: node
 bundle: initiative
-label: '3.2.4b Provision of community-level benefits'
+label: 'Provision of community-level benefits'
 description: ''
 required: false
 translatable: false

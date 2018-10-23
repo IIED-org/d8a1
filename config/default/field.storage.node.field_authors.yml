@@ -1,19 +1,20 @@
-uuid: 95afcc77-17e5-480a-a764-5ecfa0188e1b
+uuid: c1188bae-0b5a-44a9-b093-8d691f99c5dd
 langcode: en
 status: true
 dependencies:
   module:
     - node
-    - taxonomy
-id: node.field_add_species
-field_name: field_add_species
+id: node.field_authors
+field_name: field_authors
 entity_type: node
-type: entity_reference
+type: string
 settings:
-  target_type: taxonomy_term
+  max_length: 512
+  is_ascii: false
+  case_sensitive: false
 module: core
 locked: false
-cardinality: -1
+cardinality: 1
 translatable: true
 indexes: {  }
 persist_with_no_fields: false

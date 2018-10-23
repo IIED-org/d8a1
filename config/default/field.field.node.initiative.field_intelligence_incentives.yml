@@ -9,7 +9,7 @@ id: node.initiative.field_intelligence_incentives
 field_name: field_intelligence_incentives
 entity_type: node
 bundle: initiative
-label: '3.2.1e Monetary incentives for community intelligence'
+label: 'Monetary incentives for community intelligence'
 description: ''
 required: false
 translatable: false

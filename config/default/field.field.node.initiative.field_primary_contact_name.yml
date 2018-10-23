@@ -14,7 +14,7 @@ id: node.initiative.field_primary_contact_name
 field_name: field_primary_contact_name
 entity_type: node
 bundle: initiative
-label: '5.4 Who is the primary contact for this initiative?'
+label: Contact
 description: ''
 required: false
 translatable: false

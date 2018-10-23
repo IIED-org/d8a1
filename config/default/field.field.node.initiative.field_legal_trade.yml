@@ -9,7 +9,7 @@ id: node.initiative.field_legal_trade
 field_name: field_legal_trade
 entity_type: node
 bundle: initiative
-label: '3.2.2f Legal trade'
+label: 'Legal trade'
 description: ''
 required: false
 translatable: false

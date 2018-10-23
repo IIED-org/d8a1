@@ -27,7 +27,7 @@ settings:
 visibility:
   request_path:
     id: request_path
-    pages: "/node/add/*\r\n/contribute"
+    pages: "/node/add/*\r\n/contribute\r\n/user/login\r\n/user/register"
     negate: false
     context_mapping: {  }
   user_role:

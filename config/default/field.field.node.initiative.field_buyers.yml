@@ -15,7 +15,7 @@ id: node.initiative.field_buyers
 field_name: field_buyers
 entity_type: node
 bundle: initiative
-label: '2.3 Who is buying the product (if known)?'
+label: 'Who is buying the product (if known)? (Not used)'
 description: ''
 required: false
 translatable: false

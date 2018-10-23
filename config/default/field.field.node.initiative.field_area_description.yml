@@ -15,7 +15,7 @@ id: node.initiative.field_area_description
 field_name: field_area_description
 entity_type: node
 bundle: initiative
-label: '1.3 Please describe the area where the initiative is taking place'
+label: 'Please describe the area where the initiative is taking place'
 description: ''
 required: false
 translatable: false

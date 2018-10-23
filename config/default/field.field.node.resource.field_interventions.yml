@@ -10,7 +10,7 @@ id: node.resource.field_interventions
 field_name: field_interventions
 entity_type: node
 bundle: resource
-label: 'Interventions (Please select all the options that apply to this resource)'
+label: 'Please select all the options that apply to this resource'
 description: ''
 required: false
 translatable: false

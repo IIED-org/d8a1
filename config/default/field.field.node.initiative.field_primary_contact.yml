@@ -14,7 +14,7 @@ id: node.initiative.field_primary_contact
 field_name: field_primary_contact
 entity_type: node
 bundle: initiative
-label: '5.4a Email address'
+label: 'Email address'
 description: ''
 required: false
 translatable: false

@@ -9,7 +9,7 @@ id: node.initiative.field_paid_scouts
 field_name: field_paid_scouts
 entity_type: node
 bundle: initiative
-label: '3.2.1a Paid in money community scouts'
+label: 'Paid in wages community scouts'
 description: ''
 required: false
 translatable: false

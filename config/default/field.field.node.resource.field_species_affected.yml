@@ -6,11 +6,6 @@ dependencies:
     - field.storage.node.field_species_affected
     - node.type.resource
     - taxonomy.vocabulary.species
-  module:
-    - label_help
-third_party_settings:
-  label_help:
-    label_help_description: '(Start typing and/or select from the list that appears)'
 id: node.resource.field_species_affected
 field_name: field_species_affected
 entity_type: node

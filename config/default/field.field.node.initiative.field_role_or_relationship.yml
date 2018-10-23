@@ -11,7 +11,7 @@ id: node.initiative.field_role_or_relationship
 field_name: field_role_or_relationship
 entity_type: node
 bundle: initiative
-label: '5.3 What is your role or relationship with the initiative?'
+label: 'What is your role or relationship with the initiative?'
 description: ''
 required: false
 translatable: false

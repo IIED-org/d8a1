@@ -9,7 +9,7 @@ id: node.initiative.field_raising_awareness
 field_name: field_raising_awareness
 entity_type: node
 bundle: initiative
-label: '3.2.1g Raising community awareness about wildlife crime penalties and sanctions'
+label: 'Raising community awareness about wildlife crime penalties and sanctions'
 description: ''
 required: false
 translatable: false

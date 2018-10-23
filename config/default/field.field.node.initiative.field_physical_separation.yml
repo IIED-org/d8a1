@@ -14,7 +14,7 @@ id: node.initiative.field_physical_separation
 field_name: field_physical_separation
 entity_type: node
 bundle: initiative
-label: '3.2.3d Physical separation of people/livestock and wildlife'
+label: 'Physical separation of people/livestock and wildlife'
 description: ''
 required: false
 translatable: false

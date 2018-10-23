@@ -5,18 +5,13 @@ dependencies:
   config:
     - field.storage.node.field_permission_for_reuse
     - node.type.initiative
-  module:
-    - label_help
-third_party_settings:
-  label_help:
-    label_help_description: 'I understand that IUCN/IIED/TRAFFIC and others who access the material online may, without consultation, use it for research and communications activities, and that findings may be published in other outputs.'
 id: node.initiative.field_permission_for_reuse
 field_name: field_permission_for_reuse
 entity_type: node
 bundle: initiative
-label: '6.2 Permission for re-use'
+label: 'I acknowledge that I have permission to share information from those named in this initiative '
 description: ''
-required: true
+required: false
 translatable: false
 default_value:
   -

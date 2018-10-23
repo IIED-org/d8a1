@@ -9,7 +9,7 @@ id: node.initiative.field_subsistence_resource_use
 field_name: field_subsistence_resource_use
 entity_type: node
 bundle: initiative
-label: '3.2.2c Subsistence resource access/use'
+label: 'Subsistence resource access/use'
 description: ''
 required: false
 translatable: false

@@ -9,12 +9,12 @@ dependencies:
     - label_help
 third_party_settings:
   label_help:
-    label_help_description: '(Author name in ''Firstname Lastname'' format, one author per box)'
+    label_help_description: 'Optional where relevant. Add comma separated list in Firstname Lastname format.'
 id: node.resource.field_author
 field_name: field_author
 entity_type: node
 bundle: resource
-label: Author(s)
+label: 'Author(s) (deprecated)'
 description: ''
 required: false
 translatable: false

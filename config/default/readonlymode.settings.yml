@@ -1,4 +1,4 @@
-enabled: '1'
+enabled: null
 url: ''
 messages:
   default: '@site is currently in maintenance. During this maintenance it is not possible to change site content (like comments, pages and users).'

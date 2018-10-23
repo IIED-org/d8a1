@@ -16,7 +16,6 @@ dependencies:
     - field.storage.node.field_3_2_6_details
     - field.storage.node.field_4_2_1_details
     - field.storage.node.field_4_3_1_details
-    - field.storage.node.field_add_species
     - field.storage.node.field_address
     - field.storage.node.field_area_description
     - field.storage.node.field_buyers
@@ -4811,6 +4810,7 @@ display:
           leaflet_map: esri-world_street_map
           height: '358'
           hide_empty_map: 0
+          disable_wheel: 1
           map_position:
             force: 0
             center:
@@ -4937,126 +4937,6 @@ display:
           alter:
             alter_text: true
             text: '<p><strong>Species affected</strong> {{ field_species_affected }} </p>'
-            make_link: false
-            path: ''
-            absolute: false
-            external: false
-            replace_spaces: false
-            path_case: none
-            trim_whitespace: false
-            alt: ''
-            rel: ''
-            link_class: ''
-            prefix: ''
-            suffix: ''
-            target: ''
-            nl2br: false
-            max_length: 0
-            word_boundary: true
-            ellipsis: true
-            more_link: false
-            more_link_text: ''
-            more_link_path: ''
-            strip_tags: false
-            trim: false
-            preserve_tags: ''
-            html: false
-          element_type: ''
-          element_class: ''
-          element_label_type: ''
-          element_label_class: ''
-          element_label_colon: false
-          element_wrapper_type: ''
-          element_wrapper_class: ''
-          element_default_classes: true
-          empty: ''
-          hide_empty: false
-          empty_zero: false
-          hide_alter_empty: true
-          set_precision: false
-          precision: 0
-          decimal: .
-          separator: ','
-          format_plural: false
-          format_plural_string: !!binary MQNAY291bnQ=
-          prefix: ''
-          suffix: ''
-          plugin_id: numeric
-        field_add_species:
-          id: field_add_species
-          table: node__field_add_species
-          field: field_add_species
-          relationship: none
-          group_type: group
-          admin_label: ''
-          label: ''
-          exclude: true
-          alter:
-            alter_text: false
-            text: ''
-            make_link: false
-            path: ''
-            absolute: false
-            external: false
-            replace_spaces: false
-            path_case: none
-            trim_whitespace: false
-            alt: ''
-            rel: ''
-            link_class: ''
-            prefix: ''
-            suffix: ''
-            target: ''
-            nl2br: false
-            max_length: 0
-            word_boundary: true
-            ellipsis: true
-            more_link: false
-            more_link_text: ''
-            more_link_path: ''
-            strip_tags: false
-            trim: false
-            preserve_tags: ''
-            html: false
-          element_type: ''
-          element_class: ''
-          element_label_type: ''
-          element_label_class: ''
-          element_label_colon: false
-          element_wrapper_type: ''
-          element_wrapper_class: ''
-          element_default_classes: true
-          empty: ''
-          hide_empty: false
-          empty_zero: false
-          hide_alter_empty: true
-          click_sort_column: target_id
-          type: entity_reference_label
-          settings:
-            link: false
-          group_column: target_id
-          group_columns: {  }
-          group_rows: true
-          delta_limit: 0
-          delta_offset: 0
-          delta_reversed: false
-          delta_first_last: false
-          multi_type: separator
-          separator: ', '
-          field_api_classes: false
-          plugin_id: field
-        delta_1:
-          id: delta_1
-          table: node__field_add_species
-          field: delta
-          relationship: none
-          group_type: group
-          admin_label: ''
-          label: ''
-          exclude: true
-          alter:
-            alter_text: false
-            text: ''
             make_link: false
             path: ''
             absolute: false
@@ -5361,7 +5241,7 @@ display:
           exclude: false
           alter:
             alter_text: true
-            text: "    <!-- PROBLEM SECTION  -->\r\n    <section class=\"py-4 mb-4\">\r\n        <div class=\"container\">\r\n            <div class=\"row\">\r\n                <div class=\"col-md-3\">\r\n                    <h2>The Poaching and Wildlife Trade Problem</h2>\r\n                </div>\r\n                <div class=\"col-md-9\">\r\n{{ delta }}\r\n{{ field_add_species }}\r\n{{ field_products_in_trade }} \r\n{{ field_end_use }}\r\n{{ field_buyers }}\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </section>"
+            text: "    <!-- PROBLEM SECTION  -->\r\n    <section class=\"py-4 mb-4\">\r\n        <div class=\"container\">\r\n            <div class=\"row\">\r\n                <div class=\"col-md-3\">\r\n                    <h2>The Poaching and Wildlife Trade Problem</h2>\r\n                </div>\r\n                <div class=\"col-md-9\">\r\n{{ delta }}\r\n{{ field_add_species }}\r\n{{ field_products_in_trade }} \r\n{{ field_end_use }}\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </section>"
             make_link: false
             path: ''
             absolute: false
@@ -5410,7 +5290,6 @@ display:
         - 'user.node_grants:view'
         - user.permissions
       tags:
-        - 'config:field.storage.node.field_add_species'
         - 'config:field.storage.node.field_buyers'
         - 'config:field.storage.node.field_end_use'
         - 'config:field.storage.node.field_problem_overview'

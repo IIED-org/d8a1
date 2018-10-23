@@ -9,7 +9,7 @@ id: node.initiative.field_lease_payments
 field_name: field_lease_payments
 entity_type: node
 bundle: initiative
-label: '3.2.2d Lease payments'
+label: 'Lease payments'
 description: ''
 required: false
 translatable: false

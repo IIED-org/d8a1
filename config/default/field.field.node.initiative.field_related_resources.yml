@@ -10,12 +10,12 @@ dependencies:
     - label_help
 third_party_settings:
   label_help:
-    label_help_description: 'You can add images, videos, documents and links related to your initiative. Please add resources as links rather than uploading if they’re already available on other sites.'
+    label_help_description: "Please provide information that describes your initiative in more detail (e.g. videos, reports) and any other supplementary material related to your initiative such as documents and web links that can be posted on the People Not Poaching learning platform.<br />\r\nBy uploading you agree that you have permission from any copyright holders for all materials to be re-used under the terms of Creative Commons Attribution-ShareAlike license (<a href=\"https://creativecommons.org/licenses/by-sa/4.0\">CC-BY-SA</a>)"
 id: node.initiative.field_related_resources
 field_name: field_related_resources
 entity_type: node
 bundle: initiative
-label: '5.2 Related resources'
+label: Resources
 description: ''
 required: false
 translatable: false

@@ -11,7 +11,7 @@ id: node.initiative.field_image
 field_name: field_image
 entity_type: node
 bundle: initiative
-label: '5.2.1 Main image'
+label: 'Main image'
 description: ''
 required: false
 translatable: true

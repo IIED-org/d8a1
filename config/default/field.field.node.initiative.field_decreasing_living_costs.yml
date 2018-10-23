@@ -9,7 +9,7 @@ id: node.initiative.field_decreasing_living_costs
 field_name: field_decreasing_living_costs
 entity_type: node
 bundle: initiative
-label: '3.2.3 Decreasing the costs of living with wildlife'
+label: 'Decreasing the costs of living with wildlife'
 description: ''
 required: false
 translatable: false

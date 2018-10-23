@@ -14,7 +14,7 @@ id: node.initiative.field_policy_regulatory_change
 field_name: field_policy_regulatory_change
 entity_type: node
 bundle: initiative
-label: '3.2.2g Policy/regulatory change to enable communities to benefit.'
+label: 'Policy/regulatory change to enable communities to benefit.'
 description: ''
 required: false
 translatable: false

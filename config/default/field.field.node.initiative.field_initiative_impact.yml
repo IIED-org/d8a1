@@ -15,7 +15,7 @@ id: node.initiative.field_initiative_impact
 field_name: field_initiative_impact
 entity_type: node
 bundle: initiative
-label: '4.1 Please summarise the effectiveness and impact of the initative.'
+label: 'Has the initiative made a difference?'
 description: ''
 required: false
 translatable: false

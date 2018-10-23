@@ -9,7 +9,7 @@ id: node.initiative.field_illegal_disincentives
 field_name: field_illegal_disincentives
 entity_type: node
 bundle: initiative
-label: '3.2.1 Strengthening disincentives for illegal behaviour'
+label: 'Strengthening disincentives for illegal behaviour'
 description: ''
 required: false
 translatable: false

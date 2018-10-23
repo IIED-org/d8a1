@@ -10,7 +10,7 @@ id: node.initiative.field_lead_organisation
 field_name: field_lead_organisation
 entity_type: node
 bundle: initiative
-label: '1.4 Who is leading the initiative?'
+label: 'Who is leading the initiative?'
 description: ''
 required: false
 translatable: false

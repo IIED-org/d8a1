@@ -5,9 +5,10 @@ dependencies:
   config:
     - core.entity_view_mode.node.search_result
     - field.field.node.resource.body
-    - field.field.node.resource.field_add_species
+    - field.field.node.resource.field_add_new_species
     - field.field.node.resource.field_address
     - field.field.node.resource.field_author
+    - field.field.node.resource.field_authors
     - field.field.node.resource.field_date_published
     - field.field.node.resource.field_geofield
     - field.field.node.resource.field_interventions
@@ -120,8 +121,9 @@ content:
             classes: {  }
 hidden:
   addtoany: true
-  field_add_species: true
+  field_add_new_species: true
   field_address: true
+  field_authors: true
   field_geofield: true
   field_interventions: true
   field_language: true

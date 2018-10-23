@@ -15,7 +15,7 @@ id: node.initiative.field_interventions
 field_name: field_interventions
 entity_type: node
 bundle: initiative
-label: '3.2 Please select all the option(s) that apply to your project''s strategy by ticking the relevant boxes.'
+label: 'The strategy'
 description: 'Strategies, though discrete, may be inter-linked. In these cases please tick all boxes that apply and add an explanation in the fields provided.'
 required: false
 translatable: true

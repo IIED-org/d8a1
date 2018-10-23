@@ -9,7 +9,7 @@ id: node.initiative.field_year_finished
 field_name: field_year_finished
 entity_type: node
 bundle: initiative
-label: '1.5.1 Year initiative finished'
+label: 'Year initiative finished'
 description: ''
 required: false
 translatable: false

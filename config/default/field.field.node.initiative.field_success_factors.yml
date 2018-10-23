@@ -11,8 +11,8 @@ id: node.initiative.field_success_factors
 field_name: field_success_factors
 entity_type: node
 bundle: initiative
-label: '4.2.1 What are the three most important factors that you think helped your initiative to succeed?'
-description: ''
+label: 'Factors for success'
+description: 'In addition, you can choose up to three most important factors that helped your project to succeed from the list below.'
 required: false
 translatable: false
 default_value: {  }

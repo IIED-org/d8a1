@@ -17,7 +17,6 @@ dependencies:
     - field.field.node.initiative.field_3_2_6_details
     - field.field.node.initiative.field_4_2_1_details
     - field.field.node.initiative.field_4_3_1_details
-    - field.field.node.initiative.field_add_species
     - field.field.node.initiative.field_address
     - field.field.node.initiative.field_area_description
     - field.field.node.initiative.field_buyers
@@ -57,6 +56,7 @@ dependencies:
     - field.field.node.initiative.field_primary_contact
     - field.field.node.initiative.field_primary_contact_name
     - field.field.node.initiative.field_problem_overview
+    - field.field.node.initiative.field_products_in_trade
     - field.field.node.initiative.field_raising_awareness
     - field.field.node.initiative.field_reactive_measures
     - field.field.node.initiative.field_related_resources
@@ -197,7 +197,6 @@ hidden:
   field_3_2_6_details: true
   field_4_2_1_details: true
   field_4_3_1_details: true
-  field_add_species: true
   field_address: true
   field_area_description: true
   field_buyers: true
@@ -236,6 +235,7 @@ hidden:
   field_primary_contact: true
   field_primary_contact_name: true
   field_problem_overview: true
+  field_products_in_trade: true
   field_raising_awareness: true
   field_reactive_measures: true
   field_related_resources: true

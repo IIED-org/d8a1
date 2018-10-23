@@ -3,7 +3,7 @@ langcode: en
 status: true
 dependencies: {  }
 id: _link_to_document_hosted_on_anot
-label: 'Document (pdf)'
+label: Document
 icon_uuid: null
 description: ''
 behavior_plugins: {  }

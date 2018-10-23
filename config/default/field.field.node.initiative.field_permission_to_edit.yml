@@ -9,14 +9,14 @@ dependencies:
     - label_help
 third_party_settings:
   label_help:
-    label_help_description: 'I give permission for IUCN/IIED/TRAFFIC to edit and reorganise the information provided for inclusion on the People not Poaching Platform and understand that the material will be publicly accessible.'
+    label_help_description: 'I give permission to edit the information provided for inclusion on the People not Poaching Platform and understand that the material will be publicly accessible.'
 id: node.initiative.field_permission_to_edit
 field_name: field_permission_to_edit
 entity_type: node
 bundle: initiative
-label: '6.1 Permission to edit and publish'
+label: 'I give permission to edit, publish and re-use the information provided'
 description: ''
-required: true
+required: false
 translatable: false
 default_value:
   -

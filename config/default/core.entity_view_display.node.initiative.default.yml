@@ -16,7 +16,7 @@ dependencies:
     - field.field.node.initiative.field_3_2_6_details
     - field.field.node.initiative.field_4_2_1_details
     - field.field.node.initiative.field_4_3_1_details
-    - field.field.node.initiative.field_add_species
+    - field.field.node.initiative.field_add_new_species
     - field.field.node.initiative.field_address
     - field.field.node.initiative.field_area_description
     - field.field.node.initiative.field_buyers
@@ -189,13 +189,13 @@ content:
     third_party_settings: {  }
     type: text_default
     region: content
-  field_add_species:
-    weight: 9
+  field_add_new_species:
+    weight: 86
     label: above
     settings:
-      link: true
+      link_to_entity: false
     third_party_settings: {  }
-    type: entity_reference_label
+    type: string
     region: content
   field_address:
     weight: 2

@@ -11,8 +11,8 @@ id: node.initiative.field_limiting_factors
 field_name: field_limiting_factors
 entity_type: node
 bundle: initiative
-label: '4.3.1 What are the three most important factors that you think limited, or hindered your initiative’s success?'
-description: ''
+label: 'Factors that limited or hindered success'
+description: 'Please consider adding a brief explanation to help us understand how these factors influenced your project.'
 required: false
 translatable: false
 default_value: {  }

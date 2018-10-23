@@ -9,7 +9,7 @@ id: node.initiative.field_sense_of_ownership
 field_name: field_sense_of_ownership
 entity_type: node
 bundle: initiative
-label: '3.2.5 Build/and or support sense of community ownership or stewardship'
+label: 'Build/and or support sense of community ownership or stewardship'
 description: ''
 required: false
 translatable: false

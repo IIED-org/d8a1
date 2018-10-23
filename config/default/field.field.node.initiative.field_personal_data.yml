@@ -9,9 +9,9 @@ id: node.initiative.field_personal_data
 field_name: field_personal_data
 entity_type: node
 bundle: initiative
-label: '6.4 I give permission for my name and email address to be made available to the users of People not Poaching'
+label: 'I give permission for the supplied contact name and email address to be made public'
 description: ''
-required: true
+required: false
 translatable: false
 default_value:
   -

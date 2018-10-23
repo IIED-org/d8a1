@@ -9,7 +9,7 @@ id: node.initiative.field_stewardship_incentives
 field_name: field_stewardship_incentives
 entity_type: node
 bundle: initiative
-label: '3.2.2 Increasing incentives for wildlife stewardship'
+label: 'Increasing incentives for wildlife stewardship'
 description: ''
 required: false
 translatable: false

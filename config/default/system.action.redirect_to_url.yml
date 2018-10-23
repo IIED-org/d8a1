@@ -1,0 +1,12 @@
+uuid: 2c16b159-284e-489b-b387-3a24f274e292
+langcode: en
+status: true
+dependencies:
+  module:
+    - action
+id: redirect_to_url
+label: 'Redirect to thank you page'
+type: system
+plugin: action_goto_action
+configuration:
+  url: /thank-you-for-submitting-initiative

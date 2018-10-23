@@ -15,7 +15,7 @@ id: node.initiative.field_end_use
 field_name: field_end_use
 entity_type: node
 bundle: initiative
-label: '2.2.1 What is their end use (if known)?'
+label: 'What is their end use (if known)?'
 description: ''
 required: false
 translatable: false

@@ -9,7 +9,7 @@ id: node.initiative.field_3_2_3_other
 field_name: field_3_2_3_other
 entity_type: node
 bundle: initiative
-label: '3.2.3e Other'
+label: Other
 description: ''
 required: false
 translatable: false

@@ -7,15 +7,11 @@ dependencies:
     - node.type.initiative
   module:
     - address
-    - label_help
-third_party_settings:
-  label_help:
-    label_help_description: 'Please select (at least) the country that your initiative includes. You can add more than one location, with as much detail of the address as possible.'
 id: node.initiative.field_address
 field_name: field_address
 entity_type: node
 bundle: initiative
-label: '1.2 Where is the initiative taking place?'
+label: 'Where is the initiative taking place?'
 description: ''
 required: false
 translatable: false

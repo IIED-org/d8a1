@@ -57,7 +57,6 @@ module:
   file_mdm_exif: 0
   filter: 0
   form_mode_manager: 0
-  forms_steps: 0
   geocoder: 0
   geocoder_address: 0
   geocoder_field: 0
@@ -81,6 +80,7 @@ module:
   link: 0
   masquerade: 0
   media: 0
+  menu_token: 0
   menu_ui: 0
   migrate: 0
   migrate_drupal: 0
@@ -97,12 +97,14 @@ module:
   redirect: 0
   registration_role: 0
   responsive_image: 0
+  rules: 0
   search_api: 0
   search_api_db: 0
   search_api_solr: 0
   search_api_solr_defaults: 0
   shortcut: 0
   shrinktheweb: 0
+  simplify: 0
   social_api: 0
   social_auth: 0
   social_auth_facebook: 0
@@ -117,6 +119,7 @@ module:
   token: 0
   toolbar: 0
   tour: 0
+  typed_data: 0
   update: 0
   user: 0
   video_embed_field: 0
@@ -124,6 +127,7 @@ module:
   views_infinite_scroll: 0
   views_ui: 0
   workflows: 0
+  contribute: 1
   ds: 1
   hide_revision_field: 1
   menu_link_content: 1

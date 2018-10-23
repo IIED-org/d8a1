@@ -9,7 +9,7 @@ dependencies:
     - label_help
 third_party_settings:
   label_help:
-    label_help_description: '(Publisher name or source of material)'
+    label_help_description: 'Publisher name or source of material'
 id: node.resource.field_publisher
 field_name: field_publisher
 entity_type: node

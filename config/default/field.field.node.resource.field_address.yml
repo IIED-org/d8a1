@@ -7,16 +7,12 @@ dependencies:
     - node.type.resource
   module:
     - address
-    - label_help
-third_party_settings:
-  label_help:
-    label_help_description: '(Start typing and/or select from the list that appears)'
 id: node.resource.field_address
 field_name: field_address
 entity_type: node
 bundle: resource
 label: Country
-description: ''
+description: 'You can add a further location where relevant.'
 required: false
 translatable: true
 default_value: {  }

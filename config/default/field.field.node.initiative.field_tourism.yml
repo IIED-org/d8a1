@@ -9,7 +9,7 @@ id: node.initiative.field_tourism
 field_name: field_tourism
 entity_type: node
 bundle: initiative
-label: '3.2.2a Tourism'
+label: Tourism
 description: ''
 required: false
 translatable: false

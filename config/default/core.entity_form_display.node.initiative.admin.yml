@@ -4,7 +4,6 @@ status: true
 dependencies:
   config:
     - core.entity_form_mode.node.admin
-    - core.entity_form_mode.taxonomy_term.ief
     - field.field.node.initiative.body
     - field.field.node.initiative.field_3_2_1_details
     - field.field.node.initiative.field_3_2_1_other
@@ -18,7 +17,6 @@ dependencies:
     - field.field.node.initiative.field_3_2_6_details
     - field.field.node.initiative.field_4_2_1_details
     - field.field.node.initiative.field_4_3_1_details
-    - field.field.node.initiative.field_add_species
     - field.field.node.initiative.field_address
     - field.field.node.initiative.field_area_description
     - field.field.node.initiative.field_buyers
@@ -84,7 +82,6 @@ dependencies:
     - geofield
     - hide_revision_field
     - image
-    - inline_entity_form
     - layout_discovery
     - path
     - synonyms
@@ -205,22 +202,6 @@ content:
       rows: 5
       placeholder: ''
     third_party_settings: {  }
-  field_add_species:
-    weight: 17
-    settings:
-      form_mode: ief
-      override_labels: true
-      label_singular: Species
-      label_plural: Species
-      collapsible: true
-      collapsed: true
-      allow_new: true
-      match_operator: CONTAINS
-      allow_existing: false
-      allow_duplicate: false
-    third_party_settings: {  }
-    type: inline_entity_form_complex
-    region: content
   field_address:
     weight: 10
     settings:
@@ -690,4 +671,9 @@ content:
       placeholder: ''
     region: content
     third_party_settings: {  }
+  url_redirects:
+    weight: 50
+    settings: {  }
+    third_party_settings: {  }
+    region: content
 hidden: {  }

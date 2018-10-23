@@ -15,7 +15,7 @@ id: node.initiative.field_products_in_trade
 field_name: field_products_in_trade
 entity_type: node
 bundle: initiative
-label: '2.2 Which products are in trade?'
+label: 'Which products are in trade?'
 description: ''
 required: false
 translatable: false

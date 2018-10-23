@@ -14,7 +14,7 @@ id: node.initiative.field_permission_to_use_photos
 field_name: field_permission_to_use_photos
 entity_type: node
 bundle: initiative
-label: '6.3 Photo permission'
+label: 'Photo permission'
 description: ''
 required: true
 translatable: false

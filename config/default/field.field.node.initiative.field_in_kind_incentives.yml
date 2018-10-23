@@ -9,7 +9,7 @@ id: node.initiative.field_in_kind_incentives
 field_name: field_in_kind_incentives
 entity_type: node
 bundle: initiative
-label: '3.2.1f Non-monetary, in-kind incentives for community intelligence'
+label: 'Non-monetary, in-kind incentives for community intelligence'
 description: ''
 required: false
 translatable: false

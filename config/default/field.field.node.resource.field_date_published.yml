@@ -12,7 +12,7 @@ field_name: field_date_published
 entity_type: node
 bundle: resource
 label: 'Date published'
-description: 'Format: ''dd/mm/yyyy''. Only Month and Year published will be displayed'
+description: 'Only Month and Year published will be displayed'
 required: false
 translatable: false
 default_value: {  }

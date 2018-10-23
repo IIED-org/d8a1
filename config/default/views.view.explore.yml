@@ -1095,6 +1095,7 @@ display:
           leaflet_map: esri-world_street_map
           height: '600'
           hide_empty_map: 0
+          disable_wheel: 1
           map_position:
             force: 1
             center:

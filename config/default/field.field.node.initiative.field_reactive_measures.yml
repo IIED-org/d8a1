@@ -14,7 +14,7 @@ id: node.initiative.field_reactive_measures
 field_name: field_reactive_measures
 entity_type: node
 bundle: initiative
-label: '3.2.3b Reactive measures to deal with problem animals '
+label: 'Reactive measures to deal with problem animals '
 description: ''
 required: false
 translatable: false

@@ -9,7 +9,7 @@ id: node.initiative.field_non_wildlife_livelihoods
 field_name: field_non_wildlife_livelihoods
 entity_type: node
 bundle: initiative
-label: '3.2.4 Increasing livelihoods that are not related to wildlife'
+label: 'Increasing livelihoods that are not related to wildlife'
 description: ''
 required: false
 translatable: false

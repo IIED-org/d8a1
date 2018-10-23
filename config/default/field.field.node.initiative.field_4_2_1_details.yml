@@ -15,7 +15,7 @@ id: node.initiative.field_4_2_1_details
 field_name: field_4_2_1_details
 entity_type: node
 bundle: initiative
-label: '4.2.1 Details'
+label: 'Details (optional)'
 description: ''
 required: false
 translatable: false
