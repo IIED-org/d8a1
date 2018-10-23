@@ -473,6 +473,12 @@ i.fa-3x {
     color: #fff;
 }
 
+.path-explore .region-highlighted {
+    background: url(/sites/default/files/theme-images/explore-bg.svg);
+    background-position: 50%;
+    background-repeat: no-repeat;
+    height: 160px;
+}
 
 
 /* COLORS
@@ -518,6 +524,125 @@ a {
 
 .slick>div {
     margin: 0 15px;
+}
+
+
+/* NODE ADD Node edit forms
+--------------------------------------------------*/
+
+.node-form {
+  .field--type-address.form-group {
+    overflow-y: hidden;
+    .field-multiple-table {
+      min-height: 260px;
+    }
+  }
+}
+
+.node-resource-form .chosen-container .chosen-results {
+  max-height: 60px;
+}
+
+#field-address-values details {
+    border: none;
+    margin-top: 0;
+  }
+
+#field-address-values td {
+    padding: 0;
+    border-top: none;
+}
+
+
+label.js-form-required,
+.js-form-type-textarea label,
+.form-item-field-species-affected label,
+.js-form-type-textfield label,
+.field--name-field-date-published label {
+  font-size: 1.5rem !important;
+  font-weight: bold;
+  margin-top: 2rem;
+}
+
+.field-group-html-element h3, #edit-group-page-group {
+  margin-left: 30px;
+}
+
+.field-card {
+  margin: 2rem 0;
+}
+
+.field--name-field-date-published label, .field--name-field-date-published small {
+   margin-left: 15px !important;
+}
+
+.node-initiative-form, .node-resource-form {
+  @extend .container;
+  margin-top: 2rem;
+}
+
+.user-logged-in .content h1.title {
+  margin-top: 2rem;
+}
+
+.node-resource-form label {
+
+}
+
+.label-description, .field--type-entity-reference legend, #edit-field-resource-type--description {
+  @extend .text-muted;
+  font-size: 1rem;
+  font-weight: normal;
+}
+
+.paragraphs-tabs-wrapper .label-description {
+  margin-top: 0.5rem;
+}
+
+.node-resource-form .table th {
+  border: none;
+}
+
+.fa-question-circle {
+  color: $info;
+}
+
+.node-resource-form td.field-multiple-drag, .tabledrag-toggle-weight-wrapper, #edit-field-address-0 summary {
+  display: none;
+}
+
+.node-form #edit-submit {
+  @extend .btn-secondary;
+}
+
+
+/* ANIMALS
+--------------------------------------------------*/
+#bear {
+  position: absolute;
+  width: 85px;
+  height: auto;
+  top: -80px;
+  left: 50px;
+}
+
+#croc {
+  position: absolute;
+  width: 185px;
+  height: auto;
+  top: -26px;
+  right: 50px;
+  transition: width 0.5s;
+}
+
+#cat {
+  position: absolute;
+  width: 165px;
+  height: auto;
+  top: -116px;
+  right: 50px;
+  transition: width 0.5s;
+  z-index: 10;
 }
 
 
@@ -568,14 +693,37 @@ h2.i-r-r {
 }
 }
 
-/* Node edit forms
---------------------------------------------------*/
+@media (max-width: 768px) {
+  #hero {
+    min-height: 500px;
+  }
 
-.node-form {
-  .field--type-address.form-group {
-    overflow-y: hidden;
-    .field-multiple-table {
-      min-height: 500px;
-    }
+  .mb-resp {
+    margin-bottom: 2rem;
+  }
+
+  body {
+    font-size: 1rem;
+  }
+
+  #bear {
+    display: none;
+  }
+
+  #croc {
+    width: 100px;
+    height: auto;
+    top: -14px;
+    transition: width 0.5s;
+  }
+
+  #cat {
+    position: absolute;
+    width: 125px;
+    height: auto;
+    top: -90px;
+    right: 50px;
+    transition: width 0.5s;
+    z-index: 10;
   }
 }
