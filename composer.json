@@ -141,6 +141,9 @@
       },
       "drupal/rules": {
         "Condition UserHasRole throws an error": "https://www.drupal.org/files/issues/2816157-10.patch"
+      },
+      "drupal/content_moderation_notifications": {
+        "Add twig support": "https://www.drupal.org/files/issues/2018-10-12/cmn-twig-2959026-15.patch"
       }
     }
   },
