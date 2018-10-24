@@ -124,7 +124,8 @@
       "drupal/field_group": {
         "Error: Call to a member function process() on null": "https://www.drupal.org/files/issues/2018-09-07/field_group-process.patch",
         "Fix double escaping & config translation": "https://www.drupal.org/files/issues/2018-07-12/field_group-use_config_translation-2846617-21.patch",
-        "Empty groups showing": "https://www.drupal.org/files/issues/2018-07-17/field_group-empty-fieldgroups-showing-bug-2986455-2.patch"
+        "Empty groups showing": "https://www.drupal.org/files/issues/2018-07-17/field_group-empty-fieldgroups-showing-bug-2986455-2.patch",
+        "Accordion open state": "https://www.drupal.org/files/issues/2018-10-24/field_group-accordion_item_open_state-2984756-6.patch"
       },
       "drupal/paragraphs": {
         "Error on upload via entity browser": "https://www.drupal.org/files/issues/paragraphs-missing-langcode-2901390-9.patch"

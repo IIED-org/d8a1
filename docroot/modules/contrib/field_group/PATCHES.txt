@@ -13,3 +13,7 @@ Empty groups showing
 Source: https://www.drupal.org/files/issues/2018-07-17/field_group-empty-fieldgroups-showing-bug-2986455-2.patch
 
 
+Accordion open state
+Source: https://www.drupal.org/files/issues/2018-10-24/field_group-accordion_item_open_state-2984756-6.patch
+
+
