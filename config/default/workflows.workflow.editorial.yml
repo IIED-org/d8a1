@@ -2,6 +2,10 @@ uuid: c0271493-3ad9-4c57-80b8-d6bd6354b2d9
 langcode: en
 status: true
 dependencies:
+  config:
+    - node.type.initiative
+    - node.type.organisation
+    - node.type.resource
   module:
     - content_moderation
 _core:
@@ -59,4 +63,8 @@ type_settings:
       from:
         - draft
         - published
-  entity_types: {  }
+  entity_types:
+    node:
+      - initiative
+      - organisation
+      - resource

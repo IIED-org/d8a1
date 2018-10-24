@@ -2585,6 +2585,9 @@
                     "status": "not-covered",
                     "message": "RC releases are not covered by Drupal security advisories."
                 }
+            },
+            "patches_applied": {
+                "Add twig support": "https://www.drupal.org/files/issues/2018-10-12/cmn-twig-2959026-15.patch"
             }
         },
         "installation-source": "dist",

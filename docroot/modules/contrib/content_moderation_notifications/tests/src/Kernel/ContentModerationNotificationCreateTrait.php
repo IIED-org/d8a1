@@ -21,8 +21,9 @@ trait ContentModerationNotificationCreateTrait {
    */
   protected function createNotification(array $values = []) {
     $values += [
-      'id' => Unicode::strtolower($this->randomMachineName()),
+      'id' => 'example_notification',
       'workflow' => 'editorial',
+      'transitions' => [],
       'subject' => $this->randomString(),
       'status' => 1,
       'body' => [
@@ -30,8 +31,14 @@ trait ContentModerationNotificationCreateTrait {
         'format' => 'filtered_html',
       ],
       'roles' => [],
-      'emails' => '',
-      'transitions' => [],
+      'to' => '',
+      'cc' => '',
+      'bcc' => '',
+      'from' => '',
+      'replyto' => '',
+      'abort' => '',
+      'debug' => FALSE,
+      'title' => 'test',
     ];
 
     $notification = ContentModerationNotification::create($values);
