@@ -5,11 +5,12 @@ dependencies:
   config:
     - field.field.paragraph._link_to_document_hosted_on_anot.field_cover_image
     - field.field.paragraph._link_to_document_hosted_on_anot.field_document_url
+    - field.field.paragraph._link_to_document_hosted_on_anot.field_file_upload
     - image.style.thumbnail
     - paragraphs.paragraphs_type._link_to_document_hosted_on_anot
   module:
-    - content_moderation
     - field_layout
+    - file
     - image
     - layout_discovery
     - link
@@ -23,7 +24,7 @@ bundle: _link_to_document_hosted_on_anot
 mode: default
 content:
   field_cover_image:
-    weight: 102
+    weight: 2
     settings:
       progress_indicator: throbber
       preview_image_style: thumbnail
@@ -31,20 +32,22 @@ content:
     type: image_image
     region: content
   field_document_url:
-    weight: 101
+    weight: 0
     settings:
       placeholder_url: ''
       placeholder_title: ''
     third_party_settings: {  }
     type: link_default
     region: content
-  moderation_state:
-    type: moderation_state_default
-    weight: 100
-    settings: {  }
-    region: content
+  field_file_upload:
+    weight: 1
+    settings:
+      progress_indicator: throbber
     third_party_settings: {  }
+    type: file_generic
+    region: content
 hidden:
   created: true
+  moderation_state: true
   status: true
   uid: true

@@ -5,8 +5,10 @@ dependencies:
   config:
     - field.field.paragraph._link_to_document_hosted_on_anot.field_cover_image
     - field.field.paragraph._link_to_document_hosted_on_anot.field_document_url
+    - field.field.paragraph._link_to_document_hosted_on_anot.field_file_upload
     - paragraphs.paragraphs_type._link_to_document_hosted_on_anot
   module:
+    - file
     - image
     - link
 id: paragraph._link_to_document_hosted_on_anot.default
@@ -34,5 +36,13 @@ content:
       target: ''
     third_party_settings: {  }
     type: link
+    region: content
+  field_file_upload:
+    weight: 2
+    label: above
+    settings:
+      use_description_as_link_text: true
+    third_party_settings: {  }
+    type: file_default
     region: content
 hidden: {  }

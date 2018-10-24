@@ -10,7 +10,7 @@ dependencies:
     - label_help
 third_party_settings:
   label_help:
-    label_help_description: 'Please add any images relating to the initiative. By uploading you agree that you have permission from any copyright holders. Images may be re-used under the terms of Creative Commons Attribution-ShareAlike license <a href="https://creativecommons.org/licenses/by-sa/4.0">(CC-BY-SA)</a> unless the relevant copyright information is supplied in the image <strong>Title</strong> field.'
+    label_help_description: 'Please add any images relating to the initiative. By uploading you agree that you have permission from any copyright holders. Images may be re-used under the terms of Creative Commons Attribution-ShareAlike license <a href="https://creativecommons.org/licenses/by-sa/4.0">(CC-BY-SA)</a> except where copyright information is specified in the image title.'
 id: node.initiative.field_image_gallery
 field_name: field_image_gallery
 entity_type: node

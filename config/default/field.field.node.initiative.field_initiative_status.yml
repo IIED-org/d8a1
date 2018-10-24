@@ -6,11 +6,7 @@ dependencies:
     - field.storage.node.field_initiative_status
     - node.type.initiative
   module:
-    - label_help
     - options
-third_party_settings:
-  label_help:
-    label_help_description: 'Leave blank if unknown'
 id: node.initiative.field_initiative_status
 field_name: field_initiative_status
 entity_type: node

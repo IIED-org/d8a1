@@ -11,13 +11,13 @@ id: paragraph.online_article_or_blog.field_article_url
 field_name: field_article_url
 entity_type: paragraph
 bundle: online_article_or_blog
-label: 'Article URL'
-description: '<big><strong>Enter web address of the article or blog on the publishers website</big></strong>'
+label: URL
+description: '<big><strong>Enter the full web address of the content on the publishers website</big></strong>'
 required: false
 translatable: false
 default_value: {  }
 default_value_callback: ''
 settings:
   link_type: 16
-  title: 0
+  title: 1
 field_type: link

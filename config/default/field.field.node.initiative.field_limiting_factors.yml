@@ -12,7 +12,7 @@ field_name: field_limiting_factors
 entity_type: node
 bundle: initiative
 label: 'Factors that limited or hindered success'
-description: 'Please consider adding a brief explanation to help us understand how these factors influenced your project.'
+description: 'Select up to three factors from the list of checkboxes. Please consider adding a brief explanation to help us understand how these factors influenced your project'
 required: false
 translatable: false
 default_value: {  }

@@ -21,6 +21,7 @@ dependencies:
     - datetime
     - field_group
     - field_layout
+    - field_states_ui
     - layout_discovery
     - paragraphs
     - synonyms
@@ -51,8 +52,7 @@ third_party_settings:
       weight: 10
       format_type: html_element
       format_settings:
-        id: ''
-        classes: ''
+        label: 'Interventions (strategies)'
         element: div
         show_label: true
         label_element: h3
@@ -61,7 +61,9 @@ third_party_settings:
         attributes: ''
         effect: none
         speed: fast
-      label: Interventions
+        id: ''
+        classes: ''
+      label: 'Interventions (strategies)'
       region: content
 id: node.resource.default
 targetEntityType: node
@@ -72,10 +74,15 @@ content:
     type: text_textarea_with_summary
     weight: 2
     settings:
-      rows: 9
-      summary_rows: 3
+      rows: 5
       placeholder: ''
-    third_party_settings: {  }
+      summary_rows: 1
+    third_party_settings:
+      field_states_ui:
+        form:
+          type: ''
+          list: ''
+          add: Add
     region: content
   field_add_new_species:
     weight: 9
@@ -135,15 +142,21 @@ content:
       title: 'Resource type'
       title_plural: 'Resource types'
       edit_mode: open
+      closed_mode: summary
+      autocollapse: none
       add_mode: button
       form_display_mode: default
       default_paragraph_type: _none
-      closed_mode: summary
-      autocollapse: none
       features:
-        duplicate: duplicate
-        collapse_edit_all: collapse_edit_all
-    third_party_settings: {  }
+        duplicate: '0'
+        collapse_edit_all: '0'
+        add_above: '0'
+    third_party_settings:
+      field_states_ui:
+        form:
+          type: ''
+          list: ''
+          add: Add
     region: content
   field_species_affected:
     weight: 8

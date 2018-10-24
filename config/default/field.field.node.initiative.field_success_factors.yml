@@ -12,7 +12,7 @@ field_name: field_success_factors
 entity_type: node
 bundle: initiative
 label: 'Factors for success'
-description: 'In addition, you can choose up to three most important factors that helped your project to succeed from the list below.'
+description: 'You can choose up to three most important factors that helped your project to succeed from the list of checkboxes.'
 required: false
 translatable: false
 default_value: {  }

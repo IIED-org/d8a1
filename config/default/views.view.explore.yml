@@ -4433,7 +4433,7 @@ display:
           exclude: true
           alter:
             alter_text: true
-            text: "  <div class=\"i-p-container\">\r\n        <div class=\"i-play\"><i class=\"fas fa-play-circle\"></i> Play video</div>\r\n        {{ field_video_url_4 }} \r\n    </div>"
+            text: "  <div class=\"i-p-container d-flex justify-content-center mb-3\">\r\n        <div class=\"i-play align-self-center\"><i class=\"fas fa-play-circle fa-2x\"></i></div>\r\n        {{ field_video_url_4 }} \r\n    </div>"
             make_link: false
             path: ''
             absolute: false
@@ -4860,7 +4860,7 @@ display:
           expose:
             label: ''
           plugin_id: search_api
-      css_class: 'container mt-5'
+      css_class: container
     cache_metadata:
       max-age: -1
       contexts:

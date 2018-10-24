@@ -3,7 +3,7 @@ langcode: en
 status: true
 dependencies: {  }
 id: document
-label: 'Upload document file (deprecated)'
+label: 'Document upload (deprecated)'
 icon_uuid: null
 description: ''
 behavior_plugins: {  }

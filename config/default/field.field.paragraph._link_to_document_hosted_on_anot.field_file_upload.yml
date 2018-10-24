@@ -1,0 +1,27 @@
+uuid: 6ca355da-9c73-464b-80ac-25f1ad4b50ff
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_file_upload
+    - paragraphs.paragraphs_type._link_to_document_hosted_on_anot
+  module:
+    - file
+id: paragraph._link_to_document_hosted_on_anot.field_file_upload
+field_name: field_file_upload
+entity_type: paragraph
+bundle: _link_to_document_hosted_on_anot
+label: 'File upload'
+description: '<big><strong>Upload file only if you have the publisher''s permission and it is not already available online.</strong></big><br>'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  file_directory: 'uploads/[date:custom:Y]-[date:custom:m]'
+  file_extensions: 'pdf txt'
+  max_filesize: '8 MB'
+  description_field: true
+  handler: 'default:file'
+  handler_settings: {  }
+field_type: file

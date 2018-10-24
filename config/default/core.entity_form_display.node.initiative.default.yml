@@ -117,15 +117,12 @@ third_party_settings:
       region: content
     group_step_1:
       children:
-        - title
-        - group_name_and_intro
+        - group_name_intro
         - group_location
-        - field_species_affected
-        - group_new_species
+        - group_species_card
         - group_3_2
         - group_related_resources
-        - field_primary_contact_name
-        - field_primary_contact
+        - group_contact_card
       parent_name: group_multi
       weight: 15
       format_type: multipage
@@ -302,14 +299,14 @@ third_party_settings:
       children:
         - group_please_select
       parent_name: group_step_1
-      weight: 26
+      weight: 23
       format_type: details
       format_settings:
         label: 'The strategy'
         open: true
         required_fields: true
         id: ''
-        classes: ''
+        classes: card
       label: 'The strategy'
       region: content
     group_strategy_text:
@@ -342,26 +339,6 @@ third_party_settings:
         classes: ''
         required_fields: false
       label: 'Strategies, though discrete, may be inter-linked. In these cases please tick all boxes that apply and add an explanation'
-      region: content
-    group_name_and_intro:
-      children:
-        - body
-      parent_name: group_step_1
-      weight: 22
-      format_type: html_element
-      format_settings:
-        label: 'What name describes your initiative?'
-        element: div
-        show_label: true
-        label_element: small
-        label_element_classes: 'description text-muted ml-4'
-        attributes: ''
-        effect: none
-        speed: fast
-        id: ''
-        classes: ''
-        required_fields: false
-      label: 'What name describes your initiative?'
       region: content
     group_related_material:
       children:
@@ -417,8 +394,8 @@ third_party_settings:
     group_new_species:
       children:
         - field_add_new_species
-      parent_name: group_step_1
-      weight: 25
+      parent_name: group_species_card
+      weight: 24
       format_type: details
       format_settings:
         label: 'New species'
@@ -432,14 +409,14 @@ third_party_settings:
       children:
         - field_address
       parent_name: group_step_1
-      weight: 23
+      weight: 21
       format_type: details
       format_settings:
         label: Location
         open: true
         required_fields: true
         id: ''
-        classes: ''
+        classes: card
       label: Location
       region: content
     group_related_resources:
@@ -447,15 +424,15 @@ third_party_settings:
         - field_related_resources
         - field_image_gallery
       parent_name: group_step_1
-      weight: 27
+      weight: 24
       format_type: details
       format_settings:
-        label: Resources
+        label: 'Add or upload content'
         open: true
         required_fields: true
         id: ''
-        classes: ''
-      label: Resources
+        classes: card
+      label: 'Add or upload content'
       region: content
     group_details:
       children:
@@ -469,9 +446,9 @@ third_party_settings:
       format_settings:
         label: 'Further details'
         formatter: open
-        required_fields: true
         id: ''
         classes: ''
+        required_fields: false
       label: 'Further details'
       region: content
     group_more_details:
@@ -485,10 +462,70 @@ third_party_settings:
       format_type: accordion
       format_settings:
         label: 'Details of the initiative (optional)'
-        effect: none
+        effect: bounceslide
         id: ''
         classes: ''
       label: 'Details of the initiative (optional)'
+      region: content
+    group_name_intro:
+      children:
+        - title
+        - body
+      parent_name: group_step_1
+      weight: 20
+      format_type: html_element
+      format_settings:
+        id: ''
+        classes: card
+        element: div
+        show_label: false
+        label_element: h3
+        label_element_classes: ''
+        required_fields: false
+        attributes: ''
+        effect: none
+        speed: fast
+      label: name-intro
+      region: content
+    group_species_card:
+      children:
+        - field_species_affected
+        - group_new_species
+      parent_name: group_step_1
+      weight: 22
+      format_type: html_element
+      format_settings:
+        id: ''
+        classes: card
+        element: div
+        show_label: false
+        label_element: h3
+        label_element_classes: ''
+        required_fields: false
+        attributes: ''
+        effect: none
+        speed: fast
+      label: 'species card'
+      region: content
+    group_contact_card:
+      children:
+        - field_primary_contact_name
+        - field_primary_contact
+      parent_name: group_step_1
+      weight: 25
+      format_type: html_element
+      format_settings:
+        id: ''
+        classes: card
+        element: div
+        show_label: false
+        label_element: h3
+        label_element_classes: ''
+        required_fields: false
+        attributes: ''
+        effect: none
+        speed: fast
+      label: 'contact card'
       region: content
 id: node.initiative.default
 targetEntityType: node
@@ -497,7 +534,7 @@ mode: default
 content:
   body:
     type: text_textarea_with_summary
-    weight: 23
+    weight: 22
     settings:
       rows: 5
       placeholder: ''
@@ -1311,7 +1348,7 @@ content:
     type: boolean_checkbox
     region: content
   field_primary_contact:
-    weight: 29
+    weight: 27
     settings:
       size: 60
       placeholder: ''
@@ -1319,7 +1356,7 @@ content:
     type: email_default
     region: content
   field_primary_contact_name:
-    weight: 28
+    weight: 26
     settings:
       size: 60
       placeholder: ''
@@ -1425,7 +1462,7 @@ content:
       display_label: true
     third_party_settings: {  }
   field_species_affected:
-    weight: 24
+    weight: 23
     settings: {  }
     third_party_settings: {  }
     type: synonyms_select
