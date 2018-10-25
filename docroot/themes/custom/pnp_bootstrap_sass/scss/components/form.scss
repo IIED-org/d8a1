@@ -32,3 +32,18 @@ form .form-type-textarea {
       margin: 2.5em 1em 0;
     }
 }
+
+.entity-browser-form {
+  td {
+    padding: 0 ($spacer / 2);
+  }
+  .views-field-title {
+     cursor: pointer;
+  }
+  .entity-browser-show-selection,
+  .entity-browser-remove-selected-entity {
+    display: inline-block;
+    width: auto;
+    margin: 0 $spacer;
+  }
+}
