@@ -353,6 +353,11 @@ form.form-search:before {
   margin: 0 1rem 0 -2rem;
 }
 
+#i-gallery a.colorbox.cboxElement:nth-child(n+5) {
+    display: none;
+}
+
+
 /* EXPLORE
 --------------------------------------------------*/
 .leaflet-container {
@@ -492,6 +497,7 @@ i.fa-3x {
 .i-p-container {
     position: relative;
 }
+
 
 /* COLORS
 --------------------------------------------------*/
@@ -715,6 +721,18 @@ label.js-form-required,
   body {
     font-size: 1rem;
   }
+
+  .path-explore .block-facet--dropdown, .path-explore .block-facets {
+    margin-bottom: 1rem;
+  }
+
+  .list-map {
+      padding-top: 10rem !important;
+  }
+
+  .navbar-nav {
+    margin-left: 1rem;
+}
 }
 
 
