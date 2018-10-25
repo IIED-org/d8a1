@@ -111,3 +111,16 @@
 .field--label-inline .field__item {
     display: inline-block
 }
+
+/* Chosen dropdowns
+----------------------------------------
+*/
+.chosen-container-multi, .chosen-container-single {
+  .chosen-single,
+  .chosen-choices {
+    border: none;
+    background-image: none;
+    box-shadow: none;
+    background: none;
+  }
+}
