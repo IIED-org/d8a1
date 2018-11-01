@@ -32,6 +32,11 @@
             else {
               ui.options.animated = 'slide';
             }
+          },
+          activate: function(event, ui) {
+            	if (ui.newHeader.offset()) {
+            	   $('body,html').animate({ scrollTop: ui.newHeader.offset().top - 80 });
+            	}
           }
         });
 
