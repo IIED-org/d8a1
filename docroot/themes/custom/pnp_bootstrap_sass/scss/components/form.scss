@@ -22,6 +22,10 @@ form .filter-wrapper {
     margin-right: 1rem;
 }
 
+form .filter-help {
+  display: none;
+}
+
 form .form-type-textarea {
     margin-bottom: 0;
 }
@@ -46,4 +50,8 @@ form .form-type-textarea {
     width: auto;
     margin: 0 $spacer;
   }
+}
+
+button#edit-preview {
+    display: none;
 }

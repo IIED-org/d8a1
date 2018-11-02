@@ -124,6 +124,9 @@ $spring-green: #00ff56;
 .menu--account {
   position: absolute;
   right: $spacer;
+  .nav-link {
+    margin-left: 8rem;
+  }
 }
 
 /* PAGE STYLES
@@ -132,6 +135,7 @@ $spring-green: #00ff56;
 .btn {
   padding: 0.5rem 1.5rem;
   border-radius: 2rem;
+  margin: 0 $spacer;
 }
 
 #hero {
@@ -357,6 +361,14 @@ form.form-search:before {
     display: none;
 }
 
+.parens {
+  &::before {
+    content: "(";
+  }
+  &::after {
+    content: " )"; // Remove space if field whitespace is trimmed
+  }
+}
 
 /* EXPLORE
 --------------------------------------------------*/
@@ -758,11 +770,11 @@ label.js-form-required,
 @media (min-width: 768px) {
   fieldset.js-form-item.js-form-type-textfield.form-type-textfield.js-form-item-search.form-item-search.form-group.col-auto {
     width: 50%;
-}
-h2.i-r-r {
-  position: absolute;
-  width: 260px;
-}
+  }
+  h2.i-r-r {
+    position: absolute;
+    width: 260px;
+  }
 }
 
 @media (max-width: 768px) {
