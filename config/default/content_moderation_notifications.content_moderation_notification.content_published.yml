@@ -1,0 +1,22 @@
+uuid: 667a1780-821b-453e-b1f2-acea48f6a82d
+langcode: en
+status: true
+dependencies: {  }
+id: content_published
+workflow: editorial
+transitions:
+  publish: publish
+roles: {  }
+author: true
+to: ''
+cc: ''
+bcc: ''
+from: ''
+replyto: info@peoplenotpoaching.org
+subject: 'The {{ entity.type.entity.label }} submitted to People Not Poaching has been published'
+body:
+  value: "<p>Dear contributor,</p>\r\n\r\n<p>Thank you for your submission,&nbsp;which has been reviewed and published and is now available at:</p>\r\n\r\n<p>{{ base_url }}/node/{{ entity.nid.value }}</p>\r\n\r\n<p>Thanks again for contributing to the platform.</p>\r\n\r\n<p>Best regards,<br />\r\nThe Rhinobot<br />\r\n{{ site_name }}</p>\r\n"
+  format: basic_html
+label: 'Content published'
+abort: ''
+debug: false

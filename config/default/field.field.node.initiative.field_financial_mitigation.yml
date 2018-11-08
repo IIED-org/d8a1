@@ -1,0 +1,28 @@
+uuid: 2637c043-5b42-4752-9db8-893bc268d379
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_financial_mitigation
+    - node.type.initiative
+  module:
+    - label_help
+third_party_settings:
+  label_help:
+    label_help_description: 'For example, compensation, insurance…'
+id: node.initiative.field_financial_mitigation
+field_name: field_financial_mitigation
+entity_type: node
+bundle: initiative
+label: 'Financial mitigation measures '
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

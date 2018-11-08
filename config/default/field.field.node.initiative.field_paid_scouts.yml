@@ -1,0 +1,23 @@
+uuid: 729ac073-e882-4de0-993a-7b1bbb98b116
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_paid_scouts
+    - node.type.initiative
+id: node.initiative.field_paid_scouts
+field_name: field_paid_scouts
+entity_type: node
+bundle: initiative
+label: 'Paid in wages community scouts'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

@@ -1,0 +1,25 @@
+uuid: d707552c-b995-4c03-9014-3757119fea2d
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_products_in_trade
+    - node.type.initiative
+  module:
+    - label_help
+    - text
+third_party_settings:
+  label_help:
+    label_help_description: 'For example, live animals, rhino horn, ivory, timber, skin, fur, feathers, seeds, nuts, whole plants.'
+id: node.initiative.field_products_in_trade
+field_name: field_products_in_trade
+entity_type: node
+bundle: initiative
+label: 'Which products are in trade?'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long

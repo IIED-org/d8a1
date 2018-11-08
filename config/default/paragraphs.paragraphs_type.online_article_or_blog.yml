@@ -1,0 +1,9 @@
+uuid: f7b2f335-574a-4c29-96de-406cf0412985
+langcode: en
+status: true
+dependencies: {  }
+id: online_article_or_blog
+label: Link
+icon_uuid: null
+description: 'An article or blog published on an external website'
+behavior_plugins: {  }

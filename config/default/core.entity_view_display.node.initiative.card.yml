@@ -1,0 +1,255 @@
+uuid: a2ef577a-e6a0-4777-8b09-9fc1edc63c19
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.card
+    - field.field.node.initiative.body
+    - field.field.node.initiative.field_3_2_1_details
+    - field.field.node.initiative.field_3_2_1_other
+    - field.field.node.initiative.field_3_2_2_details
+    - field.field.node.initiative.field_3_2_2_other
+    - field.field.node.initiative.field_3_2_3_details
+    - field.field.node.initiative.field_3_2_3_other
+    - field.field.node.initiative.field_3_2_4_details
+    - field.field.node.initiative.field_3_2_4_other
+    - field.field.node.initiative.field_3_2_5_details
+    - field.field.node.initiative.field_3_2_6_details
+    - field.field.node.initiative.field_4_2_1_details
+    - field.field.node.initiative.field_4_3_1_details
+    - field.field.node.initiative.field_address
+    - field.field.node.initiative.field_area_description
+    - field.field.node.initiative.field_buyers
+    - field.field.node.initiative.field_community_level_benefits
+    - field.field.node.initiative.field_decreasing_living_costs
+    - field.field.node.initiative.field_ecosystem_service_payments
+    - field.field.node.initiative.field_education_and_awareness
+    - field.field.node.initiative.field_end_use
+    - field.field.node.initiative.field_financial_mitigation
+    - field.field.node.initiative.field_geofield
+    - field.field.node.initiative.field_illegal_disincentives
+    - field.field.node.initiative.field_image
+    - field.field.node.initiative.field_image_gallery
+    - field.field.node.initiative.field_in_kind_incentives
+    - field.field.node.initiative.field_in_kind_scouts
+    - field.field.node.initiative.field_initiative_impact
+    - field.field.node.initiative.field_initiative_introduction
+    - field.field.node.initiative.field_initiative_status
+    - field.field.node.initiative.field_intelligence_incentives
+    - field.field.node.initiative.field_interventions
+    - field.field.node.initiative.field_lead_organisation
+    - field.field.node.initiative.field_lease_payments
+    - field.field.node.initiative.field_legal_trade
+    - field.field.node.initiative.field_limiting_factors
+    - field.field.node.initiative.field_non_wildlife_development
+    - field.field.node.initiative.field_non_wildlife_livelihoods
+    - field.field.node.initiative.field_organisers_donors_partners
+    - field.field.node.initiative.field_paid_scouts
+    - field.field.node.initiative.field_performance_payments
+    - field.field.node.initiative.field_permission_for_reuse
+    - field.field.node.initiative.field_permission_to_edit
+    - field.field.node.initiative.field_permission_to_use_photos
+    - field.field.node.initiative.field_personal_data
+    - field.field.node.initiative.field_physical_separation
+    - field.field.node.initiative.field_policy_regulatory_change
+    - field.field.node.initiative.field_preventive_measures_deter
+    - field.field.node.initiative.field_primary_contact
+    - field.field.node.initiative.field_primary_contact_name
+    - field.field.node.initiative.field_problem_overview
+    - field.field.node.initiative.field_products_in_trade
+    - field.field.node.initiative.field_raising_awareness
+    - field.field.node.initiative.field_reactive_measures
+    - field.field.node.initiative.field_related_resources
+    - field.field.node.initiative.field_role_or_relationship
+    - field.field.node.initiative.field_sense_of_ownership
+    - field.field.node.initiative.field_species_affected
+    - field.field.node.initiative.field_stewardship_incentives
+    - field.field.node.initiative.field_subsistence_resource_use
+    - field.field.node.initiative.field_success_factors
+    - field.field.node.initiative.field_supporting_sanctions
+    - field.field.node.initiative.field_tourism
+    - field.field.node.initiative.field_trophy_hunting
+    - field.field.node.initiative.field_voluntary_scouts
+    - field.field.node.initiative.field_what_isnt_working
+    - field.field.node.initiative.field_what_worked
+    - field.field.node.initiative.field_year_finished
+    - image.style.card_270x130_
+    - node.type.initiative
+  module:
+    - ds
+    - image
+    - user
+third_party_settings:
+  ds:
+    layout:
+      id: layout_onecol
+      library: layout_discovery/onecol
+      disable_css: false
+      entity_classes: all_classes
+      settings: {  }
+    regions:
+      content:
+        - field_image
+        - node_title
+        - 'bundle_field:node'
+    fields:
+      node_title:
+        plugin_id: node_title
+        weight: 0
+        label: hidden
+        formatter: default
+        settings:
+          wrapper: h4
+          class: card-title
+          link: false
+        ft:
+          id: default
+          settings:
+            lb: ''
+            lb-col: false
+            classes: {  }
+      'bundle_field:node':
+        plugin_id: 'bundle_field:node'
+        weight: 0
+        label: hidden
+        formatter: default
+        ft:
+          id: expert
+          settings:
+            lb: ''
+            prefix: ''
+            lbw-el: ''
+            lbw-cl: ''
+            lbw-at: ''
+            ow-el: ''
+            ow-cl: ''
+            ow-at: ''
+            fis-el: ''
+            fis-cl: ''
+            fis-at: ''
+            fi: true
+            fi-el: span
+            fi-cl: text-muted
+            fi-at: ''
+            suffix: ''
+            lbw: false
+            lb-col: false
+            ow: false
+            ow-def-at: false
+            ow-def-cl: false
+            fis: false
+            fis-def-at: false
+            fi-def-at: false
+id: node.initiative.card
+targetEntityType: node
+bundle: initiative
+mode: card
+content:
+  field_image:
+    type: image
+    weight: 0
+    region: content
+    label: hidden
+    settings:
+      image_style: card_270x130_
+      image_link: content
+    third_party_settings:
+      ds:
+        ft:
+          id: expert
+          settings:
+            lb: ''
+            prefix: ''
+            lbw-el: ''
+            lbw-cl: ''
+            lbw-at: ''
+            ow-el: ''
+            ow-cl: ''
+            ow-at: ''
+            fis-el: ''
+            fis-cl: ''
+            fis-at: ''
+            fi: true
+            fi-el: div
+            fi-cl: 'img-fluid card-img-top'
+            fi-at: ''
+            suffix: ''
+            lbw: false
+            lb-col: false
+            ow: false
+            ow-def-at: false
+            ow-def-cl: false
+            fis: false
+            fis-def-at: false
+            fi-def-at: false
+hidden:
+  addtoany: true
+  body: true
+  field_3_2_1_details: true
+  field_3_2_1_other: true
+  field_3_2_2_details: true
+  field_3_2_2_other: true
+  field_3_2_3_details: true
+  field_3_2_3_other: true
+  field_3_2_4_details: true
+  field_3_2_4_other: true
+  field_3_2_5_details: true
+  field_3_2_6_details: true
+  field_4_2_1_details: true
+  field_4_3_1_details: true
+  field_address: true
+  field_area_description: true
+  field_buyers: true
+  field_community_level_benefits: true
+  field_decreasing_living_costs: true
+  field_ecosystem_service_payments: true
+  field_education_and_awareness: true
+  field_end_use: true
+  field_financial_mitigation: true
+  field_geofield: true
+  field_illegal_disincentives: true
+  field_image_gallery: true
+  field_in_kind_incentives: true
+  field_in_kind_scouts: true
+  field_initiative_impact: true
+  field_initiative_introduction: true
+  field_initiative_status: true
+  field_intelligence_incentives: true
+  field_interventions: true
+  field_lead_organisation: true
+  field_lease_payments: true
+  field_legal_trade: true
+  field_limiting_factors: true
+  field_non_wildlife_development: true
+  field_non_wildlife_livelihoods: true
+  field_organisers_donors_partners: true
+  field_paid_scouts: true
+  field_performance_payments: true
+  field_permission_for_reuse: true
+  field_permission_to_edit: true
+  field_permission_to_use_photos: true
+  field_personal_data: true
+  field_physical_separation: true
+  field_policy_regulatory_change: true
+  field_preventive_measures_deter: true
+  field_primary_contact: true
+  field_primary_contact_name: true
+  field_problem_overview: true
+  field_products_in_trade: true
+  field_raising_awareness: true
+  field_reactive_measures: true
+  field_related_resources: true
+  field_role_or_relationship: true
+  field_sense_of_ownership: true
+  field_species_affected: true
+  field_stewardship_incentives: true
+  field_subsistence_resource_use: true
+  field_success_factors: true
+  field_supporting_sanctions: true
+  field_tourism: true
+  field_trophy_hunting: true
+  field_voluntary_scouts: true
+  field_what_isnt_working: true
+  field_what_worked: true
+  field_year_finished: true
+  links: true

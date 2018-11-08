@@ -1,0 +1,31 @@
+uuid: b924618e-8393-4ea1-b583-828553d78f15
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:basic:e30f00b5-2bb2-45b7-98f4-711123870fc4'
+  module:
+    - block_content
+    - system
+  theme:
+    - pnp_bootstrap_sass
+id: explorelistormap
+theme: pnp_bootstrap_sass
+region: content
+weight: -19
+provider: null
+plugin: 'block_content:e30f00b5-2bb2-45b7-98f4-711123870fc4'
+settings:
+  id: 'block_content:e30f00b5-2bb2-45b7-98f4-711123870fc4'
+  label: 'Explore list or map'
+  provider: block_content
+  label_display: '0'
+  status: true
+  info: ''
+  view_mode: full
+visibility:
+  request_path:
+    id: request_path
+    pages: /explore
+    negate: false
+    context_mapping: {  }

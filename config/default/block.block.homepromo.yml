@@ -1,0 +1,31 @@
+uuid: 57ce932e-f375-43ac-9da1-6827e6bc9b82
+langcode: en
+status: false
+dependencies:
+  content:
+    - 'block_content:basic:2d59df7a-60a1-401c-b555-79bbb13a8202'
+  module:
+    - block_content
+    - system
+  theme:
+    - pnp_bootstrap_sass
+id: homepromo
+theme: pnp_bootstrap_sass
+region: content
+weight: -6
+provider: null
+plugin: 'block_content:2d59df7a-60a1-401c-b555-79bbb13a8202'
+settings:
+  id: 'block_content:2d59df7a-60a1-401c-b555-79bbb13a8202'
+  label: 'Home promo'
+  provider: block_content
+  label_display: '0'
+  status: true
+  info: ''
+  view_mode: full
+visibility:
+  request_path:
+    id: request_path
+    pages: '<front>'
+    negate: false
+    context_mapping: {  }

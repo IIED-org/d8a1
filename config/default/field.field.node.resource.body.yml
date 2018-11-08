@@ -1,0 +1,26 @@
+uuid: 2d23e1d2-b93b-433a-8af7-77e66d3717b8
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.body
+    - node.type.resource
+  module:
+    - label_help
+    - text
+third_party_settings:
+  label_help:
+    label_help_description: 'A brief description or summary of the resource'
+id: node.resource.body
+field_name: body
+entity_type: node
+bundle: resource
+label: Description
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  display_summary: false
+field_type: text_with_summary

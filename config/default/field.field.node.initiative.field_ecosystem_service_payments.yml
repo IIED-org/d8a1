@@ -1,0 +1,23 @@
+uuid: 099e4408-4be5-4b3a-821b-c55076e7c37c
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_ecosystem_service_payments
+    - node.type.initiative
+id: node.initiative.field_ecosystem_service_payments
+field_name: field_ecosystem_service_payments
+entity_type: node
+bundle: initiative
+label: 'Payments for ecosystem services'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

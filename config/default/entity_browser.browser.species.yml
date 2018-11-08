@@ -1,0 +1,29 @@
+uuid: 0a311c57-f221-40cb-8282-53bcbe88a495
+langcode: en
+status: true
+dependencies:
+  module:
+    - entity_browser_entity_form
+name: species
+label: Species
+display: modal
+display_configuration:
+  width: '800'
+  height: '600'
+  link_text: 'Add new species'
+  auto_open: false
+selection_display: no_display
+selection_display_configuration: {  }
+widget_selector: single
+widget_selector_configuration: {  }
+widgets:
+  14498c7a-1a57-4be4-8d14-32aa8da79b1e:
+    settings:
+      entity_type: taxonomy_term
+      bundle: species
+      form_mode: ief
+      submit_text: 'Create species'
+    uuid: 14498c7a-1a57-4be4-8d14-32aa8da79b1e
+    weight: 1
+    label: ''
+    id: entity_form

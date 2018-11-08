@@ -1,0 +1,20 @@
+uuid: 8597f376-a710-45af-a245-f10f1ba67a45
+langcode: en
+status: true
+dependencies:
+  theme:
+    - pnp_bootstrap_sass
+_core:
+  default_config_hash: 13GQpeITIJsp1kyPniXtWZfyFH87vb1xxJCHifL4UeE
+id: pnp_bootstrap_sass_local_actions
+theme: pnp_bootstrap_sass
+region: content
+weight: -14
+provider: null
+plugin: local_actions_block
+settings:
+  id: local_actions_block
+  label: 'Primary admin actions'
+  provider: core
+  label_display: '0'
+visibility: {  }

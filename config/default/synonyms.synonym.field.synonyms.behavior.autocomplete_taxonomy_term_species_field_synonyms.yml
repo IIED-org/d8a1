@@ -1,0 +1,13 @@
+uuid: 0d6ff5a5-b710-417c-89bb-f6ffb9306afa
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.taxonomy_term.species.field_synonyms
+id: field.synonyms.behavior.autocomplete_taxonomy_term_species_field_synonyms
+provider_plugin: 'field:synonyms.behavior.autocomplete_taxonomy_term_species_field_synonyms'
+base_provider_plugin: field
+provider_configuration: {  }
+behavior: synonyms.behavior.autocomplete
+behavior_configuration:
+  wording: '@entity_label (aka @synonym)'

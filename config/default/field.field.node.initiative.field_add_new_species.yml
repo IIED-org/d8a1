@@ -1,0 +1,19 @@
+uuid: d5315d6f-c486-4fce-ba79-e2f4944c2bc8
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_add_new_species
+    - node.type.initiative
+id: node.initiative.field_add_new_species
+field_name: field_add_new_species
+entity_type: node
+bundle: initiative
+label: 'Add new species if yours doesn''t appear in the above list'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

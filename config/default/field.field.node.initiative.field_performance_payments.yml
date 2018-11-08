@@ -1,0 +1,28 @@
+uuid: f77d1e72-8d01-4005-93f4-99f6420f78c4
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_performance_payments
+    - node.type.initiative
+  module:
+    - label_help
+third_party_settings:
+  label_help:
+    label_help_description: 'That is, on top of salaries, such as bonuses for number of arrests, etc.'
+id: node.initiative.field_performance_payments
+field_name: field_performance_payments
+entity_type: node
+bundle: initiative
+label: 'Performance-based payments/incentives for patrolling or guarding'
+description: 'That is, on top of salaries, such as bonuses for number of arrests, etc.'
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

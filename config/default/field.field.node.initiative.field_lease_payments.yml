@@ -1,0 +1,23 @@
+uuid: b4c7d71a-d37e-45ca-ae56-112bc84f485c
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_lease_payments
+    - node.type.initiative
+id: node.initiative.field_lease_payments
+field_name: field_lease_payments
+entity_type: node
+bundle: initiative
+label: 'Lease payments'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

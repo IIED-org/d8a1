@@ -1,0 +1,5 @@
+masquerade.unmasquerade:
+  menu_name: account
+  route_name: masquerade.unmasquerade
+  class: Drupal\masquerade\Plugin\Menu\UnmasqueradeMenuLink
+  weight: -50

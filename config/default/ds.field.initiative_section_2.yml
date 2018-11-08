@@ -1,0 +1,17 @@
+id: initiative_section_2
+label: 'Initiative section 2'
+ui_limit: initiative|full
+properties:
+  block: 'views_block:initiative_blocks-block_6'
+  use_block_title: false
+  config:
+    id: 'views_block:initiative_blocks-block_6'
+    label: ''
+    provider: views
+    label_display: visible
+    views_label: ''
+    items_per_page: '1'
+type: block
+type_label: 'Block field'
+entities:
+  node: node

@@ -1,0 +1,31 @@
+uuid: e049ae7d-d697-42d8-a8db-9bd8fc52fa23
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:basic:1fd9d01f-4bb9-45fd-894f-b78b526ed11e'
+  module:
+    - block_content
+    - system
+  theme:
+    - pnp_bootstrap_sass
+id: aboutpartners
+theme: pnp_bootstrap_sass
+region: content
+weight: -9
+provider: null
+plugin: 'block_content:1fd9d01f-4bb9-45fd-894f-b78b526ed11e'
+settings:
+  id: 'block_content:1fd9d01f-4bb9-45fd-894f-b78b526ed11e'
+  label: 'About partners'
+  provider: block_content
+  label_display: '0'
+  status: true
+  info: ''
+  view_mode: full
+visibility:
+  request_path:
+    id: request_path
+    pages: /node/16
+    negate: false
+    context_mapping: {  }

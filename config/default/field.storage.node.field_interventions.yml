@@ -1,0 +1,20 @@
+uuid: 98cadd3f-4264-43fb-89af-431cfe4bc5e8
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+    - taxonomy
+id: node.field_interventions
+field_name: field_interventions
+entity_type: node
+type: entity_reference
+settings:
+  target_type: taxonomy_term
+module: core
+locked: false
+cardinality: -1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

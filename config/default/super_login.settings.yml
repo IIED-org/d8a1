@@ -1,0 +1,18 @@
+super_login:
+  login_text: 'Username or email'
+  forgot_pw_text: 'Forgot password?'
+  capslock_msg: 'Caps Lock On'
+  new_account_text: 'Sign up to add your initiatives or resources'
+  login_title: ''
+  password_reset_title: 'Reset password'
+  back_link: ''
+  messages: 0
+  css: 0
+  button_theme: 0
+  placeholder: 1
+  login_type: '0'
+  capslock: 0
+  login_placeholder: email@example.org
+  pass_placeholder: ''
+_core:
+  default_config_hash: LmPnyWGjnerstvvV_7kuxofM0TCr_46oT3YaWy9HYJs

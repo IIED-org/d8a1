@@ -1,0 +1,25 @@
+uuid: 92d93107-0f2d-4784-8112-ebdb78239190
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_what_isnt_working
+    - node.type.initiative
+  module:
+    - label_help
+    - text
+third_party_settings:
+  label_help:
+    label_help_description: 'Please share lessons from your experience on what has not worked and why. We encourage you to share approaches or strategies that didn''t work as well as you wanted or expected, or even failed: we can learn as much or more from failures as from successes. You may want to highlight specific strategies you used (e.g. decreasing the costs of living with wildlife), broader aspects of your approach (e.g. building trust, working with traditional leaders), or wider factors (e.g. unsupportive policy environment).'
+id: node.initiative.field_what_isnt_working
+field_name: field_what_isnt_working
+entity_type: node
+bundle: initiative
+label: 'What doesn''t (or didn''t) work and why?'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long

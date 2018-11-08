@@ -1,0 +1,34 @@
+uuid: c2d6d748-143b-4363-af2c-ece13e3dce3b
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_species_affected
+    - node.type.initiative
+    - taxonomy.vocabulary.species
+  module:
+    - label_help
+third_party_settings:
+  label_help:
+    label_help_description: 'What species, affected by illegal wildlife trade, is the initiative is focussing on? Start typing common or scientific name. You can add multiple species, but please try and restrict this list to the key focal species.'
+id: node.initiative.field_species_affected
+field_name: field_species_affected
+entity_type: node
+bundle: initiative
+label: 'Species affected'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      species: species
+    sort:
+      field: name
+      direction: asc
+    auto_create: true
+    auto_create_bundle: ''
+field_type: entity_reference

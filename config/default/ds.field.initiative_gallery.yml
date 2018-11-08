@@ -1,0 +1,17 @@
+id: initiative_gallery
+label: 'Initiative gallery'
+ui_limit: initiative|full
+properties:
+  block: 'views_block:initiative_blocks-block_7'
+  use_block_title: false
+  config:
+    id: 'views_block:initiative_blocks-block_7'
+    label: ''
+    provider: views
+    label_display: visible
+    views_label: ''
+    items_per_page: '1'
+type: block
+type_label: 'Block field'
+entities:
+  node: node

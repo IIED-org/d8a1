@@ -1,0 +1,25 @@
+uuid: dffa4e69-eca2-4df7-abc1-b6fece0cef51
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_end_use
+    - node.type.initiative
+  module:
+    - label_help
+    - text
+third_party_settings:
+  label_help:
+    label_help_description: 'For example, medicinal, trophies, fuel, fodder, clothing and ornaments, religious purposes, collections etc...'
+id: node.initiative.field_end_use
+field_name: field_end_use
+entity_type: node
+bundle: initiative
+label: 'What is their end use (if known)?'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long

@@ -1,0 +1,39 @@
+uuid: 84405747-33a6-43a9-8c7f-c349aead0d22
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:basic:1d87f453-1f42-4eb3-8464-4f042e60e0bc'
+  module:
+    - block_content
+    - system
+    - user
+  theme:
+    - pnp_bootstrap_sass
+id: loginoptions_2
+theme: pnp_bootstrap_sass
+region: content
+weight: -20
+provider: null
+plugin: 'block_content:1d87f453-1f42-4eb3-8464-4f042e60e0bc'
+settings:
+  id: 'block_content:1d87f453-1f42-4eb3-8464-4f042e60e0bc'
+  label: 'Login options'
+  provider: block_content
+  label_display: '0'
+  status: true
+  info: ''
+  view_mode: full
+visibility:
+  request_path:
+    id: request_path
+    pages: "/node/add/*\r\n/contribute\r\n/user/login\r\n/user/register"
+    negate: false
+    context_mapping: {  }
+  user_role:
+    id: user_role
+    roles:
+      anonymous: anonymous
+    negate: false
+    context_mapping:
+      user: '@user.current_user_context:current_user'

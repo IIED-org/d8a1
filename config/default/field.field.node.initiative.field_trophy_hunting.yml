@@ -1,0 +1,23 @@
+uuid: 7404d946-c14e-4a88-a840-33099700864b
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_trophy_hunting
+    - node.type.initiative
+id: node.initiative.field_trophy_hunting
+field_name: field_trophy_hunting
+entity_type: node
+bundle: initiative
+label: 'Trophy hunting'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

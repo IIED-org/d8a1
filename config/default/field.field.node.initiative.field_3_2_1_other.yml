@@ -1,0 +1,23 @@
+uuid: cb29a7eb-2a1a-4081-9b24-1b67660db450
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_3_2_1_other
+    - node.type.initiative
+id: node.initiative.field_3_2_1_other
+field_name: field_3_2_1_other
+entity_type: node
+bundle: initiative
+label: Other
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

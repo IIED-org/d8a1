@@ -1,0 +1,132 @@
+uuid: 0f4072c9-5c25-4c7a-8ff0-d5aae9a9dabd
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.search_result
+    - field.field.node.resource.body
+    - field.field.node.resource.field_add_new_species
+    - field.field.node.resource.field_address
+    - field.field.node.resource.field_author
+    - field.field.node.resource.field_authors
+    - field.field.node.resource.field_date_published
+    - field.field.node.resource.field_geofield
+    - field.field.node.resource.field_interventions
+    - field.field.node.resource.field_language
+    - field.field.node.resource.field_publisher
+    - field.field.node.resource.field_resource_type
+    - field.field.node.resource.field_species_affected
+    - node.type.resource
+  module:
+    - datetime
+    - ds
+    - entity_reference_revisions
+    - text
+    - user
+third_party_settings:
+  ds:
+    layout:
+      id: ds_1col_wrapper
+      library: null
+      disable_css: false
+      entity_classes: all_classes
+      settings:
+        wrappers:
+          ds_content: div
+        outer_wrapper: article
+        attributes: class|container
+        link_attribute: tokens
+        link_custom: '[node:field_resource_type:entity:field_file_upload]'
+        classes:
+          layout_class: {  }
+          ds_content: {  }
+    regions:
+      ds_content:
+        - node_title
+        - field_date_published
+        - body
+        - field_author
+        - 'bundle_field:node'
+        - field_resource_type
+    fields:
+      node_title:
+        plugin_id: node_title
+        weight: 0
+        label: hidden
+        formatter: default
+      'bundle_field:node':
+        plugin_id: 'bundle_field:node'
+        weight: 4
+        label: hidden
+        formatter: default
+id: node.resource.search_result
+targetEntityType: node
+bundle: resource
+mode: search_result
+content:
+  body:
+    label: hidden
+    type: text_summary_or_trimmed
+    weight: 2
+    settings:
+      trim_length: 300
+    third_party_settings:
+      ds:
+        ft:
+          id: default
+          settings:
+            lb: ''
+            lb-col: false
+            classes: {  }
+    region: ds_content
+  field_author:
+    type: string
+    weight: 3
+    region: ds_content
+    label: inline
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+  field_date_published:
+    type: datetime_custom
+    weight: 1
+    region: ds_content
+    label: hidden
+    settings:
+      timezone_override: ''
+      date_format: 'M Y'
+    third_party_settings:
+      ds:
+        ft:
+          id: default
+          settings:
+            lb: ''
+            lb-col: false
+            classes: {  }
+  field_resource_type:
+    type: entity_reference_revisions_entity_view
+    weight: 5
+    region: ds_content
+    label: hidden
+    settings:
+      view_mode: preview
+      link: ''
+    third_party_settings:
+      ds:
+        ft:
+          id: default
+          settings:
+            lb: ''
+            lb-col: false
+            classes: {  }
+hidden:
+  addtoany: true
+  field_add_new_species: true
+  field_address: true
+  field_authors: true
+  field_geofield: true
+  field_interventions: true
+  field_language: true
+  field_publisher: true
+  field_species_affected: true
+  links: true

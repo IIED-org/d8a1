@@ -5,7 +5,6 @@ namespace Drupal\Tests\search_api_solr\Functional;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\search_api\Entity\Index;
 use Drupal\Tests\search_api\Functional\SearchApiBrowserTestBase;
-use Drupal\search_api_solr\Utility\SolrCommitTrait;
 
 /**
  * Tests the Views integration of the Search API.
@@ -14,14 +13,12 @@ use Drupal\search_api_solr\Utility\SolrCommitTrait;
  */
 class ViewsTest extends \Drupal\Tests\search_api\Functional\ViewsTest {
 
-  use SolrCommitTrait;
-
   /**
    * Modules to enable for this test.
    *
    * @var string[]
    */
-  public static $modules = ['search_api_solr_test'];
+  public static $modules = array('search_api_solr_test');
 
   /**
    * {@inheritdoc}
@@ -56,7 +53,7 @@ class ViewsTest extends \Drupal\Tests\search_api\Functional\ViewsTest {
   protected function tearDown() {
     $index = Index::load($this->indexId);
     $index->clear();
-    $this->ensureCommit($index->getServerInstance());
+    sleep(2);
     parent::tearDown();
   }
 
@@ -79,13 +76,10 @@ class ViewsTest extends \Drupal\Tests\search_api\Functional\ViewsTest {
    *
    * @return int
    *   The number of successfully indexed items.
-   *
-   * @throws \Drupal\search_api\SearchApiException
    */
   protected function indexItems($index_id) {
     $index_status = parent::indexItems($index_id);
-    $index = Index::load($index_id);
-    $this->ensureCommit($index->getServerInstance());
+    sleep(2);
     return $index_status;
   }
 

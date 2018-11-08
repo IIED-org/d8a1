@@ -1,0 +1,23 @@
+uuid: a1907a9b-7e35-400c-b472-5e895a5ec12d
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_supporting_sanctions
+    - node.type.initiative
+id: node.initiative.field_supporting_sanctions
+field_name: field_supporting_sanctions
+entity_type: node
+bundle: initiative
+label: 'Strengthening and supporting traditional norms and sanctions against IWT'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

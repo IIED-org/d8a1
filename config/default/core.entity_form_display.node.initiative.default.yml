@@ -1,0 +1,1684 @@
+uuid: 2a411650-aa39-44eb-8759-3709517595cc
+langcode: en
+status: true
+dependencies:
+  config:
+    - entity_browser.browser.resource
+    - field.field.node.initiative.body
+    - field.field.node.initiative.field_3_2_1_details
+    - field.field.node.initiative.field_3_2_1_other
+    - field.field.node.initiative.field_3_2_2_details
+    - field.field.node.initiative.field_3_2_2_other
+    - field.field.node.initiative.field_3_2_3_details
+    - field.field.node.initiative.field_3_2_3_other
+    - field.field.node.initiative.field_3_2_4_details
+    - field.field.node.initiative.field_3_2_4_other
+    - field.field.node.initiative.field_3_2_5_details
+    - field.field.node.initiative.field_3_2_6_details
+    - field.field.node.initiative.field_4_2_1_details
+    - field.field.node.initiative.field_4_3_1_details
+    - field.field.node.initiative.field_add_new_species
+    - field.field.node.initiative.field_address
+    - field.field.node.initiative.field_area_description
+    - field.field.node.initiative.field_buyers
+    - field.field.node.initiative.field_community_level_benefits
+    - field.field.node.initiative.field_decreasing_living_costs
+    - field.field.node.initiative.field_ecosystem_service_payments
+    - field.field.node.initiative.field_education_and_awareness
+    - field.field.node.initiative.field_end_use
+    - field.field.node.initiative.field_financial_mitigation
+    - field.field.node.initiative.field_geofield
+    - field.field.node.initiative.field_illegal_disincentives
+    - field.field.node.initiative.field_image
+    - field.field.node.initiative.field_image_gallery
+    - field.field.node.initiative.field_in_kind_incentives
+    - field.field.node.initiative.field_in_kind_scouts
+    - field.field.node.initiative.field_initiative_impact
+    - field.field.node.initiative.field_initiative_introduction
+    - field.field.node.initiative.field_initiative_status
+    - field.field.node.initiative.field_intelligence_incentives
+    - field.field.node.initiative.field_interventions
+    - field.field.node.initiative.field_lead_organisation
+    - field.field.node.initiative.field_lease_payments
+    - field.field.node.initiative.field_legal_trade
+    - field.field.node.initiative.field_limiting_factors
+    - field.field.node.initiative.field_non_wildlife_development
+    - field.field.node.initiative.field_non_wildlife_livelihoods
+    - field.field.node.initiative.field_organisers_donors_partners
+    - field.field.node.initiative.field_paid_scouts
+    - field.field.node.initiative.field_performance_payments
+    - field.field.node.initiative.field_permission_for_reuse
+    - field.field.node.initiative.field_permission_to_edit
+    - field.field.node.initiative.field_permission_to_use_photos
+    - field.field.node.initiative.field_personal_data
+    - field.field.node.initiative.field_physical_separation
+    - field.field.node.initiative.field_policy_regulatory_change
+    - field.field.node.initiative.field_preventive_measures_deter
+    - field.field.node.initiative.field_primary_contact
+    - field.field.node.initiative.field_primary_contact_name
+    - field.field.node.initiative.field_problem_overview
+    - field.field.node.initiative.field_products_in_trade
+    - field.field.node.initiative.field_raising_awareness
+    - field.field.node.initiative.field_reactive_measures
+    - field.field.node.initiative.field_related_resources
+    - field.field.node.initiative.field_role_or_relationship
+    - field.field.node.initiative.field_sense_of_ownership
+    - field.field.node.initiative.field_species_affected
+    - field.field.node.initiative.field_stewardship_incentives
+    - field.field.node.initiative.field_subsistence_resource_use
+    - field.field.node.initiative.field_success_factors
+    - field.field.node.initiative.field_supporting_sanctions
+    - field.field.node.initiative.field_tourism
+    - field.field.node.initiative.field_trophy_hunting
+    - field.field.node.initiative.field_voluntary_scouts
+    - field.field.node.initiative.field_what_isnt_working
+    - field.field.node.initiative.field_what_worked
+    - field.field.node.initiative.field_year_finished
+    - image.style.thumbnail
+    - node.type.initiative
+  module:
+    - address
+    - conditional_fields
+    - entity_browser
+    - field_group
+    - field_layout
+    - field_states_ui
+    - image
+    - layout_discovery
+    - synonyms
+    - text
+third_party_settings:
+  field_layout:
+    id: layout_onecol
+    settings: {  }
+  field_group:
+    group_multi:
+      children:
+        - group_step_1
+        - group_step_2
+        - group_permissions
+      parent_name: ''
+      weight: 0
+      format_type: multipage_group
+      format_settings:
+        label: Multipage
+        id: ''
+        classes: ''
+        page_header: 2
+        page_counter: 1
+        move_button: 1
+        ajaxify: 1
+        nonjs_multistep: false
+        scroll_top: 1
+        button_label_next: ''
+        button_label_prev: ''
+        button_label: '0'
+      label: Multipage
+      region: content
+    group_step_1:
+      children:
+        - group_name_intro
+        - group_location
+        - group_species_card
+        - group_3_2
+        - group_related_resources
+        - group_contact_card
+      parent_name: group_multi
+      weight: 15
+      format_type: multipage
+      format_settings:
+        label: Overview
+        description: ''
+        required_fields: true
+        id: ''
+        classes: ''
+      label: Overview
+      region: content
+    group_step_2:
+      children:
+        - group_more_details
+      parent_name: group_multi
+      weight: 16
+      format_type: multipage
+      format_settings:
+        label: 'Details of the initiative (optional)'
+        description: ''
+        required_fields: true
+        id: ''
+        classes: ''
+      label: 'Details of the initiative (optional)'
+      region: content
+    group_the_anti_iwt_initiative:
+      children:
+        - field_products_in_trade
+        - field_end_use
+        - field_buyers
+        - field_problem_overview
+      parent_name: group_more_details
+      weight: 22
+      format_type: accordion_item
+      format_settings:
+        label: 'The Poaching and Wildlife Trade Problem'
+        required_fields: true
+        id: ''
+        classes: ''
+        open: false
+        formatter: closed
+        description: ''
+      label: 'The Poaching and Wildlife Trade Problem'
+      region: content
+    group_initiative_difference:
+      children:
+        - field_initiative_introduction
+        - field_initiative_impact
+        - field_what_worked
+        - field_success_factors
+        - field_4_2_1_details
+        - field_what_isnt_working
+        - field_limiting_factors
+        - field_4_3_1_details
+      parent_name: group_more_details
+      weight: 23
+      format_type: accordion_item
+      format_settings:
+        label: 'The Anti-IWT Initiative'
+        description: ''
+        required_fields: true
+        id: ''
+        classes: ''
+        open: false
+        formatter: closed
+      label: 'The Anti-IWT Initiative'
+      region: content
+    group_3_2_1_strengthening_disinc:
+      children:
+        - field_paid_scouts
+        - field_performance_payments
+        - field_voluntary_scouts
+        - field_in_kind_scouts
+        - field_intelligence_incentives
+        - field_in_kind_incentives
+        - field_raising_awareness
+        - field_supporting_sanctions
+        - field_3_2_1_other
+        - field_3_2_1_details
+      parent_name: group_strategy_text
+      weight: 22
+      format_type: html_element
+      format_settings:
+        label: field_illegal_disincentives
+        element: div
+        show_label: false
+        label_element: h3
+        label_element_classes: ''
+        attributes: ''
+        effect: none
+        speed: fast
+        id: ''
+        classes: ml-3
+        required_fields: false
+      label: field_illegal_disincentives
+      region: content
+    group_3_2_2:
+      children:
+        - field_tourism
+        - field_trophy_hunting
+        - field_subsistence_resource_use
+        - field_lease_payments
+        - field_ecosystem_service_payments
+        - field_legal_trade
+        - field_policy_regulatory_change
+        - field_3_2_2_other
+        - field_3_2_2_details
+      parent_name: group_strategy_text
+      weight: 24
+      format_type: html_element
+      format_settings:
+        label: field_stewardship_incentives
+        element: div
+        show_label: false
+        label_element: h3
+        label_element_classes: ''
+        required_fields: true
+        attributes: ''
+        effect: none
+        speed: fast
+        id: ''
+        classes: ml-3
+      label: field_stewardship_incentives
+      region: content
+    group_3_2_3:
+      children:
+        - field_preventive_measures_deter
+        - field_reactive_measures
+        - field_financial_mitigation
+        - field_physical_separation
+        - field_3_2_3_other
+        - field_3_2_3_details
+      parent_name: group_strategy_text
+      weight: 26
+      format_type: html_element
+      format_settings:
+        label: field_decreasing_living_costs
+        element: div
+        show_label: false
+        label_element: h3
+        label_element_classes: ''
+        required_fields: true
+        attributes: ''
+        effect: none
+        speed: fast
+        id: ''
+        classes: ml-3
+      label: field_decreasing_living_costs
+      region: content
+    group_3_2_4:
+      children:
+        - field_non_wildlife_development
+        - field_community_level_benefits
+        - field_3_2_4_other
+        - field_3_2_4_details
+      parent_name: group_strategy_text
+      weight: 28
+      format_type: html_element
+      format_settings:
+        label: field_non_wildlife_livelihoods
+        element: div
+        show_label: false
+        label_element: h3
+        label_element_classes: ''
+        required_fields: true
+        attributes: ''
+        effect: none
+        speed: fast
+        id: ''
+        classes: ml-3
+      label: field_non_wildlife_livelihoods
+      region: content
+    group_3_2:
+      children:
+        - group_please_select
+      parent_name: group_step_1
+      weight: 23
+      format_type: details
+      format_settings:
+        label: 'The strategy'
+        open: true
+        required_fields: true
+        id: ''
+        classes: card
+      label: 'The strategy'
+      region: content
+    group_strategy_text:
+      children:
+        - field_illegal_disincentives
+        - group_3_2_1_strengthening_disinc
+        - field_stewardship_incentives
+        - group_3_2_2
+        - field_decreasing_living_costs
+        - group_3_2_3
+        - field_non_wildlife_livelihoods
+        - group_3_2_4
+        - field_sense_of_ownership
+        - field_3_2_5_details
+        - field_education_and_awareness
+        - field_3_2_6_details
+      parent_name: group_please_select
+      weight: 21
+      format_type: html_element
+      format_settings:
+        label: 'Strategies, though discrete, may be inter-linked. In these cases please tick all boxes that apply and add an explanation'
+        element: div
+        show_label: true
+        label_element: small
+        label_element_classes: 'description text-muted'
+        attributes: ''
+        effect: none
+        speed: fast
+        id: ''
+        classes: ''
+        required_fields: false
+      label: 'Strategies, though discrete, may be inter-linked. In these cases please tick all boxes that apply and add an explanation'
+      region: content
+    group_related_material:
+      children:
+        - field_organisers_donors_partners
+        - field_role_or_relationship
+      parent_name: group_more_details
+      weight: 24
+      format_type: accordion_item
+      format_settings:
+        label: 'Organisers, donors and partners'
+        formatter: closed
+        id: ''
+        classes: ''
+        required_fields: false
+      label: 'Organisers, donors and partners'
+      region: content
+    group_permissions:
+      children:
+        - field_permission_for_reuse
+        - field_permission_to_edit
+        - field_personal_data
+      parent_name: group_multi
+      weight: 17
+      format_type: multipage
+      format_settings:
+        label: Permissions
+        description: ''
+        required_fields: true
+        id: ''
+        classes: ''
+      label: Permissions
+      region: content
+    group_please_select:
+      children:
+        - group_strategy_text
+      parent_name: group_3_2
+      weight: 20
+      format_type: html_element
+      format_settings:
+        label: 'Please select all the option(s) that apply to your project''s strategy by ticking the relevant boxes.'
+        element: div
+        show_label: true
+        label_element: small
+        label_element_classes: ''
+        required_fields: true
+        attributes: ''
+        effect: none
+        speed: fast
+        id: ''
+        classes: ''
+      label: 'Please select all the option(s) that apply to your project''s strategy by ticking the relevant boxes.'
+      region: content
+    group_new_species:
+      children:
+        - field_add_new_species
+      parent_name: group_species_card
+      weight: 24
+      format_type: details
+      format_settings:
+        label: 'New species'
+        required_fields: true
+        id: ''
+        classes: ''
+        open: false
+      label: 'New species'
+      region: content
+    group_location:
+      children:
+        - field_address
+      parent_name: group_step_1
+      weight: 21
+      format_type: details
+      format_settings:
+        label: Location
+        open: true
+        required_fields: true
+        id: ''
+        classes: card
+      label: Location
+      region: content
+    group_related_resources:
+      children:
+        - field_related_resources
+        - field_image_gallery
+      parent_name: group_step_1
+      weight: 24
+      format_type: details
+      format_settings:
+        label: 'Add or upload content'
+        open: true
+        required_fields: true
+        id: ''
+        classes: card
+      label: 'Add or upload content'
+      region: content
+    group_details:
+      children:
+        - field_lead_organisation
+        - field_initiative_status
+        - field_year_finished
+        - field_area_description
+      parent_name: group_more_details
+      weight: 21
+      format_type: accordion_item
+      format_settings:
+        label: 'Further details'
+        formatter: open
+        id: ''
+        classes: ''
+        required_fields: false
+      label: 'Further details'
+      region: content
+    group_more_details:
+      children:
+        - group_details
+        - group_the_anti_iwt_initiative
+        - group_initiative_difference
+        - group_related_material
+      parent_name: group_step_2
+      weight: 20
+      format_type: accordion
+      format_settings:
+        label: 'Details of the initiative (optional)'
+        effect: bounceslide
+        id: ''
+        classes: ''
+      label: 'Details of the initiative (optional)'
+      region: content
+    group_name_intro:
+      children:
+        - title
+        - body
+      parent_name: group_step_1
+      weight: 20
+      format_type: html_element
+      format_settings:
+        id: ''
+        classes: card
+        element: div
+        show_label: false
+        label_element: h3
+        label_element_classes: ''
+        required_fields: false
+        attributes: ''
+        effect: none
+        speed: fast
+      label: name-intro
+      region: content
+    group_species_card:
+      children:
+        - field_species_affected
+        - group_new_species
+      parent_name: group_step_1
+      weight: 22
+      format_type: html_element
+      format_settings:
+        id: ''
+        classes: card
+        element: div
+        show_label: false
+        label_element: h3
+        label_element_classes: ''
+        required_fields: false
+        attributes: ''
+        effect: none
+        speed: fast
+      label: 'species card'
+      region: content
+    group_contact_card:
+      children:
+        - field_primary_contact_name
+        - field_primary_contact
+      parent_name: group_step_1
+      weight: 25
+      format_type: html_element
+      format_settings:
+        id: ''
+        classes: card
+        element: div
+        show_label: false
+        label_element: h3
+        label_element_classes: ''
+        required_fields: false
+        attributes: ''
+        effect: none
+        speed: fast
+      label: 'contact card'
+      region: content
+id: node.initiative.default
+targetEntityType: node
+bundle: initiative
+mode: default
+content:
+  body:
+    type: text_textarea_with_summary
+    weight: 22
+    settings:
+      rows: 5
+      placeholder: ''
+      summary_rows: 3
+    third_party_settings:
+      field_states_ui:
+        form:
+          type: ''
+          list: ''
+          add: Add
+    region: content
+  field_3_2_1_details:
+    weight: 12
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings:
+      conditional_fields:
+        1835ae3a-4da8-4b8c-bd1c-1f880383311a:
+          dependee: field_illegal_disincentives
+          settings:
+            state: visible
+            condition: checked
+            grouping: AND
+            values_set: 1
+            value: ''
+            values: {  }
+            value_form:
+              value: false
+            effect: show
+            effect_options: {  }
+            selector: ''
+          entity_type: node
+          bundle: initiative
+    type: text_textarea
+    region: content
+  field_3_2_1_other:
+    weight: 11
+    settings:
+      display_label: true
+    third_party_settings:
+      conditional_fields:
+        78494b7f-c9b3-4576-b28b-145a2a40f5ff:
+          dependee: field_illegal_disincentives
+          settings:
+            state: visible
+            condition: checked
+            grouping: AND
+            values_set: 1
+            value: ''
+            values: {  }
+            value_form:
+              value: false
+            effect: show
+            effect_options: {  }
+            selector: ''
+          entity_type: node
+          bundle: initiative
+    type: boolean_checkbox
+    region: content
+  field_3_2_2_details:
+    weight: 13
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings:
+      conditional_fields:
+        1ccf737b-fee9-4adb-997f-3b9e9e6a6c67:
+          dependee: field_stewardship_incentives
+          settings:
+            state: visible
+            condition: checked
+            grouping: AND
+            values_set: 1
+            value: ''
+            values: {  }
+            value_form:
+              value: false
+            effect: show
+            effect_options: {  }
+            selector: ''
+          entity_type: node
+          bundle: initiative
+    type: text_textarea
+    region: content
+  field_3_2_2_other:
+    weight: 12
+    settings:
+      display_label: true
+    third_party_settings:
+      conditional_fields:
+        5d308329-6ccf-4476-9be7-776d9f2fd365:
+          dependee: field_stewardship_incentives
+          settings:
+            state: visible
+            condition: checked
+            grouping: AND
+            values_set: 1
+            value: ''
+            values: {  }
+            value_form:
+              value: false
+            effect: show
+            effect_options: {  }
+            selector: ''
+          entity_type: node
+          bundle: initiative
+    type: boolean_checkbox
+    region: content
+  field_3_2_3_details:
+    weight: 12
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings:
+      conditional_fields:
+        dfc218af-55f8-4d52-a04d-af59fd067372:
+          dependee: field_decreasing_living_costs
+          settings:
+            state: visible
+            condition: checked
+            grouping: AND
+            values_set: 1
+            value: ''
+            values: {  }
+            value_form:
+              value: false
+            effect: show
+            effect_options: {  }
+            selector: ''
+          entity_type: node
+          bundle: initiative
+    type: text_textarea
+    region: content
+  field_3_2_3_other:
+    weight: 11
+    settings:
+      display_label: true
+    third_party_settings:
+      conditional_fields:
+        06cab2da-e054-464d-a4b4-175ab34e2317:
+          dependee: field_decreasing_living_costs
+          settings:
+            state: visible
+            condition: checked
+            grouping: AND
+            values_set: 1
+            value: ''
+            values: {  }
+            value_form:
+              value: false
+            effect: show
+            effect_options: {  }
+            selector: ''
+          entity_type: node
+          bundle: initiative
+    type: boolean_checkbox
+    region: content
+  field_3_2_4_details:
+    weight: 12
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings:
+      conditional_fields:
+        185a1415-a89a-4995-852c-f2fb995892d3:
+          dependee: field_non_wildlife_livelihoods
+          settings:
+            state: visible
+            condition: checked
+            grouping: AND
+            values_set: 1
+            value: ''
+            values: {  }
+            value_form:
+              value: false
+            effect: show
+            effect_options: {  }
+            selector: ''
+          entity_type: node
+          bundle: initiative
+    type: text_textarea
+    region: content
+  field_3_2_4_other:
+    weight: 11
+    settings:
+      display_label: true
+    third_party_settings:
+      conditional_fields:
+        88d08461-2bd9-4d68-bffe-c45a0c9f3d5a:
+          dependee: field_non_wildlife_livelihoods
+          settings:
+            state: visible
+            condition: checked
+            grouping: AND
+            values_set: 1
+            value: ''
+            values: {  }
+            value_form:
+              value: false
+            effect: show
+            effect_options: {  }
+            selector: ''
+          entity_type: node
+          bundle: initiative
+    type: boolean_checkbox
+    region: content
+  field_3_2_5_details:
+    weight: 30
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings:
+      conditional_fields:
+        11d4662b-898e-4a2e-8308-9ecd1f720fdf:
+          dependee: field_sense_of_ownership
+          settings:
+            state: visible
+            condition: checked
+            grouping: AND
+            values_set: 1
+            value: ''
+            values: {  }
+            value_form:
+              value: false
+            effect: show
+            effect_options: {  }
+            selector: ''
+          entity_type: node
+          bundle: initiative
+    type: text_textarea
+    region: content
+  field_3_2_6_details:
+    weight: 32
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings:
+      conditional_fields:
+        5d573fc6-b170-4423-a523-46af7c13aace:
+          dependee: field_education_and_awareness
+          settings:
+            state: visible
+            condition: checked
+            grouping: AND
+            values_set: 1
+            value: ''
+            values: {  }
+            value_form:
+              value: false
+            effect: show
+            effect_options: {  }
+            selector: ''
+          entity_type: node
+          bundle: initiative
+    type: text_textarea
+    region: content
+  field_4_2_1_details:
+    weight: 40
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+    type: text_textarea
+    region: content
+  field_4_3_1_details:
+    weight: 43
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+    type: text_textarea
+    region: content
+  field_add_new_species:
+    weight: 26
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_address:
+    weight: 24
+    settings:
+      default_country: null
+    third_party_settings: {  }
+    type: address_default
+    region: content
+  field_area_description:
+    weight: 43
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+    type: text_textarea
+    region: content
+  field_buyers:
+    weight: 37
+    settings:
+      rows: 3
+      placeholder: ''
+    third_party_settings: {  }
+    type: text_textarea
+    region: content
+  field_community_level_benefits:
+    weight: 10
+    settings:
+      display_label: true
+    third_party_settings:
+      conditional_fields:
+        92711e31-9e81-4005-82ce-86f349fff4e4:
+          dependee: field_non_wildlife_livelihoods
+          settings:
+            state: visible
+            condition: checked
+            grouping: AND
+            values_set: 1
+            value: ''
+            values: {  }
+            value_form:
+              value: false
+            effect: show
+            effect_options: {  }
+            selector: ''
+          entity_type: node
+          bundle: initiative
+    type: boolean_checkbox
+    region: content
+  field_decreasing_living_costs:
+    type: boolean_checkbox
+    weight: 25
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  field_ecosystem_service_payments:
+    weight: 9
+    settings:
+      display_label: true
+    third_party_settings:
+      conditional_fields:
+        c098a23b-f1a1-4e85-9f3f-c869e8ae5877:
+          dependee: field_stewardship_incentives
+          settings:
+            state: visible
+            condition: checked
+            grouping: AND
+            values_set: 1
+            value: ''
+            values: {  }
+            value_form:
+              value: false
+            effect: show
+            effect_options: {  }
+            selector: ''
+          entity_type: node
+          bundle: initiative
+    type: boolean_checkbox
+    region: content
+  field_education_and_awareness:
+    type: boolean_checkbox
+    weight: 31
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  field_end_use:
+    weight: 36
+    settings:
+      rows: 3
+      placeholder: ''
+    third_party_settings: {  }
+    type: text_textarea
+    region: content
+  field_financial_mitigation:
+    weight: 9
+    settings:
+      display_label: true
+    third_party_settings:
+      conditional_fields:
+        b911e400-2e3a-4819-ac01-9f085146d1b0:
+          dependee: field_decreasing_living_costs
+          settings:
+            state: visible
+            condition: checked
+            grouping: AND
+            values_set: 1
+            value: ''
+            values: {  }
+            value_form:
+              value: false
+            effect: show
+            effect_options: {  }
+            selector: ''
+          entity_type: node
+          bundle: initiative
+    type: boolean_checkbox
+    region: content
+  field_illegal_disincentives:
+    type: boolean_checkbox
+    weight: 21
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  field_image_gallery:
+    type: image_image
+    weight: 29
+    region: content
+    settings:
+      progress_indicator: throbber
+      preview_image_style: thumbnail
+    third_party_settings: {  }
+  field_in_kind_incentives:
+    weight: 8
+    settings:
+      display_label: true
+    third_party_settings:
+      conditional_fields:
+        bba5ad44-faae-434f-a318-e827832cbc1f:
+          dependee: field_illegal_disincentives
+          settings:
+            state: visible
+            condition: checked
+            grouping: AND
+            values_set: 1
+            value: ''
+            values: {  }
+            value_form:
+              value: false
+            effect: show
+            effect_options: {  }
+            selector: ''
+          entity_type: node
+          bundle: initiative
+    type: boolean_checkbox
+    region: content
+  field_in_kind_scouts:
+    weight: 6
+    settings:
+      display_label: true
+    third_party_settings:
+      field_states_ui:
+        form:
+          type: ''
+          list: ''
+          add: Add
+        field_states:
+          5c4135bb-ecb2-4bbc-b1ee-669c229409a1:
+            uuid: 5c4135bb-ecb2-4bbc-b1ee-669c229409a1
+            id: invisible
+            data:
+              target: field_illegal_disincentives
+              comparison: unchecked
+              value: true
+              submit:
+                save: Add
+                cancel: Cancel
+      conditional_fields:
+        023cfce4-1c58-4050-9a83-6798d87ad336:
+          dependee: field_illegal_disincentives
+          settings:
+            state: visible
+            condition: checked
+            grouping: AND
+            values_set: 1
+            value: ''
+            values: {  }
+            value_form:
+              value: false
+            effect: show
+            effect_options: {  }
+            selector: ''
+          entity_type: node
+          bundle: initiative
+    type: boolean_checkbox
+    region: content
+  field_initiative_impact:
+    weight: 36
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+    type: text_textarea
+    region: content
+  field_initiative_introduction:
+    weight: 35
+    settings:
+      rows: 3
+      placeholder: ''
+    third_party_settings: {  }
+    type: text_textarea
+    region: content
+  field_initiative_status:
+    weight: 41
+    settings: {  }
+    third_party_settings: {  }
+    type: options_select
+    region: content
+  field_intelligence_incentives:
+    weight: 7
+    settings:
+      display_label: true
+    third_party_settings:
+      field_states_ui:
+        form:
+          type: ''
+          list: ''
+          add: Add
+      conditional_fields:
+        587a6649-0b6b-4dbc-82fb-88af865295b7:
+          dependee: field_illegal_disincentives
+          settings:
+            state: visible
+            condition: checked
+            grouping: AND
+            values_set: 1
+            value: ''
+            values: {  }
+            value_form:
+              value: false
+            effect: show
+            effect_options: {  }
+            selector: ''
+          entity_type: node
+          bundle: initiative
+    type: boolean_checkbox
+    region: content
+  field_lead_organisation:
+    weight: 40
+    settings:
+      entity_browser: organisation
+      field_widget_display: label
+      open: true
+      selection_mode: selection_edit
+      field_widget_edit: false
+      field_widget_remove: false
+      field_widget_replace: false
+      field_widget_display_settings: {  }
+    third_party_settings: {  }
+    type: entity_browser_entity_reference
+    region: content
+  field_lease_payments:
+    weight: 8
+    settings:
+      display_label: true
+    third_party_settings:
+      conditional_fields:
+        a20008cb-5da7-420a-a8ea-7e7fa603ead9:
+          dependee: field_stewardship_incentives
+          settings:
+            state: visible
+            condition: checked
+            grouping: AND
+            values_set: 1
+            value: ''
+            values: {  }
+            value_form:
+              value: false
+            effect: show
+            effect_options: {  }
+            selector: ''
+          entity_type: node
+          bundle: initiative
+    type: boolean_checkbox
+    region: content
+  field_legal_trade:
+    weight: 10
+    settings:
+      display_label: true
+    third_party_settings:
+      conditional_fields:
+        f7f4cd8d-fca7-4f12-bac3-179c3f43e4b0:
+          dependee: field_stewardship_incentives
+          settings:
+            state: visible
+            condition: checked
+            grouping: AND
+            values_set: 1
+            value: ''
+            values: {  }
+            value_form:
+              value: false
+            effect: show
+            effect_options: {  }
+            selector: ''
+          entity_type: node
+          bundle: initiative
+    type: boolean_checkbox
+    region: content
+  field_limiting_factors:
+    weight: 42
+    settings: {  }
+    third_party_settings: {  }
+    type: options_buttons
+    region: content
+  field_non_wildlife_development:
+    weight: 9
+    settings:
+      display_label: true
+    third_party_settings:
+      conditional_fields:
+        5a87f04e-e1b4-4882-99f1-f6b478f75339:
+          dependee: field_non_wildlife_livelihoods
+          settings:
+            state: visible
+            condition: checked
+            grouping: AND
+            values_set: 1
+            value: ''
+            values: {  }
+            value_form:
+              value: false
+            effect: show
+            effect_options: {  }
+            selector: ''
+          entity_type: node
+          bundle: initiative
+    type: boolean_checkbox
+    region: content
+  field_non_wildlife_livelihoods:
+    type: boolean_checkbox
+    weight: 27
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  field_organisers_donors_partners:
+    weight: 58
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+    type: text_textarea
+    region: content
+  field_paid_scouts:
+    weight: 3
+    settings:
+      display_label: true
+    third_party_settings:
+      field_states_ui:
+        form:
+          type: ''
+          list:
+            d850d779-ec2b-4a56-8566-69c503db303d:
+              operations:
+                edit: Edit
+                delete: Delete
+          add: Add
+        field_states:
+          d850d779-ec2b-4a56-8566-69c503db303d:
+            uuid: d850d779-ec2b-4a56-8566-69c503db303d
+            id: invisible
+            data:
+              target: field_illegal_disincentives
+              comparison: unchecked
+              value: ''
+              submit: 'Add Cancel'
+      conditional_fields:
+        6ec154bc-2291-4d08-a0a1-118ecce6f6ee:
+          dependee: field_illegal_disincentives
+          settings:
+            state: visible
+            condition: checked
+            grouping: AND
+            values_set: 1
+            value: ''
+            values: {  }
+            value_form:
+              value: false
+            effect: show
+            effect_options: {  }
+            selector: ''
+          entity_type: node
+          bundle: initiative
+    type: boolean_checkbox
+    region: content
+  field_performance_payments:
+    weight: 4
+    settings:
+      display_label: true
+    third_party_settings:
+      field_states_ui:
+        form:
+          type: ''
+          list:
+            f5281516-5008-41dc-8c08-8b34987e8075:
+              operations:
+                edit: Edit
+                delete: Delete
+          add: Add
+        field_states:
+          f5281516-5008-41dc-8c08-8b34987e8075:
+            uuid: f5281516-5008-41dc-8c08-8b34987e8075
+            id: invisible
+            data:
+              target: field_illegal_disincentives
+              comparison: unchecked
+              value: ''
+              submit: 'Add Cancel'
+      conditional_fields:
+        57f6295f-8015-4460-aaaf-c5d22c43092f:
+          dependee: field_illegal_disincentives
+          settings:
+            state: visible
+            condition: checked
+            grouping: AND
+            values_set: 1
+            value: ''
+            values: {  }
+            value_form:
+              value: false
+            effect: show
+            effect_options: {  }
+            selector: ''
+          entity_type: node
+          bundle: initiative
+    type: boolean_checkbox
+    region: content
+  field_permission_for_reuse:
+    weight: 66
+    settings:
+      display_label: true
+    third_party_settings: {  }
+    type: boolean_checkbox
+    region: content
+  field_permission_to_edit:
+    weight: 67
+    settings:
+      display_label: true
+    third_party_settings: {  }
+    type: boolean_checkbox
+    region: content
+  field_personal_data:
+    weight: 69
+    settings:
+      display_label: true
+    third_party_settings: {  }
+    type: boolean_checkbox
+    region: content
+  field_physical_separation:
+    weight: 10
+    settings:
+      display_label: true
+    third_party_settings:
+      conditional_fields:
+        906511b8-3eae-47bd-893a-ef233d405b02:
+          dependee: field_decreasing_living_costs
+          settings:
+            state: visible
+            condition: checked
+            grouping: AND
+            values_set: 1
+            value: ''
+            values: {  }
+            value_form:
+              value: false
+            effect: show
+            effect_options: {  }
+            selector: ''
+          entity_type: node
+          bundle: initiative
+    type: boolean_checkbox
+    region: content
+  field_policy_regulatory_change:
+    weight: 11
+    settings:
+      display_label: true
+    third_party_settings:
+      conditional_fields:
+        b2209719-ea78-4130-a4ce-db597ddcab3b:
+          dependee: field_stewardship_incentives
+          settings:
+            state: visible
+            condition: checked
+            grouping: AND
+            values_set: 1
+            value: ''
+            values: {  }
+            value_form:
+              value: false
+            effect: show
+            effect_options: {  }
+            selector: ''
+          entity_type: node
+          bundle: initiative
+    type: boolean_checkbox
+    region: content
+  field_preventive_measures_deter:
+    weight: 7
+    settings:
+      display_label: true
+    third_party_settings:
+      conditional_fields:
+        204f1b02-c67c-43e6-83e5-73e2c27adb14:
+          dependee: field_decreasing_living_costs
+          settings:
+            state: visible
+            condition: checked
+            grouping: AND
+            values_set: 1
+            value: ''
+            values: {  }
+            value_form:
+              value: false
+            effect: show
+            effect_options: {  }
+            selector: ''
+          entity_type: node
+          bundle: initiative
+    type: boolean_checkbox
+    region: content
+  field_primary_contact:
+    weight: 27
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: email_default
+    region: content
+  field_primary_contact_name:
+    weight: 26
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_problem_overview:
+    weight: 38
+    settings:
+      rows: 3
+      placeholder: ''
+    third_party_settings: {  }
+    type: text_textarea
+    region: content
+  field_products_in_trade:
+    weight: 35
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+    type: text_textarea
+    region: content
+  field_raising_awareness:
+    weight: 9
+    settings:
+      display_label: true
+    third_party_settings:
+      conditional_fields:
+        40cffd1b-eea8-4316-9471-27ba529b2924:
+          dependee: field_illegal_disincentives
+          settings:
+            state: visible
+            condition: checked
+            grouping: AND
+            values_set: 1
+            value: ''
+            values: {  }
+            value_form:
+              value: false
+            effect: show
+            effect_options: {  }
+            selector: ''
+          entity_type: node
+          bundle: initiative
+    type: boolean_checkbox
+    region: content
+  field_reactive_measures:
+    weight: 8
+    settings:
+      display_label: true
+    third_party_settings:
+      conditional_fields:
+        5821de8f-72dc-46cd-a31d-e6e2098af235:
+          dependee: field_decreasing_living_costs
+          settings:
+            state: visible
+            condition: checked
+            grouping: AND
+            values_set: 1
+            value: ''
+            values: {  }
+            value_form:
+              value: false
+            effect: show
+            effect_options: {  }
+            selector: ''
+          entity_type: node
+          bundle: initiative
+    type: boolean_checkbox
+    region: content
+  field_related_resources:
+    weight: 28
+    settings:
+      entity_browser: resource
+      field_widget_display: label
+      field_widget_remove: true
+      open: true
+      selection_mode: selection_append
+      field_widget_edit: false
+      field_widget_replace: false
+      field_widget_display_settings: {  }
+    third_party_settings:
+      field_states_ui:
+        form:
+          type: ''
+          list: ''
+          add: Add
+    type: entity_browser_entity_reference
+    region: content
+  field_role_or_relationship:
+    weight: 62
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+    type: text_textarea
+    region: content
+  field_sense_of_ownership:
+    type: boolean_checkbox
+    weight: 29
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  field_species_affected:
+    weight: 23
+    settings: {  }
+    third_party_settings: {  }
+    type: synonyms_select
+    region: content
+  field_stewardship_incentives:
+    type: boolean_checkbox
+    weight: 23
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  field_subsistence_resource_use:
+    weight: 7
+    settings:
+      display_label: true
+    third_party_settings:
+      conditional_fields:
+        f4693245-9ae6-4134-bad9-d24835c257cd:
+          dependee: field_stewardship_incentives
+          settings:
+            state: visible
+            condition: checked
+            grouping: AND
+            values_set: 1
+            value: ''
+            values: {  }
+            value_form:
+              value: false
+            effect: show
+            effect_options: {  }
+            selector: ''
+          entity_type: node
+          bundle: initiative
+    type: boolean_checkbox
+    region: content
+  field_success_factors:
+    weight: 39
+    settings: {  }
+    third_party_settings: {  }
+    type: options_buttons
+    region: content
+  field_supporting_sanctions:
+    weight: 10
+    settings:
+      display_label: true
+    third_party_settings:
+      conditional_fields:
+        3efe747a-5c35-4c21-a85c-be220ca9aa28:
+          dependee: field_illegal_disincentives
+          settings:
+            state: visible
+            condition: checked
+            grouping: AND
+            values_set: 1
+            value: ''
+            values: {  }
+            value_form:
+              value: false
+            effect: show
+            effect_options: {  }
+            selector: ''
+          entity_type: node
+          bundle: initiative
+    type: boolean_checkbox
+    region: content
+  field_tourism:
+    weight: 5
+    settings:
+      display_label: true
+    third_party_settings:
+      conditional_fields:
+        4263796e-2fdf-4149-b7d8-9e22b008b3c7:
+          dependee: field_stewardship_incentives
+          settings:
+            state: visible
+            condition: checked
+            grouping: AND
+            values_set: 1
+            value: ''
+            values: {  }
+            value_form:
+              value: false
+            effect: show
+            effect_options: {  }
+            selector: ''
+          entity_type: node
+          bundle: initiative
+    type: boolean_checkbox
+    region: content
+  field_trophy_hunting:
+    weight: 6
+    settings:
+      display_label: true
+    third_party_settings:
+      conditional_fields:
+        358a25f6-8f94-42ab-8ed0-95236a6a782a:
+          dependee: field_stewardship_incentives
+          settings:
+            state: visible
+            condition: checked
+            grouping: AND
+            values_set: 1
+            value: ''
+            values: {  }
+            value_form:
+              value: false
+            effect: show
+            effect_options: {  }
+            selector: ''
+          entity_type: node
+          bundle: initiative
+    type: boolean_checkbox
+    region: content
+  field_voluntary_scouts:
+    weight: 5
+    settings:
+      display_label: true
+    third_party_settings:
+      field_states_ui:
+        form:
+          type: ''
+          list:
+            9279c20b-ca01-4880-a9b2-0b070b7cfd76:
+              operations:
+                edit: Edit
+                delete: Delete
+          add: Add
+        field_states:
+          9279c20b-ca01-4880-a9b2-0b070b7cfd76:
+            uuid: 9279c20b-ca01-4880-a9b2-0b070b7cfd76
+            id: invisible
+            data:
+              target: field_illegal_disincentives
+              comparison: unchecked
+              value: ''
+              submit: 'Add Cancel'
+      conditional_fields:
+        ef18431d-673a-4310-a1bb-681d94294a7c:
+          dependee: field_illegal_disincentives
+          settings:
+            state: visible
+            condition: checked
+            grouping: AND
+            values_set: 1
+            value: ''
+            values: {  }
+            value_form:
+              value: false
+            effect: show
+            effect_options: {  }
+            selector: ''
+          entity_type: node
+          bundle: initiative
+    type: boolean_checkbox
+    region: content
+  field_what_isnt_working:
+    weight: 41
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+    type: text_textarea
+    region: content
+  field_what_worked:
+    weight: 38
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+    type: text_textarea
+    region: content
+  field_year_finished:
+    weight: 42
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings:
+      conditional_fields:
+        5dbf8956-2b78-43d3-a1b4-3695d7789bd5:
+          dependee: field_initiative_status
+          settings:
+            state: visible
+            condition: value
+            grouping: AND
+            values_set: 1
+            value: ''
+            values: 'No'
+            value_form:
+              -
+                value: 'Yes'
+            effect: show
+            effect_options: {  }
+            selector: ''
+          entity_type: node
+          bundle: initiative
+    type: string_textfield
+    region: content
+  title:
+    type: string_textfield
+    weight: 21
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+hidden:
+  created: true
+  field_geofield: true
+  field_image: true
+  field_interventions: true
+  field_permission_to_use_photos: true
+  moderation_state: true
+  path: true
+  promote: true
+  revision_log: true
+  status: true
+  sticky: true
+  uid: true
+  url_redirects: true

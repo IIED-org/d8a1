@@ -1,0 +1,22 @@
+uuid: ddc630ce-893b-4f06-b4ca-08790beaf98c
+langcode: en
+status: true
+dependencies:
+  module:
+    - system
+  theme:
+    - pnp_bootstrap_sass
+_core:
+  default_config_hash: KHQIJ7Vfl25lTjzIc7qIvnuistt-Mw2O0kG4jCofmkI
+id: pnp_bootstrap_sass_messages
+theme: pnp_bootstrap_sass
+region: highlighted
+weight: -21
+provider: null
+plugin: system_messages_block
+settings:
+  id: system_messages_block
+  label: 'Status messages'
+  provider: system
+  label_display: '0'
+visibility: {  }

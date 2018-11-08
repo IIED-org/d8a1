@@ -1,0 +1,21 @@
+uuid: 000026b0-052b-4994-a5ba-4fc22351ce11
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_role_or_relationship
+    - node.type.initiative
+  module:
+    - text
+id: node.initiative.field_role_or_relationship
+field_name: field_role_or_relationship
+entity_type: node
+bundle: initiative
+label: 'What is your role or relationship with the initiative?'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long

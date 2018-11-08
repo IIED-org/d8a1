@@ -1,0 +1,175 @@
+uuid: 431ef5fc-cdbb-428a-953b-26596fed0ddd
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.resource.body
+    - field.field.node.resource.field_add_new_species
+    - field.field.node.resource.field_address
+    - field.field.node.resource.field_author
+    - field.field.node.resource.field_authors
+    - field.field.node.resource.field_date_published
+    - field.field.node.resource.field_geofield
+    - field.field.node.resource.field_interventions
+    - field.field.node.resource.field_language
+    - field.field.node.resource.field_publisher
+    - field.field.node.resource.field_resource_type
+    - field.field.node.resource.field_species_affected
+    - node.type.resource
+  module:
+    - address
+    - datetime
+    - ds
+    - entity_reference_revisions
+    - leaflet
+    - text
+    - user
+id: node.resource.default
+targetEntityType: node
+bundle: resource
+mode: default
+content:
+  body:
+    label: hidden
+    type: text_default
+    weight: 2
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+  field_add_new_species:
+    weight: 16
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_address:
+    weight: 12
+    label: inline
+    settings: {  }
+    third_party_settings: {  }
+    type: address_default
+    region: content
+  field_author:
+    weight: 3
+    label: inline
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_authors:
+    weight: 15
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_date_published:
+    weight: 5
+    label: hidden
+    settings:
+      timezone_override: ''
+      format_type: month_year
+    third_party_settings:
+      ds:
+        ft:
+          id: default
+          settings:
+            lb: 'Date published'
+            lb-col: false
+            classes: {  }
+    type: datetime_default
+    region: content
+  field_geofield:
+    weight: 14
+    label: hidden
+    settings:
+      popup_content: ''
+      leaflet_map: 'OSM Mapnik'
+      height: '400'
+      map_position:
+        zoom: '3'
+        minZoom: '1'
+        maxZoom: '18'
+        force: 0
+      icon:
+        iconUrl: ''
+        shadowUrl: ''
+        iconSize:
+          x: ''
+          'y': ''
+        iconAnchor:
+          x: ''
+          'y': ''
+        shadowAnchor:
+          x: ''
+          'y': ''
+        popupAnchor:
+          x: ''
+          'y': ''
+      multiple_map: 0
+      popup: 0
+      hide_empty_map: 0
+    third_party_settings:
+      ds:
+        ds_limit: ''
+    type: leaflet_formatter_default
+    region: content
+  field_interventions:
+    weight: 11
+    label: inline
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+  field_language:
+    weight: 8
+    label: inline
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_publisher:
+    weight: 4
+    label: inline
+    settings:
+      link_to_entity: false
+    third_party_settings:
+      ds:
+        ft:
+          id: default
+          settings:
+            lb: ''
+            lb-col: true
+            classes: {  }
+    type: string
+    region: content
+  field_resource_type:
+    type: entity_reference_revisions_entity_view
+    weight: 1
+    label: hidden
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    region: content
+  field_species_affected:
+    weight: 9
+    label: inline
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+  links:
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  addtoany: true

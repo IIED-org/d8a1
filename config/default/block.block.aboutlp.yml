@@ -1,0 +1,31 @@
+uuid: e375605f-ead5-400b-9899-367bf87b387c
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:basic:f8eee970-e017-45a7-8fcb-76e758412b78'
+  module:
+    - block_content
+    - system
+  theme:
+    - pnp_bootstrap_sass
+id: aboutlp
+theme: pnp_bootstrap_sass
+region: content
+weight: -10
+provider: null
+plugin: 'block_content:f8eee970-e017-45a7-8fcb-76e758412b78'
+settings:
+  id: 'block_content:f8eee970-e017-45a7-8fcb-76e758412b78'
+  label: 'About LP'
+  provider: block_content
+  label_display: '0'
+  status: true
+  info: ''
+  view_mode: full
+visibility:
+  request_path:
+    id: request_path
+    pages: /node/16
+    negate: false
+    context_mapping: {  }

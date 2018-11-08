@@ -1,0 +1,28 @@
+uuid: 5d1cd705-405c-4f82-aea6-56c911124ab5
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_in_kind_scouts
+    - node.type.initiative
+  module:
+    - label_help
+third_party_settings:
+  label_help:
+    label_help_description: 'For example, uniforms and equipment'
+id: node.initiative.field_in_kind_scouts
+field_name: field_in_kind_scouts
+entity_type: node
+bundle: initiative
+label: 'Paid in kind community scouts'
+description: 'For example, uniforms and equipment'
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

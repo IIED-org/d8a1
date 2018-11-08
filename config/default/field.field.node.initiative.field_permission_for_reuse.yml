@@ -1,0 +1,23 @@
+uuid: 510973be-400c-4461-97d3-5a4675e91b27
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_permission_for_reuse
+    - node.type.initiative
+id: node.initiative.field_permission_for_reuse
+field_name: field_permission_for_reuse
+entity_type: node
+bundle: initiative
+label: 'I acknowledge that I have permission to share information from those named in this initiative '
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

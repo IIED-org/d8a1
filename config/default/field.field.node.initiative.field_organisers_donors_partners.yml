@@ -1,0 +1,21 @@
+uuid: 0b44ded8-d3fa-4e34-b2d4-a24dacda5c1c
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_organisers_donors_partners
+    - node.type.initiative
+  module:
+    - text
+id: node.initiative.field_organisers_donors_partners
+field_name: field_organisers_donors_partners
+entity_type: node
+bundle: initiative
+label: 'Organisers, donors and partners'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long

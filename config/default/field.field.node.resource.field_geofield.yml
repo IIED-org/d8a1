@@ -1,0 +1,43 @@
+uuid: 2bc94c77-a201-4e01-abc3-6130db6b9c07
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_geofield
+    - node.type.resource
+  module:
+    - geocoder_field
+    - geofield
+third_party_settings:
+  geocoder_field:
+    method: source
+    weight: 0
+    geocode_field: field_address
+    reverse_geocode_field: ''
+    hidden: true
+    disabled: false
+    plugins:
+      - openstreetmap
+      - yandex
+      - freegeoip
+      - geoplugin
+      - geoip
+    dumper: wkt
+    delta_handling: default
+    failure:
+      handling: preserve
+      status_message: true
+      log: true
+id: node.resource.field_geofield
+field_name: field_geofield
+entity_type: node
+bundle: resource
+label: Geofield
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  backend: geofield_backend_default
+field_type: geofield

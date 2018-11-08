@@ -1,0 +1,34 @@
+uuid: 9324a5c6-43a7-467e-8474-cde733741cb9
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_related_resources
+    - node.type.initiative
+    - node.type.resource
+  module:
+    - label_help
+third_party_settings:
+  label_help:
+    label_help_description: "Please provide information that describes your initiative in more detail (e.g. videos, reports) and any other supplementary material related to your initiative such as documents and web links that can be posted on the People Not Poaching learning platform.<br />\r\nBy uploading you agree that you have permission from any copyright holders for all materials to be re-used under the terms of Creative Commons Attribution-ShareAlike license (<a href=\"https://creativecommons.org/licenses/by-sa/4.0\">CC-BY-SA</a>)"
+id: node.initiative.field_related_resources
+field_name: field_related_resources
+entity_type: node
+bundle: initiative
+label: Resources
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      resource: resource
+    sort:
+      field: title
+      direction: ASC
+    auto_create: true
+    auto_create_bundle: ''
+field_type: entity_reference

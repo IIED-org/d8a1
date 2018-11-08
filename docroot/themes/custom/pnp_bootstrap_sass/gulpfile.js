@@ -11,9 +11,9 @@ gulp.task('sass', function() {
     return gulp.src(['node_modules/bootstrap/scss/bootstrap.scss', 'scss/style.scss'])
         .pipe(sourcemaps.init())
         .pipe(sass().on('error', sass.logError))
-        .pipe(sass({ outputStyle: 'nested' }))      // nested | compressed etc.
-        .pipe(sourcemaps.write())                   // Comment out in prod mode
-        //.pipe(cleanCSS({compatibility: 'ie10'}))  // Remove comment in prod mode
+        .pipe(sass({ outputStyle: 'compressed' }))      // nested | compressed etc.
+        //.pipe(sourcemaps.write())                    // Comment out in prod mode
+        .pipe(cleanCSS({compatibility: 'ie10'}))      // Remove comment in prod mode
         .pipe(gulp.dest("css"))
         .pipe(browserSync.stream());
 });

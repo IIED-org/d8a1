@@ -1,0 +1,18 @@
+uuid: 7be2c0ff-a4d8-4323-a009-945567102f53
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: node.field_ecosystem_service_payments
+field_name: field_ecosystem_service_payments
+entity_type: node
+type: boolean
+settings: {  }
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

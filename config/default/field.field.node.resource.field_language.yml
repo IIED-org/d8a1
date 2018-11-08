@@ -1,0 +1,24 @@
+uuid: d7f8db9a-dd94-405b-af0b-093df2e81a0e
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_language
+    - node.type.resource
+  module:
+    - label_help
+third_party_settings:
+  label_help:
+    label_help_description: 'What language is the resource in?'
+id: node.resource.field_language
+field_name: field_language
+entity_type: node
+bundle: resource
+label: Language
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

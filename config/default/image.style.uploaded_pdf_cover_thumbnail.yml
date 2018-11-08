@@ -1,0 +1,15 @@
+uuid: 3a89d008-f286-4db9-bb24-ab0d22a0628a
+langcode: en
+status: true
+dependencies: {  }
+name: uploaded_pdf_cover_thumbnail
+label: 'Uploaded pdf cover thumbnail'
+effects:
+  5fc357c4-2f3d-4f98-8a4e-2f771c27a97d:
+    uuid: 5fc357c4-2f3d-4f98-8a4e-2f771c27a97d
+    id: image_scale
+    weight: 1
+    data:
+      width: 80
+      height: null
+      upscale: false

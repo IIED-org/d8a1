@@ -1,0 +1,29 @@
+uuid: c6638bb0-5072-488f-820d-d07d207dae94
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_new
+    - paragraphs.paragraphs_type.add_new_species
+    - taxonomy.vocabulary.species
+id: paragraph.add_new_species.field_new
+field_name: field_new
+entity_type: paragraph
+bundle: add_new_species
+label: 'Add new species (if yours does not appear in the list above)'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      species: species
+    sort:
+      field: name
+      direction: asc
+    auto_create: true
+    auto_create_bundle: ''
+field_type: entity_reference

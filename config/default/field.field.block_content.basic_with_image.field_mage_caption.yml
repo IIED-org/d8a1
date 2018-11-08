@@ -1,0 +1,21 @@
+uuid: a2a7025b-8b3f-4655-92e6-c8fe12319f4e
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.basic_with_image
+    - field.storage.block_content.field_mage_caption
+  module:
+    - text
+id: block_content.basic_with_image.field_mage_caption
+field_name: field_mage_caption
+entity_type: block_content
+bundle: basic_with_image
+label: 'Image caption'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text

@@ -1,0 +1,31 @@
+uuid: 80461f34-b697-4a82-8976-0be4b23d4ae3
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:basic:e1792e94-c674-4972-b6b0-c3430632b0d3'
+  module:
+    - block_content
+    - system
+  theme:
+    - pnp_bootstrap_sass
+id: homemission
+theme: pnp_bootstrap_sass
+region: content
+weight: -13
+provider: null
+plugin: 'block_content:e1792e94-c674-4972-b6b0-c3430632b0d3'
+settings:
+  id: 'block_content:e1792e94-c674-4972-b6b0-c3430632b0d3'
+  label: 'home mission'
+  provider: block_content
+  label_display: '0'
+  status: true
+  info: ''
+  view_mode: full
+visibility:
+  request_path:
+    id: request_path
+    pages: '<front>'
+    negate: false
+    context_mapping: {  }

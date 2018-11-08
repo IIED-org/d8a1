@@ -1,0 +1,15 @@
+uuid: 504d6a2f-94b6-4232-98df-f97378668d6a
+langcode: en
+status: true
+dependencies: {  }
+name: gallery_270x270_
+label: 'Gallery (270x270)'
+effects:
+  e1eed868-d4e6-4920-bb98-f32db190c3b5:
+    uuid: e1eed868-d4e6-4920-bb98-f32db190c3b5
+    id: image_scale_and_crop
+    weight: 1
+    data:
+      width: 270
+      height: 270
+      anchor: center-center

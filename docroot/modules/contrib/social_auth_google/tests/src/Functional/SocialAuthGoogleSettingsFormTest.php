@@ -2,16 +2,16 @@
 
 namespace Drupal\Tests\social_auth_google\Functional;
 
-use Drupal\social_api\SocialApiSettingsFormBase;
+use Drupal\social_api\SocialApiSettingsFormBaseTest;
 
 /**
- * Test Social Auth Google module functionality of settings' forms.
+ * Test Social Auth Google settings form.
  *
  * @group social_auth
  *
  * @ingroup social_auth_google
  */
-class SocialAuthGoogleSettingsFormTest extends SocialApiSettingsFormBase {
+class SocialAuthGoogleSettingsFormTest extends SocialApiSettingsFormBaseTest {
   /**
    * Modules to enable.
    *

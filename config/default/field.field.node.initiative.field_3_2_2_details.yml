@@ -1,0 +1,21 @@
+uuid: 1eb29d32-c587-4fd2-892f-ef04879648d9
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_3_2_2_details
+    - node.type.initiative
+  module:
+    - text
+id: node.initiative.field_3_2_2_details
+field_name: field_3_2_2_details
+entity_type: node
+bundle: initiative
+label: 'Details (optional)'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long

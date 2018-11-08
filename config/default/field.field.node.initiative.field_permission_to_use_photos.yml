@@ -1,0 +1,28 @@
+uuid: c2d9fbda-5617-4cb7-a8a6-bd467515c7c4
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_permission_to_use_photos
+    - node.type.initiative
+  module:
+    - label_help
+third_party_settings:
+  label_help:
+    label_help_description: 'I give permission for the pictures/photos I have provided to be used by IUCN/IIED/TRAFFIC (and others who access the platform) in publications, as long as they are properly credited and not for commercial gain.'
+id: node.initiative.field_permission_to_use_photos
+field_name: field_permission_to_use_photos
+entity_type: node
+bundle: initiative
+label: 'Photo permission'
+description: ''
+required: true
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

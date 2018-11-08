@@ -1,0 +1,34 @@
+uuid: 358ab0cb-1a82-4af5-8529-d89dcc843c22
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_interventions
+    - node.type.initiative
+    - taxonomy.vocabulary.interventions
+  module:
+    - label_help
+third_party_settings:
+  label_help:
+    label_help_description: 'Strategies, though discrete, may be inter-linked. In these cases please tick all boxes that apply and add an explanation in the fields provided.'
+id: node.initiative.field_interventions
+field_name: field_interventions
+entity_type: node
+bundle: initiative
+label: 'The strategy'
+description: 'Strategies, though discrete, may be inter-linked. In these cases please tick all boxes that apply and add an explanation in the fields provided.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      interventions: interventions
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

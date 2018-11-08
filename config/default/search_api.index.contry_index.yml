@@ -1,0 +1,155 @@
+uuid: 3f3e9786-64be-4304-9314-e1abde6c2024
+langcode: en
+status: false
+dependencies:
+  config:
+    - field.storage.node.field_address
+    - field.storage.node.body
+    - field.storage.node.field_author
+    - field.storage.node.field_initiative_introduction
+    - field.storage.node.field_interventions
+    - field.storage.node.field_lead_organisation
+    - field.storage.node.field_problem_overview
+    - field.storage.node.field_species_affected
+    - search_api.server.search_server
+  module:
+    - node
+    - search_api
+id: contry_index
+name: 'Country index'
+description: ''
+read_only: false
+field_settings:
+  additional_name:
+    label: '1.2 Where is the initiative taking place? » The additional name.'
+    datasource_id: 'entity:node'
+    property_path: 'field_address:additional_name'
+    type: string
+    dependencies:
+      config:
+        - field.storage.node.field_address
+  body:
+    label: '1.1 Introductory paragraph for the initiative'
+    datasource_id: 'entity:node'
+    property_path: body
+    type: text
+    dependencies:
+      config:
+        - field.storage.node.body
+  country_name:
+    label: '1.2 Where is the initiative taking place? » The full name of the country.'
+    datasource_id: 'entity:node'
+    property_path: 'field_address:country_name'
+    type: string
+    dependencies:
+      config:
+        - field.storage.node.field_address
+  field_author:
+    label: Author(s)
+    datasource_id: 'entity:node'
+    property_path: field_author
+    type: text
+    dependencies:
+      config:
+        - field.storage.node.field_author
+  field_initiative_introduction:
+    label: '3.1 Please introduce the initiative for tackling poaching.'
+    datasource_id: 'entity:node'
+    property_path: field_initiative_introduction
+    type: text
+    dependencies:
+      config:
+        - field.storage.node.field_initiative_introduction
+  field_interventions:
+    label: '3.2 Please select all the option(s) that apply to your project''s strategy by ticking the relevant boxes.'
+    datasource_id: 'entity:node'
+    property_path: field_interventions
+    type: string
+    dependencies:
+      config:
+        - field.storage.node.field_interventions
+  field_lead_organisation:
+    label: '1.4 Who is leading the initiative?'
+    datasource_id: 'entity:node'
+    property_path: field_lead_organisation
+    type: text
+    dependencies:
+      config:
+        - field.storage.node.field_lead_organisation
+  field_problem_overview:
+    label: '2.3 Please give an overview of the kind of poaching that is (or was) occurring in the case study area'
+    datasource_id: 'entity:node'
+    property_path: field_problem_overview
+    type: text
+    dependencies:
+      config:
+        - field.storage.node.field_problem_overview
+  field_species_affected:
+    label: '2.1 Species affected'
+    datasource_id: 'entity:node'
+    property_path: field_species_affected
+    type: string
+    dependencies:
+      config:
+        - field.storage.node.field_species_affected
+  title:
+    label: Title
+    datasource_id: 'entity:node'
+    property_path: title
+    type: text
+    dependencies:
+      module:
+        - node
+datasource_settings:
+  'entity:node':
+    bundles:
+      default: false
+      selected:
+        - initiative
+        - resource
+    languages:
+      default: true
+      selected: {  }
+processor_settings:
+  add_url: {  }
+  aggregated_field: {  }
+  entity_status: {  }
+  ignore_character:
+    all_fields: false
+    fields:
+      - additional_name
+      - country_name
+    ignorable: '[''¿¡!?,.:;]'
+    strip:
+      character_sets:
+        Cc: 0
+        Cf: 0
+        Co: 0
+        Mc: 0
+        Me: 0
+        Mn: 0
+        Pc: Pc
+        Pd: Pd
+        Pe: Pe
+        Pf: Pf
+        Pi: Pi
+        Po: Po
+        Ps: Ps
+        Sc: 0
+        Sk: 0
+        Sm: 0
+        So: 0
+        Zl: 0
+        Zp: 0
+        Zs: 0
+    weights:
+      preprocess_index: -10
+      preprocess_query: -10
+  rendered_item: {  }
+tracker_settings:
+  default:
+    indexing_order: fifo
+options:
+  index_directly: true
+  cron_limit: 50
+server: search_server

@@ -1,0 +1,21 @@
+uuid: 4433733e-84cb-4121-b6f9-1f0d01e7a7ad
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_success_factors
+    - node.type.initiative
+  module:
+    - options
+id: node.initiative.field_success_factors
+field_name: field_success_factors
+entity_type: node
+bundle: initiative
+label: 'Factors for success'
+description: 'You can choose up to three most important factors that helped your project to succeed from the list of checkboxes.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_string

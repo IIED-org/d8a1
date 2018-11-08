@@ -1,0 +1,21 @@
+uuid: a14f632a-c73d-4526-a910-2a0283991464
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_limiting_factors
+    - node.type.initiative
+  module:
+    - options
+id: node.initiative.field_limiting_factors
+field_name: field_limiting_factors
+entity_type: node
+bundle: initiative
+label: 'Factors that limited or hindered success'
+description: 'Select up to three factors from the list of checkboxes. Please consider adding a brief explanation to help us understand how these factors influenced your project'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_string

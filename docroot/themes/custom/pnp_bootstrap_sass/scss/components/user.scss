@@ -33,12 +33,14 @@
     background-color: theme-color("success");
 }
 
+/*
 .password-confirm,
 .password-field,
 .password-strength,
 .password-confirm-match {
     width: 55%;
 }
+*/
 
 .password-suggestions {
     padding: 0.2em 0.5em;
@@ -79,13 +81,35 @@
 }
 
 
-/* Login page stype */
+/* Login page type */
 
 .page-user-login main .region-content,
 .page-user-password main .region-content {
+    @extend .container;
     max-width: 400px;
     background: white;
     padding: $spacer $spacer;
     margin: 0 auto;
     border-radius: $border-radius-lg;
+}
+
+.account-modal {
+    z-index: 500 !important;
+}
+
+.account-modal-header h2 {
+  font-size: inherit;
+  margin: 0 $spacer;
+  float: left;
+  line-height: 52px;
+}
+
+#block-name {
+  position: absolute;
+  right: 7rem;
+  padding: 0.5rem 0;
+}
+
+.actions-suffix {
+    text-align: center;
 }

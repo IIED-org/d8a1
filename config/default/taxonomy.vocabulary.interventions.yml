@@ -1,0 +1,9 @@
+uuid: 7627851b-1596-48fa-8752-b4cf43a53ae3
+langcode: en
+status: true
+dependencies: {  }
+name: Interventions
+vid: interventions
+description: 'Project strategies'
+hierarchy: 0
+weight: 0

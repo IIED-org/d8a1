@@ -1,0 +1,18 @@
+id: initiative_list_card
+label: 'Initiative list card'
+ui_limit: initiative|list_card
+properties:
+  block: 'views_block:initiative_display-block_1'
+  use_block_title: false
+  config:
+    id: 'views_block:initiative_display-block_1'
+    label: ''
+    provider: views
+    label_display: visible
+    views_label: ''
+    items_per_page: '1'
+    context_mapping: {  }
+type: block
+type_label: 'Block field'
+entities:
+  node: node

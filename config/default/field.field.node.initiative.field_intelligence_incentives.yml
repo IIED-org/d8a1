@@ -1,0 +1,23 @@
+uuid: 802840ce-ca42-45f1-a51c-e61cf343fdbb
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_intelligence_incentives
+    - node.type.initiative
+id: node.initiative.field_intelligence_incentives
+field_name: field_intelligence_incentives
+entity_type: node
+bundle: initiative
+label: 'Monetary incentives for community intelligence'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

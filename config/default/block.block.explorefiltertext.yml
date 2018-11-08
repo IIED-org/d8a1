@@ -1,0 +1,31 @@
+uuid: 5d98b288-125d-4d3a-a5fe-3e176cf755e2
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:basic:5a0fe900-edff-404a-9278-4f60cb399195'
+  module:
+    - block_content
+    - system
+  theme:
+    - pnp_bootstrap_sass
+id: explorefiltertext
+theme: pnp_bootstrap_sass
+region: featured_top
+weight: -18
+provider: null
+plugin: 'block_content:5a0fe900-edff-404a-9278-4f60cb399195'
+settings:
+  id: 'block_content:5a0fe900-edff-404a-9278-4f60cb399195'
+  label: 'Explore filter text'
+  provider: block_content
+  label_display: '0'
+  status: true
+  info: ''
+  view_mode: full
+visibility:
+  request_path:
+    id: request_path
+    pages: '/explore*'
+    negate: false
+    context_mapping: {  }

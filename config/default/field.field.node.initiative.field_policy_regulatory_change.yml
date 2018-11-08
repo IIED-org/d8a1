@@ -1,0 +1,28 @@
+uuid: 228268ec-7519-4eb9-a374-cd104fac6183
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_policy_regulatory_change
+    - node.type.initiative
+  module:
+    - label_help
+third_party_settings:
+  label_help:
+    label_help_description: 'This may include national/international changes to policy to enable communities to benefit.'
+id: node.initiative.field_policy_regulatory_change
+field_name: field_policy_regulatory_change
+entity_type: node
+bundle: initiative
+label: 'Policy/regulatory change to enable communities to benefit.'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

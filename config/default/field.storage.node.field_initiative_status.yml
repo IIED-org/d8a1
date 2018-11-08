@@ -1,0 +1,30 @@
+uuid: 4007662e-ca11-4268-8610-f6480d77f244
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+    - options
+id: node.field_initiative_status
+field_name: field_initiative_status
+entity_type: node
+type: list_string
+settings:
+  allowed_values:
+    -
+      value: 'Yes'
+      label: Completed
+    -
+      value: 'No'
+      label: Current
+    -
+      value: Unknown
+      label: Unknown
+  allowed_values_function: ''
+module: options
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

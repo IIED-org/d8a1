@@ -1,0 +1,13 @@
+Account Modal 8.x-1.0-beta1, 2018-10-05
+---------------------------------------
+#2849976 by bmcclure: Allow customization of modal size
+#2955557 by shmel210, bmcclure: Library core/drupal.ajax is not attached on page
+#2991099 by RumyanaRuseva: JS error on successful login if user/login is not opened through ajax
+
+Account Modal 8.x-1.0-alpha1, 2017-04-14
+----------------------------------------
+No changes since initial release
+
+Account Modal 8.x-1.x-dev, 2017-04-14
+-------------------------------------
+Initial dev release by bmcclure

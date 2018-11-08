@@ -1,0 +1,18 @@
+uuid: d53ad4fb-433e-42e7-afe0-2576205f54a9
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: node.field_illegal_disincentives
+field_name: field_illegal_disincentives
+entity_type: node
+type: boolean
+settings: {  }
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

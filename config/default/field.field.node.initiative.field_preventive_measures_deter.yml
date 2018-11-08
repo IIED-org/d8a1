@@ -1,0 +1,28 @@
+uuid: de351998-6222-4194-9823-579964a6357d
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_preventive_measures_deter
+    - node.type.initiative
+  module:
+    - label_help
+third_party_settings:
+  label_help:
+    label_help_description: 'For example, fences, lion lights, whistles...'
+id: node.initiative.field_preventive_measures_deter
+field_name: field_preventive_measures_deter
+entity_type: node
+bundle: initiative
+label: 'Preventive measures to deter wildlife '
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

@@ -1,0 +1,33 @@
+uuid: 3f36976f-c5c9-44cc-b407-946fbeffa6e2
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.online_article_or_blog.field_article_url
+    - paragraphs.paragraphs_type.online_article_or_blog
+  module:
+    - field_layout
+    - layout_discovery
+    - link
+third_party_settings:
+  field_layout:
+    id: layout_onecol
+    settings: {  }
+id: paragraph.online_article_or_blog.default
+targetEntityType: paragraph
+bundle: online_article_or_blog
+mode: default
+content:
+  field_article_url:
+    weight: 0
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: {  }
+    type: link_default
+    region: content
+hidden:
+  created: true
+  moderation_state: true
+  status: true
+  uid: true

@@ -1,0 +1,27 @@
+uuid: d3277b02-4e60-415f-aad3-eed31ffb83bf
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.online_article_or_blog.field_article_url
+    - paragraphs.paragraphs_type.online_article_or_blog
+  module:
+    - link
+id: paragraph.online_article_or_blog.default
+targetEntityType: paragraph
+bundle: online_article_or_blog
+mode: default
+content:
+  field_article_url:
+    weight: 0
+    label: hidden
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+    type: link
+    region: content
+hidden: {  }

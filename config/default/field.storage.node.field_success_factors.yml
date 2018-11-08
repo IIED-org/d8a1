@@ -1,0 +1,57 @@
+uuid: af650635-c547-4752-9768-ed8bb3488676
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+    - options
+id: node.field_success_factors
+field_name: field_success_factors
+entity_type: node
+type: list_string
+settings:
+  allowed_values:
+    -
+      value: 'Supportive national policy/legislation for devolved governance of natural resources'
+      label: 'Supportive national policy/legislation for devolved governance of natural resources'
+    -
+      value: 'Supportive national policy/legislation on sustainable use of natural resources'
+      label: 'Supportive national policy/legislation on sustainable use of natural resources'
+    -
+      value: 'Coordinated and coherent sectoral policies/legislation (For example, land use planning, agricultural etc...)'
+      label: 'Coordinated and coherent sectoral policies/legislation (For example, land use planning, agricultural etc...)'
+    -
+      value: 'Long-term donor support that is flexible, adaptive and/or based on realistic time goals'
+      label: 'Long-term donor support that is flexible, adaptive and/or based on realistic time goals'
+    -
+      value: 'Supportive, multi-stakeholder partnerships with a shared vision'
+      label: 'Supportive, multi-stakeholder partnerships with a shared vision'
+    -
+      value: 'Sufficient time investment in building relationships and trust between the initiative and local communities'
+      label: 'Sufficient time investment in building relationships and trust between the initiative and local communities'
+    -
+      value: 'Devolved decision-making power so local communities have a voice in creating or co-creating solutions (as part of the initiative)'
+      label: 'Devolved decision-making power so local communities have a voice in creating or co-creating solutions (as part of the initiative)'
+    -
+      value: 'Effective and accountable community-based natural resources management institutions'
+      label: 'Effective and accountable community-based natural resources management institutions'
+    -
+      value: 'Effective and trusted community leaders'
+      label: 'Effective and trusted community leaders'
+    -
+      value: 'Transparent and accountable distribution of benefits to local communities'
+      label: 'Transparent and accountable distribution of benefits to local communities'
+    -
+      value: 'Clearly defined tenure or resource use rights'
+      label: 'Clearly defined tenure or resource use rights'
+    -
+      value: 'Clear and tangible benefits to local communities from wildlife (These may be financial and/or non-financial)'
+      label: 'Clear and tangible benefits to local communities from wildlife (These may be financial and/or non-financial)'
+  allowed_values_function: ''
+module: options
+locked: false
+cardinality: -1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false
