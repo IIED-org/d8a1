@@ -671,10 +671,6 @@ label.js-form-required,
     width: 90% !important;
 }
 
-.node-form .ui-accordion .ui-accordion-content {
-    padding: 0;
-}
-
 .node-form {
   .card {
   margin-bottom: 2rem;
@@ -682,6 +678,9 @@ label.js-form-required,
   .ui-state-active {
   border-color: $info;
   background: $info;
+  }
+  .ui-accordion .ui-accordion-content {
+      padding: 0;
   }
 }
 
@@ -692,7 +691,14 @@ label.js-form-required,
   }
 }
 
-
+.path-admin .views-exposed-form {
+    .form-item-type label {
+    display: block;
+}
+    .form-row {
+    margin-left: 3rem;
+}
+}
 
 /* ANIMALS
 --------------------------------------------------*/
