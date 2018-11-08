@@ -362,11 +362,17 @@ form.form-search:before {
 }
 
 .parens {
+  font-style: italic;
   &::before {
     content: "(";
+    font-style: initial;
+    margin-right: -0.3rem;
   }
   &::after {
     content: " )"; // Remove space if field whitespace is trimmed
+    font-style: initial;
+    margin-right: -0.3rem;
+    margin-left: -0.3rem;
   }
 }
 
@@ -665,10 +671,6 @@ label.js-form-required,
     width: 90% !important;
 }
 
-.node-form .ui-accordion .ui-accordion-content {
-    padding: 0;
-}
-
 .node-form {
   .card {
   margin-bottom: 2rem;
@@ -676,6 +678,9 @@ label.js-form-required,
   .ui-state-active {
   border-color: $info;
   background: $info;
+  }
+  .ui-accordion .ui-accordion-content {
+      padding: 0;
   }
 }
 
@@ -686,7 +691,14 @@ label.js-form-required,
   }
 }
 
-
+.path-admin .views-exposed-form {
+    .form-item-type label {
+    display: block;
+}
+    .form-row {
+    margin-left: 3rem;
+}
+}
 
 /* ANIMALS
 --------------------------------------------------*/
@@ -717,6 +729,9 @@ label.js-form-required,
   z-index: 10;
 }
 
+.node--type-initiative #cat, .user-logged-in #cat {
+    display: none;
+}
 
 /* @MEDIA
 --------------------------------------------------*/
@@ -800,14 +815,16 @@ label.js-form-required,
     top: -14px;
     transition: width 0.5s;
   }
+}
 
-  #cat {
-    position: absolute;
-    width: 125px;
-    height: auto;
-    top: -90px;
-    right: 50px;
-    transition: width 0.5s;
-    z-index: 10;
-  }
+@media (max-width: 1200px) {
+#cat {
+  position: absolute;
+  width: 125px;
+  height: auto;
+  top: -90px;
+  right: 50px;
+  transition: width 0.5s;
+  z-index: 10;
+}
 }
