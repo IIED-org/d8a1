@@ -362,11 +362,17 @@ form.form-search:before {
 }
 
 .parens {
+  font-style: italic;
   &::before {
     content: "(";
+    font-style: initial;
+    margin-right: -0.3rem;
   }
   &::after {
     content: " )"; // Remove space if field whitespace is trimmed
+    font-style: initial;
+    margin-right: -0.3rem;
+    margin-left: -0.3rem;
   }
 }
 
@@ -717,6 +723,9 @@ label.js-form-required,
   z-index: 10;
 }
 
+.node--type-initiative #cat, .user-logged-in #cat {
+    display: none;
+}
 
 /* @MEDIA
 --------------------------------------------------*/
@@ -752,6 +761,15 @@ label.js-form-required,
 .block-facet--dropdown {
     flex: 0 0 18%;
     max-width: 18%;
+}
+#cat {
+  position: absolute;
+  width: 125px;
+  height: auto;
+  top: -90px;
+  right: 50px;
+  transition: width 0.5s;
+  z-index: 10;
 }
 }
 
@@ -799,15 +817,5 @@ label.js-form-required,
     height: auto;
     top: -14px;
     transition: width 0.5s;
-  }
-
-  #cat {
-    position: absolute;
-    width: 125px;
-    height: auto;
-    top: -90px;
-    right: 50px;
-    transition: width 0.5s;
-    z-index: 10;
   }
 }
