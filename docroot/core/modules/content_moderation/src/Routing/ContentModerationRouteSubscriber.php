@@ -71,11 +71,7 @@ class ContentModerationRouteSubscriber extends RouteSubscriberBase {
     }
     $parameters = $route->getOption('parameters') ?: [];
     foreach ($parameters as &$parameter) {
-      if (isset($parameter['type']) && $parameter['type'] === 'entity:' . $entity_type && !isset($parameter['load_latest_revision'])) {
-        $parameter['load_latest_revision'] = TRUE;
-      }
-      elseif (isset($parameter['targetEntityType']) && $parameter['targetEntityType'] === $entity_type) {
-        $parameter['type'] = 'entity:' . $entity_type;
+      if ($parameter['type'] === 'entity:' . $entity_type && !isset($parameter['load_latest_revision'])) {
         $parameter['load_latest_revision'] = TRUE;
       }
     }
