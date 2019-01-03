@@ -85,7 +85,8 @@
     "league/oauth2-google": "^2.2",
     "drupal/simplify": "^1.0",
     "drupal/rules": "^3.0@alpha",
-    "drupal/rabbit_hole": "^1.0@beta"
+    "drupal/rabbit_hole": "^1.0@beta",
+    "drupal/honeypot": "^1.29"
   },
   "require-dev": {
     "drupal/devel": "^1.0",
