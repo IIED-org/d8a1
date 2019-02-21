@@ -2,8 +2,11 @@
 
 namespace Drupal\leaflet_views\Plugin\views\style;
 
-use Drupal\Component\Utility\UrlHelper;
+use Drupal\Core\Entity\Plugin\DataType\EntityAdapter;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\search_api\Datasource\DatasourceInterface;
+use Drupal\search_api\Entity\Index;
+use Drupal\Core\Url;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Plugin\views\style\StylePluginBase;
 use Drupal\views\ViewExecutable;
@@ -13,9 +16,12 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Render\RendererInterface;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Leaflet\LeafletService;
 use Drupal\Component\Utility\Html;
+use Drupal\Core\Utility\LinkGeneratorInterface;
 use Drupal\leaflet\LeafletSettingsElementsTrait;
+use Drupal\views\Plugin\views\PluginBase;
 
 /**
  * Style plugin to render a View output as a Leaflet map.
@@ -46,7 +52,7 @@ class LeafletMap extends StylePluginBase implements ContainerFactoryPluginInterf
   /**
    * The Entity Info service property.
    *
-   * @var string
+   * @var \Drupal\Core\Entity\EntityTypeInterface
    */
   protected $entityInfo;
 
@@ -86,11 +92,25 @@ class LeafletMap extends StylePluginBase implements ContainerFactoryPluginInterf
   protected $renderer;
 
   /**
+   * The module handler to invoke the alter hook.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   */
+  protected $moduleHandler;
+
+  /**
    * Leaflet service.
    *
    * @var \Drupal\Leaflet\LeafletService
    */
   protected $leafletService;
+
+  /**
+   * The Link generator Service.
+   *
+   * @var \Drupal\Core\Utility\LinkGeneratorInterface
+   */
+  protected $link;
 
   /**
    * Constructs a LeafletMap style instance.
@@ -109,8 +129,12 @@ class LeafletMap extends StylePluginBase implements ContainerFactoryPluginInterf
    *   The entity display manager.
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer.
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   *   The module handler.
    * @param \Drupal\Leaflet\LeafletService $leaflet_service
    *   The Leaflet service.
+   * @param \Drupal\Core\Utility\LinkGeneratorInterface $link_generator
+   *   The Link Generator service.
    */
   public function __construct(
     array $configuration,
@@ -120,7 +144,9 @@ class LeafletMap extends StylePluginBase implements ContainerFactoryPluginInterf
     EntityFieldManagerInterface $entity_field_manager,
     EntityDisplayRepositoryInterface $entity_display,
     RendererInterface $renderer,
-    LeafletService $leaflet_service
+    ModuleHandlerInterface $module_handler,
+    LeafletService $leaflet_service,
+    LinkGeneratorInterface $link_generator
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
@@ -128,7 +154,9 @@ class LeafletMap extends StylePluginBase implements ContainerFactoryPluginInterf
     $this->entityFieldManager = $entity_field_manager;
     $this->entityDisplay = $entity_display;
     $this->renderer = $renderer;
+    $this->moduleHandler = $module_handler;
     $this->leafletService = $leaflet_service;
+    $this->link = $link_generator;
   }
 
   /**
@@ -143,7 +171,9 @@ class LeafletMap extends StylePluginBase implements ContainerFactoryPluginInterf
       $container->get('entity_field.manager'),
       $container->get('entity_display.repository'),
       $container->get('renderer'),
-      $container->get('leaflet.service')
+      $container->get('module_handler'),
+      $container->get('leaflet.service'),
+      $container->get('link_generator')
     );
   }
 
@@ -161,6 +191,17 @@ class LeafletMap extends StylePluginBase implements ContainerFactoryPluginInterf
         $this->entityType = $key;
         $this->entityInfo = $info;
         return;
+      }
+    }
+    // Set entity info for Search API views.
+    if ($this->moduleHandler->moduleExists('search_api') && substr($base_table, 0, 17) === 'search_api_index_') {
+      $index_id = substr($base_table, 17);
+      $index = Index::load($index_id);
+      foreach ($index->getDatasources() as $datasource) {
+        if ($datasource instanceof DatasourceInterface) {
+          $this->entityType = $datasource->getEntityTypeId();
+          $this->entityInfo = $this->entityManager->getDefinition($this->entityType);
+        }
       }
     }
   }
@@ -242,6 +283,7 @@ class LeafletMap extends StylePluginBase implements ContainerFactoryPluginInterf
     if ($this->entityType) {
       $desc_options += [
         '#rendered_entity' => $this->t('< @entity entity >', ['@entity' => $this->entityType]),
+        '#rendered_entity_ajax' => $this->t('< @entity entity via ajax >', ['@entity' => $this->entityType]),
       ];
     }
 
@@ -272,7 +314,8 @@ class LeafletMap extends StylePluginBase implements ContainerFactoryPluginInterf
         '#states' => [
           'visible' => [
             ':input[name="style_options[description_field]"]' => [
-              'value' => '#rendered_entity',
+              ['value' => '#rendered_entity'],
+              ['value' => '#rendered_entity_ajax'],
             ],
           ],
         ],
@@ -290,6 +333,11 @@ class LeafletMap extends StylePluginBase implements ContainerFactoryPluginInterf
     $icon_options = $this->options['icon'];
     $form['icon'] = $this->generateIconFormElement($icon_options);
 
+    // Set Map Marker Cluster Element.
+    $this->setMapMarkerclusterElement($form, $this->options);
+
+    // Set Map Geometries Options Element.
+    $this->setMapPathOptionsElement($form, $this->options);
   }
 
   /**
@@ -315,33 +363,97 @@ class LeafletMap extends StylePluginBase implements ContainerFactoryPluginInterf
    * Renders the View.
    */
   public function render() {
-
     // Performs some preprocess on the leaflet map settings.
     $this->leafletService->preProcessMapSettings($this->options);
 
     $data = [];
 
-    $geofield_name = $this->options['data_source'];
+    // Always render the map, otherwise ...
+    $leaflet_map_style = !isset($this->options['leaflet_map']) ? $this->options['map'] : $this->options['leaflet_map'];
+    $map = leaflet_map_get_info($leaflet_map_style);
 
-    if ($this->options['data_source']) {
+    // Set Map additional map Settings.
+    $this->setAdditionalMapOptions($map, $this->options);
+
+    // Add a specific map id.
+    $map['id'] = Html::getUniqueId("leaflet_map_view_" . $this->view->id() . '_' . $this->view->current_display);
+
+    if ($geofield_name = $this->options['data_source']) {
       $this->renderFields($this->view->result);
+
       /* @var \Drupal\views\ResultRow $result */
       foreach ($this->view->result as $id => $result) {
 
-        $geofield_value = $this->getFieldValue($id, $geofield_name);
+        // For proper processing make sure the geofield_value is created as
+        // an array, also if single value.
+        $geofield_value = (array) $this->getFieldValue($result->index, $geofield_name);
 
         if (!empty($geofield_value)) {
+
           $points = $this->leafletService->leafletProcessGeofield($geofield_value);
 
-          // Render the entity with the selected view mode.
-          if ($this->options['description_field'] === '#rendered_entity' && isset($result->_entity)) {
+          if (!empty($result->_entity)) {
+            // Entity API provides a plain entity object.
             $entity = $result->_entity;
-            $build = $this->entityManager->getViewBuilder($entity->getEntityTypeId())->view($entity, $this->options['view_mode'], $entity->language());
-            $description = $this->renderer->renderPlain($build);
           }
-          // Normal rendering via fields.
-          elseif ($this->options['description_field']) {
-            $description = $this->rendered_fields[$id][$this->options['description_field']];
+          elseif (isset($result->_object)) {
+            // Search API provides a TypedData EntityAdapter.
+            $entity_adapter = $result->_object;
+            if ($entity_adapter instanceof EntityAdapter) {
+              $entity = $entity_adapter->getValue();
+            }
+          }
+
+          // Render the entity with the selected view mode.
+          if (isset($entity)) {
+
+            $entity_type = $entity->getEntityTypeId();
+            $entity_type_langcode_attribute = $entity_type . '_field_data_langcode';
+
+            $view = $this->view;
+
+            // Set the langcode to be used for rendering the entity.
+            $rendering_language = $view->display_handler->getOption('rendering_language');
+            $dynamic_renderers = [
+              '***LANGUAGE_entity_translation***' => 'TranslationLanguageRenderer',
+              '***LANGUAGE_entity_default***' => 'DefaultLanguageRenderer',
+            ];
+            if (isset($dynamic_renderers[$rendering_language])) {
+              /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
+              $langcode = isset($result->$entity_type_langcode_attribute) ? $result->$entity_type_langcode_attribute : $entity->language()->getId();
+            }
+            else {
+              if (strpos($rendering_language, '***LANGUAGE_') !== FALSE) {
+                $langcode = PluginBase::queryLanguageSubstitutions()[$rendering_language];
+              }
+              else {
+                // Specific langcode set.
+                $langcode = $rendering_language;
+              }
+            }
+
+            switch ($this->options['description_field']) {
+              case '#rendered_entity':
+                $build = $this->entityManager->getViewBuilder($entity->getEntityTypeId())->view($entity, $this->options['view_mode'], $langcode);
+                $description = $this->renderer->renderPlain($build);
+                break;
+
+              case '#rendered_entity_ajax':
+                $parameters = [
+                  'entity_type' => $entity->getEntityTypeId(),
+                  'entity' => $entity->id(),
+                  'view_mode' => $this->options['view_mode'],
+                  'langcode' => $langcode,
+                ];
+                $url = Url::fromRoute('leaflet_views.ajax_popup', $parameters, ['absolute' => TRUE]);
+                $description = sprintf('<div class="leaflet-ajax-popup" data-leaflet-ajax-popup="%s"></div>', $url->toString());
+                break;
+
+              default:
+                // Normal rendering via fields.
+                $description = !empty($this->options['description_field']) ? $this->rendered_fields[$result->index][$this->options['description_field']] : '';
+            }
+
           }
 
           // Attach pop-ups if we have a description field.
@@ -356,20 +468,37 @@ class LeafletMap extends StylePluginBase implements ContainerFactoryPluginInterf
             foreach ($points as &$point) {
               // Decode any entities because JS will encode them again and we
               // don't want double encoding.
-              $point['label'] = Html::decodeEntities(($this->rendered_fields[$id][$this->options['name_field']]));
+              $point['label'] = !empty($this->options['name_field']) ? Html::decodeEntities(($this->rendered_fields[$result->index][$this->options['name_field']])) : '';
             }
+          }
+
+          // Add/merge eventual map icon definition from hook_leaflet_map_info.
+          if (!empty($map['icon'])) {
+            $this->options['icon'] = $this->options['icon'] ?: [];
+            // Remove empty icon options so that they might be replaced by the
+            // ones set by the hook_leaflet_map_info.
+            foreach ($this->options['icon'] as $k => $icon_option) {
+              if (empty($icon_option) || (is_array($icon_option) && $this->leafletService::multipleEmpty($icon_option))) {
+                unset($this->options['icon'][$k]);
+              }
+            }
+            $this->options['icon'] = array_replace($map['icon'], $this->options['icon']);
           }
 
           // Attach iconUrl properties to each point.
           if (!empty($this->options['icon']) && !empty($this->options['icon']['iconUrl'])) {
             $tokens = [];
-            foreach ($this->rendered_fields[$id] as $field_name => $field_value) {
+            foreach ($this->rendered_fields[$result->index] as $field_name => $field_value) {
               $tokens[$field_name] = $field_value;
             }
             foreach ($points as &$point) {
-              $point['icon'] = $this->options['icon'];
-              $point['icon']['iconUrl'] = $this->viewsTokenReplace($this->options['icon']['iconUrl'], $tokens);
-              $point['icon']['shadowUrl'] = $this->viewsTokenReplace($this->options['icon']['shadowUrl'], $tokens);
+              if (!empty($this->options['icon']['iconUrl'])) {
+                $point['icon'] = $this->options['icon'];
+                $point['icon']['iconUrl'] = $this->viewsTokenReplace($this->options['icon']['iconUrl'], $tokens);
+                if (!empty($this->options['icon']['shadowUrl'])) {
+                  $point['icon']['shadowUrl'] = $this->viewsTokenReplace($this->options['icon']['shadowUrl'], $tokens);
+                }
+              }
             }
           }
 
@@ -378,13 +507,10 @@ class LeafletMap extends StylePluginBase implements ContainerFactoryPluginInterf
             \Drupal::moduleHandler()
               ->alter('leaflet_views_feature', $point, $result, $this->view->rowPlugin);
           }
-
           // Add new points to the whole basket.
           $data = array_merge($data, $points);
-
         }
       }
-
     }
 
     // Don't render the map, if we do not have any data
@@ -393,14 +519,15 @@ class LeafletMap extends StylePluginBase implements ContainerFactoryPluginInterf
       return [];
     }
 
-    // Always render the map, otherwise ...
-    $leaflet_map_style = !isset($this->options['leaflet_map']) ? $this->options['map'] : $this->options['leaflet_map'];
-    $map = leaflet_map_get_info($leaflet_map_style);
+    $js_settings = [
+      'map' => $map,
+      'features' => $data,
+    ];
 
-    // Set Map additional map Settings.
-    $this->setAdditionalMapOptions($map, $this->options);
+    // Allow other modules to add/alter the map js settings.
+    $this->moduleHandler->alter('leaflet_map_view_style', $js_settings, $this);
 
-    return $this->leafletService->leafletRenderMap($map, $data, $this->options['height'] . 'px');
+    return $this->leafletService->leafletRenderMap($js_settings['map'], $js_settings['features'], $this->options['height'] . 'px');
   }
 
   /**
@@ -412,24 +539,12 @@ class LeafletMap extends StylePluginBase implements ContainerFactoryPluginInterf
     $options['name_field'] = ['default' => ''];
     $options['description_field'] = ['default' => ''];
     $options['view_mode'] = ['default' => 'full'];
-    $options['map'] = ['default' => ''];
-    $options['height'] = ['default' => '400'];
-    $options['hide_empty_map'] = ['default' => 0];
-    $options['map_position'] = [
-      'default' => [
-        'force' => 0,
-        'center' => [
-          'lat' => 0,
-          'lon' => 0,
-        ],
-        'zoom' => 12,
-        'minZoom' => 1,
-        'maxZoom' => 18,
-      ],
-    ];
-    $options['icon'] = ['default' => []];
-    $options['disable_wheel'] = ['default' => 0];
-    return $options;
+
+    $leaflet_map_default_settings = [];
+    foreach (self::getDefaultSettings() as $k => $setting) {
+      $leaflet_map_default_settings[$k] = ['default' => $setting];
+    }
+    return $options + $leaflet_map_default_settings;
   }
 
 }

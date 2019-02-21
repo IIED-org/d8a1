@@ -4615,18 +4615,18 @@
     },
     {
         "name": "drupal/leaflet",
-        "version": "1.0.0-beta15",
-        "version_normalized": "1.0.0.0-beta15",
+        "version": "1.3.0",
+        "version_normalized": "1.3.0.0",
         "source": {
             "type": "git",
             "url": "https://git.drupal.org/project/leaflet",
-            "reference": "8.x-1.0-beta15"
+            "reference": "8.x-1.3"
         },
         "dist": {
             "type": "zip",
-            "url": "https://ftp.drupal.org/files/projects/leaflet-8.x-1.0-beta15.zip",
-            "reference": "8.x-1.0-beta15",
-            "shasum": "4596a7b54a3f3337e680baeb9e802af15412785a"
+            "url": "https://ftp.drupal.org/files/projects/leaflet-8.x-1.3.zip",
+            "reference": "8.x-1.3",
+            "shasum": "5a08a9b798621a98912c2c91af34bf7fb39ee32e"
         },
         "require": {
             "drupal/core": "~8.0",
@@ -4638,15 +4638,12 @@
                 "dev-1.x": "1.x-dev"
             },
             "drupal": {
-                "version": "8.x-1.0-beta15",
-                "datestamp": "1538370781",
+                "version": "8.x-1.3",
+                "datestamp": "1550423885",
                 "security-coverage": {
-                    "status": "not-covered",
-                    "message": "Beta releases are not covered by Drupal security advisories."
+                    "status": "covered",
+                    "message": "Covered by Drupal's security advisory policy"
                 }
-            },
-            "patches_applied": {
-                "Disable scroll zoom": "https://www.drupal.org/files/issues/2018-10-13/3006497-disable-zoom-wheel_0.patch"
             }
         },
         "installation-source": "dist",
@@ -4691,60 +4688,6 @@
         "support": {
             "source": "http://cgit.drupalcode.org/leaflet",
             "issues": "https://www.drupal.org/project/issues/leaflet"
-        }
-    },
-    {
-        "name": "drupal/leaflet_markercluster",
-        "version": "1.0.0-alpha2",
-        "version_normalized": "1.0.0.0-alpha2",
-        "source": {
-            "type": "git",
-            "url": "https://git.drupal.org/project/leaflet_markercluster",
-            "reference": "8.x-1.0-alpha2"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://ftp.drupal.org/files/projects/leaflet_markercluster-8.x-1.0-alpha2.zip",
-            "reference": "8.x-1.0-alpha2",
-            "shasum": "b3a21debe5ee38d3395ab49cb1a6ac53694db26f"
-        },
-        "require": {
-            "drupal/core": "~8.0",
-            "drupal/leaflet": "*"
-        },
-        "type": "drupal-module",
-        "extra": {
-            "branch-alias": {
-                "dev-1.x": "1.x-dev"
-            },
-            "drupal": {
-                "version": "8.x-1.0-alpha2",
-                "datestamp": "1456186439",
-                "security-coverage": {
-                    "status": "not-covered",
-                    "message": "Alpha releases are not covered by Drupal security advisories."
-                }
-            }
-        },
-        "installation-source": "dist",
-        "notification-url": "https://packages.drupal.org/8/downloads",
-        "license": [
-            "GPL-2.0-or-later"
-        ],
-        "authors": [
-            {
-                "name": "RdeBoer",
-                "homepage": "https://www.drupal.org/user/404007"
-            },
-            {
-                "name": "pvhee",
-                "homepage": "https://www.drupal.org/user/108811"
-            }
-        ],
-        "description": "Extends Leaflet with the Markercluster library.",
-        "homepage": "https://www.drupal.org/project/leaflet_markercluster",
-        "support": {
-            "source": "http://cgit.drupalcode.org/leaflet_markercluster"
         }
     },
     {

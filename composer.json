@@ -67,7 +67,6 @@
     "drupal/content_browser": "^1.0@alpha",
     "drupal/label_help": "1.x-dev",
     "drupal/field_states_ui": "^1.0@RC",
-    "drupal/leaflet_markercluster": "^1.0@alpha",
     "drupal/config_split": "^1.4",
     "drupal/entity_reference_facet_link": "^1.0@beta",
     "drupal/menu_link_attributes": "^1.0",
@@ -136,9 +135,6 @@
       },
       "drupal/masquerade": {
         "Unmasquerade link always appears": "https://www.drupal.org/files/issues/2018-07-11/unmasquerade_link-2695779-17.patch"
-      },
-      "drupal/leaflet": {
-        "Disable scroll zoom": "https://www.drupal.org/files/issues/2018-10-13/3006497-disable-zoom-wheel_0.patch"
       },
       "drupal/rules": {
         "Condition UserHasRole throws an error": "https://www.drupal.org/files/issues/2816157-10.patch"
