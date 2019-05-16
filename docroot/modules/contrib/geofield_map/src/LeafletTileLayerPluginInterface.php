@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\geofield_map\leafletTileLayers;
+namespace Drupal\geofield_map;
 
 use Drupal\Component\Plugin\PluginInspectionInterface;
 

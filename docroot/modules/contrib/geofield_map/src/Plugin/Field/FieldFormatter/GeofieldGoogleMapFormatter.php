@@ -20,6 +20,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\geofield\GeoPHP\GeoPHPInterface;
 use Drupal\Core\Render\RendererInterface;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\geofield_map\Services\GoogleMapsService;
 use Drupal\Core\Render\Markup;
 use Drupal\geofield_map\Services\MarkerIconService;
@@ -104,6 +105,13 @@ class GeofieldGoogleMapFormatter extends FormatterBase implements ContainerFacto
   protected $renderer;
 
   /**
+   * The module handler to invoke the alter hook.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   */
+  protected $moduleHandler;
+
+  /**
    * The geofieldMapGoogleMaps service.
    *
    * @var \Drupal\geofield_map\Services\GoogleMapsService
@@ -150,6 +158,8 @@ class GeofieldGoogleMapFormatter extends FormatterBase implements ContainerFacto
    *   The The geoPhpWrapper.
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The Renderer service.
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   *   The module handler.
    * @param \Drupal\geofield_map\Services\GoogleMapsService $google_maps_service
    *   The Google Maps service.
    * @param \Drupal\geofield_map\Services\MarkerIconService $marker_icon_service
@@ -171,6 +181,7 @@ class GeofieldGoogleMapFormatter extends FormatterBase implements ContainerFacto
     EntityFieldManagerInterface $entity_field_manager,
     GeoPHPInterface $geophp_wrapper,
     RendererInterface $renderer,
+    ModuleHandlerInterface $module_handler,
     GoogleMapsService $google_maps_service,
     MarkerIconService $marker_icon_service
   ) {
@@ -182,6 +193,7 @@ class GeofieldGoogleMapFormatter extends FormatterBase implements ContainerFacto
     $this->entityFieldManager = $entity_field_manager;
     $this->geoPhpWrapper = $geophp_wrapper;
     $this->renderer = $renderer;
+    $this->moduleHandler = $module_handler;
     $this->googleMapsService = $google_maps_service;
     $this->markerIcon = $marker_icon_service;
   }
@@ -206,6 +218,7 @@ class GeofieldGoogleMapFormatter extends FormatterBase implements ContainerFacto
       $container->get('entity_field.manager'),
       $container->get('geofield.geophp'),
       $container->get('renderer'),
+      $container->get('module_handler'),
       $container->get('geofield_map.google_maps'),
       $container->get('geofield_map.marker_icon')
     );
@@ -216,17 +229,6 @@ class GeofieldGoogleMapFormatter extends FormatterBase implements ContainerFacto
    */
   public static function defaultSettings() {
     return self::getDefaultSettings() + parent::defaultSettings();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getSettings() {
-    // Merge defaults before returning the array.
-    if (!$this->defaultSettingsMerged) {
-      $this->mergeDefaults();
-    }
-    return $this->settings;
   }
 
   /**
@@ -298,6 +300,22 @@ class GeofieldGoogleMapFormatter extends FormatterBase implements ContainerFacto
         '#title' => t('Image style'),
         '#options' => $this->markerIcon->getImageStyleOptions(),
         '#default_value' => isset($settings['map_marker_and_infowindow']['icon_file_wrapper']['image_style']) ? $settings['map_marker_and_infowindow']['icon_file_wrapper']['image_style'] : 'geofield_map_default_icon_style',
+        '#states' => [
+          'visible' => [
+            ':input[name="fields[field_geofield][settings_edit_form][settings][map_marker_and_infowindow][icon_file_wrapper][icon_file][is_svg]"]' => ['checked' => FALSE],
+          ],
+        ],
+      ],
+      'image_style_svg' => [
+        '#type' => 'container',
+        'warning' => [
+          '#markup' => $this->t("Image style cannot apply to SVG Files,<br>SVG natural dimension will be applied."),
+        ],
+        '#states' => [
+          'invisible' => [
+            ':input[name="fields[field_geofield][settings_edit_form][settings][map_marker_and_infowindow][icon_file_wrapper][icon_file][is_svg]"]' => ['checked' => FALSE],
+          ],
+        ],
       ],
       '#weight' => $elements['map_marker_and_infowindow']['icon_image_mode']['#weight'] + 1,
     ];
@@ -307,7 +325,8 @@ class GeofieldGoogleMapFormatter extends FormatterBase implements ContainerFacto
     }
 
     if ($selected_icon_image_mode != 'icon_image_path') {
-      $elements['map_marker_and_infowindow']['icon_image_path']['#attributes']['class'] = ['hidden'];
+      $elements['map_marker_and_infowindow']['icon_image_path']['#prefix'] = '<div id="icon-image-path" class="visually-hidden">';
+      $elements['map_marker_and_infowindow']['icon_image_path']['#suffix'] = '</div>';
     }
 
     return $elements + parent::settingsForm($form, $form_state);
@@ -358,7 +377,7 @@ class GeofieldGoogleMapFormatter extends FormatterBase implements ContainerFacto
       ]));
     }
     else {
-      $state = $this->t("<span class='geofield-map-warning'>Gmap Api Key missing<br>Google Maps functionality may not be available.</span> @settings_page_link", [
+      $state = $this->t("<span class='geofield-map-warning'>missing - @settings_page_link<br>Google Maps functionalities not available.</span>", [
         '@settings_page_link' => $this->link->generate($this->t('Set it in the Geofield Map Configuration Page'), Url::fromRoute('geofield_map.settings', [], [
           'query' => [
             'destination' => Url::fromRoute('<current>')
@@ -521,7 +540,7 @@ class GeofieldGoogleMapFormatter extends FormatterBase implements ContainerFacto
       'force_open' => [
         '#type' => 'html_tag',
         '#tag' => 'div',
-        '#value' => $this->t('Open Infowindow on Load: @state', ['@state' => $settings['map_marker_and_infowindow']['force_open'] ? $this->t('Yes') : $this->t('No')]),
+        '#value' => $this->t('Open Infowindow on Load: @state', ['@state' => !empty($settings['map_marker_and_infowindow']['force_open']) ? $this->t('Yes') : $this->t('No')]),
         '#weight' => 3,
       ],
     ];
@@ -574,7 +593,7 @@ class GeofieldGoogleMapFormatter extends FormatterBase implements ContainerFacto
       'markercluster_control' => [
         '#type' => 'html_tag',
         '#tag' => 'div',
-        '#value' => $this->t('Marker Cluster Enabled: @state', ['@state' => $settings['map_markercluster']['markercluster_control'] ? $this->t('Yes') : $this->t('No')]),
+        '#value' => $this->t('Marker Cluster Enabled: @state', ['@state' => isset($settings['map_markercluster']['markercluster_control']) && $settings['map_markercluster']['markercluster_control'] ? $this->t('Yes') : $this->t('No')]),
       ],
     ];
 
@@ -586,7 +605,7 @@ class GeofieldGoogleMapFormatter extends FormatterBase implements ContainerFacto
         'value' => [
           '#type' => 'html_tag',
           '#tag' => 'div',
-          '#value' => $settings['map_markercluster']['markercluster_additional_options'],
+          '#value' => isset($settings['map_markercluster']['markercluster_additional_options']) ? $settings['map_markercluster']['markercluster_additional_options'] : [],
         ],
       ];
     }
@@ -668,10 +687,13 @@ class GeofieldGoogleMapFormatter extends FormatterBase implements ContainerFacto
     $this->preProcessMapSettings($map_settings);
 
     $js_settings = [
-      'mapid' => Html::getUniqueId("geofield_map_entity_{$bundle}_{$entity_id}_{$field->getName()}"),
+      'mapid' => Html::getUniqueId("geofield_map_{$entity_type}_{$bundle}_{$entity_id}_{$field->getName()}"),
       'map_settings' => $map_settings,
       'data' => [],
     ];
+
+    // Get and set the Geofield cardinality.
+    $js_settings['map_settings']['geofield_cardinality'] = $this->fieldDefinition->getFieldStorageDefinition()->getCardinality();
 
     $description = [];
     $description_field = isset($map_settings['map_marker_and_infowindow']['infowindow_field']) ? $map_settings['map_marker_and_infowindow']['infowindow_field'] : NULL;
@@ -699,7 +721,12 @@ class GeofieldGoogleMapFormatter extends FormatterBase implements ContainerFacto
       }
     }
 
-    $geojson_data = $this->getGeoJsonData($items, $description);
+    // Define a Tooltip for the Feature.
+    if (isset($entity)) {
+      $tooltip = $entity->label();
+    }
+
+    $geojson_data = $this->getGeoJsonData($items, $entity->id(), $description, $tooltip);
 
     // Add Custom Icon File, if set.
     if (isset($map_settings['map_marker_and_infowindow']['icon_image_mode'])
@@ -731,6 +758,10 @@ class GeofieldGoogleMapFormatter extends FormatterBase implements ContainerFacto
         'features' => $geojson_data,
       ];
     }
+
+    // Allow other modules to add/alter the map js settings.
+    $this->moduleHandler->alter('geofield_map_googlemap_formatter', $js_settings, $items);
+
     $element = [geofield_map_googlemap_render($js_settings)];
 
     // Part of infinite loop stopping strategy.
