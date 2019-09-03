@@ -2,6 +2,8 @@
 
 namespace Drupal\account_modal;
 
+use Drupal\account_modal\Event\AccountModalEvents;
+use Drupal\account_modal\Event\PagesEvent;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
@@ -61,9 +63,11 @@ class AccountPageHelper {
       ];
     }
 
-    // TODO: Create an event to add pages and one to alter them here.
-
-    return $pages;
+    $event = new PagesEvent($pages);
+    /** @var \Symfony\Component\EventDispatcher\EventDispatcherInterface $eventDispatcher */
+    $eventDispatcher = \Drupal::service('event_dispatcher');
+    $eventDispatcher->dispatch(AccountModalEvents::PAGES, $event);
+    return $event->getPages();
   }
 
   /**

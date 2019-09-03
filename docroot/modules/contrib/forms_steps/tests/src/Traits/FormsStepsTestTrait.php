@@ -3,11 +3,20 @@
 namespace Drupal\Tests\forms_steps\Traits;
 
 use Drupal\user\Entity\Role;
+use Drupal\Core\Url;
 
-trait FormsStepsTestTrait
-{
+/**
+ * Trait FormsStepsTestTrait.
+ *
+ * @package Drupal\Tests\forms_steps\Traits
+ */
+trait FormsStepsTestTrait {
 
-  /** Data used to build the test. */
+  /**
+   * Data used to build the test.
+   *
+   * @var array
+   */
   private $data;
 
   /**
@@ -20,8 +29,7 @@ trait FormsStepsTestTrait
   /**
    * Perform initial setup tasks that run before every test method.
    */
-  public function formsStepsSetup()
-  {
+  public function formsStepsSetup() {
     $permissions = [
       'administer forms_steps',
       'administer content types',
@@ -49,7 +57,8 @@ trait FormsStepsTestTrait
             'label' => 'Add Test Step 1',
             'id' => 'add_test_step_article',
             'target_form_mode' => 'default',
-            'target_node_type' => 'article',
+            'target_entity_type' => 'node',
+            'target_entity_bundle' => 'article',
             'url' => '/my_test_form/step_1',
             'previous' => NULL,
           ],
@@ -57,7 +66,8 @@ trait FormsStepsTestTrait
             'label' => 'Edit Test Step 2',
             'id' => 'edit_test_step_article',
             'target_form_mode' => 'node.test_form_mode',
-            'target_node_type' => 'article',
+            'target_entity_type' => 'node',
+            'target_entity_bundle' => 'article',
             'url' => '/my_test_form/step_2',
             'previous' => 'Previous',
           ],
@@ -65,7 +75,8 @@ trait FormsStepsTestTrait
             'label' => 'Add Test Step 3',
             'id' => 'add_test_step_page',
             'target_form_mode' => 'default',
-            'target_node_type' => 'page',
+            'target_entity_type' => 'node',
+            'target_entity_bundle' => 'page',
             'url' => '/my_test_form/step_3',
             'previous' => 'Previous',
           ],
@@ -73,7 +84,8 @@ trait FormsStepsTestTrait
             'label' => 'Edit Test Step 4',
             'id' => 'edit_test_step_article_bis',
             'target_form_mode' => 'node.test_form_mode',
-            'target_node_type' => 'article',
+            'target_entity_type' => 'node',
+            'target_entity_bundle' => 'article',
             'url' => '/my_test_form/step_4',
             'previous' => 'Previous',
           ],
@@ -88,6 +100,9 @@ trait FormsStepsTestTrait
     $this->drupalLogin($this->user);
   }
 
+  /**
+   * Creation of the forms modes.
+   */
   public function formsModesCreation() {
 
     // Creation of the page node.
@@ -100,11 +115,16 @@ trait FormsStepsTestTrait
     // Creation of all form display modes.
     foreach ($this->data['form_display_modes'] as $form_display_mode) {
       // Access form mode add page.
-      $this->drupalGet('admin/structure/display-modes/form/add/node');
+      $this->drupalGet(
+        Url::fromRoute(
+          'entity.entity_form_mode.add_form',
+          ['entity_type_id' => 'node']
+        )
+      );
 
       // Add a form mode.
       $this->drupalPostForm(
-        null,
+        NULL,
         [
           'label' => $form_display_mode['label'],
           'id' => $form_display_mode['id'],
@@ -113,7 +133,7 @@ trait FormsStepsTestTrait
       );
 
       Role::load($this->user->getRoles()[1])
-        ->grantPermission('use node.'.$form_display_mode['id'].' form mode')
+        ->grantPermission('use node.' . $form_display_mode['id'] . ' form mode')
         ->save();
     }
 
@@ -129,12 +149,17 @@ trait FormsStepsTestTrait
       ->save();
 
     // Access article's form display page.
-    $this->drupalGet('admin/structure/types/manage/article/form-display');
+    $this->drupalGet(
+      Url::fromRoute(
+        'entity.entity_form_display.node.default',
+        ['node_type' => 'article']
+      )
+    );
 
     // Activate Test Form Modes as a custom display mode.
     foreach ($this->data['form_display_modes'] as $form_display_mode) {
       $this->drupalPostForm(
-        null,
+        NULL,
         [
           "display_modes_custom[${form_display_mode['id']}]" => $form_display_mode['id'],
         ],
@@ -144,11 +169,17 @@ trait FormsStepsTestTrait
 
     // Configure the visible fields.
     $this->drupalGet(
-      "admin/structure/types/manage/article/form-display/${form_display_mode['id']}"
+      Url::fromRoute(
+        'entity.entity_form_display.node.form_mode',
+        [
+          'node_type' => 'article',
+          'form_mode_name' => $form_display_mode['id'],
+        ]
+      )
     );
 
     $this->drupalPostForm(
-      null,
+      NULL,
       [
         'fields[title][region]' => 'content',
         'fields[body][region]' => 'hidden',
@@ -162,11 +193,11 @@ trait FormsStepsTestTrait
     );
 
     // Access forms steps add page.
-    $this->drupalGet('admin/config/workflow/forms_steps/add');
+    $this->drupalGet(Url::fromRoute('entity.forms_steps.add_form'));
 
     // Test the creation of a form step.
     $this->drupalPostForm(
-      null,
+      NULL,
       [
         'label' => $this->data['forms_steps']['label'],
         'id' => $this->data['forms_steps']['id'],
@@ -179,26 +210,38 @@ trait FormsStepsTestTrait
     foreach ($this->data['forms_steps']['steps'] as $step) {
       // Access step add page of the form step.
       $this->drupalGet(
-        "admin/config/workflow/forms_steps/{$this->data['forms_steps']['id']}/add_step"
+        Url::fromRoute(
+          'entity.forms_steps.add_step_form',
+          [
+            'forms_steps' => $this->data['forms_steps']['id'],
+          ]
+        )
       );
 
       // Test the creation of an add step.
       $this->drupalPostForm(
-        null,
+        NULL,
         [
           'label' => $step['label'],
           'id' => $step['id'],
           'target_form_mode' => $step['target_form_mode'],
-          'target_node_type' => $step['target_node_type'],
+          'target_entity_bundle' => $step['target_entity_bundle'],
+          'target_entity_type' => $step['target_entity_type'],
           'url' => $step['url'],
         ],
         t('Save')
       );
 
       if (!is_null($step['previous'])) {
-        // Update step with previous label
+        // Update step with previous label.
         $this->drupalPostForm(
-          'admin/config/workflow/forms_steps/test_form_step/step/'.$step['id'],
+          Url::fromRoute(
+            'entity.forms_steps.edit_step_form',
+            [
+              'forms_steps' => $this->data['forms_steps']['id'],
+              'forms_steps_step' => $step['id'],
+            ]
+          ),
           [
             'display_previous' => TRUE,
             'previous_label' => $step['previous'],
@@ -208,4 +251,5 @@ trait FormsStepsTestTrait
       }
     }
   }
+
 }

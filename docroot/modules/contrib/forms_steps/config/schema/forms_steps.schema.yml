@@ -13,6 +13,12 @@ forms_steps.forms_steps.*:
     description:
       type: text
       label: 'Administrative description'
+    redirection_policy:
+      type: string
+      label: 'Redirection policy'
+    redirection_target:
+      type: string
+      label: 'Redirection target'
     steps:
       type: sequence
       label: 'Steps'
@@ -26,7 +32,10 @@ forms_steps.forms_steps.*:
           weight:
             type: integer
             label: 'Weight'
-          node_type:
+          entity_type:
+            type: string
+            label: 'Entity Type'
+          entity_bundle:
             type: string
             label: 'Node Type'
           form_mode:

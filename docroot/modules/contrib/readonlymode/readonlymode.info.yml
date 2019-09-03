@@ -3,10 +3,10 @@ description: "This module will lock your site for any form postings."
 package: Administration
 type: module
 # core: 8.x
-configure: admin/config/development/maintenance
+configure: system.site_maintenance_mode
 
-# Information added by Drupal.org packaging script on 2017-03-27
-version: '8.x-1.0-rc1'
+# Information added by Drupal.org packaging script on 2018-11-08
+version: '8.x-1.0'
 core: '8.x'
 project: 'readonlymode'
-datestamp: 1490626686
+datestamp: 1541690884

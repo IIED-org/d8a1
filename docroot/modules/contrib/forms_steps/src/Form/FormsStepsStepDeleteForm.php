@@ -98,7 +98,7 @@ class FormsStepsStepDeleteForm extends ConfirmFormBase {
     $routeBuilderService = \Drupal::service('router.builder');
     $routeBuilderService->rebuild();
 
-    drupal_set_message($this->t(
+    $this->messenger()->addMessage($this->t(
       'Step %label deleted.',
       ['%label' => $forms_steps_label]
     ));

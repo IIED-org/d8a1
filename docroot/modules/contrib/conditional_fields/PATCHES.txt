@@ -5,7 +5,3 @@ Not working with checkboxes from widget
 Source: https://www.drupal.org/files/issues/2018-03-22/conditional_fields_fix_checkboxes_2912357_6.patch
 
 
-Uninitialised string offset
-Source: https://www.drupal.org/files/issues/conditional_fields-uninitialized_string_offset_in_conditional_fields_evaluate_dependency-2834358.patch
-
-

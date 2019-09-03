@@ -5,6 +5,7 @@ namespace Drupal\Tests\forms_steps\Functional;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\forms_steps\Traits\FormsStepsTestTrait;
 use Drupal\user\Entity\Role;
+use Drupal\Core\Url;
 
 /**
  * Tests for the Forms Steps module.
@@ -13,7 +14,7 @@ use Drupal\user\Entity\Role;
  * @runInSeparateProcess
  */
 class FormsStepsTest extends BrowserTestBase {
-    use FormsStepsTestTrait;
+  use FormsStepsTestTrait;
 
   /**
    * Modules to install.
@@ -48,7 +49,12 @@ class FormsStepsTest extends BrowserTestBase {
     // Creation of all form display modes.
     foreach ($this->data['form_display_modes'] as $form_display_mode) {
       // Access form mode add page.
-      $this->drupalGet('admin/structure/display-modes/form/add/node');
+      $this->drupalGet(
+        Url::fromRoute(
+          'entity.entity_form_mode.add_form',
+          ['entity_type_id' => 'node']
+        )
+      );
       $this->assertSession()->statusCodeEquals(200);
       // Add a form mode.
       $this->drupalPostForm(NULL, [
@@ -75,7 +81,12 @@ class FormsStepsTest extends BrowserTestBase {
       ->save();
 
     // Access article's form display page.
-    $this->drupalGet('admin/structure/types/manage/article/form-display');
+    $this->drupalGet(
+      Url::fromRoute(
+        'entity.entity_form_display.node.default',
+        ['node_type' => 'article']
+      )
+    );
     $this->assertSession()->statusCodeEquals(200);
 
     // Activate Test Form Modes as a custom display mode.
@@ -94,7 +105,7 @@ class FormsStepsTest extends BrowserTestBase {
     drupal_flush_all_caches();
 
     // Configure the visible fields.
-    $this->drupalGet("admin/structure/types/manage/article/form-display/${form_display_mode['id']}");
+    $this->drupalGet(Url::fromRoute('entity.entity_form_display.node.form_mode', ['node_type' => 'article', 'form_mode_name' => $form_display_mode['id']]));
     $this->assertSession()->statusCodeEquals(200);
     $this->drupalPostForm(NULL, [
       'fields[title][region]' => 'content',
@@ -107,7 +118,7 @@ class FormsStepsTest extends BrowserTestBase {
     ], t('Save'));
 
     // Access forms steps add page.
-    $this->drupalGet('admin/config/workflow/forms_steps/add');
+    $this->drupalGet(Url::fromRoute('entity.forms_steps.add_form'));
     $this->assertSession()->statusCodeEquals(200);
     // Test the creation of a form step.
     $this->drupalPostForm(NULL, [
@@ -122,7 +133,12 @@ class FormsStepsTest extends BrowserTestBase {
     // Perform steps creation.
     foreach ($this->data['forms_steps']['steps'] as $step) {
       // Access step add page of the form step.
-      $this->drupalGet('admin/config/workflow/forms_steps/test_form_step/add_step');
+      $this->drupalGet(
+        Url::fromRoute(
+          'entity.forms_steps.add_step_form',
+          ['forms_steps' => 'test_form_step']
+        )
+      );
       $this->assertSession()->statusCodeEquals(200);
 
       // Test the creation of an add step.
@@ -130,7 +146,8 @@ class FormsStepsTest extends BrowserTestBase {
         'label' => $step['label'],
         'id' => $step['id'],
         'target_form_mode' => $step['target_form_mode'],
-        'target_node_type' => $step['target_node_type'],
+        'target_entity_type' => $step['target_entity_type'],
+        'target_entity_bundle' => $step['target_entity_bundle'],
         'url' => $step['url'],
       ], t('Save'));
 

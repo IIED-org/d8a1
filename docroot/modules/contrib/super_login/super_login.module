@@ -5,10 +5,10 @@
  * Functions related to altering of login form.
  */
 
-use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Url;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Link;
+use Drupal\Component\Utility\Html;
 
 /**
  * Implements hook_form_alter().
@@ -17,7 +17,7 @@ use Drupal\Core\Link;
  */
 function super_login_form_alter(&$form, FormStateInterface $form_state, $form_id) {
 
-  if ($form_id == 'user_register_form') {
+  if ($form_id == 'user_register_form' && \Drupal::currentUser()->isAnonymous()) {
     $config = \Drupal::config('super_login.settings');
     $form['account']['mail']['#attributes']['autofocus'] = 'autofocus';
     unset($form['account']['mail']['#description']);
@@ -34,11 +34,14 @@ function super_login_form_alter(&$form, FormStateInterface $form_state, $form_id
     $config = \Drupal::config('super_login.settings');
 
     // Global form functions.
-    $form['name']['#attributes']['autofocus'] = 'autofocus';
+    if ($config->get('super_login.autofocus') == TRUE) {
+      $form['name']['#attributes']['autofocus'] = 'autofocus';
+    }
+
     unset($form['name']['#description']);
     unset($form['pass']['#description']);
 
-    if ($config->get('super_login.css') == 1) {
+    if ($config->get('super_login.css') == TRUE) {
       $form['#attached']['library'][] = 'super_login/super_login_css';
       if ($config->get('super_login.button_theme') == 1) {
         $form['#attached']['library'][] = 'super_login/super_login_buttons';
@@ -50,11 +53,20 @@ function super_login_form_alter(&$form, FormStateInterface $form_state, $form_id
     $form['#attached']['library'][] = 'super_login/super_login_js';
     $form['#attached']['drupalSettings']['show_messages'] = $config->get('super_login.messages');
     $form['title'] = [
-      '#markup' => '<p class="login-title">' . t($config->get('super_login.login_title')) . '</p>',
-      '#weight' => -100,
-    ];
-        
+      '#type' => 'html_tag',
+        '#tag' => 'p',
+        '#attributes' => [
+        'class' => ['login-title'],
+      ],
+        '#weight' => -100,
+      ];
+
+      $form['title']['value'] = [
+        '#plain_text' => t($config->get('super_login.login_title')),
+      ];
+
     $internal_link = Link::createFromRoute(t($config->get('super_login.forgot_pw_text')), 'user.pass')->toString();
+
     $form['reset'] = [
       '#markup' => '<p class="forgot-password">' . $internal_link . '</p>',
       '#weight' => 1,
@@ -62,8 +74,18 @@ function super_login_form_alter(&$form, FormStateInterface $form_state, $form_id
 
     if ($config->get('super_login.capslock')) {
       $form['capslock'] = [
-        '#markup' => '<div id="capslockdiv"><p>' . t($config->get('super_login.capslock_msg')) . '</p></div>',
+        '#type' => 'container',
+        '#id' => 'capslockdiv',
         '#weight' => 2,
+      ];
+
+      $form['capslock']['wrapper'] = [
+        '#type' => 'html_tag',
+        '#tag' => 'p',
+      ];
+
+      $form['capslock']['wrapper']['value'] = [
+        '#plain_text' => t($config->get('super_login.capslock_msg')),
       ];
     }
 
@@ -78,7 +100,7 @@ function super_login_form_alter(&$form, FormStateInterface $form_state, $form_id
       $form['actions']['#suffix'] = $actions_suffix;
     }
 
-    $form['name']['#title'] = t($config->get('super_login.login_text'));
+    $form['name']['#title'] = t(Html::escape($config->get('super_login.login_text')));
     $form['name']['#size'] = 50;
     $form['pass']['#size'] = 50;
 
@@ -113,8 +135,16 @@ function super_login_form_alter(&$form, FormStateInterface $form_state, $form_id
     $form['#attached']['drupalSettings']['show_messages'] = $config->get('super_login.messages');
 
     $form['title'] = [
-      '#markup' => '<p class="login-title">' . t($config->get('super_login.password_reset_title')) . '</p>',
+      '#type' => 'html_tag',
+      '#tag' => 'p',
+      '#attributes' => [
+        'class' => ['login-title'],
+      ],
       '#weight' => -100,
+    ];
+
+    $form['title']['value'] = [
+      '#plain_text' => t($config->get('super_login.password_reset_title')),
     ];
 
     $internal_link = Link::createFromRoute(t($config->get('super_login.back_link')), 'user.login')->toString();
@@ -131,7 +161,7 @@ function super_login_form_alter(&$form, FormStateInterface $form_state, $form_id
 function super_login_user_login_validate(&$form, FormStateInterface $form_state) {
   $login_type = (int) \Drupal::config('super_login.settings')
     ->get('super_login.login_type');
-  $username = Unicode::strtolower(trim($form_state->getValue('name')));
+  $username = mb_strtolower(trim($form_state->getValue('name')));
 
   if (in_array($login_type, [0, 2]) && !empty($username)) {
     $user_storage = \Drupal::entityTypeManager()->getStorage('user');

@@ -47,7 +47,7 @@ class FormsStepsProgressBarBlock extends DeriverBase implements ContainerDeriver
     // Load all available forms steps.
     $forms_steps_entities = $this->formStepsStorage->loadMultiple();
 
-    foreach($forms_steps_entities as $forms_steps) {
+    foreach ($forms_steps_entities as $forms_steps) {
       $progress_steps = $forms_steps->getProgressSteps();
       if (count($progress_steps)) {
         $this->derivatives[$forms_steps->id()] = $base_plugin_definition;
@@ -57,4 +57,5 @@ class FormsStepsProgressBarBlock extends DeriverBase implements ContainerDeriver
 
     return $this->derivatives;
   }
+
 }

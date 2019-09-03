@@ -2,8 +2,7 @@
 
 namespace Drupal\forms_steps\Service;
 
-
-use Drupal\Core\Entity\EntityManager;
+use Drupal\Core\Entity\EntityDisplayRepository;
 use Drupal\forms_steps\Entity\FormsSteps;
 
 /**
@@ -13,16 +12,21 @@ use Drupal\forms_steps\Entity\FormsSteps;
  */
 class FormsStepsManager {
 
-  /** @var \Drupal\Core\Entity\EntityManager $entityManager */
-  protected $entityManager;
+  /**
+   * EntityDisplayRepository.
+   *
+   * @var \Drupal\Core\Entity\EntityDisplayRepository
+   */
+  private $entityDisplayRepository;
 
   /**
    * FormsStepsManager constructor.
    *
-   * @param \Drupal\Core\Entity\EntityManager $entity_manager
+   * @param \Drupal\Core\Entity\EntityDisplayRepository $entity_display_repository
+   *   Injected EntityDisplayRepository instance.
    */
-  public function __construct(EntityManager $entity_manager) {
-    $this->entityManager = $entity_manager;
+  public function __construct(EntityDisplayRepository $entity_display_repository) {
+    $this->entityDisplayRepository = $entity_display_repository;
   }
 
   /**
@@ -40,7 +44,7 @@ class FormsStepsManager {
     $matches = self::getRouteParameters($route_name);
     if ($matches) {
 
-      /** @var FormsSteps $formsSteps */
+      /** @var \Drupal\forms_steps\Entity\FormsSteps $formsSteps */
       $formsSteps = FormsSteps::load($matches[1]);
       if (!$formsSteps) {
         return $nextRoute;
@@ -69,7 +73,7 @@ class FormsStepsManager {
     $matches = self::getRouteParameters($route_name);
     if ($matches) {
 
-      /** @var FormsSteps $formsSteps */
+      /** @var \Drupal\forms_steps\Entity\FormsSteps $formsSteps */
       $formsSteps = FormsSteps::load($matches[1]);
       if (!$formsSteps) {
         /** @var \Drupal\forms_steps\Step $nextStep */
@@ -95,7 +99,7 @@ class FormsStepsManager {
     $matches = self::getRouteParameters($route_name);
     if ($matches) {
 
-      /** @var FormsSteps $formsSteps */
+      /** @var \Drupal\forms_steps\Entity\FormsSteps $formsSteps */
       $formsSteps = FormsSteps::load($matches[1]);
       if (!$formsSteps) {
         return $previousRoute;
@@ -124,12 +128,37 @@ class FormsStepsManager {
     $matches = self::getRouteParameters($route_name);
     if ($matches) {
 
-      /** @var FormsSteps $formsSteps */
+      /** @var \Drupal\forms_steps\Entity\FormsSteps $formsSteps */
       $formsSteps = FormsSteps::load($matches[1]);
       if (!$formsSteps) {
         /** @var \Drupal\forms_steps\Step $nextStep */
         return $formsSteps->getPreviousStep($formsSteps->getStep($matches[2]));
       }
+    }
+
+    return NULL;
+  }
+
+  /**
+   * Get the forms_steps entity by route.
+   *
+   * @param mixed $route_name
+   *   Current route.
+   *
+   * @return null|string
+   *   Returns the Forms Steps of the route.
+   */
+  public function getFormsStepsByRoute($route_name) {
+    $matches = self::getRouteParameters($route_name);
+    if ($matches) {
+
+      /** @var \Drupal\forms_steps\Entity\FormsSteps $formsSteps */
+      $formsSteps = FormsSteps::load($matches[1]);
+      if (!$formsSteps) {
+        return NULL;
+      }
+
+      return $formsSteps;
     }
 
     return NULL;
@@ -145,16 +174,16 @@ class FormsStepsManager {
    *   Returns the Step of the route.
    */
   public function getStepByRoute($route_name) {
-    $matches = self::getRouteParameters($route_name);
-    if ($matches) {
+    $forms_steps = self::getFormsStepsByRoute($route_name);
 
-      /** @var FormsSteps $formsSteps */
-      $formsSteps = FormsSteps::load($matches[1]);
-      if (!$formsSteps) {
-        return NULL;
+    if ($forms_steps) {
+
+      $matches = self::getRouteParameters($route_name);
+      if ($matches) {
+
+        return $forms_steps->getStep($matches[2]);
+
       }
-
-      return $formsSteps->getStep($matches[2]);
     }
 
     return NULL;
@@ -163,14 +192,14 @@ class FormsStepsManager {
   /**
    * Returns route parameters.
    *
-   * @param $route_name
+   * @param string $route_name
    *   Route to get the parameters from.
    *
    * @return array|false
    *   Parameters of the route.
    */
-  public function getRouteParameters($route_name) {
-    // forms_steps routes using the format: forms_steps.forms_steps_id.step_id
+  public function getRouteParameters(string $route_name) {
+    // forms_steps routes using the format: forms_steps.forms_steps_id.step_id.
     $route_pattern = '/^forms_steps\.([a-zA-Z0-9_]{1,})\.([a-zA-Z0-9_]{1,})/';
 
     if (preg_match($route_pattern, $route_name, $matches) == 1) {
@@ -182,14 +211,15 @@ class FormsStepsManager {
   }
 
   /**
-   * Get all form modes per entity type. Only managing node for the moment.
+   * Get all form modes per entity type. Only managing node.
    *
    * @return array
+   *   Returns a list of form modes defined for Nodes.
    */
   public function getAllFormModesDefinitions() {
     // Only managing node at this time. Improvment require.
     $all_form_modes = [];
-    $form_modes = $this->entityManager->getFormModes('node');
+    $form_modes = $this->entityDisplayRepository->getFormModes('node');
 
     foreach ($form_modes as $key => $value) {
       if (!empty($key) && $value['targetEntityType'] === 'node') {
@@ -198,6 +228,25 @@ class FormsStepsManager {
     }
 
     return $all_form_modes;
+  }
+
+  /**
+   * Get the forms_steps entity by id.
+   *
+   * @param string $name
+   *   Name of the forms steps.
+   *
+   * @return null|string
+   *   Returns the Forms Steps.
+   */
+  public function getFormsStepsById(string $name) {
+    /** @var \Drupal\forms_steps\Entity\FormsSteps $formsSteps */
+    $formsSteps = FormsSteps::load($name);
+    if (!$formsSteps) {
+      return NULL;
+    }
+
+    return $formsSteps;
   }
 
 }

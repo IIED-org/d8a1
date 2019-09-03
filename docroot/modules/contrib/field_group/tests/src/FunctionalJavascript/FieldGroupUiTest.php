@@ -2,9 +2,8 @@
 
 namespace Drupal\Tests\field_group\FunctionalJavascript;
 
-use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
-use Drupal\FunctionalJavascriptTests\JavascriptTestBase;
+use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\field_group\Functional\FieldGroupTestTrait;
 
@@ -13,7 +12,7 @@ use Drupal\Tests\field_group\Functional\FieldGroupTestTrait;
  *
  * @group field_group
  */
-class FieldGroupUiTest extends JavascriptTestBase {
+class FieldGroupUiTest extends WebDriverTestBase {
 
   use FieldGroupTestTrait;
 
@@ -49,7 +48,7 @@ class FieldGroupUiTest extends JavascriptTestBase {
     $this->drupalLogin($admin_user);
 
     // Create content type, with underscores.
-    $type_name = Unicode::strtolower($this->randomMachineName(8)) . '_test';
+    $type_name = mb_strtolower($this->randomMachineName(8)) . '_test';
     $type = NodeType::create([
       'name' => $type_name,
       'type' => $type_name,

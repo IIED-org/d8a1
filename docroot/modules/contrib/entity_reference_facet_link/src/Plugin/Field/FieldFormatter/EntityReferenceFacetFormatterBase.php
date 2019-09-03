@@ -162,7 +162,7 @@ abstract class EntityReferenceFacetFormatterBase extends EntityReferenceFormatte
     foreach ($this->getEntitiesToView($items, $langcode) as $delta => $entity) {
       // Create a fake Result object from the field item so that we can pass
       // it to the URL processor.
-      $result = new Result($entity->id(), $entity->label(), 0);
+      $result = new Result($facet, $entity->id(), $entity->label(), 0);
       $result = $url_processor->buildUrls($facet, [$result])[0];
 
       // Invalidate the cache when the referenced entity or the facet source

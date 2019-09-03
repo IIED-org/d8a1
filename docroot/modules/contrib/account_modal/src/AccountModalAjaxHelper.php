@@ -9,6 +9,7 @@ use Drupal\Core\Ajax\AppendCommand;
 use Drupal\Core\Ajax\CloseModalDialogCommand;
 use Drupal\Core\Ajax\OpenModalDialogCommand;
 use Drupal\Core\Ajax\RedirectCommand;
+use Drupal\Core\Ajax\RemoveCommand;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
@@ -53,8 +54,15 @@ class AccountModalAjaxHelper {
 
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
     $renderer = \Drupal::service('renderer');
-    $messagesElement = ['#type' => 'status_messages'];
+    $messagesElement = [
+      '#type' => 'container',
+      '#attributes' => [
+        'class' => 'account-modal-messages',
+      ],
+      'messages' => ['#type' => 'status_messages'],
+    ];
 
+    $response->addCommand(new RemoveCommand('.account-modal-messages'));
     $response->addCommand(new AppendCommand(
       '#account_modal_' . $pageId . '_wrapper',
       $renderer->renderRoot($messagesElement)

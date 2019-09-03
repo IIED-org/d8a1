@@ -12,7 +12,7 @@ class Step implements StepInterface {
    *
    * @var \Drupal\forms_steps\FormsStepsInterface
    */
-  protected $forms_steps;
+  protected $formsSteps;
 
   /**
    * The step's ID.
@@ -36,11 +36,18 @@ class Step implements StepInterface {
   protected $weight;
 
   /**
-   * The step's node_type.
+   * The step's entity_type.
    *
    * @var string
    */
-  protected $nodeType;
+  protected $entityType;
+
+  /**
+   * The step's entity_bundle.
+   *
+   * @var string
+   */
+  protected $entityBundle;
 
   /**
    * The step's form_view_mode_id.
@@ -101,7 +108,7 @@ class Step implements StepInterface {
   /**
    * The step's delete state.
    *
-   * @var boolean
+   * @var bool
    */
   protected $hideDelete;
 
@@ -115,7 +122,7 @@ class Step implements StepInterface {
   /**
    * The step's previous state.
    *
-   * @var boolean
+   * @var bool
    */
   protected $displayPrevious;
 
@@ -130,19 +137,22 @@ class Step implements StepInterface {
    *   The step's label.
    * @param int $weight
    *   The step's weight.
-   * @param string $nodeType
-   *   The step's node type.
+   * @param string $entityType
+   *   The step's entity type.
+   * @param string $entityBundle
+   *   The step's bundle.
    * @param string $formMode
    *   The step's form mode.
    * @param string $url
    *   The step's URL.
    */
-  public function __construct(FormsStepsInterface $forms_steps, $id, $label, $weight = 0, $nodeType, $formMode, $url) {
-    $this->forms_steps = $forms_steps;
+  public function __construct(FormsStepsInterface $forms_steps, $id, $label, $weight, $entityType, $entityBundle, $formMode, $url) {
+    $this->formsSteps = $forms_steps;
     $this->id = $id;
     $this->label = $label;
     $this->weight = $weight;
-    $this->nodeType = $nodeType;
+    $this->entityType = $entityType;
+    $this->entityBundle = $entityBundle;
     $this->formMode = $formMode;
     $this->url = $url;
   }
@@ -169,37 +179,44 @@ class Step implements StepInterface {
   }
 
   /**
-   * @inheritDoc
+   * {@inheritdoc}
    */
-  public function nodeType() {
-    return $this->nodeType;
+  public function entityType() {
+    return $this->entityType;
   }
 
   /**
-   * @inheritDoc
+   * {@inheritdoc}
+   */
+  public function entityBundle() {
+    return $this->entityBundle;
+  }
+
+  /**
+   * {@inheritdoc}
    */
   public function formMode() {
     return $this->formMode;
   }
 
   /**
-   * @inheritDoc
+   * {@inheritdoc}
    */
-  public function Url() {
+  public function url() {
     return $this->url;
   }
 
   /**
-   * Return a list of form modes available for this node type.
+   * Return a list of form modes available for this entity bundle.
    *
    * @return array
-   *    Returns the list of form modes.
+   *   Returns the list of form modes.
    */
-  public static function formModes() {
+  public function formModes() {
     $result = [];
 
     // Get the list of available form modes for a certain entity type.
-    $form_modes = \Drupal::entityManager()->getFormModes('node');
+    $form_modes = \Drupal::entityManager()->getFormModes($this->entityType);
 
     foreach ($form_modes as $form_mode) {
       $result[$form_mode['id']] = $form_mode['label'];
@@ -263,8 +280,8 @@ class Step implements StepInterface {
   /**
    * Get the hidden status of the delete button.
    *
-   * @return boolean
-   *   true if hidden | false otherwise
+   * @return bool
+   *   TRUE if hidden | FALSE otherwise
    */
   public function hideDelete() {
     return $this->hideDelete;
@@ -273,11 +290,11 @@ class Step implements StepInterface {
   /**
    * Set the hidden state of the delete button.
    *
-   * @param  $value
-   *   true if hidden | false otherwise
+   * @param bool $value
+   *   TRUE if hidden | FALSE otherwise.
    */
   public function setHideDelete($value) {
-    return $this->hideDelete = $value;
+    $this->hideDelete = $value;
   }
 
   /**
@@ -291,83 +308,93 @@ class Step implements StepInterface {
   }
 
   /**
-   * @inheritDoc
+   * {@inheritdoc}
    */
   public function setSubmitLabel($label) {
     $this->submitLabel = $label;
   }
 
   /**
-   * @inheritDoc
+   * {@inheritdoc}
    */
   public function setCancelLabel($label) {
     $this->cancelLabel = $label;
   }
 
   /**
-   * @inheritDoc
+   * {@inheritdoc}
    */
   public function setDeleteLabel($label) {
     $this->deleteLabel = $label;
   }
 
   /**
-   * @inheritDoc
+   * {@inheritdoc}
    */
   public function setCancelRoute($route) {
     $this->cancelRoute = $route;
   }
 
   /**
-   * @inheritDoc
+   * {@inheritdoc}
    */
   public function setCancelStep(Step $step) {
     $this->cancelStep = $step;
   }
 
   /**
-   * @inheritDoc
+   * {@inheritdoc}
    */
   public function setCancelStepMode($mode) {
     $this->cancelStepMode = $mode;
   }
 
   /**
-   * @inheritDoc
+   * {@inheritdoc}
    */
   public function formsSteps() {
-    return $this->forms_steps;
+    return $this->formsSteps;
   }
 
   /**
-   * @inheritDoc
+   * {@inheritdoc}
    */
-  public function displayPrevious()
-  {
+  public function displayPrevious() {
     return $this->displayPrevious;
   }
 
   /**
-   * @inheritDoc
+   * {@inheritdoc}
    */
-  public function setPreviousLabel($label)
-  {
+  public function setPreviousLabel($label) {
     $this->previousLabel = $label;
   }
 
   /**
-   * @inheritDoc
+   * {@inheritdoc}
    */
-  public function previousLabel()
-  {
+  public function previousLabel() {
     return $this->previousLabel;
   }
 
   /**
-   * @inheritDoc
+   * {@inheritdoc}
    */
   public function setDisplayPrevious($value) {
     return $this->displayPrevious = $value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isLast() {
+    $last_step = $this->formsSteps->getLastStep();
+
+    if ($this->id == $last_step->id()) {
+      return TRUE;
+    }
+
+    return FALSE;
   }
 
 }

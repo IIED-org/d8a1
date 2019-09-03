@@ -1,0 +1,17 @@
+***************
+*** 24,30 ****
+        '#pre_render' => [
+          [$class, 'preRenderGroup'],
+        ],
+-       '#open' => TRUE,
+        '#theme_wrappers' => ['field_group_accordion_item'],
+      ];
+    }
+--- 24,30 ----
+        '#pre_render' => [
+          [$class, 'preRenderGroup'],
+        ],
++       '#open' => FALSE,
+        '#theme_wrappers' => ['field_group_accordion_item'],
+      ];
+    }

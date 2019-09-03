@@ -4,7 +4,7 @@ namespace Drupal\forms_steps\Form;
 
 use Drupal\Core\Form\FormState;
 use Drupal\forms_steps\Step;
-use Drupal\forms_steps\StepInterface;
+use Drupal\Core\Routing\TrustedRedirectResponse;
 
 /**
  * Class FormsStepsAlter.
@@ -14,10 +14,12 @@ use Drupal\forms_steps\StepInterface;
 class FormsStepsAlter {
 
   /**
+   * Handle the form/form_state.
+   *
    * @param array $form
-   *  Form to handle.
+   *   Form to handle.
    * @param \Drupal\Core\Form\FormState $form_state
-   *  Form State to handle.
+   *   Form State to handle.
    */
   public static function handle(array &$form, FormState $form_state) {
     /** @var \Drupal\forms_steps\Service\FormsStepsManager $formsStepsManager */
@@ -37,7 +39,7 @@ class FormsStepsAlter {
   /**
    * Define the submit and cancel label using the step configuration.
    *
-   * @param Step $step
+   * @param \Drupal\forms_steps\Step $step
    *   Current Step.
    * @param array $form
    *   Form to alter.
@@ -57,10 +59,10 @@ class FormsStepsAlter {
   /**
    * Manage previous/next actions.
    *
-   * @param Step $step
-   *  Current Step.
+   * @param \Drupal\forms_steps\Step $step
+   *   Current Step.
    * @param array $form
-   *  Form to alter.
+   *   Form to alter.
    */
   public static function handleNavigation(Step $step, array &$form) {
     if ($step) {
@@ -71,11 +73,10 @@ class FormsStepsAlter {
           '#value' => t($step->previousLabel()),
           '#name' => 'previous_action',
           '#submit' => [
-            ['Drupal\forms_steps\Form\FormsStepsAlter', 'setPreviousRoute']
+            ['Drupal\forms_steps\Form\FormsStepsAlter', 'setPreviousRoute'],
           ],
           '#limit_validation_errors' => [['op']],
         ];
-
       }
     }
   }
@@ -90,18 +91,52 @@ class FormsStepsAlter {
    */
   public static function setNextRoute(array &$form, FormState $form_state) {
     /** @var \Drupal\forms_steps\Service\FormsStepsManager $formsStepsManager */
+    $route = \Drupal::routeMatch();
+    $route_name = $route->getRouteName();
     $formsStepsManager = \Drupal::service('forms_steps.manager');
-    $nextRoute = $formsStepsManager->getNextStepRoute(\Drupal::routeMatch()
-      ->getRouteName());
+
+    /** @var \Drupal\forms_steps\Entity\Workflow $workflowManager */
+    $workflowManager = \Drupal::service('forms_steps.workflow.manager');
+    $nextRoute = $formsStepsManager->getNextStepRoute($route_name);
 
     if ($nextRoute) {
+      $workflow = $workflowManager->getWorkflowByEntity($form_state->getFormObject()->getEntity());
       $form_state->setRedirect($nextRoute, [
-        'uuid' => $form_state->getFormObject()
-          ->getEntity()
-          ->getTypedData()
-          ->get('field_forms_steps_id')
-          ->getString(),
+        'instance_id' => $workflow->instance_id->value,
       ]);
+    }
+
+    // Set redirection on final step according to redirection policy.
+    $forms_steps = \Drupal::service('forms_steps.manager')->getFormsStepsByRoute($route_name);
+    $redirection_policy = $forms_steps->getRedirectionPolicy();
+
+    if ($redirection_policy != '') {
+
+      $step = $formsStepsManager->getStepByRoute($route_name);
+
+      if ($step->isLast()) {
+
+        $redirection_target = $forms_steps->getRedirectionTarget();
+
+        switch ($redirection_policy) {
+          case 'internal':
+            $target_url = \Drupal::service('path.validator')->getUrlIfValid($redirection_target);
+            $target_route_name = $target_url->getRouteName();
+            $target_route_parameters = $target_url->getrouteParameters();
+
+            $form_state->setRedirect($target_route_name, $target_route_parameters);
+            break;
+
+          case 'route':
+            $parameters = $route->getParameters()->all();
+            $form_state->setRedirect($redirection_target, $parameters);
+            break;
+
+          case 'external':
+            $form_state->setResponse(new TrustedRedirectResponse($redirection_target, 302));
+            break;
+        }
+      }
     }
   }
 
@@ -109,31 +144,44 @@ class FormsStepsAlter {
    * Redirect the form to the previous step.
    *
    * @param array $form
-   *  Form to alter.
+   *   Form to alter.
    * @param \Drupal\Core\Form\FormState $form_state
-   *  Forms State to Update.
+   *   Forms State to Update.
    */
   public static function setPreviousRoute(array &$form, FormState $form_state) {
     /** @var \Drupal\forms_steps\Service\FormsStepsManager $formsStepsManager */
+    $route = \Drupal::routeMatch();
+    $route_name = $route->getRouteName();
+
+    /** @var \Drupal\forms_steps\Service\FormsStepsManager $formsStepsManager */
     $formsStepsManager = \Drupal::service('forms_steps.manager');
 
-    /** @var \Drupal\forms_steps\Step $step */
-    $step = $formsStepsManager->getPreviousStepRoute(\Drupal::routeMatch()
-      ->getRouteName());
+    $previousRoute = $formsStepsManager->getPreviousStepRoute($route_name);
 
-    // Check if this is an add step
-    $uuid = $form_state->getFormObject()
-      ->getEntity()
-      ->getTypedData()
-      ->get('field_forms_steps_id')
-      ->getString();
+    if ($previousRoute) {
+      /** @var \Drupal\forms_steps\Entity\Workflow $workflowManager */
+      $workflowManager = \Drupal::service('forms_steps.workflow.manager');
 
-    if ($step) {
-      $params = [];
-      if (!empty($uuid)) {
-        $params = ['uuid' => $uuid];
+      /** @var \Drupal\Core\Entity\Entity $entity */
+      $entity = $form_state->getFormObject()->getEntity();
+      if ($entity->isNew()) {
+        // For the moment, new entity form doesn't contains the instance_id,
+        // hence we need to get it from URL.
+        $instanceId = \Drupal::routeMatch()->getParameter('instance_id');
       }
-      $form_state->setRedirect($step, $params);
+      else {
+        $workflow = $workflowManager->getWorkflowByEntity(
+          $form_state->getFormObject()->getEntity()
+              );
+        $instanceId = $workflow->instance_id->value;
+      }
+
+      $form_state->setRedirect(
+        $previousRoute,
+        [
+          'instance_id' => $instanceId,
+        ]
+      );
     }
   }
 

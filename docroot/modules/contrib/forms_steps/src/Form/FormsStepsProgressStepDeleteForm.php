@@ -92,7 +92,7 @@ class FormsStepsProgressStepDeleteForm extends ConfirmFormBase {
       ->deleteProgressStep($this->progressStepId)
       ->save();
 
-    drupal_set_message($this->t(
+    $this->messenger()->addMessage($this->t(
       'progress step %label deleted.',
       ['%label' => $forms_steps_label]
     ));

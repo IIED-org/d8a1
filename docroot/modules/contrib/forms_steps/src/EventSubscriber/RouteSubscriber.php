@@ -3,6 +3,7 @@
 namespace Drupal\forms_steps\EventSubscriber;
 
 use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\State\StateInterface;
 use Drupal\Core\Routing\RouteSubscriberBase;
 use Drupal\forms_steps\Entity\FormsSteps;
@@ -47,18 +48,33 @@ class RouteSubscriber extends RouteSubscriberBase {
   protected $formsStepsRouteNames = [];
 
   /**
+   * EntityTypeManager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  private $entityTypeManager;
+
+  /**
    * Constructs a \Drupal\forms_steps\EventSubscriber\RouteSubscriber instance.
    *
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager.
    * @param \Drupal\Core\State\StateInterface $state
    *   The state key value store.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
    *
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
-  public function __construct(EntityManagerInterface $entity_manager, StateInterface $state) {
+  public function __construct(
+    EntityManagerInterface $entity_manager,
+    StateInterface $state,
+    EntityTypeManagerInterface $entity_type_manager
+  ) {
     $this->formsStepsStorage = $entity_manager->getStorage(FormsSteps::ENTITY_TYPE);
     $this->state = $state;
+    $this->entityTypeManager = $entity_type_manager;
   }
 
   /**
@@ -66,14 +82,19 @@ class RouteSubscriber extends RouteSubscriberBase {
    *
    * @return \Symfony\Component\Routing\RouteCollection
    *   A route collection.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
   public function routes() {
     $collection = new RouteCollection();
-    // TODO: Check if we can optimize the entityQuery for faster execution.
-    $entity_ids = \Drupal::entityQuery(FormsSteps::ENTITY_TYPE)->execute();
+    $entity_ids = $this->entityTypeManager
+      ->getStorage(FormsSteps::ENTITY_TYPE)
+      ->getQuery()
+      ->execute();
 
     // Loads of all forms steps.
-    $forms_steps = \Drupal::entityTypeManager()
+    $forms_steps = $this->entityTypeManager
       ->getStorage(FormsSteps::ENTITY_TYPE)
       ->loadMultiple($entity_ids);
 
@@ -81,21 +102,21 @@ class RouteSubscriber extends RouteSubscriberBase {
     foreach ($forms_steps as $form_steps) {
       foreach ($form_steps->getSteps() as $step) {
         $route = new Route(
-          $step->Url() . '/{uuid}',
+          $step->url() . '/{instance_id}',
           [
             '_controller' => '\Drupal\forms_steps\Controller\FormsStepsController::step',
             '_title' => $step->label(),
             'forms_steps' => $form_steps->id(),
             'step' => $step->id(),
-            'uuid' => '',
+            'instance_id' => '',
           ],
           [
             '_permission' => 'access content',
-            'uuid' => '^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
+            'instance_id' => '^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$',
           ]
         );
 
-        $collection->add('forms_steps.' . $form_steps->id() . '.' . $step->id() , $route);
+        $collection->add('forms_steps.' . $form_steps->id() . '.' . $step->id(), $route);
       }
     }
 

@@ -94,6 +94,16 @@ entity.forms_steps.delete_progress_step_form:
   requirements:
     _permission: 'administer forms_steps'
 
+entity.forms_steps_workflow.collection:
+  path: '/admin/config/workflow/forms_steps/workflows/list'
+  defaults:
+    # Calls the list controller, defined in the annotation of the contact entity.
+    _entity_list: 'forms_steps_workflow'
+    _title: 'Workflow Instance list'
+  requirements:
+    # Checks for permission directly.
+    _permission: 'view forms_steps_workflow entity'
+
 # Dynamic routing for forms steps
 route_callbacks:
   - 'forms_steps.route_subscriber:routes'

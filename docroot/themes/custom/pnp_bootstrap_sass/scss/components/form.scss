@@ -55,3 +55,7 @@ form .form-type-textarea {
 button#edit-preview {
     display: none;
 }
+
+.form-select {
+  @extend .form-control;
+}

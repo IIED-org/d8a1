@@ -6,8 +6,6 @@ use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
-use Drupal\forms_steps\progressStepInterface;
-use Drupal\node\Entity\NodeType;
 
 /**
  * Class FormsStepsProgressStepEditForm.
@@ -68,16 +66,15 @@ class FormsStepsProgressStepEditForm extends EntityForm {
 
     // Warn the user if there are no steps.
     if (empty($steps)) {
-      drupal_set_message(
+      $this->messenger()->addWarning(
         $this->t(
-          'This Forms Steps has no steps and will be disabled until there is at least one, <a href=":add-step">add a new node step.</a>',
+          'This Forms Steps has no steps and will be disabled until there is at least one, <a href=":add-step">add a new step.</a>',
           [':add-step' => $forms_steps->toUrl('add-step-form')->toString()]
-        ),
-        'warning'
+        )
       );
     }
 
-    //[$this->t('There are no steps yet.')]
+    // [$this->t('There are no steps yet.')].
     $options = [];
     foreach ($steps as $step) {
       $options[$step->id()] = $step->label();
@@ -129,14 +126,14 @@ class FormsStepsProgressStepEditForm extends EntityForm {
     $forms_steps = $this->entity;
 
     $forms_steps->save();
-    drupal_set_message($this->t('Saved %label progress step.', [
+    $this->messenger()->addMessage($this->t('Saved %label progress step.', [
       '%label' => $forms_steps->getProgressStep($this->progressStepId)->label(),
     ]));
     $form_state->setRedirectUrl($forms_steps->toUrl('edit-form'));
   }
 
   /**
-   * Copies top-level form values to entity properties
+   * Copies top-level form values to entity properties.
    *
    * This form can only change values for a step, which is part of forms_steps.
    *
