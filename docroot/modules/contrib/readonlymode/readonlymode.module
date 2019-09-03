@@ -13,7 +13,7 @@
  * that the site is in maintenance mode.
  */
 use Drupal\Core\Form\FormStateInterface;
-
+use Drupal\Core\Render\Element;
 /**
  * Implements hook_form_FORM_ID_alter().
  */
@@ -23,8 +23,7 @@ function readonlymode_form_system_site_maintenance_mode_alter(&$form, FormStateI
     '#title' => t('Read Only Mode'),
     '#type' => 'details',
     '#weight' => 1,
-    '#collapsible' => TRUE,
-    '#collapsed' => $settings->get('enabled') ? FALSE : TRUE,
+    '#open'=> TRUE
   );
   $form['read_only']['enable_readonly'] = array(
     '#type' => 'checkbox',
@@ -89,7 +88,7 @@ function readonlymode_form_system_site_maintenance_mode_alter(&$form, FormStateI
     '#default_value' => $settings->get('forms.additional.view'),
   );
   $form['#validate'][] = 'readonlymode_settings_form_validate';
-  $form['actions']['submit']['#submit'][] = 'readonlymode_settings_form_submit';
+  $form['#submit'][] = 'readonlymode_settings_form_submit';
 }
 
 /**
@@ -100,8 +99,8 @@ function readonlymode_form_system_site_maintenance_mode_alter(&$form, FormStateI
 function readonlymode_settings_form_validate(array &$form, FormStateInterface $form_state) {
   $values = $form_state->getValues();
   if ($path = $values['url']) {
-    $item = menu_get_item($path);
-    if (!$item || !$item['access']) {
+    $path_validator = \Drupal::pathValidator();
+    if (!$path_validator->isValid($form_state->getValue('url'))) {
       $form_state->setErrorByName('url', t('The path %link_path is either invalid or you do not have access to it.', array('%link_path' => $path)));
     }
   }
@@ -134,34 +133,29 @@ function readonlymode_settings_form_submit(array &$form, FormStateInterface $for
 function readonlymode_form_alter(&$form, FormStateInterface $form_state, $form_id) {
   $settings = \Drupal::config('readonlymode.settings');
   if (!_readonlymode_form_check($form, $form_id, FALSE)) {
-    // Check whether the form is a fresh form being served to the user.
-    if (!empty($form_state->getValue('form_token'))) {
-      // If a redirect URL is set, then we redirect to it.
-      if ($url = $settings->get('url')) {
-        return new \Symfony\Component\HttpFoundation\RedirectResponse($url);
-      }
-      else {
-        // Remove FAPI #after_build handlers.
-        $form['#after_build'] = array();
-        // Remove all elements of the form.
-        foreach (element_children($form) as $key) {
-          if (!in_array($key, array(
-            'form_id',
-            'form_token',
-            'form_build_id'
-          ))
-          ) {
-            unset($form[$key]);
-          }
+    // If a redirect URL is set, then we redirect to it.
+    if ($url = $settings->get('url')) {
+      return new \Symfony\Component\HttpFoundation\RedirectResponse($url);
+    }
+    else {
+      // Remove FAPI #after_build handlers.
+      $form['#after_build'] = array();
+      // Remove all elements of the form.
+      foreach (Element::children($form) as $key) {
+        if (!in_array($key, array(
+          'form_id',
+          'form_token',
+          'form_build_id'
+        ))
+        ) {
+          unset($form[$key]);
         }
-        $form['readonly_notice'] = array(
-          '#markup' => t($settings->get('messages.default'), array(
-            '@site' => \Drupal::config('system.site')->get('name'),
-          )),
-          '#prefix' => '<div class="messages warning">',
-          '#suffix' => '</div>',
-        );
       }
+      $form['readonly_notice'] = array(
+        '#markup' => \Drupal::token()->replace($settings->get('messages.default')),
+        '#prefix' => '<div class="messages warning">',
+        '#suffix' => '</div>',
+      );
     }
   }
 
@@ -183,10 +177,7 @@ function readonlymode_form_alter(&$form, FormStateInterface $form_state, $form_i
 function readonlymode_check_form_validate(array &$form, FormStateInterface $form_state) {
   // Check for Read Only Mode, whether we are allowed this form,
   if (!_readonlymode_form_check($form, $form['form_id']['#value'], TRUE)) {
-    $settings = \Drupal::config('readonlymode.settings');
-    $form_state->setErrorByName('submit', t($settings->get('messages.not_saved'), array(
-      '@site' => \Drupal::config('system.site')->get('name'),
-    )));
+    $form_state->setErrorByName('submit', \Drupal::token()->replace(\Drupal::config('readonlymode.settings')->get('messages.not_saved')));
   }
 }
 

@@ -19,9 +19,10 @@
         "url": "git://github.com/IIED-org/d8a1.git"
     },
     "dependencies": {
-        "bootstrap": "^4.1.0",
-        "browser-sync": "^2.24.7",
-        "jquery": "^3.3.1",
+        "bootstrap": "^4.3.1",
+        "browser-sync": "^2.26.7",
+        "jquery": "^3.4.1",
+        "natives": "^1.1.6",
         "popper.js": "^1.14.3"
     },
     "devDependencies": {

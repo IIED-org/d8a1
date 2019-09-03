@@ -6,6 +6,7 @@ use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\forms_steps\FormsStepsInterface;
 use Drupal\forms_steps\Step;
 use Drupal\forms_steps\ProgressStep;
+use Drupal\Core\Url;
 
 /**
  * FormsSteps configuration entity to persistently store configuration.
@@ -38,6 +39,8 @@ use Drupal\forms_steps\ProgressStep;
  *     "id",
  *     "label",
  *     "description",
+ *     "redirection_policy",
+ *     "redirection_target",
  *     "steps",
  *     "progress_steps",
  *   },
@@ -56,7 +59,8 @@ use Drupal\forms_steps\ProgressStep;
  */
 class FormsSteps extends ConfigEntityBase implements FormsStepsInterface {
 
-  /** Entity type id. */
+  /**
+ * Entity type id. */
   const ENTITY_TYPE = 'forms_steps';
 
   /**
@@ -81,6 +85,20 @@ class FormsSteps extends ConfigEntityBase implements FormsStepsInterface {
   protected $description = '';
 
   /**
+   * The redirection policy of the FormsSteps.
+   *
+   * @var string
+   */
+  protected $redirection_policy = '';
+
+  /**
+   * The redirection target of the FormsSteps.
+   *
+   * @var string
+   */
+  protected $redirection_target = '';
+
+  /**
    * The ordered FormsSteps steps.
    *
    * Steps array. The array is numerically indexed by the step id and contains
@@ -98,13 +116,13 @@ class FormsSteps extends ConfigEntityBase implements FormsStepsInterface {
   /**
    * The ordered FormsSteps progress steps.
    *
-   * progress steps array. The array is numerically indexed by the progress step id and contains
-   * arrays with the following structure:
+   * Progress steps array. The array is numerically indexed by the progress step
+   * id and contains arrays with the following structure:
    *   - weight: weight of the progress step
    *   - label: label of the progress step
    *   - form_id: form id of the progress step
    *   - routes: an array of the routes for which the progress step is active
-   *   - link: the link of the progress step
+   *   - link: the link of the progress step.
    *
    * @var array
    */
@@ -118,9 +136,23 @@ class FormsSteps extends ConfigEntityBase implements FormsStepsInterface {
   }
 
   /**
+   * Returns the redirection policy.
+   */
+  public function getRedirectionPolicy() {
+    return $this->redirection_policy;
+  }
+
+  /**
+   * Returns the redirection target.
+   */
+  public function getRedirectionTarget() {
+    return $this->redirection_target;
+  }
+
+  /**
    * {@inheritdoc}
    */
-  public function addStep($step_id, $label, $nodeType, $formMode, $url) {
+  public function addStep($step_id, $label, $entityType, $entityBundle, $formMode, $url) {
     if (isset($this->Steps[$step_id])) {
       throw new \InvalidArgumentException(
         "The Step '$step_id' already exists in the forms steps '{$this->id()}'"
@@ -134,7 +166,8 @@ class FormsSteps extends ConfigEntityBase implements FormsStepsInterface {
     $this->steps[$step_id] = [
       'label' => $label,
       'weight' => $this->getNextWeight($this->steps),
-      'node_type' => $nodeType,
+      'entity_type' => $entityType,
+      'entity_bundle' => $entityBundle,
       'form_mode' => $formMode,
       'url' => $url,
     ];
@@ -216,7 +249,7 @@ class FormsSteps extends ConfigEntityBase implements FormsStepsInterface {
   public function getPreviousStep(Step $step) {
     $previousStep = NULL;
 
-    // Reverse the order of the array
+    // Reverse the order of the array.
     $stepsReversed = array_reverse($this->getSteps());
     $stepsIterator = new \ArrayIterator($stepsReversed);
 
@@ -226,7 +259,8 @@ class FormsSteps extends ConfigEntityBase implements FormsStepsInterface {
         $previousStep = $stepsIterator->current();
 
         break;
-      } else {
+      }
+      else {
         $stepsIterator->next();
       }
     }
@@ -344,6 +378,17 @@ class FormsSteps extends ConfigEntityBase implements FormsStepsInterface {
   /**
    * {@inheritdoc}
    */
+  public function getLastStep($steps = NULL) {
+    if ($steps === NULL) {
+      $steps = $this->getSteps();
+    }
+    return end($steps);
+
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getStep($step_id) {
     if (!isset($this->steps[$step_id])) {
       throw new \InvalidArgumentException(
@@ -355,7 +400,8 @@ class FormsSteps extends ConfigEntityBase implements FormsStepsInterface {
       $step_id,
       $this->steps[$step_id]['label'],
       $this->steps[$step_id]['weight'],
-      $this->steps[$step_id]['node_type'],
+      $this->steps[$step_id]['entity_type'],
+      $this->steps[$step_id]['entity_bundle'],
       $this->steps[$step_id]['form_mode'],
       $this->steps[$step_id]['url']
     );
@@ -457,13 +503,13 @@ class FormsSteps extends ConfigEntityBase implements FormsStepsInterface {
   /**
    * {@inheritdoc}
    */
-  public function setStepNodeType($step_id, $nodeType) {
+  public function setStepEntityBundle($step_id, $entityBundle) {
     if (!isset($this->steps[$step_id])) {
       throw new \InvalidArgumentException(
         "The Step '$step_id' does not exist in forms steps '{$this->id()}'"
       );
     }
-    $this->steps[$step_id]['node_type'] = $nodeType;
+    $this->steps[$step_id]['entity_bundle'] = $entityBundle;
     return $this;
   }
 
@@ -476,7 +522,18 @@ class FormsSteps extends ConfigEntityBase implements FormsStepsInterface {
         "The Step '$step_id' does not exist in forms steps '{$this->id()}'"
       );
     }
-    $this->steps[$step_id]['url'] = $url;
+    $this->steps[$step_id]['url'] = '';
+    if ('/' != $url[0]) {
+      $url = '/' . $url;
+    }
+    if (!empty(Url::fromUri("internal:$url"))) {
+      $this->steps[$step_id]['url'] = $url;
+    } else {
+      throw new \InvalidArgumentException(
+        "The Url Step '$url' is not accessible"
+      );
+    }
+
     return $this;
   }
 
@@ -490,6 +547,19 @@ class FormsSteps extends ConfigEntityBase implements FormsStepsInterface {
       );
     }
     $this->steps[$step_id]['form_mode'] = $formMode;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setStepEntityType($step_id, $entity_type) {
+    if (!isset($this->steps[$step_id])) {
+      throw new \InvalidArgumentException(
+        "The Step '$step_id' does not exist in forms steps '{$this->id()}'"
+      );
+    }
+    $this->steps[$step_id]['entity_type'] = $entity_type;
     return $this;
   }
 
@@ -616,7 +686,7 @@ class FormsSteps extends ConfigEntityBase implements FormsStepsInterface {
   /**
    * {@inheritdoc}
    */
-  public function setProgressStepLinkVisibility($progress_step_id, $steps) {
+  public function setProgressStepLinkVisibility($progress_step_id, array $steps) {
     if (!isset($this->progress_steps[$progress_step_id])) {
       throw new \InvalidArgumentException(
         "The progress step '$progress_step_id' does not exist in forms steps '{$this->id()}'"
@@ -684,10 +754,9 @@ class FormsSteps extends ConfigEntityBase implements FormsStepsInterface {
   }
 
   /**
-   * @inheritDoc
+   * {@inheritdoc}
    */
-  public function setStepPreviousLabel($step_id, $label)
-  {
+  public function setStepPreviousLabel($step_id, $label) {
     if (!isset($this->steps[$step_id])) {
       throw new \InvalidArgumentException(
         "The Step '$step_id' does not exist in forms steps '{$this->id()}'"
@@ -698,10 +767,9 @@ class FormsSteps extends ConfigEntityBase implements FormsStepsInterface {
   }
 
   /**
-   * @inheritDoc
+   * {@inheritdoc}
    */
-  public function setStepPreviousState($step_id, $state)
-  {
+  public function setStepPreviousState($step_id, $state) {
     if (!isset($this->steps[$step_id])) {
       throw new \InvalidArgumentException(
         "The Step '$step_id' does not exist in forms steps '{$this->id()}'"

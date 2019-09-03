@@ -9,6 +9,9 @@ use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\forms_steps\Form\FormsStepsAlter;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\Entity\ContentEntityType;
 
 /**
  * Implements hook_help().
@@ -31,47 +34,56 @@ function forms_steps_help($route_name, RouteMatchInterface $route_match) {
  * form.
  */
 function forms_steps_form_alter(&$form, FormStateInterface $form_state, $form_id) {
-  if (preg_match('/^forms_steps\./', \Drupal::routeMatch()->getRouteName())) {
+  $formStateStorage = $form_state->getStorage();
+  if (
+    preg_match('/^forms_steps\./', \Drupal::routeMatch()->getRouteName())
+    && isset($formStateStorage['form_steps'])
+  ) {
     $form['actions']['submit']['#submit'][] = 'Drupal\forms_steps\Form\FormsStepsAlter::setNextRoute';
 
-    // Handle the forms steps
+    // Handle the forms steps.
     FormsStepsAlter::handle($form, $form_state);
   }
 }
 
 /**
+ * Implements hook_entity_insert().
+ */
+function forms_steps_entity_insert(EntityInterface $entity) {
+  \Drupal::service('forms_steps.workflow.manager')->entityInsert($entity);
+}
+
+/**
  * Implements hook_entity_presave().
  */
-function forms_steps_entity_presave(Drupal\Core\Entity\EntityInterface $entity) {
-  if (preg_match('/^forms_steps\./', \Drupal::routeMatch()->getRouteName())) {
-    // We manage the field_forms_steps_id value in the entity.
-    $uuid = $entity->getTypedData()->get('field_forms_steps_id')->getString();
-    if (empty($uuid)) {
-      $uuid = \Drupal::service('uuid')->generate();
-      $entity->set('field_forms_steps_id', $uuid);
-    }
-  }
+function forms_steps_entity_presave(EntityInterface $entity) {
+  \Drupal::service('forms_steps.workflow.manager')->entityPreSave($entity);
 }
 
 /**
  * Implements hook_entity_base_field_info().
  */
-function forms_steps_entity_base_field_info(\Drupal\Core\Entity\EntityTypeInterface $entity_type) {
+function forms_steps_entity_base_field_info(ContentEntityType $entity_type) {
   if ($entity_type->id() === 'node') {
-    $fields['field_forms_steps_id'] = \Drupal\Core\Field\BaseFieldDefinition::create('string')
-      ->setLabel(t('Forms Steps ID'))
-      ->setDisplayConfigurable('form', FALSE)
-      ->setDisplayConfigurable('view', FALSE)
-    ;
-    return $fields;
+    // If we have moved to new workflow management. We no longer need this
+    // field.
+    if (drupal_get_installed_schema_version('forms_steps') === '8100') {
+      $fields['field_forms_steps_id'] = BaseFieldDefinition::create(
+        'string'
+      )
+        ->setLabel(t('Forms Steps ID'))
+        ->setDisplayConfigurable('form', FALSE)
+        ->setDisplayConfigurable('view', FALSE);
+
+      return $fields;
+    }
   }
 }
 
 /**
- * Manage all form modes and define FormClass. Only managing nodes for the
- * moment.
+ * Implements hook_entity_type_build().
  *
- * @param array $entity_types
+ * Manage all form modes and define FormClass. Only managing nodes.
  */
 function forms_steps_entity_type_build(array &$entity_types) {
   /** @var \Drupal\forms_steps\Service\FormsStepsManager $formsStepsManager */

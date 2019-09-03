@@ -47,16 +47,15 @@ class FormsStepsProgressStepAddForm extends EntityForm {
 
     // Warn the user if there are no steps.
     if (empty($steps)) {
-      drupal_set_message(
+      $this->messenger()->addWarning(
         $this->t(
-          'This Forms Steps has no steps and will be disabled until there is at least one, <a href=":add-step">add a new node step.</a>',
+          'This Forms Steps has no steps and will be disabled until there is at least one, <a href=":add-step">add a new step.</a>',
           [':add-step' => $forms_steps->toUrl('add-step-form')->toString()]
-        ),
-        'warning'
+        )
       );
     }
 
-    //[$this->t('There are no steps yet.')]
+    // [$this->t('There are no steps yet.')].
     $options = [];
     foreach ($steps as $step) {
       $options[$step->id()] = $step->label();
@@ -105,10 +104,13 @@ class FormsStepsProgressStepAddForm extends EntityForm {
    *
    * @return bool
    *   TRUE if the forms steps progress step exists, FALSE otherwise.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
   public function exists($progress_step_id) {
     /** @var \Drupal\forms_steps\FormsStepsInterface $original_forms_steps */
-    $original_forms_steps = \Drupal::entityTypeManager()
+    $original_forms_steps = $this->entityTypeManager
       ->getStorage('forms_steps')
       ->loadUnchanged($this->getEntity()->id());
     return $original_forms_steps->hasProgressStep($progress_step_id);
@@ -146,7 +148,7 @@ class FormsStepsProgressStepAddForm extends EntityForm {
     $forms_steps = $this->entity;
     $forms_steps->save();
 
-    drupal_set_message($this->t('Created %label progress step.', [
+    $this->messenger()->addMessage($this->t('Created %label progress step.', [
       '%label' => $forms_steps->getProgressStep($form_state->getValue('id'))
         ->label(),
     ]));

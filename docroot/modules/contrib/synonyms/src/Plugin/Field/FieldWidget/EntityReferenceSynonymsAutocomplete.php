@@ -134,6 +134,10 @@ class EntityReferenceSynonymsAutocomplete extends WidgetBase implements Containe
       '#target_bundles' => $this->getFieldSetting('handler_settings')['target_bundles'],
       '#suggestion_size' => $this->getSetting('suggestion_size'),
       '#suggest_only_unique' => $this->getSetting('suggest_only_unique'),
+      // Entity reference field items are handling validation themselves via
+      // the 'ValidReference' constraint.
+      '#validate_reference' => FALSE,
+      '#maxlength' => 1024,
       '#match' => $this->getSetting('match'),
       '#default_value' => $default_value,
     ];

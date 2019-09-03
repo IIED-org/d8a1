@@ -16,6 +16,6 @@
   },
   "license": "GPL-2.0+",
   "require": {
-    "drupal/facets": "~1"
+    "drupal/facets": "^1.0.0-beta1"
   }
 }

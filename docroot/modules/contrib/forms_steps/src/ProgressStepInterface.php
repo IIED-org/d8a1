@@ -43,6 +43,7 @@ interface ProgressStepInterface {
    * Set the active routes for this progress step.
    *
    * @param array $routes
+   *   Routes to set for this progress step.
    */
   public function setActiveRoutes(array $routes);
 
@@ -57,7 +58,8 @@ interface ProgressStepInterface {
   /**
    * Set the link for this progress step.
    *
-   * @param string
+   * @param string $link
+   *   Links to set for this progress step.
    */
   public function setLink($link);
 
@@ -72,7 +74,8 @@ interface ProgressStepInterface {
   /**
    * Set the link visibility for this progress step.
    *
-   * @param array
+   * @param array $steps
+   *   Set the steps where the link will be visible.
    */
   public function setLinkVisibility(array $steps);
 

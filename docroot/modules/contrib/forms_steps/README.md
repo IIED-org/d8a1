@@ -25,9 +25,7 @@ modes. It creates quick and configurable multisteps forms.
 REQUIREMENTS
 ------------
 
-This module requires the following outside of Drupal core.
-
- * Form mode manager - https://www.drupal.org/project/form_mode_manager
+PHP 7.0+
 
 
 INSTALLATION
@@ -52,7 +50,8 @@ MAINTAINERS
 
  * Nicolas Loye (nicoloye) - https://www.drupal.org/u/nicoloye
  * Hakim Rachidi (HakimR) - https://www.drupal.org/u/hakimr
- * Christophe Klein (christophe.klein) - https://www.drupal.org/u/christopheklein67
+ * Christophe Klein (christophe.klein) - 
+ https://www.drupal.org/u/christopheklein67
 
 Supporting organization:
 

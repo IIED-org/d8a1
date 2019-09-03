@@ -5,13 +5,54 @@ namespace Drupal\forms_steps\Form;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Path\PathValidatorInterface;
+use Drupal\Core\Routing\RouteProvider;
 use Drupal\Core\Url;
+use Drupal\Component\Utility\UrlHelper;
 use Drupal\forms_steps\Entity\FormsSteps;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a form to edit a Forms Steps.
  */
 class FormsStepsEditForm extends EntityForm {
+
+  /**
+   * PathValidatorInterface.
+   *
+   * @var \Drupal\Core\Path\PathValidatorInterface
+   */
+  protected $pathValidator;
+
+  /**
+   * RouteProvider.
+   *
+   * @var \Drupal\Core\Routing\RouteProvider
+   */
+  protected $routeProvider;
+
+  /**
+   * Class constructor.
+   */
+  public function __construct(
+    PathValidatorInterface $path_validator,
+    RouteProvider $route_provider
+  ) {
+    $this->pathValidator = $path_validator;
+    $this->routeProvider = $route_provider;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    // Instantiates this form class.
+    return new static(
+    // Load the service required to construct this class.
+      $container->get('path.validator'),
+      $container->get('router.route_provider')
+    );
+  }
 
   /**
    * {@inheritdoc}
@@ -44,7 +85,7 @@ class FormsStepsEditForm extends EntityForm {
 
     $header = [
       'step' => $this->t('Step'),
-      'form_id' => $this->t('Node type'),
+      'form_id' => $this->t('Entity bundle'),
       'form_mode' => $this->t('Form mode'),
       'weight' => $this->t('Weight'),
       'operations' => $this->t('Operations'),
@@ -73,12 +114,11 @@ class FormsStepsEditForm extends EntityForm {
 
     // Warn the user if there are no steps.
     if (empty($steps)) {
-      drupal_set_message(
+      $this->messenger()->addWarning(
         $this->t(
-          'This Forms Steps has no steps and will be disabled until there is at least one, <a href=":add-step">add a new node step.</a>',
+          'This Forms Steps has no steps and will be disabled until there is at least one, <a href=":add-step">add a new step.</a>',
           [':add-step' => $forms_steps->toUrl('add-step-form')->toString()]
-        ),
-        'warning'
+        )
       );
     }
 
@@ -95,7 +135,7 @@ class FormsStepsEditForm extends EntityForm {
       ];
       if ($this->entity->access('delete-step:' . $step->id())) {
         $links['delete'] = [
-          'title' => t('Delete'),
+          'title' => $this->t('Delete'),
           'url' => Url::fromRoute('entity.forms_steps.delete_step_form', [
             'forms_steps' => $forms_steps->id(),
             'forms_steps_step' => $step->id(),
@@ -106,12 +146,12 @@ class FormsStepsEditForm extends EntityForm {
       $form['steps_container']['steps'][$step->id()] = [
         '#attributes' => ['class' => ['draggable']],
         'step' => ['#markup' => $step->label()],
-        'form_id' => ['#markup' => $step->NodeType()],
+        'form_id' => ['#markup' => $step->EntityBundle()],
         'form_mode' => ['#markup' => $step->formMode()],
         '#weight' => $step->weight(),
         'weight' => [
           '#type' => 'weight',
-          '#title' => t('Weight for @title', ['@title' => $step->label()]),
+          '#title' => $this->t('Weight for @title', ['@title' => $step->label()]),
           '#title_display' => 'invisible',
           '#default_value' => $step->weight(),
           '#attributes' => ['class' => ['step-weight']],
@@ -123,7 +163,7 @@ class FormsStepsEditForm extends EntityForm {
       ];
     }
     $form['steps_container']['step_add'] = [
-      '#markup' => $forms_steps->toLink($this->t('Add a new node step'), 'add-step-form')
+      '#markup' => $forms_steps->toLink($this->t('Add a new step'), 'add-step-form')
         ->toString(),
     ];
 
@@ -133,7 +173,7 @@ class FormsStepsEditForm extends EntityForm {
       '#description' => $this->t(
         'Define new progress steps here and assign steps to them to generate a progress bar block available for display.<br/>To configure the block display, please go to the <a href=":block-layout-url">block layout section</a>.<br/><br/><em>Note that any link set to be displayed on the first step will not be rendered, as Forms Steps starts to store progression on the first step submission.</em>',
           [':block-layout-url' => Url::fromRoute('block.admin_display')->toString()]
-        ),
+      ),
       '#open' => TRUE,
       '#collapsible' => 'FALSE',
     ];
@@ -165,7 +205,7 @@ class FormsStepsEditForm extends EntityForm {
     if (empty($steps)) {
       $form['progress_container']['no_steps'] = [
         '#markup' => $this->t(
-          'This Forms Steps has no steps, no progress step can be added until there is at least one, <a href=":add-step">add a new node step.</a>',
+          'This Forms Steps has no steps, no progress step can be added until there is at least one, <a href=":add-step">add a new step.</a>',
           [':add-step' => $forms_steps->toUrl('add-step-form')->toString()]
         ),
       ];
@@ -187,7 +227,7 @@ class FormsStepsEditForm extends EntityForm {
         ];
         if ($this->entity->access('delete-progress-step:' . $progress_step->id())) {
           $links['delete'] = [
-            'title' => t('Delete'),
+            'title' => $this->t('Delete'),
             'url' => Url::fromRoute('entity.forms_steps.delete_progress_step_form', [
               'forms_steps' => $forms_steps->id(),
               'forms_steps_progress_step' => $progress_step->id(),
@@ -202,7 +242,7 @@ class FormsStepsEditForm extends EntityForm {
         $active_routes = array_filter($active_routes);
         $active_routes = $forms_steps->getSteps($active_routes);
 
-        foreach($active_routes as $key => $value) {
+        foreach ($active_routes as $value) {
           $routes[] = $value->label();
         }
 
@@ -246,7 +286,7 @@ class FormsStepsEditForm extends EntityForm {
           '#weight' => $progress_step->weight(),
           'weight' => [
             '#type' => 'weight',
-            '#title' => t('Weight for @title', ['@title' => $progress_step->label()]),
+            '#title' => $this->t('Weight for @title', ['@title' => $progress_step->label()]),
             '#title_display' => 'invisible',
             '#default_value' => $progress_step->weight(),
             '#attributes' => ['class' => ['progress-state-weight']],
@@ -263,11 +303,39 @@ class FormsStepsEditForm extends EntityForm {
       ];
     }
 
-
     $form['settings'] = [
       '#type' => 'details',
       '#title' => $this->t('Settings'),
       '#open' => FALSE,
+    ];
+
+    $redirection_options = [
+      '' => $this->t('None'),
+      'internal' => $this->t('Internal path'),
+      'external' => $this->t('External url'),
+      'route' => $this->t('Route'),
+    ];
+
+    $form['settings']['redirection_policy'] = [
+      '#type' => 'select',
+      '#title' => $this->t('Redirection policy'),
+      '#description' => $this->t('Defines how the user should be redirected after the last step submission.<br/><strong>Internal:</strong> An internal path that is accessible to the user.<br/><strong>External:</strong> An absolute URL to an external target.<br/><strong>Route:</strong> A route name. Forms Steps current route parameters will be passed to this route. Advanced user only.'),
+      '#options' => $redirection_options,
+      '#default_value' => $this->entity->getRedirectionPolicy(),
+    ];
+
+    $form['settings']['redirection_target'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Redirection target'),
+      '#description' => $this->t('Defines where the user will be redirected after the last step submission.'),
+      '#default_value' => $this->entity->getRedirectionTarget(),
+      '#states' => [
+        'invisible' => [
+          ':input[name="redirection_policy"]' => [
+            'value' => '',
+          ],
+        ],
+      ],
     ];
 
     $form['settings']['description'] = [
@@ -306,6 +374,8 @@ class FormsStepsEditForm extends EntityForm {
     $entity->set('label', $values['label']);
     $entity->set('id', $values['id']);
     $entity->set('description', $values['description']);
+    $entity->set('redirection_policy', $values['redirection_policy']);
+    $entity->set('redirection_target', $values['redirection_target']);
 
     if (!empty($values['steps'])) {
       foreach ($values['steps'] as $step_id => $step_values) {
@@ -321,7 +391,7 @@ class FormsStepsEditForm extends EntityForm {
     parent::save($form, $form_state);
     $form_state->setRedirectUrl($this->entity->urlInfo('edit-form'));
 
-    drupal_set_message($this->t('Forms Steps %label has been updated.', ['%label' => $this->entity->label()]));
+    $this->messenger()->addMessage($this->t('Forms Steps %label has been updated.', ['%label' => $this->entity->label()]));
   }
 
   /**
@@ -333,8 +403,8 @@ class FormsStepsEditForm extends EntityForm {
    *   Forms States to alter.
    */
   public function cancel(array $form, FormStateInterface $form_state) {
-    drupal_set_message($this->t('Canceled.'));
-    $form_state->setRedirect('forms_steps.collection');
+    $this->messenger()->addMessage($this->t('Canceled.'));
+    $form_state->setRedirect('entity.forms_steps.collection');
   }
 
   /**
@@ -348,6 +418,38 @@ class FormsStepsEditForm extends EntityForm {
    */
   public function getTitle(FormsSteps $forms_steps) {
     return $this->t('Edit Forms Steps "@label"', ['@label' => $forms_steps->label()]);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function validateForm(array &$form, FormStateInterface $form_state) {
+    parent::validateForm($form, $form_state);
+    $values = $form_state->getValues();
+
+    switch ($values['redirection_policy']) {
+      // Check that the specified internal path exists and that the current user
+      // has access to it.
+      case 'internal':
+        if (!$this->pathValidator->isValid($values['redirection_target'])) {
+          $form_state->setErrorByName('redirection_target', $this->t('Invalid internal path for redirection!'));
+        }
+        break;
+
+      // Check that the specified route exists.
+      case 'route':
+        if (count($this->routeProvider->getRoutesByNames([$values['redirection_target']])) === 0) {
+          $form_state->setErrorByName('redirection_target', $this->t('Invalid route specified for redirection!'));
+        }
+        break;
+
+      // Check that the specified external URL exists.
+      case 'external':
+        if (!UrlHelper::isExternal($values['redirection_target']) || !UrlHelper::isValid($values['redirection_target'])) {
+          $form_state->setErrorByName('redirection_target', $this->t('Invalid external URL specified for redirection!'));
+        }
+        break;
+    }
   }
 
 }

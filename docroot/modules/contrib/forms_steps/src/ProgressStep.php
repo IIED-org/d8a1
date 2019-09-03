@@ -12,7 +12,7 @@ class ProgressStep implements ProgressStepInterface {
    *
    * @var \Drupal\forms_steps\FormsStepsInterface
    */
-  protected $forms_steps;
+  protected $formsSteps;
 
   /**
    * The progress step's ID.
@@ -54,7 +54,7 @@ class ProgressStep implements ProgressStepInterface {
    *
    * @var array
    */
-  protected $link_visibility;
+  protected $linkVisibility;
 
   /**
    * Step constructor.
@@ -74,14 +74,14 @@ class ProgressStep implements ProgressStepInterface {
    * @param array $link_visibility
    *   The progress step's link visibility.
    */
-  public function __construct(FormsStepsInterface $forms_steps, $id, $label, $weight = 0, array $routes, $link, array $link_visibility) {
-    $this->forms_steps = $forms_steps;
+  public function __construct(FormsStepsInterface $forms_steps, $id, $label, $weight, array $routes, $link, array $link_visibility) {
+    $this->formsSteps = $forms_steps;
     $this->id = $id;
     $this->label = $label;
     $this->weight = $weight;
     $this->routes = $routes;
     $this->link = $link;
-    $this->link_visibility = $link_visibility;
+    $this->linkVisibility = $link_visibility;
   }
 
   /**
@@ -106,45 +106,45 @@ class ProgressStep implements ProgressStepInterface {
   }
 
   /**
-   * @inheritDoc
+   * {@inheritdoc}
    */
   public function activeRoutes() {
     return $this->routes;
   }
 
   /**
-   * @inheritDoc
+   * {@inheritdoc}
    */
   public function setActiveRoutes(array $routes) {
     return $this->routes = $routes;
   }
 
   /**
-   * @inheritDoc
+   * {@inheritdoc}
    */
   public function link() {
     return $this->link;
   }
 
   /**
-   * @inheritDoc
+   * {@inheritdoc}
    */
   public function setLink($link) {
     return $this->link = $link;
   }
 
   /**
-   * @inheritDoc
+   * {@inheritdoc}
    */
   public function linkVisibility() {
-    return $this->link_visibility;
+    return $this->linkVisibility;
   }
 
   /**
-   * @inheritDoc
+   * {@inheritdoc}
    */
   public function setLinkVisibility(array $steps) {
-    return $this->link_visibility = $steps;
+    return $this->linkVisibility = $steps;
   }
 
 }

@@ -18,8 +18,10 @@ interface FormsStepsInterface extends ConfigEntityInterface {
    *   The step's ID.
    * @param string $label
    *   The step's label.
-   * @param string $nodeType
-   *   The step's node_type.
+   * @param string $entityType
+   *   The step's entity type.
+   * @param string $entityBundle
+   *   The step's bundle.
    * @param string $formMode
    *   The step's form_mode.
    * @param string $url
@@ -28,7 +30,7 @@ interface FormsStepsInterface extends ConfigEntityInterface {
    * @return \Drupal\forms_steps\FormsStepsInterface
    *   The forms_steps entity.
    */
-  public function addStep($step_id, $label, $nodeType, $formMode, $url);
+  public function addStep($step_id, $label, $entityType, $entityBundle, $formMode, $url);
 
   /**
    * Adds a progress step to the forms_steps.
@@ -67,7 +69,8 @@ interface FormsStepsInterface extends ConfigEntityInterface {
    *   The progress step's ID.
    *
    * @return bool
-   *   TRUE if the forms_steps has a progress step with the provided ID, FALSE if not.
+   *   TRUE if the forms_steps has a progress step with the provided ID, FALSE
+   *   if not.
    */
   public function hasProgressStep($progress_step_id);
 
@@ -111,15 +114,39 @@ interface FormsStepsInterface extends ConfigEntityInterface {
    * Gets progress step objects for the provided progress step IDs.
    *
    * @param string[] $progress_step_ids
-   *   A list of progress step IDs to get. If NULL then all progress steps will be returned.
+   *   A list of progress step IDs to get. If NULL then all progress steps will
+   *   be returned.
    *
    * @return \Drupal\forms_steps\ProgressStepInterface[]
    *   An array of forms_steps progress steps.
    *
    * @throws \InvalidArgumentException
-   *   Thrown if $progress_step_ids contains a progress step ID that does not exist.
+   *   Thrown if $progress_step_ids contains a progress step ID that does not
+   *   exist.
    */
   public function getProgressSteps(array $progress_step_ids = NULL);
+
+  /**
+   * Retrieve the last step defined on a forms steps entity.
+   *
+   * @param string $steps
+   *   The forms_steps steps' IDs.
+   *
+   * @return \Drupal\forms_steps\StepInterface
+   *   The forms_steps step.
+   */
+  public function getLastStep($steps = NULL);
+
+  /**
+   * Retrieve the first step defined on a forms steps entity.
+   *
+   * @param string $steps
+   *   The forms_steps steps' IDs.
+   *
+   * @return \Drupal\forms_steps\StepInterface
+   *   The forms_steps step.
+   */
+  public function getFirstStep($steps = NULL);
 
   /**
    * Gets a forms_steps step.
@@ -189,17 +216,30 @@ interface FormsStepsInterface extends ConfigEntityInterface {
   public function setStepWeight($step_id, $weight);
 
   /**
-   * Sets a step's Node type.
+   * Sets a step's Entity bundle.
    *
    * @param string $step_id
-   *   The step ID to set the node_type for.
-   * @param int $nodeType
-   *   The step's node type.
+   *   The step ID to set the entity_bundle for.
+   * @param int $entityBundle
+   *   The step's entity bundle.
    *
    * @return \Drupal\forms_steps\StepInterface
    *   The forms_steps entity.
    */
-  public function setStepNodeType($step_id, $nodeType);
+  public function setStepEntityBundle($step_id, $entityBundle);
+
+  /**
+   * Sets a step's Entity type.
+   *
+   * @param string $step_id
+   *   The step ID to set the entity_bundle for.
+   * @param int $entity_type
+   *   The step's entity type.
+   *
+   * @return \Drupal\forms_steps\StepInterface
+   *   The forms_steps entity.
+   */
+  public function setStepEntityType($step_id, $entity_type);
 
   /**
    * Sets a step's form mode value.
@@ -329,7 +369,7 @@ interface FormsStepsInterface extends ConfigEntityInterface {
    * @return \Drupal\forms_steps\ProgressStepInterface
    *   The forms_steps entity.
    */
-  public function setProgressStepLinkVisibility($progress_step_id, $steps);
+  public function setProgressStepLinkVisibility($progress_step_id, array $steps);
 
   /**
    * Deletes a step from the forms_steps.
@@ -363,10 +403,10 @@ interface FormsStepsInterface extends ConfigEntityInterface {
    * Returns the next step to $step.
    *
    * @param \Drupal\forms_steps\Step $step
-   *    The current Step.
+   *   The current Step.
    *
    * @return \Drupal\forms_steps\Step|null
-   *    Returns the next Step or null if no next step found.
+   *   Returns the next Step or null if no next step found.
    */
   public function getNextStep(Step $step);
 
@@ -374,23 +414,23 @@ interface FormsStepsInterface extends ConfigEntityInterface {
    * Returns the previous step to $step.
    *
    * @param \Drupal\forms_steps\Step $step
-   *    The current Step.
+   *   The current Step.
    *
    * @return \Drupal\forms_steps\Step|null
-   *    Returns the previous Step or first step if no previous step found.
+   *   Returns the previous Step or first step if no previous step found.
    */
   public function getPreviousStep(Step $step);
 
   /**
-   * Set the label of the delete button of the step
+   * Set the label of the delete button of the step.
    *
    * @param int $step_id
-   *    Step id.
+   *   Step id.
    * @param mixed $label
-   *    Label to set.
+   *   Label to set.
    *
    * @return \Drupal\forms_steps\Entity\FormsSteps
-   *    The forms steps.
+   *   The forms steps.
    */
   public function setStepDeleteLabel($step_id, $label);
 
@@ -398,25 +438,25 @@ interface FormsStepsInterface extends ConfigEntityInterface {
    * Set the delete state (hidden or shown) of the step.
    *
    * @param int $step_id
-   *    Step id.
+   *   Step id.
    * @param bool $state
-   *    State to set.
+   *   State to set.
    *
    * @return \Drupal\forms_steps\Entity\FormsSteps
-   *    The forms steps.
+   *   The forms steps.
    */
   public function setStepDeleteState($step_id, $state);
 
   /**
-   * Set the label of the previous button of the step
+   * Set the label of the previous button of the step.
    *
    * @param int $step_id
-   *    Step id.
+   *   Step id.
    * @param mixed $label
-   *    Label to set.
+   *   Label to set.
    *
    * @return \Drupal\forms_steps\Entity\FormsSteps
-   *    The forms steps.
+   *   The forms steps.
    */
   public function setStepPreviousLabel($step_id, $label);
 
@@ -424,12 +464,12 @@ interface FormsStepsInterface extends ConfigEntityInterface {
    * Set the previous state (hidden or displayed) of the step.
    *
    * @param int $step_id
-   *    Step id.
+   *   Step id.
    * @param bool $state
-   *    State to set.
+   *   State to set.
    *
    * @return \Drupal\forms_steps\Entity\FormsSteps
-   *    The forms steps.
+   *   The forms steps.
    */
   public function setStepPreviousState($step_id, $state);
 

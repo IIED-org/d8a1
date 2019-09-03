@@ -2,6 +2,8 @@
 
 namespace Drupal\forms_steps\Service;
 
+use Drupal\Core\Routing\CurrentRouteMatch;
+
 /**
  * Class FormsStepsHelper.
  *
@@ -9,33 +11,51 @@ namespace Drupal\forms_steps\Service;
  */
 class FormsStepsHelper {
 
-  /** @var \Drupal\Core\Entity\EntityManager $entityManager */
+  /**
+   * FormsStepsManager.
+   *
+   * @var \Drupal\forms_steps\Service\FormsStepsManager
+   */
   protected $formsStepsManager;
 
   /**
-   * FormsStepsManager constructor.
+   * CurrentRouteMatch.
    *
-   * @param \Drupal\Core\Entity\EntityManager $entity_manager
+   * @var \Drupal\Core\Routing\CurrentRouteMatch
    */
-  public function __construct(FormsStepsManager $formsStepsManager) {
-    $this->formsStepsManager = $formsStepsManager;
+  private $currentRouteMatch;
+
+  /**
+   * FormsStepsHelper constructor.
+   *
+   * @param \Drupal\forms_steps\Service\FormsStepsManager $forms_steps_manager
+   *   Injected FormsStepsManager instance.
+   * @param \Drupal\Core\Routing\CurrentRouteMatch $current_route_match
+   *   Injected current route match instance.
+   */
+  public function __construct(
+    FormsStepsManager $forms_steps_manager,
+    CurrentRouteMatch $current_route_match
+  ) {
+    $this->formsStepsManager = $forms_steps_manager;
+    $this->currentRouteMatch = $current_route_match;
   }
 
   /**
-   * Get the workflow uuid from the current route if it is a forms steps route.
+   * Get the workflow instance ID if in a current forms steps route.
    *
-   * @return bool|string
+   * @return false|string
+   *   Return the Instance ID or FALSE otherwise.
    */
-  public function getWorkflowUuidFromRoute() {
-    $route_match = \Drupal::routeMatch();
+  public function getWorkflowInstanceIdFromRoute() {
+    $step = $this->formsStepsManager->getStepByRoute($this->currentRouteMatch->getRouteName());
 
-    $step = $this->formsStepsManager->getStepByRoute($route_match->getRouteName());
-
-    // Only return the workflow uuid if the current route is a forms steps route.
+    // Only return the workflow instance id if the current route is a forms
+    // steps route.
     if ($step) {
-      $uuid = $route_match->getParameter('uuid');
+      $instanceId = $this->currentRouteMatch->getParameter('instance_id');
 
-      return $uuid;
+      return $instanceId;
     }
 
     return FALSE;

@@ -5,6 +5,7 @@
  * Allows administrators to attach custom fields to fieldable types.
  */
 
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\ds\Ds;
 use Drupal\Core\Entity\ContentEntityFormInterface;
 use Drupal\Core\Entity\Display\EntityDisplayInterface;
@@ -15,6 +16,21 @@ use Drupal\Core\Form\ConfirmFormInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\field_group\Element\VerticalTabs;
+
+/**
+ * Implements hook_help().
+ */
+function field_group_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.field_group':
+      $output = '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Fieldgroup will, as the name implies, group fields together. All fieldable entities will have the possibility to add groups to wrap their fields together. Fieldgroup comes with default HTML wrappers like vertical tabs, horizontal tabs, accordions, fieldsets or div wrappers.') . '</p>';
+      $output .= '<p>' . t('The field group project is a follow-up on the field group module in <a href="@linkcck">CCK</a>. The release will only exist for Drupal 7 release and higher, so since the existence of the Fields API in core.</br>By moving field group to a separate module, this may open some new perspectives.', ['@linkcck' => 'http://drupal.org/project/cck']) . '</p>';
+      $output .= '<h3>' . t('More Information') . '</h3>';
+      $output .= '<p>' . t('For more information about this module please visit the <a href="@link">module page</a>.', ['@link' => 'https://www.drupal.org/project/field_group']) . '</p>';
+      return $output;
+  }
+}
 
 /**
  * Implements hook_theme_registry_alter().
@@ -82,9 +98,9 @@ function field_group_theme_suggestions_alter(array &$suggestions, array $variabl
     case 'field_group_html_element':
       $element = $variables['element'];
 
-      $name = $element['#group_name'];
-      $entity_type = $element['#entity_type'];
-      $bundle = $element['#bundle'];
+      $name = !empty($element['#group_name']) ? $element['#group_name'] : NULL;
+      $entity_type = !empty($element['#entity_type']) ? $element['#entity_type'] : NULL;
+      $bundle = !empty($element['#bundle']) ? $element['#bundle'] : NULL;
 
       $wrapper = '';
       if (isset($element['#wrapper_element'])) {
@@ -92,21 +108,33 @@ function field_group_theme_suggestions_alter(array &$suggestions, array $variabl
         $suggestions[] = $hook . '__' . $wrapper;
       }
 
-      $suggestions[] = $hook . '__' . $entity_type;
-      $suggestions[] = $hook . '__' . $bundle;
-      $suggestions[] = $hook . '__' . $name;
+      if (!empty($entity_type)) {
+        $suggestions[] = $hook . '__' . $entity_type;
+      }
+      if (!empty($bundle)) {
+        $suggestions[] = $hook . '__' . $bundle;
+      }
+      if (!empty($name)) {
+        $suggestions[] = $hook . '__' . $name;
+      }
 
-      if ($wrapper) {
+      if ($wrapper && !empty($entity_type)) {
         $suggestions[] = $hook . '__' . $entity_type . '__' . $wrapper;
       }
 
-      $suggestions[] = $hook . '__' . $entity_type . '__' . $bundle;
-      $suggestions[] = $hook . '__' . $entity_type . '__' . $name;
+      if (!empty($entity_type) && !empty($bundle)) {
+        $suggestions[] = $hook . '__' . $entity_type . '__' . $bundle;
+      }
+      if (!empty($entity_type) && !empty($name)) {
+        $suggestions[] = $hook . '__' . $entity_type . '__' . $name;
+      }
 
-      if ($wrapper) {
+      if ($wrapper && !empty($entity_type) && !empty($bundle)) {
         $suggestions[] = $hook . '__' . $entity_type . '__' . $bundle . '__' . $wrapper;
       }
-      $suggestions[] = $hook . '__' . $entity_type . '__' . $bundle . '__' . $name;
+      if (!empty($entity_type) && !empty($bundle) && !empty($name)) {
+        $suggestions[] = $hook . '__' . $entity_type . '__' . $bundle . '__' . $name;
+      }
       break;
   }
 
@@ -265,10 +293,14 @@ function field_group_form_pre_render(array $element) {
  *
  * @param array $element
  *   Form that is being processed.
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
+ *   The current state of the form.
+ * @param array $form
+ *   The complete form structure.
  *
  * @return array
  */
-function field_group_form_process(array &$element) {
+function field_group_form_process(array &$element, FormStateInterface $form_state = NULL, array &$form = []) {
   if (empty($element['#field_group_form_process'])) {
     $element['#field_group_form_process'] = TRUE;
     if (empty($element['#fieldgroups'])) {
@@ -315,7 +347,7 @@ function field_group_form_process(array &$element) {
     }
 
     // Allow others to alter the complete processed build.
-    Drupal::moduleHandler()->alter('field_group_form_process_build', $element);
+    Drupal::moduleHandler()->alter('field_group_form_process_build', $element, $form_state, $form);
   }
 
   return $element;
@@ -385,7 +417,10 @@ function field_group_field_group_pre_render(&$element, &$group, &$rendering_obje
   $manager = Drupal::service('plugin.manager.field_group.formatters');
   $plugin = $manager->getInstance([
     'format_type' => $group->format_type,
-    'configuration' => ['label' => $group->label, 'settings' => $group->format_settings],
+    'configuration' => [
+      'label' => $group->label,
+      'settings' => $group->format_settings,
+    ],
     'group' => $group,
   ]);
   if ($plugin) {
@@ -396,10 +431,14 @@ function field_group_field_group_pre_render(&$element, &$group, &$rendering_obje
 /**
  * Implements hook_field_group_form_process_build_alter().
  *
- * @param array $elements
- *   By address.
+ * @param array $element
+ *   Element being processed.
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
+ *   The current state of the form.
+ * @param array $form
+ *   The complete form structure.
  */
-function field_group_field_group_form_process_build_alter(array &$element) {
+function field_group_field_group_form_process_build_alter(array &$element, $form_state = NULL, &$form = []) {
   $groups = array_keys($element['#fieldgroups']);
   field_group_remove_empty_form_groups($element, $groups, $element['#entity_type']);
 }
@@ -408,7 +447,7 @@ function field_group_field_group_form_process_build_alter(array &$element) {
  * Implements hook_field_group_build_pre_render_alter().
  *
  * @param array $elements
- *   By address.
+ *   By address.field_group_entity_display_build_alter
  */
 function field_group_field_group_build_pre_render_alter(& $element) {
   // Someone is doing a node view, in a node view. Reset content.
@@ -438,6 +477,10 @@ function field_group_field_group_build_pre_render_alter(& $element) {
  *   The contextual information.
  */
 function field_group_attach_groups(&$element, $context) {
+
+  if ($context['mode'] == '_custom') {
+    return;
+  }
 
   $entity_type = $context['entity_type'];
   $bundle = $context['bundle'];
@@ -549,7 +592,9 @@ function field_group_fields_nest(&$element, &$vars = NULL, $context = NULL) {
   $group_references = [];
   foreach ($element['#fieldgroups'] as $group_name => $group) {
     // Construct own weight, as some fields (for example preprocess fields) don't have weight set.
-    $element[$group_name] = [];
+    if (!isset($element[$group_name])) {
+      $element[$group_name] = [];
+    }
     $group_references[$group_name] = &$element[$group_name];
   }
 
@@ -576,6 +621,12 @@ function field_group_fields_nest(&$element, &$vars = NULL, $context = NULL) {
       // If not a group, check the content variable for empty field.
       $key = field_group_get_content_element_key($context);
       if (!isset($element['#fieldgroups'][$child_name]) && isset($vars[$key][$child_name])) {
+
+        // ECK marks his defaut properties as printed, while it is not printed yet.
+        if ($context === 'eck_entity' && !empty($vars[$key][$child_name]['#printed'])) {
+          $vars[$key][$child_name]['#printed'] = FALSE;
+        }
+
         $group_references[$parent_name][$child_name] = $vars[$key][$child_name];
         unset($vars[$key][$child_name]);
       }
@@ -631,7 +682,9 @@ function field_group_field_layout_fields_nest(array &$element, &$vars = NULL, $c
   foreach ($element['#fieldgroups'] as $group_name => $group) {
     // Construct own weight, as some fields (for example preprocess fields)
     // don't have weight set.
-    $element[$group_name] = [];
+    if (!isset($element[$group_name])) {
+      $element[$group_name] = [];
+    }
     $group_references[$group_name] = &$element[$group_name];
   }
 
@@ -660,6 +713,12 @@ function field_group_field_layout_fields_nest(array &$element, &$vars = NULL, $c
     // If not a group, check the content variable for empty field.
     $key = field_group_get_content_element_key($context);
     if (!isset($element['#fieldgroups'][$child_name]) && isset($vars[$key]['_field_layout'][$region][$child_name])) {
+
+      // ECK marks his defaut properties as printed, while it is not printed yet.
+      if ($context === 'eck_entity' && !empty($vars[$key]['_field_layout'][$region][$child_name]['#printed'])) {
+        $vars[$key]['_field_layout'][$region][$child_name]['#printed'] = FALSE;
+      }
+
       $group_references[$group_name][$child_name] = $vars[$key]['_field_layout'][$region][$child_name];
       unset($vars[$key]['_field_layout'][$region][$child_name]);
     }
@@ -783,6 +842,9 @@ function field_group_group_save($group, $display = NULL) {
   }
 
   if (isset($display)) {
+    // Remove label from the format_settings.
+    unset($group->format_settings['label']);
+
     $data = (array) $group;
     unset($data['group_name'], $data['entity_type'], $data['bundle'], $data['mode'], $data['form'], $data['context']);
     $display->setThirdPartySetting('field_group', $group->group_name, $data);
@@ -921,7 +983,7 @@ function field_group_remove_empty_form_groups(&$element, $groups, $entity_type) 
 
       // If the element is not empty, and it has a group. Mark the group as not
       // empty.
-      if (!$empty_element && isset($element[$childname]['#group'])) {
+      if (!$empty_element && isset($element[$childname]['#group']) && (!isset($element[$childname]['#access']) || $element[$childname]['#access'])) {
         $name_prefix = implode('][', $element['#array_parents']) . '][';
         $group_name = str_replace($name_prefix, '', $element[$childname]['#group']);
         $empty_groups_indication[$group_name] = FALSE;

@@ -49,7 +49,7 @@ class FormsStepsListBuilder extends ConfigEntityListBuilder {
 
     // View action is only displayed when the forms steps has at least one step.
     if ($first_step) {
-      $uri = $first_step->Url();
+      $uri = $first_step->url();
 
       $operations['display'] = [
         'title' => $this->t('View'),

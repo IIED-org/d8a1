@@ -133,6 +133,13 @@ class super_loginSettingsForm extends ConfigFormBase {
       '#default_value' => $config->get('super_login.button_theme'),
     ];
 
+    $form['options']['autofocus'] = [
+      '#type'  => 'checkbox',
+      '#title' => $this->t('Enable autofocus for username field'),
+      '#default_value' => $config->get('super_login.autofocus'),
+      '#description' => t('Enable this option for browsers to automatically set the focus in username field.'),
+    ];
+
     $form['options']['placeholder'] = [
       '#type'  => 'checkbox',
       '#title' => $this->t('Enable "placeholder" text within fields.'),
@@ -186,6 +193,8 @@ class super_loginSettingsForm extends ConfigFormBase {
     $config->set('super_login.login_type', $form_state->getValue('login_type'));
     $config->set('super_login.login_placeholder', $form_state->getValue('login_placeholder'));
     $config->set('super_login.pass_placeholder', $form_state->getValue('pass_placeholder'));
+    $config->set('super_login.autofocus', $form_state->getValue('autofocus'));
+
     $config->save();
 
     parent::submitForm($form, $form_state);

@@ -10,5 +10,6 @@ super_login:
   css: TRUE
   button_theme: TRUE  
   placeholder: TRUE
+  autofocus: FALSE
   login_type: 0
   capslock_msg: TRUE

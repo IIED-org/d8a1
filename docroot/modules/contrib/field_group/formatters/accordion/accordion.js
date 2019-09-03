@@ -32,11 +32,6 @@
             else {
               ui.options.animated = 'slide';
             }
-          },
-          activate: function(event, ui) {
-            	if (ui.newHeader.offset()) {
-            	   $('body,html').animate({ scrollTop: ui.newHeader.offset().top - 80 });
-            	}
           }
         });
 
@@ -54,7 +49,7 @@
             if ($('.error', $this).length) {
               // Save first error item, for focussing it.
               if (!$firstErrorItem) {
-                $firstErrorItem = $this.parent().accordion('activate', i);
+                $firstErrorItem = $this.parent().accordion('option', 'active', i);
               }
               $('h3.ui-accordion-header').eq(i).addClass('error');
             }

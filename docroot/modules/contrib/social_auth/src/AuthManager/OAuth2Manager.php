@@ -3,6 +3,7 @@
 namespace Drupal\social_auth\AuthManager;
 
 use Drupal\Core\Config\Config;
+use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\social_api\AuthManager\OAuth2Manager as BaseOAuth2Manager;
 
 /**
@@ -34,32 +35,42 @@ abstract class OAuth2Manager extends BaseOAuth2Manager implements OAuth2ManagerI
   protected $endPoints;
 
   /**
+   * The logger factory.
+   *
+   * @var \Drupal\Core\Logger\LoggerChannelFactory
+   */
+  protected $loggerFactory;
+
+  /**
    * Constructor.
    *
    * @param \Drupal\Core\Config\Config $settings
    *   The implementer settings.
+   * @param \Drupal\Core\Logger\LoggerChannelFactoryInterface $logger_factory
+   *   The logger factory.
    */
-  public function __construct(Config $settings) {
+  public function __construct(Config $settings, LoggerChannelFactoryInterface $logger_factory) {
     $this->settings = $settings;
+    $this->loggerFactory = $logger_factory;
     $this->endPoints = $this->scopes = FALSE;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getExtraDetails() {
+  public function getExtraDetails($method = 'GET', $domain = NULL) {
     $endpoints = $this->getEndPoints();
 
-    // Store the data mapped with endpoints define in settings.
+    // Stores the data mapped with endpoints define in settings.
     $data = [];
 
     if ($endpoints) {
-      // Iterate through api calls define in settings and retrieve them.
+      // Iterates through endpoints define in settings and retrieves them.
       foreach (explode(PHP_EOL, $endpoints) as $endpoint) {
         // Endpoint is set as path/to/endpoint|name.
         $parts = explode('|', $endpoint);
-        $call[$parts[1]] = $this->requestEndPoint($parts[0]);
-        array_push($data, $call);
+
+        $data[$parts[1]] = $this->requestEndPoint($method, $parts[0], $domain);
       }
 
       return json_encode($data);
@@ -75,6 +86,7 @@ abstract class OAuth2Manager extends BaseOAuth2Manager implements OAuth2ManagerI
     if ($this->scopes === FALSE) {
       $this->scopes = $this->settings->get('scopes');
     }
+
     return $this->scopes;
   }
 
@@ -85,6 +97,7 @@ abstract class OAuth2Manager extends BaseOAuth2Manager implements OAuth2ManagerI
     if ($this->endPoints === FALSE) {
       $this->endPoints = $this->settings->get('endpoints');
     }
+
     return $this->endPoints;
   }
 

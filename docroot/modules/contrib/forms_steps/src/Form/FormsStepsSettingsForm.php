@@ -15,7 +15,7 @@ class FormsStepsSettingsForm extends ConfigFormBase {
   protected $config = 'forms_steps.settings';
 
   /**
-   * {@inheritDoc}
+   * {@inheritdoc}
    */
   protected function getEditableConfigNames() {
     return [
@@ -24,14 +24,14 @@ class FormsStepsSettingsForm extends ConfigFormBase {
   }
 
   /**
-   * {@inheritDoc}
+   * {@inheritdoc}
    */
   public function getFormId() {
     return 'forms_steps_settings_form';
   }
 
   /**
-   * {@inheritDoc}
+   * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $config = $this->config($this->config);
@@ -47,7 +47,7 @@ class FormsStepsSettingsForm extends ConfigFormBase {
   }
 
   /**
-   * {@inheritDoc}
+   * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     parent::submitForm($form, $form_state);

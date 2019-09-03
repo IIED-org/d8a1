@@ -6,15 +6,14 @@ use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\forms_steps\Traits\FormsStepsTestTrait;
 
 /**
- * Class FormsStepsNavigationTest
+ * Class FormsStepsNavigationTest.
  *
  * @package Drupal\Tests\forms_steps\Unit
  * @coversClass \Drupal\forms_steps\Service\FormsStepsManager
  * @requires module forms_steps
  * @group forms_steps
  */
-class FormsStepsNavigationTest extends BrowserTestBase
-{
+class FormsStepsNavigationTest extends BrowserTestBase {
 
   use FormsStepsTestTrait;
 
@@ -31,16 +30,20 @@ class FormsStepsNavigationTest extends BrowserTestBase
     'forms_steps',
   ];
 
-  protected function setUp()
-  {
+  /**
+   * Setup the env for current test using trait methods.
+   */
+  protected function setUp() {
     parent::setUp();
 
     $this->formsStepsSetup();
     $this->formsModesCreation();
   }
 
-  public function testNavigation()
-  {
+  /**
+   * Test the navigation in steps.
+   */
+  public function testNavigation() {
     // TODO: seems that we have a bug in core, new form class not correctly
     // defined coz of cache.
     drupal_flush_all_caches();

@@ -2,15 +2,17 @@
 
 namespace Drupal\forms_steps\Plugin\Block;
 
+use Drupal\Core\Routing\CurrentRouteMatch;
 use Drupal\Core\Url;
 use Drupal\Core\Link;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Block\BlockBase;
-use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\forms_steps\Service\FormsStepsHelper;
+use Drupal\forms_steps\Service\FormsStepsManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -23,19 +25,52 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * )
  */
 class FormsStepsProgressBarBlock extends BlockBase implements ContainerFactoryPluginInterface {
+
+  /**
+   * Derivative Id.
+   *
+   * @var string|null
+   */
   private $derivativeId;
 
   /**
-   * Creates a forms steps block instance.
+   * CurrentRouteMatch.
    *
-   * @param array $configuration
-   * @param string $plugin_id
-   * @param array $plugin_definition
-   * @param EntityManagerInterface $entity_manager
+   * @var \Drupal\Core\Routing\CurrentRouteMatch
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityManagerInterface $entity_manager) {
+  private $currentRouteMatch;
+
+  /**
+   * FormsStepsManager.
+   *
+   * @var \Drupal\forms_steps\Service\FormsStepsManager
+   */
+  private $formsStepsManager;
+
+  /**
+   * FormsStepsHelper.
+   *
+   * @var \Drupal\forms_steps\Service\FormsStepsHelper
+   */
+  private $formsStepsHelper;
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __construct(
+    array $configuration,
+    $plugin_id,
+    $plugin_definition,
+    CurrentRouteMatch $current_route_match,
+    FormsStepsManager $forms_steps_manager,
+    FormsStepsHelper $forms_steps_helper
+  ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
+
     $this->derivativeId = $this->getDerivativeId();
+    $this->currentRouteMatch = $current_route_match;
+    $this->formsStepsManager = $forms_steps_manager;
+    $this->formsStepsHelper = $forms_steps_helper;
   }
 
   /**
@@ -46,7 +81,9 @@ class FormsStepsProgressBarBlock extends BlockBase implements ContainerFactoryPl
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('entity.manager')
+      $container->get('current_route_match'),
+      $container->get('forms_steps.manager'),
+      $container->get('forms_steps.helper')
     );
   }
 
@@ -54,13 +91,10 @@ class FormsStepsProgressBarBlock extends BlockBase implements ContainerFactoryPl
    * {@inheritdoc}
    */
   public function build() {
-    $route = \Drupal::routeMatch()->getRouteName();
-
-    /** @var \Drupal\forms_steps\Service\FormsStepsManager $formsStepsManager */
-    $formsStepsManager = \Drupal::service('forms_steps.manager');
+    $route = $this->currentRouteMatch->getRouteName();
 
     /** @var \Drupal\forms_steps\Step $step */
-    $step = $formsStepsManager->getStepByRoute($route);
+    $step = $this->formsStepsManager->getStepByRoute($route);
 
     // The block is rendered only if the current route is a forms steps route.
     if ($step) {
@@ -79,18 +113,19 @@ class FormsStepsProgressBarBlock extends BlockBase implements ContainerFactoryPl
           // the existence of a link and its visibility configuration.
           $link_visibility = array_filter($progress_step->linkVisibility());
 
-          // Retrieve current workflow uuid to add it to the link.
-          $uuid = \Drupal::service('forms_steps.helper')->getWorkflowUuidFromRoute();
+          // Retrieve current workflow instance_id to add it to the link.
+          $instanceId = $this->formsStepsHelper->getWorkflowInstanceIdFromRoute();
 
           // Display a simple label or the link.
-          // @todo: Manage the specific case of "No workflow uuid" for the first step to avoid having no links at all on this step.
-          if (empty($progress_step->link()) || !in_array($step->id(), $link_visibility) || empty($uuid)) {
+          // @todo: Manage the specific case of "No workflow instance id" for the first step to avoid having no links at all on this step.
+          if (empty($progress_step->link()) || !in_array($step->id(), $link_visibility) || empty($instanceId)) {
             $item['#markup'] = $this->t($progress_step->label());
-          } else {
+          }
+          else {
             $link_step = $forms_steps->getStep($progress_step->link());
             $options = [];
-            if ($uuid) {
-              $options['uuid'] = $uuid;
+            if ($instanceId) {
+              $options['instance_id'] = $instanceId;
             }
             $url = Url::fromRoute($forms_steps->getStepRoute($link_step), $options);
             $link = Link::fromTextAndUrl($this->t($progress_step->label()), $url);
@@ -150,8 +185,6 @@ class FormsStepsProgressBarBlock extends BlockBase implements ContainerFactoryPl
    * {@inheritdoc}
    */
   public function blockForm($form, FormStateInterface $form_state) {
-    $config = $this->getConfiguration();
-
     return $form;
   }
 
@@ -166,24 +199,26 @@ class FormsStepsProgressBarBlock extends BlockBase implements ContainerFactoryPl
    * {@inheritdoc}
    */
   public function getCacheTags() {
-    $route = \Drupal::routeMatch()->getRouteName();
-
-    /** @var \Drupal\forms_steps\Service\FormsStepsManager $formsStepsManager */
-    $formsStepsManager = \Drupal::service('forms_steps.manager');
+    $route = $this->currentRouteMatch->getRouteName();
 
     /** @var \Drupal\forms_steps\Step $step */
-    $step = $formsStepsManager->getStepByRoute($route);
+    $step = $this->formsStepsManager->getStepByRoute($route);
 
     // Rebuild cache if the step is a new one.
     if ($step) {
-      return Cache::mergeTags(parent::getCacheTags(), array('forms_steps_step:' . $step->id()));
-    } else {
+      return Cache::mergeTags(parent::getCacheTags(), ['forms_steps_step:' . $step->id()]);
+    }
+    else {
       return parent::getCacheTags();
     }
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function getCacheContexts() {
     // Set cache context as we depend on routes.
-    return Cache::mergeContexts(parent::getCacheContexts(), array('route'));
+    return Cache::mergeContexts(parent::getCacheContexts(), ['route']);
   }
+
 }

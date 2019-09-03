@@ -9,6 +9,8 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\Schema\SchemaCheckTrait;
 use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use FileEye\MimeMap\Type as MimeType;
+use FileEye\MimeMap\MappingException as MimeTypeMappingException;
 
 /**
  * Provides the ImageMagick format mapper.
@@ -29,6 +31,12 @@ class ImagemagickFormatMapper implements ImagemagickFormatMapperInterface {
    * The MIME type guessing service.
    *
    * @var \Drupal\imagemagick\MimeTypeMapper
+   *
+   * @deprecated in ImageMagick 8.x-2.4, will be removed in 8.x-3.0.
+   *   You should use the FileEye\MimeMap\Type and FileEye\MimeMap\Extension
+   *   API instead.
+   *
+   * @see https://www.drupal.org/project/imagemagick/issues/3026733
    */
   protected $mimeTypeMapper;
 
@@ -52,7 +60,7 @@ class ImagemagickFormatMapper implements ImagemagickFormatMapperInterface {
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache_service
    *   The cache service.
    * @param \Drupal\imagemagick\ImagemagickMimeTypeMapper $mime_type_mapper
-   *   The MIME type mapping service.
+   *   [DEPRECATED] The MIME type mapping service.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory.
    * @param \Drupal\Core\Config\TypedConfigManagerInterface $typed_config
@@ -102,9 +110,14 @@ class ImagemagickFormatMapper implements ImagemagickFormatMapperInterface {
         // Formats must have a MIME type mapped.
         $errors[$key]['format'][] = $this->t("Missing mime_type variable.")->render();
       }
-      elseif (!in_array($value['mime_type'], $this->mimeTypeMapper->getMimeTypes())) {
+      else {
         // MIME type must exist.
-        $errors[$key]['variables']['mime_type'][] = $this->t("MIME type (@mime_type) not found.", ['@mime_type' => $value['mime_type']])->render();
+        try {
+          (new MimeType($value['mime_type']))->getExtensions();
+        }
+        catch (MimeTypeMappingException $e) {
+          $errors[$key]['variables']['mime_type'][] = $e->getMessage();
+        }
       }
     }
 
@@ -173,8 +186,14 @@ class ImagemagickFormatMapper implements ImagemagickFormatMapperInterface {
       $enabled_image_formats = [];
       foreach ($image_formats as $format => $data) {
         if (!isset($data['enabled']) || (isset($data['enabled']) && $data['enabled'])) {
-          if (isset($data['mime_type']) && in_array($data['mime_type'], $this->mimeTypeMapper->getMimeTypes())) {
-            $enabled_image_formats[$format] = $data['mime_type'];
+          if (isset($data['mime_type'])) {
+            try {
+              (new MimeType($data['mime_type']))->getExtensions();
+              $enabled_image_formats[$format] = $data['mime_type'];
+            }
+            catch (MimeTypeMappingException $e) {
+              // Just continue.
+            }
           }
         }
       }
@@ -221,7 +240,7 @@ class ImagemagickFormatMapper implements ImagemagickFormatMapperInterface {
       $extensions = [];
       $excluded_extensions = [];
       foreach ($enabled_image_formats as $format) {
-        $format_extensions = $this->mimeTypeMapper->getExtensionsForMimeType($image_formats[$format]['mime_type']);
+        $format_extensions = (new MimeType($image_formats[$format]['mime_type']))->getExtensions();
         $weight_checked_extensions = [];
         foreach ($format_extensions as $ext) {
           if (!isset($extensions[$ext])) {
