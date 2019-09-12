@@ -126,6 +126,7 @@ class ComposerStaticInitd4b25c3c42fe54840614cd40d27e53a2
         'D' => 
         array (
             'Drush\\' => 6,
+            'Drupal\\facets_pretty_paths\\' => 27,
             'Drupal\\Driver\\' => 14,
             'Drupal\\Core\\' => 12,
             'Drupal\\Component\\' => 17,
@@ -358,6 +359,10 @@ class ComposerStaticInitd4b25c3c42fe54840614cd40d27e53a2
         'Drush\\' => 
         array (
             0 => __DIR__ . '/..' . '/drush/drush/src',
+        ),
+        'Drupal\\facets_pretty_paths\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/docroot/modules/contrib/facets_pretty_paths/src',
         ),
         'Drupal\\Driver\\' => 
         array (
