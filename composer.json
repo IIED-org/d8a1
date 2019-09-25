@@ -102,7 +102,8 @@
     "mledoze/countries": "^2.1",
     "drupal/leaflet": "^1.19",
     "drupal/geolocation": "^3.0",
-    "drupal/views_field_view": "^1.0@beta"
+    "drupal/views_field_view": "^1.0@beta",
+    "drupal/views_entity_form_field": "^1.0@beta"
   },
   "require-dev": {
     "drupal/devel": "^1.0",
