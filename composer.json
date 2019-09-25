@@ -103,7 +103,8 @@
     "drupal/leaflet": "^1.19",
     "drupal/geolocation": "^3.0",
     "drupal/views_field_view": "^1.0@beta",
-    "drupal/views_entity_form_field": "^1.0@beta"
+    "drupal/views_entity_form_field": "^1.0@beta",
+    "drupal/asset_injector": "^2.4"
   },
   "require-dev": {
     "drupal/devel": "^1.0",

@@ -1807,6 +1807,60 @@
         }
     },
     {
+        "name": "drupal/asset_injector",
+        "version": "2.4.0",
+        "version_normalized": "2.4.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://git.drupalcode.org/project/asset_injector.git",
+            "reference": "8.x-2.4"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://ftp.drupal.org/files/projects/asset_injector-8.x-2.4.zip",
+            "reference": "8.x-2.4",
+            "shasum": "c377e8aa7ff9a0fcb180586173540450f22c93bc"
+        },
+        "require": {
+            "drupal/core": "~8.0"
+        },
+        "type": "drupal-module",
+        "extra": {
+            "branch-alias": {
+                "dev-2.x": "2.x-dev"
+            },
+            "drupal": {
+                "version": "8.x-2.4",
+                "datestamp": "1540573084",
+                "security-coverage": {
+                    "status": "covered",
+                    "message": "Covered by Drupal's security advisory policy"
+                }
+            }
+        },
+        "installation-source": "dist",
+        "notification-url": "https://packages.drupal.org/8/downloads",
+        "license": [
+            "GPL-2.0+"
+        ],
+        "authors": [
+            {
+                "name": "Mike Decker",
+                "homepage": "https://www.drupal.org/u/pookmish"
+            },
+            {
+                "name": "Axel Rutz",
+                "homepage": "https://www.drupal.org/u/axelrutz"
+            }
+        ],
+        "description": "Adds CSS or JS to the page output based on configurable rules.",
+        "homepage": "http://drupal.org/project/asset_injector",
+        "support": {
+            "source": "https://git.drupalcode.org/project/asset_injector",
+            "issues": "https://www.drupal.org/project/issues/asset_injector"
+        }
+    },
+    {
         "name": "drupal/back_to_top",
         "version": "1.0.0",
         "version_normalized": "1.0.0.0",
@@ -3106,90 +3160,6 @@
         "support": {
             "source": "http://cgit.drupalcode.org/ctools",
             "issues": "https://www.drupal.org/project/issues/ctools"
-        }
-    },
-    {
-        "name": "drupal/devel",
-        "version": "1.2.0",
-        "version_normalized": "1.2.0.0",
-        "source": {
-            "type": "git",
-            "url": "https://git.drupalcode.org/project/devel.git",
-            "reference": "8.x-1.2"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://ftp.drupal.org/files/projects/devel-8.x-1.2.zip",
-            "reference": "8.x-1.2",
-            "shasum": "01f3349ef75f6e21fceef24be9d3d6506ca29647"
-        },
-        "require": {
-            "drupal/core": "~8.0"
-        },
-        "suggest": {
-            "symfony/var-dumper": "Pretty print complex values better with var-dumper available"
-        },
-        "type": "drupal-module",
-        "extra": {
-            "branch-alias": {
-                "dev-1.x": "1.x-dev"
-            },
-            "drupal": {
-                "version": "8.x-1.2",
-                "datestamp": "1507197844",
-                "security-coverage": {
-                    "status": "covered",
-                    "message": "Covered by Drupal's security advisory policy"
-                }
-            }
-        },
-        "installation-source": "dist",
-        "notification-url": "https://packages.drupal.org/8/downloads",
-        "license": [
-            "GPL-2.0+"
-        ],
-        "authors": [
-            {
-                "name": "Moshe Weitzman",
-                "homepage": "https://github.com/weitzman",
-                "email": "weitzman@tejasa.com",
-                "role": "Maintainer"
-            },
-            {
-                "name": "Hans Salvisberg",
-                "homepage": "https://www.drupal.org/u/salvis",
-                "email": "drupal@salvisberg.com",
-                "role": "Maintainer"
-            },
-            {
-                "name": "Luca Lusso",
-                "homepage": "https://www.drupal.org/u/lussoluca",
-                "role": "Maintainer"
-            },
-            {
-                "name": "Marco (willzyx)",
-                "homepage": "https://www.drupal.org/u/willzyx",
-                "role": "Maintainer"
-            },
-            {
-                "name": "See contributors",
-                "homepage": "https://www.drupal.org/node/3236/committers"
-            },
-            {
-                "name": "salvis",
-                "homepage": "https://www.drupal.org/user/82964"
-            },
-            {
-                "name": "willzyx",
-                "homepage": "https://www.drupal.org/user/1043862"
-            }
-        ],
-        "description": "Various blocks, pages, and functions for developers.",
-        "homepage": "http://drupal.org/project/devel",
-        "support": {
-            "source": "http://cgit.drupalcode.org/devel",
-            "issues": "http://drupal.org/project/devel",
-            "irc": "irc://irc.freenode.org/drupal-contribute"
         }
     },
     {
@@ -6726,83 +6696,6 @@
         "support": {
             "source": "http://cgit.drupalcode.org/sandbox-utkarsh-dixit-2841076",
             "issues": "https://www.drupal.org/project/issues/2841076"
-        }
-    },
-    {
-        "name": "drupal/stage_file_proxy",
-        "version": "1.0.0-beta1",
-        "version_normalized": "1.0.0.0-beta1",
-        "source": {
-            "type": "git",
-            "url": "https://git.drupalcode.org/project/stage_file_proxy.git",
-            "reference": "8.x-1.0-beta1"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://ftp.drupal.org/files/projects/stage_file_proxy-8.x-1.0-beta1.zip",
-            "reference": "8.x-1.0-beta1",
-            "shasum": "6609a2166509fd7cc2e593ff2efd7c44daeb0e5b"
-        },
-        "require": {
-            "drupal/core": "~8.0"
-        },
-        "type": "drupal-module",
-        "extra": {
-            "branch-alias": {
-                "dev-1.x": "1.x-dev"
-            },
-            "drupal": {
-                "version": "8.x-1.0-beta1",
-                "datestamp": "1555515785",
-                "security-coverage": {
-                    "status": "not-covered",
-                    "message": "Beta releases are not covered by Drupal security advisories."
-                }
-            }
-        },
-        "installation-source": "dist",
-        "notification-url": "https://packages.drupal.org/8/downloads",
-        "license": [
-            "GPL-2.0+"
-        ],
-        "authors": [
-            {
-                "name": "BarisW",
-                "homepage": "https://www.drupal.org/user/107229"
-            },
-            {
-                "name": "axel.rutz",
-                "homepage": "https://www.drupal.org/user/229048"
-            },
-            {
-                "name": "greggles",
-                "homepage": "https://www.drupal.org/user/36762"
-            },
-            {
-                "name": "markdorison",
-                "homepage": "https://www.drupal.org/user/346106"
-            },
-            {
-                "name": "moshe weitzman",
-                "homepage": "https://www.drupal.org/user/23"
-            },
-            {
-                "name": "msonnabaum",
-                "homepage": "https://www.drupal.org/user/75278"
-            },
-            {
-                "name": "netaustin",
-                "homepage": "https://www.drupal.org/user/199298"
-            },
-            {
-                "name": "robwilmshurst",
-                "homepage": "https://www.drupal.org/user/144488"
-            }
-        ],
-        "description": "Provides stage_file_proxy module.",
-        "homepage": "https://www.drupal.org/project/stage_file_proxy",
-        "support": {
-            "source": "https://git.drupalcode.org/project/stage_file_proxy"
         }
     },
     {
