@@ -1,0 +1,28 @@
+uuid: f86a9bca-ded7-48c9-84e5-2fba46bf822d
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_standalone_resource
+    - node.type.resource
+  module:
+    - label_help
+third_party_settings:
+  label_help:
+    label_help_description: 'Resource not linked to specific case study (for display)'
+id: node.resource.field_standalone_resource
+field_name: field_standalone_resource
+entity_type: node
+bundle: resource
+label: 'Standalone resource'
+description: 'Resource not linked to specific case study'
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

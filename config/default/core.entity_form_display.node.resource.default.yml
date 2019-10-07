@@ -6,7 +6,6 @@ dependencies:
     - field.field.node.resource.body
     - field.field.node.resource.field_add_new_species
     - field.field.node.resource.field_address
-    - field.field.node.resource.field_author
     - field.field.node.resource.field_authors
     - field.field.node.resource.field_date_published
     - field.field.node.resource.field_geofield
@@ -15,6 +14,7 @@ dependencies:
     - field.field.node.resource.field_publisher
     - field.field.node.resource.field_resource_type
     - field.field.node.resource.field_species_affected
+    - field.field.node.resource.field_standalone_resource
     - node.type.resource
   module:
     - address
@@ -22,6 +22,7 @@ dependencies:
     - field_group
     - field_layout
     - field_states_ui
+    - geofield
     - layout_discovery
     - paragraphs
     - synonyms
@@ -35,10 +36,9 @@ third_party_settings:
       children:
         - field_add_new_species
       parent_name: ''
-      weight: 9
+      weight: 11
       format_type: details
       format_settings:
-        label: 'Add new species if yours doesn''t appear in the list'
         required_fields: true
         id: ''
         classes: field-card
@@ -49,10 +49,9 @@ third_party_settings:
       children:
         - field_interventions
       parent_name: ''
-      weight: 10
+      weight: 12
       format_type: html_element
       format_settings:
-        label: 'Interventions (strategies)'
         element: div
         show_label: true
         label_element: h3
@@ -72,7 +71,7 @@ mode: default
 content:
   body:
     type: text_textarea_with_summary
-    weight: 2
+    weight: 3
     settings:
       rows: 5
       placeholder: ''
@@ -93,14 +92,13 @@ content:
     type: string_textfield
     region: content
   field_address:
-    weight: 7
-    settings:
-      default_country: null
+    weight: 8
+    settings: {  }
     third_party_settings: {  }
     type: address_default
     region: content
   field_authors:
-    weight: 3
+    weight: 4
     settings:
       size: 60
       placeholder: ''
@@ -108,19 +106,26 @@ content:
     type: string_textfield
     region: content
   field_date_published:
-    weight: 5
+    weight: 6
     settings: {  }
     third_party_settings: {  }
     type: datetime_default
     region: content
+  field_geofield:
+    type: geofield_latlon
+    weight: 9
+    region: content
+    settings:
+      html5_geolocation: false
+    third_party_settings: {  }
   field_interventions:
-    weight: 10
+    weight: 1
     settings: {  }
     third_party_settings: {  }
     type: options_buttons
     region: content
   field_language:
-    weight: 6
+    weight: 7
     settings:
       size: 60
       placeholder: ''
@@ -128,7 +133,7 @@ content:
     type: string_textfield
     region: content
   field_publisher:
-    weight: 4
+    weight: 5
     settings:
       size: 60
       placeholder: ''
@@ -137,7 +142,7 @@ content:
     region: content
   field_resource_type:
     type: paragraphs
-    weight: 1
+    weight: 2
     settings:
       title: 'Resource type'
       title_plural: 'Resource types'
@@ -151,6 +156,7 @@ content:
         duplicate: '0'
         collapse_edit_all: '0'
         add_above: '0'
+      closed_mode_threshold: 0
     third_party_settings:
       field_states_ui:
         form:
@@ -159,10 +165,17 @@ content:
           add: Add
     region: content
   field_species_affected:
-    weight: 8
+    weight: 10
     settings: {  }
     third_party_settings: {  }
     type: synonyms_select
+    region: content
+  field_standalone_resource:
+    weight: 1
+    settings:
+      display_label: true
+    third_party_settings: {  }
+    type: boolean_checkbox
     region: content
   title:
     type: string_textfield
@@ -174,8 +187,6 @@ content:
     third_party_settings: {  }
 hidden:
   created: true
-  field_author: true
-  field_geofield: true
   moderation_state: true
   path: true
   promote: true

@@ -9,6 +9,7 @@ dependencies:
     - field.field.node.organisation.field_organisation_type
     - image.style.thumbnail
     - node.type.organisation
+    - workflows.workflow.node_added
   module:
     - content_moderation
     - field_layout
@@ -126,4 +127,9 @@ content:
       placeholder: ''
     region: content
     third_party_settings: {  }
+  url_redirects:
+    weight: 50
+    settings: {  }
+    third_party_settings: {  }
+    region: content
 hidden: {  }

@@ -31,8 +31,10 @@ third_party_settings:
         link_custom: ''
         classes:
           layout_class: {  }
+          ds_content: {  }
     regions:
       ds_content:
+        - content_moderation_control
         - links
         - body
         - field_link
@@ -50,6 +52,11 @@ content:
     settings: {  }
     third_party_settings: {  }
     region: ds_content
+  content_moderation_control:
+    weight: -20
+    region: ds_content
+    settings: {  }
+    third_party_settings: {  }
   field_image:
     weight: 103
     label: above

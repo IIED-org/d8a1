@@ -15,7 +15,7 @@ field_name: field_reactive_measures
 entity_type: node
 bundle: initiative
 label: 'Reactive measures to deal with problem animals '
-description: ''
+description: 'For example, removal, culling...'
 required: false
 translatable: false
 default_value:

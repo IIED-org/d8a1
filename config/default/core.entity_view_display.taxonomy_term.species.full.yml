@@ -1,0 +1,64 @@
+uuid: e9c4d0ae-7d6c-4d20-9e04-1d5534ec735c
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.taxonomy_term.full
+    - field.field.taxonomy_term.species.field_scientific_name
+    - field.field.taxonomy_term.species.field_synonyms
+    - field.field.taxonomy_term.species.field_workflow
+    - taxonomy.vocabulary.species
+  module:
+    - ds
+third_party_settings:
+  ds:
+    layout:
+      id: ds_1col
+      library: null
+      disable_css: false
+      entity_classes: all_classes
+      settings:
+        wrappers:
+          ds_content: div
+        outer_wrapper: div
+        attributes: ''
+        link_attribute: ''
+        link_custom: ''
+        classes:
+          layout_class: {  }
+          ds_content: {  }
+    regions:
+      ds_content:
+        - taxonomy_term_title
+        - field_scientific_name
+        - field_synonyms
+    fields:
+      taxonomy_term_title:
+        plugin_id: taxonomy_term_title
+        weight: 0
+        label: hidden
+        formatter: default
+id: taxonomy_term.species.full
+targetEntityType: taxonomy_term
+bundle: species
+mode: full
+content:
+  field_scientific_name:
+    weight: 1
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: ds_content
+  field_synonyms:
+    weight: 2
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: ds_content
+hidden:
+  description: true
+  field_workflow: true

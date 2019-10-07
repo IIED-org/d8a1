@@ -15,7 +15,7 @@ from: ''
 replyto: info@peoplenotpoaching.org
 subject: 'The {{ entity.type.entity.label }} submitted to People Not Poaching has been published'
 body:
-  value: "<p>Dear contributor,</p>\r\n\r\n<p>Thank you for your submission,&nbsp;which has been reviewed and published and is now available at:</p>\r\n\r\n<p>{{ base_url }}/node/{{ entity.nid.value }}</p>\r\n\r\n<p>Thanks again for contributing to the platform.</p>\r\n\r\n<p>Best regards,<br />\r\nThe Rhinobot<br />\r\n{{ site_name }}</p>\r\n"
+  value: "<p>Dear contributor,</p>\r\n\r\n<p>Thank you for your submission \"{{ entity.title.value }}\",&nbsp;which has been reviewed and published and is now available via:</p>\r\n\r\n<p>{% if entity.bundle == 'initiative' %}<br />\r\n&nbsp; {{ base_url }}node/{{ entity.nid.value }}<br />\r\n{% else %}<br />\r\n&nbsp;&nbsp;{{ base_url }}explore<br />\r\n{% endif %}</p>\r\n\r\n<p>If you want to add new content to your submission or otherwise change it in future, please contact us at info@peoplenotpoaching.org. Thanks again for contributing to the platform.</p>\r\n\r\n<p>Best regards,<br />\r\nThe Rhinobot<br />\r\n{{ site_name }}</p>\r\n"
   format: basic_html
 label: 'Content published'
 abort: ''

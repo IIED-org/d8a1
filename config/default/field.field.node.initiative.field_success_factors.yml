@@ -6,7 +6,11 @@ dependencies:
     - field.storage.node.field_success_factors
     - node.type.initiative
   module:
+    - label_help
     - options
+third_party_settings:
+  label_help:
+    label_help_description: 'You can choose up to three most important factors that helped your project to succeed from the list of checkboxes.'
 id: node.initiative.field_success_factors
 field_name: field_success_factors
 entity_type: node

@@ -18,9 +18,7 @@ label: 'Email address'
 description: ''
 required: false
 translatable: false
-default_value:
-  -
-    value: name@example.org
+default_value: {  }
 default_value_callback: ''
 settings: {  }
 field_type: email

@@ -1,0 +1,56 @@
+uuid: af425e93-6807-4ddd-a6f1-352e96543fcb
+langcode: en
+status: true
+dependencies: {  }
+id: submit_initiative
+label: 'Submit initiative'
+events:
+  -
+    event_name: 'rules_entity_update:content_moderation_state'
+description: ''
+tags: {  }
+config_version: '3'
+expression:
+  id: rules_rule
+  uuid: 132e6062-7da3-4af9-9301-bc2456653f9f
+  conditions:
+    id: rules_and
+    uuid: 38a6c49b-3209-4abc-b6fc-4765b5915b5c
+    conditions:
+      -
+        id: rules_condition
+        uuid: a51821f5-f119-4cd5-987d-de203d46c8ee
+        context_values:
+          operation: '=='
+          value: submit_for_review
+        context_mapping:
+          data: content_moderation_state.moderation_state.value
+        context_processors:
+          operation:
+            rules_tokens: {  }
+          value:
+            rules_tokens: {  }
+        provides_mapping: {  }
+        condition_id: rules_data_comparison
+        negate: false
+  actions:
+    id: rules_action_set
+    uuid: 6325a694-cd10-459f-bca0-a2affae048f7
+    actions:
+      -
+        id: rules_action
+        uuid: d5522cc4-07cf-4ee7-8b71-d720054e1877
+        context_values:
+          message: 'Thank you for your submission. We will send you an email once we have reviewed and published the content you supplied.'
+          type: warning
+          repeat: false
+        context_mapping: {  }
+        context_processors:
+          message:
+            rules_tokens: {  }
+          type:
+            rules_tokens: {  }
+          repeat:
+            rules_tokens: {  }
+        provides_mapping: {  }
+        action_id: rules_system_message

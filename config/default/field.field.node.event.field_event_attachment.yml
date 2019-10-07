@@ -1,0 +1,27 @@
+uuid: c5d5b4e9-7ba3-4c86-9b44-9fac63ceccbf
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_event_attachment
+    - node.type.event
+  module:
+    - file
+id: node.event.field_event_attachment
+field_name: field_event_attachment
+entity_type: node
+bundle: event
+label: 'Event attachment'
+description: 'Supporting PDF attachment. Please link to the original source rather than uploading if option available.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  file_directory: '[date:custom:Y]-[date:custom:m]'
+  file_extensions: pdf
+  max_filesize: '6 MB'
+  description_field: true
+  handler: 'default:file'
+  handler_settings: {  }
+field_type: file

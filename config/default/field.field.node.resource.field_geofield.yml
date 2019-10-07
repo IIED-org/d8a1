@@ -8,31 +8,32 @@ dependencies:
   module:
     - geocoder_field
     - geofield
+    - label_help
 third_party_settings:
   geocoder_field:
     method: source
     weight: 0
     geocode_field: field_address
     reverse_geocode_field: ''
-    hidden: true
+    hidden: false
     disabled: false
     plugins:
+      - googlemaps
       - openstreetmap
-      - yandex
       - freegeoip
-      - geoplugin
-      - geoip
     dumper: wkt
     delta_handling: default
     failure:
       handling: preserve
       status_message: true
       log: true
+  label_help:
+    label_help_description: 'Please add GPS coordinates if known, otherwise these will be calculated from the location(s) given above. '
 id: node.resource.field_geofield
 field_name: field_geofield
 entity_type: node
 bundle: resource
-label: Geofield
+label: 'GPS coordinates'
 description: ''
 required: false
 translatable: false

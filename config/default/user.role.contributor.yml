@@ -7,6 +7,8 @@ label: Contributor
 weight: -8
 is_admin: null
 permissions:
+  - 'access add_new_organisation entity browser pages'
+  - 'access add_new_resource entity browser pages'
   - 'access organisation entity browser pages'
   - 'access resource entity browser pages'
   - 'access shortcuts'
@@ -20,11 +22,17 @@ permissions:
   - 'create remote_video media'
   - 'create resource content'
   - 'create video media'
+  - 'edit own initiative content'
+  - 'rabbit hole bypass node'
   - 'use add_species_via_ief transition create_new_draft'
   - 'use editorial transition create_new_draft'
+  - 'use editorial transition keep_in_draft'
+  - 'use editorial transition submit_for_review'
+  - 'use moderation sidebar'
   - 'use new_species_added transition create_new_draft'
   - 'use node.default form mode'
   - 'use node.popup form mode'
-  - 'use taxonomy_term.ief form mode'
-  - 'view conditional fields'
+  - 'use node_added transition create_new_draft'
+  - 'use text format basic_html'
+  - 'view latest version'
   - 'view own unpublished content'

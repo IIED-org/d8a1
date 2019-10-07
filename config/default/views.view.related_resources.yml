@@ -5,13 +5,12 @@ dependencies:
   config:
     - core.entity_view_mode.node.teaser
     - field.storage.node.body
-    - field.storage.node.field_author
+    - field.storage.node.field_authors
     - field.storage.node.field_date_published
     - field.storage.node.field_language
     - field.storage.node.field_publisher
     - field.storage.node.field_resource_type
     - field.storage.paragraph.field_article_url
-    - field.storage.paragraph.field_cover_image
     - field.storage.paragraph.field_document_url
     - field.storage.paragraph.field_file_upload
     - field.storage.paragraph.field_video_url
@@ -22,7 +21,6 @@ dependencies:
     - datetime
     - entity_reference_revisions
     - file
-    - image
     - link
     - node
     - paragraphs
@@ -87,70 +85,6 @@ display:
           separator: ''
           hide_empty: true
       fields:
-        field_cover_image:
-          id: field_cover_image
-          table: paragraph__field_cover_image
-          field: field_cover_image
-          relationship: field_resource_type
-          group_type: group
-          admin_label: ''
-          label: ''
-          exclude: true
-          alter:
-            alter_text: false
-            text: ''
-            make_link: false
-            path: ''
-            absolute: false
-            external: false
-            replace_spaces: false
-            path_case: none
-            trim_whitespace: false
-            alt: ''
-            rel: ''
-            link_class: ''
-            prefix: ''
-            suffix: ''
-            target: ''
-            nl2br: false
-            max_length: 0
-            word_boundary: true
-            ellipsis: true
-            more_link: false
-            more_link_text: ''
-            more_link_path: ''
-            strip_tags: false
-            trim: false
-            preserve_tags: ''
-            html: false
-          element_type: ''
-          element_class: ''
-          element_label_type: ''
-          element_label_class: ''
-          element_label_colon: false
-          element_wrapper_type: ''
-          element_wrapper_class: ''
-          element_default_classes: true
-          empty: ''
-          hide_empty: false
-          empty_zero: false
-          hide_alter_empty: true
-          click_sort_column: target_id
-          type: image
-          settings:
-            image_style: ''
-            image_link: ''
-          group_column: ''
-          group_columns: {  }
-          group_rows: true
-          delta_limit: 0
-          delta_offset: 0
-          delta_reversed: false
-          delta_first_last: false
-          multi_type: separator
-          separator: ', '
-          field_api_classes: false
-          plugin_id: field
         title:
           id: title
           table: node_field_data
@@ -405,18 +339,18 @@ display:
           separator: ', '
           field_api_classes: false
           plugin_id: field
-        field_author:
-          id: field_author
-          table: node__field_author
-          field: field_author
+        field_authors:
+          id: field_authors
+          table: node__field_authors
+          field: field_authors
           relationship: field_related_resources
           group_type: group
           admin_label: ''
-          label: Author(s)
+          label: ''
           exclude: true
           alter:
             alter_text: true
-            text: 'Author(s): {{ field_author }}'
+            text: 'Author(s): {{ field_authors }}'
             make_link: false
             path: ''
             absolute: false
@@ -445,7 +379,7 @@ display:
           element_class: ''
           element_label_type: ''
           element_label_class: ''
-          element_label_colon: true
+          element_label_colon: false
           element_wrapper_type: ''
           element_wrapper_class: ''
           element_default_classes: true
@@ -739,7 +673,7 @@ display:
           exclude: true
           alter:
             alter_text: true
-            text: "  <div class=\"i-p-container\">\r\n        <div class=\"i-play\"><i class=\"fas fa-play-circle\"></i> Play video</div>\r\n        {{ field_video_url }}\r\n    </div>"
+            text: "  <div class=\"i-p-container d-flex justify-content-center mb-3\">\r\n        <div class=\"i-play align-self-center\"><i class=\"fas fa-play-circle fa-2x\"></i></div>\r\n        {{ field_video_url }}\r\n    </div>"
             make_link: false
             path: ''
             absolute: false
@@ -1001,7 +935,7 @@ display:
           exclude: false
           alter:
             alter_text: true
-            text: "<div class=\"container mb-5\">\r\n            <div class=\"row justify-content-end\">\r\n                <div class=\"col-md-9\">\r\n                    <div class=\"card mb-resp\">\r\n                        <div class=\"card-block\">\r\n                            <div class=\"row\">\r\n                                <div class=\"col-11\">\r\n                                    <div class=\"card-body\">\r\n                                        <h4 class=\"card-title\">{{ title }}</h4>\r\n                                    </div>\r\n                                </div>\r\n                            </div>\r\n                        </div>\r\n                        <div class=\"card-footer w-100\">\r\n                            <a href=\"#collapse\" class=\"d-block\" data-toggle=\"collapse\" data-target=\"#collapse_{{ id }}\">+\r\n                                show\r\n                                more</a>\r\n\r\n                            <div class=\"collapse mt-4\" id=\"collapse_{{ id }}\">\r\n<div class=\"card-text\">{{ body }}</div>\r\n{{ field_video_url }}\r\n<div class=\"card p-3\">\r\n<p>{{ field_publisher }}</p>\r\n<p>{{ field_date_published }}</p>\r\n<p>{{ field_author }}</p>\r\n<p>{{ field_language }}</p>\r\n</div>\r\n                            </div>\r\n                        </div>\r\n                        <div class=\"card-footer w-100\">\r\n{{ field_article_url }} \r\n{{ field_document_url }} \r\n{{ field_file_upload }}\r\n{{ field_video_url_1 }}\r\n                        </div>\r\n                    </div>\r\n                </div>\r\n            </div>\r\n</div>"
+            text: "<div class=\"container mb-5\">\r\n            <div class=\"row justify-content-end\">\r\n                <div class=\"col-md-9\">\r\n                    <div class=\"card mb-resp\">\r\n                        <div class=\"card-block\">\r\n                            <div class=\"row\">\r\n                                <div class=\"col-11\">\r\n                                    <div class=\"card-body\">\r\n                                        <h4 class=\"card-title\">{{ title }}</h4>\r\n                                    </div>\r\n                                </div>\r\n                            </div>\r\n                        </div>\r\n                        <div class=\"card-footer w-100\">\r\n                            <a href=\"#collapse\" class=\"d-block\" data-toggle=\"collapse\" data-target=\"#collapse_{{ id }}\">+\r\n                                show\r\n                                more</a>\r\n\r\n                            <div class=\"collapse mt-4\" id=\"collapse_{{ id }}\">\r\n<div class=\"card-text\">{{ body }}</div>\r\n{{ field_video_url }}\r\n<div class=\"card p-3\">\r\n<p>{{ field_publisher }}</p>\r\n<p>{{ field_date_published }}</p>\r\n<p>{{ field_authors }}</p>\r\n<p>{{ field_language }}</p>\r\n</div>\r\n                            </div>\r\n                        </div>\r\n                        <div class=\"card-footer w-100\">\r\n{{ field_article_url }} \r\n{{ field_document_url }} \r\n{{ field_file_upload }}\r\n{{ field_video_url_1 }}\r\n                        </div>\r\n                    </div>\r\n                </div>\r\n            </div>\r\n</div>"
             make_link: false
             path: ''
             absolute: false
@@ -1081,6 +1015,43 @@ display:
           entity_type: node
           entity_field: type
           plugin_id: bundle
+        status_extra:
+          id: status_extra
+          table: node_field_data
+          field: status_extra
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: '='
+          value: false
+          group: 1
+          exposed: false
+          expose:
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
+            operator: ''
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          entity_type: node
+          plugin_id: node_status
       sorts:
         created:
           id: created
@@ -1178,17 +1149,17 @@ display:
         - 'languages:language_content'
         - 'languages:language_interface'
         - url
+        - user
         - 'user.node_grants:view'
         - user.permissions
       tags:
         - 'config:field.storage.node.body'
-        - 'config:field.storage.node.field_author'
+        - 'config:field.storage.node.field_authors'
         - 'config:field.storage.node.field_date_published'
         - 'config:field.storage.node.field_language'
         - 'config:field.storage.node.field_publisher'
         - 'config:field.storage.node.field_resource_type'
         - 'config:field.storage.paragraph.field_article_url'
-        - 'config:field.storage.paragraph.field_cover_image'
         - 'config:field.storage.paragraph.field_document_url'
         - 'config:field.storage.paragraph.field_file_upload'
         - 'config:field.storage.paragraph.field_video_url'
@@ -1219,70 +1190,6 @@ display:
         header: false
         fields: false
       fields:
-        field_cover_image:
-          id: field_cover_image
-          table: paragraph__field_cover_image
-          field: field_cover_image
-          relationship: field_resource_type
-          group_type: group
-          admin_label: ''
-          label: ''
-          exclude: true
-          alter:
-            alter_text: false
-            text: ''
-            make_link: false
-            path: ''
-            absolute: false
-            external: false
-            replace_spaces: false
-            path_case: none
-            trim_whitespace: false
-            alt: ''
-            rel: ''
-            link_class: ''
-            prefix: ''
-            suffix: ''
-            target: ''
-            nl2br: false
-            max_length: 0
-            word_boundary: true
-            ellipsis: true
-            more_link: false
-            more_link_text: ''
-            more_link_path: ''
-            strip_tags: false
-            trim: false
-            preserve_tags: ''
-            html: false
-          element_type: ''
-          element_class: ''
-          element_label_type: ''
-          element_label_class: ''
-          element_label_colon: false
-          element_wrapper_type: ''
-          element_wrapper_class: ''
-          element_default_classes: true
-          empty: ''
-          hide_empty: false
-          empty_zero: false
-          hide_alter_empty: true
-          click_sort_column: target_id
-          type: image
-          settings:
-            image_style: ''
-            image_link: ''
-          group_column: ''
-          group_columns: {  }
-          group_rows: true
-          delta_limit: 0
-          delta_offset: 0
-          delta_reversed: false
-          delta_first_last: false
-          multi_type: separator
-          separator: ', '
-          field_api_classes: false
-          plugin_id: field
         title:
           id: title
           table: node_field_data
@@ -1537,18 +1444,18 @@ display:
           separator: ', '
           field_api_classes: false
           plugin_id: field
-        field_author:
-          id: field_author
-          table: node__field_author
-          field: field_author
+        field_authors:
+          id: field_authors
+          table: node__field_authors
+          field: field_authors
           relationship: field_related_resources
           group_type: group
           admin_label: ''
           label: ''
           exclude: true
           alter:
-            alter_text: false
-            text: 'Author(s): {{ field_author }}'
+            alter_text: true
+            text: 'Author(s): {{ field_authors }} '
             make_link: false
             path: ''
             absolute: false
@@ -1593,69 +1500,6 @@ display:
           group_columns: {  }
           group_rows: true
           delta_limit: 0
-          delta_offset: 0
-          delta_reversed: false
-          delta_first_last: false
-          multi_type: separator
-          separator: ', '
-          field_api_classes: false
-          plugin_id: field
-        field_author_1:
-          id: field_author_1
-          table: node__field_author
-          field: field_author
-          relationship: field_related_resources
-          group_type: group
-          admin_label: 'Content: Author(s) field output'
-          label: ''
-          exclude: true
-          alter:
-            alter_text: true
-            text: 'Author(s): {{ field_author }}'
-            make_link: false
-            path: ''
-            absolute: false
-            external: false
-            replace_spaces: false
-            path_case: none
-            trim_whitespace: false
-            alt: ''
-            rel: ''
-            link_class: ''
-            prefix: ''
-            suffix: ''
-            target: ''
-            nl2br: false
-            max_length: 0
-            word_boundary: true
-            ellipsis: true
-            more_link: false
-            more_link_text: ''
-            more_link_path: ''
-            strip_tags: false
-            trim: false
-            preserve_tags: ''
-            html: false
-          element_type: ''
-          element_class: ''
-          element_label_type: ''
-          element_label_class: ''
-          element_label_colon: false
-          element_wrapper_type: ''
-          element_wrapper_class: ''
-          element_default_classes: true
-          empty: ''
-          hide_empty: false
-          empty_zero: false
-          hide_alter_empty: true
-          click_sort_column: value
-          type: string
-          settings:
-            link_to_entity: false
-          group_column: value
-          group_columns: {  }
-          group_rows: true
-          delta_limit: 1
           delta_offset: 0
           delta_reversed: false
           delta_first_last: false
@@ -1716,69 +1560,6 @@ display:
           settings:
             link_to_entity: false
           group_column: value
-          group_columns: {  }
-          group_rows: true
-          delta_limit: 0
-          delta_offset: 0
-          delta_reversed: false
-          delta_first_last: false
-          multi_type: separator
-          separator: ', '
-          field_api_classes: false
-          plugin_id: field
-        field_resource_type:
-          id: field_resource_type
-          table: node__field_resource_type
-          field: field_resource_type
-          relationship: field_related_resources
-          group_type: group
-          admin_label: ''
-          label: 'Resource type'
-          exclude: true
-          alter:
-            alter_text: false
-            text: ''
-            make_link: false
-            path: ''
-            absolute: false
-            external: false
-            replace_spaces: false
-            path_case: none
-            trim_whitespace: false
-            alt: ''
-            rel: ''
-            link_class: ''
-            prefix: ''
-            suffix: ''
-            target: ''
-            nl2br: false
-            max_length: 0
-            word_boundary: true
-            ellipsis: true
-            more_link: false
-            more_link_text: ''
-            more_link_path: ''
-            strip_tags: false
-            trim: false
-            preserve_tags: ''
-            html: false
-          element_type: ''
-          element_class: ''
-          element_label_type: ''
-          element_label_class: ''
-          element_label_colon: true
-          element_wrapper_type: ''
-          element_wrapper_class: ''
-          element_default_classes: true
-          empty: ''
-          hide_empty: false
-          empty_zero: false
-          hide_alter_empty: true
-          click_sort_column: target_id
-          type: entity_reference_revisions_entity_view
-          settings:
-            view_mode: default
-          group_column: ''
           group_columns: {  }
           group_rows: true
           delta_limit: 0
@@ -1934,7 +1715,7 @@ display:
           exclude: true
           alter:
             alter_text: true
-            text: "  <div class=\"i-p-container\">\r\n        <div class=\"i-play\"><i class=\"fas fa-play-circle\"></i> Play video</div>\r\n        {{ field_video_url }}\r\n    </div>"
+            text: "  <div class=\"i-p-container d-flex justify-content-center mb-3\">\r\n        <div class=\"i-play align-self-center\"><i class=\"fas fa-play-circle fa-2x\"></i></div>\r\n        {{ field_video_url }}\r\n    </div>"
             make_link: false
             path: ''
             absolute: false
@@ -2196,7 +1977,7 @@ display:
           exclude: false
           alter:
             alter_text: true
-            text: "<div class=\"container mb-5\">\r\n            <div class=\"row justify-content-end\">\r\n                <div class=\"col-md-9\">\r\n                    <div class=\"card mb-resp\">\r\n                        <div class=\"card-block\">\r\n                            <div class=\"row\">\r\n                                <div class=\"col-11\">\r\n                                    <div class=\"card-body\">\r\n                                        <h4 class=\"card-title\">{{ title }}</h4>\r\n                                    </div>\r\n                                </div>\r\n                            </div>\r\n                        </div>\r\n                        <div class=\"card-footer w-100\">\r\n                            <a href=\"#collapse\" class=\"d-block\" data-toggle=\"collapse\" data-target=\"#collapse_{{ id }}\">+\r\n                                show\r\n                                more</a>\r\n\r\n                            <div class=\"collapse mt-4\" id=\"collapse_{{ id }}\">\r\n<div class=\"card-text\">{{ body }}</div>\r\n{{ field_video_url }}\r\n<div class=\"card p-3\">\r\n<p>{{ field_publisher }}</p>\r\n<p>{{ field_date_published }}</p>\r\n<p>{{ field_author_1 }}</p>\r\n<p>{{ field_language }}</p>\r\n</div>\r\n                            </div>\r\n                        </div>\r\n                        <div class=\"card-footer w-100\">\r\n{{ field_article_url }} \r\n{{ field_document_url }} \r\n{{ field_file_upload }}\r\n{{ field_video_url_1 }}\r\n                        </div>\r\n                    </div>\r\n                </div>\r\n            </div>\r\n</div>"
+            text: "<div class=\"container mb-5\">\r\n            <div class=\"row justify-content-end\">\r\n                <div class=\"col-md-9\">\r\n                    <div class=\"card mb-resp\">\r\n                        <div class=\"card-block\">\r\n                            <div class=\"row\">\r\n                                <div class=\"col-11\">\r\n                                    <div class=\"card-body\">\r\n                                        <h4 class=\"card-title\">{{ title }}</h4>\r\n                                    </div>\r\n                                </div>\r\n                            </div>\r\n                        </div>\r\n                        <div class=\"card-footer w-100\">\r\n                            <a href=\"#collapse\" class=\"d-block\" data-toggle=\"collapse\" data-target=\"#collapse_{{ id }}\">+\r\n                                show\r\n                                more</a>\r\n\r\n                            <div class=\"collapse mt-4\" id=\"collapse_{{ id }}\">\r\n<div class=\"card-text\">{{ body }}</div>\r\n{{ field_video_url }}\r\n<div class=\"card p-3\">\r\n<p>{{ field_publisher }}</p>\r\n<p>{{ field_date_published }}</p>\r\n<p>{{ field_authors }}</p>\r\n<p>{{ field_language }}</p>\r\n</div>\r\n                            </div>\r\n                        </div>\r\n                        <div class=\"card-footer w-100\">\r\n{{ field_article_url }} \r\n{{ field_document_url }} \r\n{{ field_file_upload }}\r\n{{ field_video_url_1 }}\r\n                        </div>\r\n                    </div>\r\n                </div>\r\n            </div>\r\n</div>"
             make_link: false
             path: ''
             absolute: false
@@ -2240,17 +2021,16 @@ display:
         - 'languages:language_content'
         - 'languages:language_interface'
         - url
+        - user
         - 'user.node_grants:view'
         - user.permissions
       tags:
         - 'config:field.storage.node.body'
-        - 'config:field.storage.node.field_author'
+        - 'config:field.storage.node.field_authors'
         - 'config:field.storage.node.field_date_published'
         - 'config:field.storage.node.field_language'
         - 'config:field.storage.node.field_publisher'
-        - 'config:field.storage.node.field_resource_type'
         - 'config:field.storage.paragraph.field_article_url'
-        - 'config:field.storage.paragraph.field_cover_image'
         - 'config:field.storage.paragraph.field_document_url'
         - 'config:field.storage.paragraph.field_file_upload'
         - 'config:field.storage.paragraph.field_video_url'
@@ -2286,11 +2066,13 @@ display:
           required: true
           plugin_id: standard
       fields: {  }
+      enabled: false
     cache_metadata:
       max-age: -1
       contexts:
         - 'languages:language_interface'
         - url
+        - user
         - 'user.node_grants:view'
         - user.permissions
       tags: {  }

@@ -1,0 +1,39 @@
+uuid: 7f64a10b-eaf5-4409-9024-d6fb703ee537
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+    - options
+id: node.field_event_type
+field_name: field_event_type
+entity_type: node
+type: list_string
+settings:
+  allowed_values:
+    -
+      value: '1'
+      label: Conference
+    -
+      value: '2'
+      label: Exhibition
+    -
+      value: '3'
+      label: Webinar
+    -
+      value: '4'
+      label: Workshop
+    -
+      value: '5'
+      label: Seminar
+    -
+      value: '6'
+      label: Lecture
+  allowed_values_function: ''
+module: options
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

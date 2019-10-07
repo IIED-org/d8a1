@@ -15,7 +15,7 @@ field_name: field_performance_payments
 entity_type: node
 bundle: initiative
 label: 'Performance-based payments/incentives for patrolling or guarding'
-description: 'That is, on top of salaries, such as bonuses for number of arrests, etc.'
+description: 'For example, payment based on the number of arrests'
 required: false
 translatable: false
 default_value:

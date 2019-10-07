@@ -8,7 +8,7 @@ id: node.initiative.title
 field_name: title
 entity_type: node
 bundle: initiative
-label: 'Name of initiative'
+label: 'Name of case study'
 description: ''
 required: true
 translatable: true

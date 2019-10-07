@@ -10,12 +10,12 @@ dependencies:
     - text
 third_party_settings:
   label_help:
-    label_help_description: 'For example, live animals, rhino horn, ivory, timber, skin, fur, feathers, seeds, nuts, whole plants.'
+    label_help_description: 'For example, live animals, rhino horn, ivory, timber, skin, fur, feathers, seeds, nuts, whole plants. Please include their end use if known, for example, , medicinal, trophies, fuel, fodder, clothing and ornaments, religious purposes, collections etc...'
 id: node.initiative.field_products_in_trade
 field_name: field_products_in_trade
 entity_type: node
 bundle: initiative
-label: 'Which products are in trade?'
+label: 'Which products are in trade and what is their end use?'
 description: ''
 required: false
 translatable: false

@@ -1,0 +1,18 @@
+uuid: 7a68a713-1f3f-4f3d-b45e-25ef15f7ef6c
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: node.field_standalone_resource
+field_name: field_standalone_resource
+entity_type: node
+type: boolean
+settings: {  }
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

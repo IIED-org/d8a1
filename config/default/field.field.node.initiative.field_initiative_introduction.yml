@@ -10,7 +10,7 @@ dependencies:
     - text
 third_party_settings:
   label_help:
-    label_help_description: "Please consider the following:<br />\r\n• Are local communities leading, or involved in the design/development of the initiative?<br />\r\n• If so, how are they involved and what are their motivations for being so?<br />\r\n• The strategies and approaches the initiative is using to reduce poaching. <br />\r\n• How will these strategies and approaches reduce poaching, or other related objectives.<br />\r\n• How the strategies and approaches have developed over time.<br />"
+    label_help_description: "Please consider the following:<br />\r\n• Are local communities leading, or involved in the design/development of the initiative?<br />\r\n• If so, how are they involved and what are their motivations for participating?<br />\r\n• The strategies and approaches the initiative is using to reduce poaching. <br />\r\n• How these strategies and approaches will reduce poaching, or contribute to achieving other related objectives.<br />\r\n• How the strategies and approaches have developed over time.<br />"
 id: node.initiative.field_initiative_introduction
 field_name: field_initiative_introduction
 entity_type: node

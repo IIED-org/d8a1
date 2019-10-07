@@ -17,6 +17,7 @@ dependencies:
     - field.field.node.initiative.field_3_2_6_details
     - field.field.node.initiative.field_4_2_1_details
     - field.field.node.initiative.field_4_3_1_details
+    - field.field.node.initiative.field_add_new_species
     - field.field.node.initiative.field_address
     - field.field.node.initiative.field_area_description
     - field.field.node.initiative.field_buyers
@@ -145,6 +146,11 @@ targetEntityType: node
 bundle: initiative
 mode: card
 content:
+  content_moderation_control:
+    weight: -20
+    settings: {  }
+    third_party_settings: {  }
+    region: content
   field_image:
     type: image
     weight: 0
@@ -197,6 +203,7 @@ hidden:
   field_3_2_6_details: true
   field_4_2_1_details: true
   field_4_3_1_details: true
+  field_add_new_species: true
   field_address: true
   field_area_description: true
   field_buyers: true

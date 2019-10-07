@@ -14,7 +14,6 @@ dependencies:
     - comment
     - field_layout
     - image
-    - layout_discovery
     - text
     - user
 third_party_settings:

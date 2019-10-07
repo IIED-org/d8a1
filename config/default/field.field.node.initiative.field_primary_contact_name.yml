@@ -9,7 +9,7 @@ dependencies:
     - label_help
 third_party_settings:
   label_help:
-    label_help_description: 'The name of the contact person if others would like to get in contact or to get updates on the initiative. '
+    label_help_description: 'The name of the contact person for further information and updates on the initiative. '
 id: node.initiative.field_primary_contact_name
 field_name: field_primary_contact_name
 entity_type: node

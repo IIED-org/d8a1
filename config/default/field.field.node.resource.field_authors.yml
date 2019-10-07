@@ -9,7 +9,7 @@ dependencies:
     - label_help
 third_party_settings:
   label_help:
-    label_help_description: 'Add author names separated by commas (optional, where relevant)'
+    label_help_description: 'Add author names separated by commas (optional, only where relevant for written content)'
 id: node.resource.field_authors
 field_name: field_authors
 entity_type: node

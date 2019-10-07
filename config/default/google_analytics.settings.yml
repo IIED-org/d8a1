@@ -24,7 +24,10 @@ track:
 privacy:
   anonymizeip: true
 custom:
-  dimension: {  }
+  dimension:
+    1:
+      value: '[node:content-type]'
+      index: 1
   metric: {  }
 codesnippet:
   create: {  }

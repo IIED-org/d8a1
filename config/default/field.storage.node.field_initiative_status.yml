@@ -19,7 +19,7 @@ settings:
       label: Current
     -
       value: Unknown
-      label: Unknown
+      label: ''
   allowed_values_function: ''
 module: options
 locked: false

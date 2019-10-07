@@ -50,7 +50,6 @@ spi:
   admin_priv: 1
   send_node_user: 1
   send_watchdog: 1
-  module_diff_data: 1
   use_cron: 1
   dynamic_banner: 0
   set_variables_override: 0
@@ -75,8 +74,8 @@ spi:
     time: 0
   cron_interval: 28800
   site_name: 'd8a1: dev'
-  site_machine_name: ef43298b_5eac_4d9d_b465_5fd0b1af3281__d8a1k82re2pxsc__5bcf7e6306449
-  site_environment: dev
+  site_machine_name: ef43298b_5eac_4d9d_b465_5fd0b1af3281__d8a1rfjrbvzlqo__5d8b92886af6d
+  site_environment: prod
   env_detection_enabled: true
   site_uuid: 898878d8-b982-4417-bf59-ac5133857409
 mapping:

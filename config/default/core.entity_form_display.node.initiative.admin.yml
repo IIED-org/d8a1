@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - core.entity_form_mode.node.admin
+    - entity_browser.browser.resource
     - field.field.node.initiative.body
     - field.field.node.initiative.field_3_2_1_details
     - field.field.node.initiative.field_3_2_1_other
@@ -17,7 +18,9 @@ dependencies:
     - field.field.node.initiative.field_3_2_6_details
     - field.field.node.initiative.field_4_2_1_details
     - field.field.node.initiative.field_4_3_1_details
+    - field.field.node.initiative.field_add_new_species
     - field.field.node.initiative.field_address
+    - field.field.node.initiative.field_alternative_language_versi
     - field.field.node.initiative.field_area_description
     - field.field.node.initiative.field_buyers
     - field.field.node.initiative.field_community_level_benefits
@@ -26,6 +29,7 @@ dependencies:
     - field.field.node.initiative.field_education_and_awareness
     - field.field.node.initiative.field_end_use
     - field.field.node.initiative.field_financial_mitigation
+    - field.field.node.initiative.field_gender_age_ethnic
     - field.field.node.initiative.field_geofield
     - field.field.node.initiative.field_illegal_disincentives
     - field.field.node.initiative.field_image
@@ -75,10 +79,15 @@ dependencies:
     - field.field.node.initiative.field_year_finished
     - image.style.thumbnail
     - node.type.initiative
+    - workflows.workflow.editorial
   module:
     - address
     - content_moderation
+    - entity_browser
+    - field_group
     - field_layout
+    - field_states_ui
+    - file
     - geofield
     - hide_revision_field
     - image
@@ -90,6 +99,244 @@ third_party_settings:
   field_layout:
     id: layout_onecol
     settings: {  }
+  field_group:
+    group_illegal_disincentives:
+      children:
+        - field_paid_scouts
+        - field_performance_payments
+        - field_voluntary_scouts
+        - field_in_kind_scouts
+        - field_intelligence_incentives
+        - field_in_kind_incentives
+        - field_raising_awareness
+        - field_supporting_sanctions
+        - field_3_2_1_other
+        - field_3_2_1_details
+      parent_name: group_strategy_details
+      weight: 11
+      format_type: html_element
+      format_settings:
+        id: ''
+        classes: ml-3
+        element: div
+        show_label: false
+        label_element: h3
+        label_element_classes: ''
+        required_fields: true
+        attributes: ''
+        effect: none
+        speed: fast
+      label: illegal_disincentives
+      region: content
+    group_stewardship_incentives:
+      children:
+        - field_tourism
+        - field_trophy_hunting
+        - field_subsistence_resource_use
+        - field_lease_payments
+        - field_ecosystem_service_payments
+        - field_legal_trade
+        - field_policy_regulatory_change
+        - field_3_2_2_other
+        - field_3_2_2_details
+      parent_name: group_strategy_details
+      weight: 13
+      format_type: html_element
+      format_settings:
+        id: ''
+        classes: ml-3
+        element: div
+        show_label: false
+        label_element: h3
+        label_element_classes: ''
+        required_fields: true
+        attributes: ''
+        effect: none
+        speed: fast
+      label: stewardship_incentives
+      region: content
+    group_decreasing_living_costs:
+      children:
+        - field_preventive_measures_deter
+        - field_reactive_measures
+        - field_financial_mitigation
+        - field_physical_separation
+        - field_3_2_3_other
+        - field_3_2_3_details
+      parent_name: group_strategy_details
+      weight: 15
+      format_type: html_element
+      format_settings:
+        id: ''
+        classes: ml-3
+        element: div
+        show_label: false
+        label_element: h3
+        label_element_classes: ''
+        required_fields: true
+        attributes: ''
+        effect: none
+        speed: fast
+      label: decreasing_living_costs
+      region: content
+    group_non_wildlife_livelihoods:
+      children:
+        - field_non_wildlife_development
+        - field_community_level_benefits
+        - field_3_2_4_other
+        - field_3_2_4_details
+      parent_name: group_strategy_details
+      weight: 17
+      format_type: html_element
+      format_settings:
+        id: ''
+        classes: ml-3
+        element: div
+        show_label: false
+        label_element: h3
+        label_element_classes: ''
+        required_fields: true
+        attributes: ''
+        effect: none
+        speed: fast
+      label: non_wildlife_livelihoods
+      region: content
+    group_steps:
+      children:
+        - group_step_1_overview
+        - group_step_2_details
+        - group_step_3_permissions
+      parent_name: ''
+      weight: 0
+      format_type: accordion
+      format_settings:
+        id: ''
+        classes: ''
+        effect: none
+      label: Steps
+      region: content
+    group_step_1_overview:
+      children:
+        - title
+        - body
+        - field_address
+        - field_geofield
+        - field_species_affected
+        - field_add_new_species
+        - group_strategy_details2
+        - field_related_resources
+        - field_image_gallery
+        - field_image
+      parent_name: group_steps
+      weight: 1
+      format_type: accordion_item
+      format_settings:
+        id: ''
+        classes: ''
+        formatter: closed
+        required_fields: true
+        description: ''
+      label: "Step 1 –\_Overview"
+      region: content
+    group_step_2_details:
+      children:
+        - field_lead_organisation
+        - field_primary_contact_name
+        - field_primary_contact
+        - field_initiative_status
+        - field_year_finished
+        - field_area_description
+        - field_products_in_trade
+        - field_end_use
+        - field_problem_overview
+        - field_initiative_introduction
+        - field_initiative_impact
+        - field_what_worked
+        - field_success_factors
+        - field_4_2_1_details
+        - field_what_isnt_working
+        - field_limiting_factors
+        - field_4_3_1_details
+        - field_organisers_donors_partners
+        - field_role_or_relationship
+        - field_gender_age_ethnic
+      parent_name: group_steps
+      weight: 2
+      format_type: accordion_item
+      format_settings:
+        formatter: closed
+        required_fields: true
+        id: ''
+        classes: ''
+      label: 'Step 2 – Details'
+      region: content
+    group_step_3_permissions:
+      children:
+        - field_permission_to_edit
+        - field_permission_for_reuse
+        - field_personal_data
+      parent_name: group_steps
+      weight: 3
+      format_type: accordion_item
+      format_settings:
+        id: ''
+        classes: ''
+        formatter: closed
+        required_fields: true
+        description: ''
+      label: 'Step 3 – Permissions'
+      region: content
+    group_strategies:
+      children:
+        - field_interventions
+      parent_name: group_strategy_details2
+      weight: 9
+      format_type: details
+      format_settings:
+        open: true
+        required_fields: true
+        id: ''
+        classes: ''
+      label: 'Select the top-level strategies as per the "Strategy details" section'
+      region: content
+    group_strategy_details:
+      children:
+        - field_illegal_disincentives
+        - group_illegal_disincentives
+        - field_stewardship_incentives
+        - group_stewardship_incentives
+        - field_decreasing_living_costs
+        - group_decreasing_living_costs
+        - field_non_wildlife_livelihoods
+        - group_non_wildlife_livelihoods
+        - field_sense_of_ownership
+        - field_3_2_5_details
+        - field_education_and_awareness
+        - field_3_2_6_details
+      parent_name: group_strategy_details2
+      weight: 10
+      format_type: details
+      format_settings:
+        id: ''
+        classes: ''
+        open: true
+        required_fields: true
+      label: 'Strategy details'
+      region: content
+    group_strategy_details2:
+      children:
+        - group_strategies
+        - group_strategy_details
+      parent_name: group_step_1_overview
+      weight: 8
+      format_type: details
+      format_settings:
+        id: ''
+        classes: ''
+        open: true
+        required_fields: true
+      label: Strategies
+      region: content
 id: node.initiative.admin
 targetEntityType: node
 bundle: initiative
@@ -97,7 +344,7 @@ mode: admin
 content:
   body:
     type: text_textarea_with_summary
-    weight: 9
+    weight: 3
     settings:
       rows: 9
       summary_rows: 3
@@ -106,13 +353,13 @@ content:
     region: content
   created:
     type: datetime_timestamp
-    weight: 2
+    weight: 6
     region: content
     settings: {  }
     third_party_settings: {  }
   field_3_2_1_details:
     type: text_textarea
-    weight: 34
+    weight: 37
     region: content
     settings:
       rows: 5
@@ -120,14 +367,14 @@ content:
     third_party_settings: {  }
   field_3_2_1_other:
     type: boolean_checkbox
-    weight: 33
+    weight: 36
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
   field_3_2_2_details:
     type: text_textarea
-    weight: 44
+    weight: 37
     region: content
     settings:
       rows: 5
@@ -135,14 +382,14 @@ content:
     third_party_settings: {  }
   field_3_2_2_other:
     type: boolean_checkbox
-    weight: 43
+    weight: 36
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
   field_3_2_3_details:
     type: text_textarea
-    weight: 51
+    weight: 35
     region: content
     settings:
       rows: 5
@@ -150,14 +397,14 @@ content:
     third_party_settings: {  }
   field_3_2_3_other:
     type: boolean_checkbox
-    weight: 50
+    weight: 34
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
   field_3_2_4_details:
     type: text_textarea
-    weight: 56
+    weight: 34
     region: content
     settings:
       rows: 5
@@ -165,95 +412,12 @@ content:
     third_party_settings: {  }
   field_3_2_4_other:
     type: boolean_checkbox
-    weight: 55
+    weight: 33
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
   field_3_2_5_details:
-    type: text_textarea
-    weight: 58
-    region: content
-    settings:
-      rows: 5
-      placeholder: ''
-    third_party_settings: {  }
-  field_3_2_6_details:
-    type: text_textarea
-    weight: 60
-    region: content
-    settings:
-      rows: 5
-      placeholder: ''
-    third_party_settings: {  }
-  field_4_2_1_details:
-    type: text_textarea
-    weight: 64
-    region: content
-    settings:
-      rows: 5
-      placeholder: ''
-    third_party_settings: {  }
-  field_4_3_1_details:
-    type: text_textarea
-    weight: 67
-    region: content
-    settings:
-      rows: 5
-      placeholder: ''
-    third_party_settings: {  }
-  field_address:
-    weight: 10
-    settings:
-      default_country: null
-    third_party_settings: {  }
-    type: address_default
-    region: content
-  field_area_description:
-    type: text_textarea
-    weight: 12
-    region: content
-    settings:
-      rows: 5
-      placeholder: ''
-    third_party_settings: {  }
-  field_buyers:
-    type: text_textarea
-    weight: 20
-    region: content
-    settings:
-      rows: 5
-      placeholder: ''
-    third_party_settings: {  }
-  field_community_level_benefits:
-    type: boolean_checkbox
-    weight: 54
-    region: content
-    settings:
-      display_label: true
-    third_party_settings: {  }
-  field_decreasing_living_costs:
-    type: boolean_checkbox
-    weight: 46
-    region: content
-    settings:
-      display_label: true
-    third_party_settings: {  }
-  field_ecosystem_service_payments:
-    type: boolean_checkbox
-    weight: 40
-    region: content
-    settings:
-      display_label: true
-    third_party_settings: {  }
-  field_education_and_awareness:
-    type: boolean_checkbox
-    weight: 59
-    region: content
-    settings:
-      display_label: true
-    third_party_settings: {  }
-  field_end_use:
     type: text_textarea
     weight: 19
     region: content
@@ -261,15 +425,112 @@ content:
       rows: 5
       placeholder: ''
     third_party_settings: {  }
-  field_financial_mitigation:
+  field_3_2_6_details:
+    type: text_textarea
+    weight: 21
+    region: content
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+  field_4_2_1_details:
+    type: text_textarea
+    weight: 18
+    region: content
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+  field_4_3_1_details:
+    type: text_textarea
+    weight: 21
+    region: content
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+  field_add_new_species:
+    type: string_textfield
+    weight: 7
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_address:
+    weight: 4
+    settings: {  }
+    third_party_settings: {  }
+    type: address_default
+    region: content
+  field_alternative_language_versi:
+    type: file_generic
+    weight: 9
+    region: content
+    settings:
+      progress_indicator: throbber
+    third_party_settings: {  }
+  field_area_description:
+    type: text_textarea
+    weight: 10
+    region: content
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+  field_community_level_benefits:
     type: boolean_checkbox
-    weight: 49
+    weight: 32
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
+  field_decreasing_living_costs:
+    type: boolean_checkbox
+    weight: 14
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  field_ecosystem_service_payments:
+    type: boolean_checkbox
+    weight: 33
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  field_education_and_awareness:
+    type: boolean_checkbox
+    weight: 20
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  field_end_use:
+    type: text_textarea
+    weight: 12
+    region: content
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+  field_financial_mitigation:
+    type: boolean_checkbox
+    weight: 32
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  field_gender_age_ethnic:
+    type: text_textarea
+    weight: 16
+    region: content
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
   field_geofield:
-    weight: 11
+    weight: 5
     settings:
       html5_geolocation: false
     third_party_settings: {  }
@@ -277,14 +538,14 @@ content:
     region: content
   field_illegal_disincentives:
     type: boolean_checkbox
-    weight: 24
+    weight: 10
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
   field_image:
     type: image_image
-    weight: 70
+    weight: 13
     region: content
     settings:
       progress_indicator: throbber
@@ -292,7 +553,7 @@ content:
     third_party_settings: {  }
   field_image_gallery:
     type: image_image
-    weight: 71
+    weight: 12
     region: content
     settings:
       progress_indicator: throbber
@@ -300,21 +561,21 @@ content:
     third_party_settings: {  }
   field_in_kind_incentives:
     type: boolean_checkbox
-    weight: 30
+    weight: 33
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
   field_in_kind_scouts:
     type: boolean_checkbox
-    weight: 28
+    weight: 31
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
   field_initiative_impact:
     type: text_textarea
-    weight: 61
+    weight: 15
     region: content
     settings:
       rows: 5
@@ -322,7 +583,7 @@ content:
     third_party_settings: {  }
   field_initiative_introduction:
     type: text_textarea
-    weight: 22
+    weight: 14
     region: content
     settings:
       rows: 5
@@ -330,26 +591,26 @@ content:
     third_party_settings: {  }
   field_initiative_status:
     type: options_select
-    weight: 14
+    weight: 8
     region: content
     settings: {  }
     third_party_settings: {  }
   field_intelligence_incentives:
     type: boolean_checkbox
-    weight: 29
+    weight: 32
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
   field_interventions:
     type: options_buttons
-    weight: 23
+    weight: 9
     region: content
     settings: {  }
     third_party_settings: {  }
   field_lead_organisation:
     type: entity_reference_autocomplete
-    weight: 13
+    weight: 5
     region: content
     settings:
       match_operator: CONTAINS
@@ -358,41 +619,41 @@ content:
     third_party_settings: {  }
   field_lease_payments:
     type: boolean_checkbox
-    weight: 39
+    weight: 32
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
   field_legal_trade:
     type: boolean_checkbox
-    weight: 41
+    weight: 34
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
   field_limiting_factors:
     type: options_buttons
-    weight: 66
+    weight: 20
     region: content
     settings: {  }
     third_party_settings: {  }
   field_non_wildlife_development:
     type: boolean_checkbox
-    weight: 53
+    weight: 31
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
   field_non_wildlife_livelihoods:
     type: boolean_checkbox
-    weight: 52
+    weight: 16
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
   field_organisers_donors_partners:
     type: text_textarea
-    weight: 68
+    weight: 22
     region: content
     settings:
       rows: 5
@@ -400,70 +661,63 @@ content:
     third_party_settings: {  }
   field_paid_scouts:
     type: boolean_checkbox
-    weight: 25
+    weight: 28
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
   field_performance_payments:
     type: boolean_checkbox
-    weight: 26
+    weight: 29
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
   field_permission_for_reuse:
     type: boolean_checkbox
-    weight: 76
+    weight: 5
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
   field_permission_to_edit:
     type: boolean_checkbox
-    weight: 75
-    region: content
-    settings:
-      display_label: true
-    third_party_settings: {  }
-  field_permission_to_use_photos:
-    type: boolean_checkbox
-    weight: 77
+    weight: 4
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
   field_personal_data:
     type: boolean_checkbox
-    weight: 78
+    weight: 6
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
   field_physical_separation:
     type: boolean_checkbox
-    weight: 45
+    weight: 33
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
   field_policy_regulatory_change:
     type: boolean_checkbox
-    weight: 42
+    weight: 35
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
   field_preventive_measures_deter:
     type: boolean_checkbox
-    weight: 47
+    weight: 30
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
   field_primary_contact:
     type: email_default
-    weight: 74
+    weight: 7
     region: content
     settings:
       size: 60
@@ -471,7 +725,7 @@ content:
     third_party_settings: {  }
   field_primary_contact_name:
     type: string_textfield
-    weight: 73
+    weight: 6
     region: content
     settings:
       size: 60
@@ -479,7 +733,7 @@ content:
     third_party_settings: {  }
   field_problem_overview:
     type: text_textarea
-    weight: 21
+    weight: 13
     region: content
     settings:
       rows: 5
@@ -487,7 +741,7 @@ content:
     third_party_settings: {  }
   field_products_in_trade:
     type: text_textarea
-    weight: 18
+    weight: 11
     region: content
     settings:
       rows: 5
@@ -495,30 +749,40 @@ content:
     third_party_settings: {  }
   field_raising_awareness:
     type: boolean_checkbox
-    weight: 31
+    weight: 34
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
   field_reactive_measures:
     type: boolean_checkbox
-    weight: 48
+    weight: 31
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
   field_related_resources:
-    type: entity_reference_autocomplete
-    weight: 69
+    type: entity_browser_entity_reference
+    weight: 11
     region: content
     settings:
-      match_operator: CONTAINS
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
+      entity_browser: resource
+      field_widget_display: label
+      field_widget_edit: true
+      field_widget_remove: true
+      open: true
+      selection_mode: selection_edit
+      field_widget_replace: false
+      field_widget_display_settings: {  }
+    third_party_settings:
+      field_states_ui:
+        form:
+          type: ''
+          list: ''
+          add: Add
   field_role_or_relationship:
     type: text_textarea
-    weight: 72
+    weight: 23
     region: content
     settings:
       rows: 5
@@ -526,68 +790,68 @@ content:
     third_party_settings: {  }
   field_sense_of_ownership:
     type: boolean_checkbox
-    weight: 57
+    weight: 18
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
   field_species_affected:
-    weight: 16
+    weight: 6
     settings: {  }
     third_party_settings: {  }
     type: synonyms_select
     region: content
   field_stewardship_incentives:
     type: boolean_checkbox
-    weight: 35
+    weight: 12
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
   field_subsistence_resource_use:
     type: boolean_checkbox
-    weight: 38
+    weight: 31
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
   field_success_factors:
     type: options_buttons
-    weight: 63
+    weight: 17
     region: content
     settings: {  }
     third_party_settings: {  }
   field_supporting_sanctions:
     type: boolean_checkbox
-    weight: 32
+    weight: 35
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
   field_tourism:
     type: boolean_checkbox
-    weight: 36
+    weight: 29
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
   field_trophy_hunting:
     type: boolean_checkbox
-    weight: 37
+    weight: 30
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
   field_voluntary_scouts:
     type: boolean_checkbox
-    weight: 27
+    weight: 30
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
   field_what_isnt_working:
     type: text_textarea
-    weight: 65
+    weight: 19
     region: content
     settings:
       rows: 5
@@ -595,7 +859,7 @@ content:
     third_party_settings: {  }
   field_what_worked:
     type: text_textarea
-    weight: 62
+    weight: 16
     region: content
     settings:
       rows: 5
@@ -603,7 +867,7 @@ content:
     third_party_settings: {  }
   field_year_finished:
     type: string_textfield
-    weight: 15
+    weight: 9
     region: content
     settings:
       size: 60
@@ -611,26 +875,19 @@ content:
     third_party_settings: {  }
   moderation_state:
     type: moderation_state_default
-    weight: 6
+    weight: 3
     settings: {  }
     region: content
     third_party_settings: {  }
   path:
     type: path
-    weight: 5
+    weight: 8
     region: content
     settings: {  }
     third_party_settings: {  }
-  promote:
-    type: boolean_checkbox
-    settings:
-      display_label: true
-    weight: 3
-    region: content
-    third_party_settings: {  }
   revision_log:
     type: hide_revision_field_log_widget
-    weight: 8
+    weight: 1
     region: content
     settings:
       show: true
@@ -644,19 +901,19 @@ content:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 7
+    weight: 4
     region: content
     third_party_settings: {  }
   sticky:
     type: boolean_checkbox
+    weight: 7
+    region: content
     settings:
       display_label: true
-    weight: 4
-    region: content
     third_party_settings: {  }
   title:
     type: string_textfield
-    weight: 0
+    weight: 2
     region: content
     settings:
       size: 60
@@ -664,7 +921,7 @@ content:
     third_party_settings: {  }
   uid:
     type: entity_reference_autocomplete
-    weight: 1
+    weight: 5
     settings:
       match_operator: CONTAINS
       size: 60
@@ -672,8 +929,11 @@ content:
     region: content
     third_party_settings: {  }
   url_redirects:
-    weight: 50
+    weight: 2
+    region: content
     settings: {  }
     third_party_settings: {  }
-    region: content
-hidden: {  }
+hidden:
+  field_buyers: true
+  field_permission_to_use_photos: true
+  promote: true

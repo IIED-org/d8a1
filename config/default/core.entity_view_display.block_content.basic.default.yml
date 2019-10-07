@@ -7,7 +7,6 @@ dependencies:
     - field.field.block_content.basic.body
   module:
     - field_layout
-    - layout_discovery
     - text
 third_party_settings:
   field_layout:

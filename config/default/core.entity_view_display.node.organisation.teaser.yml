@@ -14,11 +14,38 @@ dependencies:
     - ds
     - image
     - user
+third_party_settings:
+  ds:
+    layout:
+      id: layout_onecol
+      library: layout_discovery/onecol
+      disable_css: false
+      entity_classes: all_classes
+      settings:
+        classes: {  }
+        wrappers:
+          content: div
+        outer_wrapper: div
+        attributes: ''
+        link_attribute: ''
+        link_custom: ''
+    regions:
+      content:
+        - content_moderation_control
+        - field_image
+        - body
+        - field_link
+        - field_organisation_type
 id: node.organisation.teaser
 targetEntityType: node
 bundle: organisation
 mode: teaser
 content:
+  content_moderation_control:
+    weight: -20
+    region: content
+    settings: {  }
+    third_party_settings: {  }
   field_image:
     type: image
     weight: 0

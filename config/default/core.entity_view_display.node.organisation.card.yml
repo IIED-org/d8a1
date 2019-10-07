@@ -1,0 +1,95 @@
+uuid: bd79c4e7-d8f3-4e71-b348-227db21fe177
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.card
+    - field.field.node.organisation.body
+    - field.field.node.organisation.field_image
+    - field.field.node.organisation.field_link
+    - field.field.node.organisation.field_organisation_type
+    - node.type.organisation
+  module:
+    - ds
+    - image
+    - link
+    - options
+    - text
+    - user
+third_party_settings:
+  ds:
+    layout:
+      id: ds_1col
+      library: null
+      disable_css: false
+      entity_classes: all_classes
+      settings:
+        wrappers:
+          ds_content: div
+        outer_wrapper: div
+        attributes: ''
+        link_attribute: ''
+        link_custom: ''
+        classes:
+          layout_class: {  }
+          ds_content: {  }
+    regions:
+      ds_content:
+        - content_moderation_control
+        - links
+        - body
+        - field_link
+        - field_image
+        - field_organisation_type
+id: node.organisation.card
+targetEntityType: node
+bundle: organisation
+mode: card
+content:
+  body:
+    label: hidden
+    type: text_default
+    weight: 101
+    settings: {  }
+    third_party_settings: {  }
+    region: ds_content
+  content_moderation_control:
+    weight: -20
+    region: ds_content
+    settings: {  }
+    third_party_settings: {  }
+  field_image:
+    weight: 103
+    label: above
+    settings:
+      image_style: ''
+      image_link: ''
+    third_party_settings: {  }
+    type: image
+    region: ds_content
+  field_link:
+    weight: 102
+    label: above
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+    type: link
+    region: ds_content
+  field_organisation_type:
+    weight: 104
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: list_default
+    region: ds_content
+  links:
+    weight: 100
+    region: ds_content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  addtoany: true

@@ -1,0 +1,19 @@
+uuid: bd1ad41e-e4e9-405e-8305-91a5c7597237
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_event_dates
+    - node.type.event
+id: node.event.field_event_dates
+field_name: field_event_dates
+entity_type: node
+bundle: event
+label: 'Event timings'
+description: 'Additional date and timing info (optional, will appear below date if added).'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

@@ -10,7 +10,7 @@ dependencies:
     - text
 third_party_settings:
   label_help:
-    label_help_description: "Consider the following:<br />\r\n• Have poaching rates decreased and what evidence is available that demonstrates this?<br />\r\n• Has it been effective in other ways? For example, decreasing habitat loss, or improving attitudes toward conservation, or meeting socio-economic needs?"
+    label_help_description: "Please summarise the effectiveness and impact of the initiative. Consider the following:<br />\r\n• Have poaching rates decreased and what evidence is available that demonstrates this?<br />\r\n• Has it been effective in other ways? For example, decreasing habitat loss, or improving attitudes toward conservation, or meeting socio-economic needs?"
 id: node.initiative.field_initiative_impact
 field_name: field_initiative_impact
 entity_type: node

@@ -3,7 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
-    - entity_browser.browser.resource
+    - entity_browser.browser.add_new_resource
     - field.field.node.initiative.body
     - field.field.node.initiative.field_3_2_1_details
     - field.field.node.initiative.field_3_2_1_other
@@ -19,6 +19,7 @@ dependencies:
     - field.field.node.initiative.field_4_3_1_details
     - field.field.node.initiative.field_add_new_species
     - field.field.node.initiative.field_address
+    - field.field.node.initiative.field_alternative_language_versi
     - field.field.node.initiative.field_area_description
     - field.field.node.initiative.field_buyers
     - field.field.node.initiative.field_community_level_benefits
@@ -27,6 +28,7 @@ dependencies:
     - field.field.node.initiative.field_education_and_awareness
     - field.field.node.initiative.field_end_use
     - field.field.node.initiative.field_financial_mitigation
+    - field.field.node.initiative.field_gender_age_ethnic
     - field.field.node.initiative.field_geofield
     - field.field.node.initiative.field_illegal_disincentives
     - field.field.node.initiative.field_image
@@ -76,9 +78,11 @@ dependencies:
     - field.field.node.initiative.field_year_finished
     - image.style.thumbnail
     - node.type.initiative
+    - workflows.workflow.editorial
   module:
     - address
     - conditional_fields
+    - content_moderation
     - entity_browser
     - field_group
     - field_layout
@@ -101,7 +105,6 @@ third_party_settings:
       weight: 0
       format_type: multipage_group
       format_settings:
-        label: Multipage
         id: ''
         classes: ''
         page_header: 2
@@ -122,17 +125,15 @@ third_party_settings:
         - group_species_card
         - group_3_2
         - group_related_resources
-        - group_contact_card
       parent_name: group_multi
       weight: 15
       format_type: multipage
       format_settings:
-        label: Overview
         description: ''
         required_fields: true
         id: ''
         classes: ''
-      label: Overview
+      label: 'Overview (key information)'
       region: content
     group_step_2:
       children:
@@ -141,7 +142,6 @@ third_party_settings:
       weight: 16
       format_type: multipage
       format_settings:
-        label: 'Details of the initiative (optional)'
         description: ''
         required_fields: true
         id: ''
@@ -151,24 +151,20 @@ third_party_settings:
     group_the_anti_iwt_initiative:
       children:
         - field_products_in_trade
-        - field_end_use
-        - field_buyers
         - field_problem_overview
       parent_name: group_more_details
       weight: 22
       format_type: accordion_item
       format_settings:
-        label: 'The Poaching and Wildlife Trade Problem'
+        formatter: closed
         required_fields: true
         id: ''
         classes: ''
-        open: false
-        formatter: closed
-        description: ''
-      label: 'The Poaching and Wildlife Trade Problem'
+      label: 'The poaching and wildlife trade problem'
       region: content
     group_initiative_difference:
       children:
+        - field_gender_age_ethnic
         - field_initiative_introduction
         - field_initiative_impact
         - field_what_worked
@@ -181,14 +177,11 @@ third_party_settings:
       weight: 23
       format_type: accordion_item
       format_settings:
-        label: 'The Anti-IWT Initiative'
-        description: ''
+        formatter: closed
         required_fields: true
         id: ''
         classes: ''
-        open: false
-        formatter: closed
-      label: 'The Anti-IWT Initiative'
+      label: 'The anti-IWT initiative'
       region: content
     group_3_2_1_strengthening_disinc:
       children:
@@ -206,7 +199,6 @@ third_party_settings:
       weight: 22
       format_type: html_element
       format_settings:
-        label: field_illegal_disincentives
         element: div
         show_label: false
         label_element: h3
@@ -234,7 +226,6 @@ third_party_settings:
       weight: 24
       format_type: html_element
       format_settings:
-        label: field_stewardship_incentives
         element: div
         show_label: false
         label_element: h3
@@ -259,7 +250,6 @@ third_party_settings:
       weight: 26
       format_type: html_element
       format_settings:
-        label: field_decreasing_living_costs
         element: div
         show_label: false
         label_element: h3
@@ -282,7 +272,6 @@ third_party_settings:
       weight: 28
       format_type: html_element
       format_settings:
-        label: field_non_wildlife_livelihoods
         element: div
         show_label: false
         label_element: h3
@@ -302,7 +291,6 @@ third_party_settings:
       weight: 23
       format_type: details
       format_settings:
-        label: 'The strategy'
         open: true
         required_fields: true
         id: ''
@@ -327,11 +315,10 @@ third_party_settings:
       weight: 21
       format_type: html_element
       format_settings:
-        label: 'Strategies, though discrete, may be inter-linked. In these cases please tick all boxes that apply and add an explanation'
         element: div
         show_label: true
-        label_element: small
-        label_element_classes: 'description text-muted'
+        label_element: p
+        label_element_classes: 'description text-muted label-description'
         attributes: ''
         effect: none
         speed: fast
@@ -348,7 +335,6 @@ third_party_settings:
       weight: 24
       format_type: accordion_item
       format_settings:
-        label: 'Organisers, donors and partners'
         formatter: closed
         id: ''
         classes: ''
@@ -357,19 +343,17 @@ third_party_settings:
       region: content
     group_permissions:
       children:
-        - field_permission_for_reuse
-        - field_permission_to_edit
-        - field_personal_data
+        - group_we_need_permission
+        - group_workflow
       parent_name: group_multi
       weight: 17
       format_type: multipage
       format_settings:
-        label: Permissions
         description: ''
         required_fields: true
         id: ''
         classes: ''
-      label: Permissions
+      label: 'Permissions and save'
       region: content
     group_please_select:
       children:
@@ -378,9 +362,8 @@ third_party_settings:
       weight: 20
       format_type: html_element
       format_settings:
-        label: 'Please select all the option(s) that apply to your project''s strategy by ticking the relevant boxes.'
         element: div
-        show_label: true
+        show_label: false
         label_element: small
         label_element_classes: ''
         required_fields: true
@@ -398,7 +381,6 @@ third_party_settings:
       weight: 24
       format_type: details
       format_settings:
-        label: 'New species'
         required_fields: true
         id: ''
         classes: ''
@@ -412,7 +394,6 @@ third_party_settings:
       weight: 21
       format_type: details
       format_settings:
-        label: Location
         open: true
         required_fields: true
         id: ''
@@ -427,7 +408,6 @@ third_party_settings:
       weight: 24
       format_type: details
       format_settings:
-        label: 'Add or upload content'
         open: true
         required_fields: true
         id: ''
@@ -437,6 +417,8 @@ third_party_settings:
     group_details:
       children:
         - field_lead_organisation
+        - field_primary_contact_name
+        - field_primary_contact
         - field_initiative_status
         - field_year_finished
         - field_area_description
@@ -444,7 +426,6 @@ third_party_settings:
       weight: 21
       format_type: accordion_item
       format_settings:
-        label: 'Further details'
         formatter: open
         id: ''
         classes: ''
@@ -461,7 +442,6 @@ third_party_settings:
       weight: 20
       format_type: accordion
       format_settings:
-        label: 'Details of the initiative (optional)'
         effect: bounceslide
         id: ''
         classes: ''
@@ -507,25 +487,39 @@ third_party_settings:
         speed: fast
       label: 'species card'
       region: content
-    group_contact_card:
+    group_we_need_permission:
       children:
-        - field_primary_contact_name
-        - field_primary_contact
-      parent_name: group_step_1
-      weight: 25
+        - field_permission_for_reuse
+        - field_permission_to_edit
+        - field_personal_data
+      parent_name: group_permissions
+      weight: 20
+      format_type: fieldset
+      format_settings:
+        description: ''
+        required_fields: true
+        id: ''
+        classes: ml-3
+      label: 'Please tick the boxes to allow us to publish your submission. See our <a href="/privacy-policy">privacy policy</a> for more info'
+      region: content
+    group_workflow:
+      children:
+        - moderation_state
+      parent_name: group_permissions
+      weight: 21
       format_type: html_element
       format_settings:
-        id: ''
-        classes: card
         element: div
-        show_label: false
-        label_element: h3
+        show_label: true
+        label_element: strong
         label_element_classes: ''
-        required_fields: false
+        required_fields: true
         attributes: ''
         effect: none
         speed: fast
-      label: 'contact card'
+        id: ''
+        classes: ''
+      label: 'Select "Submit for review" when ready, or leave in Draft if you wish to come back and revise your submission later'
       region: content
 id: node.initiative.default
 targetEntityType: node
@@ -793,7 +787,7 @@ content:
     type: text_textarea
     region: content
   field_4_2_1_details:
-    weight: 40
+    weight: 39
     settings:
       rows: 5
       placeholder: ''
@@ -818,23 +812,14 @@ content:
     region: content
   field_address:
     weight: 24
-    settings:
-      default_country: null
+    settings: {  }
     third_party_settings: {  }
     type: address_default
     region: content
   field_area_description:
-    weight: 43
+    weight: 33
     settings:
       rows: 5
-      placeholder: ''
-    third_party_settings: {  }
-    type: text_textarea
-    region: content
-  field_buyers:
-    weight: 37
-    settings:
-      rows: 3
       placeholder: ''
     third_party_settings: {  }
     type: text_textarea
@@ -901,14 +886,6 @@ content:
     settings:
       display_label: true
     third_party_settings: {  }
-  field_end_use:
-    weight: 36
-    settings:
-      rows: 3
-      placeholder: ''
-    third_party_settings: {  }
-    type: text_textarea
-    region: content
   field_financial_mitigation:
     weight: 9
     settings:
@@ -932,6 +909,14 @@ content:
           entity_type: node
           bundle: initiative
     type: boolean_checkbox
+    region: content
+  field_gender_age_ethnic:
+    weight: 35
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+    type: text_textarea
     region: content
   field_illegal_disincentives:
     type: boolean_checkbox
@@ -1021,7 +1006,7 @@ content:
     type: text_textarea
     region: content
   field_initiative_introduction:
-    weight: 35
+    weight: 34
     settings:
       rows: 3
       placeholder: ''
@@ -1029,7 +1014,7 @@ content:
     type: text_textarea
     region: content
   field_initiative_status:
-    weight: 41
+    weight: 31
     settings: {  }
     third_party_settings: {  }
     type: options_select
@@ -1064,17 +1049,22 @@ content:
     type: boolean_checkbox
     region: content
   field_lead_organisation:
-    weight: 40
+    weight: 28
     settings:
-      entity_browser: organisation
+      entity_browser: add_new_organisation
       field_widget_display: label
+      field_widget_remove: true
       open: true
-      selection_mode: selection_edit
+      selection_mode: selection_append
       field_widget_edit: false
-      field_widget_remove: false
       field_widget_replace: false
       field_widget_display_settings: {  }
-    third_party_settings: {  }
+    third_party_settings:
+      field_states_ui:
+        form:
+          type: ''
+          list: ''
+          add: Add
     type: entity_browser_entity_reference
     region: content
   field_lease_payments:
@@ -1255,21 +1245,21 @@ content:
     type: boolean_checkbox
     region: content
   field_permission_for_reuse:
-    weight: 66
+    weight: 21
     settings:
       display_label: true
     third_party_settings: {  }
     type: boolean_checkbox
     region: content
   field_permission_to_edit:
-    weight: 67
+    weight: 22
     settings:
       display_label: true
     third_party_settings: {  }
     type: boolean_checkbox
     region: content
   field_personal_data:
-    weight: 69
+    weight: 23
     settings:
       display_label: true
     third_party_settings: {  }
@@ -1348,7 +1338,7 @@ content:
     type: boolean_checkbox
     region: content
   field_primary_contact:
-    weight: 27
+    weight: 30
     settings:
       size: 60
       placeholder: ''
@@ -1356,7 +1346,7 @@ content:
     type: email_default
     region: content
   field_primary_contact_name:
-    weight: 26
+    weight: 29
     settings:
       size: 60
       placeholder: ''
@@ -1430,7 +1420,7 @@ content:
   field_related_resources:
     weight: 28
     settings:
-      entity_browser: resource
+      entity_browser: add_new_resource
       field_widget_display: label
       field_widget_remove: true
       open: true
@@ -1499,7 +1489,7 @@ content:
     type: boolean_checkbox
     region: content
   field_success_factors:
-    weight: 39
+    weight: 38
     settings: {  }
     third_party_settings: {  }
     type: options_buttons
@@ -1627,7 +1617,7 @@ content:
     type: text_textarea
     region: content
   field_what_worked:
-    weight: 38
+    weight: 37
     settings:
       rows: 5
       placeholder: ''
@@ -1635,7 +1625,7 @@ content:
     type: text_textarea
     region: content
   field_year_finished:
-    weight: 42
+    weight: 32
     settings:
       size: 60
       placeholder: ''
@@ -1660,6 +1650,12 @@ content:
           bundle: initiative
     type: string_textfield
     region: content
+  moderation_state:
+    type: moderation_state_default
+    weight: 22
+    region: content
+    settings: {  }
+    third_party_settings: {  }
   title:
     type: string_textfield
     weight: 21
@@ -1670,11 +1666,13 @@ content:
     third_party_settings: {  }
 hidden:
   created: true
+  field_alternative_language_versi: true
+  field_buyers: true
+  field_end_use: true
   field_geofield: true
   field_image: true
   field_interventions: true
   field_permission_to_use_photos: true
-  moderation_state: true
   path: true
   promote: true
   revision_log: true

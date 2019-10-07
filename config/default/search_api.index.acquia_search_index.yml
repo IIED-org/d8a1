@@ -12,6 +12,7 @@ dependencies:
     - field.storage.node.field_geofield
     - field.storage.node.field_interventions
     - field.storage.node.field_species_affected
+    - field.storage.node.field_standalone_resource
     - field.storage.paragraph.field_video_url
     - search_api.server.acquia_search_server
   module:
@@ -25,7 +26,7 @@ _core:
 id: acquia_search_index
 name: 'Acquia Search Solr Index'
 description: ''
-read_only: true
+read_only: false
 field_settings:
   body:
     label: Body
@@ -116,6 +117,14 @@ field_settings:
     dependencies:
       config:
         - field.storage.node.field_species_affected
+  field_standalone_resource:
+    label: 'Standalone resource'
+    datasource_id: 'entity:node'
+    property_path: field_standalone_resource
+    type: boolean
+    dependencies:
+      config:
+        - field.storage.node.field_standalone_resource
   field_video_url:
     label: 'Resource type » Paragraph » Video URL'
     datasource_id: 'entity:node'
@@ -186,7 +195,7 @@ field_settings:
       module:
         - node
   uid:
-    label: null
+    label: uid
     datasource_id: 'entity:node'
     property_path: uid
     type: integer

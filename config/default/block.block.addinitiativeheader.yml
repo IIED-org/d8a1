@@ -1,0 +1,31 @@
+uuid: a019663d-8008-4825-adec-8cc522662cc6
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:basic:54e07c30-7c55-4cc1-9348-971003a8b151'
+  module:
+    - block_content
+    - system
+  theme:
+    - pnp_bootstrap_sass
+id: addinitiativeheader
+theme: pnp_bootstrap_sass
+region: content
+weight: -20
+provider: null
+plugin: 'block_content:54e07c30-7c55-4cc1-9348-971003a8b151'
+settings:
+  id: 'block_content:54e07c30-7c55-4cc1-9348-971003a8b151'
+  label: 'Add initiative header'
+  provider: block_content
+  label_display: '0'
+  status: true
+  info: ''
+  view_mode: full
+visibility:
+  request_path:
+    id: request_path
+    pages: /node/add/initiative
+    negate: false
+    context_mapping: {  }

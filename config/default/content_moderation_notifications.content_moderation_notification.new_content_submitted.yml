@@ -6,17 +6,16 @@ id: new_content_submitted
 workflow: editorial
 transitions:
   create_new_draft: create_new_draft
-roles:
-  editor: editor
-author: false
+roles: {  }
+author: true
 to: ''
 cc: ''
 bcc: ''
 from: ''
-replyto: ''
-subject: 'Draft {{ entity.type.entity.label }} on People Not Poaching'
+replyto: info@peoplenotpoaching.org
+subject: 'Draft {{ entity.bundle }} created on People Not Poaching'
 body:
-  value: "<p>Dear site editor,</p>\r\n\r\n<p>Content has been created or modified&nbsp;which needs reviewing and publishing. The URL to edit the content is:</p>\r\n\r\n<p>{{ base_url }}/node/{{ entity.nid.value }}/edit</p>\r\n\r\n<p>Best regards,<br />\r\nThe Rhinobot<br />\r\n{{ site_name }}</p>\r\n\r\n<p>&nbsp;</p>\r\n"
+  value: "<p>Dear contributor,</p>\r\n\r\n<p>{{ entity.type.entity.label }}&nbsp;\"{{ entity.title.value }}\" has been created in draft. The URL to edit the {{ entity.bundle }} is:</p>\r\n\r\n<p>&nbsp; {{ base_url }}node/{{ entity.nid.value }}/edit</p>\r\n\r\n<p>When you're ready to submit the {{ entity.bundle }}&nbsp;for review please select \"Submit for review\" at the end of the form, and re-save the item. You will be notified when your {{ entity.bundle }} has been made live.</p>\r\n\r\n<p>Best regards,<br />\r\nThe Rhinobot<br />\r\n{{ site_name }}</p>\r\n\r\n<p>&nbsp;</p>\r\n"
   format: basic_html
 label: 'New content submitted'
 abort: ''

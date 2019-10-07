@@ -31,7 +31,8 @@ third_party_settings:
         classes:
           layout_class:
             container: container
-          ds_content: {  }
+          ds_content:
+            container: container
     regions:
       ds_content:
         - username
@@ -67,7 +68,14 @@ content:
     region: ds_content
     settings:
       image_style: thumbnail
-      image_link: content
-    third_party_settings: {  }
+      image_link: ''
+    third_party_settings:
+      ds:
+        ft:
+          id: default
+          settings:
+            lb: ''
+            lb-col: false
+            classes: {  }
     label: hidden
 hidden: {  }

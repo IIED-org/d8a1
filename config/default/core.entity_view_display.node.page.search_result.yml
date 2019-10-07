@@ -5,6 +5,7 @@ dependencies:
   config:
     - core.entity_view_mode.node.search_result
     - field.field.node.page.body
+    - field.field.node.page.field_standfirst
     - node.type.page
   module:
     - text
@@ -31,3 +32,4 @@ content:
     region: content
 hidden:
   addtoany: true
+  field_standfirst: true

@@ -15,7 +15,7 @@ field_name: field_policy_regulatory_change
 entity_type: node
 bundle: initiative
 label: 'Policy/regulatory change to enable communities to benefit.'
-description: ''
+description: 'This may include national/international changes to policy to enable communities to benefit'
 required: false
 translatable: false
 default_value:

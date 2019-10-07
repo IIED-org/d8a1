@@ -1,0 +1,31 @@
+uuid: 9b45cc4a-49b0-45d9-9816-505ce50690a9
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:basic:ec13550a-b258-4555-96ef-faaf44aeddb7'
+  module:
+    - block_content
+    - system
+  theme:
+    - pnp_bootstrap_sass
+id: homenewsletter
+theme: pnp_bootstrap_sass
+region: featured_bottom_second
+weight: 0
+provider: null
+plugin: 'block_content:ec13550a-b258-4555-96ef-faaf44aeddb7'
+settings:
+  id: 'block_content:ec13550a-b258-4555-96ef-faaf44aeddb7'
+  label: 'Home newsletter'
+  provider: block_content
+  label_display: '0'
+  status: true
+  info: ''
+  view_mode: full
+visibility:
+  request_path:
+    id: request_path
+    pages: '<front>'
+    negate: false
+    context_mapping: {  }
