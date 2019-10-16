@@ -46,6 +46,7 @@ trait LeafletSettingsElementsTrait {
       'multiple_map' => 0,
       'leaflet_map' => 'OSM Mapnik',
       'height' => 400,
+      'height_unit' => 'px',
       'hide_empty_map' => 0,
       'disable_wheel' => 0,
       'fullscreen_control' => 1,
@@ -67,6 +68,7 @@ trait LeafletSettingsElementsTrait {
         'zoomFiner' => 0,
       ],
       'icon' => [
+        'iconType' => 'marker',
         'iconUrl' => '',
         'iconSize' => ['x' => NULL, 'y' => NULL],
         'iconAnchor' => ['x' => NULL, 'y' => NULL],
@@ -74,6 +76,8 @@ trait LeafletSettingsElementsTrait {
         'shadowSize' => ['x' => NULL, 'y' => NULL],
         'shadowAnchor' => ['x' => NULL, 'y' => NULL],
         'popupAnchor' => ['x' => NULL, 'y' => NULL],
+        'iconHtml' => '<div></div>',
+        'html_class' => 'leaflet-map-divicon',
       ],
       'leaflet_markercluster' => [
         'control' => 0,
@@ -125,7 +129,18 @@ trait LeafletSettingsElementsTrait {
       '#title' => $this->t('Map Height'),
       '#type' => 'number',
       '#default_value' => $settings['height'],
-      '#field_suffix' => $this->t('px'),
+      '#description' => $this->t('Note: This can be left empty to make the Map fill its parent container height.'),
+    ];
+
+    $elements['height_unit'] = [
+      '#title' => t('Map height unit'),
+      '#type' => 'select',
+      '#options' => [
+        'px' => t('px'),
+        '%' => t('%'),
+      ],
+      '#default_value' => $settings['height_unit'],
+      '#description' => t("Whether height is absolute (pixels) or relative (percent).<br><strong>Note:</strong> In case of Percent the Leaflet Map should be wrapped in a container element with defined Height, otherwise won't show up."),
     ];
 
     $elements['hide_empty_map'] = [
@@ -295,7 +310,17 @@ trait LeafletSettingsElementsTrait {
    */
   protected function generateIconFormElement(array $icon_options) {
 
-    $icon_url_description = $this->t('Can be an absolute or relative URL.<br><b>Note: </b> Using Tokens it is possible to dynamically define the Marker Icon output, with the composition of Marker Icon paths including entity properties or fields values.');
+    $token_replacement_disclaimer = $this->t('<b>Note: </b> Using Tokens/Replacement Patterns it is possible to dynamically define the Marker Icon output, with the composition of Marker Icon paths including entity properties or fields values.');
+    $icon_url_description = $this->t('Can be an absolute or relative URL. <b>If left empty the default Leaflet Marker will be used.</b><br>@token_replacement_disclaimer', [
+      '@token_replacement_disclaimer' => $token_replacement_disclaimer,
+    ]);
+
+    if (isset($this->fieldDefinition)) {
+      $icon_type = ':input[name="fields[' . $this->fieldDefinition->getName() . '][settings_edit_form][settings][icon][iconType]"]';
+    }
+    else {
+      $icon_type = ':input[name="style_options[icon][iconType]"]';
+    }
 
     $element = [
       '#type' => 'fieldset',
@@ -307,12 +332,27 @@ trait LeafletSettingsElementsTrait {
       ],
     ];
 
+    $element['iconType'] = [
+      '#type' => 'radios',
+      '#title' => t('Icon Source'),
+      '#default_value' => isset($icon_options['iconType']) ? $icon_options['iconType'] : 'marker',
+      '#options' => [
+        'marker' => 'Icon Image Url/Path',
+        'html' => 'Field (html DivIcon)',
+      ],
+    ];
+
     $element['iconUrl'] = [
       '#title' => $this->t('Icon URL'),
       '#description' => $icon_url_description,
       '#type' => 'textarea',
       '#rows' => 3,
       '#default_value' => isset($icon_options['iconUrl']) ? $icon_options['iconUrl'] : NULL,
+      '#states' => [
+        'visible' => [
+          $icon_type => ['value' => 'marker'],
+        ],
+      ],
     ];
 
     $element['shadowUrl'] = [
@@ -321,6 +361,41 @@ trait LeafletSettingsElementsTrait {
       '#type' => 'textarea',
       '#rows' => 3,
       '#default_value' => isset($icon_options['shadowUrl']) ? $icon_options['shadowUrl'] : NULL,
+      '#states' => [
+        'visible' => [
+          $icon_type => ['value' => 'marker'],
+        ],
+      ],
+    ];
+
+    $element['html'] = [
+      '#title' => $this->t('Html'),
+      '#type' => 'textarea',
+      '#description' => $this->t('Insert here the Html code that will be used as marker html markup. <b>If left empty the default Leaflet Marker will be used.</b><br>@token_replacement_disclaimer', [
+        '@token_replacement_disclaimer' => $token_replacement_disclaimer,
+      ]),
+      '#default_value' => isset($icon_options['html']) ? $icon_options['html'] : '<div></div>',
+      '#rows' => 3,
+      '#states' => [
+        'visible' => [
+          $icon_type => ['value' => 'html'],
+        ],
+        'required' => [
+          $icon_type => ['value' => 'html'],
+        ],
+      ],
+    ];
+
+    $element['html_class'] = [
+      '#type' => 'textfield',
+      '#title' => t('Marker HTML class'),
+      '#description' => t('Required class name for the div used to wrap field output. For multiple classes, separate with a space.'),
+      '#default_value' => isset($icon_options['html_class']) ? $icon_options['html_class'] : 'leaflet-map-divicon',
+      '#states' => [
+        'visible' => [
+          $icon_type => ['value' => 'html'],
+        ],
+      ],
     ];
 
     if (method_exists($this, 'getProvider') && $this->getProvider() == 'leaflet_views') {
@@ -851,7 +926,13 @@ trait LeafletSettingsElementsTrait {
    */
   public static function validateGeocoderProviders(array $element, FormStateInterface &$form_state) {
     $form_state_input = $form_state->getUserInput();
-    if ($form_state_input['style_options']['geocoder']['control']) {
+    if (isset($form_state_input['style_options'])) {
+      $geocoder_control = $form_state_input['style_options']['geocoder']['control'];
+    }
+    if (isset($form_state_input['fields'])) {
+      $geocoder_control = $form_state_input['fields'][$element['#array_parents'][1]]['settings_edit_form']['settings']['geocoder']['control'];
+    }
+    if (isset($geocoder_control) && $geocoder_control) {
       $providers = is_array($element['#value']) ? array_filter($element['#value'], function ($value) {
         return isset($value['checked']) && TRUE == $value['checked'];
       }) : [];
