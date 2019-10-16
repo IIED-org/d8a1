@@ -97,7 +97,7 @@ class LeafletCountryFormatter extends LeafletDefaultFormatter {
    */
   public function viewElements(FieldItemListInterface $items, $langcode) {
     $settings = $this->getSettings();
-    $icon_url = $settings['icon']['icon_url'];
+    $icon_url = $settings['icon']['iconUrl'];
 
     $map = leaflet_map_get_info($settings['leaflet_map']);
     $map['settings']['zoom'] = isset($settings["map_position"]["zoom"]) ? $settings["map_position"]["zoom"] != 'auto' ? $settings["map_position"]["zoom"] : NULL : NULL;

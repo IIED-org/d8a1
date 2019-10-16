@@ -22,7 +22,7 @@ use Drupal\views\ViewsData;
  *   id = "leaflet_country",
  *   title = @Translation("Country outline"),
  *   help = @Translation("Display the row as a leaflet country outline."),
- *   display_types = {"leaflet"},
+ *   display_types = {"normal"},
  * )
  */
 class LeafletCountry extends RowPluginBase implements ContainerFactoryPluginInterface {

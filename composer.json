@@ -100,11 +100,12 @@
     "drupal/honeypot": "^1.29",
     "drupal/leaflet_countries": "^1.1",
     "mledoze/countries": "^2.1",
-    "drupal/leaflet": "^1.19",
     "drupal/geolocation": "^3.0",
     "drupal/views_field_view": "^1.0@beta",
     "drupal/views_entity_form_field": "^1.0@beta",
-    "drupal/asset_injector": "^2.4"
+    "drupal/asset_injector": "^2.4",
+    "drupal/leaflet": "^1.22",
+    "drupal/leaflet_mapbox": "1.x-dev"
   },
   "require-dev": {
     "drupal/devel": "^1.0",
