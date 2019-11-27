@@ -229,7 +229,10 @@ third_party_settings:
         - field_related_resources
         - field_image_gallery
         - field_image
+<<<<<<< HEAD
         - field_main_image_caption
+=======
+>>>>>>> d89ab922ab942473f4d6c5eaf2d6db943dabbfa9
       parent_name: group_steps
       weight: 1
       format_type: accordion_item
@@ -254,7 +257,10 @@ third_party_settings:
         - field_problem_overview
         - field_initiative_introduction
         - field_initiative_impact
+<<<<<<< HEAD
         - field_gender_age_ethnic
+=======
+>>>>>>> d89ab922ab942473f4d6c5eaf2d6db943dabbfa9
         - field_what_worked
         - field_success_factors
         - field_4_2_1_details
@@ -263,6 +269,10 @@ third_party_settings:
         - field_4_3_1_details
         - field_organisers_donors_partners
         - field_role_or_relationship
+<<<<<<< HEAD
+=======
+        - field_gender_age_ethnic
+>>>>>>> d89ab922ab942473f4d6c5eaf2d6db943dabbfa9
       parent_name: group_steps
       weight: 2
       format_type: accordion_item
@@ -548,7 +558,11 @@ content:
     third_party_settings: {  }
   field_image:
     type: image_image
+<<<<<<< HEAD
     weight: 11
+=======
+    weight: 13
+>>>>>>> d89ab922ab942473f4d6c5eaf2d6db943dabbfa9
     region: content
     settings:
       progress_indicator: throbber
@@ -556,7 +570,11 @@ content:
     third_party_settings: {  }
   field_image_gallery:
     type: image_image
+<<<<<<< HEAD
     weight: 10
+=======
+    weight: 12
+>>>>>>> d89ab922ab942473f4d6c5eaf2d6db943dabbfa9
     region: content
     settings:
       progress_indicator: throbber
@@ -779,7 +797,11 @@ content:
     third_party_settings: {  }
   field_related_resources:
     type: entity_browser_entity_reference
+<<<<<<< HEAD
     weight: 9
+=======
+    weight: 11
+>>>>>>> d89ab922ab942473f4d6c5eaf2d6db943dabbfa9
     region: content
     settings:
       entity_browser: resource
@@ -951,6 +973,9 @@ content:
     third_party_settings: {  }
 hidden:
   field_buyers: true
+<<<<<<< HEAD
   field_image_caption: true
+=======
+>>>>>>> d89ab922ab942473f4d6c5eaf2d6db943dabbfa9
   field_permission_to_use_photos: true
   promote: true
