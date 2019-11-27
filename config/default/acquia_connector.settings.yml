@@ -4,7 +4,7 @@ subscription_data:
   uuid: ef43298b-5eac-4d9d-b465-5fd0b1af3281
   subscription_name: d8a1
   expiration_date:
-    value: '2019-10-30T00:00:00'
+    value: '2020-10-30T00:00:00'
   product:
     view: 'Acquia Network'
   derived_key_salt: 10dc8ea824194e275b7858588093ae4e

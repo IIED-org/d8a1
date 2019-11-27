@@ -1,0 +1,38 @@
+uuid: 188bdac8-fb76-4d97-84f6-763009b8650d
+langcode: en
+status: true
+dependencies:
+  module:
+    - content_moderation
+id: test_type
+label: 'test type'
+type: content_moderation
+type_settings:
+  states:
+    draft:
+      label: Draft
+      published: false
+      default_revision: false
+      weight: 0
+    published:
+      label: Published
+      published: true
+      default_revision: true
+      weight: 1
+  transitions:
+    create_new_draft:
+      label: 'Create New Draft'
+      to: draft
+      weight: 0
+      from:
+        - draft
+        - published
+    publish:
+      label: Publish
+      to: published
+      weight: 1
+      from:
+        - draft
+        - published
+  entity_types: {  }
+  default_moderation_state: draft

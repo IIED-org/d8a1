@@ -1,0 +1,31 @@
+uuid: 53ef4745-d5cc-4deb-a6e2-984e681355ec
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:basic:cf626c19-412e-49db-a7c8-2798d20ce564'
+  module:
+    - block_content
+    - system
+  theme:
+    - pnp_bootstrap_sass
+id: homeexploreandcontribute
+theme: pnp_bootstrap_sass
+region: content
+weight: 0
+provider: null
+plugin: 'block_content:cf626c19-412e-49db-a7c8-2798d20ce564'
+settings:
+  id: 'block_content:cf626c19-412e-49db-a7c8-2798d20ce564'
+  label: 'Home explore and contribute'
+  provider: block_content
+  label_display: '0'
+  status: true
+  info: ''
+  view_mode: full
+visibility:
+  request_path:
+    id: request_path
+    pages: '<front>'
+    negate: false
+    context_mapping: {  }
