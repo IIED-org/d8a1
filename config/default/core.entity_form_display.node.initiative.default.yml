@@ -166,7 +166,6 @@ third_party_settings:
       region: content
     group_initiative_difference:
       children:
-        - field_gender_age_ethnic
         - field_initiative_introduction
         - field_gender_age_ethnic
         - field_initiative_impact
