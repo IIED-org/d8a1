@@ -40,10 +40,6 @@ dependencies:
     - field.storage.node.field_legal_trade
     - field.storage.node.field_limiting_factors
     - field.storage.node.field_link
-<<<<<<< HEAD
-    - field.storage.node.field_main_image_caption
-=======
->>>>>>> d89ab922ab942473f4d6c5eaf2d6db943dabbfa9
     - field.storage.node.field_non_wildlife_development
     - field.storage.node.field_non_wildlife_livelihoods
     - field.storage.node.field_organisers_donors_partners
@@ -4264,71 +4260,6 @@ display:
           separator: ', '
           field_api_classes: false
           plugin_id: field
-<<<<<<< HEAD
-        field_main_image_caption:
-          id: field_main_image_caption
-          table: node__field_main_image_caption
-          field: field_main_image_caption
-          relationship: none
-          group_type: group
-          admin_label: ''
-          label: ''
-          exclude: true
-          alter:
-            alter_text: false
-            text: ''
-            make_link: false
-            path: ''
-            absolute: false
-            external: false
-            replace_spaces: false
-            path_case: none
-            trim_whitespace: false
-            alt: ''
-            rel: ''
-            link_class: ''
-            prefix: ''
-            suffix: ''
-            target: ''
-            nl2br: false
-            max_length: 0
-            word_boundary: true
-            ellipsis: true
-            more_link: false
-            more_link_text: ''
-            more_link_path: ''
-            strip_tags: false
-            trim: false
-            preserve_tags: ''
-            html: false
-          element_type: ''
-          element_class: ''
-          element_label_type: ''
-          element_label_class: ''
-          element_label_colon: false
-          element_wrapper_type: ''
-          element_wrapper_class: ''
-          element_default_classes: false
-          empty: ''
-          hide_empty: false
-          empty_zero: false
-          hide_alter_empty: true
-          click_sort_column: value
-          type: text_default
-          settings: {  }
-          group_column: value
-          group_columns: {  }
-          group_rows: true
-          delta_limit: 0
-          delta_offset: 0
-          delta_reversed: false
-          delta_first_last: false
-          multi_type: separator
-          separator: ', '
-          field_api_classes: false
-          plugin_id: field
-=======
->>>>>>> d89ab922ab942473f4d6c5eaf2d6db943dabbfa9
         nothing:
           id: nothing
           table: views
@@ -4340,11 +4271,7 @@ display:
           exclude: false
           alter:
             alter_text: true
-<<<<<<< HEAD
-            text: "    <!-- PAGE HEADER -->\r\n    <header id=\"i-header\">\r\n        <div class=\"container\">\r\n            <div class=\"row\">\r\n                <div class=\"col-md-6\">\r\n                    <h1>{{ title }}</h1>\r\n                   <p>{{ field_initiative_status }} {{ field_year_finished }}</p>\r\n                   <p> {{ status }}</p>\r\n                   <p>Published {{ created }}</p>\r\n                   {{ field_alternative_language_versi }}\r\n                </div>\r\n                <div class=\"col-md-6\">\r\n                 <figure class=\"figure mb-4\">{{ field_image }}\r\n  <figcaption class=\"figure-caption text-muted\">{{ field_main_image_caption }}</figcaption>\r\n</figure>\r\n                </div>\r\n            </div>\r\n        </div>\r\n        </div>\r\n    </header>"
-=======
             text: "    <!-- PAGE HEADER -->\r\n    <header id=\"i-header\">\r\n        <div class=\"container\">\r\n            <div class=\"row\">\r\n                <div class=\"col-md-6\">\r\n                    <h1>{{ title }}</h1>\r\n                   <p>{{ field_initiative_status }} {{ field_year_finished }}</p>\r\n                   <p> {{ status }}</p>\r\n                   <p>Published {{ created }}</p>\r\n                   {{ field_alternative_language_versi }}\r\n                </div>\r\n                <div class=\"col-md-6\">\r\n                    {{ field_image }}\r\n                </div>\r\n            </div>\r\n        </div>\r\n        </div>\r\n    </header>"
->>>>>>> d89ab922ab942473f4d6c5eaf2d6db943dabbfa9
             make_link: false
             path: ''
             absolute: false
@@ -4702,11 +4629,7 @@ display:
           exclude: true
           alter:
             alter_text: true
-<<<<<<< HEAD
-            text: "    <!-- LEAD SECTION  -->\r\n    <section class=\"py-4 mb-4\">\r\n        <div class=\"container\">\r\n            <div class=\"row\">\r\n                <div class=\"col-md-2\">\r\n                    <h2>Lead</h2>\r\n                </div>\r\n                <div class=\"col-md-10\">\r\n                    <div>{{ field_image }}</div>\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </section>"
-=======
             text: "    <!-- LEAD SECTION  -->\r\n    <section class=\"py-4 mb-4\">\r\n        <div class=\"container\">\r\n            <div class=\"row\">\r\n                <div class=\"col-md-2\">\r\n                    <h2>Lead</h2>\r\n                </div>\r\n                <div class=\"col-md-10\">\r\n                    <div>{{ field_lead_organisation }}</div>\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </section>"
->>>>>>> d89ab922ab942473f4d6c5eaf2d6db943dabbfa9
             make_link: false
             path: ''
             absolute: false
@@ -4731,11 +4654,7 @@ display:
             trim: false
             preserve_tags: ''
             html: false
-<<<<<<< HEAD
-          element_type: ''
-=======
           element_type: div
->>>>>>> d89ab922ab942473f4d6c5eaf2d6db943dabbfa9
           element_class: ''
           element_label_type: ''
           element_label_class: ''
