@@ -1,0 +1,31 @@
+uuid: 0e5a3026-dd62-4d9b-8415-240fc8081c9e
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:basic:2079c1a3-7cb4-4617-8eb7-5c442d694e4a'
+  module:
+    - block_content
+    - system
+  theme:
+    - pnp_bootstrap_sass
+id: homewhoweare
+theme: pnp_bootstrap_sass
+region: highlighted
+weight: 0
+provider: null
+plugin: 'block_content:2079c1a3-7cb4-4617-8eb7-5c442d694e4a'
+settings:
+  id: 'block_content:2079c1a3-7cb4-4617-8eb7-5c442d694e4a'
+  label: 'Home who we are'
+  provider: block_content
+  label_display: '0'
+  status: true
+  info: ''
+  view_mode: full
+visibility:
+  request_path:
+    id: request_path
+    pages: '<front>'
+    negate: false
+    context_mapping: {  }

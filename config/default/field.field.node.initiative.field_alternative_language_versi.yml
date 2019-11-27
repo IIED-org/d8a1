@@ -1,0 +1,27 @@
+uuid: 4bfb188c-639d-4c16-a176-e803312d0fa2
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_alternative_language_versi
+    - node.type.initiative
+  module:
+    - file
+id: node.initiative.field_alternative_language_versi
+field_name: field_alternative_language_versi
+entity_type: node
+bundle: initiative
+label: 'Alternative language version'
+description: 'Upload a PDF translation and use the description field for appropriate link text. For example Version en français or Version en español.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  file_directory: '[date:custom:Y]-[date:custom:m]'
+  file_extensions: pdf
+  max_filesize: '6 MB'
+  description_field: true
+  handler: 'default:file'
+  handler_settings: {  }
+field_type: file

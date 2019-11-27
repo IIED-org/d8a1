@@ -1,0 +1,18 @@
+id: organisation_logo_display
+label: 'Organisation logo display'
+ui_limit: organisation
+properties:
+  block: 'views_block:organisation_display-block_1'
+  use_block_title: false
+  config:
+    id: 'views_block:organisation_display-block_1'
+    label: ''
+    provider: views
+    label_display: visible
+    views_label: ''
+    items_per_page: '1'
+    context_mapping: {  }
+type: block
+type_label: 'Block field'
+entities:
+  node: node

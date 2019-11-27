@@ -4,67 +4,78 @@ status: true
 dependencies:
   config:
     - node.type.initiative
-    - node.type.organisation
-    - node.type.resource
   module:
     - content_moderation
 _core:
   default_config_hash: T_JxNjYlfoRBi7Bj1zs5Xv9xv1btuBkKp5C1tNrjMhI
 id: editorial
-label: Editorial
+label: Initiative
 type: content_moderation
 type_settings:
   states:
     archived:
-      label: Archived
-      weight: 5
       published: false
       default_revision: true
+      label: Unpublished
+      weight: 1
     draft:
       label: Draft
       published: false
       default_revision: false
-      weight: -5
+      weight: -2
     published:
       label: Published
       published: true
       default_revision: true
       weight: 0
+    submit_for_review:
+      published: false
+      default_revision: false
+      label: 'Submit for review'
+      weight: -1
   transitions:
     archive:
-      label: Archive
+      label: Unpublish
       from:
+        - draft
         - published
       to: archived
       weight: 2
     archived_draft:
       label: 'Restore to Draft'
       from:
-        - archived
+        - submit_for_review
       to: draft
-      weight: 3
-    archived_published:
-      label: Restore
-      from:
-        - archived
-      to: published
-      weight: 4
+      weight: 0
     create_new_draft:
       label: 'Create New Draft'
       to: draft
-      weight: 0
+      weight: -3
+      from:
+        - archived
+        - published
+    keep_in_draft:
+      label: 'Keep in draft'
       from:
         - draft
-        - published
+      to: draft
+      weight: -2
     publish:
       label: Publish
       to: published
       weight: 1
       from:
+        - archived
         - draft
         - published
+        - submit_for_review
+    submit_for_review:
+      label: 'Submit for review'
+      from:
+        - draft
+      to: submit_for_review
+      weight: -1
   entity_types:
     node:
       - initiative
-      - organisation
-      - resource
+  default_moderation_state: draft

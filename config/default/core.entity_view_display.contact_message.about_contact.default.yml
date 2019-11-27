@@ -39,7 +39,7 @@ third_party_settings:
         classes: col-md-6
         description: ''
       label: 'Message group'
-      region: content
+      region: hidden
 id: contact_message.about_contact.default
 targetEntityType: contact_message
 bundle: about_contact
@@ -49,7 +49,7 @@ content:
     type: basic_string
     weight: 0
     label: hidden
-    region: content
+    region: ds_content
     settings: {  }
     third_party_settings:
       ds:

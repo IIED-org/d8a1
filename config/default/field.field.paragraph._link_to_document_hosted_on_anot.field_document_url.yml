@@ -12,7 +12,7 @@ field_name: field_document_url
 entity_type: paragraph
 bundle: _link_to_document_hosted_on_anot
 label: 'Document URL'
-description: '<big><strong>Enter web address if the document is available from the publishers website or other online location</strong></big>'
+description: 'Enter web address if the document is available from the publisher''s website or other location'
 required: false
 translatable: true
 default_value: {  }

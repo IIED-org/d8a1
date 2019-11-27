@@ -5,10 +5,10 @@ dependencies:
   config:
     - core.entity_view_mode.node.teaser
     - field.field.node.page.body
+    - field.field.node.page.field_standfirst
     - node.type.page
   module:
     - field_layout
-    - layout_discovery
     - text
     - user
 third_party_settings:
@@ -38,4 +38,5 @@ content:
   links:
     weight: 101
     region: content
-hidden: {  }
+hidden:
+  field_standfirst: true

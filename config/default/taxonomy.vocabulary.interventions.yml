@@ -5,5 +5,4 @@ dependencies: {  }
 name: Interventions
 vid: interventions
 description: 'Project strategies'
-hierarchy: 0
 weight: 0

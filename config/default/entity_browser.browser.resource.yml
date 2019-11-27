@@ -20,7 +20,7 @@ selection_display_configuration:
   entity_type: node
   display: label
   display_settings: {  }
-  select_text: 'Use selected'
+  select_text: 'Submit selected'
   selection_hidden: false
   view: select_organisation
   view_display: entity_browser_3
@@ -32,7 +32,7 @@ widgets:
       entity_type: node
       bundle: resource
       form_mode: popup
-      submit_text: 'Save resource'
+      submit_text: 'Add resource (scroll down and click Submit after adding)'
     uuid: 073e5b49-cae4-4932-a6ab-700df4964ef0
     weight: -10
     label: 'Add new resource'
@@ -44,6 +44,6 @@ widgets:
       submit_text: 'Select resource(s)'
       auto_select: true
     uuid: 5068732e-8bcb-479b-9d19-f3e5275bafd0
-    weight: -8
+    weight: -9
     label: 'Select exisiting'
     id: view

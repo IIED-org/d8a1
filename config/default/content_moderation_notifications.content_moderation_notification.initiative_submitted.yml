@@ -1,0 +1,22 @@
+uuid: 09ffbe7d-6a62-43ec-89b7-05a3d03d5c16
+langcode: en
+status: true
+dependencies: {  }
+id: initiative_submitted
+workflow: editorial
+transitions:
+  submit_for_review: submit_for_review
+roles: {  }
+author: true
+to: ''
+cc: ''
+bcc: ''
+from: ''
+replyto: info@peoplenotpoaching.org
+subject: '{{ entity.type.entity.label }} submitted for review'
+body:
+  value: "<p>Dear contributor,</p>\r\n\r\n<p>Thank you for submitting {{ entity.bundle }} \"{{ entity.title.value }}\" for review. You will be notified when your {{ entity.bundle }} has been made live. If you wish to make any changes to your {{ entity.bundle }} please email info@peoplenotpoaching.org.</p>\r\n\r\n<p>Best regards,<br />\r\nThe Rhinobot<br />\r\n{{ site_name }}</p>\r\n"
+  format: basic_html
+label: 'Initiative submitted'
+abort: ''
+debug: false

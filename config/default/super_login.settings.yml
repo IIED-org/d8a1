@@ -2,7 +2,7 @@ super_login:
   login_text: 'Username or email'
   forgot_pw_text: 'Forgot password?'
   capslock_msg: 'Caps Lock On'
-  new_account_text: 'Sign up to add your initiatives or resources'
+  new_account_text: '<hr />New to People Not Poaching?<br /><strong>Sign up</strong> to add your initiatives or resources'
   login_title: ''
   password_reset_title: 'Reset password'
   back_link: ''

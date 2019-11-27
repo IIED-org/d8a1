@@ -1,0 +1,33 @@
+uuid: 242b05f7-054a-444e-8846-38ed8564a101
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:basic:6af31ed0-70ce-47b9-a136-08dd2ef17b4e'
+  module:
+    - block_content
+    - ctools
+  theme:
+    - pnp_bootstrap_sass
+id: eventscrumb
+theme: pnp_bootstrap_sass
+region: breadcrumb
+weight: 0
+provider: null
+plugin: 'block_content:6af31ed0-70ce-47b9-a136-08dd2ef17b4e'
+settings:
+  id: 'block_content:6af31ed0-70ce-47b9-a136-08dd2ef17b4e'
+  label: 'Events crumb'
+  provider: block_content
+  label_display: '0'
+  status: true
+  info: ''
+  view_mode: full
+visibility:
+  'entity_bundle:node':
+    id: 'entity_bundle:node'
+    bundles:
+      event: event
+    negate: false
+    context_mapping:
+      node: '@node.node_route_context:node'

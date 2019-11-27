@@ -3,15 +3,12 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.field.paragraph._link_to_document_hosted_on_anot.field_cover_image
     - field.field.paragraph._link_to_document_hosted_on_anot.field_document_url
     - field.field.paragraph._link_to_document_hosted_on_anot.field_file_upload
-    - image.style.thumbnail
     - paragraphs.paragraphs_type._link_to_document_hosted_on_anot
   module:
     - field_layout
     - file
-    - image
     - layout_discovery
     - link
 third_party_settings:
@@ -23,14 +20,6 @@ targetEntityType: paragraph
 bundle: _link_to_document_hosted_on_anot
 mode: default
 content:
-  field_cover_image:
-    weight: 2
-    settings:
-      progress_indicator: throbber
-      preview_image_style: thumbnail
-    third_party_settings: {  }
-    type: image_image
-    region: content
   field_document_url:
     weight: 0
     settings:

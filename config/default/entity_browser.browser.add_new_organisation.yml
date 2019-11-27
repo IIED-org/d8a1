@@ -1,0 +1,29 @@
+uuid: 8e7523e6-42cf-4400-ac8b-90de19eba6e7
+langcode: en
+status: true
+dependencies:
+  module:
+    - entity_browser_entity_form
+name: add_new_organisation
+label: 'Add new organisation'
+display: modal
+display_configuration:
+  width: '800'
+  height: '600'
+  link_text: 'Add lead organisation / community group'
+  auto_open: false
+selection_display: no_display
+selection_display_configuration: {  }
+widget_selector: single
+widget_selector_configuration: {  }
+widgets:
+  05425cc9-c25d-4567-b172-13df08c6adf4:
+    settings:
+      entity_type: node
+      bundle: organisation
+      form_mode: popup
+      submit_text: 'Save organisation / group'
+    uuid: 05425cc9-c25d-4567-b172-13df08c6adf4
+    weight: 1
+    label: 'Add new organisation / community group'
+    id: entity_form

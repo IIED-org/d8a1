@@ -12,7 +12,7 @@ field_name: field_file_upload
 entity_type: paragraph
 bundle: _link_to_document_hosted_on_anot
 label: 'File upload'
-description: '<big><strong>Upload file only if you have the publisher''s permission and it is not already available online.</strong></big><br>'
+description: 'Upload file only if you have the publisher''s permission and it is not already available online.<br>'
 required: false
 translatable: true
 default_value: {  }

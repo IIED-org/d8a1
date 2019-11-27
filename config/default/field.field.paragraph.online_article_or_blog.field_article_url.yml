@@ -11,8 +11,8 @@ id: paragraph.online_article_or_blog.field_article_url
 field_name: field_article_url
 entity_type: paragraph
 bundle: online_article_or_blog
-label: URL
-description: '<big><strong>Enter the full web address of the content on the publishers website</big></strong>'
+label: 'Web address'
+description: ''
 required: false
 translatable: false
 default_value: {  }

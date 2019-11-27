@@ -5,13 +5,11 @@ dependencies:
   config:
     - field.storage.node.body
     - field.storage.node.field_address
-    - field.storage.node.field_author
     - field.storage.node.field_authors
     - field.storage.node.field_date_published
     - field.storage.node.field_interventions
     - field.storage.node.field_language
     - field.storage.node.field_publisher
-    - field.storage.node.field_resource_type
     - field.storage.node.field_species_affected
     - node.type.resource
     - user.role.administrator
@@ -72,6 +70,117 @@ display:
           offset: 0
       style:
         type: table
+        options:
+          grouping: {  }
+          row_class: ''
+          default_row_class: true
+          override: true
+          sticky: false
+          caption: ''
+          summary: ''
+          description: ''
+          columns:
+            counter: counter
+            created: created
+            title: title
+            edit_node: title
+            type: type
+            field_address: field_address
+            field_species_affected: field_species_affected
+            field_interventions: field_interventions
+            body: body
+            field_authors: field_authors
+            field_date_published: field_date_published
+            field_language: field_language
+            field_publisher: field_publisher
+          info:
+            counter:
+              sortable: true
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            created:
+              sortable: true
+              default_sort_order: desc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            title:
+              sortable: true
+              default_sort_order: asc
+              align: ''
+              separator: ' '
+              empty_column: false
+              responsive: ''
+            edit_node:
+              sortable: false
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            type:
+              sortable: true
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            field_address:
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            field_species_affected:
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            field_interventions:
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            body:
+              sortable: false
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            field_authors:
+              sortable: false
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            field_date_published:
+              sortable: true
+              default_sort_order: desc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            field_language:
+              sortable: true
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            field_publisher:
+              sortable: true
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+          default: created
+          empty_table: false
       row:
         type: fields
       fields:
@@ -82,7 +191,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
-          label: ''
+          label: '#'
           exclude: false
           alter:
             alter_text: false
@@ -115,7 +224,7 @@ display:
           element_class: ''
           element_label_type: ''
           element_label_class: ''
-          element_label_colon: false
+          element_label_colon: true
           element_wrapper_type: ''
           element_wrapper_class: ''
           element_default_classes: true
@@ -125,6 +234,73 @@ display:
           hide_alter_empty: true
           counter_start: 1
           plugin_id: counter
+        created:
+          id: created
+          table: node_field_data
+          field: created
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: Added
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: value
+          type: timestamp
+          settings:
+            date_format: short
+            custom_date_format: ''
+            timezone: ''
+          group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+          entity_type: node
+          entity_field: created
+          plugin_id: field
         title:
           id: title
           table: node_field_data
@@ -172,14 +348,14 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-        field_resource_type:
-          id: field_resource_type
-          table: node__field_resource_type
-          field: field_resource_type
+        edit_node:
+          id: edit_node
+          table: node_field_revision
+          field: edit_node
           relationship: none
           group_type: group
           admin_label: ''
-          label: 'Resource type'
+          label: Edit
           exclude: false
           alter:
             alter_text: false
@@ -220,20 +396,11 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
-          click_sort_column: target_id
-          type: paragraph_summary
-          settings: {  }
-          group_column: ''
-          group_columns: {  }
-          group_rows: true
-          delta_limit: 0
-          delta_offset: 0
-          delta_reversed: false
-          delta_first_last: false
-          multi_type: separator
-          separator: ', '
-          field_api_classes: false
-          plugin_id: field
+          text: '[edit]'
+          output_url_as_text: false
+          absolute: false
+          entity_type: node
+          plugin_id: entity_link_edit
         type:
           id: type
           table: paragraphs_item_field_data
@@ -487,14 +654,14 @@ display:
           separator: ', '
           field_api_classes: false
           plugin_id: field
-        field_author:
-          id: field_author
-          table: node__field_author
-          field: field_author
+        body:
+          id: body
+          table: node__body
+          field: body
           relationship: none
           group_type: group
           admin_label: ''
-          label: 'Author(s) dep'
+          label: Description
           exclude: false
           alter:
             alter_text: false
@@ -513,14 +680,14 @@ display:
             suffix: ''
             target: ''
             nl2br: false
-            max_length: 0
+            max_length: 60
             word_boundary: true
             ellipsis: true
             more_link: false
             more_link_text: ''
             more_link_path: ''
             strip_tags: false
-            trim: false
+            trim: true
             preserve_tags: ''
             html: false
           element_type: ''
@@ -536,9 +703,8 @@ display:
           empty_zero: false
           hide_alter_empty: true
           click_sort_column: value
-          type: string
-          settings:
-            link_to_entity: false
+          type: text_default
+          settings: {  }
           group_column: value
           group_columns: {  }
           group_rows: true
@@ -613,68 +779,6 @@ display:
           separator: ', '
           field_api_classes: false
           plugin_id: field
-        body:
-          id: body
-          table: node__body
-          field: body
-          relationship: none
-          group_type: group
-          admin_label: ''
-          label: Description
-          exclude: false
-          alter:
-            alter_text: false
-            text: ''
-            make_link: false
-            path: ''
-            absolute: false
-            external: false
-            replace_spaces: false
-            path_case: none
-            trim_whitespace: false
-            alt: ''
-            rel: ''
-            link_class: ''
-            prefix: ''
-            suffix: ''
-            target: ''
-            nl2br: false
-            max_length: 60
-            word_boundary: true
-            ellipsis: true
-            more_link: false
-            more_link_text: ''
-            more_link_path: ''
-            strip_tags: false
-            trim: true
-            preserve_tags: ''
-            html: false
-          element_type: ''
-          element_class: ''
-          element_label_type: ''
-          element_label_class: ''
-          element_label_colon: true
-          element_wrapper_type: ''
-          element_wrapper_class: ''
-          element_default_classes: true
-          empty: ''
-          hide_empty: false
-          empty_zero: false
-          hide_alter_empty: true
-          click_sort_column: value
-          type: text_default
-          settings: {  }
-          group_column: value
-          group_columns: {  }
-          group_rows: true
-          delta_limit: 0
-          delta_offset: 0
-          delta_reversed: false
-          delta_first_last: false
-          multi_type: separator
-          separator: ', '
-          field_api_classes: false
-          plugin_id: field
         field_date_published:
           id: field_date_published
           table: node__field_date_published
@@ -727,7 +831,7 @@ display:
           type: datetime_default
           settings:
             timezone_override: ''
-            format_type: html_year
+            format_type: html_month
           group_column: value
           group_columns: {  }
           group_rows: true
@@ -865,59 +969,6 @@ display:
           separator: ', '
           field_api_classes: false
           plugin_id: field
-        edit_node:
-          id: edit_node
-          table: node_field_revision
-          field: edit_node
-          relationship: none
-          group_type: group
-          admin_label: ''
-          label: 'Link to edit Content'
-          exclude: false
-          alter:
-            alter_text: false
-            text: ''
-            make_link: false
-            path: ''
-            absolute: false
-            external: false
-            replace_spaces: false
-            path_case: none
-            trim_whitespace: false
-            alt: ''
-            rel: ''
-            link_class: ''
-            prefix: ''
-            suffix: ''
-            target: ''
-            nl2br: false
-            max_length: 0
-            word_boundary: true
-            ellipsis: true
-            more_link: false
-            more_link_text: ''
-            more_link_path: ''
-            strip_tags: false
-            trim: false
-            preserve_tags: ''
-            html: false
-          element_type: ''
-          element_class: ''
-          element_label_type: ''
-          element_label_class: ''
-          element_label_colon: true
-          element_wrapper_type: ''
-          element_wrapper_class: ''
-          element_default_classes: true
-          empty: ''
-          hide_empty: false
-          empty_zero: false
-          hide_alter_empty: true
-          text: edit
-          output_url_as_text: false
-          absolute: false
-          entity_type: node
-          plugin_id: entity_link_edit
       filters:
         status:
           value: '1'
@@ -976,18 +1027,17 @@ display:
       contexts:
         - 'languages:language_content'
         - 'languages:language_interface'
+        - url.query_args
         - 'user.node_grants:view'
         - user.roles
       tags:
         - 'config:field.storage.node.body'
         - 'config:field.storage.node.field_address'
-        - 'config:field.storage.node.field_author'
         - 'config:field.storage.node.field_authors'
         - 'config:field.storage.node.field_date_published'
         - 'config:field.storage.node.field_interventions'
         - 'config:field.storage.node.field_language'
         - 'config:field.storage.node.field_publisher'
-        - 'config:field.storage.node.field_resource_type'
         - 'config:field.storage.node.field_species_affected'
   page_1:
     display_plugin: page
@@ -1002,16 +1052,15 @@ display:
       contexts:
         - 'languages:language_content'
         - 'languages:language_interface'
+        - url.query_args
         - 'user.node_grants:view'
         - user.roles
       tags:
         - 'config:field.storage.node.body'
         - 'config:field.storage.node.field_address'
-        - 'config:field.storage.node.field_author'
         - 'config:field.storage.node.field_authors'
         - 'config:field.storage.node.field_date_published'
         - 'config:field.storage.node.field_interventions'
         - 'config:field.storage.node.field_language'
         - 'config:field.storage.node.field_publisher'
-        - 'config:field.storage.node.field_resource_type'
         - 'config:field.storage.node.field_species_affected'

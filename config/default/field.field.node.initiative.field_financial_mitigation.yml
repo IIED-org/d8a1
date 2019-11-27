@@ -15,7 +15,7 @@ field_name: field_financial_mitigation
 entity_type: node
 bundle: initiative
 label: 'Financial mitigation measures '
-description: ''
+description: 'For example, compensation, insurance…'
 required: false
 translatable: false
 default_value:

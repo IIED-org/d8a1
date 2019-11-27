@@ -1,0 +1,11 @@
+id: event_list_card
+label: 'Event list card'
+ui_limit: event|list_card
+properties:
+  block: 'block_content:f8eee970-e017-45a7-8fcb-76e758412b78'
+  use_block_title: false
+  add_block_wrappers: false
+type: block
+type_label: 'Block field'
+entities:
+  node: node

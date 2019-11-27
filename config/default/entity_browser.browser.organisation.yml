@@ -13,7 +13,7 @@ display: modal
 display_configuration:
   width: '800'
   height: '600'
-  link_text: 'Select lead organisation'
+  link_text: 'Select lead organisation / community group'
   auto_open: false
 selection_display: multi_step_display
 selection_display_configuration:
@@ -22,7 +22,7 @@ selection_display_configuration:
   display_settings:
     view_mode: teaser
   select_text: Submit
-  selection_hidden: false
+  selection_hidden: true
   view: select_organisation
   view_display: entity_browser_2
 widget_selector: tabs
@@ -35,7 +35,7 @@ widgets:
       submit_text: Submit
       auto_select: true
     uuid: c5cceafd-c9ae-4e48-8fc2-6b5c35991eaf
-    weight: -10
+    weight: -9
     label: 'Select existing'
     id: view
   251e2cbe-57d3-4cde-b2b7-a82ae694027d:
@@ -43,8 +43,8 @@ widgets:
       entity_type: node
       bundle: organisation
       form_mode: popup
-      submit_text: 'Create organisation'
+      submit_text: 'Add organisation / group (scroll down and click Submit after adding)'
     uuid: 251e2cbe-57d3-4cde-b2b7-a82ae694027d
-    weight: 2
+    weight: -10
     label: 'Add new'
     id: entity_form

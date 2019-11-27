@@ -1,4 +1,4 @@
-uuid: 60f740a7-e9ef-4e17-88f1-71e1f353a10b
+uuid: 78568bfd-13fa-4720-aa22-367fbcf24cb4
 langcode: en
 status: true
 dependencies: {  }
@@ -8,19 +8,18 @@ events:
   -
     event_name: 'rules_entity_insert:node'
 description: ''
-tags:
-  - ''
+tags: {  }
 config_version: '3'
 expression:
   id: rules_rule
-  uuid: fc41ea02-b514-430b-9e86-9a6b72efce19
+  uuid: c1aa353b-b38f-466f-88c3-f1bfc9378cfb
   conditions:
     id: rules_and
-    uuid: 2c98f07f-a2cf-4573-a75b-1d75cc178f0f
+    uuid: cd88182b-e503-4064-85ed-d0ce00dc6aa3
     conditions:
       -
         id: rules_condition
-        uuid: aa991c24-6841-4f9f-b616-85cb1abb7907
+        uuid: 187d3241-fcb1-40a8-ad72-e6bc5abef77c
         context_values:
           roles:
             - contributor
@@ -37,15 +36,26 @@ expression:
         negate: false
   actions:
     id: rules_action_set
-    uuid: e7155b21-046d-4448-9b4b-aa1d271914de
+    uuid: a8c1d4b9-b1f7-409f-bfb8-c1bfda7cd059
     actions:
       -
         id: rules_action
-        uuid: f457d488-4190-4c1a-8f1b-8832cf5bedea
+        uuid: c009153a-7131-4395-8598-ed21b4922790
         context_values:
-          message: 'Thank you for your submission. We will send you an email once we have reviewed and published the content you supplied.'
-          type: Warning
-          repeat: false
+          url: /contribute
+        context_mapping: {  }
+        context_processors:
+          url:
+            rules_tokens: {  }
+        provides_mapping: {  }
+        action_id: rules_page_redirect
+      -
+        id: rules_action
+        uuid: c09794e4-413f-4571-93cd-c31b934134c9
+        context_values:
+          message: 'Thank you for creating new content. We have sent you an email with information about the next steps.'
+          type: warning
+          repeat: true
         context_mapping: {  }
         context_processors:
           message:
@@ -56,14 +66,3 @@ expression:
             rules_tokens: {  }
         provides_mapping: {  }
         action_id: rules_system_message
-      -
-        id: rules_action
-        uuid: 94fb7d2e-4e83-4507-9df6-24ae15afc9ef
-        context_values:
-          url: /contribute
-        context_mapping: {  }
-        context_processors:
-          url:
-            rules_tokens: {  }
-        provides_mapping: {  }
-        action_id: rules_page_redirect

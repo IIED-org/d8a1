@@ -11,7 +11,9 @@ dependencies:
     - image.style.thumbnail
     - node.type.organisation
   module:
+    - field_group
     - field_layout
+    - field_states_ui
     - image
     - layout_discovery
     - link
@@ -20,6 +22,24 @@ third_party_settings:
   field_layout:
     id: layout_onecol
     settings: {  }
+  field_group:
+    group_after_adding:
+      children:
+        - body
+        - field_link
+        - field_image
+        - field_organisation_type
+      parent_name: ''
+      weight: 2
+      format_type: details
+      format_settings:
+        label: 'After creating a new organisation please scroll to the bottom and click "Submit"'
+        open: true
+        id: ''
+        classes: ''
+        required_fields: false
+      label: 'After creating a new organisation please scroll to the bottom and click "Submit"'
+      region: content
 id: node.organisation.popup
 targetEntityType: node
 bundle: organisation
@@ -29,13 +49,18 @@ content:
     type: text_textarea_with_summary
     weight: 1
     settings:
-      rows: 4
+      rows: 3
       placeholder: ''
-      summary_rows: 3
-    third_party_settings: {  }
+      summary_rows: 1
+    third_party_settings:
+      field_states_ui:
+        form:
+          type: ''
+          list: ''
+          add: Add
     region: content
   field_image:
-    weight: 3
+    weight: 4
     settings:
       progress_indicator: throbber
       preview_image_style: thumbnail
@@ -43,7 +68,7 @@ content:
     type: image_image
     region: content
   field_link:
-    weight: 2
+    weight: 3
     settings:
       placeholder_url: ''
       placeholder_title: ''
@@ -51,7 +76,7 @@ content:
     type: link_default
     region: content
   field_organisation_type:
-    weight: 4
+    weight: 5
     settings: {  }
     third_party_settings: {  }
     type: options_select
@@ -73,3 +98,4 @@ hidden:
   status: true
   sticky: true
   uid: true
+  url_redirects: true

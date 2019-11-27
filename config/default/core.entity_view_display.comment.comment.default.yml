@@ -7,7 +7,6 @@ dependencies:
     - field.field.comment.comment.comment_body
   module:
     - field_layout
-    - layout_discovery
     - text
 third_party_settings:
   field_layout:

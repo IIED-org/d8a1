@@ -12,7 +12,7 @@ _core:
 id: pnp_bootstrap_sass_page_title
 theme: pnp_bootstrap_sass
 region: content
-weight: -16
+weight: -14
 provider: null
 plugin: page_title_block
 settings:

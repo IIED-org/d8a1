@@ -2,10 +2,14 @@ uuid: d2752eca-c8ee-48f2-893b-048de672eb02
 langcode: en
 status: true
 dependencies:
+  config:
+    - node.type.event
+    - node.type.organisation
+    - node.type.resource
   module:
     - content_moderation
 id: node_added
-label: 'Content added (not used)'
+label: 'Resource, Organisation, Event'
 type: content_moderation
 type_settings:
   states:
@@ -19,6 +23,11 @@ type_settings:
       published: true
       default_revision: true
       weight: 1
+    unpublished:
+      published: false
+      default_revision: true
+      label: Unpublished
+      weight: 2
   transitions:
     create_new_draft:
       label: 'Create New Draft'
@@ -27,6 +36,7 @@ type_settings:
       from:
         - draft
         - published
+        - unpublished
     publish:
       label: Publish
       to: published
@@ -34,4 +44,16 @@ type_settings:
       from:
         - draft
         - published
-  entity_types: {  }
+        - unpublished
+    unpublish:
+      label: Unpublish
+      from:
+        - published
+      to: unpublished
+      weight: 2
+  entity_types:
+    node:
+      - event
+      - organisation
+      - resource
+  default_moderation_state: draft

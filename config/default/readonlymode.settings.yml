@@ -1,8 +1,8 @@
 enabled: null
 url: ''
 messages:
-  default: '@site is currently in maintenance. During this maintenance it is not possible to change site content (like comments, pages and users).'
-  not_saved: 'Data not saved. @site is currently in maintenance. During maintenance it is not possible to change content. Please make a note of your changes and try again later.'
+  default: '[site:name] is currently in maintenance. During this time it is not possible to change site content (including adding or modifying case studies or resources).'
+  not_saved: 'Data not saved. [site:name] is currently in maintenance. During maintenance it is not possible to change content. Please make a note of your changes and try again later.'
 forms:
   default:
     edit:

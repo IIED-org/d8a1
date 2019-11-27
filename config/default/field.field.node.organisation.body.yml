@@ -11,12 +11,12 @@ id: node.organisation.body
 field_name: body
 entity_type: node
 bundle: organisation
-label: Body
-description: ''
+label: Description
+description: 'A short summary of the organisation / community group'
 required: false
 translatable: true
 default_value: {  }
 default_value_callback: ''
 settings:
-  display_summary: true
+  display_summary: false
 field_type: text_with_summary

@@ -17,6 +17,7 @@ dependencies:
     - field.field.node.initiative.field_3_2_6_details
     - field.field.node.initiative.field_4_2_1_details
     - field.field.node.initiative.field_4_3_1_details
+    - field.field.node.initiative.field_add_new_species
     - field.field.node.initiative.field_address
     - field.field.node.initiative.field_area_description
     - field.field.node.initiative.field_buyers
@@ -90,6 +91,11 @@ content:
     label: hidden
     type: text_default
     weight: 1
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+  content_moderation_control:
+    weight: -20
     settings: {  }
     third_party_settings: {  }
     region: content
@@ -673,4 +679,5 @@ hidden:
   addtoany: true
   field_3_2_5_details: true
   field_3_2_6_details: true
+  field_add_new_species: true
   field_products_in_trade: true

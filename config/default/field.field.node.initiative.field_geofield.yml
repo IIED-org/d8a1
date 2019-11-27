@@ -19,7 +19,7 @@ third_party_settings:
     disabled: false
     plugins:
       - openstreetmap
-      - yandex
+      - googlemaps
     dumper: wkt
     delta_handling: default
     failure:
@@ -27,7 +27,7 @@ third_party_settings:
       status_message: true
       log: true
   label_help:
-    label_help_description: 'Please add GPS coordinates if known, otherwise these will be calculated from the location(s) given above. Only the first location will be shown on the map.'
+    label_help_description: 'Please add GPS coordinates if known, otherwise these will be calculated from the location(s) given above.'
 id: node.initiative.field_geofield
 field_name: field_geofield
 entity_type: node

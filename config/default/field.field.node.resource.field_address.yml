@@ -7,6 +7,25 @@ dependencies:
     - node.type.resource
   module:
     - address
+    - geocoder_field
+third_party_settings:
+  geocoder_field:
+    method: destination
+    weight: 1
+    geocode_field: moderation_state
+    reverse_geocode_field: field_geofield
+    hidden: false
+    disabled: false
+    plugins:
+      - googlemaps
+      - openstreetmap
+      - yandex
+    dumper: geojson
+    delta_handling: default
+    failure:
+      handling: preserve
+      status_message: true
+      log: true
 id: node.resource.field_address
 field_name: field_address
 entity_type: node

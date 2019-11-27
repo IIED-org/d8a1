@@ -1,4 +1,54 @@
 cache: true
-plugins_options: {  }
+plugins_options:
+  arcgisonline:
+    sourcecountry: ''
+    usessl: false
+  bingmaps:
+    apikey: ''
+    locale: ''
+  geonames:
+    username: ''
+    locale: ''
+  googlemaps:
+    apikey: AIzaSyBw6aJ-G1zFH2jwmn43dp8LocvP3xo8qf0
+    locale: en
+    region: ''
+    usessl: true
+  googlemaps_business:
+    clientId: ''
+    privateKey: ''
+    locale: ''
+    region: ''
+    usessl: false
+  ipinfodb:
+    apikey: ''
+    precision: city
+  mapquest:
+    apikey: ''
+    licensed: false
+  maxmind:
+    apikey: ''
+    service: f
+    usessl: false
+  nominatim:
+    rooturl: ''
+    locale: ''
+  opencage:
+    apikey: ''
+    locale: ''
+    usessl: false
+  tomtom:
+    apikey: ''
+    locale: ''
+  file: {  }
+  freegeoip: {  }
+  geoip: {  }
+  geoplugin: {  }
+  gpxfile: {  }
+  hostip: {  }
+  openstreetmap: {  }
+  random: {  }
+  yandex: {  }
 _core:
   default_config_hash: osnxMBUiZuk-XXBHfOYTjoChGsNlHSSMZnv3CrXGFcE
+geocoder_presave_disabled: false

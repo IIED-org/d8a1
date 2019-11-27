@@ -1,0 +1,25 @@
+uuid: 9ea0b88b-d35b-4763-9fd2-e129f531f5f8
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_gender_age_ethnic
+    - node.type.initiative
+  module:
+    - label_help
+    - text
+third_party_settings:
+  label_help:
+    label_help_description: "Please consider the following:<br />\r\n• Does your approach target or exclude men/women/both?<br />\r\n• Does your approach target or exclude the old/young/both?<br />\r\n• Does your approach target or exclude specific ethnic groups?<br />\r\n• For each please explain why these groups are specifically targeted or why they are specifically excluded<br />"
+id: node.initiative.field_gender_age_ethnic
+field_name: field_gender_age_ethnic
+entity_type: node
+bundle: initiative
+label: 'Please discuss how your project tackles inclusivity of gender/age/ethnic groups'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long

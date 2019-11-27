@@ -12,7 +12,7 @@ dependencies:
 id: homepromo
 theme: pnp_bootstrap_sass
 region: content
-weight: -6
+weight: -4
 provider: null
 plugin: 'block_content:2d59df7a-60a1-401c-b555-79bbb13a8202'
 settings:

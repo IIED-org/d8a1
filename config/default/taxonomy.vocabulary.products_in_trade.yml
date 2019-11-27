@@ -5,5 +5,4 @@ dependencies: {  }
 name: 'Products in trade'
 vid: products_in_trade
 description: 'Items in Illegal wildlife trade'
-hierarchy: 0
 weight: 0

@@ -10,7 +10,7 @@ dependencies:
     - text
 third_party_settings:
   label_help:
-    label_help_description: 'Please write a short summary that describes your initiative. This will introduce your initiative to others. Please keep it brief and try not to exceed 300 characters.'
+    label_help_description: 'Please provide a summary overview to introduce your initiative to others. Please keep it brief and try not to exceed 300 characters.'
 id: node.initiative.body
 field_name: body
 entity_type: node

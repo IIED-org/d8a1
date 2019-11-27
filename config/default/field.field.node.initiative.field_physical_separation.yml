@@ -15,7 +15,7 @@ field_name: field_physical_separation
 entity_type: node
 bundle: initiative
 label: 'Physical separation of people/livestock and wildlife'
-description: ''
+description: 'For example, land use zoning.'
 required: false
 translatable: false
 default_value:

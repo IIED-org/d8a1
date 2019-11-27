@@ -1,0 +1,21 @@
+uuid: 4c01e243-9748-4134-905f-285b20683982
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_no_further_info
+    - node.type.event
+  module:
+    - options
+id: node.event.field_no_further_info
+field_name: field_no_further_info
+entity_type: node
+bundle: event
+label: 'No further info'
+description: 'If you wish to use the above link instead of linking to the page, select do not include more information link'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_string

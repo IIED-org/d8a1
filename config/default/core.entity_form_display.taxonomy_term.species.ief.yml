@@ -1,6 +1,6 @@
 uuid: 3e61ab63-9028-4326-afbf-cea418135666
 langcode: en
-status: true
+status: false
 dependencies:
   config:
     - core.entity_form_mode.taxonomy_term.ief
@@ -10,6 +10,7 @@ dependencies:
     - taxonomy.vocabulary.species
   module:
     - field_layout
+    - hide_revision_field
     - layout_discovery
 third_party_settings:
   field_layout:
@@ -34,6 +35,18 @@ content:
     region: content
     settings:
       size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  revision_log_message:
+    type: hide_revision_field_log_widget
+    weight: 80
+    region: content
+    settings:
+      show: true
+      default: ''
+      permission_based: false
+      allow_user_settings: true
+      rows: '5'
       placeholder: ''
     third_party_settings: {  }
   tid:
