@@ -3,22 +3,24 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.storage.block_content.field_country
     - field.storage.node.body
     - field.storage.node.field_address
+    - field.storage.node.field_geofield
     - field.storage.node.field_resource_type
     - field.storage.paragraph.field_article_url
     - field.storage.paragraph.field_document_url
     - field.storage.paragraph.field_file_upload
-    - field.storage.node.field_geofield
-    - field.storage.node.field_interventions
+    - field.storage.paragraph.field_video_url
     - field.storage.node.field_species_affected
     - field.storage.node.field_standalone_resource
-    - field.storage.paragraph.field_video_url
+    - field.storage.node.field_interventions
     - search_api.server.acquia_search_server
   module:
     - node
     - paragraphs
     - search_api
+    - block_content
     - media
     - taxonomy
 _core:
@@ -26,7 +28,7 @@ _core:
 id: acquia_search_index
 name: 'Acquia Search Solr Index'
 description: ''
-read_only: false
+read_only: true
 field_settings:
   body:
     label: Body
@@ -52,6 +54,14 @@ field_settings:
     dependencies:
       config:
         - field.storage.node.field_address
+  country_name_1:
+    label: 'Country name'
+    datasource_id: 'entity:block_content'
+    property_path: 'field_country:country_name'
+    type: string
+    dependencies:
+      config:
+        - field.storage.block_content.field_country
   created:
     label: 'Authored on'
     datasource_id: 'entity:node'
@@ -205,6 +215,14 @@ field_settings:
       module:
         - node
 datasource_settings:
+  'entity:block_content':
+    bundles:
+      default: false
+      selected:
+        - country_header_block
+    languages:
+      default: true
+      selected: {  }
   'entity:media':
     bundles:
       default: true
@@ -399,4 +417,5 @@ options:
       weight: -50
       settings: {  }
       processorPluginId: language
+  overridden_by_acquia_search: 2
 server: acquia_search_server

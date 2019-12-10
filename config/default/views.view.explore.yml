@@ -7,6 +7,7 @@ dependencies:
     - field.storage.node.body
     - field.storage.node.field_authors
     - field.storage.node.field_date_published
+    - field.storage.node.field_document_type
     - field.storage.node.field_geofield
     - field.storage.node.field_image
     - field.storage.node.field_language
@@ -1077,6 +1078,217 @@ display:
         - 'config:field.storage.paragraph.field_document_url'
         - 'config:field.storage.paragraph.field_file_upload'
         - 'config:field.storage.paragraph.field_video_url'
+  attachment_1:
+    display_plugin: attachment
+    id: attachment_1
+    display_title: Attachment
+    position: 3
+    display_options:
+      display_extenders: {  }
+      displays:
+        page_2: page_2
+      inherit_exposed_filters: true
+      fields:
+        body:
+          id: body
+          table: search_api_datasource_acquia_search_index_entity_node
+          field: body
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: ''
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: value
+          type: text_default
+          settings: {  }
+          group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+          field_rendering: true
+          fallback_handler: search_api
+          fallback_options:
+            link_to_item: false
+            use_highlighting: false
+            multi_type: separator
+            multi_separator: ', '
+          entity_type: node
+          plugin_id: search_api_field
+      defaults:
+        fields: false
+        filters: false
+        filter_groups: false
+        style: false
+        row: false
+        header: false
+        arguments: false
+      filters:
+        search_api_datasource:
+          id: search_api_datasource
+          table: search_api_index_acquia_search_index
+          field: search_api_datasource
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: or
+          value:
+            'entity:block_content': 'entity:block_content'
+          group: 1
+          exposed: false
+          expose:
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
+            operator: ''
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+            reduce: false
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          reduce_duplicates: false
+          plugin_id: search_api_datasource
+      filter_groups:
+        operator: AND
+        groups:
+          1: AND
+      style:
+        type: default
+        options:
+          grouping: {  }
+          row_class: ''
+          default_row_class: true
+      row:
+        type: search_api
+        options:
+          view_modes:
+            'entity:block_content':
+              country_header_block: default
+            'entity:media':
+              audio: default
+              file: default
+              image: default
+              remote_video: default
+              video: default
+            'entity:node':
+              article: default
+              event: default
+              initiative: default
+              organisation: default
+              page: default
+              resource: default
+            'entity:paragraph':
+              _link_to_document_hosted_on_anot: default
+              document: default
+              online_article_or_blog: default
+              video: default
+            'entity:taxonomy_term':
+              document_type: default
+              interventions: default
+              products_in_trade: default
+              species: default
+              tags: default
+      header: {  }
+      arguments:
+        country_name_1:
+          id: country_name_1
+          table: search_api_index_acquia_search_index
+          field: country_name_1
+          relationship: none
+          group_type: group
+          admin_label: ''
+          default_action: 'not found'
+          exception:
+            value: all
+            title_enable: false
+            title: All
+          title_enable: true
+          title: '{{ arguments.country_name_1 }}'
+          default_argument_type: fixed
+          default_argument_options:
+            argument: ''
+          default_argument_skip_url: false
+          summary_options: {  }
+          summary:
+            sort_order: asc
+            number_of_records: 0
+            format: default_summary
+          specify_validation: false
+          validate:
+            type: none
+            fail: 'not found'
+          validate_options: {  }
+          break_phrase: false
+          not: false
+          plugin_id: search_api
+    cache_metadata:
+      max-age: -1
+      contexts:
+        - 'languages:language_content'
+        - 'languages:language_interface'
+        - url
+        - user.permissions
+      tags:
+        - 'config:field.storage.node.body'
   page_1:
     display_plugin: page
     id: page_1
@@ -2476,7 +2688,15 @@ display:
       style:
         type: default
         options:
-          grouping: {  }
+          grouping:
+            -
+              field: type
+              rendered: false
+              rendered_strip: false
+            -
+              field: field_document_type
+              rendered: false
+              rendered_strip: false
           row_class: ''
           default_row_class: false
       defaults:
@@ -2489,6 +2709,7 @@ display:
         filter_groups: false
         sorts: false
         css_class: false
+        header: false
       row:
         type: fields
         options:
@@ -2500,6 +2721,162 @@ display:
       cache:
         type: none
       fields:
+        type:
+          id: type
+          table: search_api_index_acquia_search_index
+          field: type
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: ''
+          exclude: true
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: target_id
+          type: entity_reference_label
+          settings:
+            link: false
+          group_column: target_id
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+          field_rendering: true
+          fallback_handler: search_api_entity
+          fallback_options:
+            link_to_item: false
+            use_highlighting: false
+            multi_type: separator
+            multi_separator: ', '
+            display_methods:
+              node_type:
+                display_method: label
+          plugin_id: search_api_field
+        field_document_type:
+          id: field_document_type
+          table: search_api_datasource_acquia_search_index_entity_node
+          field: field_document_type
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: ''
+          exclude: true
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: target_id
+          type: entity_reference_entity_view
+          settings:
+            view_mode: default
+          group_column: target_id
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+          field_rendering: true
+          fallback_handler: search_api_entity
+          fallback_options:
+            link_to_item: false
+            use_highlighting: false
+            multi_type: separator
+            multi_separator: ', '
+            display_methods:
+              document_type:
+                display_method: label
+              interventions:
+                display_method: label
+              products_in_trade:
+                display_method: label
+              species:
+                display_method: label
+                view_mode: default
+              tags:
+                display_method: label
+          entity_type: node
+          plugin_id: search_api_field
         field_geofield:
           id: field_geofield
           table: search_api_index_acquia_search_index
@@ -4406,12 +4783,12 @@ display:
           field: field_resource_type
           relationship: none
           group_type: group
-          admin_label: ''
+          admin_label: 'Resource body'
           label: ''
           exclude: true
           alter:
             alter_text: true
-            text: "                    <div class=\"card-footer w-100\">\r\n                        <a href=\"#collapse\" class=\"d-block\" data-toggle=\"collapse\" data-target=\"#collapse_{{ nid }}\">+show\r\n                            more</a>\r\n                        <div class=\"collapse mt-4\" id=\"collapse_{{ nid }}\">\r\n                            <div class=\"card-text\">{{ body }}</div>\r\n                           {{ field_video_url_4 }}\r\n                            <div class=\"card p-3\">\r\n                                {{ field_date_published }}\r\n                                {{ field_authors }}\r\n                                {{ field_publisher }}\r\n                                {{ field_language }}\r\n                            </div>\r\n                        </div>\r\n                    </div>"
+            text: "<div class=\"card-footer w-100\">\r\n  <div class=\"card-text\">{{ body }}</div>\r\n  <a href=\"#collapse\" class=\"d-block\" data-toggle=\"collapse\" data-target=\"#collapse_{{ nid }}\">+show\r\n    more</a>\r\n  <div class=\"collapse mt-4\" id=\"collapse_{{ nid }}\">\r\n\r\n    {{ field_video_url_4 }}\r\n    <div class=\"card p-3\">\r\n      {{ field_date_published }}\r\n      {{ field_authors }}\r\n      {{ field_publisher }}\r\n      {{ field_language }}\r\n    </div>\r\n  </div>\r\n</div>"
             make_link: false
             path: ''
             absolute: false
@@ -4786,6 +5163,18 @@ display:
         context: '0'
         menu_name: main
       sorts:
+        type:
+          id: type
+          table: search_api_index_acquia_search_index
+          field: type
+          relationship: none
+          group_type: group
+          admin_label: ''
+          order: ASC
+          exposed: false
+          expose:
+            label: ''
+          plugin_id: search_api
         created:
           id: created
           table: search_api_index_acquia_search_index
@@ -4799,6 +5188,20 @@ display:
             label: ''
           plugin_id: search_api
       css_class: container
+      header:
+        area:
+          id: area
+          table: views
+          field: area
+          relationship: none
+          group_type: group
+          admin_label: ''
+          empty: false
+          tokenize: false
+          content:
+            value: ''
+            format: basic_html
+          plugin_id: text
     cache_metadata:
       max-age: -1
       contexts:
@@ -4812,6 +5215,7 @@ display:
         - 'config:field.storage.node.body'
         - 'config:field.storage.node.field_authors'
         - 'config:field.storage.node.field_date_published'
+        - 'config:field.storage.node.field_document_type'
         - 'config:field.storage.node.field_geofield'
         - 'config:field.storage.node.field_image'
         - 'config:field.storage.node.field_link'

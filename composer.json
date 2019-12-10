@@ -104,7 +104,8 @@
     "drupal/geolocation": "^3.0",
     "drupal/views_field_view": "^1.0@beta",
     "drupal/views_entity_form_field": "^1.0@beta",
-    "drupal/asset_injector": "^2.4"
+    "drupal/asset_injector": "^2.4",
+    "drupal/taxonomy_manager": "^1.0@alpha"
   },
   "require-dev": {
     "drupal/devel": "^1.0",
@@ -154,6 +155,9 @@
       },
       "drupal/leaflet_countries": {
         "Add compatibility with latest leaflet version": "https://www.drupal.org/files/issues/2019-06-24/leaflet_countries-fatal-errors-3017830-3.patch"
+      },
+      "drupal/facets": {
+        "Hierarchical Facets using Dropdown Widget": "https://www.drupal.org/files/issues/2019-07-08/3058431-5-facets-add-hierarchy-in-dropdown-widget.patch"
       }
     }
   },

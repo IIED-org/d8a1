@@ -1,0 +1,8 @@
+uuid: 8bff5bc2-4e64-41c5-98b7-c7a7e9f756f9
+langcode: en
+status: true
+dependencies: {  }
+id: country_header_block
+label: 'Country header block'
+revision: 1
+description: 'Block with location enabled for display on country-specific pages'

@@ -6,11 +6,15 @@ dependencies:
     - search_api.index.acquia_search_index
     - views.view.explore
   module:
+    - facets_pretty_paths
     - search_api
+third_party_settings:
+  facets_pretty_paths:
+    coder: taxonomy_term_coder
 id: strategy_2
 name: Strategy
 url_alias: strategy
-weight: 0
+weight: 1
 min_count: 1
 show_only_one_result: true
 field_identifier: field_interventions

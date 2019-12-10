@@ -1,0 +1,22 @@
+uuid: e0264f0c-289e-400b-91a5-6121e8dd77e6
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.country_header_block
+    - field.storage.block_content.field_country
+  module:
+    - address
+id: block_content.country_header_block.field_country
+field_name: field_country
+entity_type: block_content
+bundle: country_header_block
+label: Country
+description: 'Select country'
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  available_countries: {  }
+field_type: address_country

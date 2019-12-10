@@ -1,0 +1,38 @@
+uuid: 916b24e7-f09b-45cf-82ff-8a0027f89fb3
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_document_type
+    - node.type.resource
+    - taxonomy.vocabulary.document_type
+  content:
+    - 'taxonomy_term:document_type:e2e63375-4daa-4f24-870b-e867b0e45614'
+  module:
+    - label_help
+third_party_settings:
+  label_help:
+    label_help_description: 'Type of resource, for display on search result pages'
+id: node.resource.field_document_type
+field_name: field_document_type
+entity_type: node
+bundle: resource
+label: 'Document type'
+description: 'Set the type of resource for display on search result pages'
+required: false
+translatable: false
+default_value:
+  -
+    target_uuid: e2e63375-4daa-4f24-870b-e867b0e45614
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      document_type: document_type
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference
