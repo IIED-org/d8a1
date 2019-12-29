@@ -12,7 +12,7 @@ dependencies:
 id: aboutlp
 theme: pnp_bootstrap_sass
 region: content
-weight: -8
+weight: -12
 provider: null
 plugin: 'block_content:f8eee970-e017-45a7-8fcb-76e758412b78'
 settings:

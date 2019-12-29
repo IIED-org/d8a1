@@ -12,7 +12,7 @@ dependencies:
 id: explorelistview
 theme: pnp_bootstrap_sass
 region: content
-weight: -16
+weight: -18
 provider: null
 plugin: 'block_content:46783ba4-d98d-4253-9511-c18916ee4c2b'
 settings:

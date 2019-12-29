@@ -12,7 +12,7 @@ dependencies:
 id: aboutdonors
 theme: pnp_bootstrap_sass
 region: content
-weight: -5
+weight: -9
 provider: null
 plugin: 'block_content:89dec9d4-d978-49cf-b543-d5e51a05f504'
 settings:
