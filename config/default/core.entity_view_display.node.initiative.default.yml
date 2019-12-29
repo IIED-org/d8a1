@@ -31,6 +31,7 @@ dependencies:
     - field.field.node.initiative.field_geofield
     - field.field.node.initiative.field_illegal_disincentives
     - field.field.node.initiative.field_image
+    - field.field.node.initiative.field_image_caption
     - field.field.node.initiative.field_image_gallery
     - field.field.node.initiative.field_in_kind_incentives
     - field.field.node.initiative.field_in_kind_scouts
@@ -43,6 +44,7 @@ dependencies:
     - field.field.node.initiative.field_lease_payments
     - field.field.node.initiative.field_legal_trade
     - field.field.node.initiative.field_limiting_factors
+    - field.field.node.initiative.field_main_image_caption
     - field.field.node.initiative.field_non_wildlife_development
     - field.field.node.initiative.field_non_wildlife_livelihoods
     - field.field.node.initiative.field_organisers_donors_partners
@@ -317,6 +319,13 @@ content:
     third_party_settings: {  }
     type: image
     region: content
+  field_image_caption:
+    weight: 73
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: text_default
+    region: content
   field_image_gallery:
     weight: 60
     label: above
@@ -419,6 +428,13 @@ content:
     settings: {  }
     third_party_settings: {  }
     type: list_default
+    region: content
+  field_main_image_caption:
+    weight: 74
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: text_default
     region: content
   field_non_wildlife_development:
     weight: 37

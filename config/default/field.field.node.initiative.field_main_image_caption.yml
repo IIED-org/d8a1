@@ -1,0 +1,21 @@
+uuid: 395d177b-67ce-4dd8-b42b-3c0574f34895
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_main_image_caption
+    - node.type.initiative
+  module:
+    - text
+id: node.initiative.field_main_image_caption
+field_name: field_main_image_caption
+entity_type: node
+bundle: initiative
+label: 'Main image caption'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long
