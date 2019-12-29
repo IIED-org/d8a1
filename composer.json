@@ -105,7 +105,8 @@
     "drupal/views_entity_form_field": "^1.0@beta",
     "drupal/asset_injector": "^2.4",
     "drupal/leaflet": "^1.22",
-    "drupal/leaflet_mapbox": "1.x-dev"
+    "drupal/leaflet_mapbox": "1.x-dev",
+    "drupal/taxonomy_manager": "^1.0@alpha"
   },
   "require-dev": {
     "drupal/devel": "^1.0",
@@ -154,7 +155,7 @@
         "Add twig support": "https://www.drupal.org/files/issues/2018-10-12/cmn-twig-2959026-15.patch"
       },
       "drupal/leaflet_countries": {
-        "Add compatibility with latest leaflet version": "https://www.drupal.org/files/issues/2019-06-24/leaflet_countries-fatal-errors-3017830-3.patch"
+        "Add compatibility with latest leaflet version and support for country outlines to be clickable and navigate to another url.": "https://www.drupal.org/files/issues/2019-12-29/leaflet_countries-grouped-entities-popup-3086578-9.patch"
       }
     }
   },
