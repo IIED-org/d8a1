@@ -34,6 +34,9 @@
         }
       }
     }
+    // Set the max bounds and viscosity to prevent dragging.
+    leaflet.lMap.setMaxBounds(bounds);
+    leaflet.lMap.maxBoundsViscosity(1.0);
     // Fit the map to the superBounds.
     leaflet.lMap.fitBounds(superBounds);
   });
@@ -44,6 +47,70 @@
    * Used to add an optional text label to a country feature.
    */
   $(document).bind('leaflet.feature', function (Event, lFeature, feature, leaflet) {
+
+    function style(feature) {
+      return {
+        fillColor: '#00F',
+        weight: 2,
+        opacity: 1,
+        color: 'white',
+        dashArray: '3',
+        fillOpacity: 0.7
+      };
+    }
+
+    function highlightFeature(e) {
+      var layer = e.target;
+
+      layer.setStyle({
+        weight: 1,
+        color: '#00F',
+        dashArray: '',
+        fillOpacity: 0.7
+      });
+
+      if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
+        layer.bringToFront();
+      }
+    }
+
+    function resetHighlight(e) {
+      //geojson.resetStyle(e.target);
+      var layer = e.target;
+      layer.setStyle({
+        color: feature.options.color,
+        weight: feature.options.weight,
+        lineOpacity: feature.options.lineOpacity,
+        fillColor: feature.options.fillColor,
+        fillOpacity: feature.options.fillOpacity
+      });
+    }
+    // Check for href value
+    if (feature.href) {
+      var map = leaflet.lMap;
+      $(lFeature).click(function (e) {
+        window.location = feature.href;
+      });
+
+      // Add mouseover and mouseout functions.
+      $(lFeature).on({
+        mouseover: function (e) {
+          var layer = e.target;
+          highlightFeature(e);
+          lFeature.openPopup();
+        },
+        mouseout: function (e) {
+          var layer = e.target;
+          resetHighlight(e);
+          layer.closePopup();
+        },
+      });
+    }
+    // If we have a tooltip, bind it.
+    if (feature.tooltip) {
+      lFeature.bindTooltip(feature.tooltip);
+    }
+
     if (feature.label) {
       var map = leaflet.lMap;
       var centre = lFeature.getBounds().getCenter();
