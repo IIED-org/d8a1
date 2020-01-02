@@ -19,7 +19,6 @@ dependencies:
     - node.type.resource
   module:
     - address
-    - chosen_field
     - datetime
     - field_group
     - field_layout
@@ -135,7 +134,7 @@ content:
               comparison: checked
               value: ''
               submit: 'Add Cancel'
-    type: chosen_select
+    type: options_select
     region: content
   field_geofield:
     type: geofield_latlon

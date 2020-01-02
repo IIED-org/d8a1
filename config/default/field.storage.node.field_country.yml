@@ -1,13 +1,13 @@
-uuid: 508c3655-4496-4613-a74b-b94ee49990cc
+uuid: 23605d39-52e1-4e17-bccc-78312ab548dc
 langcode: en
 status: true
 dependencies:
   module:
     - address
-    - block_content
-id: block_content.field_country
+    - node
+id: node.field_country
 field_name: field_country
-entity_type: block_content
+entity_type: node
 type: address_country
 settings: {  }
 module: address

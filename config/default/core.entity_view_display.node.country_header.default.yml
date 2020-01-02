@@ -1,0 +1,39 @@
+uuid: 8a1c4cc2-b824-4274-8702-77b91f7972cb
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.country_header.body
+    - field.field.node.country_header.field_country
+    - node.type.country_header
+  module:
+    - address
+    - text
+    - user
+id: node.country_header.default
+targetEntityType: node
+bundle: country_header
+mode: default
+content:
+  body:
+    label: hidden
+    type: text_default
+    weight: 101
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+  field_country:
+    weight: 102
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: address_country_default
+    region: content
+  links:
+    weight: 100
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+hidden:
+  addtoany: true
+  search_api_excerpt: true

@@ -74,8 +74,8 @@ spi:
     time: 0
   cron_interval: 28800
   site_name: 'd8a1: dev'
-  site_machine_name: ef43298b_5eac_4d9d_b465_5fd0b1af3281__d8a1rfjrbvzlqo__5d8b92886af6d
-  site_environment: null
+  site_machine_name: ef43298b_5eac_4d9d_b465_5fd0b1af3281__d8a1paqkuxea2h__5defdc78a1e84
+  site_environment: test
   env_detection_enabled: true
   site_uuid: 898878d8-b982-4417-bf59-ac5133857409
 mapping:

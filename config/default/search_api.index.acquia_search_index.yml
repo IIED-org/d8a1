@@ -3,18 +3,18 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.block_content.field_country
     - field.storage.node.body
     - field.storage.node.field_address
-    - field.storage.node.field_geofield
+    - field.storage.node.field_country
     - field.storage.node.field_resource_type
     - field.storage.paragraph.field_article_url
     - field.storage.paragraph.field_document_url
     - field.storage.paragraph.field_file_upload
-    - field.storage.paragraph.field_video_url
+    - field.storage.node.field_geofield
+    - field.storage.node.field_interventions
     - field.storage.node.field_species_affected
     - field.storage.node.field_standalone_resource
-    - field.storage.node.field_interventions
+    - field.storage.paragraph.field_video_url
     - search_api.server.acquia_search_server
   module:
     - node
@@ -28,7 +28,7 @@ _core:
 id: acquia_search_index
 name: 'Acquia Search Solr Index'
 description: ''
-read_only: true
+read_only: false
 field_settings:
   body:
     label: Body
@@ -54,14 +54,14 @@ field_settings:
     dependencies:
       config:
         - field.storage.node.field_address
-  country_name_1:
-    label: 'Country name'
-    datasource_id: 'entity:block_content'
+  country_name_2:
+    label: 'Country » Full Name'
+    datasource_id: 'entity:node'
     property_path: 'field_country:country_name'
     type: string
     dependencies:
       config:
-        - field.storage.block_content.field_country
+        - field.storage.node.field_country
   created:
     label: 'Authored on'
     datasource_id: 'entity:node'
@@ -417,5 +417,4 @@ options:
       weight: -50
       settings: {  }
       processorPluginId: language
-  overridden_by_acquia_search: 2
 server: acquia_search_server
