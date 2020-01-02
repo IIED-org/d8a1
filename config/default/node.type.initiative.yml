@@ -9,7 +9,7 @@ third_party_settings:
     available_menus:
       - main
     parent: 'main:'
-name: 'Case study'
+name: 'Case studies'
 type: initiative
 description: 'Fill out this form to submit a case study to engage communities in tackling illegal wildlife trade. Submissions can include photos, documents and links to related material. We will guide you through each step and you can enter as much detail as you like. '
 help: ''

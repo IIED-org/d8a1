@@ -12,7 +12,7 @@ dependencies:
 id: aboutcommunity
 theme: pnp_bootstrap_sass
 region: content
-weight: -6
+weight: -10
 provider: null
 plugin: 'block_content:5898ce92-8fce-4fd9-a67e-5c89c7787d17'
 settings:

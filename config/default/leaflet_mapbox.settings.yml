@@ -1,6 +1,6 @@
 label: 'IIED Mapbox'
 api_version: '4'
-code: ''
+code: 'mapbox://styles/iied/ck03pwvo2006v1co70ojs0oz2'
 style_url: 'mapbox://styles/iied/ck03pwvo2006v1co70ojs0oz2'
 token: pk.eyJ1IjoiaWllZCIsImEiOiJjazAzcHVtMmcyYXZ5M2xvMXFlaWk2dWh3In0.cSVpPstX-AU9kPBR47kQuA
 zoomlevel: 2

@@ -10,7 +10,7 @@ dependencies:
 id: type_2
 name: Type
 url_alias: type
-weight: 0
+weight: 2
 min_count: 0
 show_only_one_result: false
 field_identifier: type

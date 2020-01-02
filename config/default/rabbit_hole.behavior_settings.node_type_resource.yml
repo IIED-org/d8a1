@@ -1,7 +1,9 @@
 uuid: e5616aa8-d6fe-486e-9c2c-c2b49e7f80cb
 langcode: en
 status: true
-dependencies: {  }
+dependencies:
+  config:
+    - node.type.resource
 id: node_type_resource
 action: page_redirect
 allow_override: 1
