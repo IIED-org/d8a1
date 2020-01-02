@@ -5,6 +5,7 @@ dependencies:
   config:
     - field.storage.node.body
     - field.storage.node.field_address
+    - field.storage.node.field_country
     - field.storage.node.field_resource_type
     - field.storage.paragraph.field_article_url
     - field.storage.paragraph.field_document_url
@@ -19,6 +20,7 @@ dependencies:
     - node
     - paragraphs
     - search_api
+    - block_content
     - media
     - taxonomy
 _core:
@@ -52,6 +54,14 @@ field_settings:
     dependencies:
       config:
         - field.storage.node.field_address
+  country_name_2:
+    label: 'Country » Full Name'
+    datasource_id: 'entity:node'
+    property_path: 'field_country:country_name'
+    type: string
+    dependencies:
+      config:
+        - field.storage.node.field_country
   created:
     label: 'Authored on'
     datasource_id: 'entity:node'
@@ -205,6 +215,14 @@ field_settings:
       module:
         - node
 datasource_settings:
+  'entity:block_content':
+    bundles:
+      default: false
+      selected:
+        - country_header_block
+    languages:
+      default: true
+      selected: {  }
   'entity:media':
     bundles:
       default: true
