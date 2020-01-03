@@ -1,0 +1,68 @@
+# Documentation: https://dev.docs.agile.coop/docs/environment/intro
+
+name: pnp # Insert the project name here in the format [client][project], i.e. ethimain.
+recipe: drupal8
+config:
+  xdebug: true
+  webroot: docroot
+  php: '7.2'
+proxy:
+  mailhog:
+    - mail.pnp.lndo.site # Change projectname to the same as the name key above.
+  adminer:
+    - adminer.pnp.lndo.site # Change projectname to the same as the name key above.
+services:
+  appserver:
+    overrides:
+      environment:
+        DRUSH_OPTIONS_ROOT: '/app/docroot'
+        DRUSH_OPTIONS_URI: 'http://pnp.lndo.site'
+  database:
+    creds:
+      user: database
+      password: database
+      database: database
+  mailhog:
+    type: mailhog
+    hogfrom:
+      - appserver
+    portforward: true
+  adminer:
+    type: compose
+    services:
+      image: dehy/adminer
+      command: '/bin/s6-svscan /etc/services.d'
+    portforward: true
+  node:
+    type: 'node:10'
+    build:
+      - 'if [ -d $LANDO_MOUNT/web/themes/custom/site_theme ]; then cd $LANDO_MOUNT/web/themes/custom/site_theme && yarn install --production; fi'
+    overrides:
+      image: 'agilecollective/lando-node:2.0.2-node8'
+      ports:
+        - '3050:3050' # You should change this port to something random and then update gulpconfig.js in the theme to match
+tooling:
+  npm:
+    service: node
+  yarn:
+    service: node
+  node:
+    service: node
+  gulp:
+    service: node
+  backstop:
+    service: node
+  drush:
+    service: appserver
+    cmd: '/app/bin/drush'
+  xdebug-on:
+    service: appserver
+    description: Enable xdebug for apache.
+    cmd: "docker-php-ext-enable xdebug && /etc/init.d/apache2 reload"
+    user: root
+  xdebug-off:
+    service: appserver
+    description: Disable xdebug for apache.
+    cmd: "rm /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini && /etc/init.d/apache2 reload"
+    user: root
+
