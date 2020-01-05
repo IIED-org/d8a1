@@ -12,7 +12,7 @@ dependencies:
 id: addinitiativeheader
 theme: pnp_bootstrap_sass
 region: content
-weight: -23
+weight: -22
 provider: null
 plugin: 'block_content:54e07c30-7c55-4cc1-9348-971003a8b151'
 settings:

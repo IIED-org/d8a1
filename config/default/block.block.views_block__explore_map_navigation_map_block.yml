@@ -1,0 +1,30 @@
+uuid: 5553527e-36de-4777-a31d-581c8a25818a
+langcode: en
+status: true
+dependencies:
+  config:
+    - views.view.explore_map_navigation
+  module:
+    - system
+    - views
+  theme:
+    - pnp_bootstrap_sass
+id: views_block__explore_map_navigation_map_block
+theme: pnp_bootstrap_sass
+region: content
+weight: -23
+provider: null
+plugin: 'views_block:explore_map_navigation-map_block'
+settings:
+  id: 'views_block:explore_map_navigation-map_block'
+  label: ''
+  provider: views
+  label_display: '0'
+  views_label: ''
+  items_per_page: none
+visibility:
+  request_path:
+    id: request_path
+    pages: "/explore/list\r\n/explore/list/*"
+    negate: false
+    context_mapping: {  }
