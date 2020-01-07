@@ -4,6 +4,7 @@ namespace Drupal\leaflet_countries\Plugin\views\style;
 
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Field\FieldTypePluginManagerInterface;
+use Drupal\Core\Locale\CountryManager;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Render\RenderContext;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
@@ -1114,10 +1115,22 @@ class LeafletCountriesMap extends StylePluginBase implements ContainerFactoryPlu
     $feature['label'] = $label;
     $feature['labelTriggerPopup'] = $this->options['name_trigger_popup'];
 
+    // Determine the type of geolocation field.
+    $geofield_name = $this->options['data_source'];
+    $geofield_type = $this->getDataSourceFieldType($geofield_name);
+
     // Get country name and format href target.
     if ($this->options['onclick_href']) {
-      $country_names = \Drupal\leaflet_countries\Countries::getCodesAndLabels();
-      $country_name = $country_names[$code];
+      if ($geofield_type=='address'){
+        // Get country names in the same format as addressfield (eg. Congo - Brazzaville).
+        $list = \Drupal\Core\Locale\CountryManager::getStandardList();
+        $countries = \Drupal\leaflet_countries\Countries::getCountriesCca3();
+        $cca2 = $countries[$code]->cca2;
+        $country_name = $list[$cca2]->__toString();
+      } else {
+        $country_names = \Drupal\leaflet_countries\Countries::getCodesAndLabels();
+        $country_name = $country_names[$code];
+      }
       $pattern = $this->options['onclick_href_pattern'];
       $feature['href'] = str_replace('%country', $country_name, $pattern);
     }

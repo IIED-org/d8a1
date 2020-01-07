@@ -46,6 +46,18 @@ class Countries {
   }
 
   /**
+   * Decodes the countries JSON data and returns it, keyed by cca3 code.
+   */
+  public static function getCountriesCca3() {
+    $countries = json_decode(self::getCountriesJSON());
+    $cca3Countries = [];
+    foreach ($countries as $country) {
+      $cca3Countries[$country->cca3] = $country;
+    }
+    return $cca3Countries;
+  }
+
+  /**
    * Gets the country codes and returns an array of them.
    *
    * @return array
