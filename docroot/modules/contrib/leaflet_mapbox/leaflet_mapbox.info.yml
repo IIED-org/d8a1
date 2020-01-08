@@ -1,0 +1,9 @@
+name: Leaflet MapBox
+type: module
+description: Provides MapBox integration with MapBox
+package: Leaflet
+configure: leaflet_mapbox.settings
+dependencies:
+  - leaflet
+
+core: 8.x

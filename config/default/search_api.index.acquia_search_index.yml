@@ -28,7 +28,7 @@ _core:
 id: acquia_search_index
 name: 'Acquia Search Solr Index'
 description: ''
-read_only: false
+read_only: true
 field_settings:
   body:
     label: Body
@@ -417,4 +417,5 @@ options:
       weight: -50
       settings: {  }
       processorPluginId: language
+  overridden_by_acquia_search: 2
 server: acquia_search_server

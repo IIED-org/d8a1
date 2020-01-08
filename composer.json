@@ -100,7 +100,6 @@
     "drupal/honeypot": "^1.29",
     "drupal/leaflet_countries": "^1.1",
     "mledoze/countries": "^2.1",
-    "drupal/leaflet": "^1.19",
     "drupal/geolocation": "^3.0",
     "drupal/views_field_view": "^1.0@beta",
     "drupal/views_entity_form_field": "^1.0@beta",
@@ -154,12 +153,11 @@
         "Add twig support": "https://www.drupal.org/files/issues/2018-10-12/cmn-twig-2959026-15.patch"
       },
       "drupal/leaflet_countries": {
-        "Add compatibility with latest leaflet version": "https://www.drupal.org/files/issues/2019-06-24/leaflet_countries-fatal-errors-3017830-3.patch"
+        "Add compatibility with latest leaflet version and support for country outlines to be clickable and navigate to another url.": "https://www.drupal.org/files/issues/2019-12-29/leaflet_countries-grouped-entities-popup-3086578-9.patch"
       },
       "drupal/facets": {
         "Hierarchical Facets using Dropdown Widget": "https://www.drupal.org/files/issues/2019-07-08/3058431-5-facets-add-hierarchy-in-dropdown-widget.patch"
       }
-    }
   },
   "scripts": {
     "post-install-cmd": [

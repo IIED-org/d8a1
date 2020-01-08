@@ -13,7 +13,7 @@ dependencies:
 id: loginoptions_2
 theme: pnp_bootstrap_sass
 region: content
-weight: -21
+weight: -20
 provider: null
 plugin: 'block_content:1d87f453-1f42-4eb3-8464-4f042e60e0bc'
 settings:

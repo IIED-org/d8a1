@@ -33,6 +33,10 @@ $spring-green: #00ff56;
     padding-left: 0;
 }
 
+.w-200 {
+  width: 200%; //Fix for row widht
+}
+
 #block-aboutsubmenu { @extend .container; }
 #i-header img { @extend .img-fluid; }
 

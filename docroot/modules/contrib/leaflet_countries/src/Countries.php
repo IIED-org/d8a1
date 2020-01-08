@@ -46,6 +46,18 @@ class Countries {
   }
 
   /**
+   * Decodes the countries JSON data and returns it, keyed by cca3 code.
+   */
+  public static function getCountriesCca3() {
+    $countries = json_decode(self::getCountriesJSON());
+    $cca3Countries = [];
+    foreach ($countries as $country) {
+      $cca3Countries[$country->cca3] = $country;
+    }
+    return $cca3Countries;
+  }
+
+  /**
    * Gets the country codes and returns an array of them.
    *
    * @return array
@@ -89,6 +101,22 @@ class Countries {
   public static function getIndividualCountryJSON($code) {
     $filepath = 'data/' . strtolower($code) . '.topo.json';
     return self::getJSONContent($filepath);
+  }
+  /**
+   * Gets an individual country's cca3 code from its cca2 code.
+   *
+   * @param $cca2
+   *   The cca2 code of the country whose data should be returned.
+   *
+   * @return $string
+   *   The cca3 code for the country.
+   */
+  public static function getCca3($cca2) {
+    $list = self::getCountries();
+    foreach($list as $item) {
+      $cca3[$item->cca2] = $item->cca3;
+    }
+    return ($cca3[$cca2]);
   }
 
 }

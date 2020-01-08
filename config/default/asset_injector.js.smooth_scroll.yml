@@ -1,0 +1,20 @@
+uuid: df4ab7f2-cfff-45cc-bd13-93cbf4cf73df
+langcode: en
+status: true
+dependencies:
+  module:
+    - system
+id: smooth_scroll
+label: 'Smooth scroll'
+code: "el = document.getElementById(\"block-pnp-bootstrap-sass-content\");\r\nel.scrollIntoView({behavior: \"smooth\", block: \"start\"});"
+noscript: ''
+noscriptRegion: {  }
+jquery: false
+header: false
+preprocess: true
+conditions:
+  request_path:
+    id: request_path
+    pages: '/explore/country/*'
+    negate: false
+conditions_require_all: true
