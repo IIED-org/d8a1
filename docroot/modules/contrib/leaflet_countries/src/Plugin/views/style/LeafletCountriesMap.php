@@ -4,7 +4,6 @@ namespace Drupal\leaflet_countries\Plugin\views\style;
 
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Field\FieldTypePluginManagerInterface;
-use Drupal\Core\Locale\CountryManager;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Render\RenderContext;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
@@ -51,7 +50,8 @@ use Drupal\views\ResultRow;
  *   theme = "leaflet-map"
  * )
  */
-class LeafletCountriesMap extends StylePluginBase implements ContainerFactoryPluginInterface {
+class LeafletCountriesMap extends StylePluginBase implements ContainerFactoryPluginInterface
+{
 
   use LeafletSettingsElementsTrait;
 
@@ -238,7 +238,8 @@ class LeafletCountriesMap extends StylePluginBase implements ContainerFactoryPlu
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition)
+  {
     return new static(
       $configuration,
       $plugin_id,
@@ -259,7 +260,8 @@ class LeafletCountriesMap extends StylePluginBase implements ContainerFactoryPlu
   /**
    * {@inheritdoc}
    */
-  public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
+  public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL)
+  {
     parent::init($view, $display, $options);
 
     // We want to allow view editors to select which entity out of a
@@ -275,13 +277,11 @@ class LeafletCountriesMap extends StylePluginBase implements ContainerFactoryPlu
         try {
           $this->entityInfo = $this->entityManager->getDefinition($table['table']['entity type']);
           $this->entityType = $this->entityInfo->id();
-        }
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
           watchdog_exception('geofield_map', $e);
         }
       }
-    }
-    else {
+    } else {
       $this->entitySource = '__base_table';
 
       // For later use, set entity info related to the View's base table.
@@ -302,8 +302,7 @@ class LeafletCountriesMap extends StylePluginBase implements ContainerFactoryPlu
             $this->entityType = $datasource->getEntityTypeId();
             try {
               $this->entityInfo = $this->entityManager->getDefinition($this->entityType);
-            }
-            catch (\Exception $e) {
+            } catch (\Exception $e) {
               watchdog_exception('leaflet', $e);
             }
           }
@@ -315,7 +314,8 @@ class LeafletCountriesMap extends StylePluginBase implements ContainerFactoryPlu
   /**
    * {@inheritdoc}
    */
-  public function getFieldValue($index, $field) {
+  public function getFieldValue($index, $field)
+  {
     $this->view->row_index = $index;
     $value = isset($this->view->field[$field]) ? $this->view->field[$field]->getValue($this->view->result[$index]) : NULL;
     unset($this->view->row_index);
@@ -328,7 +328,8 @@ class LeafletCountriesMap extends StylePluginBase implements ContainerFactoryPlu
    * @return array
    *   Available data sources.
    */
-  protected function getAvailableDataSources() {
+  protected function getAvailableDataSources()
+  {
     $fields_geo_data = [];
 
     /* @var \Drupal\views\Plugin\views\ViewsHandlerInterface $handler) */
@@ -339,8 +340,7 @@ class LeafletCountriesMap extends StylePluginBase implements ContainerFactoryPlu
         /* @var \Drupal\views\Plugin\views\field\EntityField $handler */
         try {
           $entity_type = $handler->getEntityType();
-        }
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
           $entity_type = NULL;
         }
         $field_storage_definitions = $this->entityFieldManager->getFieldStorageDefinitions($entity_type);
@@ -374,11 +374,11 @@ class LeafletCountriesMap extends StylePluginBase implements ContainerFactoryPlu
    * @return array
    *   The entity sources list.
    */
-  protected function getAvailableEntitySources() {
+  protected function getAvailableEntitySources()
+  {
     if ($base_entity_type = $this->view->getBaseEntityType()) {
       $label = $base_entity_type->getLabel();
-    }
-    else {
+    } else {
       // Fallback to the base table key.
       $base_tables = array_keys($this->view->getBaseTables());
       // A view without a base table should never happen (just in case).
@@ -397,8 +397,7 @@ class LeafletCountriesMap extends StylePluginBase implements ContainerFactoryPlu
       if (($table = $data->get($handler->definition['base'])) && !empty($table['table']['entity type'])) {
         try {
           $entity_type = $this->entityManager->getDefinition($table['table']['entity type']);
-        }
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
           $entity_type = NULL;
         }
         $options[$relationship_id] = new TranslatableMarkup('@relationship (@entity_type)', [
@@ -420,7 +419,8 @@ class LeafletCountriesMap extends StylePluginBase implements ContainerFactoryPlu
    * @return \Drupal\Core\Entity\EntityTypeInterface
    *   The entity type.
    */
-  protected function getEntitySourceEntityInfo($source) {
+  protected function getEntitySourceEntityInfo($source)
+  {
     if (!empty($source) && ($source != '__base_table')) {
       $handler = $this->displayHandler->getHandler('relationship', $source);
 
@@ -428,8 +428,7 @@ class LeafletCountriesMap extends StylePluginBase implements ContainerFactoryPlu
       if (($table = $data->get($handler->definition['base'])) && !empty($table['table']['entity type'])) {
         try {
           return $this->entityManager->getDefinition($table['table']['entity type']);
-        }
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
           $entity_type = NULL;
         }
       }
@@ -441,7 +440,8 @@ class LeafletCountriesMap extends StylePluginBase implements ContainerFactoryPlu
   /**
    * {@inheritdoc}
    */
-  public function evenEmpty() {
+  public function evenEmpty()
+  {
     // Render map even if there is no data.
     return TRUE;
   }
@@ -449,7 +449,8 @@ class LeafletCountriesMap extends StylePluginBase implements ContainerFactoryPlu
   /**
    * {@inheritdoc}
    */
-  public function buildOptionsForm(&$form, FormStateInterface $form_state) {
+  public function buildOptionsForm(&$form, FormStateInterface $form_state)
+  {
 
     // If data source changed then apply the changes.
     if ($form_state->get('entity_source')) {
@@ -509,8 +510,7 @@ class LeafletCountriesMap extends StylePluginBase implements ContainerFactoryPlu
         '#type' => 'value',
         '#value' => key($entity_sources),
       ];
-    }
-    else {
+    } else {
       $form['entity_source'] = [
         '#type' => 'select',
         '#title' => new TranslatableMarkup('Entity Source'),
@@ -712,7 +712,24 @@ class LeafletCountriesMap extends StylePluginBase implements ContainerFactoryPlu
       '#size' => 6,
       '#default_value' => $this->options['fillopacity'],
       '#empty_value' => '1',
+    );
 
+    // setMaxBounds
+    $form['setmaxbounds'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Enable the Leaflet setMaxBounds option'),
+      '#description' => $this->t('This restricts dragging outside of the bounds set by the country outlines.'),
+      '#default_value' => $this->options['setmaxbounds'],
+    ];
+
+    // maxBoundsViscosity.
+    $form['maxboundsviscosity'] = array(
+      '#type' => 'textfield',
+      '#title' => 'Set maxBoundsViscosity',
+      '#description' => $this->t('If maxBounds is set, this option will control how solid the bounds are when dragging the map around. The default value of 0.0 allows the user to drag outside the bounds at normal speed, higher values will slow down map dragging outside bounds, and 1.0 makes the bounds fully solid, preventing the user from dragging outside the bounds.'),
+      '#size' => 6,
+      '#default_value' => $this->options['maxboundsviscosity'],
+      '#empty_value' => '0.0',
     );
 
     // Generate the Leaflet Map General Settings.
@@ -743,7 +760,8 @@ class LeafletCountriesMap extends StylePluginBase implements ContainerFactoryPlu
   /**
    * {@inheritdoc}
    */
-  public function validateOptionsForm(&$form, FormStateInterface $form_state) {
+  public function validateOptionsForm(&$form, FormStateInterface $form_state)
+  {
     parent::validateOptionsForm($form, $form_state);
 
     $style_options = $form_state->getValue('style_options');
@@ -778,7 +796,8 @@ class LeafletCountriesMap extends StylePluginBase implements ContainerFactoryPlu
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The Form state.
    */
-  public static function optionsFormEntitySourceSubmit(array $form, FormStateInterface $form_state) {
+  public static function optionsFormEntitySourceSubmit(array $form, FormStateInterface $form_state)
+  {
     $parents = $form_state->getTriggeringElement()['#parents'];
     array_pop($parents);
     array_push($parents, 'entity_source');
@@ -802,7 +821,8 @@ class LeafletCountriesMap extends StylePluginBase implements ContainerFactoryPlu
    * @return mixed
    *   The returned result.
    */
-  public static function optionsFormEntitySourceSubmitAjax(array $form, FormStateInterface $form_state) {
+  public static function optionsFormEntitySourceSubmitAjax(array $form, FormStateInterface $form_state)
+  {
     $triggering_element = $form_state->getTriggeringElement();
     $array_parents = $triggering_element['#array_parents'];
     array_pop($array_parents);
@@ -819,7 +839,8 @@ class LeafletCountriesMap extends StylePluginBase implements ContainerFactoryPlu
    * @return string $field_type
    *   The field type.
    */
-  protected function getDataSourceFieldType($field_name) {
+  protected function getDataSourceFieldType($field_name)
+  {
     $fields_geo_data = [];
     // We can assume the data source is a field within the view.
     /* @var \Drupal\views\Plugin\views\ViewsHandlerInterface $handler) */
@@ -830,8 +851,7 @@ class LeafletCountriesMap extends StylePluginBase implements ContainerFactoryPlu
         /* @var \Drupal\views\Plugin\views\field\EntityField $handler */
         try {
           $entity_type = $handler->getEntityType();
-        }
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
           $entity_type = NULL;
         }
         $field_storage_definitions = $this->entityFieldManager->getFieldStorageDefinitions($entity_type);
@@ -861,7 +881,8 @@ class LeafletCountriesMap extends StylePluginBase implements ContainerFactoryPlu
   /**
    * Renders the View.
    */
-  public function render() {
+  public function render()
+  {
     // Performs some preprocess on the leaflet map settings.
     $this->leafletService->preProcessMapSettings($this->options);
 
@@ -890,7 +911,7 @@ class LeafletCountriesMap extends StylePluginBase implements ContainerFactoryPlu
     }
 
     // For a leaflet_countries field data source.
-    if  ($geofield_type == 'leaflet_country_item') {
+    if ($geofield_type == 'leaflet_country_item') {
 
       // Group the rows according to the grouping instructions, if specified.
       $sets = $this->renderGrouping(
@@ -900,11 +921,10 @@ class LeafletCountriesMap extends StylePluginBase implements ContainerFactoryPlu
       );
 
       $data = $this->renderGroupingSets($sets);
-
     }
 
     // For address field data source.
-    if  ($geofield_type == 'address') {
+    if ($geofield_type == 'address') {
 
       // Group the rows according to the grouping instructions, if specified.
       $sets = $this->renderGrouping(
@@ -914,33 +934,18 @@ class LeafletCountriesMap extends StylePluginBase implements ContainerFactoryPlu
       );
 
       $data = $this->renderGroupingSets($sets);
-
     }
     // Don't render the map, if we do not have any data
     // and the hide option is set.
     if (empty($data) && !empty($this->options['hide_empty_map'])) {
       return [];
     }
-    // $map['settings']['path'] = '{"color":"#000000","fillcolor":"#FFFFFF","fillopacity":"0.5"}';
-    // $color = isset($this->options['linecolor']) ? '#' . $this->options['linecolor'] : '#666666';
-    // $weight = isset($this->options['lineweight']) ? $this->options['lineweight'] : '1.5';
-    // $lineOpacity = isset($this->options['lineopacity']) ? $this->options['lineopacity'] : '1';
-    // $fillColor = isset($this->options['fillcolor']) ? '#' . $this->options['fillcolor'] : '#666666';
-    // $fillOpacity = isset($this->options['fillopacity']) ? $this->options['fillopacity'] : '1';
-    // $path = [
-    //   'color' => isset($this->options['linecolor']) ? '#' . $this->options['linecolor'] : '#666666',
-    //   'weight' => isset($this->options['lineweight']) ? $this->options['lineweight'] : '1.5',
-    //   'lineopacity' => isset($this->options['lineopacity']) ? $this->options['lineopacity'] : '1',
-    //   'fillcolor' => isset($this->options['fillcolor']) ? '#' . $this->options['fillcolor'] : '#666666',
-    //   'fillopacity' => isset($this->options['fillopacity']) ? $this->options['fillopacity'] : '1',
-    //   'fillopacity' => '1',
-    //   'fillColor' => '#000',
 
-    // ];
-    // $map['settings']['path']  = json_encode($path);
-    //$map['settings']['maxBounds']  = [[40.712, -74.227],[40.774, -74.125]];
-    $map['settings']['maxBoundsViscosity']  = '1.0';
+    // Set maxBoundsViscosity, from views style settings.
 
+    $map['settings']['setMaxBounds']  = $this->options['setmaxbounds'];
+    $map['settings']['maxBoundsViscosity']  = $this->options['maxboundsviscosity'];
+    // Reset the map path to allow overrides from views style config.
     $map['settings']['path']  = '';
 
 
@@ -953,7 +958,7 @@ class LeafletCountriesMap extends StylePluginBase implements ContainerFactoryPlu
     $this->moduleHandler->alter('leaflet_map_view_style', $js_settings, $this);
 
     $map_height = !empty($this->options['height']) ? $this->options['height'] . $this->options['height_unit'] : '';
-      $build = $this->leafletService->leafletRenderMap($js_settings['map'], $js_settings['features'], $map_height);
+    $build = $this->leafletService->leafletRenderMap($js_settings['map'], $js_settings['features'], $map_height);
     BubbleableMetadata::createFromRenderArray($build)
       ->merge(BubbleableMetadata::createFromRenderArray($build_for_bubbleable_metadata))
       ->applyTo($build);
@@ -963,7 +968,8 @@ class LeafletCountriesMap extends StylePluginBase implements ContainerFactoryPlu
   /**
    * {@inheritdoc}
    */
-  public function renderGroupingSets($sets, $level = 0) {
+  public function renderGroupingSets($sets, $level = 0)
+  {
     $output = array();
     $countries = array();
 
@@ -978,8 +984,7 @@ class LeafletCountriesMap extends StylePluginBase implements ContainerFactoryPlu
         if (!empty($row->_entity)) {
           // Entity API provides a plain entity object.
           $entity = $row->_entity;
-        }
-        elseif (isset($row->_object)) {
+        } elseif (isset($row->_object)) {
           // Search API provides a TypedData EntityAdapter.
           $entity_adapter = $row->_object;
           if ($entity_adapter instanceof EntityAdapter) {
@@ -1008,10 +1013,10 @@ class LeafletCountriesMap extends StylePluginBase implements ContainerFactoryPlu
     }
 
     // We should now have an array of countries, indexed by cca3 code, each with one or more rows.
-    foreach ($countries as $cca3 => $country){
+    foreach ($countries as $cca3 => $country) {
       // Render outlines, one per country, passing just the first row to render the outline.
       $country_data = $this->renderCountryRow($country['rows'][0], $cca3);
-      $newoutput['rows'][$cca3] = $country_data ;
+      $newoutput['rows'][$cca3] = $country_data;
       // If a description field is set, add a popup.
       if ($this->options['description_field']) {
         // render popup content, one per row in each country
@@ -1039,12 +1044,10 @@ class LeafletCountriesMap extends StylePluginBase implements ContainerFactoryPlu
         // merge them into the output; else simply append the feature group.
         if (empty($feature_group['group'])) {
           $output = array_merge($output, $feature_group['features']);
-        }
-        else {
+        } else {
           $output[] = $feature_group;
         }
       }
-
     }
 
     // I think this is called to leave the view object without a pointer to the current index. @todo check what this is for.
@@ -1057,7 +1060,8 @@ class LeafletCountriesMap extends StylePluginBase implements ContainerFactoryPlu
   /**
    * {@inheritdoc}
    */
-  public function renderCountryRow($row, $cca3) {
+  public function renderCountryRow($row, $cca3)
+  {
 
     // Load the GeoJSON data.
     $data = json_decode(\Drupal\leaflet_countries\Countries::getIndividualCountryJSON($cca3), TRUE);
@@ -1071,7 +1075,6 @@ class LeafletCountriesMap extends StylePluginBase implements ContainerFactoryPlu
 
     // Return a single country outline.
     return $outline;
-
   }
 
 
@@ -1086,13 +1089,14 @@ class LeafletCountriesMap extends StylePluginBase implements ContainerFactoryPlu
    * @return array
    *   List of leaflet features.
    */
-  protected function renderLeafletOutlines($features, ResultRow $row, $code) {
+  protected function renderLeafletOutlines($features, ResultRow $row, $code)
+  {
     foreach ($features as &$feature) {
       $features[] = $this->renderLeafletOutline($feature, $row, $code);
     }
     return $features;
   }
-    /**
+  /**
    * Converts the given geo data points into a leaflet feature.
    *
    * @param array $feature
@@ -1103,7 +1107,8 @@ class LeafletCountriesMap extends StylePluginBase implements ContainerFactoryPlu
    * @return array
    *   Leaflet features.
    */
-  protected function renderLeafletOutline($feature, ResultRow $row, $code) {
+  protected function renderLeafletOutline($feature, ResultRow $row, $code)
+  {
 
     // Render the entity with the selected view mode.
     $popup_body = $this->renderRowContent($row);
@@ -1111,26 +1116,14 @@ class LeafletCountriesMap extends StylePluginBase implements ContainerFactoryPlu
     $label = $this->view->getStyle()
       ->getField($row->index, $this->options['name_field']);
 
-    $feature['popup'] = $popup_body;//$popup_body;
+    $feature['popup'] = $popup_body; //$popup_body;
     $feature['label'] = $label;
     $feature['labelTriggerPopup'] = $this->options['name_trigger_popup'];
 
-    // Determine the type of geolocation field.
-    $geofield_name = $this->options['data_source'];
-    $geofield_type = $this->getDataSourceFieldType($geofield_name);
-
     // Get country name and format href target.
     if ($this->options['onclick_href']) {
-      if ($geofield_type=='address'){
-        // Get country names in the same format as addressfield (eg. Congo - Brazzaville).
-        $list = \Drupal\Core\Locale\CountryManager::getStandardList();
-        $countries = \Drupal\leaflet_countries\Countries::getCountriesCca3();
-        $cca2 = $countries[$code]->cca2;
-        $country_name = $list[$cca2]->__toString();
-      } else {
-        $country_names = \Drupal\leaflet_countries\Countries::getCodesAndLabels();
-        $country_name = $country_names[$code];
-      }
+      $country_names = \Drupal\leaflet_countries\Countries::getCodesAndLabels();
+      $country_name = $country_names[$code];
       $pattern = $this->options['onclick_href_pattern'];
       $feature['href'] = str_replace('%country', $country_name, $pattern);
     }
@@ -1144,13 +1137,6 @@ class LeafletCountriesMap extends StylePluginBase implements ContainerFactoryPlu
       'fillColor' => isset($this->options['fillcolor']) ? '#' . $this->options['fillcolor'] : '#666666',
       'fillOpacity' => isset($this->options['fillopacity']) ? $this->options['fillopacity'] : '1',
     );
-
-    // Allow sub-classes to adjust the feature.
-    //$this->alterLeafletFeature($feature, $row);
-
-    // Allow modules to adjust the feature.
-    //\Drupal::moduleHandler()
-    //  ->alter('leaflet_countries_views_feature', $feature, $row, $this);
 
     return $feature;
   }
@@ -1166,7 +1152,8 @@ class LeafletCountriesMap extends StylePluginBase implements ContainerFactoryPlu
    * @return string
    *   Markup to pupulate the popup.
    */
-  protected function renderRowContent(ResultRow $row) {
+  protected function renderRowContent(ResultRow $row)
+  {
     $popup_body = '';
     if ($this->options['description_field'] === '#rendered_entity' && is_object($row->_entity)) {
       $entity = $row->_entity;
@@ -1191,7 +1178,8 @@ class LeafletCountriesMap extends StylePluginBase implements ContainerFactoryPlu
    * @return string
    *   Rendered markup.
    */
-  protected function renderPopupRows($country) {
+  protected function renderPopupRows($country)
+  {
     // @todo: refactor this to make better use of the theme system to render the popup content.
     $markup = '';
     foreach ($country['rows'] as $row) {
@@ -1210,7 +1198,8 @@ class LeafletCountriesMap extends StylePluginBase implements ContainerFactoryPlu
   /**
    * Set default options.
    */
-  protected function defineOptions() {
+  protected function defineOptions()
+  {
     $options = parent::defineOptions();
     $options['data_source'] = ['default' => ''];
     $options['entity_source'] = ['default' => '__base_table'];
@@ -1225,6 +1214,8 @@ class LeafletCountriesMap extends StylePluginBase implements ContainerFactoryPlu
     $options['name_trigger_popup'] = TRUE;
     $options['onclick_href'] = FALSE;
     $options['onclick_href_pattern'] = array('default' => '/explore');
+    $options['maxboundsviscosity'] = array('default' => '0.0');
+    $options['setmaxbounds'] = FALSE;
 
     $leaflet_map_default_settings = [];
     foreach (self::getDefaultSettings() as $k => $setting) {
@@ -1246,14 +1237,15 @@ class LeafletCountriesMap extends StylePluginBase implements ContainerFactoryPlu
    * @return array
    *   Definition of leaflet features, compatible with leaflet_render_map().
    */
-  protected function renderLeafletGroup(array $features = array(), $title, $level) {
+  protected function renderLeafletGroup(array $features = array(), $title, $level)
+  {
     return array(
       'group' => FALSE,
       'features' => $features,
     );
   }
 
- /**
+  /**
    * Chance for sub-classes to adjust the leaflet feature array.
    *
    * For example, this can be used to add in icon configuration.
@@ -1263,7 +1255,7 @@ class LeafletCountriesMap extends StylePluginBase implements ContainerFactoryPlu
    * @param ResultRow $row
    *   The Result rows.
    */
-  protected function alterLeafletFeature(array &$point, ResultRow $row) {
+  protected function alterLeafletFeature(array &$point, ResultRow $row)
+  {
   }
-
 }
