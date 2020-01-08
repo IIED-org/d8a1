@@ -5174,7 +5174,7 @@
                 }
             },
             "patches_applied": {
-                "Add compatibility with latest leaflet version and support for country outlines to be clickable and navigate to another url.": "https://www.drupal.org/files/issues/2020-01-08/leaflet_countries-grouped-entities-popup-3086578-10.patch"
+                "Add compatibility with latest leaflet version and support for country outlines to be clickable and navigate to another url.": "https://www.drupal.org/files/issues/2020-01-08/leaflet_countries-grouped-entities-popup-3086578-11.patch"
             }
         },
         "installation-source": "dist",

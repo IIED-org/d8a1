@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "42d777e3e0eef002b6481b82c396acaf",
+    "content-hash": "2d3d6f8a39e1e411563a2caba4544300",
     "packages": [
         {
             "name": "abraham/twitteroauth",
@@ -4950,7 +4950,7 @@
                     }
                 },
                 "patches_applied": {
-                    "Add compatibility with latest leaflet version and support for country outlines to be clickable and navigate to another url.": "https://www.drupal.org/files/issues/2020-01-08/leaflet_countries-grouped-entities-popup-3086578-10.patch"
+                    "Add compatibility with latest leaflet version and support for country outlines to be clickable and navigate to another url.": "https://www.drupal.org/files/issues/2020-01-08/leaflet_countries-grouped-entities-popup-3086578-11.patch"
                 }
             },
             "notification-url": "https://packages.drupal.org/8/downloads",
