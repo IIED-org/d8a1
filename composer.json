@@ -104,8 +104,6 @@
     "drupal/views_field_view": "^1.0@beta",
     "drupal/views_entity_form_field": "^1.0@beta",
     "drupal/asset_injector": "^2.4",
-    "drupal/leaflet": "^1.22",
-    "drupal/leaflet_mapbox": "1.x-dev",
     "drupal/taxonomy_manager": "^1.0@alpha"
   },
   "require-dev": {
@@ -156,8 +154,10 @@
       },
       "drupal/leaflet_countries": {
         "Add compatibility with latest leaflet version and support for country outlines to be clickable and navigate to another url.": "https://www.drupal.org/files/issues/2020-01-08/leaflet_countries-grouped-entities-popup-3086578-11.patch"
+      },
+      "drupal/facets": {
+        "Hierarchical Facets using Dropdown Widget": "https://www.drupal.org/files/issues/2019-07-08/3058431-5-facets-add-hierarchy-in-dropdown-widget.patch"
       }
-    }
   },
   "scripts": {
     "post-install-cmd": [

@@ -3230,10 +3230,6 @@
                 "homepage": "https://www.drupal.org/node/3236/committers"
             },
             {
-                "name": "pcambra",
-                "homepage": "https://www.drupal.org/user/122101"
-            },
-            {
                 "name": "salvis",
                 "homepage": "https://www.drupal.org/user/82964"
             },
@@ -3848,6 +3844,9 @@
                     "status": "covered",
                     "message": "Covered by Drupal's security advisory policy"
                 }
+            },
+            "patches_applied": {
+                "Hierarchical Facets using Dropdown Widget": "https://www.drupal.org/files/issues/2019-07-08/3058431-5-facets-add-hierarchy-in-dropdown-widget.patch"
             }
         },
         "installation-source": "dist",
@@ -6889,7 +6888,7 @@
                 "homepage": "https://www.drupal.org/user/107229"
             },
             {
-                "name": "geek.merlin aka axel.rutz",
+                "name": "axel.rutz",
                 "homepage": "https://www.drupal.org/user/229048"
             },
             {
