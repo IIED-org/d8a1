@@ -35,8 +35,11 @@
       }
     }
     // Set the max bounds and viscosity to prevent dragging.
-    leaflet.lMap.setMaxBounds(superBounds);
-    leaflet.lMap.maxBoundsViscosity(1.0);
+    if (leaflet.settings.setMaxBounds) {
+      leaflet.lMap.setMaxBounds(superBounds);
+      leaflet.lMap.maxBoundsViscosity(leaflet.settings.maxBoundsViscosity);
+    }
+    // Set the maxBoundsViscosity.
     // Fit the map to the superBounds.
     leaflet.lMap.fitBounds(superBounds);
   });
