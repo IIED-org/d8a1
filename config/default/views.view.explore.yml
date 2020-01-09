@@ -1250,42 +1250,10 @@ display:
           empty: true
           tokenize: true
           content:
-            value: "<div class=\"col-12\">\r\n<div class=\"row\">\r\n<h2>{{ arguments.country_name_2_1 }}</h2>\r\n</div>\r\n</div>"
+            value: "<div class=\"row mb-3\">\r\n<div class=\"col-12\">\r\n<h2>{{ arguments.country_name_2 }}</h2>\r\n</div>\r\n</div>"
             format: basic_html
           plugin_id: text
       arguments:
-        country_name_2_1:
-          id: country_name_2_1
-          table: search_api_index_acquia_search_index
-          field: country_name_2
-          relationship: none
-          group_type: group
-          admin_label: ''
-          default_action: default
-          exception:
-            value: country
-            title_enable: false
-            title: All
-          title_enable: true
-          title: '{{ arguments.country_name_2 }} '
-          default_argument_type: raw
-          default_argument_options:
-            index: 2
-            use_alias: true
-          default_argument_skip_url: false
-          summary_options: {  }
-          summary:
-            sort_order: asc
-            number_of_records: 0
-            format: default_summary
-          specify_validation: false
-          validate:
-            type: none
-            fail: 'not found'
-          validate_options: {  }
-          break_phrase: false
-          not: false
-          plugin_id: search_api
         country_name_2:
           id: country_name_2
           table: search_api_index_acquia_search_index
@@ -1298,8 +1266,8 @@ display:
             value: all
             title_enable: false
             title: All
-          title_enable: false
-          title: ''
+          title_enable: true
+          title: '{{ arguments.country_name_2 }}'
           default_argument_type: raw
           default_argument_options:
             index: 2
@@ -1318,7 +1286,7 @@ display:
           break_phrase: false
           not: false
           plugin_id: search_api
-      use_ajax: true
+      use_ajax: false
       pager:
         type: some
         options:
@@ -2915,9 +2883,9 @@ display:
               rendered_strip: false
             -
               field: field_document_type
-              rendered: true
-              rendered_strip: true
-          row_class: row
+              rendered: false
+              rendered_strip: false
+          row_class: ''
           default_row_class: false
       defaults:
         style: false
@@ -5481,7 +5449,7 @@ display:
           group_type: group
           admin_label: ''
           empty: true
-          content: '@total items found'
+          content: '<p><em>@total items found</em></p>'
           plugin_id: result
     cache_metadata:
       max-age: -1

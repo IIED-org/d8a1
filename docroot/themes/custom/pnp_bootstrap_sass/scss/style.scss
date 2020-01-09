@@ -33,9 +33,6 @@ $spring-green: #00ff56;
     padding-left: 0;
 }
 
-.w-200 {
-  width: 200%; //Fix for row widht
-}
 
 #block-aboutsubmenu { @extend .container; }
 #i-header img { @extend .img-fluid; }
@@ -50,7 +47,7 @@ $spring-green: #00ff56;
   }
   .featured-top {
     @extend .container;
-    height: 100px;
+    min-height: 100px;
     font-size: 1rem;
   }
   .facets-dropdown {
@@ -440,7 +437,7 @@ form.form-search:before {
 --------------------------------------------------*/
 .leaflet-container {
   min-width: 100% !important;
-  margin-bottom: 105px;
+  margin-bottom: 20px;
 }
 
 .leaflet-touch-zoom  {
@@ -477,6 +474,10 @@ button#edit-submit-explore {
     box-shadow: none;
     outline: none !important;
   }
+}
+
+.js-facets-dropdown-links {
+  display: none;
 }
 
 .block-facets h2 {
@@ -1045,10 +1046,13 @@ label.js-form-required,
 
 
 @media (min-width: 1200px) {
-.block-facet--dropdown {
-    flex: 0 0 18%;
-    max-width: 18%;
-}
+  .block-facet--dropdown {
+      flex: 0 0 18%;
+      max-width: 18%;
+  }
+  .w-200 {
+    width: 200%; //Fix for card row width
+  }
 }
 
 @media (min-width: 992px) {

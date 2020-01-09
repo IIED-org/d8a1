@@ -70,7 +70,7 @@ display:
           linecolor: CCCCCC
           lineweight: '.5'
           lineopacity: '0.3'
-          fillcolor: CCCCFF
+          fillcolor: '666666'
           fillopacity: '0.2'
           leaflet_map: leaflet-mapbox
           height: '400'
@@ -114,7 +114,7 @@ display:
           leaflet_markercluster:
             control: 0
             options: '{"spiderfyOnMaxZoom":true,"showCoverageOnHover":true,"removeOutsideVisibleBounds":false}'
-          path: '{"color":"#eeeeee","opacity":"1.0","stroke":true,"weight":1,"fill":"depends","fillColor":"*","fillOpacity":"0.2"}'
+          path: ''
           geocoder:
             control: 0
             settings:
