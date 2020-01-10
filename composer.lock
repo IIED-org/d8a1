@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ff81383064929aa1da7943a07a239a0c",
+    "content-hash": "b35d3afefc05e02dd17efec9c8498325",
     "packages": [
         {
             "name": "abraham/twitteroauth",
@@ -4985,6 +4985,65 @@
             "support": {
                 "source": "https://git.drupalcode.org/project/leaflet_countries"
             }
+        },
+        {
+            "name": "drupal/leaflet_mapbox",
+            "version": "dev-1.x",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/leaflet_mapbox.git",
+                "reference": "5337011575921a88287e189213fd54546a4c6aee"
+            },
+            "require": {
+                "drupal/core": "~8.0",
+                "drupal/leaflet": "*"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "branch-alias": {
+                    "dev-1.x": "1.x-dev"
+                },
+                "drupal": {
+                    "version": "8.x-1.x-dev",
+                    "datestamp": "1568819586",
+                    "security-coverage": {
+                        "status": "not-covered",
+                        "message": "Dev releases are not covered by Drupal security advisories."
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "RdeBoer",
+                    "homepage": "https://www.drupal.org/user/404007"
+                },
+                {
+                    "name": "arshadcn",
+                    "homepage": "https://www.drupal.org/user/571032"
+                },
+                {
+                    "name": "geek.merlin aka axel.rutz",
+                    "homepage": "https://www.drupal.org/user/229048"
+                },
+                {
+                    "name": "heliogabal",
+                    "homepage": "https://www.drupal.org/user/998658"
+                },
+                {
+                    "name": "jherencia",
+                    "homepage": "https://www.drupal.org/user/360690"
+                }
+            ],
+            "description": "Provides MapBox integration with MapBox",
+            "homepage": "https://www.drupal.org/project/leaflet_mapbox",
+            "support": {
+                "source": "https://git.drupalcode.org/project/leaflet_mapbox"
+            },
+            "time": "2016-06-28T08:03:29+00:00"
         },
         {
             "name": "drupal/leaflet_more_maps",
@@ -11053,65 +11112,6 @@
             }
         },
         {
-            "name": "drupal/leaflet_mapbox",
-            "version": "dev-1.x",
-            "source": {
-                "type": "git",
-                "url": "https://git.drupalcode.org/project/leaflet_mapbox.git",
-                "reference": "5337011575921a88287e189213fd54546a4c6aee"
-            },
-            "require": {
-                "drupal/core": "~8.0",
-                "drupal/leaflet": "*"
-            },
-            "type": "drupal-module",
-            "extra": {
-                "branch-alias": {
-                    "dev-1.x": "1.x-dev"
-                },
-                "drupal": {
-                    "version": "8.x-1.x-dev",
-                    "datestamp": "1568819586",
-                    "security-coverage": {
-                        "status": "not-covered",
-                        "message": "Dev releases are not covered by Drupal security advisories."
-                    }
-                }
-            },
-            "notification-url": "https://packages.drupal.org/8/downloads",
-            "license": [
-                "GPL-2.0-or-later"
-            ],
-            "authors": [
-                {
-                    "name": "RdeBoer",
-                    "homepage": "https://www.drupal.org/user/404007"
-                },
-                {
-                    "name": "arshadcn",
-                    "homepage": "https://www.drupal.org/user/571032"
-                },
-                {
-                    "name": "geek.merlin aka axel.rutz",
-                    "homepage": "https://www.drupal.org/user/229048"
-                },
-                {
-                    "name": "heliogabal",
-                    "homepage": "https://www.drupal.org/user/998658"
-                },
-                {
-                    "name": "jherencia",
-                    "homepage": "https://www.drupal.org/user/360690"
-                }
-            ],
-            "description": "Provides MapBox integration with MapBox",
-            "homepage": "https://www.drupal.org/project/leaflet_mapbox",
-            "support": {
-                "source": "https://git.drupalcode.org/project/leaflet_mapbox"
-            },
-            "time": "2016-06-28T08:03:29+00:00"
-        },
-        {
             "name": "drupal/stage_file_proxy",
             "version": "1.0.0-beta1",
             "source": {
@@ -11214,7 +11214,8 @@
         "drupal/rabbit_hole": 10,
         "drupal/views_field_view": 10,
         "drupal/views_entity_form_field": 10,
-        "drupal/taxonomy_manager": 15
+        "drupal/taxonomy_manager": 15,
+        "drupal/leaflet_mapbox": 20
     },
     "prefer-stable": true,
     "prefer-lowest": false,

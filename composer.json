@@ -104,7 +104,8 @@
     "drupal/views_field_view": "^1.0@beta",
     "drupal/views_entity_form_field": "^1.0@beta",
     "drupal/asset_injector": "^2.4",
-    "drupal/taxonomy_manager": "^1.0@alpha"
+    "drupal/taxonomy_manager": "^1.0@alpha",
+    "drupal/leaflet_mapbox": "1.x-dev"
   },
   "require-dev": {
     "drupal/devel": "^1.0",
