@@ -72,8 +72,8 @@ display:
           lineopacity: '0.3'
           fillcolor: '666666'
           fillopacity: '0.2'
-          setmaxbounds: 0
-          maxboundsviscosity: '0.5'
+          setmaxbounds: 1
+          maxboundsviscosity: '0.75'
           leaflet_map: leaflet-mapbox
           height: '400'
           height_unit: px
