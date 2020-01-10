@@ -9,7 +9,6 @@ return array(
     'Twig_' => array($vendorDir . '/twig/twig/lib'),
     'Stack' => array($vendorDir . '/stack/builder/src'),
     'Solarium\\' => array($vendorDir . '/solarium/solarium/library'),
-    'PEAR' => array($vendorDir . '/pear/pear_exception'),
     'Geocoder' => array($vendorDir . '/willdurand/geocoder/src'),
     'EasyRdf_' => array($vendorDir . '/easyrdf/easyrdf/lib'),
     'Drush' => array($vendorDir . '/drush/drush/lib'),

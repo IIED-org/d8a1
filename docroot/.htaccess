@@ -69,7 +69,7 @@ AddEncoding gzip svgz
 <IfModule mod_rewrite.c>
   RewriteEngine on
 
-  # Set protocol to https on Acquia unless on dev
+  # Set protocol to https unless on dev
   RewriteCond %{ENV:AH_SITE_ENVIRONMENT} !^$ [NC]
   RewriteCond %{ENV:AH_SITE_ENVIRONMENT} !^dev$ [NC]
   RewriteCond %{HTTPS} off
@@ -110,12 +110,12 @@ AddEncoding gzip svgz
   # (http://example.com/foo will be redirected to http://www.example.com/foo)
   # uncomment the following:
 
-  # Add www. prefix only on Acquia prod environment
   RewriteCond %{ENV:AH_SITE_ENVIRONMENT} prod [NC]
   RewriteCond %{HTTP_HOST} .
   RewriteCond %{HTTP_HOST} !^www\. [NC]
   RewriteRule ^ http%{ENV:protossl}://www.%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
+  #
   # To redirect all users to access the site WITHOUT the 'www.' prefix,
   # (http://www.example.com/foo will be redirected to http://example.com/foo)
   # uncomment the following:
