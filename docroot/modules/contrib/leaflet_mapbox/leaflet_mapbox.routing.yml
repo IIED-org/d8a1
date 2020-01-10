@@ -1,7 +1,0 @@
-leaflet_mapbox.settings:
-  path: '/admin/config/services/leaflet-mapbox'
-  defaults:
-    _form: '\Drupal\leaflet_mapbox\Form\SettingsForm'
-    _title: 'Leaflet MapBox'
-  requirements:
-    _permission: 'administer site configuration'
