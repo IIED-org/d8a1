@@ -37,7 +37,7 @@
     // Set the max bounds and viscosity to prevent dragging.
     if (leaflet.settings.setMaxBounds) {
       leaflet.lMap.setMaxBounds(superBounds);
-      leaflet.lMap.maxBoundsViscosity(leaflet.settings.maxBoundsViscosity);
+      leaflet.lMap.maxBoundsViscosity = leaflet.settings.maxBoundsViscosity;
     }
     // Set the maxBoundsViscosity.
     // Fit the map to the superBounds.
