@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2d3d6f8a39e1e411563a2caba4544300",
+    "content-hash": "c72483ba63cf3c3b95e09bfa0fcf4fc1",
     "packages": [
         {
             "name": "abraham/twitteroauth",
@@ -3663,6 +3663,9 @@
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
                     }
+                },
+                "patches_applied": {
+                    "Hierarchical Facets using Dropdown Widget": "https://www.drupal.org/files/issues/2019-07-08/3058431-5-facets-add-hierarchy-in-dropdown-widget.patch"
                 }
             },
             "notification-url": "https://packages.drupal.org/8/downloads",

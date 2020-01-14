@@ -218,8 +218,7 @@ datasource_settings:
   'entity:block_content':
     bundles:
       default: false
-      selected:
-        - country_header_block
+      selected: {  }
     languages:
       default: true
       selected: {  }

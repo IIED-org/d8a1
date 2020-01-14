@@ -45,6 +45,9 @@
     color: $link-color;
 }
 
-.view-explore .view-grouping-header {
-  @extend h3;
+.view-explore {
+  padding: 2rem 0;
+  .view-grouping-header {
+    @extend h3;
+  }
 }
