@@ -104,12 +104,14 @@
     "drupal/views_field_view": "^1.0@beta",
     "drupal/views_entity_form_field": "^1.0@beta",
     "drupal/asset_injector": "^2.4",
-    "drupal/taxonomy_manager": "^1.0@alpha",
-    "drupal/leaflet_mapbox": "1.x-dev"
+    "drupal/leaflet_mapbox": "1.x-dev",
+    "drupal/username_enumeration_prevention": "^1.0",
+    "drupal/http_response_headers": "^2.0@beta"
   },
   "require-dev": {
     "drupal/devel": "^1.0",
-    "drupal/stage_file_proxy": "^1.0"
+    "drupal/stage_file_proxy": "^1.0",
+    "drupal/taxonomy_manager": "^1.0@alpha"
   },
   "conflict": {
     "drupal/core": "7.*"
