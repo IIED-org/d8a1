@@ -3176,6 +3176,94 @@
         }
     },
     {
+        "name": "drupal/devel",
+        "version": "1.2.0",
+        "version_normalized": "1.2.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://git.drupalcode.org/project/devel.git",
+            "reference": "8.x-1.2"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://ftp.drupal.org/files/projects/devel-8.x-1.2.zip",
+            "reference": "8.x-1.2",
+            "shasum": "01f3349ef75f6e21fceef24be9d3d6506ca29647"
+        },
+        "require": {
+            "drupal/core": "~8.0"
+        },
+        "suggest": {
+            "symfony/var-dumper": "Pretty print complex values better with var-dumper available"
+        },
+        "type": "drupal-module",
+        "extra": {
+            "branch-alias": {
+                "dev-1.x": "1.x-dev"
+            },
+            "drupal": {
+                "version": "8.x-1.2",
+                "datestamp": "1507197844",
+                "security-coverage": {
+                    "status": "covered",
+                    "message": "Covered by Drupal's security advisory policy"
+                }
+            }
+        },
+        "installation-source": "dist",
+        "notification-url": "https://packages.drupal.org/8/downloads",
+        "license": [
+            "GPL-2.0+"
+        ],
+        "authors": [
+            {
+                "name": "Moshe Weitzman",
+                "homepage": "https://github.com/weitzman",
+                "email": "weitzman@tejasa.com",
+                "role": "Maintainer"
+            },
+            {
+                "name": "Hans Salvisberg",
+                "homepage": "https://www.drupal.org/u/salvis",
+                "email": "drupal@salvisberg.com",
+                "role": "Maintainer"
+            },
+            {
+                "name": "Luca Lusso",
+                "homepage": "https://www.drupal.org/u/lussoluca",
+                "role": "Maintainer"
+            },
+            {
+                "name": "Marco (willzyx)",
+                "homepage": "https://www.drupal.org/u/willzyx",
+                "role": "Maintainer"
+            },
+            {
+                "name": "See contributors",
+                "homepage": "https://www.drupal.org/node/3236/committers"
+            },
+            {
+                "name": "pcambra",
+                "homepage": "https://www.drupal.org/user/122101"
+            },
+            {
+                "name": "salvis",
+                "homepage": "https://www.drupal.org/user/82964"
+            },
+            {
+                "name": "willzyx",
+                "homepage": "https://www.drupal.org/user/1043862"
+            }
+        ],
+        "description": "Various blocks, pages, and functions for developers.",
+        "homepage": "http://drupal.org/project/devel",
+        "support": {
+            "source": "http://cgit.drupalcode.org/devel",
+            "issues": "http://drupal.org/project/devel",
+            "irc": "irc://irc.freenode.org/drupal-contribute"
+        }
+    },
+    {
         "name": "drupal/ds",
         "version": "3.4.0",
         "version_normalized": "3.4.0.0",
@@ -4781,6 +4869,59 @@
         ],
         "support": {
             "source": "http://cgit.drupalcode.org/honeypot"
+        }
+    },
+    {
+        "name": "drupal/http_response_headers",
+        "version": "2.0.0-beta1",
+        "version_normalized": "2.0.0.0-beta1",
+        "source": {
+            "type": "git",
+            "url": "https://git.drupalcode.org/project/http_response_headers.git",
+            "reference": "8.x-2.0-beta1"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://ftp.drupal.org/files/projects/http_response_headers-8.x-2.0-beta1.zip",
+            "reference": "8.x-2.0-beta1",
+            "shasum": "6ef58fca09cfa24c8c35d2498d8462bdb76d88c2"
+        },
+        "require": {
+            "drupal/core": "~8.0"
+        },
+        "type": "drupal-module",
+        "extra": {
+            "branch-alias": {
+                "dev-2.x": "2.x-dev"
+            },
+            "drupal": {
+                "version": "8.x-2.0-beta1",
+                "datestamp": "1578136083",
+                "security-coverage": {
+                    "status": "not-covered",
+                    "message": "Beta releases are not covered by Drupal security advisories."
+                }
+            }
+        },
+        "installation-source": "dist",
+        "notification-url": "https://packages.drupal.org/8/downloads",
+        "license": [
+            "GPL 2.0+"
+        ],
+        "authors": [
+            {
+                "name": "minnur",
+                "homepage": "https://www.drupal.org/user/702026"
+            },
+            {
+                "name": "vijaycs85",
+                "homepage": "https://www.drupal.org/user/93488"
+            }
+        ],
+        "description": "Allows addition, removal and modification of http headers.",
+        "homepage": "https://www.drupal.org/project/http_response_headers",
+        "support": {
+            "source": "https://git.drupalcode.org/project/http_response_headers"
         }
     },
     {
@@ -6775,6 +6916,83 @@
         }
     },
     {
+        "name": "drupal/stage_file_proxy",
+        "version": "1.0.0-beta1",
+        "version_normalized": "1.0.0.0-beta1",
+        "source": {
+            "type": "git",
+            "url": "https://git.drupalcode.org/project/stage_file_proxy.git",
+            "reference": "8.x-1.0-beta1"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://ftp.drupal.org/files/projects/stage_file_proxy-8.x-1.0-beta1.zip",
+            "reference": "8.x-1.0-beta1",
+            "shasum": "6609a2166509fd7cc2e593ff2efd7c44daeb0e5b"
+        },
+        "require": {
+            "drupal/core": "~8.0"
+        },
+        "type": "drupal-module",
+        "extra": {
+            "branch-alias": {
+                "dev-1.x": "1.x-dev"
+            },
+            "drupal": {
+                "version": "8.x-1.0-beta1",
+                "datestamp": "1569500290",
+                "security-coverage": {
+                    "status": "not-covered",
+                    "message": "Beta releases are not covered by Drupal security advisories."
+                }
+            }
+        },
+        "installation-source": "dist",
+        "notification-url": "https://packages.drupal.org/8/downloads",
+        "license": [
+            "GPL-2.0+"
+        ],
+        "authors": [
+            {
+                "name": "BarisW",
+                "homepage": "https://www.drupal.org/user/107229"
+            },
+            {
+                "name": "geek-merlin",
+                "homepage": "https://www.drupal.org/user/229048"
+            },
+            {
+                "name": "greggles",
+                "homepage": "https://www.drupal.org/user/36762"
+            },
+            {
+                "name": "markdorison",
+                "homepage": "https://www.drupal.org/user/346106"
+            },
+            {
+                "name": "moshe weitzman",
+                "homepage": "https://www.drupal.org/user/23"
+            },
+            {
+                "name": "msonnabaum",
+                "homepage": "https://www.drupal.org/user/75278"
+            },
+            {
+                "name": "netaustin",
+                "homepage": "https://www.drupal.org/user/199298"
+            },
+            {
+                "name": "robwilmshurst",
+                "homepage": "https://www.drupal.org/user/144488"
+            }
+        ],
+        "description": "Provides stage_file_proxy module.",
+        "homepage": "https://www.drupal.org/project/stage_file_proxy",
+        "support": {
+            "source": "https://git.drupalcode.org/project/stage_file_proxy"
+        }
+    },
+    {
         "name": "drupal/super_login",
         "version": "1.3.0",
         "version_normalized": "1.3.0.0",
@@ -7159,6 +7377,55 @@
         "homepage": "https://www.drupal.org/project/typed_data",
         "support": {
             "source": "https://git.drupalcode.org/project/typed_data"
+        }
+    },
+    {
+        "name": "drupal/username_enumeration_prevention",
+        "version": "1.0.0",
+        "version_normalized": "1.0.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://git.drupalcode.org/project/username_enumeration_prevention.git",
+            "reference": "8.x-1.0"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://ftp.drupal.org/files/projects/username_enumeration_prevention-8.x-1.0.zip",
+            "reference": "8.x-1.0",
+            "shasum": "3ed276650099b834feaf425ef5c8c95cf322f507"
+        },
+        "require": {
+            "drupal/core": "*"
+        },
+        "type": "drupal-module",
+        "extra": {
+            "branch-alias": {
+                "dev-1.x": "1.x-dev"
+            },
+            "drupal": {
+                "version": "8.x-1.0",
+                "datestamp": "1575593585",
+                "security-coverage": {
+                    "status": "covered",
+                    "message": "Covered by Drupal's security advisory policy"
+                }
+            }
+        },
+        "installation-source": "dist",
+        "notification-url": "https://packages.drupal.org/8/downloads",
+        "license": [
+            "GPL-2.0-or-later"
+        ],
+        "authors": [
+            {
+                "name": "nicksanta",
+                "homepage": "https://www.drupal.org/user/87915"
+            }
+        ],
+        "description": "Prevents username enumeration on password reset and user pages.",
+        "homepage": "https://www.drupal.org/project/username_enumeration_prevention",
+        "support": {
+            "source": "https://git.drupalcode.org/project/username_enumeration_prevention"
         }
     },
     {

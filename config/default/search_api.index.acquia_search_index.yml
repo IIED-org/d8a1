@@ -416,5 +416,4 @@ options:
       weight: -50
       settings: {  }
       processorPluginId: language
-  overridden_by_acquia_search: 2
 server: acquia_search_server
