@@ -12,7 +12,7 @@ dependencies:
 id: aboutheader
 theme: pnp_bootstrap_sass
 region: content
-weight: -17
+weight: -19
 provider: null
 plugin: 'block_content:1c3e2b52-2786-4e76-a0b3-87a39cb7d006'
 settings:

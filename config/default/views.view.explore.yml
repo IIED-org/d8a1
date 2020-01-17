@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - block.block.currentsearch
     - field.storage.media.field_media_oembed_video
     - field.storage.node.body
     - field.storage.node.field_address
@@ -1344,7 +1345,7 @@ display:
           break_phrase: false
           not: false
           plugin_id: search_api
-      use_ajax: false
+      use_ajax: true
       pager:
         type: some
         options:
@@ -1370,7 +1371,7 @@ display:
   page_1:
     display_plugin: page
     id: page_1
-    display_title: Map
+    display_title: 'Map (not in use)'
     position: 1
     display_options:
       display_extenders: {  }
@@ -2963,6 +2964,7 @@ display:
         use_more_text: false
         arguments: false
         empty: false
+        title: false
       row:
         type: fields
         options:
@@ -5442,6 +5444,32 @@ display:
           plugin_id: search_api
       css_class: container
       header:
+        area:
+          id: area
+          table: views
+          field: area
+          relationship: none
+          group_type: group
+          admin_label: ''
+          empty: true
+          tokenize: true
+          content:
+            value: '<em>[view:total-rows] items found for "{{ filters.search_api_fulltext }}" </em>'
+            format: basic_html
+          plugin_id: text
+        entity_block:
+          id: entity_block
+          table: views
+          field: entity_block
+          relationship: none
+          group_type: group
+          admin_label: ''
+          empty: true
+          tokenize: true
+          target: currentsearch
+          view_mode: default
+          bypass_access: true
+          plugin_id: entity
         view:
           id: view
           table: views
@@ -5453,19 +5481,6 @@ display:
           view_to_insert: 'explore:attachment_1'
           inherit_arguments: true
           plugin_id: view
-        area:
-          id: area
-          table: views
-          field: area
-          relationship: none
-          group_type: group
-          admin_label: ''
-          empty: false
-          tokenize: false
-          content:
-            value: "<div class=\"col-12\"><div class=\"row\">\r\n[view:total-rows] items found\r\n</div></div>"
-            format: basic_html
-          plugin_id: text
       use_ajax: false
       exposed_form:
         type: bef
@@ -5498,17 +5513,8 @@ display:
       use_more_always: false
       use_more_text: More
       arguments: {  }
-      empty:
-        result:
-          id: result
-          table: views
-          field: result
-          relationship: none
-          group_type: group
-          admin_label: ''
-          empty: true
-          content: '<p><em>@total items found</em></p>'
-          plugin_id: result
+      empty: {  }
+      title: Explore
     cache_metadata:
       max-age: -1
       contexts:

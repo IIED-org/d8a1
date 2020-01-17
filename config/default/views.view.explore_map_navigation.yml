@@ -67,11 +67,11 @@ display:
           onclick_href: 1
           onclick_href_pattern: /explore/country/%country
           view_mode: teaser
-          linecolor: CCCCCC
-          lineweight: '.5'
+          linecolor: dddddd
+          lineweight: '.25'
           lineopacity: '0.3'
-          fillcolor: '666666'
-          fillopacity: '0.2'
+          fillcolor: 40e0d0
+          fillopacity: '0.5'
           setmaxbounds: 1
           maxboundsviscosity: '0.8'
           leaflet_map: leaflet-mapbox

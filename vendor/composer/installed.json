@@ -3054,7 +3054,8 @@
             },
             "patches_applied": {
                 "getEntityTranslation() throws exception on null": "https://www.drupal.org/files/issues/2018-09-05/2951493-15.patch",
-                "Undefined index: #type in drupal_process_states": "https://www.drupal.org/files/issues/2018-04-17/drupal-process-states-notice-2700667-41.patch"
+                "Undefined index: #type in drupal_process_states": "https://www.drupal.org/files/issues/2018-04-17/drupal-process-states-notice-2700667-41.patch",
+                "Make exposed filter values available as tokens": "https://www.drupal.org/files/issues/2018-05-14/make_exposed_filter-2761273-13.patch"
             }
         },
         "installation-source": "dist",
@@ -7287,7 +7288,8 @@
                     "status": "covered",
                     "message": "Covered by Drupal's security advisory policy"
                 }
-            }
+            },
+            "patches_applied": []
         },
         "installation-source": "dist",
         "notification-url": "https://packages.drupal.org/8/downloads",

@@ -751,6 +751,51 @@ function token_tokens($type, array $tokens, array $data = [], array $options = [
     $request = \Drupal::request();
     foreach ($tokens as $name => $original) {
       switch ($name) {
+        case 'query:?':
+          $bubbleable_metadata->addCacheContexts(['url.path']);
+          try {
+            $url = Url::createFromRequest($request)
+              ->setOptions($url_options)
+              ->setOption('query', $request->query->all());
+          }
+          catch (\Exception $e) {
+            // Url::createFromRequest() can fail, e.g. on 404 pages.
+            // Fall back and try again with Url::fromUserInput().
+            try {
+              $url = Url::fromUserInput($request->getPathInfo(), $url_options);
+            }
+            catch (\Exception $e) {
+              // Instantiation would fail again on malformed urls.
+            }
+          }
+          if (isset($url)) {
+            $replacements[$original] = $url->toString();
+          }
+          break;
+
+        case 'url:absolute':
+          $bubbleable_metadata->addCacheContexts(['url.path']);
+          try {
+            $url = Url::createFromRequest($request)
+              ->setOptions($url_options)
+              ->setOption('query', $request->query->all())
+              ->setAbsolute();
+          }
+          catch (\Exception $e) {
+            // Url::createFromRequest() can fail, e.g. on 404 pages.
+            // Fall back and try again with Url::fromUserInput().
+            try {
+              $url = Url::fromUserInput($request->getPathInfo(), $url_options);
+            }
+            catch (\Exception $e) {
+              // Instantiation would fail again on malformed urls.
+            }
+          }
+          if (isset($url)) {
+            $replacements[$original] = $url->toString();
+          }
+          break;
+
         case 'title':
           $route = $request->attributes->get(RouteObjectInterface::ROUTE_OBJECT);
           if ($route) {
@@ -762,7 +807,9 @@ function token_tokens($type, array $tokens, array $data = [], array $options = [
         case 'url':
           $bubbleable_metadata->addCacheContexts(['url.path']);
           try {
-            $url = Url::createFromRequest($request)->setOptions($url_options);
+            $url = Url::createFromRequest($request)
+              ->setOptions($url_options)
+              ->setOption('query', $request->query->all());
           }
           catch (\Exception $e) {
             // Url::createFromRequest() can fail, e.g. on 404 pages.
@@ -819,7 +866,9 @@ function token_tokens($type, array $tokens, array $data = [], array $options = [
     if ($url_tokens = \Drupal::token()->findWithPrefix($tokens, 'url')) {
       $url = NULL;
       try {
-        $url = Url::createFromRequest($request)->setOptions($url_options);
+        $url = Url::createFromRequest($request)
+          ->setOptions($url_options)
+          ->setOption('query', $request->query->all());
       }
       catch (\Exception $e) {
         // Url::createFromRequest() can fail, e.g. on 404 pages.
