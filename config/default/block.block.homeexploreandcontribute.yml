@@ -12,7 +12,7 @@ dependencies:
 id: homeexploreandcontribute
 theme: pnp_bootstrap_sass
 region: content
-weight: -8
+weight: -9
 provider: null
 plugin: 'block_content:cf626c19-412e-49db-a7c8-2798d20ce564'
 settings:

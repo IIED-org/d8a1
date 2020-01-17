@@ -1,0 +1,28 @@
+uuid: 6ec9bc2d-20d5-430b-a534-de5c601daace
+langcode: en
+status: true
+dependencies:
+  config:
+    - facets_summary.facets_summary.current_search
+  module:
+    - facets_summary
+    - system
+  theme:
+    - pnp_bootstrap_sass
+id: currentsearch
+theme: pnp_bootstrap_sass
+region: content
+weight: -15
+provider: null
+plugin: 'facets_summary_block:current_search'
+settings:
+  id: 'facets_summary_block:current_search'
+  label: 'Current search'
+  provider: facets_summary
+  label_display: '0'
+visibility:
+  request_path:
+    id: request_path
+    pages: /none
+    negate: false
+    context_mapping: {  }

@@ -1,0 +1,44 @@
+uuid: b1b7381e-7cd6-4108-ac27-77ffc8ffad34
+langcode: en
+status: true
+dependencies:
+  config:
+    - search_api.index.acquia_search_index
+    - views.view.explore
+  module:
+    - search_api
+id: current_search
+name: 'Current search'
+facets:
+  country_2:
+    checked: true
+    label: Country
+    separator: ', '
+    weight: 0
+    show_count: false
+  species_2:
+    checked: true
+    label: Species
+    separator: ', '
+    weight: 0
+    show_count: false
+  strategy_2:
+    checked: true
+    label: Strategy
+    separator: ', '
+    weight: 0
+    show_count: false
+  type_2:
+    checked: true
+    label: Type
+    separator: ', '
+    weight: 0
+    show_count: false
+facet_source_id: 'search_api:views_page__explore__page_2'
+processor_configs:
+  reset_facets:
+    processor_id: reset_facets
+    weights:
+      build: '30'
+    settings:
+      link_text: Reset

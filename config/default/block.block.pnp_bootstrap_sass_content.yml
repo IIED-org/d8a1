@@ -11,7 +11,7 @@ _core:
 id: pnp_bootstrap_sass_content
 theme: pnp_bootstrap_sass
 region: content
-weight: -13
+weight: -14
 provider: null
 plugin: system_main_block
 settings:

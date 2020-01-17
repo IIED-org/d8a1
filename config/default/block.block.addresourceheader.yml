@@ -13,7 +13,7 @@ dependencies:
 id: addresourceheader
 theme: pnp_bootstrap_sass
 region: content
-weight: -21
+weight: -22
 provider: null
 plugin: 'block_content:6a0e5e37-3e30-4190-b40f-7228c96d67a4'
 settings:

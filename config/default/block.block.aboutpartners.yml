@@ -12,7 +12,7 @@ dependencies:
 id: aboutpartners
 theme: pnp_bootstrap_sass
 region: content
-weight: -11
+weight: -12
 provider: null
 plugin: 'block_content:1fd9d01f-4bb9-45fd-894f-b78b526ed11e'
 settings:

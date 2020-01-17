@@ -15,6 +15,6 @@ preprocess: true
 conditions:
   request_path:
     id: request_path
-    pages: '/explore/country/*'
+    pages: '/explore*'
     negate: false
 conditions_require_all: true
