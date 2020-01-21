@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   module:
+    - condition_query
     - system
 id: smooth_scroll
 label: 'Smooth scroll'
@@ -15,6 +16,10 @@ preprocess: true
 conditions:
   request_path:
     id: request_path
-    pages: '/explore*'
+    pages: '/explore/*'
     negate: false
-conditions_require_all: true
+  request_param:
+    id: request_param
+    request_param: 'search=*'
+    negate: false
+conditions_require_all: false

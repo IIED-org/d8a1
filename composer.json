@@ -106,7 +106,8 @@
     "drupal/asset_injector": "^2.4",
     "drupal/leaflet_mapbox": "1.x-dev",
     "drupal/username_enumeration_prevention": "^1.0",
-    "drupal/http_response_headers": "^2.0@beta"
+    "drupal/http_response_headers": "^2.0@beta",
+    "drupal/condition_query": "^1.2"
   },
   "require-dev": {
     "drupal/devel": "^1.0",
@@ -161,6 +162,9 @@
       },
       "drupal/facets": {
         "Hierarchical Facets using Dropdown Widget": "https://www.drupal.org/files/issues/2019-07-08/3058431-5-facets-add-hierarchy-in-dropdown-widget.patch"
+      },
+      "drupal/condition_query": {
+        "Enable wildcard": "https://www.drupal.org/files/issues/2018-07-18/2986466-2-condition_query_wildcard.patch"
       }
     }
   },

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c7dc99693b0177d3dfaebe4ddbfb8347",
+    "content-hash": "555f6650d5e97fa337343bc0cf8e3ce7",
     "packages": [
         {
             "name": "abraham/twitteroauth",
@@ -2395,6 +2395,53 @@
             }
         },
         {
+            "name": "drupal/condition_query",
+            "version": "1.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/condition_query.git",
+                "reference": "8.x-1.2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/condition_query-8.x-1.2.zip",
+                "reference": "8.x-1.2",
+                "shasum": "e4a5dc56628da920ee640043f8dcd3d67e658565"
+            },
+            "require": {
+                "drupal/core": "~8.0"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "branch-alias": {
+                    "dev-1.x": "1.x-dev"
+                },
+                "drupal": {
+                    "version": "8.x-1.2",
+                    "datestamp": "1526589180",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "logan.H",
+                    "homepage": "https://www.drupal.org/user/629136"
+                }
+            ],
+            "description": "Adds condition plugin by query parameter",
+            "homepage": "https://www.drupal.org/project/condition_query",
+            "support": {
+                "source": "https://git.drupalcode.org/project/condition_query"
+            }
+        },
+        {
             "name": "drupal/conditional_fields",
             "version": "1.0.0-alpha6",
             "source": {
@@ -2976,7 +3023,8 @@
                 },
                 "patches_applied": {
                     "getEntityTranslation() throws exception on null": "https://www.drupal.org/files/issues/2018-09-05/2951493-15.patch",
-                    "Undefined index: #type in drupal_process_states": "https://www.drupal.org/files/issues/2018-04-17/drupal-process-states-notice-2700667-41.patch"
+                    "Undefined index: #type in drupal_process_states": "https://www.drupal.org/files/issues/2018-04-17/drupal-process-states-notice-2700667-41.patch",
+                    "Make exposed filter values available as tokens": "https://www.drupal.org/files/issues/2018-05-14/make_exposed_filter-2761273-13.patch"
                 }
             },
             "autoload": {
@@ -6789,67 +6837,6 @@
             }
         },
         {
-            "name": "drupal/taxonomy_manager",
-            "version": "1.0.0-alpha2",
-            "source": {
-                "type": "git",
-                "url": "https://git.drupalcode.org/project/taxonomy_manager.git",
-                "reference": "8.x-1.0-alpha2"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/taxonomy_manager-8.x-1.0-alpha2.zip",
-                "reference": "8.x-1.0-alpha2",
-                "shasum": "7becfad1cad0d26f471b8e097afcadde94a9f266"
-            },
-            "require": {
-                "drupal/core": "*"
-            },
-            "type": "drupal-module",
-            "extra": {
-                "branch-alias": {
-                    "dev-1.x": "1.x-dev"
-                },
-                "drupal": {
-                    "version": "8.x-1.0-alpha2",
-                    "datestamp": "1538074980",
-                    "security-coverage": {
-                        "status": "not-covered",
-                        "message": "Alpha releases are not covered by Drupal security advisories."
-                    }
-                }
-            },
-            "notification-url": "https://packages.drupal.org/8/downloads",
-            "license": [
-                "GPL-2.0+"
-            ],
-            "authors": [
-                {
-                    "name": "Matthias Hutterer (mpdonadio)",
-                    "homepage": "https://www.drupal.org/u/mh86",
-                    "role": "Maintainer"
-                },
-                {
-                    "name": "joaogarin",
-                    "homepage": "https://www.drupal.org/user/612814"
-                },
-                {
-                    "name": "kalinchernev",
-                    "homepage": "https://www.drupal.org/user/231185"
-                },
-                {
-                    "name": "mh86",
-                    "homepage": "https://www.drupal.org/user/59747"
-                }
-            ],
-            "description": "Taxonomy_Manager provides a powerful interface for managing taxonomies via a tree view.",
-            "homepage": "https://drupal.org/project/taxonomy_manager",
-            "support": {
-                "source": "http://cgit.drupalcode.org/taxonomy_manager",
-                "issues": "https://drupal.org/project/issues/taxonomy_manager"
-            }
-        },
-        {
             "name": "drupal/taxonomy_publish",
             "version": "1.1.0",
             "source": {
@@ -6925,7 +6912,8 @@
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
                     }
-                }
+                },
+                "patches_applied": []
             },
             "notification-url": "https://packages.drupal.org/8/downloads",
             "license": [
@@ -11282,6 +11270,67 @@
             "support": {
                 "source": "https://git.drupalcode.org/project/stage_file_proxy"
             }
+        },
+        {
+            "name": "drupal/taxonomy_manager",
+            "version": "1.0.0-alpha2",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/taxonomy_manager.git",
+                "reference": "8.x-1.0-alpha2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/taxonomy_manager-8.x-1.0-alpha2.zip",
+                "reference": "8.x-1.0-alpha2",
+                "shasum": "7becfad1cad0d26f471b8e097afcadde94a9f266"
+            },
+            "require": {
+                "drupal/core": "*"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "branch-alias": {
+                    "dev-1.x": "1.x-dev"
+                },
+                "drupal": {
+                    "version": "8.x-1.0-alpha2",
+                    "datestamp": "1538074980",
+                    "security-coverage": {
+                        "status": "not-covered",
+                        "message": "Alpha releases are not covered by Drupal security advisories."
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0+"
+            ],
+            "authors": [
+                {
+                    "name": "Matthias Hutterer (mpdonadio)",
+                    "homepage": "https://www.drupal.org/u/mh86",
+                    "role": "Maintainer"
+                },
+                {
+                    "name": "joaogarin",
+                    "homepage": "https://www.drupal.org/user/612814"
+                },
+                {
+                    "name": "kalinchernev",
+                    "homepage": "https://www.drupal.org/user/231185"
+                },
+                {
+                    "name": "mh86",
+                    "homepage": "https://www.drupal.org/user/59747"
+                }
+            ],
+            "description": "Taxonomy_Manager provides a powerful interface for managing taxonomies via a tree view.",
+            "homepage": "https://drupal.org/project/taxonomy_manager",
+            "support": {
+                "source": "http://cgit.drupalcode.org/taxonomy_manager",
+                "issues": "https://drupal.org/project/issues/taxonomy_manager"
+            }
         }
     ],
     "aliases": [],
@@ -11311,9 +11360,9 @@
         "drupal/rabbit_hole": 10,
         "drupal/views_field_view": 10,
         "drupal/views_entity_form_field": 10,
-        "drupal/taxonomy_manager": 15,
         "drupal/leaflet_mapbox": 20,
-        "drupal/http_response_headers": 10
+        "drupal/http_response_headers": 10,
+        "drupal/taxonomy_manager": 15
     },
     "prefer-stable": true,
     "prefer-lowest": false,
