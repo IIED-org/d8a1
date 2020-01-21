@@ -99,13 +99,31 @@ blockquote:after {
   display: none;
 }
 
-.path-frontpage .featured-top {
+/* .path-frontpage .featured-top {
   background-color: #40e0d0;
+}*/
+
+.path-frontpage .featured-bottom {
+  background-color: #40e0d0;
+}
+
+.path-frontpage .highlighted {
+  background-color: $secondary;
+}
+
+.path-frontpage .view-header {
+    position: absolute;
+    top: 0;
+}
+
+.block-views-blockhome-promoted-block-1 {
+  @extend .container;
 }
 
 .card-body .display-3 {
   line-height: .73;
   padding-top: .5rem;
+  min-width: 85px;
 }
 
 .row.row-offcanvas.row-offcanvas-left.clearfix {
@@ -193,6 +211,10 @@ blockquote:after {
   padding: 0.5rem 1.5rem;
   border-radius: 2rem;
   margin: 0 $spacer;
+}
+
+.btn-outline-secondary a {
+ padding: 0.5em 0 0.5em 0;
 }
 
 #hero {

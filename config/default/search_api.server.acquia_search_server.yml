@@ -29,6 +29,5 @@ backend_config:
   suggest_suffix: true
   suggest_corrections: true
   suggest_words: false
-  acquia_search_possible_cores:
-    - AHQT-177573.test.d8a1paqkuxea2h
-    - AHQT-177573.test.default
+  acquia_search_possible_cores: {  }
+  overridden_by_acquia_search: 2
