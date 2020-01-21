@@ -41,4 +41,4 @@ processor_configs:
     weights:
       build: '30'
     settings:
-      link_text: Reset
+      link_text: 'Clear filters'

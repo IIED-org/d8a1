@@ -44,10 +44,3 @@
 .views-ui-display-tab-actions .dropbutton .form-submit:focus {
     color: $link-color;
 }
-
-.view-explore {
-  padding: 2rem 0;
-  .view-grouping-header {
-    @extend h3;
-  }
-}
