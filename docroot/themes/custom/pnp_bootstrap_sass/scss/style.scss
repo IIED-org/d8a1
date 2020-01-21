@@ -41,20 +41,6 @@ $spring-green: #00ff56;
   @extend .col-md-3;
 }
 
-.path-explore {
-  .featured-top__inner {
-    @extend .row;
-  }
-  .featured-top {
-    @extend .container;
-    min-height: 100px;
-    font-size: 1rem;
-  }
-  .facets-dropdown {
-     max-width: 260px;
-  }
-}
-
  .block-facet--dropdown h2 {
    font-size: 1.1rem;
  }
@@ -524,8 +510,33 @@ button#edit-submit-explore-::before {
    justify-content: center;
 }
 
+/* Explore view */
+
+.filterbtn {
+  float: left;
+  a {
+    display: block;
+    padding: 0 .5em;
+    margin: 0 .5em;
+    border-radius: 2rem;
+    border: solid 1px $gray-100;
+  }
+  &.reset a {
+    color: $gray-800;
+  }
+}
+
 .path-explore {
+  .featured-top__inner {
+    @extend .row;
+  }
+  .featured-top {
+    @extend .container;
+    min-height: 100px;
+    font-size: 1rem;
+  }
   .facets-dropdown {
+      max-width: 260px;
       width: 170px;
   }
   .featured-top__inner {
@@ -535,8 +546,8 @@ button#edit-submit-explore-::before {
     justify-content: center;
     margin-bottom: 1rem;
   }
-  .views-element-container.col-auto {
-    @extend .bg-light;
+  .card {
+    @extend .mb-5;
   }
   .card-body p {
     overflow: auto;
@@ -544,7 +555,60 @@ button#edit-submit-explore-::before {
   .form-control {
       border-radius: 1.25rem;
   }
+  .view-display-id-attachment_1 {
+    clear: left;
+    margin-top: 3rem;
+  }
+  #block-pnp-bootstrap-sass-content {
+    padding: 2rem 0;
+    @extend .bg-light;
+    .content:first-child {
+      @extend .col-md-10;
+      @extend .mx-auto;
+    }
+  }
+  .view-grouping-header {
+    @extend h3;
+    margin-top: 1rem;
+  }
+  .results {
+    float: left;
+  }
+  #block-currentsearch {
+    display: inline;
+    ul {
+      padding-left: 1em;
+      list-style: none;
+      margin: 0;
+    }
+    li {
+      @extend .filterbtn;
+    }
+  }
+  .view-header {
+    @extend .clearfix;
+  }
+  .vocabulary-document-type {
+    h2 {
+      @extend h3;
+      a {
+        color: $body-color;
+        text-decoration: none !important;
+        cursor: default;
+      }
+    }
+    .field--name-description  {
+      color: $gray-800;
+      font-size: $font-size-base;
+    }
+  }
+  .view-footer {
+    padding: .75rem 1.25rem;
+    background-color: $spring-green;
+    border-radius: .25rem;
+  }
 }
+
 
 i.fa-3x {
     color: #ababab;

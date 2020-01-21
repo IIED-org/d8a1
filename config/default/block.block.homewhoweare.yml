@@ -1,23 +1,23 @@
-uuid: 05e005a6-0ae0-414f-80d4-f595c8fbd263
+uuid: f92ed7ae-4554-4e65-a1d5-ce72addac55e
 langcode: en
 status: true
 dependencies:
   content:
-    - 'block_content:basic:6a32a71e-048c-41c7-a5cf-9eac68988d28'
+    - 'block_content:basic:2079c1a3-7cb4-4617-8eb7-5c442d694e4a'
   module:
     - block_content
     - system
   theme:
     - pnp_bootstrap_sass
-id: homenewhero
+id: homewhoweare
 theme: pnp_bootstrap_sass
 region: highlighted
 weight: 0
 provider: null
-plugin: 'block_content:6a32a71e-048c-41c7-a5cf-9eac68988d28'
+plugin: 'block_content:2079c1a3-7cb4-4617-8eb7-5c442d694e4a'
 settings:
-  id: 'block_content:6a32a71e-048c-41c7-a5cf-9eac68988d28'
-  label: 'Home new hero'
+  id: 'block_content:2079c1a3-7cb4-4617-8eb7-5c442d694e4a'
+  label: 'Home who we are'
   provider: block_content
   label_display: '0'
   status: true
