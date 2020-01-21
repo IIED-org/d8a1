@@ -423,6 +423,18 @@ display:
             group_items: {  }
           plugin_id: string
       sorts:
+        random:
+          id: random
+          table: views
+          field: random
+          relationship: none
+          group_type: group
+          admin_label: ''
+          order: ASC
+          exposed: false
+          expose:
+            label: ''
+          plugin_id: random
         created:
           id: created
           table: node_field_data
@@ -445,9 +457,9 @@ display:
       relationships: {  }
       arguments: {  }
       display_extenders: {  }
-      css_class: 'row pb-5'
+      css_class: 'row pb-5 pt-5'
     cache_metadata:
-      max-age: -1
+      max-age: 0
       contexts:
         - 'languages:language_content'
         - 'languages:language_interface'
@@ -764,10 +776,20 @@ display:
         fields: false
         header: false
         title: false
-      header: {  }
-      title: 'Case study highlights'
+      header:
+        result:
+          id: result
+          table: views
+          field: result
+          relationship: none
+          group_type: group
+          admin_label: ''
+          empty: false
+          content: '<div class="pb-3 pl-3"><p>We have @total case studies, here are some highlights</p></div>'
+          plugin_id: result
+      title: 'Case studies'
     cache_metadata:
-      max-age: -1
+      max-age: 0
       contexts:
         - 'languages:language_content'
         - 'languages:language_interface'

@@ -11,7 +11,7 @@ dependencies:
     - pnp_bootstrap_sass
 id: views_block__home_promoted_block_1
 theme: pnp_bootstrap_sass
-region: featured_bottom_first
+region: featured_top
 weight: -22
 provider: null
 plugin: 'views_block:home_promoted-block_1'
