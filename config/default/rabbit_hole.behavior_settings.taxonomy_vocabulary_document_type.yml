@@ -5,7 +5,7 @@ dependencies:
   config:
     - taxonomy.vocabulary.document_type
 id: taxonomy_vocabulary_document_type
-action: display_page
+action: page_not_found
 allow_override: 1
 redirect: ''
 redirect_code: 301
