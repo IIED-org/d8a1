@@ -64,6 +64,7 @@ dependencies:
     - field.field.node.initiative.field_products_in_trade
     - field.field.node.initiative.field_raising_awareness
     - field.field.node.initiative.field_reactive_measures
+    - field.field.node.initiative.field_region
     - field.field.node.initiative.field_related_resources
     - field.field.node.initiative.field_role_or_relationship
     - field.field.node.initiative.field_sense_of_ownership
@@ -1677,6 +1678,7 @@ hidden:
   field_interventions: true
   field_main_image_caption: true
   field_permission_to_use_photos: true
+  field_region: true
   path: true
   promote: true
   revision_log: true

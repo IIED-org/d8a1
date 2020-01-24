@@ -366,7 +366,18 @@ form.form-search:before {
   z-index: 1000;
 }
 
-
+.node--type-page {
+  blockquote {
+    margin: 2em 0;
+    border-color: #dadada;
+    p {
+        font-weight: bold;
+    }
+  }
+  .table td {
+      padding: .25rem;
+  }
+}
 
 /* INITIATIVE
 --------------------------------------------------*/

@@ -6,8 +6,6 @@ dependencies:
     - field.storage.node.field_document_type
     - node.type.resource
     - taxonomy.vocabulary.document_type
-  content:
-    - 'taxonomy_term:document_type:e2e63375-4daa-4f24-870b-e867b0e45614'
   module:
     - label_help
 third_party_settings:
@@ -18,12 +16,10 @@ field_name: field_document_type
 entity_type: node
 bundle: resource
 label: 'Document type'
-description: 'Set the type of resource for display on search result pages'
+description: ''
 required: false
 translatable: false
-default_value:
-  -
-    target_uuid: e2e63375-4daa-4f24-870b-e867b0e45614
+default_value: {  }
 default_value_callback: ''
 settings:
   handler: 'default:taxonomy_term'
