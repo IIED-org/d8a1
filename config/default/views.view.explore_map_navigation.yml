@@ -71,7 +71,7 @@ display:
           lineweight: '.25'
           lineopacity: '0.3'
           fillcolor: 40e0d0
-          fillopacity: '0.25'
+          fillopacity: '0.33'
           setmaxbounds: 1
           maxboundsviscosity: '0.8'
           leaflet_map: leaflet-mapbox

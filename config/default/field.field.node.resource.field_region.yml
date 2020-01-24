@@ -1,31 +1,31 @@
-uuid: 916b24e7-f09b-45cf-82ff-8a0027f89fb3
+uuid: 7b35e077-d242-49db-9790-8f2626fcd061
 langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.node.field_document_type
+    - field.storage.node.field_region
     - node.type.resource
-    - taxonomy.vocabulary.document_type
+    - taxonomy.vocabulary.region
   module:
     - label_help
 third_party_settings:
   label_help:
-    label_help_description: 'Type of resource, for display on search result pages'
-id: node.resource.field_document_type
-field_name: field_document_type
+    label_help_description: 'Global region of resource'
+id: node.resource.field_region
+field_name: field_region
 entity_type: node
 bundle: resource
-label: 'Document type'
+label: Region
 description: ''
 required: false
-translatable: false
+translatable: true
 default_value: {  }
 default_value_callback: ''
 settings:
   handler: 'default:taxonomy_term'
   handler_settings:
     target_bundles:
-      document_type: document_type
+      region: region
     sort:
       field: name
       direction: asc
