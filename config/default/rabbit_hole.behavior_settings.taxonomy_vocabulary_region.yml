@@ -1,0 +1,11 @@
+uuid: 518b98f5-fcf6-4795-bd18-b50cf76e4ba1
+langcode: en
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.region
+id: taxonomy_vocabulary_region
+action: page_not_found
+allow_override: 1
+redirect: ''
+redirect_code: 301
