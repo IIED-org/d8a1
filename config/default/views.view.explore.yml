@@ -3082,9 +3082,9 @@ display:
             more_link: false
             more_link_text: ''
             more_link_path: ''
-            strip_tags: false
+            strip_tags: true
             trim: false
-            preserve_tags: ''
+            preserve_tags: '<p>'
             html: false
           element_type: ''
           element_class: ''
@@ -3125,6 +3125,8 @@ display:
               interventions:
                 display_method: label
               products_in_trade:
+                display_method: label
+              region:
                 display_method: label
               species:
                 display_method: label

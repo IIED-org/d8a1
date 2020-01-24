@@ -8,7 +8,7 @@ id: node.country_header.title
 field_name: title
 entity_type: node
 bundle: country_header
-label: Country
+label: 'Country title'
 description: ''
 required: true
 translatable: true

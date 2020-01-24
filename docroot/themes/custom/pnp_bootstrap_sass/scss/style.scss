@@ -599,16 +599,8 @@ button#edit-submit-explore-::before {
   .view-header {
     @extend .clearfix;
   }
-  .vocabulary-document-type {
-    h2 {
-      @extend h3;
-      a {
-        color: $body-color;
-        text-decoration: none !important;
-        cursor: default;
-      }
-    }
-    .field--name-description  {
+  .view-grouping-content {
+    h3 > p {
       color: $gray-800;
       font-size: $font-size-base;
     }
