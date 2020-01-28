@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "555f6650d5e97fa337343bc0cf8e3ce7",
+    "content-hash": "120c9d6753b334b8e403de1ec3326a98",
     "packages": [
         {
             "name": "abraham/twitteroauth",
@@ -2423,6 +2423,9 @@
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
                     }
+                },
+                "patches_applied": {
+                    "Enable wildcard": "https://www.drupal.org/files/issues/2018-07-18/2986466-2-condition_query_wildcard.patch"
                 }
             },
             "notification-url": "https://packages.drupal.org/8/downloads",
