@@ -5210,7 +5210,7 @@ display:
           exclude: false
           alter:
             alter_text: true
-            text: "<h3>{{ field_address_country_code }}</h3>\r\n<p>Coordinates: {{ field_geofield }}</p>"
+            text: "<h4>{{ field_address }}</h4>\r\n<p>Coordinates: {{ field_geofield }}</p>"
             make_link: false
             path: ''
             absolute: false
