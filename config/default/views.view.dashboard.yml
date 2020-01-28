@@ -4,6 +4,8 @@ status: true
 dependencies:
   config:
     - node.type.article
+    - node.type.country_header
+    - node.type.event
     - node.type.initiative
     - node.type.organisation
     - node.type.page
@@ -855,6 +857,8 @@ display:
           operator: in
           value:
             initiative: initiative
+            country_header: country_header
+            event: event
             organisation: organisation
             resource: resource
           group: 1

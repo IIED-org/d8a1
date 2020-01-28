@@ -264,7 +264,7 @@ processor_settings:
     fields:
       field_species_affected: taxonomy_term-parent
     weights:
-      preprocess_index: -45
+      preprocess_index: -42
   highlight:
     highlight: always
     highlight_partial: false
@@ -291,14 +291,12 @@ processor_settings:
     alt: true
     tags:
       b: 2
-      em: 1
       h1: 5
       h2: 3
       h3: 2
       strong: 2
-      u: 1
     weights:
-      preprocess_index: -15
+      preprocess_index: -48
       preprocess_query: -15
   ignorecase:
     all_fields: false
@@ -308,7 +306,7 @@ processor_settings:
       - title
       - type
     weights:
-      preprocess_index: -20
+      preprocess_index: -50
       preprocess_query: -20
   rendered_item: {  }
   stopwords:
@@ -354,7 +352,7 @@ processor_settings:
       - will
       - with
     weights:
-      preprocess_index: -5
+      preprocess_index: -45
       preprocess_query: -2
   tokenizer:
     all_fields: false
@@ -366,7 +364,7 @@ processor_settings:
     overlap_cjk: 1
     minimum_word_size: '3'
     weights:
-      preprocess_index: -6
+      preprocess_index: -46
       preprocess_query: -6
   transliteration:
     all_fields: false
@@ -376,10 +374,14 @@ processor_settings:
       - title
       - type
     weights:
-      preprocess_index: -20
+      preprocess_index: -49
       preprocess_query: -20
   type_boost:
     boosts:
+      'entity:block_content':
+        datasource_boost: !!float 1
+      'entity:media':
+        datasource_boost: !!float 1
       'entity:node':
         datasource_boost: !!float 1
         bundle_boosts:
@@ -403,7 +405,7 @@ processor_settings:
           species: !!float 0
           tags: !!float 0
     weights:
-      preprocess_index: 0
+      preprocess_index: -43
 tracker_settings:
   default:
     indexing_order: fifo

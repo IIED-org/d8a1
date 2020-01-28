@@ -1,0 +1,22 @@
+uuid: 5ca1c4ae-336a-48a0-ac3e-82455b49b154
+langcode: en
+status: true
+dependencies:
+  module:
+    - condition_query
+    - system
+id: alerts
+label: Alerts
+code: ".alert-wrapper {\r\n  position: absolute;\r\n}"
+media: all
+preprocess: true
+conditions:
+  request_param:
+    id: request_param
+    request_param: 'search=*'
+    negate: false
+  request_path:
+    id: request_path
+    pages: '/explore*'
+    negate: false
+conditions_require_all: false

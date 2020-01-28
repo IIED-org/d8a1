@@ -5328,7 +5328,7 @@ display:
             default_group_multiple: {  }
             group_items: {  }
           parse_mode: terms
-          min_length: 3
+          min_length: 2
           fields: {  }
           plugin_id: search_api_fulltext
         field_standalone_resource:
@@ -5502,7 +5502,7 @@ display:
               allow_secondary: false
               secondary_label: 'Advanced options'
               autosubmit: true
-              autosubmit_exclude_textfield: false
+              autosubmit_exclude_textfield: true
               autosubmit_hide: false
             search_api_fulltext:
               bef_format: default

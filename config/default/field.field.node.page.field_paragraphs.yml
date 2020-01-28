@@ -1,0 +1,46 @@
+uuid: 241abc0f-2fde-4147-ae97-3a76d04868b7
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_paragraphs
+    - node.type.page
+    - paragraphs.paragraphs_type.text
+  module:
+    - entity_reference_revisions
+id: node.page.field_paragraphs
+field_name: field_paragraphs
+entity_type: node
+bundle: page
+label: Paragraphs
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    negate: 0
+    target_bundles:
+      text: text
+    target_bundles_drag_drop:
+      add_new_species:
+        weight: 6
+        enabled: false
+      document:
+        weight: 7
+        enabled: false
+      online_article_or_blog:
+        weight: 8
+        enabled: false
+      video:
+        weight: 9
+        enabled: false
+      text:
+        enabled: true
+        weight: 10
+      _link_to_document_hosted_on_anot:
+        weight: 10
+        enabled: false
+field_type: entity_reference_revisions

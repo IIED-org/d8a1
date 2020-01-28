@@ -77,8 +77,8 @@ dependencies:
     - address
     - colorbox
     - file
+    - geofield
     - image
-    - leaflet
     - leaflet_views
     - link
     - node
@@ -5085,6 +5085,56 @@ display:
           separator: ', '
           field_api_classes: false
           plugin_id: field
+        field_address_country_code:
+          id: field_address_country_code
+          table: node__field_address
+          field: field_address_country_code
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: ''
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          display_name: true
+          plugin_id: country
         field_geofield:
           id: field_geofield
           table: node__field_geofield
@@ -5134,34 +5184,10 @@ display:
           empty_zero: false
           hide_alter_empty: true
           click_sort_column: value
-          type: leaflet_formatter_default
+          type: geofield_latlon
           settings:
-            multiple_map: 0
-            popup: 0
-            popup_content: ''
-            leaflet_map: 'OSM Mapnik'
-            height: '358'
-            hide_empty_map: 0
-            map_position:
-              force: 0
-              zoom: '2'
-              minZoom: '1'
-              maxZoom: '18'
-            icon:
-              iconUrl: ''
-              shadowUrl: ''
-              iconSize:
-                x: ''
-                'y': ''
-              iconAnchor:
-                x: ''
-                'y': ''
-              shadowAnchor:
-                x: ''
-                'y': ''
-              popupAnchor:
-                x: ''
-                'y': ''
+            output_format: decimal
+            output_escape: 0
           group_column: value
           group_columns: {  }
           group_rows: true
@@ -5173,6 +5199,55 @@ display:
           separator: ', '
           field_api_classes: false
           plugin_id: field
+        nothing:
+          id: nothing
+          table: views
+          field: nothing
+          relationship: none
+          group_type: group
+          admin_label: Popup
+          label: ''
+          exclude: false
+          alter:
+            alter_text: true
+            text: "<h3>{{ field_address_country_code }}</h3>\r\n<p>Coordinates: {{ field_geofield }}</p>"
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: false
+          plugin_id: custom
       defaults:
         fields: false
         style: false
@@ -5180,42 +5255,132 @@ display:
       style:
         type: leaflet_map
         options:
-          grouping:
-            -
-              field: field_geofield
-              rendered: false
-              rendered_strip: false
+          grouping: {  }
           data_source: field_geofield
-          name_field: title
-          description_field: field_address
+          entity_source: __base_table
+          name_field: field_address_country_code
+          description_field: nothing
           view_mode: full
-          leaflet_map: esri-world_street_map
+          leaflet_map: leaflet-mapbox
           height: '358'
+          height_unit: px
           hide_empty_map: 0
           disable_wheel: 1
+          fullscreen_control: 0
+          reset_map:
+            control: 1
+            position: topleft
           map_position:
             force: 0
             center:
-              lat: '0'
+              lat: '-4'
               lon: '0'
-            zoom: '2'
-            minZoom: '1'
-            maxZoom: '18'
+            zoom: '6'
+            minZoom: '2'
+            maxZoom: '9'
+            zoomFiner: '0'
           icon:
+            iconType: marker
             iconUrl: '/sites/default/files/markers/{{ type }}.png'
             shadowUrl: /sites/default/files/markers/pin-shadow.png
+            html: '<div></div>'
+            html_class: leaflet-map-divicon
             iconSize:
               x: '25'
               'y': '40'
             iconAnchor:
               x: '12'
               'y': '40'
+            shadowSize:
+              x: ''
+              'y': ''
             shadowAnchor:
               x: '12'
               'y': '40'
             popupAnchor:
               x: '0'
               'y': '-30'
+          leaflet_markercluster:
+            control: 0
+            options: '{"spiderfyOnMaxZoom":true,"showCoverageOnHover":true,"removeOutsideVisibleBounds":false}'
+          path: '{"color":"#3388ff","opacity":"1.0","stroke":true,"weight":3,"fill":"depends","fillColor":"*","fillOpacity":"0.2"}'
+          geocoder:
+            control: 0
+            settings:
+              position: topright
+              input_size: '25'
+              providers:
+                arcgisonline:
+                  weight: '0'
+                  checked: 0
+                bingmaps:
+                  weight: '0'
+                  checked: 0
+                file:
+                  weight: '0'
+                  checked: 0
+                freegeoip:
+                  weight: '0'
+                  checked: 0
+                gpxfile:
+                  weight: '0'
+                  checked: 0
+                geojsonfile:
+                  weight: '0'
+                  checked: 0
+                geoplugin:
+                  weight: '0'
+                  checked: 0
+                geoip:
+                  weight: '0'
+                  checked: 0
+                geonames:
+                  weight: '0'
+                  checked: 0
+                googlemaps:
+                  weight: '0'
+                  checked: 0
+                googlemaps_business:
+                  weight: '0'
+                  checked: 0
+                hostip:
+                  weight: '0'
+                  checked: 0
+                ipinfodb:
+                  weight: '0'
+                  checked: 0
+                kmlfile:
+                  weight: '0'
+                  checked: 0
+                mapquest:
+                  weight: '0'
+                  checked: 0
+                maxmind:
+                  weight: '0'
+                  checked: 0
+                nominatim:
+                  weight: '0'
+                  checked: 0
+                opencage:
+                  weight: '0'
+                  checked: 0
+                openstreetmap:
+                  weight: '0'
+                  checked: 0
+                random:
+                  weight: '0'
+                  checked: 0
+                tomtom:
+                  weight: '0'
+                  checked: 0
+                yandex:
+                  weight: '0'
+                  checked: 0
+              min_terms: '4'
+              delay: '800'
+              zoom: '16'
+              popup: 0
+              options: ''
       row:
         type: fields
         options:

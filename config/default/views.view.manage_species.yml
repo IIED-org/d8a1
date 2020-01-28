@@ -6,6 +6,7 @@ dependencies:
     - field.storage.taxonomy_term.field_scientific_name
     - field.storage.taxonomy_term.field_synonyms
     - taxonomy.vocabulary.species
+    - views.view.manage_content
   module:
     - taxonomy
     - text
@@ -57,7 +58,11 @@ display:
       style:
         type: table
         options:
-          grouping: {  }
+          grouping:
+            -
+              field: parent_target_id
+              rendered: true
+              rendered_strip: false
           row_class: ''
           default_row_class: true
           override: true
@@ -446,7 +451,18 @@ display:
             value: "<div class=\"container my-5\">\r\n      <div class=\"row\">\r\n        <div class=\"col-md-3\">\r\n<a href=\"/admin/structure/taxonomy/manage/species/add\" class=\"btn btn-primary\">+ add new species</a>\r\n</div></div></div>\r\n"
             format: full_html
           plugin_id: text
-      footer: {  }
+      footer:
+        view:
+          id: view
+          table: views
+          field: view
+          relationship: none
+          group_type: group
+          admin_label: ''
+          empty: false
+          view_to_insert: 'manage_content:block_1'
+          inherit_arguments: false
+          plugin_id: view
       empty: {  }
       relationships:
         parent_target_id:
