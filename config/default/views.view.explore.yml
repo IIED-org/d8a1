@@ -60,7 +60,7 @@ display:
         options:
           perm: 'access content'
       cache:
-        type: none
+        type: search_api_tag
         options: {  }
       query:
         type: views_query
@@ -2975,7 +2975,8 @@ display:
           hide_empty: false
       exposed_block: true
       cache:
-        type: none
+        type: search_api_tag
+        options: {  }
       fields:
         type:
           id: type
@@ -5529,7 +5530,7 @@ display:
           empty: false
           tokenize: false
           content:
-            value: "<strong>Have we missed anything?</strong>\r\n<p>Please contact us at info@peoplenotpoaching.org, or complete our <a href=\"https://www.surveymonkey.com/r/5CMTPDV\">feedback survey</a> to let us know.</p>"
+            value: "<div class=\"bg-secondary text-white pt-3 pb-1 px-3 rounded\"><p><strong>Have we missed anything?</strong><br />\r\nPlease contact us at info@peoplenotpoaching.org, or complete our <a href=\"https://www.surveymonkey.com/r/5CMTPDV\" style=\"color: white; text-decoration: underline;\">feedback survey</a> to let us know.</p></div>"
             format: full_html
           plugin_id: text
     cache_metadata:

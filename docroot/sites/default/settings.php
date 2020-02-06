@@ -767,6 +767,11 @@ $settings['entity_update_batch_size'] = 50;
 // (Drupal 5 or 6) or $databases (Drupal 7 or 8) as described in comments above.
 if (file_exists('/var/www/site-php')) {
   require('/var/www/site-php/d8a1/d8a1-settings.inc');
+
+  // Memcached settings for Acquia Hosting
+  if (file_exists(DRUPAL_ROOT . '/sites/default/cloud-memcache-d8.php')) {
+    require(DRUPAL_ROOT . '/sites/default/cloud-memcache-d8.php');
+  }
 }
 
 // <DDSETTINGS>

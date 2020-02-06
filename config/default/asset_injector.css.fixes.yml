@@ -1,0 +1,17 @@
+uuid: 9507ed1d-843a-432b-a207-f0a764eaf6da
+langcode: en
+status: true
+dependencies:
+  module:
+    - system
+id: fixes
+label: fixes
+code: ".path-explore .view-footer {\r\n    padding: 0;\r\n    background-color: none;\r\n    border-radius: 0;\r\n}"
+media: all
+preprocess: true
+conditions:
+  request_path:
+    id: request_path
+    pages: '/explore*'
+    negate: false
+conditions_require_all: true
