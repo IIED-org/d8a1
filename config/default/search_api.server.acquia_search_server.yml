@@ -30,5 +30,6 @@ backend_config:
   suggest_corrections: true
   suggest_words: false
   acquia_search_possible_cores:
-    - AHQT-177573.test.d8a1paqkuxea2h
-    - AHQT-177573.test.default
+    - AHQT-177573.prod.d8a1rfjrbvzlqo
+    - AHQT-177573.prod.default
+    - AHQT-177573
