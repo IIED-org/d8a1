@@ -35,7 +35,7 @@ class AccordionItem extends FieldGroupFormatterBase {
     $element += [
       '#type' => 'field_group_accordion_item',
       '#effect' => $this->getSetting('effect'),
-      '#title' => $this->getLabel(),
+      '#title' => Html::escape($this->t($this->getLabel())),
     ];
 
     if ($this->getSetting('id')) {

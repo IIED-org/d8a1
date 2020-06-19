@@ -10,44 +10,12 @@ use Drupal\Core\Config\Entity\ConfigEntityInterface;
 interface ContentModerationNotificationInterface extends ConfigEntityInterface {
 
   /**
-   * Get the TO email addresses.
+   * Get the email addresses.
    *
    * @return string
    *   The email addresses (comma-separated) for which to send the notification.
    */
-  public function getTo();
-
-  /**
-   * Get the CC email addresses.
-   *
-   * @return string
-   *   The email addresses (comma-separated) for which to send the notification.
-   */
-  public function getCc();
-
-  /**
-   * Get the BCC email addresses.
-   *
-   * @return string
-   *   The email addresses (comma-separated) for which to send the notification.
-   */
-  public function getBcc();
-
-  /**
-   * Get the FROM email addresses.
-   *
-   * @return string
-   *   The email addresses (comma-separated) for which to send the notification.
-   */
-  public function getFrom();
-
-  /**
-   * Get the REPLY-TO email addresses.
-   *
-   * @return string
-   *   The email addresses (comma-separated) for which to send the notification.
-   */
-  public function getReplyTo();
+  public function getEmails();
 
   /**
    * Send the notification to the entity author.
@@ -104,21 +72,5 @@ interface ContentModerationNotificationInterface extends ConfigEntityInterface {
    *   The format to be used for the message body.
    */
   public function getMessageFormat();
-
-  /**
-   * Get the Debug state.
-   *
-   * @return string
-   *   The debug status of the notification.
-   */
-  public function getDebug();
-
-  /**
-   * Get the Abort-Sending email addresses.
-   *
-   * @return string
-   *   The email addresses (comma-separated) for aborting the notification.
-   */
-  public function getAbort();
 
 }

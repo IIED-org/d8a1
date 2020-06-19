@@ -48,16 +48,10 @@ use Drupal\Core\Entity\EntityStorageInterface;
  *     "transitions",
  *     "roles",
  *     "author",
- *     "to",
- *     "cc",
- *     "bcc",
- *     "from",
- *     "replyto",
+ *     "emails",
  *     "subject",
  *     "body",
  *     "label",
- *     "abort",
- *     "debug",
  *   }
  * )
  */
@@ -81,53 +75,11 @@ class ContentModerationNotification extends ConfigEntityBase implements ContentM
   ];
 
   /**
-   * TO address(es) email header.
+   * Additional recipient emails.
    *
    * @var string
    */
-  public $to = '';
-
-  /**
-   * CC address(es) email header.
-   *
-   * @var string
-   */
-  public $cc = '';
-
-  /**
-   * BCC address(es) email header.
-   *
-   * @var string
-   */
-  public $bcc = '';
-
-  /**
-   * FROM address(es) email header.
-   *
-   * @var string
-   */
-  public $from = '';
-
-  /**
-   * REPLY-TO address(es) email header.
-   *
-   * @var string
-   */
-  public $replyto = '';
-
-  /**
-   * Abort-sending email address.
-   *
-   * @var string
-   */
-  public $abort = '';
-
-  /**
-   * Process in Debug mode (display headers, no sending mail).
-   *
-   * @var bool
-   */
-  public $debug = FALSE;
+  public $emails = '';
 
   /**
    * The role IDs to send notifications to.
@@ -211,36 +163,8 @@ class ContentModerationNotification extends ConfigEntityBase implements ContentM
   /**
    * {@inheritdoc}
    */
-  public function getTo() {
-    return $this->get('to');
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getCc() {
-    return $this->get('cc');
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getBcc() {
-    return $this->get('bcc');
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getFrom() {
-    return $this->get('from');
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getReplyTo() {
-    return $this->get('replyto');
+  public function getEmails() {
+    return $this->get('emails');
   }
 
   /**
@@ -248,20 +172,6 @@ class ContentModerationNotification extends ConfigEntityBase implements ContentM
    */
   public function sendToAuthor() {
     return $this->get('author');
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getAbort() {
-    return $this->get('abort');
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getDebug() {
-    return $this->get('debug');
   }
 
 }

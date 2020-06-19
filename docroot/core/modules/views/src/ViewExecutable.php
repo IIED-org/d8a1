@@ -1138,8 +1138,7 @@ class ViewExecutable {
     }
 
     // Store the arguments for later use.
-    $this->build_info += ['substitutions' => []];
-    $this->build_info['substitutions'] += $substitutions;
+    $this->build_info['substitutions'] = $substitutions;
 
     return $status;
   }
@@ -1218,7 +1217,6 @@ class ViewExecutable {
       'query' => '',
       'count_query' => '',
       'query_args' => [],
-      'substitutions' => [],
     ];
 
     $this->initQuery();
@@ -1374,13 +1372,6 @@ class ViewExecutable {
           $handlers[$id]->setRelationship();
           $handlers[$id]->query($this->display_handler->useGroupBy());
         }
-      }
-
-      // Place an exposed filter's exposed input value into the
-      // substitutions array for tokens.
-      if ($key == 'filter' && !empty($handlers[$id]->options['expose']['identifier'])) {
-        $exposed_identifier = $handlers[$id]->options['expose']['identifier'];
-        $this->build_info['substitutions']["{{ filters.$id }}"] = $this->exposed_data[$exposed_identifier];
       }
     }
   }

@@ -5,8 +5,10 @@
  * Hook implementations for the content moderation notifications module.
  */
 
+use Drupal\Component\Render\PlainTextOutput;
 use Drupal\content_moderation_notifications\ContentModerationNotificationInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Render\Markup;
 
 /**
  * Implements hook_entity_presave().
@@ -37,12 +39,28 @@ function content_moderation_notifications_entity_insert(EntityInterface $entity)
  * Implements hook_mail().
  */
 function content_moderation_notifications_mail($key, &$message, $params) {
-  // No per-template changes.
-  // Move parameters into message fields.
-  $message['headers'] = $params['headers'];
-  $message['subject'] = $params['subject'];
-  $message['body'] = $params['body'];
-  $message['from'] = $params['from'];
+  switch ($key) {
+    case 'content_moderation_notification':
+      // Add headers, specifically this should include the Bcc header.
+      if (!empty($params['headers'])) {
+        foreach ($params['headers'] as $id => $value) {
+          $message['headers'][$id] = $params['headers'][$id];
+        }
+      }
+
+      $message['from'] = \Drupal::config('system.site')->get('mail');
+
+      $token_service = \Drupal::token();
+
+      $context = $params['context'];
+
+      $subject = PlainTextOutput::renderFromHtml($token_service->replace($params['subject'], $context, ['clear' => TRUE]));
+      $body = $token_service->replace($params['message'], $context, ['clear' => TRUE]);
+
+      $message['subject'] = str_replace(["\r", "\n"], '', $subject);
+      $message['body'][] = Markup::create($body);
+      break;
+  }
 }
 
 /**

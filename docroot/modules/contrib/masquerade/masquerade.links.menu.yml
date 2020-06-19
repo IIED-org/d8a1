@@ -1,5 +1,6 @@
 masquerade.unmasquerade:
+  title: 'Unmasquerade'
   menu_name: account
+  description: 'Switch back to your user account.'
   route_name: masquerade.unmasquerade
-  class: Drupal\masquerade\Plugin\Menu\UnmasqueradeMenuLink
   weight: -50

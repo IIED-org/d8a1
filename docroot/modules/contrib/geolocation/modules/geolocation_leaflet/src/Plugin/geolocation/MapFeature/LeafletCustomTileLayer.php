@@ -37,7 +37,6 @@ class LeafletCustomTileLayer extends MapFeatureBase {
 
     $form['tile_layer_url'] = [
       '#type' => 'textfield',
-      '#maxlength' => 256,
       '#title' => $this->t('URL'),
       '#description' => $this->t('Enter a tile server url like "http://{s}.tile.osm.org/{z}/{x}/{y}.png".'),
       '#default_value' => $settings['tile_layer_url'],
