@@ -13,7 +13,7 @@ interface SocialAuthUserInterface {
    * @return string
    *   The user's first name.
    */
-  public function getFistName();
+  public function getFirstName();
 
   /**
    * Sets the user's first name.
@@ -21,7 +21,7 @@ interface SocialAuthUserInterface {
    * @param string $first_name
    *   The user's first name.
    */
-  public function setFistName($first_name);
+  public function setFirstName($first_name);
 
   /**
    * Gets the user's last name.
@@ -138,7 +138,7 @@ interface SocialAuthUserInterface {
   /**
    * Set the user's additional data.
    *
-   * @return string
+   * @return array|null
    *   The user's additional data.
    */
   public function getAdditionalData();
@@ -146,7 +146,7 @@ interface SocialAuthUserInterface {
   /**
    * Sets the user's additional data.
    *
-   * @param string $additional_data
+   * @param array|null $additional_data
    *   The user's additional data.
    */
   public function setAdditionalData($additional_data);

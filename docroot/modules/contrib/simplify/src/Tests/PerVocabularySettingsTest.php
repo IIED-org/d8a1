@@ -1,16 +1,9 @@
 <?php
 
-/**
- * @file
- * Test case for testing the per vocabulary simplify configurations.
- *
- * Sponsored by: www.drupal-addict.com
- */
-
 namespace Drupal\simplify\Tests;
 
 use Drupal\simpletest\WebTestBase;
-use Drupal\Component\Utility\Unicode;
+use Drupal\taxonomy\Entity\Vocabulary;
 
 /**
  * Test simplify per vocabulary settings.
@@ -26,17 +19,17 @@ class PerVocabularySettingsTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('path', 'taxonomy', 'simplify');
+  public static $modules = ['path', 'taxonomy', 'simplify'];
 
   /**
    * {@inheritdoc}
    */
   public static function getInfo() {
-    return array(
+    return [
       'name' => 'Simplify per taxonomy settings test.',
       'description' => 'Test the Simplify per taxonomy settings.',
       'group' => 'Simplify',
-    );
+    ];
   }
 
   /**
@@ -45,15 +38,19 @@ class PerVocabularySettingsTest extends WebTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $admin_user = $this->drupalCreateUser(array('administer url aliases', 'administer taxonomy', 'administer simplify'));
+    $admin_user = $this->drupalCreateUser([
+      'administer url aliases',
+      'administer taxonomy',
+      'administer simplify',
+    ]);
     $this->drupalLogin($admin_user);
 
     // Create a vocabulary.
-    $vocabulary = entity_create('taxonomy_vocabulary', array(
+    $vocabulary = Vocabulary::create([
       'name' => $this->randomMachineName(),
       'description' => $this->randomMachineName(),
       'vid' => 'testing_vocabulary',
-    ));
+    ]);
     $vocabulary->save();
   }
 
@@ -78,10 +75,10 @@ class PerVocabularySettingsTest extends WebTestBase {
 
     // Globally activate some options.
     $this->drupalGet('/admin/config/user-interface/simplify');
-    $options = array(
+    $options = [
       'simplify_admin' => TRUE,
       'simplify_taxonomies_global[format]' => 'format',
-    );
+    ];
     $this->drupalPostForm(NULL, $options, t('Save configuration'));
 
     // Open vocabulary admin UI.
@@ -103,10 +100,10 @@ class PerVocabularySettingsTest extends WebTestBase {
     $this->assertTrue(count($text_format) === 0, 'Vocabulary URL alias option is not disabled.');
 
     // Save some custom options.
-    $options = array(
+    $options = [
       'simplify_taxonomies[relations]' => 'relations',
       'simplify_taxonomies[path]' => 'path',
-    );
+    ];
     $this->drupalPostForm(NULL, $options, t('Save'));
 
     // Check if options are saved.

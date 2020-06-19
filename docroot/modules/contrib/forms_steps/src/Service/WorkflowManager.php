@@ -178,7 +178,6 @@ class WorkflowManager {
             'form_mode' => $step->formMode(),
             'forms_steps' => $step->formsSteps()->id(),
           ]);
-
         $workflow->save();
       }
     }
@@ -257,9 +256,9 @@ class WorkflowManager {
             'form_mode' => $step->formMode(),
             'forms_steps' => $step->formsSteps()->id(),
           ]);
-
         $workflow->save();
       }
     }
   }
+
 }

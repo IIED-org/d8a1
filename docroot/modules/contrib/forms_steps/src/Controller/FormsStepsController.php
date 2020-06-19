@@ -2,11 +2,14 @@
 
 namespace Drupal\forms_steps\Controller;
 
+use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\forms_steps\Entity\Workflow;
 use Drupal\forms_steps\Exception\AccessDeniedException;
 use Drupal\forms_steps\Exception\FormsStepsNotFoundException;
+use Drupal\user\Entity\User;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Class FormsStepsController.
@@ -78,7 +81,7 @@ class FormsStepsController extends ControllerBase {
       ->getDefinition($step->entityType())
       ->getKey('bundle');
 
-    // We create the entity.
+    // We initialize the entity with its potential last revision.
     $entity = NULL;
     $entities = [];
     if (!is_null($instance_id)) {
@@ -95,12 +98,39 @@ class FormsStepsController extends ControllerBase {
           if (strcmp($_entity->entity_type->value, $step->entityType()) == 0
           && strcmp($_entity->bundle->value, $step->entityBundle()) == 0) {
             // We load the entity.
-            $entity = \Drupal::entityManager()->getStorage($_entity->entity_type->value)
-              ->load($_entity->entity_id->value);
+            $storage = \Drupal::entityTypeManager()->getStorage($_entity->entity_type->value);
+            $idKey = $storage->getEntityType()->getKey('id');
+
+            if ($_entity->getEntityType()->isRevisionable() == FALSE) {
+              $revision = NULL;
+            }
+            else {
+              $revision = $storage->getQuery()
+                ->condition($idKey, $_entity->entity_id->value)
+                ->latestRevision()
+                ->execute();
+            }
+
+            if ( $revision ) {
+              $rid = key($revision);
+              $entity = $storage->loadRevision($rid);
+            }
+            else {
+              $entity = $storage->load($_entity->entity_id->value);
+            }
             break;
           }
         }
       }
+    }
+
+    $userRegistrationAccess = FALSE;
+    if ($step->entityType() == 'user') {
+      $account = User::load(\Drupal::currentUser()->id());
+      /** @var  \Drupal\Core\Access\AccessResultInterface $registrationAccess */
+      $registrationAccess = \Drupal::service('access_check.user.register')
+        ->access($account);
+      $userRegistrationAccess = $registrationAccess->isAllowed();
     }
 
     // If entity not found, this is a new entity to create.
@@ -117,7 +147,10 @@ class FormsStepsController extends ControllerBase {
           }
         }
         else {
-          if (!$entity->access('create')) {
+          if (
+            ($step->entityType() !== 'user' && !$entity->access('create')) ||
+            ($step->entityType() === 'user' && !($userRegistrationAccess || $entity->access('create')))
+          ){
             throw new AccessDeniedHttpException();
           } else if($formsSteps->getFirstStep()->id() != $step->id()) {
             throw new AccessDeniedException(t('First step of the multi-step forms is required.'));
@@ -125,12 +158,37 @@ class FormsStepsController extends ControllerBase {
         }
       }
     } else {
-      if (!$entity->access('update')) {
+      if (
+        ($step->entityType() !== 'user' && !$entity->access('update')) ||
+        ($step->entityType() === 'user' && !($entity->access('update')))
+      ) {
         throw new AccessDeniedException(t('First step of the multi-step forms is required.'));
       }
     }
 
-    // We load the form.
+    $formMode = preg_replace("/^{$step->entityType()}\./", '', $step->formMode());
+    try {
+      // We load the form.
+      $form = \Drupal::service('entity.form_builder')
+        ->getForm(
+          $entity,
+          $formMode,
+          ['form_steps' => TRUE]
+        );
+    }
+    catch (InvalidPluginDefinitionException $e) {
+      $entityTypeId = $entity->getEntityTypeId();
+      $formModeOptions = \Drupal::service('entity_display.repository')
+        ->getFormModeOptions($entityTypeId);
+
+      if (isset($formModeOptions[$formMode])) {
+        \Drupal::messenger()->addError("Site's cache must be cleared after adding new form mode:" . $formMode . " on " . $entityTypeId);
+      }
+      else {
+        \Drupal::messenger()->addWarning($e->getMessage() . 'The form class could not be loaded.');
+      }
+      throw new NotFoundHttpException();
+    }
     $form = \Drupal::service('entity.form_builder')
       ->getForm(
         $entity,

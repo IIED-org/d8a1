@@ -10,8 +10,8 @@ use Drupal\geolocation\LocationBase;
  *
  * @Location(
  *   id = "freeogeoip",
- *   name = @Translation("freegoip.net Service"),
- *   description = @Translation("See http://freegeoip.net website. Limited to 15000 requests per hour."),
+ *   name = @Translation("freegoip.live Service"),
+ *   description = @Translation("See http://freegeoip.live website. Limited to 15000 requests per hour."),
  * )
  */
 class FreeGeoIp extends LocationBase implements LocationInterface {
@@ -25,7 +25,7 @@ class FreeGeoIp extends LocationBase implements LocationInterface {
       return [];
     }
 
-    $json = file_get_contents("http://freegeoip.net/json/" . $ip);
+    $json = file_get_contents("http://freegeoip.live/json/" . $ip);
     if (empty($json)) {
       return [];
     }

@@ -51,7 +51,7 @@ class ContentEmbedBlock extends BlockBase {
       'settings',
       'selection',
       'nids',
-      'entities'
+      'entities',
     ], []);
     $nids = [];
     foreach ($entities as $entity) {
@@ -96,12 +96,12 @@ class ContentEmbedBlock extends BlockBase {
       '#type' => 'entity_browser',
       '#entity_browser' => 'browse_content',
       '#entity_browser_validators' => [
-        'entity_type' => ['type' => 'node']
+        'entity_type' => ['type' => 'node'],
       ],
       '#process' => [
         [
           '\Drupal\entity_browser\Element\EntityBrowserElement',
-          'processEntityBrowser'
+          'processEntityBrowser',
         ],
         [get_called_class(), 'processEntityBrowser'],
       ],

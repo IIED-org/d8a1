@@ -25,56 +25,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class ContentModerationNotificationsFormBase extends EntityForm {
 
   /**
-   * Entity Query factory.
-   *
-   * @var \Drupal\Core\Entity\Query\QueryFactory
-   */
-  protected $entityQueryFactory;
-
-  /**
-   * Entity Type Manager service.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
-   * Construct the ContentModerationNotificationFormBase.
-   *
-   * For simple entity forms, there's no need for a constructor. Our form
-   * base, however, requires an entity query factory to be injected into it
-   * from the container. We later use this query factory to build an entity
-   * query for the exists() method.
-   *
-   * @param \Drupal\Core\Entity\Query\QueryFactory $query_factory
-   *   An entity query factory for the entity type.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
-   *   An entity type manager for the entity type.
-   */
-  public function __construct(QueryFactory $query_factory, EntityTypeManagerInterface $entity_type_manager) {
-    $this->entityTypeManager = $entity_type_manager;
-    $this->entityQueryFactory = $query_factory;
-  }
-
-  /**
-   * Factory method for ContentModerationNotificationFormBase.
-   *
-   * When Drupal builds this class it does not call the constructor directly.
-   * Instead, it relies on this method to build the new object. Why? The class
-   * constructor may take multiple arguments that are unknown to Drupal. The
-   * create() method always takes one parameter -- the container. The purpose
-   * of the create() method is twofold: It provides a standard way for Drupal
-   * to construct the object, meanwhile it provides you a place to get needed
-   * constructor parameters from the container.
-   *
-   * In this case, we ask the container for an entity query factory. We then
-   * pass the factory to our class as a constructor parameter.
-   */
-  public static function create(ContainerInterface $container) {
-    return new static($container->get('entity.query'), $container->get('entity_type.manager'));
-  }
-
-  /**
    * Update options.
    *
    * @param array $form
@@ -225,10 +175,10 @@ class ContentModerationNotificationsFormBase extends EntityForm {
     ];
 
     $form['emails'] = [
-      '#type' => 'textfield',
+      '#type' => 'textarea',
       '#title' => $this->t('Adhoc email addresses'),
       '#default_value' => $content_moderation_notification->getEmails(),
-      '#description' => $this->t('Send notifications to these email addresses, emails should be entered as a comma separated list.'),
+      '#description' => $this->t('Send notifications to these email addresses, emails should be entered as a comma separated list and optionally on separate lines.'),
     ];
 
     // Email subject line.
@@ -236,6 +186,7 @@ class ContentModerationNotificationsFormBase extends EntityForm {
       '#type' => 'textfield',
       '#title' => $this->t('Email Subject'),
       '#default_value' => $content_moderation_notification->getSubject(),
+      '#required' => TRUE,
     ];
 
     // Email body content.
@@ -245,6 +196,15 @@ class ContentModerationNotificationsFormBase extends EntityForm {
       '#title' => $this->t('Email Body'),
       '#default_value' => $content_moderation_notification->getMessage(),
     ];
+
+    // Add token tree link if module exists.
+    if ($this->moduleHandler->moduleExists('token')) {
+      $form['body']['token_tree_link'] =  [
+        '#theme' => 'token_tree_link',
+        '#token_types' => array_unique(['user', $selected_workflow]),
+        '#weight' => 10
+      ];
+    }
 
     // Return the form.
     return $form;
@@ -265,7 +225,7 @@ class ContentModerationNotificationsFormBase extends EntityForm {
    */
   public function exists($entity_id, array $element, FormStateInterface $form_state) {
     // Use the query factory to build a new entity query.
-    $query = $this->entityQueryFactory->get('content_moderation_notification');
+    $query = $this->entityTypeManager->getStorage('content_moderation_notification')->getQuery();
 
     // Query the entity ID to see if its in use.
     $result = $query->condition('id', $element['#field_prefix'] . $entity_id)
@@ -323,12 +283,12 @@ class ContentModerationNotificationsFormBase extends EntityForm {
 
     if ($status == SAVED_UPDATED) {
       // If we edited an existing entity...
-      drupal_set_message($this->t('Notification <a href=":url">%label</a> has been updated.', ['%label' => $content_moderation_notification->label(), ':url' => $content_moderation_notification->toUrl('edit-form')->toString()]));
+      $this->messenger()->addMessage($this->t('Notification <a href=":url">%label</a> has been updated.', ['%label' => $content_moderation_notification->label(), ':url' => $content_moderation_notification->toUrl('edit-form')->toString()]));
       $this->logger('content_moderation_notifications')->notice('Notification has been updated.', ['%label' => $content_moderation_notification->label()]);
     }
     else {
       // If we created a new entity...
-      drupal_set_message($this->t('Notification <a href=":url">%label</a> has been added.', ['%label' => $content_moderation_notification->label(), ':url' => $content_moderation_notification->toUrl('edit-form')->toString()]));
+      $this->messenger()->addMessage($this->t('Notification <a href=":url">%label</a> has been added.', ['%label' => $content_moderation_notification->label(), ':url' => $content_moderation_notification->toUrl('edit-form')->toString()]));
       $this->logger('content_moderation_notifications')->notice('Notification has been added.', ['%label' => $content_moderation_notification->label()]);
     }
 

@@ -19,10 +19,18 @@ use Drupal\Core\Render\BubbleableMetadata;
  *   locationCapable = true,
  *   boundaryCapable = true,
  *   frontendCapable = true,
- *   reverseCapable = false,
+ *   reverseCapable = true,
  * )
  */
 class Photon extends GeocoderBase implements GeocoderInterface {
+
+  /**
+   * Base URL.
+   *
+   * @var string
+   *   Photon URL.
+   */
+  public $requestBaseUrl = 'https://photon.komoot.de';
 
   /**
    * {@inheritdoc}
@@ -30,10 +38,14 @@ class Photon extends GeocoderBase implements GeocoderInterface {
   protected function getDefaultSettings() {
     $default_settings = parent::getDefaultSettings();
 
+    $default_settings['autocomplete_min_length'] = 1;
+
     $default_settings['location_priority'] = [
       'lat' => '',
       'lng' => '',
     ];
+
+    $default_settings['remove_duplicates'] = FALSE;
 
     return $default_settings;
   }
@@ -47,6 +59,14 @@ class Photon extends GeocoderBase implements GeocoderInterface {
 
     $form = parent::getOptionsForm();
 
+    $form['autocomplete_min_length'] = [
+      '#title' => $this->t('Autocomplete minimal input length'),
+      '#type' => 'number',
+      '#min' => 1,
+      '#step' => 1,
+      '#default_value' => $settings['autocomplete_min_length'],
+    ];
+
     $form['location_priority'] = [
       '#type' => 'geolocation_input',
       '#title' => $this->t('Location Priority'),
@@ -54,6 +74,13 @@ class Photon extends GeocoderBase implements GeocoderInterface {
         'lat' => $settings['location_priority']['lat'],
         'lng' => $settings['location_priority']['lng'],
       ],
+    ];
+
+    $form['remove_duplicates'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Remove duplicates from the Photon API'),
+      '#default_value' => $settings['remove_duplicates'],
+      '#description' => $this->t('The Photon API can generate duplicates for some locations (i.e. cities that are states for example), this option will remove them.'),
     ];
 
     return $form;
@@ -77,10 +104,12 @@ class Photon extends GeocoderBase implements GeocoderInterface {
           'geolocation' => [
             'geocoder' => [
               $this->getPluginId() => [
+                'autocompleteMinLength' => empty($this->configuration['autocomplete_min_length']) ? 1 : (int) $this->configuration['autocomplete_min_length'],
                 'locationPriority' => [
                   'lat' => $settings['location_priority']['lat'],
                   'lon' => $settings['location_priority']['lng'],
                 ],
+                'removeDuplicates' => $settings['remove_duplicates'],
               ],
             ],
           ],
@@ -107,7 +136,7 @@ class Photon extends GeocoderBase implements GeocoderInterface {
       $options['lang'] = $lang;
     }
 
-    $url = Url::fromUri('https://photon.komoot.de/api/' . $address, [
+    $url = Url::fromUri($this->requestBaseUrl . '/api/', [
       'query' => $options,
     ]);
 
@@ -121,13 +150,13 @@ class Photon extends GeocoderBase implements GeocoderInterface {
 
     $location = [];
 
-    if (empty($result[0])) {
+    if (empty($result['features'][0])) {
       return FALSE;
     }
     else {
       $location['location'] = [
-        'lat' => $result[0]['lat'],
-        'lng' => $result[0]['lon'],
+        'lat' => $result['features'][0]['geometry']['coordinates'][1],
+        'lng' => $result['features'][0]['geometry']['coordinates'][0],
       ];
     }
 
@@ -145,6 +174,63 @@ class Photon extends GeocoderBase implements GeocoderInterface {
     }
 
     return $location;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function reverseGeocode($latitude, $longitude) {
+    $url = Url::fromUri($this->requestBaseUrl . '/reverse', [
+      'query' => [
+        'lat' => $latitude,
+        'lon' => $longitude,
+        'limit' => 20,
+      ],
+    ]);
+
+    try {
+      $result = Json::decode(\Drupal::httpClient()->get($url->toString())->getBody());
+    }
+    catch (RequestException $e) {
+      watchdog_exception('geolocation', $e);
+      return FALSE;
+    }
+
+    if (empty($result['features'][0]['properties'])) {
+      return FALSE;
+    }
+
+    $countries = \Drupal::service('address.country_repository')->getList();
+    $address_atomics = [];
+    foreach ($result['features'] as $id => $entry) {
+      if (empty($entry['properties']['osm_type'])) {
+        continue;
+      }
+
+      switch ($entry['properties']['osm_type']) {
+        case 'N':
+          $address_atomics = [
+            'houseNumber' => !empty($entry['properties']['housenumber']) ? $entry['properties']['housenumber'] : '',
+            'road' => $entry['properties']['street'],
+            'city' => $entry['properties']['city'],
+            'postcode' => $entry['properties']['postcode'],
+            'state' => $entry['properties']['state'],
+            'country' => $entry['properties']['country'],
+            'countryCode' => array_search($entry['properties']['country'], $countries),
+          ];
+          break 2;
+      }
+    }
+
+    if (empty($address_atomics)) {
+      return FALSE;
+    }
+
+    return [
+      'atomics' => $address_atomics,
+      'elements' => $this->addressElements($address_atomics),
+      'formatted_address' => empty($result['display_name']) ? '' : $result['display_name'],
+    ];
   }
 
 }

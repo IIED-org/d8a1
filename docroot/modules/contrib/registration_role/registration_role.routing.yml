@@ -4,4 +4,4 @@ registration_role.setting.form:
     _title: 'Registration role'
     _form: '\Drupal\registration_role\Form\RegistrationRoleSettings'
   requirements:
-    _permission: 'administer users'
+    _permission: 'administer registration roles'

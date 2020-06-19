@@ -6,6 +6,7 @@ use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\content_moderation\ModerationInformationInterface;
+use Drupal\Core\Entity\RevisionableStorageInterface;
 
 /**
  * Service for notification related questions about the moderated entity.
@@ -123,7 +124,11 @@ class NotificationInformation implements NotificationInformationInterface {
    * {@inheritdoc}
    */
   public function getLatestRevision($entity_type_id, $entity_id) {
-    return $this->moderationInformation->getLatestRevision($entity_type_id, $entity_id);
+    $storage = $this->entityTypeManager->getStorage($entity_type_id);
+    if ($storage instanceof RevisionableStorageInterface
+      && $revision_id = $storage->getLatestRevisionId($entity_id)) {
+      return $storage->loadRevision($revision_id);
+    }
   }
 
 }

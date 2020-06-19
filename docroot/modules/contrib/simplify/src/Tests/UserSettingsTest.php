@@ -1,16 +1,8 @@
 <?php
 
-/**
- * @file
- * Test case for testing the user simplify configurations.
- *
- * Sponsored by: www.drupal-addict.com
- */
-
 namespace Drupal\simplify\Tests;
 
 use Drupal\simpletest\WebTestBase;
-use Drupal\user\Entity\Role;
 
 /**
  * Test simplify user settings.
@@ -26,24 +18,17 @@ class UserSettingsTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('contact', 'user', 'simplify');
+  public static $modules = ['contact', 'user', 'simplify'];
 
   /**
    * {@inheritdoc}
    */
   public static function getInfo() {
-    return array(
+    return [
       'name' => 'Simplify user settings test.',
       'description' => 'Test the Simplify module user settings.',
       'group' => 'Simplify',
-    );
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function setUp() {
-    parent::setUp();
+    ];
   }
 
   /**
@@ -52,7 +37,7 @@ class UserSettingsTest extends WebTestBase {
   public function testSettingSaving() {
 
     // Create an admin user.
-    $admin_user = $this->drupalCreateUser(array(), NULL, TRUE);
+    $admin_user = $this->drupalCreateUser([], NULL, TRUE);
     $this->drupalLogin($admin_user);
 
     $user_edit_page = '/user/' . $admin_user->id() . '/edit';
@@ -77,12 +62,12 @@ class UserSettingsTest extends WebTestBase {
     $this->drupalLogin($admin_user);
     // Globally activate some options.
     $this->drupalGet('admin/config/user-interface/simplify');
-    $options = array(
+    $options = [
       'simplify_admin' => TRUE,
       'simplify_users_global[status]' => 'status',
       'simplify_users_global[timezone]' => 'timezone',
       'simplify_users_global[contact]' => 'contact',
-    );
+    ];
     $this->drupalPostForm(NULL, $options, t('Save configuration'));
     // Admin users setting.
     $this->assertFieldChecked('edit-simplify-admin', "Admin users can't see hidden fields too.");

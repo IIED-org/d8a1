@@ -1,12 +1,5 @@
 <?php
 
-/**
- * @file
- * Test case for testing the global simplify configuration page.
- *
- * Sponsored by: www.drupal-addict.com
- */
-
 namespace Drupal\simplify\Tests;
 
 use Drupal\simpletest\WebTestBase;
@@ -25,17 +18,17 @@ class GlobalSettingsTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('simplify');
+  public static $modules = ['simplify'];
 
   /**
    * {@inheritdoc}
    */
   public static function getInfo() {
-    return array(
+    return [
       'name' => 'Simplify global settings test.',
       'description' => 'Test the Simplify module global settings page.',
       'group' => 'Simplify',
-    );
+    ];
   }
 
   /**
@@ -43,7 +36,7 @@ class GlobalSettingsTest extends WebTestBase {
    */
   protected function setUp() {
     parent::setUp();
-    $admin_user = $this->drupalCreateUser(array('administer simplify'));
+    $admin_user = $this->drupalCreateUser(['administer simplify']);
     $this->drupalLogin($admin_user);
   }
 
@@ -79,7 +72,15 @@ class GlobalSettingsTest extends WebTestBase {
      * 2/ Check optionnal options are added if modules becomes available.
      */
 
-    $this->container->get('module_installer')->install(array('node', 'book', 'taxonomy', 'block', 'comment', 'menu_ui', 'path'), TRUE);
+    $this->container->get('module_installer')->install([
+      'node',
+      'book',
+      'taxonomy',
+      'block',
+      'comment',
+      'menu_ui',
+      'path',
+    ], TRUE);
     $this->drupalGet('/admin/config/user-interface/simplify');
     // Node globals.
     $this->assertRaw('Nodes', 'Nodes options are now available.');
@@ -104,14 +105,14 @@ class GlobalSettingsTest extends WebTestBase {
      * 3/ Check and validate some options.
      */
 
-    $options = array(
+    $options = [
       'simplify_admin' => TRUE,
       'simplify_nodes_global[author]' => 'author',
       'simplify_nodes_global[comment]' => 'comment',
       'simplify_nodes_global[options]' => 'options',
       'simplify_taxonomies_global[format]' => 'format',
       'simplify_taxonomies_global[path]' => 'path',
-    );
+    ];
     $this->drupalPostForm(NULL, $options, t('Save configuration'));
     // User1.
     $this->assertFieldChecked('edit-simplify-admin', 'Admin user option is checked.');

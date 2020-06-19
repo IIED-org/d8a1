@@ -4,8 +4,12 @@ namespace Drupal\imagemagick\EventSubscriber;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\File\FileSystemInterface;
+use Drupal\Core\File\Exception\FileException;
+use Drupal\Core\StreamWrapper\StreamWrapperManagerInterface;
+use Drupal\file_mdm\FileMetadataManagerInterface;
 use Drupal\imagemagick\Event\ImagemagickExecutionEvent;
 use Drupal\imagemagick\ImagemagickExecArguments;
+use Drupal\imagemagick\Plugin\ImageToolkit\ImagemagickToolkit;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -43,6 +47,20 @@ class ImagemagickEventSubscriber implements EventSubscriberInterface {
   protected $fileSystem;
 
   /**
+   * The stream wrapper manager service.
+   *
+   * @var \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface
+   */
+  protected $streamWrapperManager;
+
+  /**
+   * The file metadata manager service.
+   *
+   * @var \Drupal\file_mdm\FileMetadataManagerInterface
+   */
+  protected $fileMetadataManager;
+
+  /**
    * Constructs an ImagemagickEventSubscriber object.
    *
    * @param \Psr\Log\LoggerInterface $logger
@@ -51,12 +69,18 @@ class ImagemagickEventSubscriber implements EventSubscriberInterface {
    *   The config factory.
    * @param \Drupal\Core\File\FileSystemInterface $file_system
    *   The file system service.
+   * @param \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface $stream_wrapper_manager
+   *   The stream wrapper manager service.
+   * @param \Drupal\file_mdm\FileMetadataManagerInterface $file_metadata_manager
+   *   The file metadata manager service.
    */
-  public function __construct(LoggerInterface $logger, ConfigFactoryInterface $config_factory, FileSystemInterface $file_system) {
+  public function __construct(LoggerInterface $logger, ConfigFactoryInterface $config_factory, FileSystemInterface $file_system, StreamWrapperManagerInterface $stream_wrapper_manager, FileMetadataManagerInterface $file_metadata_manager) {
     $this->logger = $logger;
     $this->configFactory = $config_factory;
     $this->imagemagickSettings = $this->configFactory->get('imagemagick.settings');
     $this->fileSystem = $file_system;
+    $this->streamWrapperManager = $stream_wrapper_manager;
+    $this->fileMetadataManager = $file_metadata_manager;
   }
 
   /**
@@ -84,7 +108,7 @@ class ImagemagickEventSubscriber implements EventSubscriberInterface {
     }
 
     $source = $arguments->getSource();
-    if (!file_valid_uri($source)) {
+    if (!$this->streamWrapperManager->isValidUri($source)) {
       // The value of $source is likely a file path already.
       $arguments->setSourceLocalPath($source);
     }
@@ -98,11 +122,20 @@ class ImagemagickEventSubscriber implements EventSubscriberInterface {
       else {
         // We are working with a remote file, copy the remote source file to a
         // temp one and set the local path to it.
-        $temp_path = $this->fileSystem->tempnam('temporary://', 'imagemagick_');
-        $this->fileSystem->unlink($temp_path);
-        $temp_path .= '.' . pathinfo($source, PATHINFO_EXTENSION);
-        $path = file_unmanaged_copy($arguments->getSource(), $temp_path, FILE_EXISTS_ERROR);
-        $arguments->setSourceLocalPath($this->fileSystem->realpath($path));
+        try {
+          $temp_path = $this->fileSystem->tempnam('temporary://', 'imagemagick_');
+          $this->fileSystem->unlink($temp_path);
+          $temp_path .= '.' . pathinfo($source, PATHINFO_EXTENSION);
+          $path = $this->fileSystem->copy($arguments->getSource(), $temp_path, FileSystemInterface::EXISTS_ERROR);
+          $arguments->setSourceLocalPath($this->fileSystem->realpath($path));
+          drupal_register_shutdown_function(
+            [static::class, 'removeTemporaryRemoteCopy'],
+            $arguments->getSourceLocalPath()
+          );
+        }
+        catch (FileException $e) {
+          $this->logger->error($e->getMessage());
+        }
       }
     }
   }
@@ -122,7 +155,7 @@ class ImagemagickEventSubscriber implements EventSubscriberInterface {
     }
 
     $destination = $arguments->getDestination();
-    if (!file_valid_uri($destination)) {
+    if (!$this->streamWrapperManager->isValidUri($destination)) {
       // The value of $destination is likely a file path already.
       $arguments->setDestinationLocalPath($destination);
     }
@@ -140,6 +173,10 @@ class ImagemagickEventSubscriber implements EventSubscriberInterface {
         $this->fileSystem->unlink($temp_path);
         $temp_path .= '.' . pathinfo($destination, PATHINFO_EXTENSION);
         $arguments->setDestinationLocalPath($this->fileSystem->realpath($temp_path));
+        drupal_register_shutdown_function(
+          [static::class, 'removeTemporaryRemoteCopy'],
+          $arguments->getDestinationLocalPath()
+        );
       }
     }
   }
@@ -153,7 +190,7 @@ class ImagemagickEventSubscriber implements EventSubscriberInterface {
   protected function prependArguments(ImagemagickExecArguments $arguments) {
     // Add prepended arguments if needed.
     if ($prepend = $this->imagemagickSettings->get('prepend')) {
-      $arguments->add($prepend, $this->imagemagickSettings->get('prepend_pre_source') ? ImagemagickExecArguments::PRE_SOURCE : ImagemagickExecArguments::POST_SOURCE, 0);
+      $arguments->add($prepend, ImagemagickExecArguments::PRE_SOURCE, 0);
     }
   }
 
@@ -202,7 +239,12 @@ class ImagemagickEventSubscriber implements EventSubscriberInterface {
     if (!$this->fileSystem->realpath($destination)) {
       // We are working with a remote file, so move the temp file to the final
       // destination, replacing any existing file with the same name.
-      file_unmanaged_move($arguments->getDestinationLocalPath(), $arguments->getDestination(), FILE_EXISTS_REPLACE);
+      try {
+        $this->fileSystem->move($arguments->getDestinationLocalPath(), $arguments->getDestination(), FileSystemInterface::EXISTS_REPLACE);
+      }
+      catch (FileException $e) {
+        $this->logger->error($e->getMessage());
+      }
     }
   }
 
@@ -270,6 +312,14 @@ class ImagemagickEventSubscriber implements EventSubscriberInterface {
     $this->prependArguments($arguments);
     $this->doEnsureDestinationLocalPath($arguments);
 
+    // Coalesce Animated GIFs, if required.
+    if (empty($arguments->find('/^\-coalesce/')) && (bool) $this->imagemagickSettings->get('advanced.coalesce') && in_array($arguments->getSourceFormat(), ['GIF', 'GIF87'])) {
+      $file_md = $this->fileMetadataManager->uri($arguments->getSource());
+      if ($file_md && $file_md->getMetadata(ImagemagickToolkit::FILE_METADATA_PLUGIN_ID, 'frames_count') > 1) {
+        $arguments->add("-coalesce", ImagemagickExecArguments::POST_SOURCE, 0);
+      }
+    }
+
     // Change output image resolution to 72 ppi, if specified in settings.
     if (empty($arguments->find('/^\-density/')) && $density = (int) $this->imagemagickSettings->get('advanced.density')) {
       $arguments->add("-density {$density} -units PixelsPerInch");
@@ -292,6 +342,20 @@ class ImagemagickEventSubscriber implements EventSubscriberInterface {
     // Change image quality.
     if (empty($arguments->find('/^\-quality/'))) {
       $arguments->add('-quality ' . $this->imagemagickSettings->get('quality'));
+    }
+  }
+
+  /**
+   * Removes a temporary file created during operations on a remote file.
+   *
+   * Used with drupal_register_shutdown_function().
+   *
+   * @param string $path
+   *   The temporary file realpath.
+   */
+  public static function removeTemporaryRemoteCopy($path) {
+    if (file_exists($path)) {
+      \Drupal::service('file_system')->delete($path);
     }
   }
 

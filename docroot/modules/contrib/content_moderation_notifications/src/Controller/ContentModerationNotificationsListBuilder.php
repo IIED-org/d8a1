@@ -37,6 +37,7 @@ class ContentModerationNotificationsListBuilder extends ConfigEntityListBuilder 
    * @see Drupal\Core\Entity\EntityListController::render()
    */
   public function buildHeader() {
+    $header['label'] = $this->t('Label');
     $header['workflow'] = $this->t('Workflow');
     $header['status'] = $this->t('Status');
     $header['transition'] = $this->t('Transitions');
@@ -76,9 +77,12 @@ class ContentModerationNotificationsListBuilder extends ConfigEntityListBuilder 
       $transitions = array_keys(array_filter($entity->transitions));
     }
     foreach ($transitions as $transition) {
-      $transition_strings[] = $workflow_transitions[$transition]->label();
+      if (!empty($workflow_transitions[$transition])) {
+        $transition_strings[] = $workflow_transitions[$transition]->label();
+      }
     }
 
+    $row['label'] = $entity->label();
     $row['workflow'] = $workflow->label();
     $row['status'] = $entity->status() ? $this->t('Enabled') : $this->t('Disabled');
     $row['transition'] = implode(', ', $transition_strings);

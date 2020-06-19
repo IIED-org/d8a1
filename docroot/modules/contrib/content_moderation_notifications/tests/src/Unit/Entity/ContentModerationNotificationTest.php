@@ -4,7 +4,6 @@ namespace Drupal\Tests\content_moderation_notifications\Unit\Entity;
 
 use Drupal\content_moderation_notifications\Entity\ContentModerationNotification;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
-use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -129,13 +128,7 @@ class ContentModerationNotificationTest extends UnitTestCase {
 
     // Mock out some necessary services.
     $container = new ContainerBuilder();
-    $entity_manager = $this->prophesize(EntityManagerInterface::class);
     $entity_type = $this->prophesize(EntityTypeInterface::class)->reveal();
-    $entity_manager->getDefinition('content_moderation_notification')->willReturn($entity_type);
-    $container->set('entity.manager', $entity_manager->reveal());
-
-    // From 8.5 onward, the entity_type.manager service is called.
-    // @see https://www.drupal.org/node/2782833
     $entity_type_manager = $this->prophesize(EntityTypeManagerInterface::class);
     $entity_type_manager->getDefinition('content_moderation_notification')->willReturn($entity_type);
     $container->set('entity_type.manager', $entity_type_manager->reveal());

@@ -3,8 +3,8 @@
 namespace Drupal\Tests\content_moderation_notifications\Kernel;
 
 use Drupal\Component\Render\PlainTextOutput;
-use Drupal\simpletest\ContentTypeCreationTrait;
-use Drupal\simpletest\NodeCreationTrait;
+use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
+use Drupal\Tests\node\Traits\NodeCreationTrait;
 use Drupal\workflows\Entity\Workflow;
 
 /**
@@ -16,6 +16,7 @@ use Drupal\workflows\Entity\Workflow;
  */
 class TokenNotificationsTest extends NotificationsTest {
 
+  use ContentModerationNotificationTestTrait;
   use ContentTypeCreationTrait;
   use NodeCreationTrait;
 
@@ -39,6 +40,7 @@ class TokenNotificationsTest extends NotificationsTest {
     // Setup site email.
     $this->config('system.site')->set('mail', 'admin@example.com')->save();
 
+    $this->enableModeration('node', 'article');
     /** @var \Drupal\workflows\WorkflowInterface $workflow */
     $workflow = Workflow::load('editorial');
     $workflow->getTypePlugin()->addEntityTypeAndBundle('node', 'article');

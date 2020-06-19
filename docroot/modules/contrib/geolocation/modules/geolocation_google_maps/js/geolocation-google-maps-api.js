@@ -94,11 +94,12 @@
         mapTypeControl: false, // Handled by feature.
         zoomControl: false, // Handled by feature.
         streetViewControl: false, // Handled by feature.
-        rotateControl: map.settings.google_map_settings.rotateControl,
+        rotateControl: false, // Handled by feature.
         fullscreenControl: false, // Handled by feature.
         scaleControl: map.settings.google_map_settings.scaleControl,
         panControl: map.settings.google_map_settings.panControl,
-        gestureHandling: map.settings.google_map_settings.gestureHandling
+        gestureHandling: map.settings.google_map_settings.gestureHandling,
+        styles: (typeof map.settings.google_map_settings.style !== 'undefined') ? map.settings.google_map_settings.style : null
       });
 
       var singleClick;
@@ -173,6 +174,64 @@
     Drupal.geolocation.GeolocationMapBase.prototype.removeMapMarker.call(this, marker);
     marker.setMap(null);
   };
+  GeolocationGoogleMap.prototype.addShape = function (shapeSettings) {
+    if (typeof shapeSettings === 'undefined') {
+      return;
+    }
+
+    var shape;
+
+    switch (shapeSettings.shape) {
+      case 'line':
+        shape = new google.maps.Polyline({
+          path: shapeSettings.coordinates,
+          strokeColor: shapeSettings.strokeColor,
+          strokeOpacity: shapeSettings.strokeOpacity,
+          strokeWeight: shapeSettings.strokeWidth
+        });
+        break;
+
+      case 'polygon':
+        shape = new google.maps.Polygon({
+          paths: shapeSettings.coordinates,
+          strokeColor: shapeSettings.strokeColor,
+          strokeOpacity: shapeSettings.strokeOpacity,
+          strokeWeight: shapeSettings.strokeWidth,
+          fillColor: shapeSettings.fillColor,
+          fillOpacity: shapeSettings.fillOpacity
+        });
+        break;
+    }
+
+    if (
+      typeof shapeSettings.title !== "undefined"
+      && shapeSettings.title.length
+    ) {
+      var infoWindow = new google.maps.InfoWindow();
+      var that = this;
+      google.maps.event.addListener(shape, 'mouseover', function (e) {
+        infoWindow.setPosition(e.latLng);
+        infoWindow.setContent(shapeSettings.title);
+        infoWindow.open(that.googleMap);
+      });
+      google.maps.event.addListener(shape, 'mouseout', function () {
+        infoWindow.close();
+      });
+    }
+
+    shape.setMap(this.googleMap);
+    Drupal.geolocation.GeolocationMapBase.prototype.addShape.call(this, shape);
+
+    return shape;
+
+  };
+  GeolocationGoogleMap.prototype.removeShape = function (shape) {
+    if (typeof shape === 'undefined') {
+      return;
+    }
+    Drupal.geolocation.GeolocationMapBase.prototype.removeShape.call(this, shape);
+    shape.setMap(null);
+  };
   GeolocationGoogleMap.prototype.getMarkerBoundaries = function (locations) {
 
     locations = locations || this.mapMarkers;
@@ -197,6 +256,11 @@
     return bounds;
   };
   GeolocationGoogleMap.prototype.fitBoundaries = function (boundaries, identifier) {
+    boundaries = this.denormalizeBoundaries(boundaries);
+    if (!boundaries) {
+      return;
+    }
+
     var currentBounds = this.googleMap.getBounds();
     if (
       !currentBounds
@@ -206,7 +270,15 @@
       Drupal.geolocation.GeolocationMapBase.prototype.fitBoundaries.call(this, boundaries, identifier);
     }
   };
-  GeolocationGoogleMap.prototype.setZoom = function (zoom) {
+  GeolocationGoogleMap.prototype.getZoom = function () {
+    var that = this;
+    return new Promise(function (resolve, reject) {
+      google.maps.event.addListenerOnce(that.googleMap, "idle", function () {
+        resolve(that.googleMap.getZoom());
+      });
+    });
+  };
+  GeolocationGoogleMap.prototype.setZoom = function (zoom, defer) {
     if (typeof zoom === 'undefined') {
       zoom = this.settings.google_map_settings.zoom;
     }
@@ -215,9 +287,11 @@
 
     this.googleMap.setZoom(zoom);
     var that = this;
-    google.maps.event.addListenerOnce(this.googleMap, "idle", function () {
-      that.googleMap.setZoom(zoom);
-    });
+    if (defer) {
+      google.maps.event.addListenerOnce(this.googleMap, "idle", function () {
+        that.googleMap.setZoom(zoom);
+      });
+    }
   };
   GeolocationGoogleMap.prototype.getCenter = function () {
     var center = this.googleMap.getCenter();
@@ -256,6 +330,42 @@
         circle.setMap(null);
       }
     }
+  };
+  GeolocationGoogleMap.prototype.normalizeBoundaries = function (boundaries) {
+    if (boundaries instanceof google.maps.LatLngBounds) {
+      var northEast = boundaries.getNorthEast();
+      var southWest = boundaries.getSouthWest();
+
+      return {
+        north: northEast.lat(),
+        east: northEast.lng(),
+        south: southWest.lat(),
+        west: southWest.lng()
+      };
+    }
+
+    return false;
+  };
+  GeolocationGoogleMap.prototype.denormalizeBoundaries = function (boundaries) {
+    if (typeof boundaries === 'undefined') {
+      return false;
+    }
+
+    if (boundaries instanceof google.maps.LatLngBounds) {
+      return boundaries;
+    }
+
+    if (Drupal.geolocation.GeolocationMapBase.prototype.boundariesNormalized.call(this, boundaries)) {
+      return new google.maps.LatLngBounds({lat: boundaries.south, lng: boundaries.west}, {lat: boundaries.north, lng: boundaries.east});
+    }
+    else {
+      boundaries = Drupal.geolocation.GeolocationMapBase.prototype.normalizeBoundaries.call(this, boundaries);
+      if (boundaries) {
+        return new google.maps.LatLngBounds({lat: boundaries.south, lng: boundaries.west}, {lat: boundaries.north, lng: boundaries.east});
+      }
+    }
+
+    return false;
   };
   GeolocationGoogleMap.prototype.addControl = function (element) {
     element = $(element);

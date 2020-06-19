@@ -14,7 +14,7 @@
  * @property {String} west
  */
 
-(function ($, Drupal) {
+(function (Drupal) {
 
   'use strict';
 
@@ -49,7 +49,6 @@
                 [south, west],
                 [north, east]
             ]);
-            map.leafletMap.fitBounds(bounds);
             map.leafletMap.setMaxBounds(bounds);
             map.leafletMap.setMinZoom(map.leafletMap.getBoundsZoom(bounds));
           });
@@ -61,4 +60,4 @@
     },
     detach: function (context, drupalSettings) {}
   };
-})(jQuery, Drupal);
+})(Drupal);

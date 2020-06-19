@@ -18,6 +18,7 @@
  * @property {String} drupalSettings.geolocation.geocoder.photon.locationPriority
  * @property {float} drupalSettings.geolocation.geocoder.photon.locationPriority.lat
  * @property {float} drupalSettings.geolocation.geocoder.photon.locationPriority.lon
+ * @property {Boolean} drupalSettings.geolocation.geocoder.photon.removeDuplicates
  */
 
 (function ($, Drupal) {
@@ -53,8 +54,17 @@
           geocoderInput.addClass('geocoder-attached');
         }
 
+        var minLength = 1;
+        if (
+            typeof drupalSettings.geolocation.geocoder.photon.autocompleteMinLength !== 'undefined'
+            && parseInt(drupalSettings.geolocation.geocoder.photon.autocompleteMinLength)
+        ) {
+          minLength = parseInt(drupalSettings.geolocation.geocoder.photon.autocompleteMinLength);
+        }
+
         geocoderInput.autocomplete({
           autoFocus: true,
+          minLength: minLength,
           source: function (request, response) {
             var autocompleteResults = [];
 
@@ -69,7 +79,12 @@
             }
 
             if (typeof drupalSettings.geolocation.geocoder.photon.locationPriority !== 'undefined') {
-              $.extend(options, drupalSettings.geolocation.geocoder.photon.locationPriority);
+              if (
+                drupalSettings.geolocation.geocoder.photon.locationPriority.lat
+                && drupalSettings.geolocation.geocoder.photon.locationPriority.lon
+              ) {
+                $.extend(options, drupalSettings.geolocation.geocoder.photon.locationPriority);
+              }
             }
 
             $.getJSON(
@@ -101,10 +116,27 @@
                     if (typeof result.properties.country !== 'undefined') {
                       formatted_address.push(result.properties.country);
                     }
-                    autocompleteResults.push({
-                      value: result.properties.name + ' - ' + formatted_address.join(', '),
-                      result: result
-                    });
+
+                    var formatted_value = result.properties.name + ' - ' + formatted_address.join(', ');
+
+                    if (drupalSettings.geolocation.geocoder.photon.removeDuplicates) {
+                      var existingResults = $.grep(autocompleteResults, function (resultItem) {
+                        return resultItem.value === formatted_value;
+                      });
+
+                      if (existingResults.length === 0) {
+                        autocompleteResults.push({
+                          value: formatted_value,
+                          result: result
+                        });
+                      }
+                    }
+                    else {
+                      autocompleteResults.push({
+                        value: formatted_value,
+                        result: result
+                      });
+                    }
                   });
                   response(autocompleteResults);
                 }
@@ -119,19 +151,35 @@
            * @param {Object} ui.item - See jquery doc
            */
           select: function (event, ui) {
-            Drupal.geolocation.geocoder.resultCallback({
-                geometry: {
-                  location: {
-                    lat: function () {
-                      return ui.item.result.geometry.coordinates[1];
-                    },
-                    lng: function () {
-                      return ui.item.result.geometry.coordinates[0];
-                    }
+            if (typeof ui.item.result.geometry.coordinates === 'undefined') {
+              return;
+            }
+
+            var result = {
+              geometry: {
+                location: {
+                  lat: function () {
+                    return ui.item.result.geometry.coordinates[1];
                   },
-                  bounds: ui.item.result.properties.extend
-                }
-            }, $(event.target).data('source-identifier').toString());
+                  lng: function () {
+                    return ui.item.result.geometry.coordinates[0];
+                  }
+                },
+                bounds: ui.item.result.properties.extent
+              }
+            };
+
+            /** @var ui.item.result.properties.extent array */
+            if (typeof ui.item.result.properties.extent !== 'undefined') {
+              result.geometry.bounds = {
+                north: ui.item.result.properties.extent[1],
+                east: ui.item.result.properties.extent[2],
+                south: ui.item.result.properties.extent[3],
+                west: ui.item.result.properties.extent[0]
+              };
+            }
+
+            Drupal.geolocation.geocoder.resultCallback(result, $(event.target).data('source-identifier').toString());
           }
         })
         .on('input', function () {

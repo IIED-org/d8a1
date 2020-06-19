@@ -147,18 +147,23 @@ class BetterFieldDescriptionsSettingsForm extends ConfigFormBase {
     // We don't want our settings to contain 0-values, only selected values.
     $bfds = [];
 
+    // Default fields values.
+    $bfd = [];
     foreach ($form_state->getValue('bundles') as $entity_type => $bundles) {
       foreach ($bundles as $bundle_machine_name => $bundle) {
         foreach ($bundle as $field_machine_name => $value) {
           // $value is (int) 0 if the field was not selected in the form.
           if (is_string($value)) {
             $bfds[$entity_type][$bundle_machine_name][$field_machine_name] = $field_machine_name;
+            $bfd[$entity_type][$bundle_machine_name][$field_machine_name]['description'] = 'Sample Description';
+            $bfd[$entity_type][$bundle_machine_name][$field_machine_name]['label'] = 'Label';
           }
         }
       }
     }
 
     $config = $this->config('better_field_descriptions.settings')->set('better_field_descriptions_settings', $bfds);
+    $config = $this->config('better_field_descriptions.settings')->set('better_field_descriptions', $bfd);
     $config->save();
     parent::submitForm($form, $form_state);
   }

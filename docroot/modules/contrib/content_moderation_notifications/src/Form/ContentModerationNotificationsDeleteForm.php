@@ -81,7 +81,7 @@ class ContentModerationNotificationsDeleteForm extends EntityConfirmFormBase {
     $this->entity->delete();
 
     // Set a message that the entity was deleted.
-    drupal_set_message($this->t('Notification %label was deleted.', [
+    $this->messenger()->addMessage($this->t('Notification %label was deleted.', [
       '%label' => $this->entity->label(),
     ]));
 

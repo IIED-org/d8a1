@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\content_moderation_notifications\Kernel;
 
-use Drupal\Component\Utility\Unicode;
 use Drupal\content_moderation_notifications\Entity\ContentModerationNotification;
 
 /**
@@ -21,7 +20,7 @@ trait ContentModerationNotificationCreateTrait {
    */
   protected function createNotification(array $values = []) {
     $values += [
-      'id' => Unicode::strtolower($this->randomMachineName()),
+      'id' => mb_strtolower($this->randomMachineName()),
       'workflow' => 'editorial',
       'subject' => $this->randomString(),
       'status' => 1,

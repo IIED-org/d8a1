@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * Hooks provided by the Simplify module.
@@ -16,7 +17,7 @@
  *   nodes, users, comments, taxonomy, blocks.
  *   See simplify_get_fields() for examples.
  */
-function hook_simplify_get_fields_alter(&$fields, $type) {
+function hook_simplify_get_fields_alter(array &$fields, $type) {
   // Allow our module's custom 'foo' node field to be hidden.
   if ($type == 'nodes') {
     $fields['foo'] = t('Foo field');
@@ -24,8 +25,7 @@ function hook_simplify_get_fields_alter(&$fields, $type) {
 }
 
 /**
- * Alter the way fields are hidden, or hide fields defined in
- * hook_simplify_get_fields_alter().
+ * Alter the way fields are hidden.
  *
  * @param array $form
  *   The form array in which the field to be hidden resides. Hiding a field is
@@ -34,7 +34,7 @@ function hook_simplify_get_fields_alter(&$fields, $type) {
  *   The machine name of the field to be hidden as defined in
  *   simplify_get_fields() or hook_simplify_get_fields_alter().
  */
-function hook_simplify_hide_field_alter(&$form, $field) {
+function hook_simplify_hide_field_alter(array &$form, array $field) {
   // Hide our module's custom 'foo' node field.
   if ($field == 'foo') {
     $form['foo']['#access'] = FALSE;

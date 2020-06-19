@@ -11,11 +11,11 @@
 function content_browser_views_data_alter(&$data) {
   // For now only support Nodes, eventually loop through all known Content
   // Entity types.
-  $data['node']['content_browser_preview'] = array(
+  $data['node']['content_browser_preview'] = [
     'title' => t('Content Browser Preview'),
     'help' => t('Displays a rendered preview of the content.'),
-    'field' => array(
+    'field' => [
       'id' => 'content_browser_preview',
-    ),
-  );
+    ],
+  ];
 }

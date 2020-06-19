@@ -6,7 +6,6 @@ use Drupal\Component\Render\PlainTextOutput;
 use Drupal\Core\Test\AssertMailTrait;
 use Drupal\entity_test\Entity\EntityTestRev;
 use Drupal\KernelTests\KernelTestBase;
-use Drupal\workflows\Entity\Workflow;
 
 /**
  * Test sending of notifications for moderation state changes.
@@ -17,6 +16,7 @@ class NotificationsTest extends KernelTestBase {
 
   use AssertMailTrait;
   use ContentModerationNotificationCreateTrait;
+  use ContentModerationNotificationTestTrait;
 
   /**
    * {@inheritdoc}
@@ -48,10 +48,7 @@ class NotificationsTest extends KernelTestBase {
     $this->config('system.site')->set('mail', 'admin@example.com')->save();
 
     // Attach workflow to entity test.
-    /** @var \Drupal\workflows\WorkflowInterface $workflow */
-    $workflow = Workflow::load('editorial');
-    $workflow->getTypePlugin()->addEntityTypeAndBundle('entity_test_rev', 'entity_test_rev');
-    $workflow->save();
+    $this->enableModeration();
   }
 
   /**
@@ -64,8 +61,9 @@ class NotificationsTest extends KernelTestBase {
     $this->assertEmpty($this->getMails());
 
     // Add a notification.
+    $long_email = $this->randomMachineName(128) . '@example.com';
     $notification = $this->createNotification([
-      'emails' => 'foo@example.com, bar@example.com',
+      'emails' => 'foo@example.com, bar@example.com' . "\r\n" . $long_email,
       'transitions' => [
         'create_new_draft' => 'create_new_draft',
         'publish' => 'publish',
@@ -78,7 +76,7 @@ class NotificationsTest extends KernelTestBase {
     $entity->save();
     $this->assertMail('from', 'admin@example.com');
     $this->assertMail('to', 'admin@example.com');
-    $this->assertBccRecipients('foo@example.com,bar@example.com');
+    $this->assertBccRecipients('foo@example.com,bar@example.com,' . $long_email);
     $this->assertMail('id', 'content_moderation_notifications_content_moderation_notification');
     $this->assertMail('subject', PlainTextOutput::renderFromHtml($notification->getSubject()));
     $this->assertCount(1, $this->getMails());
@@ -87,7 +85,7 @@ class NotificationsTest extends KernelTestBase {
     $entity->save();
     $this->assertMail('from', 'admin@example.com');
     $this->assertMail('to', 'admin@example.com');
-    $this->assertBccRecipients('foo@example.com,bar@example.com');
+    $this->assertBccRecipients('foo@example.com,bar@example.com,' . $long_email);
     $this->assertMail('id', 'content_moderation_notifications_content_moderation_notification');
     $this->assertMail('subject', PlainTextOutput::renderFromHtml($notification->getSubject()));
     $this->assertCount(2, $this->getMails());

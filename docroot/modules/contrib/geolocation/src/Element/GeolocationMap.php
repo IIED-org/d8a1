@@ -49,7 +49,7 @@ class GeolocationMap extends RenderElement {
   public function getInfo() {
     $class = get_class($this);
 
-    $info = [
+    return [
       '#process' => [
         [$class, 'processGroup'],
       ],
@@ -63,8 +63,6 @@ class GeolocationMap extends RenderElement {
       '#controls' => NULL,
       '#context' => [],
     ];
-
-    return $info;
   }
 
   /**
@@ -79,12 +77,46 @@ class GeolocationMap extends RenderElement {
   public function preRenderMap(array $render_array) {
     $render_array['#theme'] = 'geolocation_map_wrapper';
 
+    if (empty($render_array['#cache'])) {
+      $render_array['#cache'] = [];
+    }
+
+    $render_array['#cache'] = array_merge_recursive(
+      $render_array['#cache'],
+      ['contexts' => ['languages:language_interface']]
+    );
+
+    if (empty($render_array['#attributes'])) {
+      $render_array['#attributes'] = [];
+    }
+
     if (empty($render_array['#attributes'])) {
       $render_array['#attributes'] = [];
     }
 
     if (empty($render_array['#id'])) {
       $render_array['#id'] = uniqid();
+    }
+
+    if (!empty($render_array['#controls'])) {
+      uasort($render_array['#controls'], [
+        SortArray::class,
+        'sortByWeightProperty',
+      ]);
+    }
+
+    if (!empty($render_array['#layers'])) {
+      uasort($render_array['#layers'], [
+        SortArray::class,
+        'sortByWeightProperty',
+      ]);
+    }
+
+    if (!empty($render_array['#children'])) {
+      uasort($render_array['#children'], [
+        SortArray::class,
+        'sortByWeightProperty',
+      ]);
     }
 
     if (empty($render_array['#maptype'])) {
@@ -120,6 +152,12 @@ class GeolocationMap extends RenderElement {
       $render_array
     );
 
+    if (!empty($render_array['#layers'])) {
+      foreach (Element::children($render_array['#layers']) as $layer) {
+        $render_array['#children']['layers']['layer-' . $layer] = $render_array['#layers'][$layer];
+      }
+    }
+
     foreach (Element::children($render_array) as $child) {
       $render_array['#children'][$child] = $render_array[$child];
       unset($render_array[$child]);
@@ -148,20 +186,6 @@ class GeolocationMap extends RenderElement {
       $render_array['#attributes']->setAttribute('data-centre-lng-north-east', $render_array['#centre']['lng_north_east']);
       $render_array['#attributes']->setAttribute('data-centre-lat-south-west', $render_array['#centre']['lat_south_west']);
       $render_array['#attributes']->setAttribute('data-centre-lng-south-west', $render_array['#centre']['lng_south_west']);
-    }
-
-    if (!empty($render_array['#controls'])) {
-      uasort($render_array['#controls'], [
-        SortArray::class,
-        'sortByWeightProperty',
-      ]);
-    }
-
-    if (!empty($render_array['#children'])) {
-      uasort($render_array['#children'], [
-        SortArray::class,
-        'sortByWeightProperty',
-      ]);
     }
 
     $context = [];

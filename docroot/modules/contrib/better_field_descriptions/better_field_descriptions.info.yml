@@ -2,11 +2,11 @@ name: Better field descriptions
 type: module
 description: Allows users with certain roles to add themeable descriptions to fields in forms
 package: Content
-# core: 8.x
+core: 8.x
+core_version_requirement: ^8 || ^9
 configure: better_field_descriptions_admin_settings
 
-# Information added by Drupal.org packaging script on 2018-09-10
-version: '8.x-1.4'
-core: '8.x'
+# Information added by Drupal.org packaging script on 2019-11-30
+version: '8.x-1.5'
 project: 'better_field_descriptions'
-datestamp: 1536585579
+datestamp: 1575119893

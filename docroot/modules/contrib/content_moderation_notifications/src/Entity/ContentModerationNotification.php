@@ -18,6 +18,9 @@ use Drupal\Core\Entity\EntityStorageInterface;
  * @ConfigEntityType(
  *   id = "content_moderation_notification",
  *   label = @Translation("Notification"),
+ *   label_collection = @Translation("Notifications"),
+ *   label_singular = @Translation("notification"),
+ *   label_plural = @Translation("notifications"),
  *   admin_permission = "administer content moderation notifications",
  *   handlers = {
  *     "access" = "Drupal\content_moderation_notifications\ContentModerationNotificationsAccessController",

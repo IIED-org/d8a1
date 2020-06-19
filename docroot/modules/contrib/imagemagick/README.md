@@ -1,4 +1,4 @@
-# Summary
+# Imagemagick
 
 Provides ImageMagick integration.
 
@@ -7,11 +7,16 @@ To submit bug reports and feature suggestions, or to track changes: https://drup
 
 # Requirements
 
-* The module **must** be installed using Composer, see https://www.drupal.org/node/2718229
+* The module **must** be downloaded or updated using Composer, see [Download contributed modules and themes using Composer](https://www.drupal.org/node/2718229#adding-modules).
+This ensures the all dependency modules get downloaded as well.
 
-* PHP 5.6 or higher
+* PHP 7 or higher
 
-* Drupal 8.3.0 or higher
+* Drupal 8.8.0 or higher
+
+* File Metadata Manager module 8.x-2.0 or higher
+
+* Sophron module 8.x-1.0 or higher
 
 * Either ImageMagick (http://www.imagemagick.org) or GraphicsMagick
   (http://www.graphicsmagick.org) need to be installed on your server and the
@@ -19,8 +24,6 @@ To submit bug reports and feature suggestions, or to track changes: https://drup
 
 * The PHP configuration must allow invocation of _proc_open()_, which is
   security-wise identical to _exec()_.
-
-* File Metadata Manager module 8.x-1.1 or higher
 
 Consult your server administrator or hosting provider if you are unsure about
 these requirements.
@@ -30,7 +33,7 @@ these requirements.
 * Install the required module packages with Composer. From the Drupal
   installation root directory, type
   ```
-      $ composer require drupal/imagemagick:^2.1
+  $ composer require drupal/imagemagick:^3
   ```
   This will download both the ImageMagick module and any dependent module
   (namely, the File Metadata Manager module).
@@ -81,13 +84,13 @@ extensions.
 * Enter the list of image formats you want to support in the 'Enable/Disable
   Image Formats' box. Each format need to be typed following a YAML syntax,
   like e.g.:
-```
+  ```
     JPEG:
       mime_type: image/jpeg
       enabled: true
       weight: 0
       exclude_extensions: jpe, jpg
-```
+  ```
   The 'internal' format should be entered with no spaces in front, and with a
   trailing colon. For each format there are more variables that can be
   associated. Each variable should be entered with two leading spaces, followed
@@ -155,13 +158,14 @@ ImageMagick commands.
 
   As an example, the following is logged when an image derivative is generated
   by the 'Thumbnail' image style:
-```
+  ```
    ImageMagick command: identify -format 'format:%m|width:%w|height:%h|exif_orientation:%[EXIF:Orientation]' 'core/modules/image/sample.png'
    ImageMagick output:  format:PNG|width:800|height:600|exif_orientation:
    ImageMagick command: convert 'core/modules/image/sample.png' -resize 100x75! -quality 75 '/[...]/sites/default/files/styles/thumbnail/public/core/modules/image/sample.png'
    ImageMagick command: identify -format 'format:%m|width:%w|height:%h|exif_orientation:%[EXIF:Orientation]' '/[...]/sites/default/files/styles/thumbnail/public/core/modules/image/sample.png'
    ImageMagick output:  format:PNG|width:100|height:75|exif_orientation:
-```
+  ```
+
 ## Prepend -debug argument
 
   Go to _Administration » Configuration » Media » Image toolkit_ and enter, for
@@ -178,7 +182,7 @@ ImageMagick commands.
   It requires some trials before getting the required level of detail. A good
   combination is _"-debug All -log '%u: %d - %e'"_. Following on the example
   above, this will log something like (extract):
-```
+  ```
    ImageMagick command: convert 'core/modules/image/sample.png' -debug All -log '%u: %d - %e' -resize 100x75! -quality 75 '/[...]/sites/default/files/styles/thumbnail/public/core/modules/image/sample.png'
    ImageMagick error:
       [...]
@@ -204,11 +208,13 @@ ImageMagick commands.
       0.110u: Coder -       number_opaque          > 256
       0.110u: Coder -       number_semitransparent = 0
       [...]
-```
+  ```
 
 # Contact
 
 Current maintainers:
-* Daniel F. Kudwien 'sun' - https://www.drupal.org/u/sun
-* 'mondrake' - https://www.drupal.org/u/mondrake - for the Drupal 8 branch
+* 'mondrake' - https://www.drupal.org/u/mondrake - for the Drupal 8+ versions
   only.
+
+Past maintainers:
+* Daniel F. Kudwien 'sun' - https://www.drupal.org/u/sun

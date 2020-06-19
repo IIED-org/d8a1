@@ -46,14 +46,6 @@ class TaxonomyAccessFixPermissions {
     }
     // Others: well, that depends.
     switch ($op) {
-      case 'index':
-        // Allow access when the user has access to at least one vocabulary.
-        foreach (Vocabulary::loadMultiple() as $vocabulary) {
-          if (self::fixAccess('list terms', $vocabulary)) {
-            return TRUE;
-          }
-        }
-        break;
       case 'list terms':
         if ($vocabulary) {
           $vid = $vocabulary->id();
@@ -61,14 +53,12 @@ class TaxonomyAccessFixPermissions {
           $perm2 = sprintf('delete terms in %s', $vid);
           $perm3 = sprintf('add terms in %s', $vid);
           $perm4 = sprintf('reorder terms in %s', $vid);
-          $perm5 = sprintf('view terms in %s', $vid);
           if (\Drupal::currentUser()
               ->hasPermission($perm1) || \Drupal::currentUser()
               ->hasPermission($perm2) || \Drupal::currentUser()
               ->hasPermission($perm3) || \Drupal::currentUser()
-              ->hasPermission($perm4) || \Drupal::currentUser()
-              ->hasPermission($perm5)) {
-            return TRUE;
+              ->hasPermission($perm4)) {
+            return \Drupal::currentUser()->hasPermission('access taxonomy overview');
           }
         }
         break;
