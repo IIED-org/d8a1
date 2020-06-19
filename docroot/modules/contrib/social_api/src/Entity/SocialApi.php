@@ -4,6 +4,7 @@ namespace Drupal\social_api\Entity;
 
 use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Site\Settings;
 
 /**
@@ -12,11 +13,28 @@ use Drupal\Core\Site\Settings;
 class SocialApi extends ContentEntityBase implements ContentEntityInterface {
 
   /**
-   * Encryption key based on the unique hash salt of the Drupal installation.
-   *
-   * @var string
+   * {@inheritdoc}
    */
-  protected $key;
+  public static function create(array $values = []) {
+
+    if (isset($values['token'])) {
+      $values['token'] = static::encryptToken($values['token']);
+    }
+
+    return parent::create($values);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function preCreate(EntityStorageInterface $storage, array &$values) {
+
+    if (isset($values['token'])) {
+      $values['token'] = static::encryptToken($values['token']);
+    }
+
+    return parent::preCreate($storage, $values);
+  }
 
   /**
    * Sets the encrypted, serialized token.
@@ -24,7 +42,7 @@ class SocialApi extends ContentEntityBase implements ContentEntityInterface {
    * @param string $token
    *   The serialized access token.
    *
-   * @return \Drupal\social_auth\Entity\SocialAuth
+   * @return \Drupal\social_auth\Entity\SocialApi
    *   Drupal Social Auth Entity.
    */
   public function setToken($token) {
@@ -54,8 +72,8 @@ class SocialApi extends ContentEntityBase implements ContentEntityInterface {
    * @return string
    *   The encrypted token.
    */
-  protected function encryptToken($token) {
-    $key = $this->getEncryptionKey();
+  protected static function encryptToken($token) {
+    $key = static::getEncryptionKey();
 
     // Remove the base64 encoding from our key.
     $encryption_key = base64_decode($key);
@@ -100,12 +118,8 @@ class SocialApi extends ContentEntityBase implements ContentEntityInterface {
    * @return string
    *   The encryption key.
    */
-  public function getEncryptionKey() {
-    if (!$this->key) {
-      $this->key = Settings::getHashSalt();
-    }
-
-    return $this->key;
+  protected static function getEncryptionKey() {
+    return Settings::getHashSalt();
   }
 
 }

@@ -2,9 +2,10 @@
 
 namespace Drupal\Tests\imagemagick\Functional;
 
+use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Image\ImageInterface;
+use Drupal\imagemagick\EventSubscriber\ImagemagickEventSubscriber;
 use Drupal\Tests\BrowserTestBase;
-use Drupal\imagemagick\ImagemagickExecArguments;
 use Drupal\Tests\imagemagick\Kernel\ToolkitSetupTrait;
 
 /**
@@ -46,6 +47,11 @@ class ToolkitImagemagickTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
   public function setUp() {
     parent::setUp();
 
@@ -54,15 +60,39 @@ class ToolkitImagemagickTest extends BrowserTestBase {
       'administer site configuration',
     ]);
     $this->drupalLogin($admin_user);
+  }
 
-    // Set the image factory.
-    $this->imageFactory = $this->container->get('image.factory');
+  /**
+   * Test removal of temporary files created during operations on remote files.
+   *
+   * @param string $toolkit_id
+   *   The id of the toolkit to set up.
+   * @param string $toolkit_config
+   *   The config object of the toolkit to set up.
+   * @param array $toolkit_settings
+   *   The settings of the toolkit to set up.
+   *
+   * @dataProvider providerToolkitConfiguration
+   */
+  public function testTemporaryRemoteCopiesDeletion($toolkit_id, $toolkit_config, array $toolkit_settings) {
+    $this->setUpToolkit($toolkit_id, $toolkit_config, $toolkit_settings);
+    $this->prepareImageFileHandling();
 
-    // Prepare a directory for test file results.
-    $this->testDirectory = 'public://imagetest';
-    // Prepare directory.
-    file_unmanaged_delete_recursive($this->testDirectory);
-    file_prepare_directory($this->testDirectory, FILE_CREATE_DIRECTORY);
+    // Get metadata from a remote file.
+    $image = $this->imageFactory->get('dummy-remote://image-test.png');
+    $image->getToolkit()->getExifOrientation();
+    $this->assertCount(1, $this->fileSystem->scanDirectory('temporary://', '/ima.*/'), 'A temporary file has been created for getting metadata from a remote file.');
+
+    // Simulate Drupal shutdown.
+    $callbacks = drupal_register_shutdown_function();
+    foreach ($callbacks as $callback) {
+      if ($callback['callback'] === [ImagemagickEventSubscriber::class, 'removeTemporaryRemoteCopy']) {
+        call_user_func_array($callback['callback'], $callback['arguments']);
+      }
+    }
+
+    // Ensure we have no leftovers in the temporary directory.
+    $this->assertCount(0, $this->fileSystem->scanDirectory('temporary://', '/ima.*/'), 'No files left in the temporary directory after the Drupal shutdown.');
   }
 
   /**
@@ -453,7 +483,7 @@ class ToolkitImagemagickTest extends BrowserTestBase {
     $this->assertSame('', $image->getToolkit()->arguments()->getDestinationLocalPath());
 
     // Test retrieval of EXIF information.
-    file_unmanaged_copy(drupal_get_path('module', 'imagemagick') . '/misc/test-exif.jpeg', 'public://', FILE_EXISTS_REPLACE);
+    $this->fileSystem->copy(drupal_get_path('module', 'imagemagick') . '/misc/test-exif.jpeg', 'public://', FileSystemInterface::EXISTS_REPLACE);
     // The image files that will be tested.
     $image_files = [
       [
@@ -486,10 +516,6 @@ class ToolkitImagemagickTest extends BrowserTestBase {
       ],
     ];
     foreach ($image_files as $image_file) {
-      // Get image using 'identify'.
-      \Drupal::configFactory()->getEditable('imagemagick.settings')
-        ->set('use_identify', TRUE)
-        ->save();
       $image = $this->imageFactory->get($image_file['path']);
       $this->assertSame($image_file['orientation'], $image->getToolkit()->getExifOrientation());
     }
@@ -508,10 +534,6 @@ class ToolkitImagemagickTest extends BrowserTestBase {
         'rotated_height' => 26,
       ],
     ];
-    // Get images using 'identify'.
-    \Drupal::configFactory()->getEditable('imagemagick.settings')
-      ->set('use_identify', TRUE)
-      ->save();
     foreach ($image_files as $image_file) {
       $image = $this->imageFactory->get($image_file['source']);
       $this->assertSame($image_file['width'], $image->getWidth());
@@ -542,301 +564,6 @@ class ToolkitImagemagickTest extends BrowserTestBase {
       $this->assertSame($image_file['rotated_width'], $image->getWidth());
       $this->assertSame($image_file['rotated_height'], $image->getHeight());
       $this->assertSame(1, $image->getToolkit()->getFrames());
-    }
-  }
-
-  /**
-   * Legacy methods tests.
-   *
-   * @param string $toolkit_id
-   *   The id of the toolkit to set up.
-   * @param string $toolkit_config
-   *   The config object of the toolkit to set up.
-   * @param array $toolkit_settings
-   *   The settings of the toolkit to set up.
-   *
-   * @dataProvider providerToolkitConfiguration
-   *
-   * @group legacy
-   */
-  public function testManipulationsLegacy($toolkit_id, $toolkit_config, array $toolkit_settings) {
-    $this->setUpToolkit($toolkit_id, $toolkit_config, $toolkit_settings);
-
-    // Check package.
-    $toolkit = \Drupal::service('image.toolkit.manager')->createInstance('imagemagick');
-    $this->assertSame($toolkit_settings['binaries'], $toolkit->getPackage());
-    $this->assertNotNull($toolkit->getPackageLabel());
-    $this->assertSame([], $toolkit->checkPath('')['errors']);
-
-    // Typically the corner colors will be unchanged. These colors are in the
-    // order of top-left, top-right, bottom-right, bottom-left.
-    $default_corners = [
-      $this->red,
-      $this->green,
-      $this->blue,
-      $this->transparent,
-    ];
-
-    // A list of files that will be tested.
-    $files = [
-      'image-test.png',
-      'image-test.gif',
-      'image-test-no-transparency.gif',
-      'image-test.jpg',
-    ];
-
-    // Setup a list of tests to perform on each type.
-    $operations = [
-      'resize' => [
-        'function' => 'resize',
-        'arguments' => ['width' => 20, 'height' => 10],
-        'width' => 20,
-        'height' => 10,
-        'corners' => $default_corners,
-        'tolerance' => 0,
-      ],
-      'scale_x' => [
-        'function' => 'scale',
-        'arguments' => ['width' => 20],
-        'width' => 20,
-        'height' => 10,
-        'corners' => $default_corners,
-        'tolerance' => 0,
-      ],
-      'scale_y' => [
-        'function' => 'scale',
-        'arguments' => ['height' => 10],
-        'width' => 20,
-        'height' => 10,
-        'corners' => $default_corners,
-        'tolerance' => 0,
-      ],
-      'upscale_x' => [
-        'function' => 'scale',
-        'arguments' => ['width' => 80, 'upscale' => TRUE],
-        'width' => 80,
-        'height' => 40,
-        'corners' => $default_corners,
-        'tolerance' => 0,
-      ],
-      'upscale_y' => [
-        'function' => 'scale',
-        'arguments' => ['height' => 40, 'upscale' => TRUE],
-        'width' => 80,
-        'height' => 40,
-        'corners' => $default_corners,
-        'tolerance' => 0,
-      ],
-      'crop' => [
-        'function' => 'crop',
-        'arguments' => ['x' => 12, 'y' => 4, 'width' => 16, 'height' => 12],
-        'width' => 16,
-        'height' => 12,
-        'corners' => array_fill(0, 4, $this->white),
-        'tolerance' => 0,
-      ],
-      'scale_and_crop' => [
-        'function' => 'scale_and_crop',
-        'arguments' => ['width' => 10, 'height' => 8],
-        'width' => 10,
-        'height' => 8,
-        'corners' => array_fill(0, 4, $this->black),
-        'tolerance' => 100,
-      ],
-      'convert_jpg' => [
-        'function' => 'convert',
-        'width' => 40,
-        'height' => 20,
-        'arguments' => ['extension' => 'jpeg'],
-        'mimetype' => 'image/jpeg',
-        'corners' => $default_corners,
-        'tolerance' => 0,
-      ],
-      'convert_gif' => [
-        'function' => 'convert',
-        'width' => 40,
-        'height' => 20,
-        'arguments' => ['extension' => 'gif'],
-        'mimetype' => 'image/gif',
-        'corners' => $default_corners,
-        'tolerance' => 15,
-      ],
-      'convert_png' => [
-        'function' => 'convert',
-        'width' => 40,
-        'height' => 20,
-        'arguments' => ['extension' => 'png'],
-        'mimetype' => 'image/png',
-        'corners' => $default_corners,
-        'tolerance' => 5,
-      ],
-      'rotate_5' => [
-        'function' => 'rotate',
-        'arguments' => [
-          'degrees' => 5,
-          'background' => '#FF00FF',
-          'resize_filter' => 'Box',
-        ],
-        'width' => 41,
-        'height' => 23,
-        'corners' => array_fill(0, 4, $this->fuchsia),
-        'tolerance' => 5,
-      ],
-      'rotate_minus_10' => [
-        'function' => 'rotate',
-        'arguments' => [
-          'degrees' => -10,
-          'background' => '#FF00FF',
-          'resize_filter' => 'Box',
-        ],
-        'width' => 41,
-        'height' => 26,
-        'corners' => array_fill(0, 4, $this->fuchsia),
-        'tolerance' => 15,
-      ],
-      'rotate_90' => [
-        'function' => 'rotate',
-        'arguments' => ['degrees' => 90, 'background' => '#FF00FF'],
-        'width' => 20,
-        'height' => 40,
-        'corners' => [$this->transparent, $this->red, $this->green, $this->blue],
-        'tolerance' => 0,
-      ],
-      'rotate_transparent_5' => [
-        'function' => 'rotate',
-        'arguments' => ['degrees' => 5, 'resize_filter' => 'Box'],
-        'width' => 41,
-        'height' => 23,
-        'corners' => array_fill(0, 4, $this->transparent),
-        'tolerance' => 0,
-      ],
-      'rotate_transparent_90' => [
-        'function' => 'rotate',
-        'arguments' => ['degrees' => 90],
-        'width' => 20,
-        'height' => 40,
-        'corners' => [$this->transparent, $this->red, $this->green, $this->blue],
-        'tolerance' => 0,
-      ],
-      'desaturate' => [
-        'function' => 'desaturate',
-        'arguments' => [],
-        'height' => 20,
-        'width' => 40,
-        // Grayscale corners are a bit funky. Each of the corners are a shade of
-        // gray. The values of these were determined simply by looking at the
-        // final image to see what desaturated colors end up being.
-        'corners' => [
-          array_fill(0, 3, 76) + [3 => 0],
-          array_fill(0, 3, 149) + [3 => 0],
-          array_fill(0, 3, 29) + [3 => 0],
-          array_fill(0, 3, 225) + [3 => 127],
-        ],
-        // @todo tolerance here is too high. Check reasons.
-        'tolerance' => 17000,
-      ],
-    ];
-
-    // Prepare a copy of test files.
-    $this->getTestFiles('image');
-
-    foreach ($files as $file) {
-      $image_uri = 'public://' . $file;
-      foreach ($operations as $op => $values) {
-        // Load up a fresh image.
-        $image = $this->imageFactory->get($image_uri);
-        if (!$image->isValid()) {
-          $this->fail("Could not load image $file.");
-          continue 2;
-        }
-
-        // Check that no multi-frame information is set.
-        $this->assertSame(1, $image->getToolkit()->getFrames());
-
-        // Legacy source tests.
-        $this->assertSame($image_uri, $image->getToolkit()->getSource());
-        $this->assertSame($image->getToolkit()->arguments()->getSourceLocalPath(), $image->getToolkit()->getSourceLocalPath());
-        $this->assertSame($image->getToolkit()->arguments()->getSourceFormat(), $image->getToolkit()->getSourceFormat());
-
-        // Perform our operation.
-        $image->apply($values['function'], $values['arguments']);
-
-        // Save image.
-        $file_path = $this->testDirectory . '/' . $op . substr($file, -4);
-        $this->assertTrue($image->save($file_path));
-
-        // Legacy destination tests.
-        $this->assertSame($file_path, $image->getToolkit()->getDestination());
-        $this->assertSame('', $image->getToolkit()->getDestinationLocalPath());
-        $this->assertNotNull($image->getToolkit()->arguments()->getSourceFormat(), $image->getToolkit()->getDestinationFormat());
-
-        // Reload image.
-        $image = $this->imageFactory->get($file_path);
-        $this->assertTrue($image->isValid());
-
-        // Legacy set methods.
-        $image->getToolkit()->setSourceLocalPath('bar');
-        $image->getToolkit()->setSourceFormat('PNG');
-        $image->getToolkit()->setDestination('foo');
-        $image->getToolkit()->setDestinationLocalPath('baz');
-        $image->getToolkit()->setDestinationFormat('GIF');
-        $this->assertSame('bar', $image->getToolkit()->arguments()->getSourceLocalPath());
-        $this->assertSame('PNG', $image->getToolkit()->arguments()->getSourceFormat());
-        $this->assertSame('foo', $image->getToolkit()->arguments()->getDestination());
-        $this->assertSame('baz', $image->getToolkit()->arguments()->getDestinationLocalPath());
-        $this->assertSame('GIF', $image->getToolkit()->arguments()->getDestinationFormat());
-        $image->getToolkit()->setSourceFormatFromExtension('jpg');
-        $image->getToolkit()->setDestinationFormatFromExtension('jpg');
-        $this->assertSame('JPEG', $image->getToolkit()->arguments()->getSourceFormat());
-        $this->assertSame('JPEG', $image->getToolkit()->arguments()->getDestinationFormat());
-      }
-    }
-
-    // Test loading non-existing image files.
-    $this->assertFalse($this->imageFactory->get('/generic.png')->isValid());
-    $this->assertFalse($this->imageFactory->get('public://generic.png')->isValid());
-
-    // Test retrieval of EXIF information.
-    file_unmanaged_copy(drupal_get_path('module', 'imagemagick') . '/misc/test-exif.jpeg', 'public://', FILE_EXISTS_REPLACE);
-    // The image files that will be tested.
-    $image_files = [
-      [
-        'path' => drupal_get_path('module', 'imagemagick') . '/misc/test-exif.jpeg',
-        'orientation' => 8,
-      ],
-      [
-        'path' => 'public://test-exif.jpeg',
-        'orientation' => 8,
-      ],
-      [
-        'path' => 'dummy-remote://test-exif.jpeg',
-        'orientation' => 8,
-      ],
-      [
-        'path' => 'public://image-test.jpg',
-        'orientation' => NULL,
-      ],
-      [
-        'path' => 'public://image-test.png',
-        'orientation' => NULL,
-      ],
-      [
-        'path' => 'public://image-test.gif',
-        'orientation' => NULL,
-      ],
-      [
-        'path' => NULL,
-        'orientation' => NULL,
-      ],
-    ];
-
-    foreach ($image_files as $image_file) {
-      // Get image using 'getimagesize'.
-      \Drupal::configFactory()->getEditable('imagemagick.settings')
-        ->set('use_identify', FALSE)
-        ->save();
-      $image = $this->imageFactory->get($image_file['path']);
-      $this->assertSame($image_file['orientation'], $image->getToolkit()->getExifOrientation());
     }
   }
 
@@ -883,104 +610,6 @@ class ToolkitImagemagickTest extends BrowserTestBase {
     $distance = pow(($actual[0] - $expected[0]), 2) + pow(($actual[1] - $expected[1]), 2) + pow(($actual[2] - $expected[2]), 2) + pow(($actual[3] - $expected[3]), 2);
     $this->assertLessThanOrEqual($tolerance, $distance, "Actual: {" . implode(',', $actual) . "}, Expected: {" . implode(',', $expected) . "}, Distance: " . $distance . ", Tolerance: " . $tolerance . ", File: " . $file . ", Operation: " . $op);
     return TRUE;
-  }
-
-  /**
-   * Test legacy arguments handling.
-   *
-   * @group legacy
-   */
-  public function testArgumentsLegacy() {
-    $this->setUpToolkit('imagemagick', 'imagemagick.settings', [
-      'binaries' => 'imagemagick',
-      'quality' => 100,
-      'debug' => TRUE,
-    ]);
-
-    // Prepare a copy of test files.
-    $this->getTestFiles('image');
-
-    $image_uri = "public://image-test.png";
-    $image = $this->imageFactory->get($image_uri);
-    if (!$image->isValid()) {
-      $this->fail("Could not load image $image_uri.");
-    }
-
-    // Setup a list of arguments.
-    $image->getToolkit()->addArgument("-resize 100x75!");
-    // Internal argument.
-    $image->getToolkit()->addArgument(">!>INTERNAL");
-    $image->getToolkit()->addArgument("-quality 75");
-    $image->getToolkit()->prependArgument("-hoxi 76");
-
-    // Use methods introduced in 8.x-2.3.
-    $image->getToolkit()->arguments()
-      // Pre source argument.
-      ->add("-density 25", ImagemagickExecArguments::PRE_SOURCE)
-      // Another internal argument.
-      ->add("GATEAU", ImagemagickExecArguments::INTERNAL)
-      // Another pre source argument.
-      ->add("-auchocolat 90", ImagemagickExecArguments::PRE_SOURCE)
-      // Add two arguments with additional info.
-      ->add(
-        "-addz 150",
-        ImagemagickExecArguments::POST_SOURCE,
-        ImagemagickExecArguments::APPEND,
-        [
-          'foo' => 'bar',
-          'qux' => 'der',
-        ]
-      )
-      ->add(
-        "-addz 200",
-        ImagemagickExecArguments::POST_SOURCE,
-        ImagemagickExecArguments::APPEND,
-        [
-          'wey' => 'lod',
-          'foo' => 'bar',
-        ]
-      );
-
-    // Test find arguments skipping identifiers.
-    $this->assertSame([
-      0 => '-hoxi 76',
-      1 => '-resize 100x75!',
-      2 => '>!>INTERNAL',
-      3 => '-quality 75',
-      5 => '>!>GATEAU',
-      7 => '-addz 150',
-      8 => '-addz 200',
-    ], $image->getToolkit()->getArguments());
-    $this->assertSame([2], array_keys($image->getToolkit()->arguments()->find('/^INTERNAL/')));
-    $this->assertSame([5], array_keys($image->getToolkit()->arguments()->find('/^GATEAU/')));
-    $this->assertSame([6], array_keys($image->getToolkit()->arguments()->find('/^\-auchocolat/')));
-    $this->assertSame([7, 8], array_keys($image->getToolkit()->arguments()->find('/^\-addz/')));
-    $this->assertSame([7, 8], array_keys($image->getToolkit()->arguments()->find('/.*/', NULL, ['foo' => 'bar'])));
-    $this->assertSame([], $image->getToolkit()->arguments()->find('/.*/', NULL, ['arw' => 'moo']));
-    $this->assertSame(2, $image->getToolkit()->findArgument('>!>INTERNAL'));
-    $this->assertSame(5, $image->getToolkit()->findArgument('>!>GATEAU'));
-    $this->assertFalse($image->getToolkit()->findArgument('-auchocolat'));
-
-    // Check resulting command line strings.
-    $this->assertSame('-density 25 -auchocolat 90', $image->getToolkit()->arguments()->toString(ImagemagickExecArguments::PRE_SOURCE));
-    $this->assertSame("-hoxi 76 -resize 100x75! -quality 75 -addz 150 -addz 200", $image->getToolkit()->arguments()->toString(ImagemagickExecArguments::POST_SOURCE));
-    $this->assertSame("-hoxi 76 -resize 100x75! -quality 75 -addz 150 -addz 200", $image->getToolkit()->getStringForBinary());
-  }
-
-  /**
-   * Test deprecation of ImagemagickMimeTypeMapper.
-   *
-   * @group legacy
-   *
-   * @expectedDeprecation The Drupal\imagemagick\ImagemagickMimeTypeMapper class is deprecated in ImageMagick 8.x-2.4, will be removed in 8.x-3.0. You should use the FileEye\MimeMap\Type and FileEye\MimeMap\Extension API instead. See https://www.drupal.org/project/imagemagick/issues/3026733.
-   * @expectedDeprecation Drupal\imagemagick\ImagemagickMimeTypeMapper::getExtensionsForMimeType is deprecated in ImageMagick 8.x-2.4, will be removed in 8.x-3.0. Use FileEye\MimeMap\Type::getExtensions() instead. See https://www.drupal.org/project/imagemagick/issues/3026733.
-   * @expectedDeprecation Drupal\imagemagick\ImagemagickMimeTypeMapper::getMimeTypes is deprecated in ImageMagick 8.x-2.4, will be removed in 8.x-3.0. Use FileEye\MimeMap\AbstractMap::listTypes() instead. See https://www.drupal.org/project/imagemagick/issues/3026733.
-   */
-  public function testImagemagickMimeTypeMapperDeprecation() {
-    $mime_type_mapper = \Drupal::service('imagemagick.mime_type_mapper');
-    $format_extensions = $mime_type_mapper->getExtensionsForMimeType('image/jpeg');
-    $this->assertEquals(['jpe', 'jpeg', 'jpg'], $format_extensions);
-    $this->assertNotEmpty($mime_type_mapper->getMimeTypes());
   }
 
 }

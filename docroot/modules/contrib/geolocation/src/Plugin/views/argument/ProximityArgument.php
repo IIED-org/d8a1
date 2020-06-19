@@ -21,7 +21,18 @@ class ProximityArgument extends Formula {
 
   use ProximityTrait;
 
+  /**
+   * The condition operator.
+   *
+   * @var string
+   */
   protected $operator = '<';
+
+  /**
+   * Distance.
+   *
+   * @var int
+   */
   protected $distance = 0;
 
   /**
@@ -33,7 +44,7 @@ class ProximityArgument extends Formula {
   }
 
   /**
-   * {@inheritdoc}
+   * Get the formula for this argument.
    */
   public function getFormula() {
     // Parse argument for reference location.

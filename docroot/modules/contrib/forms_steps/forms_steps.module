@@ -83,9 +83,9 @@ function forms_steps_entity_base_field_info(ContentEntityType $entity_type) {
 /**
  * Implements hook_entity_type_build().
  *
- * Manage all form modes and define FormClass. Only managing nodes.
+ * Manage all form modes and define FormClasses for each specific types.
  */
-function forms_steps_entity_type_build(array &$entity_types) {
+function forms_steps_entity_type_alter(array &$entity_types) {
   /** @var \Drupal\forms_steps\Service\FormsStepsManager $formsStepsManager */
   $formsStepsManager = \Drupal::service('forms_steps.manager');
 
@@ -95,10 +95,51 @@ function forms_steps_entity_type_build(array &$entity_types) {
   foreach ($available_entity_types as $entity_type_id => $form_modes) {
     // We parse and set each form_mode.
     foreach ($form_modes as $form_mode) {
-      $entity_types[$entity_type_id]->setFormClass(
-        $form_mode,
-        'Drupal\node\NodeForm'
-      );
+      // Retrieving the form class.
+      $form_class = $entity_types[$entity_type_id]->getFormClass($form_mode);
+
+      // If no form class has been found, we try to fallback on a default operation form class.
+      if (!$form_class) {
+        $operations = ['register', 'default', 'add'];
+
+        foreach ($operations as $operation) {
+          $form_class = $entity_types[$entity_type_id]->getFormClass($operation);
+
+          if ($form_class) {
+            break;
+          }
+        }
+      }
+
+      // If we still have no form class, the user has to define it's own form class.
+      if (!$form_class) {
+        \Drupal::messenger()->addError("Forms steps could not determine a default form class for '" . $form_mode . "' form mode on " . $entity_type_id . " entity type, please define your own form class. See README.md for proper instructions.");
+      }
+      else {
+        $entity_types[$entity_type_id]->setFormClass($form_mode, $form_class);
+      }
     }
   }
+}
+
+/**
+ * Implements hook_theme().
+ *
+ * Overrides the core html theme to use a custom template for form steps.
+ */
+function forms_steps_theme() {
+  return [
+    'item_list__forms_steps' => [
+      'variables' => [
+        'items' => [],
+        'title' => '',
+        'list_type' => '',
+        'wrapper_attributes' => [],
+        'attributes' => [],
+        'empty' => '',
+        'context' => [],
+      ],
+      'preprocess functions' => ['template_preprocess_item_list'],
+    ],
+  ];
 }

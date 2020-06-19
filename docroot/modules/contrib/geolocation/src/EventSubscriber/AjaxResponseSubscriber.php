@@ -6,7 +6,7 @@ use Drupal\views\Ajax\ViewAjaxResponse;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
-use Drupal\geolocation\Plugin\views\style\CommonMapBase;
+use Drupal\geolocation\Plugin\views\style\CommonMap;
 
 /**
  * Response subscriber to handle AJAX responses.
@@ -29,7 +29,7 @@ class AjaxResponseSubscriber implements EventSubscriberInterface {
 
     $view = $response->getView();
 
-    if (!is_a($view->getStyle(), CommonMapBase::class)) {
+    if (!is_a($view->getStyle(), CommonMap::class)) {
       // This view is not of maps_common style, but maybe an attachment is.
       $common_map_attachment = FALSE;
 
@@ -40,7 +40,7 @@ class AjaxResponseSubscriber implements EventSubscriberInterface {
           $current_style = $current_display->getPlugin('style');
           if (
             !empty($current_style)
-            && is_a($current_style, CommonMapBase::class)
+            && is_a($current_style, CommonMap::class)
           ) {
             $common_map_attachment = TRUE;
           }

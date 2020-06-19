@@ -4,7 +4,7 @@ namespace Drupal\imagemagick\Plugin\FileMetadata;
 
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\StreamWrapper\StreamWrapperManagerInterface;
 use Drupal\file_mdm\FileMetadataException;
 use Drupal\file_mdm\Plugin\FileMetadata\FileMetadataPluginBase;
 use Drupal\imagemagick\Event\ImagemagickExecutionEvent;
@@ -32,19 +32,6 @@ class ImagemagickIdentify extends FileMetadataPluginBase {
   protected $eventDispatcher;
 
   /**
-   * The module handler service.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   *
-   * @deprecated in 8.x-2.5, will be removed in 8.x-3.0. No replacement
-   *   suggested, Imagemagick hooks have been dropped in favour of event
-   *   subscribers.
-   *
-   * @see https://www.drupal.org/project/imagemagick/issues/3043136
-   */
-  protected $moduleHandler;
-
-  /**
    * The ImageMagick execution manager service.
    *
    * @var \Drupal\imagemagick\ImagemagickExecManagerInterface
@@ -64,18 +51,17 @@ class ImagemagickIdentify extends FileMetadataPluginBase {
    *   The cache service.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
-   *   The module handler service.
    * @param \Drupal\imagemagick\ImagemagickExecManagerInterface $exec_manager
    *   The ImageMagick execution manager service.
    * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $dispatcher
    *   The event dispatcher.
+   * @param \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface $stream_wrapper_manager
+   *   The stream wrapper manager service.
    */
-  public function __construct(array $configuration, $plugin_id, array $plugin_definition, CacheBackendInterface $cache_service, ConfigFactoryInterface $config_factory, ModuleHandlerInterface $module_handler, ImagemagickExecManagerInterface $exec_manager, EventDispatcherInterface $dispatcher = NULL) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition, $cache_service, $config_factory);
-    $this->moduleHandler = $module_handler;
+  public function __construct(array $configuration, $plugin_id, array $plugin_definition, CacheBackendInterface $cache_service, ConfigFactoryInterface $config_factory, ImagemagickExecManagerInterface $exec_manager, EventDispatcherInterface $dispatcher, StreamWrapperManagerInterface $stream_wrapper_manager) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition, $cache_service, $config_factory, $stream_wrapper_manager);
     $this->execManager = $exec_manager;
-    $this->eventDispatcher = $dispatcher ?: \Drupal::service('event_dispatcher');
+    $this->eventDispatcher = $dispatcher;
   }
 
   /**
@@ -88,9 +74,9 @@ class ImagemagickIdentify extends FileMetadataPluginBase {
       $plugin_definition,
       $container->get('cache.file_mdm'),
       $container->get('config.factory'),
-      $container->get('module_handler'),
       $container->get('imagemagick.exec_manager'),
-      $container->get('event_dispatcher')
+      $container->get('event_dispatcher'),
+      $container->get('stream_wrapper_manager')
     );
   }
 
@@ -226,7 +212,7 @@ class ImagemagickIdentify extends FileMetadataPluginBase {
    *   The array with identify metadata, if the file was parsed correctly.
    *   NULL otherwise.
    */
-  protected function identify() {
+  protected function identify(): array {
     $arguments = new ImagemagickExecArguments($this->execManager);
 
     // Add source file.
@@ -252,8 +238,6 @@ class ImagemagickIdentify extends FileMetadataPluginBase {
 
     // Allow modules to alter source file and the command line parameters.
     $command = 'identify';
-    $this->moduleHandler->alterDeprecated('Deprecated in 8.x-2.5, will be removed in 8.x-3.0. Use an event subscriber to react on a ImagemagickExecutionEvent::ENSURE_SOURCE_LOCAL_PATH event. See https://www.drupal.org/project/imagemagick/issues/3043136.', 'imagemagick_pre_parse_file', $arguments);
-    $this->moduleHandler->alterDeprecated('Deprecated in 8.x-2.5, will be removed in 8.x-3.0. Use an event subscriber to react on a ImagemagickExecutionEvent::PRE_IDENTIFY_EXECUTE or a ImagemagickExecutionEvent::PRE_CONVERT_EXECUTE event. See https://www.drupal.org/project/imagemagick/issues/3043136.', 'imagemagick_arguments', $arguments, $command);
     $this->eventDispatcher->dispatch(ImagemagickExecutionEvent::ENSURE_SOURCE_LOCAL_PATH, new ImagemagickExecutionEvent($arguments));
     $this->eventDispatcher->dispatch(ImagemagickExecutionEvent::PRE_IDENTIFY_EXECUTE, new ImagemagickExecutionEvent($arguments));
 

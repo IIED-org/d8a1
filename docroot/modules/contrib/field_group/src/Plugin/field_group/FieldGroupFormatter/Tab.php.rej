@@ -1,0 +1,17 @@
+***************
+*** 34,40 ****
+  
+      $add = [
+        '#type' => 'details',
+-       '#title' => Html::escape($this->t($this->getLabel())),
+        '#description' => $this->getSetting('description'),
+        '#group' => $this->group->parent_name,
+      ];
+--- 34,40 ----
+  
+      $add = [
+        '#type' => 'details',
++       '#title' => $this->getLabel(),
+        '#description' => $this->getSetting('description'),
+        '#group' => $this->group->parent_name,
+      ];

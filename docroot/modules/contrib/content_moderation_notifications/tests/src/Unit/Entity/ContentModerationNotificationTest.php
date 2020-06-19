@@ -4,7 +4,6 @@ namespace Drupal\Tests\content_moderation_notifications\Unit\Entity;
 
 use Drupal\content_moderation_notifications\Entity\ContentModerationNotification;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
-use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -49,13 +48,7 @@ class ContentModerationNotificationTest extends UnitTestCase {
       'format' => 'test_format',
     ],
     'author' => TRUE,
-    'to' => 'foo@example.com',
-    'cc' => 'foo-cc@example.com',
-    'bcc' => 'foo-bcc@example.com',
-    'from' => 'foo-from@example.com',
-    'replyto' => 'foo-replyto@example.com',
-    'abort' => 'foo-abort@example.com',
-    'debug' => false,
+    'emails' => 'foo@example.com',
   ];
 
   /**
@@ -75,45 +68,10 @@ class ContentModerationNotificationTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getTo
+   * @covers ::getEmails
    */
-  public function testGetTo() {
-    $this->assertEquals('foo@example.com', $this->notification->getTo());
-  }
-
-  /**
-   * @covers ::getCc
-   */
-  public function testGetCc() {
-    $this->assertEquals('foo-cc@example.com', $this->notification->getCc());
-  }
-
-  /**
-   * @covers ::getBcc
-   */
-  public function testGetBcc() {
-    $this->assertEquals('foo-bcc@example.com', $this->notification->getBcc());
-  }
-
-  /**
-   * @covers ::getFrom
-   */
-  public function testGetFrom() {
-    $this->assertEquals('foo-from@example.com', $this->notification->getFrom());
-  }
-
-  /**
-   * @covers ::getAbort
-   */
-  public function testGetAbort() {
-    $this->assertEquals('foo-abort@example.com', $this->notification->getAbort());
-  }
-
-  /**
-   * @covers ::getDebug
-   */
-  public function testGetDebug() {
-    $this->assertEquals(false, $this->notification->getDebug());
+  public function testGetEmails() {
+    $this->assertEquals('foo@example.com', $this->notification->getEmails());
   }
 
   /**
@@ -170,13 +128,7 @@ class ContentModerationNotificationTest extends UnitTestCase {
 
     // Mock out some necessary services.
     $container = new ContainerBuilder();
-    $entity_manager = $this->prophesize(EntityManagerInterface::class);
     $entity_type = $this->prophesize(EntityTypeInterface::class)->reveal();
-    $entity_manager->getDefinition('content_moderation_notification')->willReturn($entity_type);
-    $container->set('entity.manager', $entity_manager->reveal());
-
-    // From 8.5 onward, the entity_type.manager service is called.
-    // @see https://www.drupal.org/node/2782833
     $entity_type_manager = $this->prophesize(EntityTypeManagerInterface::class);
     $entity_type_manager->getDefinition('content_moderation_notification')->willReturn($entity_type);
     $container->set('entity_type.manager', $entity_type_manager->reveal());

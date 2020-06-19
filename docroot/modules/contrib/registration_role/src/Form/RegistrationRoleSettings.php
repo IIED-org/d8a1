@@ -5,12 +5,14 @@ namespace Drupal\registration_role\Form;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
  * Contribute form.
  */
 class RegistrationRoleSettings extends ConfigFormBase {
 
+  use StringTranslationTrait;
   /**
    * {@inheritdoc}
    */
@@ -47,25 +49,25 @@ class RegistrationRoleSettings extends ConfigFormBase {
     }
     $form['role_to_select'] = array(
       '#type' => 'checkboxes',
-      '#title' => t('Roles to Assign'),
+      '#title' => $this->t('Roles to Assign'),
       '#required' => TRUE,
       '#options' => $options,
       '#default_value' => $case,
-      '#description' => 'The selected role will be assigned to users who register using the user-registration form. Be sure this role does not have any privileges you fear giving out without reviewing who receives it.',
+      '#description' => $this->t('The selected role will be assigned to users who register using the user-registration form. Be sure this role does not have any privileges you fear giving out without reviewing who receives it.'),
     );
 
     $mode_case = $config->get('registration_mode');
     $registration_mode_options = [
-      'user' => t('User self registration'),
-      'admin' => t('Both user self registration and user creation by admin'),
+      'user' => $this->t('User self registration'),
+      'admin' => $this->t('Both user self registration and user creation by admin'),
     ];
     $form['registration_mode'] = array(
       '#type' => 'radios',
-      '#title' => t('Registration mode'),
+      '#title' => $this->t('Registration mode'),
       '#required' => TRUE,
       '#options' => $registration_mode_options,
       '#default_value' => $mode_case ? $mode_case : 'user',
-      '#description' => 'Select if the role will be assigned only on the user self registration form, or also when an administrator is creating that user.',
+      '#description' => $this->t('Select if the role will be assigned only when people self register or also when administrators create users.'),
     );
     return parent::buildForm($form, $form_state);
   }

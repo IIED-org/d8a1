@@ -3,7 +3,7 @@
  * Control Zoom.
  */
 
-(function ($, Drupal) {
+(function (Drupal) {
 
   'use strict';
 
@@ -25,7 +25,29 @@
          * @param {Object} featureSettings - Settings for current feature.
          */
         function (map, featureSettings) {
-          map.yandexMap.controls.add('zoomControl');
+          var options = {};
+
+          switch (featureSettings["position"]) {
+            case "left":
+            case "top":
+            case "bottom":
+              // Leave the default values.
+              options = {};
+              break;
+            case "right":
+              // Size adaptivity will be disabled.
+              options = {
+                position: {
+                  top: "108px",
+                  right: "10px",
+                  bottom: "auto",
+                  left: "auto"
+                }
+              };
+              break;
+          }
+
+          map.yandexMap.controls.add('zoomControl', options);
 
           return true;
         },
@@ -35,4 +57,4 @@
     detach: function (context, drupalSettings) {}
   };
 
-})(jQuery, Drupal);
+})(Drupal);

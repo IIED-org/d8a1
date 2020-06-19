@@ -2,18 +2,20 @@ name: SASS Bootstrap Starter Kit Subtheme
 type: theme
 description: 'SASS starter kit for a Bootstrap Barrio SubTheme.'
 # version: VERSION
-# core: 8.x
+core: 8.x
+core_version_requirement: ^8 || ^9
 base theme: bootstrap_barrio
 
 libraries:
   - bootstrap_sass/global-styling
 libraries-override:
   bootstrap_barrio/global-styling: false
+  bootstrap_barrio/file: false
 regions:
-  top_header: 'Top Header'
-  top_header_form: "Top Header Form"
+  top_header: 'Top header'
+  top_header_form: 'Top header form'
   header: Header
-  header_form: "Header Form"
+  header_form: 'Header form'
   primary_menu: 'Primary menu'
   secondary_menu: 'Secondary menu'
   page_top: 'Page top'
@@ -33,8 +35,7 @@ regions:
   footer_fourth: 'Footer fourth'
   footer_fifth: 'Footer fifth'
 
-# Information added by Drupal.org packaging script on 2019-02-25
-version: '8.x-1.9'
-core: '8.x'
+# Information added by Drupal.org packaging script on 2020-06-18
+version: '8.x-1.13'
 project: 'bootstrap_sass'
-datestamp: 1551065297
+datestamp: 1592503344

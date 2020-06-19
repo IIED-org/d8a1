@@ -25,6 +25,7 @@
  * @property {Object[]} map_center
  * @property {jQuery} wrapper
  * @property {GeolocationMapMarker[]} mapMarkers
+ * @property {GeolocationShape[]} mapShapes
  */
 
 /**
@@ -68,10 +69,26 @@
  */
 
 /**
- * @typedef {Object} GeolocationCoordinates
+ * Callback when and only when map is updated.
+ *
+ * @callback GeolocationMapUpdatedCallback
+ *
+ * @param {GeolocationMapInterface, GeolocationMapSettings} map - Geolocation map.
+ */
 
+/**
+ * @typedef {Object} GeolocationCoordinates
+ *
  * @property {Number} lat
  * @property {Number} lng
+ */
+
+/**
+ * @typedef {Object} GeolocationCenterOption
+ *
+ * @property {Object} map_center_id
+ * @property {Object} option_id
+ * @property {Object} settings
  */
 
 /**
@@ -83,6 +100,20 @@
  * @property {string} [icon]
  * @property {string} [label]
  * @property {jQuery} locationWrapper
+ */
+
+/**
+ * @typedef {Object} GeolocationShape
+ *
+ * @property {GeolocationCoordinates[]} coordinates
+ * @property {jQuery} shapeWrapper
+ * @property {string} shape
+ * @property {string} [title]
+ * @property {string} [strokeColor]
+ * @property {int} [strokeWidth]
+ * @property {number} [strokeOpacity]
+ * @property {string} [fillColor]
+ * @property {number} [fillOpacity]
  */
 
 /**
@@ -108,13 +139,19 @@
  * @property {function({GeolocationMapPopulatedCallback})} addPopulatedCallback - Adds a callback that will be called when map is fully loaded.
  * @property {function()} initializedCallback - Executes {GeolocationMapInitializedCallbacks[]} for this map.
  * @property {function({GeolocationMapInitializedCallback})} addInitializedCallback - Adds a callback that will be called when map provider becomes available.
- * @property {function({GeolocationMapSettings})} update - Update existing map by settings.
+ * @property {function({GeolocationMapSettings})} updatedCallback - Executes {GeolocationMapUpdatedCallbacks[]} for this map.
+ * @property {function({GeolocationMapUpdatedCallbacks})} addUpdatedCallback - Adds a callback that will be called when and only when an already existing map is updated.
  *
  * @property {function({GeolocationMapMarker}):{GeolocationMapMarker}} setMapMarker - Set marker on map.
  * @property {function({GeolocationMapMarker})} removeMapMarker - Remove single marker.
  * @property {function()} removeMapMarkers - Remove all markers from map.
- *s
- * @property {function({string})} setZoom - Set zoom.
+ *
+ * @property {function({GeolocationShape})} addShape - Add shape to map.
+ * @property {function({GeolocationShape})} removeShape - Remove shape from map.
+ * @property {function()} removeShapes - Remove all shapes from map.
+ *
+ * @property {function():{Promise}} getZoom - Get zoom.
+ * @property {function({string}?, {Boolean}?)} setZoom - Set zoom.
  * @property {function():{GeolocationCoordinates}} getCenter - Get map center coordinates.
  * @property {function({string})} setCenter - Center map by plugin.
  * @property {function({GeolocationCoordinates}, {Number}?, {string}?)} setCenterByCoordinates - Center map on coordinates.
@@ -193,6 +230,7 @@
 
     this.mapCenter = mapSettings.map_center;
     this.mapMarkers = this.mapMarkers || [];
+    this.mapShapes = this.mapShapes || [];
 
     return this;
   }
@@ -204,17 +242,10 @@
     removeControls: function () {
       // Stub.
     },
-    update: function (mapSettings) {
-      this.settings = $.extend(this.settings, mapSettings.settings);
-      this.wrapper = mapSettings.wrapper;
-      mapSettings.wrapper.find('.geolocation-map-container').replaceWith(this.container);
-      this.lat = mapSettings.lat;
-      this.lng = mapSettings.lng;
-      if (typeof mapSettings.map_center !== 'undefined') {
-        this.mapCenter = mapSettings.map_center;
-      }
+    getZoom: function () {
+      // Stub.
     },
-    setZoom: function (zoom) {
+    setZoom: function (zoom, defer) {
       // Stub.
     },
     getCenter: function () {
@@ -228,19 +259,22 @@
       this.setZoom();
       this.setCenterByCoordinates({lat: this.lat, lng: this.lng});
 
-      var that = this;
+      if (typeof this.mapCenter !== 'undefined') {
 
-      Object
-        .values(this.mapCenter)
-        .sort(function (a, b) {
-          return a.weight - b.weight;
-        })
-        .forEach(
+        var that = this;
+
+        var centerOptions = Object
+          // .values(this.mapCenter) // Reenable once IE11 is dead. Hopefully soon.
+          .keys(that.mapCenter).map(function (item) {
+            return that.mapCenter[item];
+          }) // IE11 fix from #3046802.
+          .sort(function (a, b) {
+            return a.weight - b.weight;
+          });
+
+        centerOptions.some(
           /**
-           * @param {Object} centerOption
-           * @param {Object} centerOption.map_center_id
-           * @param {Object} centerOption.option_id
-           * @param {Object} centerOption.settings
+           * @param {GeolocationCenterOption} centerOption
            */
           function (centerOption) {
             if (typeof Drupal.geolocation.mapCenter[centerOption.map_center_id] === 'function') {
@@ -248,6 +282,7 @@
             }
           }
         );
+      }
     },
     setCenterByCoordinates: function (coordinates, accuracy, identifier) {
       this.centerUpdatedCallback(coordinates, accuracy, identifier);
@@ -289,6 +324,43 @@
           }
           that.removeMapMarker(item);
         }
+      );
+    },
+    addShape: function (shape) {
+      this.mapShapes.push(shape);
+    },
+    removeShape: function (shape) {
+      var that = this;
+      $.each(
+          this.mapShapes,
+
+          /**
+           * @param {integer} index - Current index.
+           * @param {GeolocationShape} item - Current shape.
+           */
+          function (index, item) {
+            if (item === shape) {
+              that.mapShapes.splice(Number(index), 1);
+            }
+          }
+      );
+    },
+    removeShapes: function () {
+      var that = this;
+      var shallowCopy = $.extend({}, this.mapShapes);
+      $.each(
+          shallowCopy,
+
+          /**
+           * @param {integer} index - Current index.
+           * @param {GeolocationShape} item - Current shape.
+           */
+          function (index, item) {
+            if (typeof item === 'undefined') {
+              return;
+            }
+            that.removeShape(item);
+          }
       );
     },
     fitMapToMarkers: function (markers, identifier) {
@@ -350,6 +422,17 @@
         this.initializedCallbacks = this.initializedCallbacks || [];
         this.initializedCallbacks.push(callback);
       }
+    },
+    updatedCallback: function (mapSettings) {
+      var that = this;
+      this.updatedCallbacks = this.updatedCallbacks || [];
+      this.updatedCallbacks.forEach(function (callback) {
+        callback(that, mapSettings);
+      });
+    },
+    addUpdatedCallback: function (callback) {
+      this.updatedCallbacks = this.updatedCallbacks || [];
+      this.updatedCallbacks.push(callback);
     },
     centerUpdatedCallback: function (coordinates, accuracy, identifier) {
       this.centerUpdatedCallbacks = this.centerUpdatedCallbacks || [];
@@ -438,6 +521,125 @@
       });
 
       return locations;
+    },
+    loadShapesFromContainer: function () {
+      var shapes = [];
+      this.wrapper.find('.geolocation-shape').each(function (index, shapeWrapperElement) {
+
+        var shapeWrapper = $(shapeWrapperElement);
+        var meta = shapeWrapper.find('span[typeof="GeoShape"] meta').first();
+        if (meta.length === 0) {
+          return;
+        }
+
+        var type = meta.attr('property').toString();
+
+        var coordinates = [];
+        $.each(meta.attr('content').toString().split(' '), function (index, rawCoordinate) {
+          var coordinate = rawCoordinate.split(',');
+          if (
+            coordinate[0].length === 0
+            || coordinate[1].length === 0
+          ) {
+            return;
+          }
+          coordinates.push({
+            lat: parseFloat(coordinate[0]),
+            lng: parseFloat(coordinate[1])
+          });
+        });
+
+        /** @type {GeolocationShape} */
+        var shape = {
+          coordinates: coordinates,
+          shape: type,
+          shapeWrapper: shapeWrapper
+        };
+
+        switch (type) {
+          case 'line':
+            shape.title = shapeWrapper.find('.polyline-title').text().trim();
+            break;
+
+          case 'polygon':
+            shape.title = shapeWrapper.find('.polygon-title').text().trim();
+
+            if (typeof shapeWrapper.data('fillColor') !== 'undefined') {
+              shape.fillColor = shapeWrapper.data('fillColor').toString();
+            }
+            if (typeof shapeWrapper.data('fillOpacity') !== 'undefined') {
+              shape.fillOpacity = parseFloat(shapeWrapper.data('fillOpacity').toString());
+            }
+            break;
+        }
+
+        if (typeof shapeWrapper.data('strokeColor') !== 'undefined') {
+          shape.strokeColor = shapeWrapper.data('strokeColor').toString();
+        }
+        if (typeof shapeWrapper.data('strokeWidth') !== 'undefined') {
+          shape.strokeWidth = parseInt(shapeWrapper.data('strokeWidth').toString());
+        }
+        if (typeof shapeWrapper.data('strokeOpacity') !== 'undefined') {
+          shape.strokeOpacity = parseFloat(shapeWrapper.data('strokeOpacity').toString());
+        }
+
+        shapes.push(shape);
+      });
+
+      return shapes;
+    },
+    boundariesNormalized: function (boundaries) {
+      if (typeof boundaries.north === 'number'
+          && typeof boundaries.east === 'number'
+          && typeof boundaries.south === 'number'
+          && typeof boundaries.west === 'number'
+      ) {
+        return true;
+      }
+
+      return false;
+    },
+    normalizeBoundaries: function (boundaries) {
+      var that = this;
+
+      if (that.boundariesNormalized(boundaries)) {
+        return boundaries;
+      }
+
+      if (
+          typeof boundaries.north !== 'undefined'
+          && typeof boundaries.south !== 'undefined'
+          && typeof boundaries.east !== 'undefined'
+          && typeof boundaries.west !== 'undefined'
+      ) {
+        var castBoundaries = {
+          north: Number(boundaries.north),
+          east: Number(boundaries.east),
+          south: Number(boundaries.south),
+          west: Number(boundaries.west)
+        };
+
+        if (that.boundariesNormalized(castBoundaries)) {
+          return castBoundaries;
+        }
+      }
+
+      $.each(Drupal.geolocation.MapProviders, function (type, name) {
+        if (typeof Drupal.geolocation[name].prototype.normalizeBoundaries !== 'undefined') {
+          var normalizedBoundaries = Drupal.geolocation[name].prototype.normalizeBoundaries.call(null, boundaries);
+        }
+
+        if (that.boundariesNormalized(normalizedBoundaries)) {
+          boundaries = normalizedBoundaries;
+          return false;
+        }
+      });
+
+      if (that.boundariesNormalized(boundaries)) {
+        return boundaries;
+      }
+
+      return false;
     }
   };
 
@@ -474,7 +676,7 @@
     }
     else {
       map = existingMap;
-      map.update(mapSettings);
+      map.updatedCallback(mapSettings);
     }
 
     if (!map) {
@@ -578,36 +780,37 @@
        * @param {GeolocationMapFeatureSettings} mapSettings[featureId] - Feature settings for current map
        */
       function (mapId, mapSettings) {
-        if (
-          typeof mapSettings[featureId] !== 'undefined'
-          && mapSettings[featureId].enable
-        ) {
-          var map = Drupal.geolocation.getMapById(mapId);
-          if (!map) {
-            return;
-          }
+        if (typeof mapSettings[featureId] === 'undefined') {
+          return;
+        }
+        if (!mapSettings[featureId].enable) {
+          return;
+        }
+        var map = Drupal.geolocation.getMapById(mapId);
+        if (!map) {
+          return;
+        }
 
-          map.features = map.features || {};
-          map.features[featureId] = map.features[featureId] || {};
-          if (typeof map.features[featureId].executed === 'undefined') {
-            map.features[featureId].executed = false;
-          }
+        map.features = map.features || {};
+        map.features[featureId] = map.features[featureId] || {};
+        if (typeof map.features[featureId].executed === 'undefined') {
+          map.features[featureId].executed = false;
+        }
 
+        if (map.features[featureId].executed) {
+          return;
+        }
+
+        map.addPopulatedCallback(function (map) {
           if (map.features[featureId].executed) {
             return;
           }
+          var result = callback(map, mapSettings[featureId]);
 
-          map.addPopulatedCallback(function (map) {
-            if (map.features[featureId].executed) {
-              return;
-            }
-            var result = callback(map, mapSettings[featureId]);
-
-            if (result === true) {
-              map.features[featureId].executed = true;
-            }
-          });
-        }
+          if (result === true) {
+            map.features[featureId].executed = true;
+          }
+        });
       }
     );
   };

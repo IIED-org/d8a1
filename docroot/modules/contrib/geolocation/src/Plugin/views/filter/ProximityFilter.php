@@ -118,7 +118,7 @@ class ProximityFilter extends NumericFilter implements ContainerFactoryPluginInt
         '#step' => 0.1,
         '#title' => $this->t('Distance'),
         '#description' => $this->t('Distance in %unit', ['%unit' => $this->options['unit'] === 'km' ? $this->t('Kilometers') : $this->t('Miles')]),
-        '#default_value' => self::convertDistance($form['value']['#default_value'], $this->options['unit'], TRUE),
+        '#default_value' => $form['value']['#default_value'],
       ]);
     }
     else {
@@ -128,7 +128,7 @@ class ProximityFilter extends NumericFilter implements ContainerFactoryPluginInt
         '#step' => 0.1,
         '#title' => $this->t('Distance'),
         '#description' => $this->t('Distance in %unit', ['%unit' => $this->options['unit'] === 'km' ? $this->t('Kilometers') : $this->t('Miles')]),
-        '#default_value' => self::convertDistance($form['value']['value']['#default_value'], $this->options['unit'], TRUE),
+        '#default_value' => $form['value']['value']['#default_value'],
       ]);
     }
 
@@ -143,7 +143,7 @@ class ProximityFilter extends NumericFilter implements ContainerFactoryPluginInt
    */
   protected function valueSubmit($form, FormStateInterface $form_state) {
     $value = $form_state->getValue(['options', 'value', 'value']);
-    $distance = self::convertDistance($value, $this->options['unit']);
+    $distance = (float) $value;
     $form_state->setValue(['options', 'value', 'value'], $distance);
 
     parent::valueSubmit($form, $form_state);
@@ -153,11 +153,13 @@ class ProximityFilter extends NumericFilter implements ContainerFactoryPluginInt
    * {@inheritdoc}
    */
   public function acceptExposedInput($input) {
-    $return = parent::acceptExposedInput($input);
+    parent::acceptExposedInput($input);
 
     if (
       array_key_exists('lat', $input)
+      && $input['lat'] !== ''
       && array_key_exists('lng', $input)
+      && $input['lng'] !== ''
     ) {
       $this->value['lat'] = (float) $input['lat'];
       $this->value['lng'] = (float) $input['lng'];
@@ -166,8 +168,11 @@ class ProximityFilter extends NumericFilter implements ContainerFactoryPluginInt
     if (!empty($input['center'])) {
       $this->value['center'] = $input['center'];
     }
+    else {
+      $this->value['center'] = [];
+    }
 
-    return $return;
+    return TRUE;
   }
 
   /**
@@ -187,14 +192,14 @@ class ProximityFilter extends NumericFilter implements ContainerFactoryPluginInt
       ];
     }
     else {
-      $center = $this->locationInputManager->getCoordinates($this->value['center'], $this->options['location_input'], $this);
+      $center = $this->locationInputManager->getCoordinates((array) $this->value['center'], $this->options['location_input'], $this);
     }
 
     if (
       empty($center)
       || !is_numeric($center['lat'])
       || !is_numeric($center['lng'])
-      || !is_numeric($this->value['value'])
+      || empty($this->value['value'])
     ) {
       return;
     }

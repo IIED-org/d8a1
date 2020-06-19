@@ -9,7 +9,7 @@
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\Component\Utility\Xss;
+use Drupal\Core\Field\FieldFilteredMarkup;
 use Drupal\Core\Render\Element;
 
 /**
@@ -66,6 +66,7 @@ function better_field_descriptions_theme($existing, $type, $theme, $path) {
 function better_field_descriptions_field_widget_form_alter(&$element, FormStateInterface $form_state, $context) {
   // Get better descriptions.
   $bfd = \Drupal::config('better_field_descriptions.settings')->get('better_field_descriptions');
+
   // Get better descriptions settings.
   $bfd_settings = \Drupal::config('better_field_descriptions.settings')->get('better_field_descriptions_settings');
 
@@ -100,7 +101,7 @@ function better_field_descriptions_field_widget_form_alter(&$element, FormStateI
       // Available positions.
       $positions = [0 => '#prefix', 1 => '#suffix', 2 => 'between'];
       // Default label.
-      $default_label = Xss::filter($bfd['default_label']);
+      $default_label = !empty($bfd['default_label']) ? FieldFilteredMarkup::create($bfd['default_label']) : '';
 
       // Apply required symbol if the fields is set as required.
       $required = (isset($element['#required']) && $element['#required']) ? TRUE : FALSE;
@@ -144,9 +145,9 @@ function better_field_descriptions_field_widget_form_alter(&$element, FormStateI
       }
       $output = [
         '#theme' => 'better_field_descriptions',
-        '#label' => Xss::filter($label),
-        '#description' => Xss::filter($description),
-        '#required' => Xss::filter($required),
+        '#label' => FieldFilteredMarkup::create($label),
+        '#description' => FieldFilteredMarkup::create($description),
+        '#required' => FieldFilteredMarkup::create($required),
       ];
       $output = \Drupal::service('renderer')->render($output);
 

@@ -534,7 +534,7 @@ class FormsStepsStepFormBase extends EntityForm {
       $values = $form_state->getValues();
 
       $entityFormDisplay =
-        entity_get_form_display(
+        \Drupal::service('entity_display.repository')->getFormDisplay(
           $values['target_entity_type'],
           $values['target_entity_bundle'],
           preg_replace(

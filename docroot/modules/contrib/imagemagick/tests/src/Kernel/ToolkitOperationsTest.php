@@ -17,7 +17,21 @@ class ToolkitOperationsTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['imagemagick', 'system', 'file_mdm', 'user'];
+  public static $modules = [
+    'imagemagick',
+    'system',
+    'file_mdm',
+    'user',
+    'sophron',
+  ];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp() {
+    parent::setUp();
+    $this->installConfig(['system', 'imagemagick', 'sophron']);
+  }
 
   /**
    * Create a new image and inspect the arguments.
@@ -87,19 +101,22 @@ class ToolkitOperationsTest extends KernelTestBase {
     $image->getToolkit()->setHeight(NULL);
     $this->assertNull($image->getWidth());
     $this->assertNull($image->getHeight());
-    $image->rotate(5);
+    // Rotate does not necessarily require previous dimensions, so it should
+    // not fail.
+    $this->assertTrue($image->rotate(5));
     $this->assertNull($image->getWidth());
     $this->assertNull($image->getHeight());
-    $image->crop(10, 10, 20, 20);
+    $this->assertFalse($image->crop(10, 10, 20, 20));
     $this->assertNull($image->getWidth());
     $this->assertNull($image->getHeight());
-    $image->scaleAndCrop(10, 10);
+    $this->assertFalse($image->scaleAndCrop(10, 10));
     $this->assertNull($image->getWidth());
     $this->assertNull($image->getHeight());
-    $image->scale(5);
+    $this->assertFalse($image->scale(5));
     $this->assertNull($image->getWidth());
     $this->assertNull($image->getHeight());
-    $image->resize(50, 100);
+    // Resize sets explicitly the new dimension, so it should not fail.
+    $this->assertTrue($image->resize(50, 100));
     $this->assertSame(50, $image->getWidth());
     $this->assertsame(100, $image->getHeight());
     if (substr(PHP_OS, 0, 3) === 'WIN') {
@@ -108,6 +125,51 @@ class ToolkitOperationsTest extends KernelTestBase {
     else {
       $this->assertSame("-size 100x200 xc:transparent -background 'transparent' -rotate 5 +repage -resize 50x100!", $image->getToolkit()->arguments()->toString(ImagemagickExecArguments::POST_SOURCE));
     }
+  }
+
+  /**
+   * Test 'scale_and_crop' operation.
+   *
+   * @param string $toolkit_id
+   *   The id of the toolkit to set up.
+   * @param string $toolkit_config
+   *   The config object of the toolkit to set up.
+   * @param array $toolkit_settings
+   *   The settings of the toolkit to set up.
+   *
+   * @dataProvider providerToolkitConfiguration
+   */
+  public function testScaleAndCropOperation($toolkit_id, $toolkit_config, array $toolkit_settings) {
+    $this->setUpToolkit($toolkit_id, $toolkit_config, $toolkit_settings);
+    $image = $this->imageFactory->get();
+    $image->createNew(100, 200);
+    $image->apply('scale_and_crop', [
+      'x' => 1,
+      'y' => 1,
+      'width' => 5,
+      'height' => 10,
+    ]);
+    $this->assertSame("-size 100x200 xc:transparent -resize 5x10! -crop 5x10+1+1!", $image->getToolkit()->arguments()->toString(ImagemagickExecArguments::POST_SOURCE));
+  }
+
+  /**
+   * Test 'scale_and_crop' operation with no anchor passed in.
+   *
+   * @param string $toolkit_id
+   *   The id of the toolkit to set up.
+   * @param string $toolkit_config
+   *   The config object of the toolkit to set up.
+   * @param array $toolkit_settings
+   *   The settings of the toolkit to set up.
+   *
+   * @dataProvider providerToolkitConfiguration
+   */
+  public function testScaleAndCropNoAnchorOperation($toolkit_id, $toolkit_config, array $toolkit_settings) {
+    $this->setUpToolkit($toolkit_id, $toolkit_config, $toolkit_settings);
+    $image = $this->imageFactory->get();
+    $image->createNew(100, 200);
+    $image->apply('scale_and_crop', ['width' => 5, 'height' => 10]);
+    $this->assertSame("-size 100x200 xc:transparent -resize 5x10! -crop 5x10+0+0!", $image->getToolkit()->arguments()->toString(ImagemagickExecArguments::POST_SOURCE));
   }
 
 }

@@ -74,7 +74,7 @@ simplify.comment_type.*:
         sequence:
           type: string
           label: 'Comment setting'
-          
+
 simplify.block_type.*:
   type: config_object
   label: 'Per block-type configurations for Simplify module.'

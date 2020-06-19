@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\content_moderation_notifications\Kernel;
 
-use Drupal\Component\Utility\Unicode;
 use Drupal\content_moderation_notifications\Entity\ContentModerationNotification;
 
 /**
@@ -21,9 +20,8 @@ trait ContentModerationNotificationCreateTrait {
    */
   protected function createNotification(array $values = []) {
     $values += [
-      'id' => 'example_notification',
+      'id' => mb_strtolower($this->randomMachineName()),
       'workflow' => 'editorial',
-      'transitions' => [],
       'subject' => $this->randomString(),
       'status' => 1,
       'body' => [
@@ -31,14 +29,8 @@ trait ContentModerationNotificationCreateTrait {
         'format' => 'filtered_html',
       ],
       'roles' => [],
-      'to' => '',
-      'cc' => '',
-      'bcc' => '',
-      'from' => '',
-      'replyto' => '',
-      'abort' => '',
-      'debug' => FALSE,
-      'title' => 'test',
+      'emails' => '',
+      'transitions' => [],
     ];
 
     $notification = ContentModerationNotification::create($values);

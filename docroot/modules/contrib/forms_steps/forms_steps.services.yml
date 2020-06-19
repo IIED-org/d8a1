@@ -7,7 +7,6 @@ services:
   forms_steps.route_subscriber:
     class: Drupal\forms_steps\EventSubscriber\RouteSubscriber
     arguments:
-      - '@entity.manager'
       - '@state'
       - '@entity_type.manager'
     tags:
@@ -15,7 +14,9 @@ services:
 
   forms_steps.manager:
     class: Drupal\forms_steps\Service\FormsStepsManager
-    arguments: ['@entity_display.repository']
+    arguments:
+      - '@entity_display.repository'
+      - '@config.factory'
 
   forms_steps.workflow.manager:
     class: Drupal\forms_steps\Service\WorkflowManager

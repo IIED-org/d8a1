@@ -81,6 +81,7 @@ abstract class GeolocationMapFormatterBase extends FormatterBase {
     $settings['title'] = '';
     $settings['set_marker'] = TRUE;
     $settings['common_map'] = TRUE;
+    $settings['show_delta_label'] = FALSE;
     $settings['data_provider_settings'] = [];
     $settings['map_provider_id'] = '';
     if (\Drupal::moduleHandler()->moduleExists('geolocation_google_maps')) {
@@ -102,7 +103,7 @@ abstract class GeolocationMapFormatterBase extends FormatterBase {
     $settings['map_provider_settings'] = [];
     $settings['info_text'] = [
       'value' => '',
-      'format' => filter_default_format(),
+      'format' => filter_fallback_format(),
     ];
     $settings['use_overridden_map_settings'] = FALSE;
     return $settings;
@@ -190,6 +191,12 @@ abstract class GeolocationMapFormatterBase extends FormatterBase {
         '#title' => $this->t('Display multiple values on a common map'),
         '#description' => $this->t('By default, each value will be displayed in a separate map. Settings this option displays all values on a common map instead. This settings is only useful on multi-value fields.'),
         '#default_value' => $settings['common_map'],
+      ];
+      $element['show_delta_label'] = [
+        '#type' => 'checkbox',
+        '#title' => $this->t('Show item cardinality as marker label'),
+        '#description' => $this->t('By default markers will not have labels, if shown on the common map it might be useful for AODA to show cardinality'),
+        '#default_value' => $settings['show_delta_label'],
       ];
     }
 
@@ -282,6 +289,9 @@ abstract class GeolocationMapFormatterBase extends FormatterBase {
       if (!empty($settings['common_map'])) {
         $summary[] = $this->t('Common Map Display: Yes');
       }
+      if (!empty($settings['show_delta_label'])) {
+        $summary[] = $this->t('Show Cardinality as Label: Yes');
+      }
     }
 
     if ($this->mapProvider) {
@@ -306,54 +316,23 @@ abstract class GeolocationMapFormatterBase extends FormatterBase {
 
     $settings = $this->getSettings();
 
-    $locations = [];
+    $locations = $this->getLocations($items);
 
-    foreach ($items as $delta => $item) {
-      $item_position = $this->dataProvider->getPositionsFromItem($item);
-      if (empty($item_position)) {
-        continue;
-      }
-
-      $title = $this->dataProvider->replaceFieldItemTokens($settings['title'], $item);
-      if (empty($title)) {
-        $title = $item_position['lat'] . ', ' . $item_position['lng'];
-      }
-
-      $location = [
-        '#type' => 'geolocation_map_location',
-        '#title' => $title,
-        '#disable_marker' => empty($settings['set_marker']) ? TRUE : FALSE,
-        '#position' => [
-          'lat' => $item_position['lat'],
-          'lng' => $item_position['lng'],
-        ],
-        '#weight' => $delta,
-      ];
-
-      if (
-        !empty($settings['info_text']['value'])
-        && !empty($settings['info_text']['format'])
-      ) {
-        $location['content'] = [
-          '#type' => 'processed_text',
-          '#text' => $this->dataProvider->replaceFieldItemTokens($settings['info_text']['value'], $item),
-          '#format' => $settings['info_text']['format'],
-        ];
-      }
-
-      $locations[] = $location;
-    }
+    $parent_entity = $items->getEntity();
 
     $element_pattern = [
       '#type' => 'geolocation_map',
       '#settings' => $settings['map_provider_settings'],
       '#maptype' => $settings['map_provider_id'],
-      '#centre' => [
-        'lat' => 0,
-        'lng' => 0,
+      '#centre' => [],
+      '#context' => [
+        'formatter' => $this,
       ],
-      '#context' => ['formatter' => $this],
     ];
+
+    if (!empty($parent_entity)) {
+      $element_pattern['#context'][$parent_entity->getEntityTypeId()] = $parent_entity;
+    }
 
     if (!empty($settings['common_map'])) {
       $elements = [
@@ -361,6 +340,9 @@ abstract class GeolocationMapFormatterBase extends FormatterBase {
       ];
       $elements[0]['#id'] = uniqid("map-");
       foreach ($locations as $delta => $location) {
+        if (!empty($settings['show_delta_label'])) {
+          $location['#label'] = $delta + 1;
+        }
         $elements[0][$delta] = $location;
       }
 
@@ -395,6 +377,64 @@ abstract class GeolocationMapFormatterBase extends FormatterBase {
     }
 
     return $elements;
+  }
+
+  /**
+   * Get renderable locations from field items.
+   *
+   * @param \Drupal\Core\Field\FieldItemListInterface $items
+   *   Field items.
+   *
+   * @return array
+   *   Renderable locations.
+   */
+  protected function getLocations(FieldItemListInterface $items) {
+
+    $settings = $this->getSettings();
+
+    $locations = [];
+
+    foreach ($items as $delta => $item) {
+      foreach ($this->dataProvider->getPositionsFromItem($item) as $item_position) {
+        if (empty($item_position)) {
+          continue;
+        }
+
+        $title = $this->dataProvider->replaceFieldItemTokens($settings['title'], $item);
+        if (empty($title)) {
+          $title = $item_position['lat'] . ', ' . $item_position['lng'];
+        }
+
+        $location = [
+          '#type' => 'geolocation_map_location',
+          '#title' => $title,
+          '#disable_marker' => empty($settings['set_marker']),
+          '#coordinates' => [
+            'lat' => $item_position['lat'],
+            'lng' => $item_position['lng'],
+          ],
+          '#weight' => $delta,
+        ];
+
+        if (
+          !empty($settings['info_text']['value'])
+          && !empty($settings['info_text']['format'])
+        ) {
+          $location['content'] = [
+            '#type' => 'processed_text',
+            '#text' => $this->dataProvider->replaceFieldItemTokens($settings['info_text']['value'], $item),
+            '#format' => $settings['info_text']['format'],
+          ];
+        }
+
+        $locations[] = $location;
+      }
+
+      $locations = array_merge($this->dataProvider->getLocationsFromItem($item), $locations);
+      $locations = array_merge($this->dataProvider->getShapesFromItem($item), $locations);
+    }
+
+    return $locations;
   }
 
   /**

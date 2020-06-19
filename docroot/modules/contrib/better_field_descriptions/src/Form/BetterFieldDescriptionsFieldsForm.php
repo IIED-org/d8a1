@@ -5,7 +5,7 @@ namespace Drupal\better_field_descriptions\Form;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Component\Utility\Xss;
+use Drupal\Core\Field\FieldFilteredMarkup;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Entity\EntityFieldManager;
@@ -183,7 +183,7 @@ class BetterFieldDescriptionsFieldsForm extends ConfigFormBase {
           $form['bundles'][$entity_type][$bundle_machine_name][$field_machine_name]['description'] = [
             '#type' => 'textarea',
             '#title' => $fields_instances[$field_machine_name]->getLabel() . ' (' . $field_machine_name . ')',
-            '#default_value' => Xss::filter($bfd_description),
+            '#default_value' => FieldFilteredMarkup::create($bfd_description),
             '#description' => $this->t('Add description for @machine_name.', ['@machine_name' => $fields_instances[$field_machine_name]->getLabel()]),
           ];
 
@@ -195,7 +195,7 @@ class BetterFieldDescriptionsFieldsForm extends ConfigFormBase {
           $form['bundles'][$entity_type][$bundle_machine_name][$field_machine_name]['label'] = [
             '#type' => 'textfield',
             '#title' => 'Label for this field description',
-            '#default_value' => Xss::filter($bfd_label),
+            '#default_value' => FieldFilteredMarkup::create($bfd_label),
             '#description' => $this->t('Label for this field description.'),
           ];
 

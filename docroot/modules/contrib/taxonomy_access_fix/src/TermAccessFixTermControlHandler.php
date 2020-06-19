@@ -20,10 +20,17 @@ class TermAccessFixTermControlHandler extends EntityAccessControlHandler {
   protected function checkAccess(EntityInterface $entity, $operation, AccountInterface $account) {
     switch ($operation) {
       case 'view':
-        return AccessResult::allowedIfHasPermissions($account, [
-          "view terms in {$entity->bundle()}",
-          'administer taxonomy',
-        ], 'OR');
+        if ($account->hasPermission('administer taxonomy')) {
+          return AccessResult::allowed()->cachePerPermissions();
+        }
+        $access_result = AccessResult::allowedIfHasPermission($account, "view terms in {$entity->bundle()}")
+          ->andIf(AccessResult::allowedIf($entity->isPublished()))
+          ->cachePerPermissions()
+          ->addCacheableDependency($entity);
+        if (!$access_result->isAllowed()) {
+          $access_result->setReason("The 'view terms in {$entity->bundle()}' OR 'administer taxonomy' permission is required and the taxonomy term must be published.");
+        }
+        return $access_result;
 
       case 'update':
         return AccessResult::allowedIfHasPermissions($account, [

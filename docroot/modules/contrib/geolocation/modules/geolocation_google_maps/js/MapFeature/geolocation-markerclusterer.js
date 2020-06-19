@@ -17,7 +17,7 @@
  * @property {Number} minimumClusterSize
  */
 
-(function ($, Drupal) {
+(function (Drupal) {
 
   'use strict';
 
@@ -85,6 +85,12 @@
             });
           });
 
+          map.addUpdatedCallback(function (map, mapSettings) {
+            if (typeof map.markerClusterer !== 'undefined') {
+              map.markerClusterer.clearMarkers();
+            }
+          });
+
           return true;
         },
         drupalSettings
@@ -93,4 +99,4 @@
     detach: function (context, drupalSettings) {}
   };
 
-})(jQuery, Drupal);
+})(Drupal);

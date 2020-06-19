@@ -1,12 +1,12 @@
 name: Account Modal
 type: module
 description: Adds the ability to open account links in a modal window.
-# core: 8.x
+core: 8.x
+core_version_requirement: ^8 || ^9
 package: User interface
 configure: account_modal.admin_settings
 
-# Information added by Drupal.org packaging script on 2019-03-22
-version: '8.x-1.0-beta2'
-core: '8.x'
+# Information added by Drupal.org packaging script on 2020-06-04
+version: '8.x-1.0-beta3'
 project: 'account_modal'
-datestamp: 1553291779
+datestamp: 1591306948

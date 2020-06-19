@@ -78,16 +78,33 @@
           $('.geolocation-map-controls > *', map.wrapper).each(function (index, control) {
             map.addControl(control);
           });
+
           map.removeMapMarkers();
-
           var locations = map.loadMarkersFromContainer();
-
           $.each(locations, function (index, location) {
             map.setMapMarker(location);
           });
+
+          map.removeShapes();
+          var shapes = map.loadShapesFromContainer();
+          $.each(shapes, function (index, shape) {
+            map.addShape(shape);
+          });
+
           map.setCenter();
 
           map.wrapper.find('.geolocation-location').hide();
+        });
+
+        map.addUpdatedCallback(function (map, mapSettings) {
+          map.settings = $.extend(map.settings, mapSettings.settings);
+          map.wrapper = mapSettings.wrapper;
+          mapSettings.wrapper.find('.geolocation-map-container').replaceWith(map.container);
+          map.lat = mapSettings.lat;
+          map.lng = mapSettings.lng;
+          if (typeof mapSettings.map_center !== 'undefined') {
+            map.mapCenter = mapSettings.map_center;
+          }
         });
       });
     },

@@ -2,7 +2,7 @@
 
 namespace Drupal\Tests\imagemagick\Kernel;
 
-use Drupal\KernelTests\KernelTestBase;
+use Drupal\Core\File\FileSystemInterface;
 use Drupal\Tests\TestFileCreationTrait;
 use Drupal\Tests\BrowserTestBase;
 
@@ -45,10 +45,6 @@ trait ToolkitSetupTrait {
    *   The settings of the toolkit to set up.
    */
   protected function setUpToolkit($toolkit_id, $toolkit_config, array $toolkit_settings) {
-    if ($this instanceof KernelTestBase) {
-      $this->installConfig(['system', 'imagemagick']);
-    }
-
     // Change the toolkit.
     \Drupal::configFactory()->getEditable('system.image')
       ->set('toolkit', $toolkit_id)
@@ -131,8 +127,8 @@ trait ToolkitSetupTrait {
 
     // Prepare a directory for test file results.
     $this->testDirectory = 'public://imagetest';
-    file_unmanaged_delete_recursive($this->testDirectory);
-    file_prepare_directory($this->testDirectory, FILE_CREATE_DIRECTORY);
+    $this->fileSystem->deleteRecursive($this->testDirectory);
+    $this->fileSystem->prepareDirectory($this->testDirectory, FileSystemInterface::CREATE_DIRECTORY);
 
     // Prepare a copy of test files.
     $this->getTestFiles('image');

@@ -1,16 +1,8 @@
 <?php
 
-/**
- * @file
- * Test case for testing the per content-type simplify configurations.
- *
- * Sponsored by: www.drupal-addict.com
- */
-
 namespace Drupal\simplify\Tests;
 
 use Drupal\simpletest\WebTestBase;
-use Drupal\user\Entity\Role;
 
 /**
  * Test simplify per content-type settings.
@@ -26,17 +18,24 @@ class PerContentTypeSettingsTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('path', 'menu_ui', 'comment', 'node', 'user', 'simplify');
+  public static $modules = [
+    'path',
+    'menu_ui',
+    'comment',
+    'node',
+    'user',
+    'simplify',
+  ];
 
   /**
    * {@inheritdoc}
    */
   public static function getInfo() {
-    return array(
+    return [
       'name' => 'Simplify per content-type settings test.',
       'description' => 'Test the Simplify per content-type settings.',
       'group' => 'Simplify',
-    );
+    ];
   }
 
   /**
@@ -46,7 +45,7 @@ class PerContentTypeSettingsTest extends WebTestBase {
     parent::setUp();
 
     // Create an admin user.
-    $admin_user = $this->drupalCreateUser(array(), NULL, TRUE);
+    $admin_user = $this->drupalCreateUser([], NULL, TRUE);
     $this->drupalLogin($admin_user);
 
     // Create a content type.
@@ -78,12 +77,12 @@ class PerContentTypeSettingsTest extends WebTestBase {
 
     // Globally activate some options.
     $this->drupalGet('admin/config/user-interface/simplify');
-    $options = array(
+    $options = [
       'simplify_admin' => TRUE,
       'simplify_nodes_global[author]' => 'author',
       'simplify_nodes_global[comment]' => 'comment',
       'simplify_nodes_global[options]' => 'options',
-    );
+    ];
     $this->drupalPostForm(NULL, $options, t('Save configuration'));
     // Admin users setting.
     $this->assertFieldChecked('edit-simplify-admin', "Admin users can't see hidden fields too.");
@@ -127,9 +126,9 @@ class PerContentTypeSettingsTest extends WebTestBase {
      */
 
     // Nodes.
-    $options = array(
+    $options = [
       'simplify_nodes[format]' => 'format',
-    );
+    ];
     $this->drupalPostForm(NULL, $options, t('Save content type'));
 
     /* -------------------------------------------------------.

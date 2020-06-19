@@ -3,8 +3,8 @@
 namespace Drupal\Tests\content_moderation_notifications\Kernel;
 
 use Drupal\Component\Render\PlainTextOutput;
-use Drupal\simpletest\ContentTypeCreationTrait;
-use Drupal\simpletest\NodeCreationTrait;
+use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
+use Drupal\Tests\node\Traits\NodeCreationTrait;
 use Drupal\workflows\Entity\Workflow;
 
 /**
@@ -16,6 +16,7 @@ use Drupal\workflows\Entity\Workflow;
  */
 class TokenNotificationsTest extends NotificationsTest {
 
+  use ContentModerationNotificationTestTrait;
   use ContentTypeCreationTrait;
   use NodeCreationTrait;
 
@@ -39,6 +40,7 @@ class TokenNotificationsTest extends NotificationsTest {
     // Setup site email.
     $this->config('system.site')->set('mail', 'admin@example.com')->save();
 
+    $this->enableModeration('node', 'article');
     /** @var \Drupal\workflows\WorkflowInterface $workflow */
     $workflow = Workflow::load('editorial');
     $workflow->getTypePlugin()->addEntityTypeAndBundle('node', 'article');
@@ -64,23 +66,23 @@ class TokenNotificationsTest extends NotificationsTest {
     ]);
 
     $entity = $this->createNode(['type' => 'article']);
-    // @todo: Re-enable test
-//    $this->assertMail('to', 'admin@example.com');
-//    $this->assertBccRecipients('foo@example.com,bar@example.com');
-//    $this->assertMail('id', 'content_moderation_notifications_content_moderation_notification');
-//    $this->assertMail('subject', PlainTextOutput::renderFromHtml($notification->getSubject()));
-//    $this->assertCount(1, $this->getMails());
-//
-//    // Verify token replacement.
-//    $mail = $this->getMails()[0];
-//    $this->assertEquals('Test token replacement ' . $entity->label() . ". Draft | Editorial | Draft!\n", $mail['body'], ("BODY: " . $mail['body']));
-//
-//    // Publish.
-//    $this->container->get('state')->set('system.test_mail_collector', []);
-//    $entity->moderation_state = 'published';
-//    $entity->save();
-//    $mail = $this->getMails()[0];
-//    $this->assertEquals('Test token replacement ' . $entity->label() . ". Draft | Editorial | Published!\n", $mail['body']);
+
+    $this->assertMail('to', 'admin@example.com');
+    $this->assertBccRecipients('foo@example.com,bar@example.com');
+    $this->assertMail('id', 'content_moderation_notifications_content_moderation_notification');
+    $this->assertMail('subject', PlainTextOutput::renderFromHtml($notification->getSubject()));
+    $this->assertCount(1, $this->getMails());
+
+    // Verify token replacement.
+    $mail = $this->getMails()[0];
+    $this->assertEquals('Test token replacement ' . $entity->label() . ". Draft | Editorial | Draft!\n", $mail['body']);
+
+    // Publish.
+    $this->container->get('state')->set('system.test_mail_collector', []);
+    $entity->moderation_state = 'published';
+    $entity->save();
+    $mail = $this->getMails()[0];
+    $this->assertEquals('Test token replacement ' . $entity->label() . ". Draft | Editorial | Published!\n", $mail['body']);
   }
 
 }

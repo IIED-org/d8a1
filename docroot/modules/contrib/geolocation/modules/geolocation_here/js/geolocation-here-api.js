@@ -23,6 +23,7 @@
    * @inheritDoc
    *
    * @prop {Object} settings.here_settings - HERE Maps specific settings.
+   * @prop {H.Map} hereMap
    */
   function GeolocationHereMap(mapSettings) {
     if (typeof H === 'undefined') {
@@ -92,7 +93,13 @@
   }
   GeolocationHereMap.prototype = Object.create(Drupal.geolocation.GeolocationMapBase.prototype);
   GeolocationHereMap.prototype.constructor = GeolocationHereMap;
-  GeolocationHereMap.prototype.setZoom = function (zoom) {
+  GeolocationHereMap.prototype.getZoom = function () {
+    var that = this;
+    return new Promise(function (resolve, reject) {
+      resolve(that.hereMap.getZoom());
+    });
+  };
+  GeolocationHereMap.prototype.setZoom = function (zoom, defer) {
     if (typeof zoom === 'undefined') {
       zoom = this.settings.here_settings.zoom;
     }
@@ -126,7 +133,58 @@
     Drupal.geolocation.GeolocationMapBase.prototype.removeMapMarker.call(this, marker);
     this.hereMap.removeObject(marker);
   };
+  GeolocationHereMap.prototype.addShape = function (shapeSettings) {
+    if (typeof shapeSettings === 'undefined') {
+      return;
+    }
+
+    var shape;
+
+    var lineString = new H.geo.LineString();
+    $.each(shapeSettings.coordinates, function (index, item) {
+      lineString.pushPoint(item);
+    });
+
+    switch (shapeSettings.shape) {
+      case 'line':
+        shape = new H.map.Polyline(lineString, {
+          style: {
+            strokeColor: 'rgba(' + parseInt(shapeSettings.strokeColor.substring(1,3), 16) + ', ' + parseInt(shapeSettings.strokeColor.substring(3,5), 16) + ', ' + parseInt(shapeSettings.strokeColor.substring(5,7), 16) + ', ' + shapeSettings.strokeOpacity + ')',
+            lineWidth: shapeSettings.strokeWidth
+          }
+        });
+        break;
+
+      case 'polygon':
+        shape = new H.map.Polygon(lineString, {
+          style: {
+            strokeColor: 'rgba(' + parseInt(shapeSettings.strokeColor.substring(1,3), 16) + ', ' + parseInt(shapeSettings.strokeColor.substring(3,5), 16) + ', ' + parseInt(shapeSettings.strokeColor.substring(5,7), 16) + ', ' + shapeSettings.strokeOpacity + ')',
+            lineWidth: shapeSettings.strokeWidth,
+            fillColor: 'rgba(' + parseInt(shapeSettings.fillColor.substring(1,3), 16) + ', ' + parseInt(shapeSettings.fillColor.substring(3,5), 16) + ', ' + parseInt(shapeSettings.fillColor.substring(5,7), 16) + ', ' + shapeSettings.fillOpacity + ')'
+          }
+        });
+        break;
+    }
+
+    this.hereMap.addObject(shape);
+    Drupal.geolocation.GeolocationMapBase.prototype.addShape.call(this, shape);
+
+    return shape;
+
+  };
+  GeolocationHereMap.prototype.removeShape = function (shape) {
+    if (typeof shape === 'undefined') {
+      return;
+    }
+    Drupal.geolocation.GeolocationMapBase.prototype.removeShape.call(this, shape);
+    this.hereMap.removeObject(shape);
+  };
   GeolocationHereMap.prototype.fitBoundaries = function (boundaries, identifier) {
+    boundaries = this.denormalizeBoundaries(boundaries);
+    if (!boundaries) {
+      return;
+    }
+
     if (!this.hereMap.getViewBounds().equals(boundaries)) {
       this.hereMap.setViewBounds(boundaries);
       Drupal.geolocation.GeolocationMapBase.prototype.fitBoundaries.call(this, boundaries, identifier);
@@ -156,6 +214,39 @@
   GeolocationHereMap.prototype.getCenter = function () {
     var center = this.hereMap.getCenter();
     return {lat: center.lat, lng: center.lng};
+  };
+  GeolocationHereMap.prototype.normalizeBoundaries = function (boundaries) {
+    if (boundaries instanceof H.geo.Rect) {
+      return {
+        north: boundaries.getTop(),
+        east: boundaries.getLeft(),
+        south: boundaries.getBottom(),
+        west: boundaries.getRight()
+      };
+    }
+
+    return false;
+  };
+  GeolocationHereMap.prototype.denormalizeBoundaries = function (boundaries) {
+    if (typeof boundaries === 'undefined') {
+      return false;
+    }
+
+    if (boundaries instanceof H.geo.Rect) {
+      return boundaries;
+    }
+
+    if (Drupal.geolocation.GeolocationMapBase.prototype.boundariesNormalized.call(this, boundaries)) {
+      return new H.geo.Rect(boundaries.north, boundaries.west, boundaries.south, boundaries.east);
+    }
+    else {
+      boundaries = Drupal.geolocation.GeolocationMapBase.prototype.normalizeBoundaries.call(this, boundaries);
+      if (boundaries) {
+        return new H.geo.Rect(boundaries.north, boundaries.west, boundaries.south, boundaries.east);
+      }
+    }
+
+    return false;
   };
 
   Drupal.geolocation.GeolocationHereMap = GeolocationHereMap;

@@ -2,6 +2,7 @@
 
 namespace Drupal\social_auth\Entity;
 
+use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
@@ -28,37 +29,52 @@ use Drupal\social_api\Entity\SocialApi;
 class SocialAuth extends SocialApi implements ContentEntityInterface {
 
   /**
+   * {@inheritdoc}
+   */
+  public static function preCreate(EntityStorageInterface $storage, array &$values) {
+    $additional_data = $values['additional_data'] ?? NULL;
+    if ($additional_data) {
+      $values['additional_data'] = static::encode($additional_data);
+    }
+
+    return parent::preCreate($storage, $values);
+  }
+
+  /**
    * Returns the Drupal user id.
    *
    * @return string
    *   The user id.
    */
   public function getUserId() {
-    return $this->get('user_id')->getValue()[0]['target_id'];
+    return $this->get('user_id')->target_id;
   }
 
   /**
    * Sets the additional data.
    *
-   * @param string $data
-   *   The serialized additional data.
+   * @param array $data
+   *   The additional data.
    *
    * @return \Drupal\social_auth\Entity\SocialAuth
    *   Drupal Social Auth Entity.
    */
-  public function setAdditionalData($data) {
-    $this->set('additional_data', $data);
+  public function setAdditionalData(array $data) {
+    $this->set('additional_data', $this->encode($data));
+
     return $this;
   }
 
   /**
    * Returns the serialized additional data.
    *
-   * @return string
-   *   The serialized additional data.
+   * @return array
+   *   The additional data.
    */
   public function getAdditionalData() {
-    return $this->get('additional_data')->value;
+    return $this->hasField('additional_data') && !$this->get('additional_data')->isEmpty()
+      ? $this->decode($this->get('additional_data')->value)
+      : [];
   }
 
   /**
@@ -162,6 +178,32 @@ class SocialAuth extends SocialApi implements ContentEntityInterface {
       ->setDescription(t('The time that the entity was last edited.'));
 
     return $fields;
+  }
+
+  /**
+   * Encodes array to store in the additional data field.
+   *
+   * @param array $data
+   *   The additional data.
+   *
+   * @return string
+   *   The serialized data.
+   */
+  protected static function encode(array $data) {
+    return json_encode($data);
+  }
+
+  /**
+   * Decodes string stored in the additional data field.
+   *
+   * @param string $data
+   *   The encoded additional data.
+   *
+   * @return array
+   *   The decoded data.
+   */
+  protected function decode(string $data) {
+    return json_decode($data, TRUE);
   }
 
 }

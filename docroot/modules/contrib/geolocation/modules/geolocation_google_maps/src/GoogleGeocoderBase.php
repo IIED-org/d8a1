@@ -62,6 +62,8 @@ abstract class GoogleGeocoderBase extends GeocoderBase implements GeocoderInterf
   protected function getDefaultSettings() {
     $default_settings = parent::getDefaultSettings();
 
+    $default_settings['autocomplete_min_length'] = 1;
+
     $default_settings['component_restrictions'] = [
       'route' => '',
       'locality' => '',
@@ -90,8 +92,16 @@ abstract class GoogleGeocoderBase extends GeocoderBase implements GeocoderInterf
       empty($render_array['#attached']) ? [] : $render_array['#attached'],
       [
         'library' => [
-          'geolocation_google_maps/googlemapsapi',
           'geolocation_google_maps/google',
+        ],
+        'drupalSettings' => [
+          'geolocation' => [
+            'geocoder' => [
+              $this->getPluginId() => [
+                'autocompleteMinLength' => empty($this->configuration['autocomplete_min_length']) ? 1 : (int) $this->configuration['autocomplete_min_length'],
+              ],
+            ],
+          ],
         ],
       ]
     );
@@ -167,6 +177,14 @@ abstract class GoogleGeocoderBase extends GeocoderBase implements GeocoderInterf
     $settings = $this->getSettings();
 
     $form = parent::getOptionsForm();
+
+    $form['autocomplete_min_length'] = [
+      '#title' => $this->t('Autocomplete minimal input length'),
+      '#type' => 'number',
+      '#min' => 1,
+      '#step' => 1,
+      '#default_value' => $settings['autocomplete_min_length'],
+    ];
 
     $form += [
       'component_restrictions' => [

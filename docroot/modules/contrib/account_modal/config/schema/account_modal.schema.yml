@@ -1,0 +1,51 @@
+account_modal.settings:
+  type: mapping
+  mapping:
+    enabled_pages:
+      type: mapping
+      label: 'Enabled pages'
+      mapping:
+        page:
+          type: string
+          label: 'Page'
+        register:
+          type: string
+          label: 'Register'
+        cancel:
+          type: string
+          label: 'Cancel'
+        login:
+          type: string
+          label: 'Login'
+        password:
+          type: string
+          label: 'Password'
+    reload_on_success:
+      type: integer
+      label: 'Reload on success'
+    dialog_width:
+      type: string
+      label: 'Dialog width'
+    dialog_height:
+      type: string
+      label: 'Dialog height'
+    create_profile_after_registration:
+      type: boolean
+      label: 'Create profile after registration'
+    profile_type:
+      type: string
+      label: 'Profile type'
+    hide_field_descriptions:
+      type: integer
+      label: 'Hide field descriptions'
+    header_blocks:
+      type: string
+      label: 'Header blocks'
+    footer_blocks:
+      type: string
+      label: 'Footer blocks'
+    langcode:
+      type: string
+      label: 'Language code'
+    _core:
+      type: _core_config_info
