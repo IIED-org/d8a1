@@ -1318,7 +1318,11 @@ class InlineParagraphsWidget extends WidgetBase {
         // A content entity form saves without any rebuild. It needs to set the
         // language to update it in case of language change.
         $langcode_key = $paragraphs_entity->getEntityType()->getKey('langcode');
-        if ($paragraphs_entity->get($langcode_key)->value != $form_state->get('langcode')) {
+
+        $paragraphs_entity->set($langcode_key, $paragraphs_entity->get($langcode_key)->getLangcode());
+
+        if (!empty($form_state->get('langcode'))
+          && $paragraphs_entity->get($langcode_key)->value != $form_state->get('langcode')) {
           // If a translation in the given language already exists, switch to
           // that. If there is none yet, update the language.
           if ($paragraphs_entity->hasTranslation($form_state->get('langcode'))) {

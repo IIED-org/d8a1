@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8cfbaba1ab55daf6eaf44e630826eb85",
+    "content-hash": "d7bb77cfd6f8f1ece315c354a734fe1c",
     "packages": [
         {
             "name": "abraham/twitteroauth",
@@ -1286,6 +1286,9 @@
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
                     }
+                },
+                "patches_applied": {
+                    "Integrate Address with Search API": "https://www.drupal.org/files/issues/2018-06-07/address-search-api-full-name-properties-2812659-37.patch"
                 }
             },
             "notification-url": "https://packages.drupal.org/8/downloads",
@@ -2676,6 +2679,10 @@
                         "[web-root]/profiles/README.txt": "assets/scaffold/files/profiles.README.txt",
                         "[web-root]/themes/README.txt": "assets/scaffold/files/themes.README.txt"
                     }
+                },
+                "patches_applied": {
+                    "getEntityTranslation() throws exception on null": "https://www.drupal.org/files/issues/2018-09-05/2951493-15.patch",
+                    "Make exposed filter values available as tokens": "https://www.drupal.org/files/issues/2018-05-14/make_exposed_filter-2761273-13.patch"
                 }
             },
             "autoload": {
@@ -5074,6 +5081,9 @@
                         "status": "not-covered",
                         "message": "Project has not opted into security advisory coverage!"
                     }
+                },
+                "patches_applied": {
+                    "Unmasquerade link always appears": "https://www.drupal.org/files/issues/2018-07-11/unmasquerade_link-2695779-17.patch"
                 }
             },
             "notification-url": "https://packages.drupal.org/8/downloads",
@@ -5289,6 +5299,9 @@
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
                     }
+                },
+                "patches_applied": {
+                    "Error on upload via entity browser": "https://www.drupal.org/files/issues/paragraphs-missing-langcode-2901390-9.patch"
                 }
             },
             "notification-url": "https://packages.drupal.org/8/downloads",

@@ -143,22 +143,6 @@
       "docroot/profiles/contrib/{$name}": ["type:drupal-profile"],
       "docroot/themes/contrib/{$name}": ["type:drupal-theme"]
     },
-    "drupal-scaffold": {
-        "locations": {
-            "web-root": "docroot/"
-        },
-        "allowed-packages": [
-            "drupal/core"
-        ],
-        "file-mapping": {
-            "[web-root]/.htaccess": {
-                "mode": "replace",
-                "path": "docroot/core/assets/scaffold/files/htaccess",
-                "overwrite": false
-            }
-        }
-      }
-    },
     "patches": {
       "drupal/core": {
         "getEntityTranslation() throws exception on null": "https://www.drupal.org/files/issues/2018-09-05/2951493-15.patch",
@@ -188,7 +172,8 @@
       "drupal/condition_query": {
         "Enable wildcard": "https://www.drupal.org/files/issues/2018-07-18/2986466-2-condition_query_wildcard.patch"
       }
-    },
+    }
+  },
   "scripts": {
   },
   "enable-patching": true
