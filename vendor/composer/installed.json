@@ -1123,52 +1123,6 @@
         ]
     },
     {
-        "name": "drupal-composer/drupal-scaffold",
-        "version": "2.6.1",
-        "version_normalized": "2.6.1.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/drupal-composer/drupal-scaffold.git",
-            "reference": "13c1ffc7dd4925cb03707759128b85c0cd6276f8"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/drupal-composer/drupal-scaffold/zipball/13c1ffc7dd4925cb03707759128b85c0cd6276f8",
-            "reference": "13c1ffc7dd4925cb03707759128b85c0cd6276f8",
-            "shasum": ""
-        },
-        "require": {
-            "composer-plugin-api": "^1.0.0",
-            "composer/semver": "^1.4",
-            "php": "^5.5.9|>=7.0.8"
-        },
-        "require-dev": {
-            "composer/composer": "dev-master",
-            "g1a/composer-test-scenarios": "^2.1.0",
-            "phpunit/phpunit": "^6",
-            "squizlabs/php_codesniffer": "^2.8"
-        },
-        "time": "2019-03-30T10:41:38+00:00",
-        "type": "composer-plugin",
-        "extra": {
-            "class": "DrupalComposer\\DrupalScaffold\\Plugin",
-            "branch-alias": {
-                "dev-master": "2.0.x-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "DrupalComposer\\DrupalScaffold\\": "src/"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "GPL-2.0-or-later"
-        ],
-        "description": "Composer Plugin for updating the Drupal scaffold files when using drupal/core"
-    },
-    {
         "name": "drupal/account_modal",
         "version": "1.0.0-beta3",
         "version_normalized": "1.0.0.0-beta3",
@@ -2817,6 +2771,55 @@
         "description": "Drupal is an open source content management platform powering millions of websites and applications."
     },
     {
+        "name": "drupal/core-composer-scaffold",
+        "version": "8.9.1",
+        "version_normalized": "8.9.1.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/drupal/core-composer-scaffold.git",
+            "reference": "07cdfe2799789fc0c2d0e3e1ba64cb5e2a973ece"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/drupal/core-composer-scaffold/zipball/07cdfe2799789fc0c2d0e3e1ba64cb5e2a973ece",
+            "reference": "07cdfe2799789fc0c2d0e3e1ba64cb5e2a973ece",
+            "shasum": ""
+        },
+        "require": {
+            "composer-plugin-api": "^1 || ^2",
+            "php": ">=7.0.8"
+        },
+        "conflict": {
+            "drupal-composer/drupal-scaffold": "*"
+        },
+        "require-dev": {
+            "composer/composer": "^1.8@stable"
+        },
+        "time": "2020-05-29T11:36:27+00:00",
+        "type": "composer-plugin",
+        "extra": {
+            "class": "Drupal\\Composer\\Plugin\\Scaffold\\Plugin",
+            "branch-alias": {
+                "dev-master": "1.0.x-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Drupal\\Composer\\Plugin\\Scaffold\\": ""
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "GPL-2.0-or-later"
+        ],
+        "description": "A flexible Composer project scaffold builder.",
+        "homepage": "https://www.drupal.org/project/drupal",
+        "keywords": [
+            "drupal"
+        ]
+    },
+    {
         "name": "drupal/core-recommended",
         "version": "8.9.1",
         "version_normalized": "8.9.1.0",
@@ -2989,79 +2992,6 @@
         "support": {
             "source": "https://git.drupalcode.org/project/ctools",
             "issues": "https://www.drupal.org/project/issues/ctools"
-        }
-    },
-    {
-        "name": "drupal/devel",
-        "version": "1.2.0",
-        "version_normalized": "1.2.0.0",
-        "source": {
-            "type": "git",
-            "url": "https://git.drupalcode.org/project/devel.git",
-            "reference": "8.x-1.2"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://ftp.drupal.org/files/projects/devel-8.x-1.2.zip",
-            "reference": "8.x-1.2",
-            "shasum": "01f3349ef75f6e21fceef24be9d3d6506ca29647"
-        },
-        "require": {
-            "drupal/core": "~8.0"
-        },
-        "suggest": {
-            "symfony/var-dumper": "Pretty print complex values better with var-dumper available"
-        },
-        "type": "drupal-module",
-        "extra": {
-            "drupal": {
-                "version": "8.x-1.2",
-                "datestamp": "1507197844",
-                "security-coverage": {
-                    "status": "covered",
-                    "message": "Covered by Drupal's security advisory policy"
-                }
-            }
-        },
-        "installation-source": "dist",
-        "notification-url": "https://packages.drupal.org/8/downloads",
-        "license": [
-            "GPL-2.0+"
-        ],
-        "authors": [
-            {
-                "name": "Moshe Weitzman",
-                "homepage": "https://github.com/weitzman",
-                "email": "weitzman@tejasa.com",
-                "role": "Maintainer"
-            },
-            {
-                "name": "Hans Salvisberg",
-                "homepage": "https://www.drupal.org/u/salvis",
-                "email": "drupal@salvisberg.com",
-                "role": "Maintainer"
-            },
-            {
-                "name": "Luca Lusso",
-                "homepage": "https://www.drupal.org/u/lussoluca",
-                "role": "Maintainer"
-            },
-            {
-                "name": "Marco (willzyx)",
-                "homepage": "https://www.drupal.org/u/willzyx",
-                "role": "Maintainer"
-            },
-            {
-                "name": "See contributors",
-                "homepage": "https://www.drupal.org/node/3236/committers"
-            }
-        ],
-        "description": "Various blocks, pages, and functions for developers.",
-        "homepage": "http://drupal.org/project/devel",
-        "support": {
-            "source": "http://cgit.drupalcode.org/devel",
-            "issues": "http://drupal.org/project/devel",
-            "irc": "irc://irc.freenode.org/drupal-contribute"
         }
     },
     {
@@ -3796,12 +3726,18 @@
     },
     {
         "name": "drupal/field_group",
-        "version": "dev-3.x",
-        "version_normalized": "dev-3.x",
+        "version": "3.1.0",
+        "version_normalized": "3.1.0.0",
         "source": {
             "type": "git",
             "url": "https://git.drupalcode.org/project/field_group.git",
-            "reference": "80ff5992b2d7f9a3c3b8614f54d33f80ada7d11e"
+            "reference": "8.x-3.1"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://ftp.drupal.org/files/projects/field_group-8.x-3.1.zip",
+            "reference": "8.x-3.1",
+            "shasum": "8a719eaea594f0ba874172831cb28da93c66b77a"
         },
         "require": {
             "drupal/core": "^8.8 || ^9"
@@ -3811,20 +3747,17 @@
         },
         "type": "drupal-module",
         "extra": {
-            "branch-alias": {
-                "dev-3.x": "3.x-dev"
-            },
             "drupal": {
-                "version": "8.x-3.1+0-dev",
-                "datestamp": "1591740591",
+                "version": "8.x-3.1",
+                "datestamp": "1591772567",
                 "security-coverage": {
-                    "status": "not-covered",
-                    "message": "Dev releases are not covered by Drupal security advisories."
+                    "status": "covered",
+                    "message": "Covered by Drupal's security advisory policy"
                 }
             },
             "patches_applied": []
         },
-        "installation-source": "source",
+        "installation-source": "dist",
         "notification-url": "https://packages.drupal.org/8/downloads",
         "license": [
             "GPL-2.0-or-later"
@@ -6744,80 +6677,6 @@
         }
     },
     {
-        "name": "drupal/stage_file_proxy",
-        "version": "1.0.0",
-        "version_normalized": "1.0.0.0",
-        "source": {
-            "type": "git",
-            "url": "https://git.drupalcode.org/project/stage_file_proxy.git",
-            "reference": "8.x-1.0"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://ftp.drupal.org/files/projects/stage_file_proxy-8.x-1.0.zip",
-            "reference": "8.x-1.0",
-            "shasum": "f101a07e0096f476c91cf23137469a5c5c18e2df"
-        },
-        "require": {
-            "drupal/core": ">=8.7.7"
-        },
-        "type": "drupal-module",
-        "extra": {
-            "drupal": {
-                "version": "8.x-1.0",
-                "datestamp": "1580492032",
-                "security-coverage": {
-                    "status": "covered",
-                    "message": "Covered by Drupal's security advisory policy"
-                }
-            }
-        },
-        "installation-source": "dist",
-        "notification-url": "https://packages.drupal.org/8/downloads",
-        "license": [
-            "GPL-2.0+"
-        ],
-        "authors": [
-            {
-                "name": "BarisW",
-                "homepage": "https://www.drupal.org/user/107229"
-            },
-            {
-                "name": "geek-merlin",
-                "homepage": "https://www.drupal.org/user/229048"
-            },
-            {
-                "name": "greggles",
-                "homepage": "https://www.drupal.org/user/36762"
-            },
-            {
-                "name": "markdorison",
-                "homepage": "https://www.drupal.org/user/346106"
-            },
-            {
-                "name": "moshe weitzman",
-                "homepage": "https://www.drupal.org/user/23"
-            },
-            {
-                "name": "msonnabaum",
-                "homepage": "https://www.drupal.org/user/75278"
-            },
-            {
-                "name": "netaustin",
-                "homepage": "https://www.drupal.org/user/199298"
-            },
-            {
-                "name": "robwilmshurst",
-                "homepage": "https://www.drupal.org/user/144488"
-            }
-        ],
-        "description": "Provides stage_file_proxy module.",
-        "homepage": "https://www.drupal.org/project/stage_file_proxy",
-        "support": {
-            "source": "https://git.drupalcode.org/project/stage_file_proxy"
-        }
-    },
-    {
         "name": "drupal/super_login",
         "version": "1.5.0",
         "version_normalized": "1.5.0.0",
@@ -6970,66 +6829,6 @@
         "homepage": "https://www.drupal.org/project/taxonomy_access_fix",
         "support": {
             "source": "https://git.drupalcode.org/project/taxonomy_access_fix"
-        }
-    },
-    {
-        "name": "drupal/taxonomy_manager",
-        "version": "1.0.0-alpha2",
-        "version_normalized": "1.0.0.0-alpha2",
-        "source": {
-            "type": "git",
-            "url": "https://git.drupalcode.org/project/taxonomy_manager.git",
-            "reference": "8.x-1.0-alpha2"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://ftp.drupal.org/files/projects/taxonomy_manager-8.x-1.0-alpha2.zip",
-            "reference": "8.x-1.0-alpha2",
-            "shasum": "7becfad1cad0d26f471b8e097afcadde94a9f266"
-        },
-        "require": {
-            "drupal/core": "^8"
-        },
-        "type": "drupal-module",
-        "extra": {
-            "drupal": {
-                "version": "8.x-1.0-alpha2",
-                "datestamp": "1538074980",
-                "security-coverage": {
-                    "status": "not-covered",
-                    "message": "Alpha releases are not covered by Drupal security advisories."
-                }
-            }
-        },
-        "installation-source": "dist",
-        "notification-url": "https://packages.drupal.org/8/downloads",
-        "license": [
-            "GPL-2.0+"
-        ],
-        "authors": [
-            {
-                "name": "Matthias Hutterer (mpdonadio)",
-                "homepage": "https://www.drupal.org/u/mh86",
-                "role": "Maintainer"
-            },
-            {
-                "name": "joaogarin",
-                "homepage": "https://www.drupal.org/user/612814"
-            },
-            {
-                "name": "kalinchernev",
-                "homepage": "https://www.drupal.org/user/231185"
-            },
-            {
-                "name": "mh86",
-                "homepage": "https://www.drupal.org/user/59747"
-            }
-        ],
-        "description": "Taxonomy_Manager provides a powerful interface for managing taxonomies via a tree view.",
-        "homepage": "https://drupal.org/project/taxonomy_manager",
-        "support": {
-            "source": "http://cgit.drupalcode.org/taxonomy_manager",
-            "issues": "https://drupal.org/project/issues/taxonomy_manager"
         }
     },
     {

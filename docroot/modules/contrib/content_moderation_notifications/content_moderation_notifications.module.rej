@@ -1,0 +1,21 @@
+***************
+*** 5,14 ****
+   * Hook implementations for the content moderation notifications module.
+   */
+  
+- use Drupal\Component\Render\PlainTextOutput;
+  use Drupal\content_moderation_notifications\ContentModerationNotificationInterface;
+  use Drupal\Core\Entity\EntityInterface;
+- use Drupal\Core\Render\Markup;
+  
+  /**
+   * Implements hook_entity_presave().
+--- 5,12 ----
+   * Hook implementations for the content moderation notifications module.
+   */
+  
+  use Drupal\content_moderation_notifications\ContentModerationNotificationInterface;
+  use Drupal\Core\Entity\EntityInterface;
+  
+  /**
+   * Implements hook_entity_presave().

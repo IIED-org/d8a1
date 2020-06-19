@@ -785,7 +785,7 @@ if (isset($_SERVER['DEVDESKTOP_DRUPAL_SETTINGS_DIR']) && file_exists($_SERVER['D
 
 if (isset($_ENV['AH_SITE_ENVIRONMENT'])) {
     $config['acquia_search.settings']['disable_auto_read_only'] = TRUE;
- }
+}
 
 /**
  * Load local development override configuration, if available.

@@ -1,0 +1,70 @@
+# Schema
+content_moderation_notifications.content_moderation_notification.*:
+  type: config_entity
+  label: 'ContentModerationNotification'
+  mapping:
+    id:
+      type: string
+      label: 'ContentModerationNotification id'
+    uuid:
+      type: string
+      label: 'UUID'
+    workflow:
+       type: string
+       label: 'Workflow'
+    transitions:
+      type: sequence
+      sequence:
+        type: string
+        label: 'Transitions'
+    roles:
+      type: sequence
+      sequence:
+        type: string
+        label: 'Roles'
+    author:
+      type: boolean
+      label: 'Author'
+    to:
+       type: string
+       label: 'To'
+    cc:
+       type: string
+       label: 'Cc'
+    bcc:
+       type: string
+       label: 'Bcc'
+    from:
+       type: string
+       label: 'From'
+    replyto:
+       type: string
+       label: 'Reply-To'
+    subject:
+       type: label
+       label: 'Subject'
+    body:
+      type: text_format
+      label: 'Email'
+      mapping:
+        value:
+          type: label
+          label: 'Value'
+        format:
+          type: string
+          label: 'Text format'
+    debug:
+      type: boolean
+      label: 'Debug'
+    abort:
+      type: string
+      label: 'Abort Email Address'
+    label:
+      type: label
+      label: 'Label'
+    langcode:
+      type: string
+      label: 'Default language'
+    status:
+      type: boolean
+      label: 'Notification status'

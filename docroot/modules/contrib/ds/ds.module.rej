@@ -1,0 +1,18 @@
+***************
+*** 527,533 ****
+            );
+          }
+          list($key, $attribute_value) = explode('|', $replaced_attribute);
+-         $variables['attributes'][$key] = $attribute_value;
+        }
+      }
+    }
+--- 527,534 ----
+            );
+          }
+          list($key, $attribute_value) = explode('|', $replaced_attribute);
++         // Handle the class attribute as an array and others as strings.
++         $key == 'class' ? $variables['attributes'][$key][] = $attribute_value : $variables['attributes'][$key] = $attribute_value;
+        }
+      }
+    }
