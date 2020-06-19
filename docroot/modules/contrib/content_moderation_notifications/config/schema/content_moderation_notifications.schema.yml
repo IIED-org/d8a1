@@ -25,21 +25,9 @@ content_moderation_notifications.content_moderation_notification.*:
     author:
       type: boolean
       label: 'Author'
-    to:
+    emails:
        type: string
-       label: 'To'
-    cc:
-       type: string
-       label: 'Cc'
-    bcc:
-       type: string
-       label: 'Bcc'
-    from:
-       type: string
-       label: 'From'
-    replyto:
-       type: string
-       label: 'Reply-To'
+       label: 'Emails'
     subject:
        type: label
        label: 'Subject'
@@ -53,12 +41,6 @@ content_moderation_notifications.content_moderation_notification.*:
         format:
           type: string
           label: 'Text format'
-    debug:
-      type: boolean
-      label: 'Debug'
-    abort:
-      type: string
-      label: 'Abort Email Address'
     label:
       type: label
       label: 'Label'

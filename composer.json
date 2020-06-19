@@ -68,7 +68,6 @@
     "drupal/leaflet_more_maps": "^1.0@alpha",
     "drupal/better_exposed_filters": "^3.0@alpha",
     "drupal/taxonomy_publish": "^1.1",
-    "drupal/content_moderation_notifications": "^3.2",
     "drupal/taxonomy_access_fix": "^2.6",
     "drupal/inline_entity_form": "^1.0@RC",
     "drupal/form_mode_manager": "^1.3",
@@ -108,7 +107,8 @@
     "drupal/http_response_headers": "^2.0@beta",
     "drupal/condition_query": "^1.2",
     "drupal/memcache": "^2.0",
-    "drupal/core-recommended": "^8.8"
+    "drupal/core-recommended": "^8.8",
+    "drupal/content_moderation_notifications": "^3.2"
   },
   "require-dev": {
     "drupal/devel": "^1.0",

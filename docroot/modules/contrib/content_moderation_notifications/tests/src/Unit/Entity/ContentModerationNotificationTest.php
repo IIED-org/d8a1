@@ -48,13 +48,7 @@ class ContentModerationNotificationTest extends UnitTestCase {
       'format' => 'test_format',
     ],
     'author' => TRUE,
-    'to' => 'foo@example.com',
-    'cc' => 'foo-cc@example.com',
-    'bcc' => 'foo-bcc@example.com',
-    'from' => 'foo-from@example.com',
-    'replyto' => 'foo-replyto@example.com',
-    'abort' => 'foo-abort@example.com',
-    'debug' => false,
+    'emails' => 'foo@example.com',
   ];
 
   /**
@@ -74,45 +68,10 @@ class ContentModerationNotificationTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getTo
+   * @covers ::getEmails
    */
-  public function testGetTo() {
-    $this->assertEquals('foo@example.com', $this->notification->getTo());
-  }
-
-  /**
-   * @covers ::getCc
-   */
-  public function testGetCc() {
-    $this->assertEquals('foo-cc@example.com', $this->notification->getCc());
-  }
-
-  /**
-   * @covers ::getBcc
-   */
-  public function testGetBcc() {
-    $this->assertEquals('foo-bcc@example.com', $this->notification->getBcc());
-  }
-
-  /**
-   * @covers ::getFrom
-   */
-  public function testGetFrom() {
-    $this->assertEquals('foo-from@example.com', $this->notification->getFrom());
-  }
-
-  /**
-   * @covers ::getAbort
-   */
-  public function testGetAbort() {
-    $this->assertEquals('foo-abort@example.com', $this->notification->getAbort());
-  }
-
-  /**
-   * @covers ::getDebug
-   */
-  public function testGetDebug() {
-    $this->assertEquals(false, $this->notification->getDebug());
+  public function testGetEmails() {
+    $this->assertEquals('foo@example.com', $this->notification->getEmails());
   }
 
   /**

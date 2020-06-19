@@ -31,7 +31,6 @@ class NotificationsTest extends KernelTestBase {
     'system',
     'user',
     'workflows',
-    'token',
   ];
 
   /**
@@ -56,7 +55,6 @@ class NotificationsTest extends KernelTestBase {
    * Test sending of emails.
    */
   public function testEmailDelivery() {
-    // @todo: Re-enable test
     // No emails should be sent for content without notifications.
     $entity = EntityTestRev::create();
     $entity->save();
@@ -106,35 +104,13 @@ class NotificationsTest extends KernelTestBase {
     $this->assertEquals('archived', $entity->moderation_state->value);
     $entity->moderation_state = 'published';
     $entity->save();
-
-    // Get data for displaying for test failures
-    $emails = $this->getMails();
-    $last_email = end($emails);
-
-    $this->assertMail('to', 'foo@example.com,BAR@EXAMPLE.COM,admin@example.com', "Failed: Alter TO=[{$last_email['to']}]");
-    $this->assertCcRecipients('foo-cc@example.com,BAR-CC@EXAMPLE.COM,admin@example.com', "Failed: Alter BCC={$last_email['headers']['cc']}");
-    $this->assertBccRecipients('foo-bcc@example.com,BAR-BCC@EXAMPLE.COM,admin@example.com', "Failed: Alter BCC={$last_email['headers']['bcc']}");
-    $this->assertMail('from', 'admin@example.com', "Failed: Alter FROM={$last_email['from']}");
-    $this->assertMail('reply-to', 'admin@example.com', "Failed: Alter REPLY-TO=[{$last_email['reply-to']}]");
-    $this->assertMail('id', 'content_moderation_notifications_example_notification', "Failed: Alter ID={$last_email['id']}");
-    $this->assertMail('subject', '[NOTICE] admin@example.com Testing TWIG', "Failed: Alter SUBJECT={$last_email['subject']}");
-
+    $this->assertMail('from', 'admin@example.com');
+    $this->assertMail('to', 'admin@example.com');
+    $this->assertBccRecipients('altered@example.com,foo' . $entity->id() . '@example.com');
+    $this->assertMail('id', 'content_moderation_notifications_content_moderation_notification');
+    $this->assertMail('subject', PlainTextOutput::renderFromHtml($notification->getSubject()));
     $this->assertCount(3, $this->getMails());
   }
-
-  /**
-   * Helper method to assert the Cc recipients.
-   *
-   * @param string $recipients
-   *   The expected recipients.
-   */
-  protected function assertCcRecipients($recipients) {
-    $mails = $this->getMails();
-    $mail = end($mails);
-    $this->assertNotEmpty($mail['headers']['cc']);
-    $this->assertEquals($recipients, $mail['headers']['cc']);
-  }
-
 
   /**
    * Helper method to assert the Bcc recipients.
@@ -145,8 +121,8 @@ class NotificationsTest extends KernelTestBase {
   protected function assertBccRecipients($recipients) {
     $mails = $this->getMails();
     $mail = end($mails);
-    $this->assertNotEmpty($mail['headers']['bcc']);
-    $this->assertEquals($recipients, $mail['headers']['bcc']);
+    $this->assertNotEmpty($mail['headers']['Bcc']);
+    $this->assertEquals($recipients, $mail['headers']['Bcc']);
   }
 
 }

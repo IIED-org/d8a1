@@ -163,7 +163,7 @@ class ContentModerationNotificationsFormBase extends EntityForm {
       '#title' => $this->t('Roles'),
       '#options' => $roles_options,
       '#default_value' => $content_moderation_notification->getRoleIds(),
-      '#description' => $this->t('Send notifications to all users with these roles.  Addresses will be added to the BCC field.'),
+      '#description' => $this->t('Send notifications to all users with these roles.'),
     ];
 
     // Send email to author?
@@ -294,21 +294,6 @@ class ContentModerationNotificationsFormBase extends EntityForm {
 
     // Redirect the user back to the listing route after the save operation.
     $form_state->setRedirect('entity.content_moderation_notification.collection');
-  }
-
-  /**
-   * Returns the number of rows to show in a text area based on the number of lines in a string.
-   *
-   * @param string $str
-   *   The string to count newlines in.
-   *
-   * @return int
-   *   The number of rows to display for the textarea
-   */
-  private function textareaCountLines($str) {
-    $num_lines = substr_count($str, "\n");
-    return $num_lines + 1;
-
   }
 
 }

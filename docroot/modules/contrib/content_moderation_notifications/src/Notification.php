@@ -24,13 +24,6 @@ class Notification implements NotificationInterface {
   protected $currentUser;
 
   /**
-   * Config factory service.
-   *
-   * @var \Drupal\Core\Config\ConfigFactoryInterface
-   */
-  protected $configFactory;
-
-  /**
    * The entity type manager service.
    *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
@@ -78,22 +71,16 @@ class Notification implements NotificationInterface {
    *   The module handler service.
    * @param \Drupal\content_moderation_notifications\NotificationInformationInterface $notification_information
    *   The notification information service.
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
-   *   Config factory service.
-   * @param \Drupal\token\TokenEntityMapperInterface $token_entity_mapper
+   * @param \Drupal\token\TokenEntityMapperInterface $token_entity_mappper
    *   The token entity mapper service.
-   * @param Drupal\Core\Utility\Token $token
-   *   The token service.
    */
-  public function __construct(AccountInterface $current_user, EntityTypeManagerInterface $entity_type_manager, MailManagerInterface $mail_manager, ModuleHandlerInterface $module_handler, NotificationInformationInterface $notification_information, ConfigFactoryInterface $config_factory, TokenEntityMapperInterface $token_entity_mapper = NULL, Token $token = null) {
+  public function __construct(AccountInterface $current_user, EntityTypeManagerInterface $entity_type_manager, MailManagerInterface $mail_manager, ModuleHandlerInterface $module_handler, NotificationInformationInterface $notification_information, TokenEntityMapperInterface $token_entity_mappper = NULL) {
     $this->currentUser = $current_user;
     $this->entityTypeManager = $entity_type_manager;
     $this->mailManager = $mail_manager;
     $this->moduleHandler = $module_handler;
     $this->notificationInformation = $notification_information;
-    $this->configFactory = $config_factory;
-    $this->tokenEntityMapper = $token_entity_mapper;
-    $this->token = $token;
+    $this->tokenEntityMapper = $token_entity_mappper;
   }
 
   /**

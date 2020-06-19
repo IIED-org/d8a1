@@ -29,14 +29,8 @@ trait ContentModerationNotificationCreateTrait {
         'format' => 'filtered_html',
       ],
       'roles' => [],
-      'to' => '',
-      'cc' => '',
-      'bcc' => '',
-      'from' => '',
-      'replyto' => '',
-      'abort' => '',
-      'debug' => FALSE,
-      'title' => 'test',
+      'emails' => '',
+      'transitions' => [],
     ];
 
     $notification = ContentModerationNotification::create($values);
