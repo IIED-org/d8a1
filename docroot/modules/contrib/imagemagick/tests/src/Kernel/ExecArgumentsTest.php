@@ -15,7 +15,7 @@ class ExecArgumentsTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['imagemagick'];
+  public static $modules = ['imagemagick', 'file_mdm', 'sophron'];
 
   /**
    * Test arguments handling.

@@ -70,12 +70,18 @@ class MapUpdater
      *
      * @return string[]
      *   An array of error messages.
+     *
+     * @throws \RuntimeException
+     *   If it was not possible to access the file.
      */
     public function loadMapFromApacheFile($source_file)
     {
         $errors = [];
 
-        $lines = file($source_file);
+        $lines = @file($source_file);
+        if ($lines === false) {
+            throw new \RuntimeException("Failed accessing {$source_file}");
+        }
         foreach ($lines as $line) {
             if ($line[0] == '#') {
                 continue;
@@ -197,7 +203,7 @@ class MapUpdater
     {
         $content = preg_replace(
             '#protected static \$map = (.+?);#s',
-            "protected static \$map = " . var_export($this->map->getMapArray(), true) . ";",
+            "protected static \$map = " . preg_replace('/\s+$/m', '', var_export($this->map->getMapArray(), true)) . ";",
             file_get_contents($file)
         );
         file_put_contents($file, $content);

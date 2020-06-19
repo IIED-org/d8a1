@@ -20,6 +20,16 @@ class ScaleAndCrop extends ImagemagickImageToolkitOperationBase {
    */
   protected function arguments() {
     return [
+      'x' => [
+        'description' => 'The horizontal offset for the start of the crop, in pixels',
+        'required' => FALSE,
+        'default' => NULL,
+      ],
+      'y' => [
+        'description' => 'The vertical offset for the start the crop, in pixels',
+        'required' => FALSE,
+        'default' => NULL,
+      ],
       'width' => [
         'description' => 'The target width, in pixels',
       ],
@@ -40,23 +50,23 @@ class ScaleAndCrop extends ImagemagickImageToolkitOperationBase {
   protected function validateArguments(array $arguments) {
     // Fail if no dimensions available for current image.
     if (is_null($this->getToolkit()->getWidth()) || is_null($this->getToolkit()->getHeight())) {
-      // @todo \InvalidArgumentException is incorrect, but other exceptions
-      // would not be managed by toolkits that implement ImageToolkitBase.
-      // Change to \RuntimeException when
-      // https://www.drupal.org/project/drupal/issues/2583041 is committed.
-      throw new \InvalidArgumentException("No image dimensions available for the image '{$this->getPluginDefinition()['operation']}' operation");
+      throw new \RuntimeException("No image dimensions available for the image '{$this->getPluginDefinition()['operation']}' operation");
     }
 
-    $actual_width = $this->getToolkit()->getWidth();
-    $actual_height = $this->getToolkit()->getHeight();
+    $actualWidth = $this->getToolkit()->getWidth();
+    $actualHeight = $this->getToolkit()->getHeight();
 
-    $scale_factor = max($arguments['width'] / $actual_width, $arguments['height'] / $actual_height);
+    $scaleFactor = max($arguments['width'] / $actualWidth, $arguments['height'] / $actualHeight);
 
-    $arguments['x'] = (int) round(($actual_width * $scale_factor - $arguments['width']) / 2);
-    $arguments['y'] = (int) round(($actual_height * $scale_factor - $arguments['height']) / 2);
+    $arguments['x'] = isset($arguments['x']) ?
+      (int) round($arguments['x']) :
+      (int) round(($actualWidth * $scaleFactor - $arguments['width']) / 2);
+    $arguments['y'] = isset($arguments['y']) ?
+      (int) round($arguments['y']) :
+      (int) round(($actualHeight * $scaleFactor - $arguments['height']) / 2);
     $arguments['resize'] = [
-      'width' => (int) round($actual_width * $scale_factor),
-      'height' => (int) round($actual_height * $scale_factor),
+      'width' => (int) round($actualWidth * $scaleFactor),
+      'height' => (int) round($actualHeight * $scaleFactor),
       'filter' => $arguments['filter'],
     ];
 
