@@ -78,6 +78,10 @@ class FormsStepsTest extends BrowserTestBase {
 
     Role::load($this->user->getRoles()[1])
       ->grantPermission("administer nodes")
+      ->grantPermission("create article content")
+      ->grantPermission("create page content")
+      ->grantPermission("edit any article content")
+      ->grantPermission("edit any page content")
       ->save();
 
     // Access article's form display page.
@@ -155,6 +159,10 @@ class FormsStepsTest extends BrowserTestBase {
         'Created ' . $step['label'] . ' step.'
       );
     }
+
+    // TODO: seems that we have a bug in core, new form class not correctly
+    // defined coz of cache.
+    drupal_flush_all_caches();
 
     // Test the flow/
     // Access the step 1.

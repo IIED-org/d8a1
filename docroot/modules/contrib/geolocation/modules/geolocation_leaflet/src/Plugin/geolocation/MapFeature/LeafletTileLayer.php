@@ -24,7 +24,7 @@ class LeafletTileLayer extends MapFeatureBase {
    */
   public static function getDefaultSettings() {
     return [
-      'tile_layer_provider' => 'OpenStreetMap.Mapnik',
+      'tile_layer_provider' => 'OpenStreetMap Mapnik',
       'tile_provider_options' => [],
     ];
   }
@@ -78,10 +78,12 @@ class LeafletTileLayer extends MapFeatureBase {
       'enable' => TRUE,
       'tileLayerProvider' => str_replace(' ', '.', $feature_settings['tile_layer_provider']),
     ];
+
     $provider = explode('.', $feature_settings['tile_layer_provider'])[0];
     if (isset($feature_settings['tile_provider_options'][$provider])) {
       $tileLayer['tileLayerOptions'] = $feature_settings['tile_provider_options'][$provider];
     }
+
     $render_array['#attached'] = BubbleableMetadata::mergeAttachments(
       empty($render_array['#attached']) ? [] : $render_array['#attached'],
       [

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\content_browser\Routing\ContentBrowserRouteSubscriber.
- */
-
 namespace Drupal\content_browser\Routing;
 
 use Drupal\Core\Routing\RouteSubscriberBase;

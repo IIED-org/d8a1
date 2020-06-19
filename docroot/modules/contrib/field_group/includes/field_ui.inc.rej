@@ -1,0 +1,17 @@
+***************
+*** 177,183 ****
+        '#region_callback' => 'field_group_display_overview_row_region',
+        '#js_settings' => ['rowHandler' => 'group'],
+        'human_name' => [
+-         '#markup' => Html::escape(t($group->label)),
+          '#prefix' => '<span class="group-label">',
+          '#suffix' => '</span>',
+        ],
+--- 177,183 ----
+        '#region_callback' => 'field_group_display_overview_row_region',
+        '#js_settings' => ['rowHandler' => 'group'],
+        'human_name' => [
++         '#markup' => $group->label,
+          '#prefix' => '<span class="group-label">',
+          '#suffix' => '</span>',
+        ],

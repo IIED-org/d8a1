@@ -69,7 +69,7 @@ abstract class ControlElementBase extends MapFeatureBase {
               $render_array['#id'] => [
                 $this->getPluginId() => [
                   'enable' => TRUE,
-                  'position' => $feature_settings['position'],
+                  'position' => empty($feature_settings['position']) ? '' : $feature_settings['position'],
                 ],
               ],
             ],

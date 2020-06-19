@@ -21,19 +21,19 @@ class GoogleMaps extends GoogleMapsProviderBase {
    *
    * @var int
    */
-  public static $MAXZOOMLEVEL = 18;
+  public static $maxZoomLevel = 20;
 
   /**
    * Google map min zoom level.
    *
    * @var int
    */
-  public static $MINZOOMLEVEL = 0;
+  public static $minZoomLevel = 0;
 
   /**
    * {@inheritdoc}
    */
-  public static $GOOGLEMAPSAPIURLPATH = '/maps/api/js';
+  public static $googleMapsApiUrlPath = '/maps/api/js';
 
   /**
    * {@inheritdoc}
@@ -56,9 +56,8 @@ class GoogleMaps extends GoogleMapsProviderBase {
     return array_replace_recursive(
       parent::getDefaultSettings(),
       [
-        'minZoom' => static::$MINZOOMLEVEL,
-        'maxZoom' => static::$MAXZOOMLEVEL,
-        'rotateControl' => FALSE,
+        'minZoom' => static::$minZoomLevel,
+        'maxZoom' => static::$maxZoomLevel,
         'gestureHandling' => 'auto',
         'map_features' => [
           'marker_infowindow' => [
@@ -104,8 +103,6 @@ class GoogleMaps extends GoogleMapsProviderBase {
   public function getSettings(array $settings) {
     $settings = parent::getSettings($settings);
 
-    $settings['rotateControl'] = (bool) $settings['rotateControl'];
-
     $settings['minZoom'] = (int) $settings['minZoom'];
     $settings['maxZoom'] = (int) $settings['maxZoom'];
 
@@ -124,13 +121,13 @@ class GoogleMaps extends GoogleMapsProviderBase {
 
     $form = parent::getSettingsForm($settings, $parents);
 
-    $form['zoom']['#min'] = static::$MINZOOMLEVEL;
-    $form['zoom']['#max'] = static::$MAXZOOMLEVEL;
+    $form['zoom']['#min'] = static::$minZoomLevel;
+    $form['zoom']['#max'] = static::$maxZoomLevel;
     $form['maxZoom'] = [
       '#group' => $parents_string . 'general_settings',
       '#type' => 'number',
-      '#min' => static::$MINZOOMLEVEL,
-      '#max' => static::$MAXZOOMLEVEL,
+      '#min' => static::$minZoomLevel,
+      '#max' => static::$maxZoomLevel,
       '#title' => $this->t('Max Zoom level'),
       '#description' => $this->t('The maximum zoom level of the map. If omitted, or set to null, the default maximum zoom from the current map type is used instead.'),
       '#default_value' => $settings['maxZoom'],
@@ -145,8 +142,8 @@ class GoogleMaps extends GoogleMapsProviderBase {
     $form['minZoom'] = [
       '#group' => $parents_string . 'general_settings',
       '#type' => 'number',
-      '#min' => static::$MINZOOMLEVEL,
-      '#max' => static::$MAXZOOMLEVEL,
+      '#min' => static::$minZoomLevel,
+      '#max' => static::$maxZoomLevel,
       '#title' => $this->t('Min Zoom level'),
       '#description' => $this->t('The minimum zoom level of the map. If omitted, or set to null, the default minimum zoom from the current map type is used instead.'),
       '#default_value' => $settings['minZoom'],
@@ -157,18 +154,6 @@ class GoogleMaps extends GoogleMapsProviderBase {
         ['\Drupal\Core\Render\Element\Number', 'preRenderNumber'],
         ['\Drupal\Core\Render\Element\RenderElement', 'preRenderGroup'],
       ],
-    ];
-
-    $form['control_settings'] = [
-      '#type' => 'fieldset',
-      '#title' => $this->t('Controls'),
-    ];
-    $form['rotateControl'] = [
-      '#group' => $parents_string . 'control_settings',
-      '#type' => 'checkbox',
-      '#title' => $this->t('Rotate control'),
-      '#description' => $this->t('Show rotate control.'),
-      '#default_value' => $settings['rotateControl'],
     ];
 
     $form['behavior_settings'] = [
@@ -213,7 +198,6 @@ class GoogleMaps extends GoogleMapsProviderBase {
       empty($render_array['#attached']) ? [] : $render_array['#attached'],
       [
         'library' => [
-          'geolocation_google_maps/googlemapsapi',
           'geolocation_google_maps/google',
         ],
         'drupalSettings' => [

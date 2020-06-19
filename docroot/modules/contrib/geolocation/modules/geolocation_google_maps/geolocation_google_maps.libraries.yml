@@ -1,6 +1,6 @@
 # Geolocation Google Maps API integration library.
 googlemapsapi:
-  version: 8.x-2.x
+  version: 8.x-3.x
   dependencies:
     - core/drupalSettings
     - geolocation/geolocation.api
@@ -17,7 +17,7 @@ commonmap.google:
 
 # Google Maps geocoder function.
 geocoder.googlegeocodingapi:
-  version: 8.x-2.x
+  version: 8.x-3.x
   js:
     js/geolocation-google-geocoding-api-geocoder.js: {}
   dependencies:
@@ -27,7 +27,7 @@ geocoder.googlegeocodingapi:
 
 # Google widget API.
 widget.api.google:
-  version: 1.x
+  version: 8.x-3.x
   js:
     js/geolocation-widget-google-api.js: {}
   dependencies:
@@ -35,17 +35,45 @@ widget.api.google:
     - geolocation_google_maps/googlemapsapi
 
 widget.google:
-  version: 1.x
+  version: 8.x-3.x
   js:
     js/geolocation-google-maps-widget.js: {}
   dependencies:
     - geolocation/geolocation.widget
     - geolocation_google_maps/widget.api.google
 
+widget.google_maps.geojson:
+  version: 8.x-3.x
+  js:
+    js/geolocation-geometry-widget-google-maps.js: {}
+  dependencies:
+    - core/jquery.once
+    - geolocation/geolocation.map
 
 #
 # Map Features
 #
+
+# Layer bicycle.
+mapfeature.google_maps_layer_bicycling:
+  js:
+    js/MapFeature/geolocation-layer-bicycle.js: {}
+  dependencies:
+    - geolocation_google_maps/googlemapsapi
+
+# Layer transit.
+mapfeature.google_maps_layer_transit:
+  js:
+    js/MapFeature/geolocation-layer-transit.js: {}
+  dependencies:
+    - geolocation_google_maps/googlemapsapi
+
+# Layer traffic.
+mapfeature.google_maps_layer_traffic:
+  js:
+    js/MapFeature/geolocation-layer-traffic.js: {}
+  dependencies:
+    - geolocation_google_maps/googlemapsapi
 
 # Drawing support.
 mapfeature.drawing:
@@ -132,6 +160,13 @@ mapfeature.marker_infobubble:
     - geolocation_google_maps/googlemapsapi
     - geolocation_google_maps/infobubble
 
+# MarkerOpacity support.
+mapfeature.marker_opacity:
+  js:
+    js/MapFeature/geolocation-marker-opacity.js: {}
+  dependencies:
+    - geolocation_google_maps/googlemapsapi
+
 # MarkerIconAdjustment support.
 mapfeature.marker_icon:
   js:
@@ -139,10 +174,10 @@ mapfeature.marker_icon:
   dependencies:
     - geolocation_google_maps/googlemapsapi
 
-# MapTypeStyle support.
-mapfeature.map_type_style:
+# MarkerLabelAdjustment support.
+mapfeature.marker_label:
   js:
-    js/MapFeature/geolocation-maptypestyle.js: {}
+    js/MapFeature/geolocation-marker-label.js: {}
   dependencies:
     - geolocation_google_maps/googlemapsapi
 
@@ -206,10 +241,31 @@ mapfeature.control_streetview:
   dependencies:
     - geolocation_google_maps/googlemapsapi
 
+# Control Rotate.
+mapfeature.control_rotate:
+  js:
+    js/MapFeature/geolocation-control-rotate.js: {}
+  dependencies:
+    - geolocation_google_maps/googlemapsapi
+
+# Control Fullscreen.
+mapfeature.control_fullscreen:
+  js:
+    js/MapFeature/geolocation-control-fullscreen.js: {}
+  dependencies:
+    - geolocation_google_maps/googlemapsapi
+
 # ControlRecenter support.
 mapfeature.control_recenter:
   js:
     js/MapFeature/geolocation-control-recenter.js: {}
+  dependencies:
+    - geolocation_google_maps/googlemapsapi
+
+# ControlLoadingIndicator support.
+mapfeature.control_loading_indicator:
+  js:
+    js/MapFeature/geolocation-control-loading-indicator.js: {}
   dependencies:
     - geolocation_google_maps/googlemapsapi
 

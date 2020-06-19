@@ -24,7 +24,7 @@ class WorkflowRepository {
    */
   protected $connection;
 
-  const FORMS_STEPS_WORKFLOW_DB = 'forms_steps_workflows';
+  const FORMS_STEPS_WORKFLOW_DB = 'forms_steps_workflow';
 
   /**
    * Construct a repository object.

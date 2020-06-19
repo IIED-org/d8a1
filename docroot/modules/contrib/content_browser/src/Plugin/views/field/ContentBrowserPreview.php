@@ -3,7 +3,8 @@
 namespace Drupal\content_browser\Plugin\views\field;
 
 use Drupal\Core\Entity\ContentEntityInterface;
-use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\views\ResultRow;
@@ -18,24 +19,32 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class ContentBrowserPreview extends FieldPluginBase {
 
   /**
-   * The entity manager.
+   * The entity type manager.
    *
-   * @var \Drupal\Core\Entity\EntityManagerInterface
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  public $entityManager;
+  protected $entityTypeManager;
+
+    /**
+   * The entity display repository.
+   *
+   * @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface
+   */
+  protected $entityDisplayRepository;
 
   /**
    * {@inheritdoc}
    *
-   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
-   *   The entity manager.
-   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
-   *   The language manager.
+   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_type_manager
+   *   The entity type manager.
+   * @param \Drupal\Core\Entity\EntityDisplayRepositoryInterface $entity_display_repository
+   *   The entity display repository.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityManagerInterface $entity_manager) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, EntityDisplayRepositoryInterface $entity_display_repository) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
-    $this->entityManager = $entity_manager;
+    $this->entityTypeManager = $entity_type_manager;
+    $this->entityDisplayRepository = $entity_display_repository;
   }
 
   /**
@@ -46,7 +55,8 @@ class ContentBrowserPreview extends FieldPluginBase {
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('entity.manager')
+      $container->get('entity_type.manager'),
+      $container->get('entity_display.repository')
     );
   }
 
@@ -64,7 +74,7 @@ class ContentBrowserPreview extends FieldPluginBase {
     }
 
     $exposed_view_mode = isset($this->view->exposed_data['view_mode']) ? $this->view->exposed_data['view_mode'] : FALSE;
-    $view_mode_options = $this->getEntityManager()->getViewModeOptions($this->getEntityType());
+    $view_mode_options = $this->entityDisplayRepository->getViewModeOptions($this->getEntityType());
 
     if ($this->options['exposed_view_mode'] && $exposed_view_mode && isset($view_mode_options[$exposed_view_mode])) {
       $view_mode = $exposed_view_mode;
@@ -73,7 +83,7 @@ class ContentBrowserPreview extends FieldPluginBase {
       $view_mode = isset($this->options['view_mode']) ? $this->options['view_mode'] : 'teaser';
     }
 
-    $entity_view = $this->getEntityManager()->getViewBuilder($entity->getEntityTypeId())->view($entity, $view_mode);
+    $entity_view = $this->entityTypeManager->getViewBuilder($entity->getEntityTypeId())->view($entity, $view_mode);
 
     return $entity_view;
   }
@@ -96,7 +106,7 @@ class ContentBrowserPreview extends FieldPluginBase {
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     $form['view_mode'] = [
       '#title' => $this->t('Content view mode'),
-      '#options' => $this->getEntityManager()->getViewModeOptions($this->getEntityType()),
+      '#options' => $this->entityDisplayRepository->getViewModeOptions($this->getEntityType()),
       '#type' => 'select',
       '#default_value' => $this->options['view_mode'],
       '#description' => $this->t('The view mode which you would like the content to be previewed in.'),
@@ -129,13 +139,6 @@ class ContentBrowserPreview extends FieldPluginBase {
    */
   protected function allowAdvancedRender() {
     return FALSE;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function getEntityManager() {
-    return $this->entityManager;
   }
 
 }

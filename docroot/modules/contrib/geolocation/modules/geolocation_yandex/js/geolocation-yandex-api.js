@@ -17,6 +17,7 @@
    * @inheritDoc
    *
    * @prop {Object} settings.yandex_settings - Yandex Maps specific settings.
+   * @prop {ymaps} yandexMap
    */
   function GeolocationYandexMap(mapSettings) {
     if (typeof ymaps === 'undefined') {
@@ -47,7 +48,7 @@
       // Instantiate (and display) a map object:
       that.yandexMap = new ymaps.Map(
         that.container.get(0), {
-          center: [that.lat, that.lng],
+          center: [that.lng, that.lat],
           zoom: that.settings.yandex_settings.zoom,
           controls: []
         }
@@ -56,12 +57,12 @@
       that.addPopulatedCallback(function (map) {
         map.yandexMap.events.add('click', function (e) {
           var coords = e.get('coords');
-          map.clickCallback({lat: coords.lat, lng: coords.lng});
+          map.clickCallback({lat: coords[1], lng: coords[0]});
         });
 
         map.yandexMap.events.add('contextmenu', function (e) {
           var coords = e.get('coords');
-          map.contextClickCallback({lat: coords.lat, lng: coords.lng});
+          map.contextClickCallback({lat: coords[1], lng: coords[0]});
         });
       });
 
@@ -71,7 +72,13 @@
   }
   GeolocationYandexMap.prototype = Object.create(Drupal.geolocation.GeolocationMapBase.prototype);
   GeolocationYandexMap.prototype.constructor = GeolocationYandexMap;
-  GeolocationYandexMap.prototype.setZoom = function (zoom) {
+  GeolocationYandexMap.prototype.getZoom = function () {
+    var that = this;
+    return new Promise(function (resolve, reject) {
+      resolve(that.yandexMap.getZoom());
+    });
+  };
+  GeolocationYandexMap.prototype.setZoom = function (zoom, defer) {
     if (typeof zoom === 'undefined') {
       zoom = this.settings.yandex_settings.zoom;
     }
@@ -80,7 +87,7 @@
   };
   GeolocationYandexMap.prototype.setCenterByCoordinates = function (coordinates, accuracy, identifier) {
     Drupal.geolocation.GeolocationMapBase.prototype.setCenterByCoordinates.call(this, coordinates, accuracy, identifier);
-    this.yandexMap.setCenter([coordinates.lat, coordinates.lng]);
+    this.yandexMap.setCenter([coordinates.lng, coordinates.lat]);
   };
   GeolocationYandexMap.prototype.setMapMarker = function (markerSettings) {
     var yandexMarkerSettings = {
@@ -88,7 +95,7 @@
       iconContent: markerSettings.label
     };
 
-    var currentMarker = new ymaps.Placemark([parseFloat(markerSettings.position.lat), parseFloat(markerSettings.position.lng)], yandexMarkerSettings);
+    var currentMarker = new ymaps.Placemark([parseFloat(markerSettings.position.lng), parseFloat(markerSettings.position.lat)], yandexMarkerSettings);
 
     this.yandexMap.geoObjects.add(currentMarker);
 
@@ -102,10 +109,120 @@
     Drupal.geolocation.GeolocationMapBase.prototype.removeMapMarker.call(this, marker);
     this.yandexMap.geoObjects.remove(marker);
   };
+  GeolocationYandexMap.prototype.addShape = function (shapeSettings) {
+    if (typeof shapeSettings === 'undefined') {
+      return;
+    }
+
+    var coordinates = [];
+
+    $.each(shapeSettings.coordinates, function (index, coordinate) {
+      coordinates.push([coordinate.lng, coordinate.lat]);
+    });
+
+    var shape;
+
+    switch (shapeSettings.shape) {
+      case 'line':
+        shape = new ymaps.Polyline(coordinates, {
+          balloonContent: shapeSettings.title
+        }, {
+          balloonCloseButton: false,
+          strokeColor: shapeSettings.strokeColor,
+          strokeWidth: shapeSettings.strokeWidth,
+          strokeOpacity: shapeSettings.strokeOpacity
+        });
+        break;
+
+      case 'polygon':
+        shape = new ymaps.Polygon([coordinates], {
+          hintContent: shapeSettings.title
+        }, {
+          strokeColor: shapeSettings.strokeColor,
+          strokeWidth: shapeSettings.strokeWidth,
+          strokeOpacity: shapeSettings.strokeOpacity,
+          fillColor: shapeSettings.fillColor,
+          fillOpacity: shapeSettings.fillOpacity
+        });
+        break;
+    }
+
+    this.yandexMap.geoObjects.add(shape);
+
+    Drupal.geolocation.GeolocationMapBase.prototype.addShape.call(this, shape);
+
+    return shape;
+
+  };
+  GeolocationYandexMap.prototype.removeShape = function (shape) {
+    if (typeof shape === 'undefined') {
+      return;
+    }
+    Drupal.geolocation.GeolocationMapBase.prototype.removeShape.call(this, shape);
+    this.yandexMap.geoObjects.remove(shape);
+  };
   GeolocationYandexMap.prototype.getCenter = function () {
     return this.yandexMap.getCenter();
   };
+  GeolocationYandexMap.prototype.normalizeBoundaries = function (boundaries) {
+    if (
+      typeof boundaries[0] === 'object'
+      && typeof boundaries[0][0] === 'number'
+      && typeof boundaries[0][1] === 'number'
+      && typeof boundaries[1] === 'object'
+      && typeof boundaries[1][0] === 'number'
+      && typeof boundaries[1][1] === 'number'
+    ) {
+      return {
+        north: boundaries[1][0],
+        east: boundaries[1][1],
+        south: boundaries[0][0],
+        west: boundaries[0][1]
+      };
+    }
+
+    return false;
+  };
+  GeolocationYandexMap.prototype.denormalizeBoundaries = function (boundaries) {
+    if (typeof boundaries === 'undefined') {
+      return false;
+    }
+
+    if (
+      typeof boundaries[0] === 'object'
+      && typeof boundaries[0][0] === 'number'
+      && typeof boundaries[0][1] === 'number'
+      && typeof boundaries[1] === 'object'
+      && typeof boundaries[1][0] === 'number'
+      && typeof boundaries[1][1] === 'number'
+    ) {
+      return boundaries;
+    }
+
+    if (Drupal.geolocation.GeolocationMapBase.prototype.boundariesNormalized.call(this, boundaries)) {
+      return [
+        [boundaries.west, boundaries.south],
+        [boundaries.east, boundaries.north]
+      ];
+    }
+    else {
+      boundaries = Drupal.geolocation.GeolocationMapBase.prototype.normalizeBoundaries.call(this, boundaries);
+      if (boundaries) {
+        return [
+          [boundaries.west, boundaries.south],
+          [boundaries.east, boundaries.north]
+        ];
+      }
+    }
+
+    return false;
+  };
   GeolocationYandexMap.prototype.fitBoundaries = function (boundaries, identifier) {
+    boundaries = this.denormalizeBoundaries(boundaries);
+    if (!boundaries) {
+      return;
+    }
+
     this.yandexMap.setBounds(boundaries);
     Drupal.geolocation.GeolocationMapBase.prototype.fitBoundaries.call(this, boundaries, identifier);
   };

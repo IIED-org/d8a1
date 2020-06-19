@@ -31,6 +31,30 @@ plugin.plugin_configuration.geolocation.map_feature.drawing:
           type: string
           label: 'fillOpacity'
 
+plugin.plugin_configuration.geolocation.map_feature.map_restriction:
+  type: geolocation.map_feature_settings
+  label: 'Map Restriction'
+  mapping:
+    settings:
+      type: mapping
+      label: 'Settings'
+      mapping:
+        north:
+          type: string
+          label: 'North'
+        south:
+          type: string
+          label: 'South'
+        east:
+          type: string
+          label: 'East'
+        west:
+          type: string
+          label: 'West'
+        strict:
+          type: boolean
+          label: 'strictBounds'
+
 plugin.plugin_configuration.geolocation.map_feature.marker_clusterer:
   type: geolocation.map_feature_settings
   label: 'Marker clusterer'
@@ -48,6 +72,18 @@ plugin.plugin_configuration.geolocation.map_feature.marker_clusterer:
         max_zoom:
           type: integer
           label: 'Max Zoom'
+        minimum_cluster_size:
+          type: integer
+          label: 'Minimum Cluster Size'
+        zoom_on_click:
+          type: boolean
+          label: 'Zoom on Click'
+        average_center:
+          type: boolean
+          label: 'Average Center'
+        grid_size:
+          type: integer
+          label: 'Grid Size'
 
 plugin.plugin_configuration.geolocation.map_feature.context_popup:
   type: geolocation.map_feature_settings
@@ -156,6 +192,39 @@ plugin.plugin_configuration.geolocation.map_feature.marker_icon:
               type: integer
               label: 'Height'
 
+plugin.plugin_configuration.geolocation.map_feature.marker_opacity:
+  type: geolocation.map_feature_settings
+  label: 'Marker Opacity'
+  mapping:
+    settings:
+      type: mapping
+      label: 'Settings'
+      mapping:
+        opacity:
+          type: float
+          label: 'Marker Opacity'
+
+plugin.plugin_configuration.geolocation.map_feature.marker_label:
+  type: geolocation.map_feature_settings
+  label: 'Marker Label'
+  mapping:
+    settings:
+      type: mapping
+      label: 'Settings'
+      mapping:
+        color:
+          type: string
+          label: 'Color'
+        font_family:
+          type: string
+          label: 'Font Family'
+        font_size:
+          type: string
+          label: 'Font Size'
+        font_weight:
+          type: string
+          label: 'Font Weight'
+
 plugin.plugin_configuration.geolocation.map_feature.marker_infobubble:
   type: geolocation.map_feature_settings
   label: 'Marker InfoBubble'
@@ -203,6 +272,15 @@ plugin.plugin_configuration.geolocation.map_feature.marker_infobubble:
         max_height:
           type: integer
           label: 'Max Height'
+        arrow_style:
+          type: integer
+          label: 'Array Style'
+        arrow_position:
+          type: integer
+          label: 'Array Position'
+        arrow_size:
+          type: integer
+          label: 'Array Size'
 
 geolocation_google_maps.map_control_feature_settings:
   type: geolocation.map_feature_settings
@@ -223,6 +301,18 @@ plugin.plugin_configuration.geolocation.map_feature.control_recenter:
 plugin.plugin_configuration.geolocation.map_feature.control_locate:
   type: geolocation_google_maps.map_control_feature_settings
   label: 'Control Locate'
+
+plugin.plugin_configuration.geolocation.map_feature.control_loading_indicator:
+  type: geolocation_google_maps.map_control_feature_settings
+  label: 'Control Loading Indicator'
+  mapping:
+    settings:
+      type: mapping
+      label: 'Settings'
+      mapping:
+        loading_label:
+          type: string
+          label: 'Label'
 
 plugin.plugin_configuration.geolocation.map_feature.control_geocoder:
   type: geolocation_google_maps.map_control_feature_settings
@@ -253,9 +343,33 @@ plugin.plugin_configuration.geolocation.map_feature.control_zoom:
           type: string
           label: 'Style'
 
+plugin.plugin_configuration.geolocation.map_feature.control_rotate:
+  type: geolocation_google_maps.map_control_feature_settings
+  label: 'Control Rotate'
+  mapping:
+    settings:
+      type: mapping
+      label: 'Settings'
+      mapping:
+        behavior:
+          type: string
+          label: 'Behavior'
+
 plugin.plugin_configuration.geolocation.map_feature.control_streetview:
   type: geolocation_google_maps.map_control_feature_settings
   label: 'Control Streetview'
+  mapping:
+    settings:
+      type: mapping
+      label: 'Settings'
+      mapping:
+        behavior:
+          type: string
+          label: 'Behavior'
+
+plugin.plugin_configuration.geolocation.map_feature.control_fullscreen:
+  type: geolocation_google_maps.map_control_feature_settings
+  label: 'Control Fullscreen'
   mapping:
     settings:
       type: mapping
@@ -279,3 +393,61 @@ plugin.plugin_configuration.geolocation.map_feature.control_maptype:
         style:
           type: string
           label: 'Style'
+
+plugin.plugin_configuration.geolocation.map_feature.marker_zoom_to_animate:
+  type: geolocation.map_feature_settings
+  label: 'Zoom & Animate'
+  mapping:
+    settings:
+      type: mapping
+      label: 'Settings'
+      mapping:
+        marker_zoom_anchor_id:
+          type: string
+          label: 'Anchor'
+
+plugin.plugin_configuration.geolocation.map_feature.spiderfying:
+  type: geolocation.map_feature_settings
+  label: 'Spiderfying'
+  mapping:
+    settings:
+      type: mapping
+      label: 'Settings'
+      mapping:
+        spiderfiable_marker_path:
+          type: string
+          label: 'Marker Path'
+        markersWontMove:
+          type: boolean
+          label: 'Setting'
+        markersWontHide:
+          type: boolean
+          label: 'Setting'
+        keepSpiderfied:
+          type: boolean
+          label: 'Setting'
+        ignoreMapClick:
+          type: boolean
+          label: 'Setting'
+        nearbyDistance:
+          type: integer
+          label: 'Setting'
+        circleSpiralSwitchover:
+          type: integer
+          label: 'Setting'
+        circleFootSeparation:
+          type: integer
+          label: 'Setting'
+        spiralFootSeparation:
+          type: integer
+          label: 'Setting'
+        spiralLengthStart:
+          type: integer
+          label: 'Setting'
+        spiralLengthFactor:
+          type: integer
+          label: 'Setting'
+        legWeight:
+          type: float
+          label: 'Setting'
+

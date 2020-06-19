@@ -5,6 +5,7 @@ namespace Drupal\forms_steps\Form;
 use Drupal\Core\Form\FormState;
 use Drupal\forms_steps\Step;
 use Drupal\Core\Routing\TrustedRedirectResponse;
+use Drupal\forms_steps\Event\StepChangeEvent;
 
 /**
  * Class FormsStepsAlter.
@@ -138,6 +139,14 @@ class FormsStepsAlter {
         }
       }
     }
+
+    // Dispatch a STEP_CHANGE_EVENT event.
+    $step = $formsStepsManager->getStepByRoute($route_name);
+    $jumpStep = $formsStepsManager->getStepByRoute($nextRoute);
+    $jumpStepEvent = new StepChangeEvent($forms_steps, $step , $jumpStep, $form_state);
+
+    $event_dispatcher = \Drupal::service('event_dispatcher');
+    $event_dispatcher->dispatch(StepChangeEvent::STEP_CHANGE_EVENT, $jumpStepEvent);
   }
 
   /**

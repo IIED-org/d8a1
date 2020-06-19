@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file Contains logic for content_browser.
  */
@@ -36,7 +37,7 @@ function content_browser_form_alter(&$form, FormStateInterface &$form_state) {
       $form['actions_wrap'] = [
         '#type' => 'container',
         '#attributes' => [
-          'class' => 'content-browser-actions',
+          'class' => ['content-browser-actions'],
         ],
         0 => $form['widget']['actions'],
       ];
@@ -44,6 +45,25 @@ function content_browser_form_alter(&$form, FormStateInterface &$form_state) {
 
       // Add a class for generic styling.
       $form['#attributes']['class'][] = 'content-browser-form';
+    }
+    // Remove types that are contextually disallowed by the View.
+    elseif (isset($form['#id']) && $form['#id'] == 'views-exposed-form-content-browser-entity-browser') {
+      /** @var \Drupal\views\ViewExecutable $view */
+      $view = $form_state->get('view');
+      if ($view instanceof \Drupal\views\ViewExecutable && isset($view->argument['type'])) {
+        /** @var \Drupal\node\Plugin\views\argument\Type $type */
+        $type = $view->argument['type'];
+        $value = $type->getValue();
+        if (!is_null($value) && !$type->isException($value)) {
+          $types = explode('+', $value);
+          $types[] = 'All';
+          foreach ($form['type']['#options'] as $name => $option) {
+            if (!in_array($name, $types, TRUE)) {
+              unset($form['type']['#options'][$name]);
+            }
+          }
+        }
+      }
     }
   }
 }

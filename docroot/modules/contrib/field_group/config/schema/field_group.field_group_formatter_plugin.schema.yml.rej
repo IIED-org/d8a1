@@ -1,0 +1,74 @@
+***************
+*** 14,21 ****
+        type: string
+        label: 'Formatting of the item'
+      description:
+-       type: string
+-       label: 'description of the item'
+      required_fields:
+        type: boolean
+        label: 'Mark for required fields'
+--- 14,21 ----
+        type: string
+        label: 'Formatting of the item'
+      description:
++       type: label
++       label: 'Description of the item'
+      required_fields:
+        type: boolean
+        label: 'Mark for required fields'
+***************
+*** 36,43 ****
+    label: 'Mapping for the fieldset formatter settings'
+    mapping:
+      description:
+-       type: string
+-       label: 'description of the item'
+      required_fields:
+        type: boolean
+        label: 'Mark for required fields'
+--- 36,43 ----
+    label: 'Mapping for the fieldset formatter settings'
+    mapping:
+      description:
++       type: label
++       label: 'Description of the item'
+      required_fields:
+        type: boolean
+        label: 'Mark for required fields'
+***************
+*** 79,86 ****
+        type: string
+        label: 'default state for the tab'
+      description:
+-       type: string
+-       label: 'description of the tab'
+      required_fields:
+        type: boolean
+        label: 'Mark for required fields'
+--- 79,86 ----
+        type: string
+        label: 'default state for the tab'
+      description:
++       type: label
++       label: 'Description of the tab'
+      required_fields:
+        type: boolean
+        label: 'Mark for required fields'
+***************
+*** 98,104 ****
+    label: 'Mapping for the base formatter settings'
+    mapping:
+      label:
+-       type: string
+        label: 'Label of the fieldgroup'
+      classes:
+        type: string
+--- 98,104 ----
+    label: 'Mapping for the base formatter settings'
+    mapping:
+      label:
++       type: label
+        label: 'Label of the fieldgroup'
+      classes:
+        type: string

@@ -1,12 +1,5 @@
 <?php
 
-/**
- * @file
- * Test case for testing the per comment-type simplify configurations.
- *
- * Sponsored by: www.drupal-addict.com
- */
-
 namespace Drupal\simplify\Tests;
 
 use Drupal\simpletest\WebTestBase;
@@ -34,17 +27,17 @@ class PerCommentTypeSettingsTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('node', 'comment', 'field_ui', 'simplify');
+  public static $modules = ['node', 'comment', 'field_ui', 'simplify'];
 
   /**
    * {@inheritdoc}
    */
   public static function getInfo() {
-    return array(
+    return [
       'name' => 'Simplify per comment-type settings test.',
       'description' => 'Test the Simplify per comment-type settings.',
       'group' => 'Simplify',
-    );
+    ];
   }
 
   /**
@@ -54,7 +47,7 @@ class PerCommentTypeSettingsTest extends WebTestBase {
     parent::setUp();
 
     // Create two test users.
-    $this->adminUser = $this->drupalCreateUser(array(
+    $this->adminUser = $this->drupalCreateUser([
       'administer content types',
       'administer comments',
       'administer comment types',
@@ -65,11 +58,11 @@ class PerCommentTypeSettingsTest extends WebTestBase {
       'post comments',
       'access comments',
       'access content',
-    ));
+    ]);
     $this->drupalLogin($this->adminUser);
 
     // Create a content type.
-    $content_type = $this->drupalCreateContentType(['type' => 'content_type', 'name' => 'Testing content type']);
+    $this->drupalCreateContentType(['type' => 'content_type', 'name' => 'Testing content type']);
 
     // Create comment field on $content_type bundle.
     $this->addDefaultCommentField('node', 'content_type');
@@ -85,7 +78,11 @@ class PerCommentTypeSettingsTest extends WebTestBase {
      */
 
     // Create a test node authored by the user.
-    $node = $this->drupalCreateNode(array('type' => 'content_type', 'promote' => 1, 'uid' => $this->adminUser->id()));
+    $node = $this->drupalCreateNode([
+      'type' => 'content_type',
+      'promote' => 1,
+      'uid' => $this->adminUser->id(),
+    ]);
 
     // Check if options are there.
     $this->drupalGet("/node/" . $node->id());
@@ -97,10 +94,10 @@ class PerCommentTypeSettingsTest extends WebTestBase {
 
     // Globally activate some options.
     $this->drupalGet('/admin/config/user-interface/simplify');
-    $options = array(
+    $options = [
       'simplify_admin' => TRUE,
       'simplify_comments_global[format]' => 'format',
-    );
+    ];
     $this->drupalPostForm(NULL, $options, t('Save configuration'));
 
     // Open admin UI.
@@ -118,10 +115,10 @@ class PerCommentTypeSettingsTest extends WebTestBase {
      */
 
     $this->drupalGet('/admin/config/user-interface/simplify');
-    $options = array(
+    $options = [
       'simplify_admin' => TRUE,
       'simplify_comments_global[format]' => FALSE,
-    );
+    ];
     $this->drupalPostForm(NULL, $options, t('Save configuration'));
 
     // Open admin UI.
@@ -135,9 +132,9 @@ class PerCommentTypeSettingsTest extends WebTestBase {
      */
 
     // Nodes.
-    $options = array(
+    $options = [
       'simplify_comments[format]' => 'format',
-    );
+    ];
     $this->drupalPostForm(NULL, $options, t('Save'));
 
     /* -------------------------------------------------------.
@@ -151,8 +148,6 @@ class PerCommentTypeSettingsTest extends WebTestBase {
      */
     $this->drupalGet("/node/" . $node->id());
     $this->assertNoRaw('About text formats', 'Comment text format option is not defined.');
-
-
   }
 
 }

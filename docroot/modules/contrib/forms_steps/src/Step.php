@@ -216,7 +216,7 @@ class Step implements StepInterface {
     $result = [];
 
     // Get the list of available form modes for a certain entity type.
-    $form_modes = \Drupal::entityManager()->getFormModes($this->entityType);
+    $form_modes = \Drupal::service('entity_display.repository')->getFormModes($this->entityType);
 
     foreach ($form_modes as $form_mode) {
       $result[$form_mode['id']] = $form_mode['label'];

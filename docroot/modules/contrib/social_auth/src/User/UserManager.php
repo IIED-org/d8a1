@@ -6,6 +6,7 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\Messenger\MessengerInterface;
@@ -19,6 +20,7 @@ use Drupal\social_auth\Event\UserEvent;
 use Drupal\social_auth\SettingsTrait;
 use Drupal\user\UserInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Drupal\social_auth\Entity\SocialAuth;
 
 /**
  * Manages database related tasks.
@@ -64,6 +66,13 @@ class UserManager extends SocialApiUserManager {
   protected $token;
 
   /**
+   * Used for saving the profile picture of the users.
+   *
+   * @var \Drupal\Core\File\FileSystemInterface
+   */
+  protected $fileSystem;
+
+  /**
    * Constructor.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
@@ -84,6 +93,8 @@ class UserManager extends SocialApiUserManager {
    *   Used for dispatching social auth events.
    * @param \Drupal\Core\Utility\Token $token
    *   Used for token support in Drupal user picture directory.
+   * @param \Drupal\Core\File\FileSystemInterface $file_system
+   *   Used for saving the profile picture of the users.
    */
   public function __construct(EntityTypeManagerInterface $entity_type_manager,
                               MessengerInterface $messenger,
@@ -93,7 +104,8 @@ class UserManager extends SocialApiUserManager {
                               PhpTransliteration $transliteration,
                               LanguageManagerInterface $language_manager,
                               EventDispatcherInterface $event_dispatcher,
-                              Token $token) {
+                              Token $token,
+                              FileSystemInterface $file_system) {
 
     parent::__construct('social_auth', $entity_type_manager, $messenger, $logger_factory);
 
@@ -103,6 +115,7 @@ class UserManager extends SocialApiUserManager {
     $this->languageManager = $language_manager;
     $this->eventDispatcher = $event_dispatcher;
     $this->token = $token;
+    $this->fileSystem = $file_system;
   }
 
   /**
@@ -222,7 +235,7 @@ class UserManager extends SocialApiUserManager {
    *   Unique Social ID returned by social network.
    * @param string $token
    *   For making API calls.
-   * @param string $user_data
+   * @param array|null $user_data
    *   Additional user data collected.
    *
    * @return true
@@ -253,11 +266,11 @@ class UserManager extends SocialApiUserManager {
         'plugin_id' => $this->pluginId,
         'provider_user_id' => $provider_user_id,
         'additional_data' => $user_data,
+        'token' => $token,
       ];
 
       try {
-        $user_info = $this->entityTypeManager->getStorage('social_auth')->create($values);
-        $user_info->setToken($token);
+        $user_info = SocialAuth::create($values);
 
         // Save the entity.
         $user_info->save();
@@ -397,7 +410,7 @@ class UserManager extends SocialApiUserManager {
     // Transliterate directory name.
     $directory = $this->transliteration->transliterate($directory, 'en', '_', 50);
 
-    if (!$this->filePrepareDirectory($directory, 1)) {
+    if (!$this->fileSystem->prepareDirectory($directory, $this->fileSystem::CREATE_DIRECTORY)) {
       $this->loggerFactory
         ->get($this->getPluginId())
         ->error('Could not save @plugin_id\'s provider profile picture. Directory is not writable: @directory', [
@@ -545,19 +558,6 @@ class UserManager extends SocialApiUserManager {
    */
   protected function userPassword($length) {
     return user_password($length);
-  }
-
-  /**
-   * Wrapper for file_prepare_directory.
-   *
-   * We need to wrap the legacy procedural Drupal API functions so that we are
-   * not using them directly in our own methods. This way we can unit test our
-   * own methods.
-   *
-   * @see file_prepare_directory
-   */
-  protected function filePrepareDirectory(&$directory, $options) {
-    return file_prepare_directory($directory, $options);
   }
 
   /**

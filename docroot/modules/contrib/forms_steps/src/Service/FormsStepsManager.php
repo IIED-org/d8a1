@@ -2,7 +2,9 @@
 
 namespace Drupal\forms_steps\Service;
 
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityDisplayRepository;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\forms_steps\Entity\FormsSteps;
 
 /**
@@ -20,13 +22,23 @@ class FormsStepsManager {
   private $entityDisplayRepository;
 
   /**
+   * EntityTypeManagerInterface.
+   *
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
+   */
+  private $configFactory;
+
+  /**
    * FormsStepsManager constructor.
    *
    * @param \Drupal\Core\Entity\EntityDisplayRepository $entity_display_repository
-   *   Injected EntityDisplayRepository instance.
+   *  Injected EntityDisplayRepository instance.
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   *  Injected ConfigFactoryInterface.
    */
-  public function __construct(EntityDisplayRepository $entity_display_repository) {
+  public function __construct(EntityDisplayRepository $entity_display_repository, ConfigFactoryInterface $config_factory) {
     $this->entityDisplayRepository = $entity_display_repository;
+    $this->configFactory = $config_factory;
   }
 
   /**
@@ -145,7 +157,7 @@ class FormsStepsManager {
    * @param mixed $route_name
    *   Current route.
    *
-   * @return null|string
+   * @return null|FormsSteps
    *   Returns the Forms Steps of the route.
    */
   public function getFormsStepsByRoute($route_name) {
@@ -170,7 +182,7 @@ class FormsStepsManager {
    * @param mixed $route_name
    *   Current route.
    *
-   * @return null|string
+   * @return null|\Drupal\forms_steps\Step
    *   Returns the Step of the route.
    */
   public function getStepByRoute($route_name) {
@@ -211,23 +223,48 @@ class FormsStepsManager {
   }
 
   /**
-   * Get all form modes per entity type. Only managing node.
+   * Get all form modes per entity type.
    *
    * @return array
-   *   Returns a list of form modes defined for Nodes.
+   *   Returns a list of form modes defined for all entity types in forms_steps entities.
    */
   public function getAllFormModesDefinitions() {
     // Only managing node at this time. Improvment require.
     $all_form_modes = [];
-    $form_modes = $this->entityDisplayRepository->getFormModes('node');
 
-    foreach ($form_modes as $key => $value) {
-      if (!empty($key) && $value['targetEntityType'] === 'node') {
-        $all_form_modes['node'][] = $key;
+    // Retrieving all entity types referenced in any forms_steps entity.
+    $entityTypes = $this->getAllFormStepsEntityTypes();
+
+    // Gather all form modes for each entity type.
+    foreach($entityTypes as $entityType) {
+      $form_modes = $this->entityDisplayRepository->getFormModes($entityType);
+
+      foreach ($form_modes as $key => $value) {
+        if (!empty($key) && $value['targetEntityType'] === $entityType) {
+          $all_form_modes[$entityType][] = $key;
+        }
       }
     }
 
     return $all_form_modes;
+  }
+
+  /**
+   * Retrieve all entity types referenced in any existing forms_steps entity.
+   */
+  public function getAllFormStepsEntityTypes() {
+    $entityTypes = [];
+
+    $formsStepsConfigs = $this->configFactory->listAll('forms_steps.forms_steps.');
+
+    foreach ($formsStepsConfigs as $formsStepsConfig) {
+      $steps = $this->configFactory->get($formsStepsConfig)->get('steps');
+      foreach ($steps as $step) {
+        $entityTypes[$step['entity_type']] = $step['entity_type'];
+      }
+    }
+
+    return $entityTypes;
   }
 
   /**

@@ -2,7 +2,6 @@
 
 namespace Drupal\forms_steps\EventSubscriber;
 
-use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\State\StateInterface;
 use Drupal\Core\Routing\RouteSubscriberBase;
@@ -57,8 +56,6 @@ class RouteSubscriber extends RouteSubscriberBase {
   /**
    * Constructs a \Drupal\forms_steps\EventSubscriber\RouteSubscriber instance.
    *
-   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
-   *   The entity manager.
    * @param \Drupal\Core\State\StateInterface $state
    *   The state key value store.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
@@ -68,11 +65,10 @@ class RouteSubscriber extends RouteSubscriberBase {
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
   public function __construct(
-    EntityManagerInterface $entity_manager,
     StateInterface $state,
     EntityTypeManagerInterface $entity_type_manager
   ) {
-    $this->formsStepsStorage = $entity_manager->getStorage(FormsSteps::ENTITY_TYPE);
+    $this->formsStepsStorage = $entity_type_manager->getStorage(FormsSteps::ENTITY_TYPE);
     $this->state = $state;
     $this->entityTypeManager = $entity_type_manager;
   }

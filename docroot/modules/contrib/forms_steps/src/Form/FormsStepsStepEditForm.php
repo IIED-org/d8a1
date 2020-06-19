@@ -2,6 +2,7 @@
 
 namespace Drupal\forms_steps\Form;
 
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 
@@ -41,6 +42,16 @@ class FormsStepsStepEditForm extends FormsStepsStepFormBase {
       '%label' => $forms_steps->getStep($this->stepId)->label(),
     ]));
     $form_state->setRedirectUrl($forms_steps->toUrl('edit-form'));
+
+    // We force the cache clearing as the core doesn't do it by itself.
+    Cache::invalidateTags([
+      'entity_types',
+      'routes',
+      'local_tasks',
+      'local_task',
+      'local_action',
+      'rendered',
+    ]);
   }
 
   /**

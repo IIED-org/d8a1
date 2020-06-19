@@ -34,11 +34,11 @@ class AccountModalAjaxHelper {
       $response->addCommand(new CloseModalDialogCommand());
 
       if ($pageId === 'login') {
-        \Drupal::messenger()->addMessage('You have been successfully logged in. Please wait a moment.');
+        \Drupal::messenger()->addMessage(t('You have been successfully logged in.'));
         $response->addCommand(self::redirectCommand($formState));
       }
       elseif ($pageId === 'register') {
-        \Drupal::messenger()->addMessage('You have successfully created an account. Please wait a moment.');
+        \Drupal::messenger()->addMessage(t('You have successfully created an account.'));
 
         /** @var \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler */
         $moduleHandler = \Drupal::service('module_handler');

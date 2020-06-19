@@ -160,8 +160,11 @@ class FormsStepsProgressBarBlock extends BlockBase implements ContainerFactoryPl
         }
 
         return [
-          '#theme' => 'item_list',
-          '#list_type' => 'ul',
+          '#theme' => [
+            'item_list__forms_steps',
+            'item_list',
+          ],
+          '#list_type' => 'ol',
           '#title' => '',
           '#items' => $items,
           '#cache' => [

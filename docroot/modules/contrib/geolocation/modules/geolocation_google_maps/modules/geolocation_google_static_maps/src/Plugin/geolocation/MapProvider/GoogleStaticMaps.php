@@ -20,7 +20,7 @@ class GoogleStaticMaps extends GoogleMapsProviderBase {
   /**
    * {@inheritdoc}
    */
-  public static $GOOGLEMAPSAPIURLPATH = '/maps/api/staticmap';
+  public static $googleMapsApiUrlPath = '/maps/api/staticmap';
 
   /**
    * {@inheritdoc}
@@ -31,6 +31,8 @@ class GoogleStaticMaps extends GoogleMapsProviderBase {
       [
         'height' => '400',
         'width' => '400',
+        'scale' => '1',
+        'format' => 'png',
       ]
     );
   }
@@ -137,7 +139,7 @@ class GoogleStaticMaps extends GoogleMapsProviderBase {
       if (!empty($location['#icon'])) {
         $marker_string .= 'icon:' . Url::fromRoute('<front>', [], ['absolute' => TRUE])->toString() . $location['#icon'] . urlencode('|');
       }
-      $marker_string .= $location['#position']['lat'] . ',' . $location['#position']['lng'];
+      $marker_string .= $location['#coordinates']['lat'] . ',' . $location['#coordinates']['lng'];
       $static_map_url .= $marker_string;
     }
 

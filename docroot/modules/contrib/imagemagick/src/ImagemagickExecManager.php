@@ -4,7 +4,7 @@ namespace Drupal\imagemagick;
 
 use Drupal\Component\Utility\Timer;
 use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Psr\Log\LoggerInterface;
@@ -16,6 +16,11 @@ use Symfony\Component\Process\Process;
 class ImagemagickExecManager implements ImagemagickExecManagerInterface {
 
   use StringTranslationTrait;
+
+  /**
+   * Replacement for percentage while escaping.
+   */
+  const PERCENTAGE_REPLACE = '1357902468IMAGEMAGICKPERCENTSIGNPATTERN8642097531';
 
   /**
    * Whether we are running on Windows OS.
@@ -60,24 +65,18 @@ class ImagemagickExecManager implements ImagemagickExecManagerInterface {
   protected $configFactory;
 
   /**
-   * The module handler service.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   *
-   * @deprecated in 8.x-2.5, will be removed in 8.x-3.0. No replacement
-   *   suggested, Imagemagick hooks have been dropped in favour of event
-   *   subscribers.
-   *
-   * @see https://www.drupal.org/project/imagemagick/issues/3043136
-   */
-  protected $moduleHandler;
-
-  /**
    * The format mapper service.
    *
    * @var \Drupal\imagemagick\ImagemagickFormatMapperInterface
    */
   protected $formatMapper;
+
+  /**
+   * The messenger service.
+   *
+   * @var \Drupal\Core\Messenger\MessengerInterface
+   */
+  protected $messenger;
 
   /**
    * Constructs an ImagemagickExecManager object.
@@ -92,61 +91,30 @@ class ImagemagickExecManager implements ImagemagickExecManagerInterface {
    *   The current user.
    * @param \Drupal\imagemagick\ImagemagickFormatMapperInterface $format_mapper
    *   The format mapper service.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
-   *   The module handler service.
+   * @param \Drupal\Core\Messenger\MessengerInterface $messenger
+   *   The messenger service.
    */
-  public function __construct(LoggerInterface $logger, ConfigFactoryInterface $config_factory, $app_root, AccountProxyInterface $current_user, ImagemagickFormatMapperInterface $format_mapper, ModuleHandlerInterface $module_handler) {
+  public function __construct(LoggerInterface $logger, ConfigFactoryInterface $config_factory, string $app_root, AccountProxyInterface $current_user, ImagemagickFormatMapperInterface $format_mapper, MessengerInterface $messenger) {
     $this->logger = $logger;
     $this->configFactory = $config_factory;
     $this->appRoot = $app_root;
     $this->currentUser = $current_user;
     $this->formatMapper = $format_mapper;
-    $this->moduleHandler = $module_handler;
+    $this->messenger = $messenger;
     $this->isWindows = substr(PHP_OS, 0, 3) === 'WIN';
   }
 
   /**
-   * Returns the format mapper.
-   *
-   * @return \Drupal\imagemagick\ImagemagickFormatMapperInterface
-   *   The format mapper service.
-   *
-   * @todo in 8.x-3.0, add this method to the interface.
+   * {@inheritdoc}
    */
-  public function getFormatMapper() {
+  public function getFormatMapper(): ImagemagickFormatMapperInterface {
     return $this->formatMapper;
   }
 
   /**
-   * Returns the module handler.
-   *
-   * @return \Drupal\Core\Extension\ModuleHandlerInterface
-   *   The module handler service.
-   *
-   * @deprecated in 8.x-2.5, will be removed in 8.x-3.0. No replacement
-   *   suggested, Imagemagick hooks have been dropped in favour of event
-   *   subscribers.
-   *
-   * @see https://www.drupal.org/project/imagemagick/issues/3043136
+   * {@inheritdoc}
    */
-  public function getModuleHandler() {
-    @trigger_error(__METHOD__ . ' is deprecated in 8.x-2.5, will be removed in 8.x-3.0. No replacement suggested, Imagemagick hooks have been dropped in favour of event subscribers. See https://www.drupal.org/project/imagemagick/issues/3043136.', E_USER_DEPRECATED);
-    return $this->moduleHandler;
-  }
-
-  /**
-   * Sets the execution timeout (max. runtime).
-   *
-   * To disable the timeout, set this value to null.
-   *
-   * @param int|null $timeout
-   *   The timeout in seconds.
-   *
-   * @return $this
-   *
-   * @todo in 8.x-3.0, add this method to the interface.
-   */
-  public function setTimeout($timeout) {
+  public function setTimeout(int $timeout): ImagemagickExecManagerInterface {
     $this->timeout = $timeout;
     return $this;
   }
@@ -154,7 +122,7 @@ class ImagemagickExecManager implements ImagemagickExecManagerInterface {
   /**
    * {@inheritdoc}
    */
-  public function getPackage($package = NULL) {
+  public function getPackage(string $package = NULL): string {
     if ($package === NULL) {
       $package = $this->configFactory->get('imagemagick.settings')->get('binaries');
     }
@@ -164,7 +132,7 @@ class ImagemagickExecManager implements ImagemagickExecManagerInterface {
   /**
    * {@inheritdoc}
    */
-  public function getPackageLabel($package = NULL) {
+  public function getPackageLabel(string $package = NULL): string {
     switch ($this->getPackage($package)) {
       case 'imagemagick':
         return $this->t('ImageMagick');
@@ -181,7 +149,7 @@ class ImagemagickExecManager implements ImagemagickExecManagerInterface {
   /**
    * {@inheritdoc}
    */
-  public function checkPath($path, $package = NULL) {
+  public function checkPath(string $path, string $package = NULL): array {
     $status = [
       'output' => '',
       'errors' => [],
@@ -229,7 +197,7 @@ class ImagemagickExecManager implements ImagemagickExecManagerInterface {
   /**
    * {@inheritdoc}
    */
-  public function execute($command, ImagemagickExecArguments $arguments, &$output = NULL, &$error = NULL, $path = NULL) {
+  public function execute(string $command, ImagemagickExecArguments $arguments, string &$output = NULL, string &$error = NULL, string $path = NULL): bool {
     switch ($command) {
       case 'convert':
         $binary = $this->getPackage() === 'imagemagick' ? 'convert' : 'gm';
@@ -267,13 +235,7 @@ class ImagemagickExecManager implements ImagemagickExecManagerInterface {
             // ImageMagick syntax:
             // identify [arguments] source
             // @codingStandardsIgnoreEnd
-            $cmdline = $arguments->toString(ImagemagickExecArguments::PRE_SOURCE);
-            // @todo BC layer. In 8.x-3.0, remove adding post source path
-            // arguments.
-            if (($post = $arguments->toString(ImagemagickExecArguments::POST_SOURCE)) !== '') {
-              $cmdline .= ' ' . $post;
-            }
-            $cmdline .= ' ' . $source_path;
+            $cmdline = $arguments->toString(ImagemagickExecArguments::PRE_SOURCE) . ' ' . $source_path;
             break;
 
           case 'graphicsmagick':
@@ -281,13 +243,7 @@ class ImagemagickExecManager implements ImagemagickExecManagerInterface {
             // GraphicsMagick syntax:
             // gm identify [arguments] source
             // @codingStandardsIgnoreEnd
-            $cmdline = 'identify ' . $arguments->toString(ImagemagickExecArguments::PRE_SOURCE);
-            // @todo BC layer. In 8.x-3.0, remove adding post source path
-            // arguments.
-            if (($post = $arguments->toString(ImagemagickExecArguments::POST_SOURCE)) !== '') {
-              $cmdline .= ' ' . $post;
-            }
-            $cmdline .= ' ' . $source_path;
+            $cmdline = 'identify ' . $arguments->toString(ImagemagickExecArguments::PRE_SOURCE) . ' ' . $source_path;
             break;
 
         }
@@ -367,7 +323,7 @@ class ImagemagickExecManager implements ImagemagickExecManagerInterface {
   /**
    * {@inheritdoc}
    */
-  public function runOsShell($command, $arguments, $id, &$output = NULL, &$error = NULL) {
+  public function runOsShell(string $command, string $arguments, string $id, string &$output = NULL, string &$error = NULL): int {
     $command_line = $command . ' ' . $arguments;
     $output = '';
     $error = '';
@@ -420,7 +376,7 @@ class ImagemagickExecManager implements ImagemagickExecManagerInterface {
    * @param string[] $context
    *   Context information.
    */
-  public function debugMessage($message, array $context) {
+  public function debugMessage(string $message, array $context) {
     $this->logger->debug($message, $context);
     if ($this->currentUser->hasPermission('administer site configuration')) {
       // Strips raw text longer than 10 lines to optimize displaying.
@@ -436,7 +392,7 @@ class ImagemagickExecManager implements ImagemagickExecManagerInterface {
         }
       }
       // @codingStandardsIgnoreLine
-      drupal_set_message($this->t($message, $context), 'status', TRUE);
+      $this->messenger->addMessage($this->t($message, $context), 'status', TRUE);
     }
   }
 
@@ -446,7 +402,7 @@ class ImagemagickExecManager implements ImagemagickExecManagerInterface {
    * @return string
    *   The string resulting from the execution of 'locale -a' in *nix systems.
    */
-  public function getInstalledLocales() {
+  public function getInstalledLocales(): string {
     $output = '';
     if ($this->isWindows === FALSE) {
       $this->runOsShell('locale', '-a', 'locale', $output);
@@ -469,7 +425,7 @@ class ImagemagickExecManager implements ImagemagickExecManagerInterface {
    * @return string
    *   The full path to the executable.
    */
-  protected function getExecutable($binary, $path = NULL) {
+  protected function getExecutable(string $binary, string $path = NULL): string {
     // $path is only passed from the validation of the image toolkit form, on
     // which the path to convert is configured. @see ::checkPath()
     if (!isset($path)) {
@@ -504,9 +460,7 @@ class ImagemagickExecManager implements ImagemagickExecManagerInterface {
    * @return string
    *   An escaped string for use in the ::execute method.
    */
-  public function escapeShellArg($arg) {
-    static $percentage_sign_replace_pattern = '1357902468IMAGEMAGICKPERCENTSIGNPATTERN8642097531';
-
+  public function escapeShellArg(string $arg): string {
     // Put the configured locale in a static to avoid multiple config get calls
     // in the same request.
     static $config_locale;
@@ -521,7 +475,7 @@ class ImagemagickExecManager implements ImagemagickExecManagerInterface {
 
     if ($this->isWindows) {
       // Temporarily replace % characters.
-      $arg = str_replace('%', $percentage_sign_replace_pattern, $arg);
+      $arg = str_replace('%', static::PERCENTAGE_REPLACE, $arg);
     }
 
     if ($current_locale !== $config_locale) {
@@ -538,7 +492,7 @@ class ImagemagickExecManager implements ImagemagickExecManagerInterface {
 
     // Get our % characters back.
     if ($this->isWindows) {
-      $arg_escaped = str_replace($percentage_sign_replace_pattern, '%', $arg_escaped);
+      $arg_escaped = str_replace(static::PERCENTAGE_REPLACE, '%', $arg_escaped);
     }
 
     return $arg_escaped;

@@ -5,7 +5,10 @@
  * Defines install routines for Content Browser.
  */
 
-use \Drupal\Core\Config\ExtensionInstallStorage;
+use Drupal\views\Entity\View;
+use Drupal\node\Entity\NodeType;
+use Drupal\Component\Serialization\Yaml;
+use Drupal\Core\File\FileSystemInterface;
 
 /**
  * Implements hook_install().
@@ -15,12 +18,14 @@ function content_browser_install() {
   if (!\Drupal::isConfigSyncing()) {
     $data = file_get_contents(dirname(__FILE__) . '/content_browser_icon.png');
     /** @var \Drupal\file\FileInterface $file */
-    $file = file_save_data($data, 'public://content_browser_icon.png', FILE_EXISTS_REPLACE);
-    // Set file uuid same as default config.
-    $uuid = (new ExtensionInstallStorage(\Drupal::service('config.storage')))->read('embed.button.content_browser')['icon_uuid'];
-    $file->set('uuid', $uuid);
-    $file->save();
-    \Drupal::service('file.usage')->add($file, 'embed', 'embed_button', 'content_browser');
+    $file = file_save_data($data, 'public://content_browser_icon.png', FileSystemInterface::EXISTS_REPLACE);
+    if ($file) {
+      // Set file uuid same as default config.
+      $uuid = Yaml::decode(file_get_contents(dirname(__FILE__) . '/config/install/embed.button.content_browser.yml'))['icon_uuid'];
+      $file->set('uuid', $uuid);
+      $file->save();
+      \Drupal::service('file.usage')->add($file, 'embed', 'embed_button', 'content_browser');
+    }
   }
 
   // Copy the teaser view mode for every Content Type so that our View makes
@@ -63,8 +68,15 @@ function content_browser_install() {
  * Implements hook_uninstall().
  */
 function content_browser_uninstall() {
-  Drupal::configFactory()->getEditable('embed.button.content_browser')->delete();
-  Drupal::configFactory()->getEditable('core.entity_view_mode.node.content_browser')->delete();
+  \Drupal::configFactory()->getEditable('embed.button.content_browser')->delete();
+  \Drupal::configFactory()->getEditable('core.entity_view_mode.node.content_browser')->delete();
+  /** @var \Drupal\node\Entity\NodeType[] $types */
+  $types = NodeType::loadMultiple();
+  foreach ($types as $type) {
+    if ($config = \Drupal::configFactory()->getEditable('core.entity_view_display.node.' . $type->id() . '.content_browser')) {
+      $config->delete();
+    }
+  }
 }
 
 /**
@@ -82,14 +94,14 @@ function content_browser_requirements($phase) {
   }
 
   if (!file_exists($masonry_path)) {
-    $requirements['masonry'] = array(
+    $requirements['masonry'] = [
       'title' => t('Masonry library missing'),
       'description' => t(
         'Content Browser requires the Masonry library. Download the newest release from
 https://github.com/desandro/masonry/releases and place it in /libraries'
       ),
       'severity' => REQUIREMENT_ERROR,
-    );
+    ];
   }
 
   return $requirements;
@@ -114,5 +126,65 @@ function content_browser_update_8001() {
       }
       $entity_browser->save();
     }
+  }
+}
+
+/**
+ * Updates the content browser view to contextually filter by allowed bundles.
+ */
+function content_browser_update_8002() {
+  /** @var \Drupal\views\Entity\View $view */
+  if (($view = View::load('content_browser')) && class_exists('Drupal\entity_browser\Plugin\views\argument_default\EntityBrowserWidgetContext')) {
+    $display = &$view->getDisplay('default');
+    $display['display_options']['arguments']['type'] = [
+      'id' => 'type',
+      'table' => 'node_field_data',
+      'field' => 'type',
+      'relationship' => 'none',
+      'group_type' => 'group',
+      'admin_label' => '',
+      'default_action' => 'default',
+      'exception' => [
+        'value' => 'all',
+        'title_enable' => FALSE,
+        'title' => 'All',
+      ],
+      'title_enable' => FALSE,
+      'title' => '',
+      'default_argument_type' => 'entity_browser_widget_context',
+      'default_argument_options' => [
+        'context_key' => 'target_bundles',
+        'fallback' => 'all',
+        'multiple' => 'or',
+      ],
+      'default_argument_skip_url' => FALSE,
+      'summary_options' => [
+        'base_path' => '',
+        'count' => TRUE,
+        'items_per_page' => 25,
+        'override' => FALSE,
+      ],
+      'summary' => [
+        'sort_order' => 'asc',
+        'number_of_records' => 0,
+        'format' => 'default_summary',
+      ],
+      'specify_validation' => FALSE,
+      'validate' => [
+        'type' => 'none',
+        'fail' => 'not found',
+      ],
+      'validate_options' => [],
+      'glossary' => FALSE,
+      'limit' => 0,
+      'case' => 'none',
+      'path_case' => 'none',
+      'transform_dash' => FALSE,
+      'break_phrase' => TRUE,
+      'entity_type' => 'node',
+      'entity_field' => 'type',
+      'plugin_id' => 'node_type',
+    ];
+    $view->save();
   }
 }

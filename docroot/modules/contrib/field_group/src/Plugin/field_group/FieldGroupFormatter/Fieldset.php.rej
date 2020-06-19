@@ -1,0 +1,17 @@
+***************
+*** 27,33 ****
+  
+      $element += [
+        '#type' => 'fieldset',
+-       '#title' => Html::escape($this->t($this->getLabel())),
+        '#attributes' => [],
+      ];
+  
+--- 27,33 ----
+  
+      $element += [
+        '#type' => 'fieldset',
++       '#title' => $this->getLabel(),
+        '#attributes' => [],
+      ];
+  

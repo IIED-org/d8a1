@@ -27,9 +27,20 @@ field_group.field_group_formatter_plugin.details:
     open:
       type: boolean
       label: 'Display element open by default.'
+    description:
+      type: text
+      label: 'Description of the element'
     required_fields:
       type: boolean
       label: 'Mark for required fields'
+
+field_group.field_group_formatter_plugin.details_sidebar:
+  type: field_group.field_group_formatter_plugin.details
+  label: 'Mapping for the details sidebar formatter settings'
+  mapping:
+    weight:
+      type: integer
+      label: 'Weight'
 
 field_group.field_group_formatter_plugin.fieldset:
   type: field_group.field_group_formatter_plugin.base
@@ -93,7 +104,7 @@ field_group.field_group_formatter_plugin.tabs:
       type: string
       label: 'default state for the tabs'
     description:
-      type: string
+      type: label
       label: 'description of the tabs'
     required_fields:
       type: boolean

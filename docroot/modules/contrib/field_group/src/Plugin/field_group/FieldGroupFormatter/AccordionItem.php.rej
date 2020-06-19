@@ -1,19 +1,17 @@
 ***************
-*** 51,56 ****
-        $element['#attached']['library'][] = 'field_group/formatter.details';
-      }
+*** 35,41 ****
+      $element += [
+        '#type' => 'field_group_accordion_item',
+        '#effect' => $this->getSetting('effect'),
+-       '#title' => Html::escape($this->t($this->getLabel())),
+      ];
   
-      foreach ($element as $key => $value) {
-        if (is_array($value) && !empty($value['#children_errors'])) {
-          $element['#open'] = TRUE;
---- 51,60 ----
-        $element['#attached']['library'][] = 'field_group/formatter.details';
-      }
+      if ($this->getSetting('id')) {
+--- 35,41 ----
+      $element += [
+        '#type' => 'field_group_accordion_item',
+        '#effect' => $this->getSetting('effect'),
++       '#title' => $this->getLabel(),
+      ];
   
-+     if ($this->getSetting('formatter') == 'open') {
-+         $element['#open'] = TRUE;
-+     }
-+ 
-      foreach ($element as $key => $value) {
-        if (is_array($value) && !empty($value['#children_errors'])) {
-          $element['#open'] = TRUE;
+      if ($this->getSetting('id')) {

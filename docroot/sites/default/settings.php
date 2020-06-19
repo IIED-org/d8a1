@@ -251,8 +251,9 @@ $databases = [];
  *   );
  * @endcode
  */
- $config_directories['vcs'] = $app_root . '/../config/' . basename($site_path);
- $config_directories[CONFIG_SYNC_DIRECTORY] = $app_root . '/../config/' . basename($site_path);
+// $config_directories['vcs'] = $app_root . '/../config/' . basename($site_path);
+
+$settings['config_sync_directory'] = $app_root . '/../config/' . basename($site_path);
 
 /**
  * Settings:

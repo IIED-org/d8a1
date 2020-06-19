@@ -77,7 +77,7 @@ class ImagemagickExecutionEvent extends Event {
    * @return \Drupal\imagemagick\ImagemagickExecArguments
    *   The ImageMagick/GraphicsMagick execution arguments object.
    */
-  public function getExecArguments() {
+  public function getExecArguments(): ImagemagickExecArguments {
     return $this->arguments;
   }
 

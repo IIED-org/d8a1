@@ -20,7 +20,7 @@ abstract class ControlCustomElementBase extends ControlElementBase {
           'geolocation-map-control',
           $this->getPluginId(),
         ],
-        'data-control-position' => $feature_settings['position'],
+        'data-control-position' => empty($feature_settings['position']) ? '' : $feature_settings['position'],
       ],
     ];
 

@@ -146,6 +146,10 @@ trait FormsStepsTestTrait {
 
     Role::load($this->user->getRoles()[1])
       ->grantPermission("administer nodes")
+      ->grantPermission("create article content")
+      ->grantPermission("create page content")
+      ->grantPermission("edit any article content")
+      ->grantPermission("edit any page content")
       ->save();
 
     // Access article's form display page.

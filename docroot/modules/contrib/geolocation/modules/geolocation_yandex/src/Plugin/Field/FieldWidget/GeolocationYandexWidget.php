@@ -8,7 +8,7 @@ use Drupal\geolocation\Plugin\Field\FieldWidget\GeolocationMapWidgetBase;
 use Drupal\Core\Render\BubbleableMetadata;
 
 /**
- * Plugin implementation of the 'geolocation_googlegeocoder' widget.
+ * Plugin implementation of the 'geolocation_yandex' widget.
  *
  * @FieldWidget(
  *   id = "geolocation_yandex",
@@ -30,6 +30,22 @@ class GeolocationYandexWidget extends GeolocationMapWidgetBase {
    * {@inheritdoc}
    */
   static protected $mapProviderSettingsFormId = 'yandex_settings';
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function defaultSettings() {
+    $settings = parent::defaultSettings();
+
+    $settings[self::$mapProviderSettingsFormId]['map_features']['yandex_control_search'] = [
+      'enabled' => TRUE,
+      'weight' => -100,
+    ];
+    $settings[self::$mapProviderSettingsFormId]['map_features']['yandex_control_zoom']['enabled'] = TRUE;
+    $settings[self::$mapProviderSettingsFormId]['map_features']['yandex_control_geolocation']['enabled'] = TRUE;
+
+    return $settings;
+  }
 
   /**
    * {@inheritdoc}

@@ -24,6 +24,11 @@ class EventSubscriberTest extends BrowserTestBase {
   public static $modules = ['system', 'imagemagick', 'file_mdm'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Test module's event subscriber.
    *
    * @param string $toolkit_id
@@ -94,10 +99,8 @@ class EventSubscriberTest extends BrowserTestBase {
     }
 
     // Change the Prepend settings, must be included in the command line.
-    // Once before the source image.
     \Drupal::configFactory()->getEditable('imagemagick.settings')
       ->set('prepend', '-debug All')
-      ->set('prepend_pre_source', TRUE)
       ->save();
     $image = $this->imageFactory->get($image_uri);
     $image->getToolkit()->arguments()
@@ -112,22 +115,56 @@ class EventSubscriberTest extends BrowserTestBase {
     }
     $this->assertSame('-debug All', $image->getToolkit()->arguments()->toString(ImagemagickExecArguments::PRE_SOURCE));
     $this->assertSame($expected, $image->getToolkit()->arguments()->toString(ImagemagickExecArguments::POST_SOURCE));
-    // Then after the source image.
+  }
+
+  /**
+   * Test coalescence of Animated GIFs.
+   *
+   * @param string $toolkit_id
+   *   The id of the toolkit to set up.
+   * @param string $toolkit_config
+   *   The config object of the toolkit to set up.
+   * @param array $toolkit_settings
+   *   The settings of the toolkit to set up.
+   *
+   * @dataProvider providerToolkitConfiguration
+   */
+  public function testGifCoalesce($toolkit_id, $toolkit_config, array $toolkit_settings) {
+    $this->setUpToolkit($toolkit_id, $toolkit_config, $toolkit_settings);
+    $this->prepareImageFileHandling();
+
+    $image_uri = drupal_get_path('module', 'imagemagick') . '/misc/test-multi-frame.gif';
+
+    // By default, no coalesce of animated GIFs.
+    $image = $this->imageFactory->get($image_uri);
+    $image->getToolkit()->arguments()->add("-resize 100x75!");
+    $image->save("public://imagetest/coalesced.gif");
+    $expected = "-resize 100x75! -quality 100";
+    $this->assertSame($expected, $image->getToolkit()->arguments()->toString(ImagemagickExecArguments::POST_SOURCE));
+
+    // Change the Advanced Coalesce setting, '-coalesce' must now be included
+    // in the command line.
     \Drupal::configFactory()->getEditable('imagemagick.settings')
-      ->set('prepend_pre_source', FALSE)
+      ->set('advanced.coalesce', TRUE)
       ->save();
     $image = $this->imageFactory->get($image_uri);
-    $image->getToolkit()->arguments()
-      ->add("-resize 100x75!")
-      ->add("-quality 75");
-    $image->save($image_uri . '.derived');
-    if (substr(PHP_OS, 0, 3) === 'WIN') {
-      $expected = "-debug All -resize 100x75! -quality 75 -colorspace \"GRAY\"";
-    }
-    else {
-      $expected = "-debug All -resize 100x75! -quality 75 -colorspace 'GRAY'";
-    }
-    $this->assertSame('', $image->getToolkit()->arguments()->toString(ImagemagickExecArguments::PRE_SOURCE));
+    $image->getToolkit()->arguments()->add("-resize 100x75!");
+    $image->save("public://imagetest/coalesced.gif");
+    $expected = "-coalesce -resize 100x75! -quality 100";
+    $this->assertSame($expected, $image->getToolkit()->arguments()->toString(ImagemagickExecArguments::POST_SOURCE));
+
+    // Single frame GIF should not be coalesceable.
+    $image = $this->imageFactory->get("public://image-test.gif");
+    $image->getToolkit()->arguments()->add("-resize 100x75!");
+    $image->save("public://imagetest/coalesced.gif");
+    $expected = "-resize 100x75! -quality 100";
+    $this->assertSame($expected, $image->getToolkit()->arguments()->toString(ImagemagickExecArguments::POST_SOURCE));
+
+    // PNG should not be coalesceable.
+    $image = $this->imageFactory->get("public://image-test.png");
+    $image->getToolkit()->arguments()->add("-resize 100x75!");
+    $image->save("public://imagetest/coalesced.png");
+    $expected = "-resize 100x75! -quality 100";
     $this->assertSame($expected, $image->getToolkit()->arguments()->toString(ImagemagickExecArguments::POST_SOURCE));
   }
 
