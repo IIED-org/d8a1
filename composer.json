@@ -66,7 +66,7 @@
     "drupal/better_field_descriptions": "^1.4",
     "drupal/geocoder": "^2.0@beta",
     "drupal/leaflet_more_maps": "^1.0@alpha",
-    "drupal/better_exposed_filters": "^3.0@alpha",
+    "drupal/better_exposed_filters": "^5.0",
     "drupal/taxonomy_publish": "^1.1",
     "drupal/taxonomy_access_fix": "^2.6",
     "drupal/inline_entity_form": "^1.0@RC",
