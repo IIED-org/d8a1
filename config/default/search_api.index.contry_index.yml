@@ -102,9 +102,8 @@ datasource_settings:
       default: true
       selected: {  }
 processor_settings:
-  add_url: {  }
-  aggregated_field: {  }
   entity_status: {  }
+  aggregated_field: {  }
   ignore_character:
     all_fields: false
     fields:
@@ -122,6 +121,8 @@ processor_settings:
       - Pi
       - Po
       - Ps
+  language_with_fallback: {  }
+  add_url: {  }
   rendered_item: {  }
 tracker_settings:
   default:

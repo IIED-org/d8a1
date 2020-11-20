@@ -17,7 +17,6 @@ description: 'Latest initiative blocks'
 tag: ''
 base_table: node_field_data
 base_field: nid
-core: 8.x
 display:
   default:
     display_plugin: default
@@ -375,6 +374,8 @@ display:
           id: status
           expose:
             operator: ''
+            operator_limit_selection: false
+            operator_list: {  }
           group: 1
         type:
           id: type
@@ -385,6 +386,9 @@ display:
           entity_type: node
           entity_field: type
           plugin_id: bundle
+          expose:
+            operator_limit_selection: false
+            operator_list: {  }
         field_image_alt:
           id: field_image_alt
           table: node__field_image
@@ -409,6 +413,8 @@ display:
             remember_roles:
               authenticated: authenticated
             placeholder: ''
+            operator_limit_selection: false
+            operator_list: {  }
           is_grouped: false
           group_info:
             label: ''
@@ -719,7 +725,7 @@ display:
           exclude: false
           alter:
             alter_text: true
-            text: "<a href=\"{{ view_node }}\">\r\n<div class=\"col-lg-3 col-md-6\">\r\n    <div class=\"card mb-resp\">\r\n     <img src=\"{{ field_image }}\" alt=\"{{ title }}\" class=\"img-fluid card-img-top\">\r\n      <div class=\"card-body\">\r\n        <h5 class=\"card-title\">{{ title }}</h5>\r\n      </div>\r\n</a>\r\n      \r\n    </div>\r\n  </div>"
+            text: "<div class=\"col-md-6 col-lg-3\">\r\n<a href=\"{{ view_node }}\">\r\n      <div class=\"card mb-5\">\r\n       <img src=\"{{ field_image }}\" alt=\"{{ title }}\" class=\"img-fluid card-img-top\">\r\n        <div class=\"card-body\">\r\n          <h5 class=\"card-title\">{{ title }}</h5>\r\n      </div>\r\n    </div>\r\n</a>\r\n</div>\r\n\r\n"
             make_link: false
             path: ''
             absolute: false
@@ -771,16 +777,12 @@ display:
           group_type: group
           admin_label: ''
           empty: false
-          content: '<div class="pb-3 pl-3"><p>We have @total case studies, here are some highlights</p></div>'
+          content: '<div class="pl-3 mb-3"><p>We have @total case studies, here are some highlights</p></div>'
           plugin_id: result
       title: 'Case studies'
       cache:
-        type: time
-        options:
-          results_lifespan: 21600
-          results_lifespan_custom: 0
-          output_lifespan: 21600
-          output_lifespan_custom: 0
+        type: tag
+        options: {  }
     cache_metadata:
       max-age: 0
       contexts:

@@ -1,0 +1,97 @@
+uuid: 934f39e1-1f58-431e-85c8-5cef013e08ff
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.video_caption_wide_.field_video_caption
+    - field.field.paragraph.video_caption_wide_.field_video_url
+    - paragraphs.paragraphs_type.video_caption_wide_
+  module:
+    - ds
+    - text
+    - video_embed_field
+third_party_settings:
+  ds:
+    layout:
+      id: ds_1col
+      library: null
+      disable_css: false
+      entity_classes: all_classes
+      settings:
+        label: ''
+        wrappers:
+          ds_content: div
+        outer_wrapper: div
+        attributes: ''
+        link_attribute: ''
+        link_custom: ''
+        classes:
+          layout_class:
+            mb-4: mb-4
+          ds_content:
+            col-md-12: col-md-12
+            m-auto: m-auto
+    regions:
+      ds_content:
+        - field_video_url
+        - field_video_caption
+id: paragraph.video_caption_wide_.default
+targetEntityType: paragraph
+bundle: video_caption_wide_
+mode: default
+content:
+  field_video_caption:
+    weight: 1
+    label: hidden
+    settings: {  }
+    third_party_settings:
+      ds:
+        ft:
+          id: expert
+          settings:
+            lb: ''
+            prefix: ''
+            lbw-el: ''
+            lbw-cl: ''
+            lbw-at: ''
+            ow-el: ''
+            ow-cl: ''
+            ow-at: ''
+            fis-el: ''
+            fis-cl: ''
+            fis-at: ''
+            fi: true
+            fi-el: figcaption
+            fi-cl: 'figure-caption text-muted'
+            fi-at: ''
+            suffix: ''
+            lbw: false
+            lb-col: false
+            ow: false
+            ow-def-at: false
+            ow-def-cl: false
+            fis: false
+            fis-def-at: false
+            fi-def-at: false
+    type: text_default
+    region: ds_content
+  field_video_url:
+    weight: 0
+    label: hidden
+    settings:
+      responsive: true
+      width: 854
+      height: 480
+      autoplay: false
+    third_party_settings:
+      ds:
+        ft:
+          id: default
+          settings:
+            lb: ''
+            lb-col: false
+            classes: {  }
+    type: video_embed_field_video
+    region: ds_content
+hidden:
+  search_api_excerpt: true

@@ -1,0 +1,11 @@
+uuid: ef316507-722e-4aef-8800-64ae2420201b
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.training
+id: node_type_training
+action: display_page
+allow_override: 1
+redirect: ''
+redirect_code: 301

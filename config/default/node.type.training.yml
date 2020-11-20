@@ -1,0 +1,17 @@
+uuid: 6af68c8d-28c9-48e5-ba97-b09e86ddf57b
+langcode: en
+status: true
+dependencies:
+  module:
+    - menu_ui
+third_party_settings:
+  menu_ui:
+    available_menus: {  }
+    parent: ''
+name: Training
+type: training
+description: 'Pages within the training section'
+help: ''
+new_revision: true
+preview_mode: 1
+display_submitted: false

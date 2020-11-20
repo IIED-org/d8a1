@@ -1,0 +1,66 @@
+uuid: ac86c3e7-72cf-41d4-943d-309bec010963
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.logo
+    - field.field.node.organisation.body
+    - field.field.node.organisation.field_image
+    - field.field.node.organisation.field_link
+    - field.field.node.organisation.field_organisation_type
+    - image.style.logo_max_270_
+    - node.type.organisation
+  module:
+    - ds
+    - image
+    - user
+third_party_settings:
+  ds:
+    layout:
+      id: ds_1col
+      library: null
+      disable_css: false
+      entity_classes: all_classes
+      settings:
+        label: ''
+        wrappers:
+          ds_content: div
+        outer_wrapper: div
+        attributes: ''
+        link_attribute: ''
+        link_custom: ''
+        classes:
+          layout_class: {  }
+          ds_content: {  }
+    regions:
+      ds_content:
+        - field_image
+id: node.organisation.logo
+targetEntityType: node
+bundle: organisation
+mode: logo
+content:
+  field_image:
+    weight: 0
+    label: hidden
+    settings:
+      image_style: logo_max_270_
+      image_link: content
+    third_party_settings:
+      ds:
+        ft:
+          id: default
+          settings:
+            lb: ''
+            lb-col: false
+            classes: {  }
+    type: image
+    region: ds_content
+hidden:
+  addtoany: true
+  body: true
+  content_moderation_control: true
+  field_link: true
+  field_organisation_type: true
+  links: true
+  search_api_excerpt: true

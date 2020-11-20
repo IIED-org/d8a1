@@ -81,7 +81,7 @@ dependencies:
     - field.field.node.initiative.field_year_finished
     - image.style.thumbnail
     - node.type.initiative
-    - workflows.workflow.editorial
+    - workflows.workflow.node_added
   module:
     - address
     - conditional_fields
@@ -97,7 +97,8 @@ dependencies:
 third_party_settings:
   field_layout:
     id: layout_onecol
-    settings: {  }
+    settings:
+      label: ''
   field_group:
     group_multi:
       children:
@@ -536,6 +537,7 @@ content:
       rows: 5
       placeholder: ''
       summary_rows: 3
+      show_summary: false
     third_party_settings:
       field_states_ui:
         form:

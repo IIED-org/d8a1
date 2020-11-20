@@ -1,0 +1,5 @@
+simplify_nodes:
+  - author
+  - comment
+  - menu
+  - redirect

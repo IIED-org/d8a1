@@ -9,10 +9,12 @@ dependencies:
     - field.field.node.resource.field_address
     - field.field.node.resource.field_authors
     - field.field.node.resource.field_date_published
+    - field.field.node.resource.field_document_type
     - field.field.node.resource.field_geofield
     - field.field.node.resource.field_interventions
     - field.field.node.resource.field_language
     - field.field.node.resource.field_publisher
+    - field.field.node.resource.field_region
     - field.field.node.resource.field_resource_type
     - field.field.node.resource.field_species_affected
     - field.field.node.resource.field_standalone_resource
@@ -27,7 +29,8 @@ dependencies:
 third_party_settings:
   field_layout:
     id: layout_onecol
-    settings: {  }
+    settings:
+      label: ''
 id: node.resource.popup
 targetEntityType: node
 bundle: resource
@@ -40,6 +43,7 @@ content:
       rows: 9
       summary_rows: 3
       placeholder: ''
+      show_summary: false
     third_party_settings: {  }
     region: content
   field_authors:
@@ -108,8 +112,10 @@ hidden:
   created: true
   field_add_new_species: true
   field_address: true
+  field_document_type: true
   field_geofield: true
   field_interventions: true
+  field_region: true
   field_species_affected: true
   field_standalone_resource: true
   moderation_state: true
