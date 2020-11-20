@@ -1,0 +1,10 @@
+uuid: 5572f5a6-419d-4408-a4e6-a96161add8e3
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: node.logo
+label: Logo
+targetEntityType: node
+cache: true

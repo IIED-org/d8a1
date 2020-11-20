@@ -9,4 +9,4 @@ label: Strict-Transport-Security
 description: 'This policy will enforce TLS on your site and all subdomains for a day.'
 group: Security
 name: Strict-Transport-Security
-value: 'max-age=86400; includeSubDomains'
+value: 'max-age=31536000; includeSubDomains'

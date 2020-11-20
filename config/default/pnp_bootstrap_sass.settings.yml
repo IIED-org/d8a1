@@ -92,3 +92,6 @@ bootstrap_barrio_radio: standard
 bootstrap_barrio_checkbox: standard
 bootstrap_barrio_select: standard
 bootstrap_barrio_file: standard
+bootstrap_barrio_navbar_top_class: ''
+bootstrap_barrio_navbar_class: justify-content-start
+bootstrap_barrio_bootstrap_icons: 0

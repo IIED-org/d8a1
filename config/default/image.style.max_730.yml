@@ -1,0 +1,15 @@
+uuid: 81e0641b-1c3d-4299-8a8f-65e9a1a1536a
+langcode: en
+status: true
+dependencies: {  }
+name: max_730
+label: 'Max 730'
+effects:
+  595edea1-126b-4436-a1ca-10cf27daccf3:
+    uuid: 595edea1-126b-4436-a1ca-10cf27daccf3
+    id: image_scale
+    weight: 1
+    data:
+      width: 730
+      height: null
+      upscale: false

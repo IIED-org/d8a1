@@ -1,0 +1,21 @@
+uuid: acb91a9c-551e-425a-aa25-350960931460
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_training_standfirst
+    - node.type.training
+  module:
+    - text
+id: node.training.field_training_standfirst
+field_name: field_training_standfirst
+entity_type: node
+bundle: training
+label: Standfirst
+description: 'Include an intro paragraph'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long

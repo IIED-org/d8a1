@@ -28,7 +28,7 @@ _core:
 id: acquia_search_index
 name: 'Acquia Search Solr Index'
 description: ''
-read_only: false
+read_only: true
 field_settings:
   body:
     label: Body
@@ -308,6 +308,7 @@ processor_settings:
     weights:
       preprocess_index: -50
       preprocess_query: -20
+  language_with_fallback: {  }
   rendered_item: {  }
   stopwords:
     all_fields: false
@@ -411,7 +412,7 @@ tracker_settings:
     indexing_order: fifo
 options:
   index_directly: true
-  cron_limit: 250
+  cron_limit: -1
   processors:
     language:
       status: '1'

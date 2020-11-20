@@ -1,0 +1,79 @@
+uuid: 3a534421-2051-47ae-9342-c6c8ff36b64e
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.organisation_logos.field_organisation
+    - paragraphs.paragraphs_type.organisation_logos
+  module:
+    - ds
+third_party_settings:
+  ds:
+    layout:
+      id: ds_1col
+      library: null
+      disable_css: false
+      entity_classes: all_classes
+      settings:
+        label: ''
+        wrappers:
+          ds_content: div
+        outer_wrapper: div
+        attributes: ''
+        link_attribute: ''
+        link_custom: ''
+        classes:
+          layout_class:
+            row: row
+            mb-4: mb-4
+          ds_content:
+            col-md-8: col-md-8
+            m-auto: m-auto
+    regions:
+      ds_content:
+        - field_organisation
+id: paragraph.organisation_logos.default
+targetEntityType: paragraph
+bundle: organisation_logos
+mode: default
+content:
+  field_organisation:
+    weight: 0
+    label: hidden
+    settings:
+      view_mode: logo
+      link: false
+    third_party_settings:
+      ds:
+        ds_limit: ''
+        ft:
+          id: expert
+          settings:
+            lb: ''
+            prefix: ''
+            lbw-el: ''
+            lbw-cl: ''
+            lbw-at: ''
+            ow-el: ''
+            ow-cl: ''
+            ow-at: ''
+            fis-el: ''
+            fis-cl: ''
+            fis-at: ''
+            fi: true
+            fi-el: div
+            fi-cl: 'float-left mr-2'
+            fi-at: ''
+            suffix: ''
+            lbw: false
+            lb-col: false
+            ow: false
+            ow-def-at: false
+            ow-def-cl: false
+            fis: false
+            fis-def-at: false
+            fi-def-at: false
+    type: entity_reference_entity_view
+    region: ds_content
+hidden:
+  search_api_excerpt: true

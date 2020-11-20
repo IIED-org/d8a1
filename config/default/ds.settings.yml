@@ -5,6 +5,11 @@ ft-show-colon: false
 classes:
   region:
     - container
+    - row
+    - col-md-8
+    - col-md-12
+    - m-auto
+    - mb-4
   field: {  }
 use_field_names: true
 _core:

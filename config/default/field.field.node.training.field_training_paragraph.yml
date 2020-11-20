@@ -1,0 +1,84 @@
+uuid: 91ec6560-7399-4c52-8206-c333da757fed
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_training_paragraph
+    - node.type.training
+    - paragraphs.paragraphs_type.basic_text
+    - paragraphs.paragraphs_type.image_caption
+    - paragraphs.paragraphs_type.image_caption_wide_
+    - paragraphs.paragraphs_type.image_left_text_right
+    - paragraphs.paragraphs_type.organisation_logos
+    - paragraphs.paragraphs_type.text_left_image_right
+    - paragraphs.paragraphs_type.video_caption_
+    - paragraphs.paragraphs_type.video_caption_wide_
+  module:
+    - entity_reference_revisions
+id: node.training.field_training_paragraph
+field_name: field_training_paragraph
+entity_type: node
+bundle: training
+label: Paragraphs
+description: 'Add a content component '
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    negate: 0
+    target_bundles:
+      basic_text: basic_text
+      image_caption: image_caption
+      image_caption_wide_: image_caption_wide_
+      image_left_text_right: image_left_text_right
+      organisation_logos: organisation_logos
+      text_left_image_right: text_left_image_right
+      video_caption_: video_caption_
+      video_caption_wide_: video_caption_wide_
+    target_bundles_drag_drop:
+      _link_to_document_hosted_on_anot:
+        weight: 12
+        enabled: false
+      add_new_species:
+        weight: 7
+        enabled: false
+      basic_text:
+        enabled: true
+        weight: 16
+      document:
+        weight: 8
+        enabled: false
+      image_caption:
+        enabled: true
+        weight: 18
+      image_caption_wide_:
+        enabled: true
+        weight: 19
+      image_left_text_right:
+        enabled: true
+        weight: 20
+      online_article_or_blog:
+        weight: 9
+        enabled: false
+      organisation_logos:
+        enabled: true
+        weight: 22
+      text:
+        weight: 10
+        enabled: false
+      text_left_image_right:
+        enabled: true
+        weight: 24
+      video:
+        weight: 11
+        enabled: false
+      video_caption_:
+        enabled: true
+        weight: 26
+      video_caption_wide_:
+        enabled: true
+        weight: 27
+field_type: entity_reference_revisions

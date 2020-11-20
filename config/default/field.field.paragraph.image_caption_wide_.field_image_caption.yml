@@ -1,0 +1,21 @@
+uuid: db2952be-664e-4b51-9573-f4159df2768c
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_image_caption
+    - paragraphs.paragraphs_type.image_caption_wide_
+  module:
+    - text
+id: paragraph.image_caption_wide_.field_image_caption
+field_name: field_image_caption
+entity_type: paragraph
+bundle: image_caption_wide_
+label: 'Image caption'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long

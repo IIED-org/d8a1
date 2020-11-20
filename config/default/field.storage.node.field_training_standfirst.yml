@@ -1,0 +1,19 @@
+uuid: 6c65487e-c480-450c-bf09-b3dbe839b644
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+    - text
+id: node.field_training_standfirst
+field_name: field_training_standfirst
+entity_type: node
+type: text_long
+settings: {  }
+module: text
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

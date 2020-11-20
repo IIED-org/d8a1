@@ -1,0 +1,117 @@
+uuid: 3146cb9f-36d4-4d5d-b6ce-1b9360a31736
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.text_left_image_right.field_para_image
+    - field.field.paragraph.text_left_image_right.field_text
+    - paragraphs.paragraphs_type.text_left_image_right
+    - responsive_image.styles.normal
+  module:
+    - ds
+    - responsive_image
+    - text
+third_party_settings:
+  ds:
+    layout:
+      id: ds_1col
+      library: null
+      disable_css: false
+      entity_classes: all_classes
+      settings:
+        label: ''
+        wrappers:
+          ds_content: div
+        outer_wrapper: div
+        attributes: ''
+        link_attribute: ''
+        link_custom: ''
+        classes:
+          layout_class:
+            row: row
+            mb-4: mb-4
+          ds_content:
+            m-auto: m-auto
+    regions:
+      ds_content:
+        - field_text
+        - field_para_image
+id: paragraph.text_left_image_right.default
+targetEntityType: paragraph
+bundle: text_left_image_right
+mode: default
+content:
+  field_para_image:
+    type: responsive_image
+    weight: 1
+    region: ds_content
+    label: hidden
+    settings:
+      responsive_image_style: normal
+      image_link: ''
+    third_party_settings:
+      ds:
+        ft:
+          id: expert
+          settings:
+            lb: ''
+            prefix: ''
+            lbw-el: ''
+            lbw-cl: ''
+            lbw-at: ''
+            ow: true
+            ow-el: div
+            ow-cl: col-md-6
+            ow-at: ''
+            fis-el: ''
+            fis-cl: ''
+            fis-at: ''
+            fi: true
+            fi-el: div
+            fi-cl: fluid-container
+            fi-at: ''
+            suffix: ''
+            lbw: false
+            lb-col: false
+            ow-def-at: false
+            ow-def-cl: false
+            fis: false
+            fis-def-at: false
+            fi-def-at: false
+  field_text:
+    weight: 0
+    label: hidden
+    settings: {  }
+    third_party_settings:
+      ds:
+        ft:
+          id: expert
+          settings:
+            lb: ''
+            prefix: ''
+            lbw-el: ''
+            lbw-cl: ''
+            lbw-at: ''
+            ow: true
+            ow-el: div
+            ow-cl: col-md-6
+            ow-at: ''
+            fis-el: ''
+            fis-cl: ''
+            fis-at: ''
+            fi-el: ''
+            fi-cl: ''
+            fi-at: ''
+            suffix: ''
+            lbw: false
+            lb-col: false
+            ow-def-at: false
+            ow-def-cl: false
+            fis: false
+            fis-def-at: false
+            fi: false
+            fi-def-at: false
+    type: text_default
+    region: ds_content
+hidden:
+  search_api_excerpt: true

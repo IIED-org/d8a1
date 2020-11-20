@@ -1,0 +1,11 @@
+uuid: f643ffbe-beb0-4409-b3a8-df83ad7ba6db
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.organisation
+id: node_type_organisation
+action: page_redirect
+allow_override: 1
+redirect: '[node:field_link]'
+redirect_code: 301

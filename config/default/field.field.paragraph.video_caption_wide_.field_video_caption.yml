@@ -1,0 +1,21 @@
+uuid: 651fd3cf-ac3f-4427-9b54-6556dafcc9e2
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_video_caption
+    - paragraphs.paragraphs_type.video_caption_wide_
+  module:
+    - text
+id: paragraph.video_caption_wide_.field_video_caption
+field_name: field_video_caption
+entity_type: paragraph
+bundle: video_caption_wide_
+label: 'Video caption'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long

@@ -19,18 +19,30 @@ dependencies:
   module:
     - content_moderation
     - datetime
+    - ds
     - field_layout
     - file
     - hide_revision_field
     - image
-    - layout_discovery
     - link
     - path
     - text
 third_party_settings:
   field_layout:
-    id: layout_onecol
-    settings: {  }
+    id: ds_1col
+    settings:
+      label: ''
+      wrappers:
+        ds_content: div
+      outer_wrapper: div
+      attributes: ''
+      link_attribute: ''
+      link_custom: ''
+      classes:
+        layout_class:
+          container: container
+        ds_content:
+          container: container
 id: node.event.default
 targetEntityType: node
 bundle: event
@@ -43,12 +55,13 @@ content:
       rows: 9
       summary_rows: 3
       placeholder: ''
+      show_summary: false
     third_party_settings: {  }
-    region: content
+    region: ds_content
   created:
     type: datetime_timestamp
     weight: 10
-    region: content
+    region: ds_content
     settings: {  }
     third_party_settings: {  }
   field_event_attachment:
@@ -57,13 +70,13 @@ content:
       progress_indicator: throbber
     third_party_settings: {  }
     type: file_generic
-    region: content
+    region: ds_content
   field_event_date:
     weight: 4
     settings: {  }
     third_party_settings: {  }
     type: datetime_default
-    region: content
+    region: ds_content
   field_event_dates:
     weight: 5
     settings:
@@ -71,7 +84,7 @@ content:
       placeholder: ''
     third_party_settings: {  }
     type: string_textfield
-    region: content
+    region: ds_content
   field_event_image:
     weight: 3
     settings:
@@ -79,7 +92,7 @@ content:
       preview_image_style: thumbnail
     third_party_settings: {  }
     type: image_image
-    region: content
+    region: ds_content
   field_event_link:
     weight: 7
     settings:
@@ -87,7 +100,7 @@ content:
       placeholder_title: ''
     third_party_settings: {  }
     type: link_default
-    region: content
+    region: ds_content
   field_event_locations:
     weight: 6
     settings:
@@ -95,35 +108,35 @@ content:
       placeholder: ''
     third_party_settings: {  }
     type: string_textfield
-    region: content
+    region: ds_content
   field_event_type:
     weight: 1
     settings: {  }
     third_party_settings: {  }
     type: options_select
-    region: content
+    region: ds_content
   field_no_further_info:
     weight: 8
     settings: {  }
     third_party_settings: {  }
     type: options_select
-    region: content
+    region: ds_content
   field_promote_front:
     weight: 19
     settings: {  }
     third_party_settings: {  }
     type: options_buttons
-    region: content
+    region: ds_content
   moderation_state:
     type: moderation_state_default
     weight: 16
     settings: {  }
-    region: content
+    region: ds_content
     third_party_settings: {  }
   path:
     type: path
     weight: 13
-    region: content
+    region: ds_content
     settings: {  }
     third_party_settings: {  }
   promote:
@@ -131,12 +144,12 @@ content:
     settings:
       display_label: true
     weight: 11
-    region: content
+    region: ds_content
     third_party_settings: {  }
   revision_log:
     type: hide_revision_field_log_widget
     weight: 15
-    region: content
+    region: ds_content
     settings:
       show: true
       default: ''
@@ -150,19 +163,19 @@ content:
     settings:
       display_label: true
     weight: 17
-    region: content
+    region: ds_content
     third_party_settings: {  }
   sticky:
     type: boolean_checkbox
     settings:
       display_label: true
     weight: 12
-    region: content
+    region: ds_content
     third_party_settings: {  }
   title:
     type: string_textfield
     weight: 0
-    region: content
+    region: ds_content
     settings:
       size: 60
       placeholder: ''
@@ -174,11 +187,12 @@ content:
       match_operator: CONTAINS
       size: 60
       placeholder: ''
-    region: content
+      match_limit: 10
+    region: ds_content
     third_party_settings: {  }
   url_redirects:
     weight: 14
-    region: content
+    region: ds_content
     settings: {  }
     third_party_settings: {  }
 hidden: {  }

@@ -1,35 +1,3 @@
-subscription_data:
-  active: true
-  href: 'https://insight.acquia.com/node/uuid/ef43298b-5eac-4d9d-b465-5fd0b1af3281/dashboard'
-  uuid: ef43298b-5eac-4d9d-b465-5fd0b1af3281
-  subscription_name: d8a1
-  expiration_date:
-    value: '2020-10-30T00:00:00'
-  product:
-    view: 'Acquia Network'
-  derived_key_salt: 10dc8ea824194e275b7858588093ae4e
-  update_service: '1'
-  search_service_enabled: 1
-  rpc_version: '3.1'
-  update: {  }
-  heartbeat_data:
-    acquia_lift:
-      status: false
-      decision:
-        public_key: ''
-        private_key: ''
-      profile:
-        account_name: ''
-        hostname: ''
-        public_key: ''
-        secret_key: ''
-        js_path: ''
-    search_service_enabled: 1
-    search_cores:
-      -
-        balancer: euwest1-c35.acquia-search.com
-        core_id: AHQT-177573
-    search_service_colony: euwest1-c35.acquia-search.com
 subscription_name: d8a1
 debug: false
 cron_interval: 30
@@ -40,13 +8,7 @@ spi:
   server: 'https://nspi.acquia.com'
   ssl_override: false
   ssl_verify: true
-  def_vars:
-    preprocess_css:
-      optional: 0
-      description: ''
   def_waived_vars: {  }
-  def_timestamp: 1374783288
-  new_optional_data: 1
   admin_priv: 1
   send_node_user: 1
   send_watchdog: 1
@@ -75,7 +37,7 @@ spi:
   cron_interval: 28800
   site_name: 'd8a1: prod'
   site_machine_name: ef43298b_5eac_4d9d_b465_5fd0b1af3281__d8a1rfjrbvzlqo__5e3025c9ef9d1
-  site_environment: prod
+  site_environment: null
   env_detection_enabled: true
   site_uuid: 898878d8-b982-4417-bf59-ac5133857409
 mapping:
