@@ -1,0 +1,30 @@
+uuid: 9e80f66b-1d62-4537-b67d-3ad129b4a3ca
+langcode: en
+status: true
+dependencies:
+  config:
+    - views.view.training_display
+  module:
+    - system
+    - views
+  theme:
+    - pnp_bootstrap_sass
+id: views_block__training_display_block_1
+theme: pnp_bootstrap_sass
+region: featured_bottom_first
+weight: 0
+provider: null
+plugin: 'views_block:training_display-block_1'
+settings:
+  id: 'views_block:training_display-block_1'
+  label: ''
+  provider: views
+  label_display: '0'
+  views_label: ''
+  items_per_page: none
+visibility:
+  request_path:
+    id: request_path
+    pages: '<front>'
+    negate: false
+    context_mapping: {  }

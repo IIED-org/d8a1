@@ -1,0 +1,21 @@
+uuid: d2b4b395-12e1-40c3-808c-7ba23c71cc64
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_promote_front
+    - node.type.training
+  module:
+    - options
+id: node.training.field_promote_front
+field_name: field_promote_front
+entity_type: node
+bundle: training
+label: 'Promote to homepage'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_string

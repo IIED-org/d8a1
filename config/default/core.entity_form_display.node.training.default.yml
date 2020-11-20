@@ -6,6 +6,7 @@ dependencies:
     - field.field.node.training.body
     - field.field.node.training.field_image
     - field.field.node.training.field_image_caption
+    - field.field.node.training.field_promote_front
     - field.field.node.training.field_training_paragraph
     - field.field.node.training.field_training_standfirst
     - image.style.thumbnail
@@ -71,6 +72,12 @@ content:
       placeholder: ''
     third_party_settings: {  }
     type: text_textfield
+    region: ds_content
+  field_promote_front:
+    weight: 15
+    settings: {  }
+    third_party_settings: {  }
+    type: options_select
     region: ds_content
   field_training_paragraph:
     type: entity_reference_paragraphs
