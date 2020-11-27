@@ -108,7 +108,8 @@
     "drupal/condition_query": "^1.2",
     "drupal/memcache": "^2.0",
     "drupal/pathauto": "^1.8",
-    "drupal/content_moderation_notifications": "^3.2"
+    "drupal/content_moderation_notifications": "^3.2",
+    "drupal/leaflet": "^2.1"
   },
   "require-dev": {
     "drupal/devel": "^1.0",

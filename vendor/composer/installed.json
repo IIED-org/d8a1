@@ -5170,18 +5170,18 @@
     },
     {
         "name": "drupal/leaflet",
-        "version": "1.38.0",
-        "version_normalized": "1.38.0.0",
+        "version": "2.1.5",
+        "version_normalized": "2.1.5.0",
         "source": {
             "type": "git",
             "url": "https://git.drupalcode.org/project/leaflet.git",
-            "reference": "8.x-1.38"
+            "reference": "2.1.5"
         },
         "dist": {
             "type": "zip",
-            "url": "https://ftp.drupal.org/files/projects/leaflet-8.x-1.38.zip",
-            "reference": "8.x-1.38",
-            "shasum": "83eeba6da93aa639afc23cd021baf902a3b34ade"
+            "url": "https://ftp.drupal.org/files/projects/leaflet-2.1.5.zip",
+            "reference": "2.1.5",
+            "shasum": "28e37842a0afbe32da4f4da33b6210eacfe0b180"
         },
         "require": {
             "drupal/core": "^8.8 || ^9",
@@ -5190,8 +5190,8 @@
         "type": "drupal-module",
         "extra": {
             "drupal": {
-                "version": "8.x-1.38",
-                "datestamp": "1591465296",
+                "version": "2.1.5",
+                "datestamp": "1605734713",
                 "security-coverage": {
                     "status": "covered",
                     "message": "Covered by Drupal's security advisory policy"
@@ -5473,7 +5473,7 @@
         "version_normalized": "1.38.0.0",
         "require": {
             "drupal/core": "^8 || ^9",
-            "drupal/leaflet": "self.version"
+            "drupal/leaflet": "*"
         },
         "type": "metapackage",
         "extra": {

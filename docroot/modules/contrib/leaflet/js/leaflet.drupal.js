@@ -15,7 +15,7 @@
 
               // Initialize the Drupal.Leaflet.[data.mapid] object,
               // for possible external interaction.
-              Drupal.Leaflet[mapid].markers = {}
+              Drupal.Leaflet[mapid].markers = {};
 
               // Add Leaflet Map Features.
               $container.data('leaflet').add_features(mapid, data.features, true);
@@ -40,8 +40,9 @@
           // allow other modules to get access to it via trigger.
           // NOTE: don't change this trigger arguments print, for back porting
           // compatibility.
+          $(document).trigger('leafletMapInit', [data.map, data.lMap, mapid]);
+          // (Keep also the pre-existing event for back port compatibility)
           $(document).trigger('leaflet.map', [data.map, data.lMap, mapid]);
-
         });
       });
     }
@@ -112,6 +113,8 @@
 
     // Set the public map object, to make it accessible from outside.
     Drupal.Leaflet[mapid] = {};
+    // Define immediately the l.Map property, to make sub-methods mapid specific.
+    Drupal.Leaflet[mapid].lMap = self.lMap;
 
     // Add map layers (base and overlay layers).
     let i = 0;
@@ -158,9 +161,6 @@
     if (self.settings.fullscreen_control) {
       self.lMap.addControl(new L.Control.Fullscreen());
     }
-
-    // Finally define the l.Map property, to make it accessible from outside.
-    Drupal.Leaflet[mapid].lMap = self.lMap;
 
   };
 
@@ -231,7 +231,7 @@
           lFeature = self.create_feature(groupFeature);
           if (lFeature !== undefined) {
             if (lFeature.setStyle) {
-              feature.path = feature.path ? JSON.parse(feature.path) : {};
+              feature.path = feature.path ? (feature.path instanceof Object ? feature.path : JSON.parse(feature.path)) : {};
               lFeature.setStyle(feature.path);
             }
             if (groupFeature.popup) {
@@ -248,7 +248,7 @@
         lFeature = self.create_feature(feature);
         if (lFeature !== undefined) {
           if (lFeature.setStyle) {
-            feature.path = feature.path ? JSON.parse(feature.path) : {};
+            feature.path = feature.path ? (feature.path instanceof Object ? feature.path : JSON.parse(feature.path)) : {};
             lFeature.setStyle(feature.path);
           }
           self.lMap.addLayer(lFeature);
@@ -340,6 +340,9 @@
   Drupal.Leaflet.prototype.create_layer = function(layer, key) {
     let self = this;
     let map_layer = new L.TileLayer(layer.urlTemplate);
+    if (layer.type === 'wms') {
+      map_layer = new L.tileLayer.wms(layer.urlTemplate, layer.options);
+    }
     map_layer._leaflet_id = key;
 
     if (layer.options) {
@@ -366,32 +369,34 @@
   };
 
   Drupal.Leaflet.prototype.create_icon = function(options) {
-    let icon = new L.Icon({iconUrl: options.iconUrl});
+    let icon_options = {
+      iconUrl: options.iconUrl,
+    };
 
     // Override applicable marker defaults.
     if (options.iconSize) {
-      icon.options.iconSize = new L.Point(parseInt(options.iconSize.x), parseInt(options.iconSize.y));
+      icon_options.iconSize = new L.Point(parseInt(options.iconSize.x), parseInt(options.iconSize.y));
     }
     if (options.iconAnchor && options.iconAnchor.x && options.iconAnchor.y) {
-      icon.options.iconAnchor = new L.Point(parseFloat(options.iconAnchor.x), parseFloat(options.iconAnchor.y));
+      icon_options.iconAnchor = new L.Point(parseFloat(options.iconAnchor.x), parseFloat(options.iconAnchor.y));
     }
     if (options.popupAnchor && options.popupAnchor.x && options.popupAnchor.y) {
-      icon.options.popupAnchor = new L.Point(parseInt(options.popupAnchor.x), parseInt(options.popupAnchor.y));
+      icon_options.popupAnchor = new L.Point(parseInt(options.popupAnchor.x), parseInt(options.popupAnchor.y));
     }
     if (options.shadowUrl) {
-      icon.options.shadowUrl = options.shadowUrl;
+      icon_options.shadowUrl = options.shadowUrl;
     }
     if (options.shadowSize && options.shadowSize.x && options.shadowSize.y) {
-      icon.options.shadowSize = new L.Point(parseInt(options.shadowSize.x), parseInt(options.shadowSize.y));
+      icon_options.shadowSize = new L.Point(parseInt(options.shadowSize.x), parseInt(options.shadowSize.y));
     }
     if (options.shadowAnchor && options.shadowAnchor.x && options.shadowAnchor.y) {
-      icon.options.shadowAnchor = new L.Point(parseInt(options.shadowAnchor.x), parseInt(options.shadowAnchor.y));
+      icon_options.shadowAnchor = new L.Point(parseInt(options.shadowAnchor.x), parseInt(options.shadowAnchor.y));
     }
     if (options.className) {
-      icon.options.className = options.className;
+      icon_options.className = options.className;
     }
 
-    return icon;
+    return new L.Icon(icon_options);
   };
 
   Drupal.Leaflet.prototype.create_divicon = function (options) {
@@ -414,21 +419,12 @@
     let latLng = new L.LatLng(marker.lat, marker.lon);
     self.bounds.push(latLng);
     let lMarker;
-    let tooltip = marker.label ? marker.label.replace(/<[^>]*>/g, '').trim() : '';
+    let marker_title = marker.label ? marker.label.replace(/<[^>]*>/g, '').trim() : '';
     let options = {
-      title: tooltip
+      title: marker_title,
+      className: marker.className || '',
+      alt: marker_title,
     };
-
-    if (marker.alt !== undefined) {
-      options.alt = marker.alt;
-    }
-
-    function checkImage(imageSrc, setIcon, logError) {
-      let img = new Image();
-      img.src = imageSrc;
-      img.onload = setIcon;
-      img.onerror = logError;
-    }
 
     lMarker = new L.Marker(latLng, options);
 
@@ -448,24 +444,16 @@
         lMarker = new L.CircleMarker(latLng, options);
       }
       else if (marker.icon.iconUrl) {
-        checkImage(marker.icon.iconUrl,
-          // Success loading image.
-          function() {
-            marker.icon.iconSize = marker.icon.iconSize || {};
-            marker.icon.iconSize.x = marker.icon.iconSize.x || this.naturalWidth;
-            marker.icon.iconSize.y = marker.icon.iconSize.y || this.naturalHeight;
-            if (marker.icon.shadowUrl) {
-              marker.icon.shadowSize = marker.icon.shadowSize || {};
-              marker.icon.shadowSize.x = marker.icon.shadowSize.x || this.naturalWidth;
-              marker.icon.shadowSize.y = marker.icon.shadowSize.y || this.naturalHeight;
-            }
-            let icon = self.create_icon(marker.icon);
-            lMarker.setIcon(icon);
-          },
-          // Error loading image.
-          function(err) {
-            console.log("Leaflet: The Icon Image doesn't exist at the requested path: " + marker.icon.iconUrl);
-          });
+        marker.icon.iconSize = marker.icon.iconSize || {};
+        marker.icon.iconSize.x = marker.icon.iconSize.x || this.naturalWidth;
+        marker.icon.iconSize.y = marker.icon.iconSize.y || this.naturalHeight;
+        if (marker.icon.shadowUrl) {
+          marker.icon.shadowSize = marker.icon.shadowSize || {};
+          marker.icon.shadowSize.x = marker.icon.shadowSize.x || this.naturalWidth;
+          marker.icon.shadowSize.y = marker.icon.shadowSize.y || this.naturalHeight;
+        }
+        let icon = self.create_icon(marker.icon);
+        lMarker.setIcon(icon);
       }
     }
 
@@ -510,7 +498,7 @@
       let latlngs = [];
       let polygon = multipolygon.component[x];
       for (let i = 0; i < polygon.points.length; i++) {
-        let latlng = [polygon.points[i].lat, polygon.points[i].lon];
+        let latlng = new L.LatLng(polygon.points[i].lat, polygon.points[i].lon);
         latlngs.push(latlng);
         self.bounds.push(latlng);
       }
@@ -565,36 +553,39 @@
   };
 
   // Set Map position, fitting Bounds in case of more than one feature.
-  // @NOTE: This method used by Leaflet Markecluster module (don't remove/rename)
+  // @NOTE: This method used by Leaflet Markercluster module (don't remove/rename)
   Drupal.Leaflet.prototype.fitbounds = function(mapid) {
     let self = this;
-    let start_zoom;
-    // Fit Bounds if both them and features exist, and the Map Position in not forced.
-    if (!self.settings.map_position_force && self.bounds.length > 0) {
+    let start_zoom, start_center;
+    // Fit Bounds if both them and features exist.
+    if (self.bounds.length > 0) {
       let bounds = new L.LatLngBounds(self.bounds);
       Drupal.Leaflet[mapid].lMap.fitBounds(bounds);
+      start_center = bounds.getCenter();
 
-      // In case of single result use the custom Map Zoom set.
-      if (self.bounds.length === 1 && self.settings.zoom) {
+      // In case of single result, or Map Zoom Forced, use the custom Map Zoom.
+      if ((self.bounds.length === 1 || self.settings.map_position_force) && self.settings.zoom) {
         start_zoom = self.settings.zoom;
         Drupal.Leaflet[mapid].lMap.setZoom(start_zoom);
+        // In case of Map Center Forced, use it.
+        if (self.settings.center && self.settings.map_position_force) {
+          start_center = L.latLng(self.settings.center);
+          Drupal.Leaflet[mapid].lMap.setView(start_center);
+        }
       }
       else {
         start_zoom = Drupal.Leaflet[mapid].lMap.getBoundsZoom(bounds);
       }
-
       // In case of map initial position not forced, and zooFiner not null/neutral,
       // adapt the Map Zoom and the Start Zoom accordingly.
-      if (!self.settings.map_position_force && self.settings.hasOwnProperty('zoomFiner') && self.settings['zoomFiner'] !== 0) {
-        start_zoom += self.settings['zoomFiner'];
+      if (!self.settings.map_position_force && self.settings.hasOwnProperty('zoomFiner') && parseInt(self.settings['zoomFiner'] !== 0)) {
+        start_zoom += parseFloat(self.settings['zoomFiner']);
         Drupal.Leaflet[mapid].lMap.setZoom(start_zoom);
       }
-
-      // Set the map start zoom and center.
-      Drupal.Leaflet[mapid].start_zoom = start_zoom;
-      Drupal.Leaflet[mapid].start_center = bounds.getCenter();
     }
-
+    // Set the map start zoom and center.
+    Drupal.Leaflet[mapid].start_zoom = start_zoom;
+    Drupal.Leaflet[mapid].start_center = start_center;
   };
 
   Drupal.Leaflet.prototype.map_reset = function(mapid) {

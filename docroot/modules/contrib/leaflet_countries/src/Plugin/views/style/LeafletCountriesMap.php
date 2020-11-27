@@ -885,7 +885,8 @@ class LeafletCountriesMap extends StylePluginBase implements ContainerFactoryPlu
   public function render()
   {
     // Performs some preprocess on the leaflet map settings.
-    $this->leafletService->preProcessMapSettings($this->options);
+    // Function removed from Leaflet – commented out next line cb 2020-11-27
+    // $this->leafletService->preProcessMapSettings($this->options);
 
     $data = [];
 
