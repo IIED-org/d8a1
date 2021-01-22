@@ -14,7 +14,7 @@ backend: search_api_solr
 backend_config:
   connector: solr_acquia_connector
   connector_config:
-    scheme: http
+    scheme: https
     timeout: 5
     index_timeout: 10
     optimize_timeout: 15
@@ -29,7 +29,3 @@ backend_config:
   suggest_suffix: true
   suggest_corrections: true
   suggest_words: false
-  acquia_search_possible_cores:
-    - AHQT-177573.prod.d8a1rfjrbvzlqo
-    - AHQT-177573.prod.default
-    - AHQT-177573

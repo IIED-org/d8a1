@@ -10,6 +10,8 @@ classes:
     - col-md-12
     - m-auto
     - mb-4
+    - pb-4
+    - pb-5
   field: {  }
 use_field_names: true
 _core:

@@ -214,8 +214,10 @@ display:
         - 'languages:language_interface'
         - url
         - url.query_args
+        - 'user.node_grants:view'
         - user.permissions
-      tags: {  }
+      tags:
+        - 'config:search_api.index.acquia_search_index'
   page:
     display_plugin: page
     id: page
@@ -231,7 +233,7 @@ display:
         description: ''
         expanded: false
         parent: ''
-        weight: -46
+        weight: -42
         context: '0'
         menu_name: main
         enabled: false
@@ -242,5 +244,7 @@ display:
         - 'languages:language_interface'
         - url
         - url.query_args
+        - 'user.node_grants:view'
         - user.permissions
-      tags: {  }
+      tags:
+        - 'config:search_api.index.acquia_search_index'

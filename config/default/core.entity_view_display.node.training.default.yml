@@ -6,6 +6,7 @@ dependencies:
     - field.field.node.training.body
     - field.field.node.training.field_image
     - field.field.node.training.field_image_caption
+    - field.field.node.training.field_link
     - field.field.node.training.field_promote_front
     - field.field.node.training.field_training_paragraph
     - field.field.node.training.field_training_standfirst
@@ -14,6 +15,7 @@ dependencies:
     - ds
     - entity_reference_revisions
     - image
+    - link
     - options
     - text
     - user
@@ -55,6 +57,11 @@ content:
     settings: {  }
     third_party_settings: {  }
     region: ds_content
+  content_moderation_control:
+    weight: -20
+    settings: {  }
+    third_party_settings: {  }
+    region: content
   field_image:
     weight: 103
     label: above
@@ -71,6 +78,18 @@ content:
     third_party_settings: {  }
     type: text_default
     region: ds_content
+  field_link:
+    weight: 107
+    label: above
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+    type: link
+    region: content
   field_promote_front:
     weight: 106
     label: above

@@ -6,17 +6,20 @@ dependencies:
     - field.field.node.training.body
     - field.field.node.training.field_image
     - field.field.node.training.field_image_caption
+    - field.field.node.training.field_link
     - field.field.node.training.field_promote_front
     - field.field.node.training.field_training_paragraph
     - field.field.node.training.field_training_standfirst
     - image.style.thumbnail
     - node.type.training
+    - workflows.workflow.node_added
   module:
     - content_moderation
     - ds
     - field_layout
     - hide_revision_field
     - image
+    - link
     - paragraphs
     - path
     - text
@@ -43,7 +46,7 @@ mode: default
 content:
   body:
     type: text_textarea_with_summary
-    weight: 4
+    weight: 5
     settings:
       rows: 9
       summary_rows: 3
@@ -53,12 +56,12 @@ content:
     region: ds_content
   created:
     type: datetime_timestamp
-    weight: 11
+    weight: 12
     region: ds_content
     settings: {  }
     third_party_settings: {  }
   field_image:
-    weight: 2
+    weight: 3
     settings:
       progress_indicator: throbber
       preview_image_style: thumbnail
@@ -66,22 +69,30 @@ content:
     type: image_image
     region: ds_content
   field_image_caption:
-    weight: 3
+    weight: 4
     settings:
       size: 60
       placeholder: ''
     third_party_settings: {  }
     type: text_textfield
     region: ds_content
+  field_link:
+    weight: 2
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: {  }
+    type: link_default
+    region: ds_content
   field_promote_front:
-    weight: 15
+    weight: 16
     settings: {  }
     third_party_settings: {  }
     type: options_select
     region: ds_content
   field_training_paragraph:
     type: entity_reference_paragraphs
-    weight: 5
+    weight: 6
     settings:
       title: Paragraph
       title_plural: Paragraphs
@@ -101,13 +112,13 @@ content:
     region: ds_content
   moderation_state:
     type: moderation_state_default
-    weight: 7
+    weight: 8
     settings: {  }
     region: ds_content
     third_party_settings: {  }
   path:
     type: path
-    weight: 8
+    weight: 9
     region: ds_content
     settings: {  }
     third_party_settings: {  }
@@ -115,12 +126,12 @@ content:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 13
+    weight: 14
     region: ds_content
     third_party_settings: {  }
   revision_log:
     type: hide_revision_field_log_widget
-    weight: 6
+    weight: 7
     region: ds_content
     settings:
       show: true
@@ -134,14 +145,14 @@ content:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 14
+    weight: 15
     region: ds_content
     third_party_settings: {  }
   sticky:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 12
+    weight: 13
     region: ds_content
     third_party_settings: {  }
   title:
@@ -154,7 +165,7 @@ content:
     third_party_settings: {  }
   uid:
     type: entity_reference_autocomplete
-    weight: 10
+    weight: 11
     settings:
       match_operator: CONTAINS
       size: 60
@@ -163,7 +174,7 @@ content:
     region: ds_content
     third_party_settings: {  }
   url_redirects:
-    weight: 9
+    weight: 10
     region: ds_content
     settings: {  }
     third_party_settings: {  }

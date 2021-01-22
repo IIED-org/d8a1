@@ -6,11 +6,11 @@ definitions:
     weight: 0
     expanded: false
   standard__front_page:
-    weight: -47
+    weight: -43
     menu_name: main
     parent: ''
-    enabled: false
     expanded: false
+    enabled: false
   user__page:
     weight: -50
     menu_name: account
