@@ -1,0 +1,8 @@
+uuid: 97fcfb1b-1d75-4f85-a09c-c2500a71339a
+langcode: en
+status: true
+dependencies: {  }
+id: training-and-resources-sub-menu
+label: 'Training and resources sub menu'
+description: 'Menu for training and resources section'
+locked: false

@@ -1,0 +1,23 @@
+uuid: a7c7c932-5866-4053-8936-9489c887ee4a
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_link
+    - node.type.training
+  module:
+    - link
+id: node.training.field_link
+field_name: field_link
+entity_type: node
+bundle: training
+label: 'Alternative link'
+description: 'If this page is a summary with an external link, then fill in only the title and standfirst fields and add link here.  '
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  link_type: 16
+  title: 2
+field_type: link

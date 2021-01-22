@@ -6,6 +6,7 @@ dependencies:
     - node.type.event
     - node.type.organisation
     - node.type.resource
+    - node.type.training
   module:
     - content_moderation
 id: node_added
@@ -56,4 +57,5 @@ type_settings:
       - event
       - organisation
       - resource
+      - training
   default_moderation_state: draft
