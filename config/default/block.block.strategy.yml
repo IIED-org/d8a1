@@ -11,7 +11,7 @@ dependencies:
 id: strategy
 theme: pnp_bootstrap_sass
 region: featured_top
-weight: -19
+weight: -18
 provider: null
 plugin: 'facet_block:strategy_0'
 settings:

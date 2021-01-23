@@ -191,6 +191,7 @@ blockquote:after {
 }
 
 /* Tabs on training & resources */
+
 .highlighted {
     .nav-item {
         border-radius: 12px 12px 0 0;
@@ -708,7 +709,9 @@ i.fa-3x {
   }
 }
 
-
+.path-training {
+  @extend .bg-light;
+}
 
 /* COLORS
 --------------------------------------------------*/

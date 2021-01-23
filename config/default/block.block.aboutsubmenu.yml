@@ -12,7 +12,7 @@ dependencies:
 id: aboutsubmenu
 theme: pnp_bootstrap_sass
 region: breadcrumb
-weight: 0
+weight: -24
 provider: null
 plugin: 'system_menu_block:about-sub-menu'
 settings:

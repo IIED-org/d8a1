@@ -5,14 +5,18 @@ dependencies:
   config:
     - views.view.explore_resources
   module:
+    - block_class
     - system
     - views
   theme:
     - pnp_bootstrap_sass
+third_party_settings:
+  block_class:
+    classes: pt-4
 id: exposedformexplore_resourcespage_2
 theme: pnp_bootstrap_sass
 region: featured_top
-weight: -17
+weight: -16
 provider: null
 plugin: 'views_exposed_filter_block:explore_resources-page_2'
 settings:

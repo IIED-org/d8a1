@@ -5,13 +5,17 @@ dependencies:
   config:
     - facets.facet.type
   module:
+    - block_class
     - facets
   theme:
     - pnp_bootstrap_sass
+third_party_settings:
+  block_class:
+    classes: pt-3
 id: type
 theme: pnp_bootstrap_sass
 region: featured_top
-weight: -15
+weight: -14
 provider: null
 plugin: 'facet_block:type'
 settings:
