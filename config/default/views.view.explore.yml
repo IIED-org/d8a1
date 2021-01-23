@@ -25,6 +25,9 @@ dependencies:
     - image.style.medium
     - image.style.thumbnail
     - search_api.index.acquia_search_index
+    - taxonomy.vocabulary.document_type
+  content:
+    - 'taxonomy_term:document_type:8f79da1e-369d-4683-8f7a-3ebfac23746a'
   module:
     - address
     - better_exposed_filters
@@ -5326,7 +5329,9 @@ display:
             description: ''
             use_operator: false
             operator: search_api_fulltext_op
-            identifier: search
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: search_api_fulltext
             required: false
             remember: false
             multiple: false
@@ -5336,9 +5341,7 @@ display:
               contributor: '0'
               editor: '0'
               administrator: '0'
-            placeholder: 'Search all case studies and resources'
-            operator_limit_selection: false
-            operator_list: {  }
+            placeholder: 'Search case studies'
           is_grouped: false
           group_info:
             label: ''
@@ -5355,44 +5358,6 @@ display:
           min_length: 2
           fields: {  }
           plugin_id: search_api_fulltext
-        field_standalone_resource:
-          id: field_standalone_resource
-          table: search_api_index_acquia_search_index
-          field: field_standalone_resource
-          relationship: none
-          group_type: group
-          admin_label: ''
-          operator: '='
-          value: '1'
-          group: 2
-          exposed: false
-          expose:
-            operator_id: ''
-            label: ''
-            description: ''
-            use_operator: false
-            operator: ''
-            identifier: ''
-            required: false
-            remember: false
-            multiple: false
-            remember_roles:
-              authenticated: authenticated
-            operator_limit_selection: false
-            operator_list: {  }
-          is_grouped: false
-          group_info:
-            label: ''
-            description: ''
-            identifier: ''
-            optional: true
-            widget: select
-            multiple: false
-            remember: false
-            default_group: All
-            default_group_multiple: {  }
-            group_items: {  }
-          plugin_id: search_api_boolean
         type:
           id: type
           table: search_api_index_acquia_search_index
@@ -5434,6 +5399,52 @@ display:
             group_items: {  }
           reduce_duplicates: false
           plugin_id: search_api_options
+        field_document_type:
+          id: field_document_type
+          table: search_api_index_acquia_search_index
+          field: field_document_type
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: or
+          value:
+            - 986
+          group: 2
+          exposed: false
+          expose:
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
+            operator: ''
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+            reduce: false
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          reduce_duplicates: false
+          type: textfield
+          limit: true
+          vid: document_type
+          hierarchy: false
+          error_message: true
+          plugin_id: search_api_term
       filter_groups:
         operator: AND
         groups:
@@ -5573,6 +5584,7 @@ display:
         - 'languages:language_interface'
         - url
         - url.query_args
+        - user
         - 'user.node_grants:view'
         - user.permissions
       tags:

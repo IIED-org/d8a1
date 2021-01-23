@@ -12,7 +12,7 @@ dependencies:
 id: exploreheading
 theme: pnp_bootstrap_sass
 region: highlighted
-weight: -19
+weight: -24
 provider: null
 plugin: 'block_content:3c0f0d83-6da4-4e16-91c7-7e3ae30e1237'
 settings:

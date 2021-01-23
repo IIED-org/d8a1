@@ -1,9 +1,9 @@
-uuid: 0e6f8649-b9e3-4019-9564-979513651f3b
+uuid: 4605f4f0-9736-4237-9d60-2b40f0105532
 langcode: en
 status: true
 dependencies:
   content:
-    - 'block_content:basic:57af0272-de0e-4ebe-8f13-2dfc4afcfdd2'
+    - 'block_content:basic:35b07475-1320-437f-8551-d5e87e883e03'
   module:
     - block_content
     - system
@@ -11,12 +11,12 @@ dependencies:
     - pnp_bootstrap_sass
 id: trainingandresourcesheader
 theme: pnp_bootstrap_sass
-region: featured_top
-weight: 0
+region: highlighted
+weight: -21
 provider: null
-plugin: 'block_content:57af0272-de0e-4ebe-8f13-2dfc4afcfdd2'
+plugin: 'block_content:35b07475-1320-437f-8551-d5e87e883e03'
 settings:
-  id: 'block_content:57af0272-de0e-4ebe-8f13-2dfc4afcfdd2'
+  id: 'block_content:35b07475-1320-437f-8551-d5e87e883e03'
   label: 'Training and resources header'
   provider: block_content
   label_display: '0'
@@ -26,6 +26,6 @@ settings:
 visibility:
   request_path:
     id: request_path
-    pages: "/resources\r\n/training"
+    pages: "/resources*\r\n/training"
     negate: false
     context_mapping: {  }

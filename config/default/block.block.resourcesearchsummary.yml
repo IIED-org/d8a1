@@ -1,0 +1,28 @@
+uuid: 322c4e5c-e595-4cd2-9121-d9920c258383
+langcode: en
+status: true
+dependencies:
+  config:
+    - facets_summary.facets_summary.resource_search_summary
+  module:
+    - facets_summary
+    - system
+  theme:
+    - pnp_bootstrap_sass
+id: resourcesearchsummary
+theme: pnp_bootstrap_sass
+region: content
+weight: 0
+provider: null
+plugin: 'facets_summary_block:resource_search_summary'
+settings:
+  id: 'facets_summary_block:resource_search_summary'
+  label: 'Resource search summary'
+  provider: facets_summary
+  label_display: '0'
+visibility:
+  request_path:
+    id: request_path
+    pages: /none
+    negate: false
+    context_mapping: {  }

@@ -11,7 +11,7 @@ dependencies:
 id: species_2
 theme: pnp_bootstrap_sass
 region: featured_top
-weight: -14
+weight: -20
 provider: null
 plugin: 'facet_block:species_2'
 settings:

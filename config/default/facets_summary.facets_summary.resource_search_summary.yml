@@ -1,0 +1,32 @@
+uuid: ff5701c1-b0cd-4c66-9f3e-2556dee9b4e2
+langcode: en
+status: true
+dependencies:
+  config:
+    - search_api.index.acquia_search_index
+    - views.view.explore_resources
+  module:
+    - search_api
+id: resource_search_summary
+name: 'Resource search summary'
+facets:
+  country:
+    checked: true
+    label: Country
+    separator: ', '
+    weight: 0
+    show_count: false
+  type:
+    checked: true
+    label: Type
+    separator: ', '
+    weight: 0
+    show_count: false
+facet_source_id: 'search_api:views_page__explore_resources__page_2'
+processor_configs:
+  reset_facets:
+    processor_id: reset_facets
+    weights:
+      build: '30'
+    settings:
+      link_text: 'Clear filters'

@@ -1,0 +1,23 @@
+uuid: 29a53297-f7ab-4fcf-9db0-727c45c62e23
+langcode: en
+status: true
+dependencies:
+  config:
+    - facets.facet.type
+  module:
+    - facets
+  theme:
+    - pnp_bootstrap_sass
+id: type
+theme: pnp_bootstrap_sass
+region: featured_top
+weight: -15
+provider: null
+plugin: 'facet_block:type'
+settings:
+  id: 'facet_block:type'
+  label: 'Filter by type'
+  provider: facets
+  label_display: visible
+  block_id: type
+visibility: {  }

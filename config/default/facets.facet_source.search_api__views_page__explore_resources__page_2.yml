@@ -1,0 +1,12 @@
+uuid: 2d5f480d-38b8-42d4-9e53-0a8abcc0a82f
+langcode: en
+status: true
+dependencies: {  }
+id: search_api__views_page__explore_resources__page_2
+name: 'search_api:views_page__explore_resources__page_2'
+filter_key: r
+url_processor: facets_pretty_paths
+breadcrumb:
+  active: false
+  before: true
+  group: false

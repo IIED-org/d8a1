@@ -9,7 +9,7 @@ _core:
 id: pnp_bootstrap_sass_local_tasks
 theme: pnp_bootstrap_sass
 region: highlighted
-weight: -20
+weight: -25
 provider: null
 plugin: local_tasks_block
 settings:

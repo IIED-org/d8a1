@@ -190,6 +190,31 @@ blockquote:after {
   }
 }
 
+/* Tabs on training & resources */
+.highlighted {
+    .nav-item {
+        border-radius: 12px 12px 0 0;
+        background: #F3C9EF;
+        margin: 0 0.2rem;
+    }
+    .nav-item.menu-item--active-trail {
+        border-bottom: none;
+        background: $turquoise-tint !important;
+    }
+    .nav-link {
+        display: block;
+        padding: .5rem 1rem;
+        font-weight: bold;
+    }
+    nav {
+        background: $secondary;
+    }
+    nav .nav {
+      @extend .m-auto;
+      @extend .col-sm-10;
+    }
+}
+
 /* PAGE STYLES
 --------------------------------------------------*/
 
@@ -585,7 +610,7 @@ button#edit-submit-explore-::before {
   .results {
     float: left;
   }
-  #block-currentsearch {
+  #block-currentsearch, #block-resourcesearchsummary {
     display: inline;
     ul {
       padding-left: 1em;
@@ -665,6 +690,24 @@ i.fa-3x {
 .i-p-container {
     position: relative;
 }
+
+/* Resources page */
+
+.path-resources {
+  @extend .path-explore;
+  @extend .bg-light;
+  .region-highlighted {
+    background-image: none;
+  }
+  .featured-top {
+    min-height: fit-content;
+    padding-top: 2rem;
+  }
+  .reset {
+    display: none;
+  }
+}
+
 
 
 /* COLORS

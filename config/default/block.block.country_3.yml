@@ -1,0 +1,23 @@
+uuid: aba23150-b737-441b-af81-afab9af4fb10
+langcode: en
+status: true
+dependencies:
+  config:
+    - facets.facet.country
+  module:
+    - facets
+  theme:
+    - pnp_bootstrap_sass
+id: country_3
+theme: pnp_bootstrap_sass
+region: featured_top
+weight: -16
+provider: null
+plugin: 'facet_block:country'
+settings:
+  id: 'facet_block:country'
+  label: 'Filter by Country'
+  provider: facets
+  label_display: visible
+  block_id: country_3
+visibility: {  }

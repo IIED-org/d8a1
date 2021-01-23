@@ -1,0 +1,29 @@
+uuid: 5dc13263-4c7f-456b-91f6-9c7cfbb3a5fd
+langcode: en
+status: true
+dependencies:
+  config:
+    - views.view.explore_resources
+  module:
+    - system
+    - views
+  theme:
+    - pnp_bootstrap_sass
+id: exposedformexplore_resourcespage_2
+theme: pnp_bootstrap_sass
+region: featured_top
+weight: -17
+provider: null
+plugin: 'views_exposed_filter_block:explore_resources-page_2'
+settings:
+  id: 'views_exposed_filter_block:explore_resources-page_2'
+  label: ''
+  provider: views
+  label_display: '0'
+  views_label: ''
+visibility:
+  request_path:
+    id: request_path
+    pages: '/resources*'
+    negate: false
+    context_mapping: {  }

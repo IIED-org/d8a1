@@ -3,7 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
-    - block.block.currentsearch
+    - block.block.resourcesearchsummary
     - field.storage.media.field_media_oembed_video
     - field.storage.node.body
     - field.storage.node.field_authors
@@ -23,7 +23,6 @@ dependencies:
     - image.style.thumbnail
     - search_api.index.acquia_search_index
     - system.menu.main
-    - views.view.explore
   module:
     - better_exposed_filters
     - datetime
@@ -1385,15 +1384,7 @@ display:
       style:
         type: default
         options:
-          grouping:
-            -
-              field: type
-              rendered: false
-              rendered_strip: false
-            -
-              field: field_document_type
-              rendered: true
-              rendered_strip: false
+          grouping: {  }
           row_class: ''
           default_row_class: false
       defaults:
@@ -1426,7 +1417,6 @@ display:
       exposed_block: true
       cache:
         type: none
-        options: {  }
       fields:
         type:
           id: type
@@ -3640,7 +3630,7 @@ display:
           exclude: false
           alter:
             alter_text: true
-            text: "    <div class=\"container mb-5\">\r\n      <div class=\"row\">\r\n        <div class=\"col-md-10 m-auto\">\r\n          <div class=\"card\">\r\n            <div class=\"card-block\">\r\n              <div class=\"row\">\r\n                <div class=\"col-sm-12\">\r\n                  <div class=\"card-body\">\r\n                    <div class=\"mr-4 mb-3 float-md-left\">\r\n                      {{ field_article_url }} {{ field_document_url }} {{\r\n                      field_file_upload }} {{ field_video_url }} {{ field_image\r\n                      }}\r\n                    </div>\r\n                    <h5 class=\"card-title\">{{ title }}</h5>\r\n                    {{ field_image_2 }}\r\n                  </div>\r\n                </div>\r\n              </div>\r\n            </div>\r\n            {{ field_resource_type }}\r\n            <div class=\"card-footer w-100\">\r\n              {{ field_article_url_2 }} {{ field_document_url_2 }} {{\r\n              field_file_upload_2 }} {{ field_video_url_3 }} {{ field_image_1 }}\r\n            </div>\r\n          </div>\r\n        </div>\r\n      </div>\r\n    </div>"
+            text: "          <div class=\"card\">\r\n            <div class=\"card-block\">\r\n              <div class=\"row\">\r\n                <div class=\"col-12\">\r\n                  <div class=\"card-body\">\r\n                    <div class=\"mr-4 mb-3 float-md-left\">\r\n                      {{ field_article_url }} {{ field_document_url }} {{\r\n                      field_file_upload }} {{ field_video_url }} {{ field_image\r\n                      }}\r\n                    </div>\r\n                    <h5 class=\"card-title\">{{ title }}</h5>\r\n                    {{ field_image_2 }}\r\n                  </div>\r\n                </div>\r\n              </div>\r\n            </div>\r\n            {{ field_resource_type }}\r\n            <div class=\"card-footer w-100\">\r\n              {{ field_article_url_2 }} {{ field_document_url_2 }} {{\r\n              field_file_upload_2 }} {{ field_video_url_3 }} {{ field_image_1 }}\r\n            </div>\r\n          </div>\r\n"
             make_link: false
             path: ''
             absolute: false
@@ -3757,6 +3747,8 @@ display:
             description: ''
             use_operator: false
             operator: search_api_fulltext_op
+            operator_limit_selection: false
+            operator_list: {  }
             identifier: search
             required: false
             remember: false
@@ -3767,9 +3759,7 @@ display:
               contributor: '0'
               editor: '0'
               administrator: '0'
-            placeholder: 'Search all case studies and resources'
-            operator_limit_selection: false
-            operator_list: {  }
+            placeholder: 'Search resources'
           is_grouped: false
           group_info:
             label: ''
@@ -3835,22 +3825,11 @@ display:
         description: 'View as list'
         expanded: false
         parent: 'menu_link_content:9fb4be01-652a-4c12-8fe7-9c066d52f754'
-        weight: 0
+        weight: -41
         context: '0'
         menu_name: main
+        enabled: false
       sorts:
-        type:
-          id: type
-          table: search_api_index_acquia_search_index
-          field: type
-          relationship: none
-          group_type: group
-          admin_label: ''
-          order: ASC
-          exposed: false
-          expose:
-            label: ''
-          plugin_id: search_api
         created:
           id: created
           table: search_api_index_acquia_search_index
@@ -3863,7 +3842,7 @@ display:
           expose:
             label: ''
           plugin_id: search_api
-      css_class: 'bg-light pb-3'
+      css_class: 'container bg-light pb-3'
       header:
         area:
           id: area
@@ -3875,7 +3854,7 @@ display:
           empty: true
           tokenize: true
           content:
-            value: "<p class=\"pt-4\">Here you can find a selection of useful resources on communities and IWT. Please contact us at info@peoplenotpoaching.org, or complete our <a href=\"https://www.surveymonkey.com/r/5CMTPDV\">feedback survey</a> to let us know if we are missing anything.</p>\r\n\r\n<p class=\"results\">[view:total-rows] results&nbsp;<strong>{{ filters.search_api_fulltext }}</strong></p>"
+            value: "<p>Here you can find a selection of useful resources on communities and IWT. Please contact us at info@peoplenotpoaching.org, or complete our <a href=\"https://www.surveymonkey.com/r/5CMTPDV\">feedback survey</a> to let us know if we are missing anything.</p>\r\n\r\n<p class=\"results\">[view:total-rows] results&nbsp;<strong>{{ filters.search_api_fulltext }}</strong></p>"
             format: full_html
           plugin_id: text
         entity_block:
@@ -3887,21 +3866,10 @@ display:
           admin_label: ''
           empty: true
           tokenize: true
-          target: currentsearch
+          target: resourcesearchsummary
           view_mode: default
           bypass_access: true
           plugin_id: entity
-        view:
-          id: view
-          table: views
-          field: view
-          relationship: none
-          group_type: group
-          admin_label: 'Country header'
-          empty: false
-          view_to_insert: 'explore:attachment_1'
-          inherit_arguments: true
-          plugin_id: view
       use_ajax: false
       exposed_form:
         type: bef

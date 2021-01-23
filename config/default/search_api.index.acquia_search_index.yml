@@ -8,6 +8,7 @@ dependencies:
     - field.storage.node.field_country
     - field.storage.node.field_resource_type
     - field.storage.paragraph.field_article_url
+    - field.storage.node.field_document_type
     - field.storage.paragraph.field_document_url
     - field.storage.paragraph.field_file_upload
     - field.storage.node.field_geofield
@@ -28,7 +29,7 @@ _core:
 id: acquia_search_index
 name: 'Acquia Search Solr Index'
 description: ''
-read_only: true
+read_only: false
 field_settings:
   body:
     label: Body
@@ -81,6 +82,14 @@ field_settings:
         - field.storage.paragraph.field_article_url
       module:
         - paragraphs
+  field_document_type:
+    label: 'Document type'
+    datasource_id: 'entity:node'
+    property_path: field_document_type
+    type: integer
+    dependencies:
+      config:
+        - field.storage.node.field_document_type
   field_document_url:
     label: 'Resource type » Paragraph » Document URL'
     datasource_id: 'entity:node'
