@@ -5,13 +5,17 @@ dependencies:
   config:
     - system.menu.about-sub-menu
   module:
+    - block_class
     - node
     - system
   theme:
     - pnp_bootstrap_sass
+third_party_settings:
+  block_class:
+    classes: tabbed
 id: aboutsubmenu
 theme: pnp_bootstrap_sass
-region: breadcrumb
+region: featured_top
 weight: -24
 provider: null
 plugin: 'system_menu_block:about-sub-menu'

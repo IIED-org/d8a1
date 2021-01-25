@@ -12,7 +12,7 @@ dependencies:
 id: trainingandresourcesheader
 theme: pnp_bootstrap_sass
 region: highlighted
-weight: -21
+weight: -19
 provider: null
 plugin: 'block_content:35b07475-1320-437f-8551-d5e87e883e03'
 settings:

@@ -5,13 +5,17 @@ dependencies:
   config:
     - system.menu.training-and-resources-sub-menu
   module:
+    - block_class
     - system
   theme:
     - pnp_bootstrap_sass
+third_party_settings:
+  block_class:
+    classes: 'pl-4 tabbed container'
 id: trainingandresourcessubmenu
 theme: pnp_bootstrap_sass
 region: highlighted
-weight: -20
+weight: -18
 provider: null
 plugin: 'system_menu_block:training-and-resources-sub-menu'
 settings:
