@@ -12,7 +12,7 @@ dependencies:
 id: homewhoweare
 theme: pnp_bootstrap_sass
 region: highlighted
-weight: -22
+weight: -20
 provider: null
 plugin: 'block_content:2079c1a3-7cb4-4617-8eb7-5c442d694e4a'
 settings:

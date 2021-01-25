@@ -192,7 +192,7 @@ blockquote:after {
 
 /* Tabs on training & resources */
 
-.highlighted {
+.tabbed {
     .nav-item {
         border-radius: 12px 12px 0 0;
         background: #F3C9EF;
@@ -204,15 +204,8 @@ blockquote:after {
     }
     .nav-link {
         display: block;
-        padding: .5rem 1rem;
+        padding: .6rem 3rem;
         font-weight: bold;
-    }
-    nav {
-        background: $secondary;
-    }
-    nav .nav {
-      @extend .m-auto;
-      @extend .col-sm-10;
     }
 }
 
@@ -312,11 +305,11 @@ blockquote:after {
 }
 
 #about-page-header {
-  height: 200px;
-  background: url("/sites/default/files/theme-images/chon-kemin-about.jpg");
+  height: 150px;
+  /* background: url("/sites/default/files/theme-images/chon-kemin-about.jpg"); */
   background-size: cover;
   background-repeat: no-repeat;
-  border-bottom: 1px #eee solid;
+  /* border-bottom: 1px #eee solid; */
   position: relative;
 
   .strawberry-overlay {
@@ -329,6 +322,12 @@ blockquote:after {
   }
 }
 
+/* about page */
+
+.page-node-16 .featured-top, .page-node-6 .featured-top {
+  background-color: $secondary;
+}
+
 /* form padding */
 #block-contactblock .form-group {
     padding: 0;
@@ -338,9 +337,9 @@ blockquote:after {
     display: none;
   }
 
-  .nav-item.menu-item--active-trail {
+  /* .nav-item.menu-item--active-trail {
     border-bottom: 2px solid $secondary;
-  }
+  } */
 
   .node--type-page h1.title {
     text-align: center;
@@ -699,6 +698,8 @@ i.fa-3x {
   @extend .bg-light;
   .region-highlighted {
     background-image: none;
+    background-color: $secondary;
+    height: 100%;
   }
   .featured-top {
     min-height: fit-content;
@@ -707,10 +708,18 @@ i.fa-3x {
   .reset {
     display: none;
   }
+  .file--application-pdf {
+  padding-left: 0;
+  }
 }
 
 .path-training {
   @extend .bg-light;
+
+  .region-highlighted {
+    background-color: $secondary;
+    height: 100%;
+  }
 }
 
 /* COLORS
