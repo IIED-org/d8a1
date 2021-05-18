@@ -4,7 +4,7 @@ status: true
 dependencies: {  }
 id: temp
 label: temp
-code: ".fluid-container img {\n    max-width: 100% !important;\n    height: auto !important;\n}"
+code: ".fluid-container img {\n    max-width: 100% !important;\n    height: auto !important;\n}\n\n.secondary-overlay {\n    position: relative;\n}\n\n#about-page-header {\n    height: auto;\n}\n\n.path-resources .view-footer {\n    background-color: #b9f3ed;\n}\n\n@media (max-width: 575.98px) {\n  .tabbed .nav-link {\n      padding: .6rem 1rem;\n  }\n}"
 conditions_require_all: true
 conditions: {  }
 contexts: {  }
