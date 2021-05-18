@@ -1,4 +1,4 @@
-uuid: 29a53297-f7ab-4fcf-9db0-727c45c62e23
+uuid: 07514e4c-b93e-488a-8e35-44d3e1aedbee
 langcode: en
 status: true
 dependencies:
@@ -15,7 +15,7 @@ third_party_settings:
 id: type
 theme: pnp_bootstrap_sass
 region: featured_top
-weight: -14
+weight: 0
 provider: null
 plugin: 'facet_block:type'
 settings:

@@ -2612,7 +2612,7 @@ display:
           exclude: false
           alter:
             alter_text: true
-            text: "<div class=\"card\">\r\n   <div class=\"card-block\">\r\n           <div class=\"card-body\">\r\n               <h5 class=\"card-title\">{{ title }}</h5>\r\n               <p>{{ field_training_standfirst }}</p>  \r\n           </div>                             \r\n   </div>\r\n   <div class=\"card-footer w-100\">\r\n        {{ field_link }}\r\n   </div>\r\n</div>"
+            text: "<div class=\"card mb-4\">\r\n   <div class=\"card-block\">\r\n           <div class=\"card-body\">\r\n               <h5 class=\"card-title\">{{ title }}</h5>\r\n               <p>{{ field_training_standfirst }}</p>  \r\n           </div>                             \r\n   </div>\r\n   <div class=\"card-footer w-100\">\r\n        {{ field_link }}\r\n   </div>\r\n</div>"
             make_link: false
             path: ''
             absolute: false
