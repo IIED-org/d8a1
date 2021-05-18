@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "28ac02a5ba818e79decc495e3ef65759",
+    "content-hash": "eb03b49a34feeeef3cd137427753d4d9",
     "packages": [
         {
             "name": "abraham/twitteroauth",
@@ -3575,40 +3575,41 @@
         },
         {
             "name": "drupal/facets",
-            "version": "1.4.0",
+            "version": "1.8.0",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/facets.git",
-                "reference": "8.x-1.4"
+                "reference": "8.x-1.8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/facets-8.x-1.4.zip",
-                "reference": "8.x-1.4",
-                "shasum": "ee2d584b8a225ab981e313f6050e13bc9c98e40b"
+                "url": "https://ftp.drupal.org/files/projects/facets-8.x-1.8.zip",
+                "reference": "8.x-1.8",
+                "shasum": "f621b84b59c5315db14a0529df5dfc74ca5bc9de"
             },
             "require": {
-                "drupal/core": "~8.0"
+                "drupal/core": "^8.8 || ^9"
+            },
+            "conflict": {
+                "drupal/search_api": "<1.14"
             },
             "require-dev": {
-                "drupal/search_api": "~1.5"
+                "drupal/search_api": "~1.14"
             },
             "type": "drupal-module",
             "extra": {
-                "branch-alias": {
-                    "dev-1.x": "1.x-dev"
-                },
                 "drupal": {
-                    "version": "8.x-1.4",
-                    "datestamp": "1556645881",
+                    "version": "8.x-1.8",
+                    "datestamp": "1620838256",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
                     }
                 },
-                "patches_applied": {
-                    "Hierarchical Facets using Dropdown Widget": "https://www.drupal.org/files/issues/2019-07-08/3058431-5-facets-add-hierarchy-in-dropdown-widget.patch"
-                }
+                "branch-alias": {
+                    "dev-8.x-1.x": "1.x-dev"
+                },
+                "patches_applied": []
             },
             "notification-url": "https://packages.drupal.org/8/downloads",
             "license": [
@@ -3626,6 +3627,14 @@
                 {
                     "name": "borisson_",
                     "homepage": "https://www.drupal.org/user/2393360"
+                },
+                {
+                    "name": "drunken monkey",
+                    "homepage": "https://www.drupal.org/user/205582"
+                },
+                {
+                    "name": "mkalkbrenner",
+                    "homepage": "https://www.drupal.org/user/124705"
                 }
             ],
             "description": "The Facet module allows site builders to easily create and manage faceted search interfaces.",
@@ -3638,48 +3647,43 @@
         },
         {
             "name": "drupal/facets_pretty_paths",
-            "version": "1.0.0",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/facets_pretty_paths.git",
-                "reference": "8.x-1.0"
+                "reference": "8.x-1.1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/facets_pretty_paths-8.x-1.0.zip",
-                "reference": "8.x-1.0",
-                "shasum": "c6660cd296dd68e2f22d42337035eca65ce94ffb"
+                "url": "https://ftp.drupal.org/files/projects/facets_pretty_paths-8.x-1.1.zip",
+                "reference": "8.x-1.1",
+                "shasum": "ca7e362185e10d2b60b47f041adf018d660a14c6"
             },
             "require": {
-                "drupal/core": "~8.0",
-                "drupal/facets": "~1",
-                "drupal/pathauto": "~1"
+                "drupal/core": "^8 || ^9",
+                "drupal/facets": "^1",
+                "drupal/pathauto": "^1"
             },
             "require-dev": {
                 "composer/installers": "^1.2",
-                "cweagans/composer-patches": "~1.4",
+                "cweagans/composer-patches": "^1.4",
                 "dealerdirect/phpcodesniffer-composer-installer": "^0.5.0",
                 "drupal-composer/drupal-scaffold": "^2.2",
-                "drupal/admin_toolbar": "^1.24",
+                "drupal/admin_toolbar": "^2",
                 "drupal/coder": "^8.3",
-                "drupal/config_installer": "~1",
-                "drupal/console": "~1",
-                "drupal/search_api": "~1.5",
-                "drush/drush": "~9",
-                "openeuropa/drupal-core-require-dev": "~8.6@rc",
+                "drupal/search_api": "^1.5",
+                "drush/drush": ">=9.7",
+                "openeuropa/drupal-core-require-dev": "^8.6 || ^9",
                 "openeuropa/task-runner": "~1.0-beta2"
             },
             "type": "drupal-module",
             "extra": {
-                "branch-alias": {
-                    "dev-1.x": "1.x-dev"
-                },
                 "drupal": {
-                    "version": "8.x-1.0",
-                    "datestamp": "1568102885",
+                    "version": "8.x-1.1",
+                    "datestamp": "1613565141",
                     "security-coverage": {
-                        "status": "not-covered",
-                        "message": "Project has not opted into security advisory coverage!"
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
                     }
                 },
                 "composer-exit-on-patch-failure": true,
@@ -3722,7 +3726,7 @@
                 ]
             },
             "license": [
-                "GPL-2.0+"
+                "GPL-2.0-or-later"
             ],
             "authors": [
                 {
@@ -3734,11 +3738,11 @@
                     "homepage": "https://www.drupal.org/user/1885838"
                 },
                 {
-                    "name": "dasjo",
-                    "homepage": "https://www.drupal.org/user/228295"
+                    "name": "phenaproxima",
+                    "homepage": "https://www.drupal.org/user/205645"
                 }
             ],
-            "description": "Facets Pretty Paths module.",
+            "description": "Pretty paths for Facets.",
             "homepage": "https://www.drupal.org/project/facets_pretty_paths",
             "keywords": [
                 "drupal"
@@ -5230,8 +5234,7 @@
             "homepage": "https://www.drupal.org/project/leaflet_mapbox",
             "support": {
                 "source": "https://git.drupalcode.org/project/leaflet_mapbox"
-            },
-            "time": "2016-06-28T08:03:29+00:00"
+            }
         },
         {
             "name": "drupal/leaflet_more_maps",
@@ -6975,8 +6978,7 @@
             "homepage": "https://www.drupal.org/project/synonyms",
             "support": {
                 "source": "https://git.drupalcode.org/project/synonyms"
-            },
-            "time": "2018-10-21T17:05:25+00:00"
+            }
         },
         {
             "name": "drupal/taxonomy_access_fix",
@@ -11865,6 +11867,10 @@
                 {
                     "name": "VladimirAus",
                     "homepage": "https://www.drupal.org/user/673120"
+                },
+                {
+                    "name": "dragan_bp",
+                    "homepage": "https://www.drupal.org/user/3578037"
                 },
                 {
                     "name": "joaogarin",

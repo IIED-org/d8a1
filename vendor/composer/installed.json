@@ -3110,79 +3110,6 @@
         }
     },
     {
-        "name": "drupal/devel",
-        "version": "1.2.0",
-        "version_normalized": "1.2.0.0",
-        "source": {
-            "type": "git",
-            "url": "https://git.drupalcode.org/project/devel.git",
-            "reference": "8.x-1.2"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://ftp.drupal.org/files/projects/devel-8.x-1.2.zip",
-            "reference": "8.x-1.2",
-            "shasum": "01f3349ef75f6e21fceef24be9d3d6506ca29647"
-        },
-        "require": {
-            "drupal/core": "~8.0"
-        },
-        "suggest": {
-            "symfony/var-dumper": "Pretty print complex values better with var-dumper available"
-        },
-        "type": "drupal-module",
-        "extra": {
-            "drupal": {
-                "version": "8.x-1.2",
-                "datestamp": "1507197844",
-                "security-coverage": {
-                    "status": "covered",
-                    "message": "Covered by Drupal's security advisory policy"
-                }
-            }
-        },
-        "installation-source": "dist",
-        "notification-url": "https://packages.drupal.org/8/downloads",
-        "license": [
-            "GPL-2.0+"
-        ],
-        "authors": [
-            {
-                "name": "Moshe Weitzman",
-                "homepage": "https://github.com/weitzman",
-                "email": "weitzman@tejasa.com",
-                "role": "Maintainer"
-            },
-            {
-                "name": "Hans Salvisberg",
-                "homepage": "https://www.drupal.org/u/salvis",
-                "email": "drupal@salvisberg.com",
-                "role": "Maintainer"
-            },
-            {
-                "name": "Luca Lusso",
-                "homepage": "https://www.drupal.org/u/lussoluca",
-                "role": "Maintainer"
-            },
-            {
-                "name": "Marco (willzyx)",
-                "homepage": "https://www.drupal.org/u/willzyx",
-                "role": "Maintainer"
-            },
-            {
-                "name": "See contributors",
-                "homepage": "https://www.drupal.org/node/3236/committers"
-            }
-        ],
-        "description": "Various blocks, pages, and functions for developers.",
-        "homepage": "http://drupal.org/project/devel",
-        "support": {
-            "source": "http://cgit.drupalcode.org/devel",
-            "issues": "http://drupal.org/project/devel",
-            "irc": "irc://irc.freenode.org/drupal-contribute"
-        }
-    },
-    {
         "name": "drupal/ds",
         "version": "3.7.0",
         "version_normalized": "3.7.0.0",
@@ -3741,41 +3668,42 @@
     },
     {
         "name": "drupal/facets",
-        "version": "1.4.0",
-        "version_normalized": "1.4.0.0",
+        "version": "1.8.0",
+        "version_normalized": "1.8.0.0",
         "source": {
             "type": "git",
             "url": "https://git.drupalcode.org/project/facets.git",
-            "reference": "8.x-1.4"
+            "reference": "8.x-1.8"
         },
         "dist": {
             "type": "zip",
-            "url": "https://ftp.drupal.org/files/projects/facets-8.x-1.4.zip",
-            "reference": "8.x-1.4",
-            "shasum": "ee2d584b8a225ab981e313f6050e13bc9c98e40b"
+            "url": "https://ftp.drupal.org/files/projects/facets-8.x-1.8.zip",
+            "reference": "8.x-1.8",
+            "shasum": "f621b84b59c5315db14a0529df5dfc74ca5bc9de"
         },
         "require": {
-            "drupal/core": "~8.0"
+            "drupal/core": "^8.8 || ^9"
+        },
+        "conflict": {
+            "drupal/search_api": "<1.14"
         },
         "require-dev": {
-            "drupal/search_api": "~1.5"
+            "drupal/search_api": "~1.14"
         },
         "type": "drupal-module",
         "extra": {
-            "branch-alias": {
-                "dev-1.x": "1.x-dev"
-            },
             "drupal": {
-                "version": "8.x-1.4",
-                "datestamp": "1556645881",
+                "version": "8.x-1.8",
+                "datestamp": "1620838256",
                 "security-coverage": {
                     "status": "covered",
                     "message": "Covered by Drupal's security advisory policy"
                 }
             },
-            "patches_applied": {
-                "Hierarchical Facets using Dropdown Widget": "https://www.drupal.org/files/issues/2019-07-08/3058431-5-facets-add-hierarchy-in-dropdown-widget.patch"
-            }
+            "branch-alias": {
+                "dev-8.x-1.x": "1.x-dev"
+            },
+            "patches_applied": []
         },
         "installation-source": "dist",
         "notification-url": "https://packages.drupal.org/8/downloads",
@@ -3794,6 +3722,14 @@
             {
                 "name": "borisson_",
                 "homepage": "https://www.drupal.org/user/2393360"
+            },
+            {
+                "name": "drunken monkey",
+                "homepage": "https://www.drupal.org/user/205582"
+            },
+            {
+                "name": "mkalkbrenner",
+                "homepage": "https://www.drupal.org/user/124705"
             }
         ],
         "description": "The Facet module allows site builders to easily create and manage faceted search interfaces.",
@@ -3806,49 +3742,44 @@
     },
     {
         "name": "drupal/facets_pretty_paths",
-        "version": "1.0.0",
-        "version_normalized": "1.0.0.0",
+        "version": "1.1.0",
+        "version_normalized": "1.1.0.0",
         "source": {
             "type": "git",
             "url": "https://git.drupalcode.org/project/facets_pretty_paths.git",
-            "reference": "8.x-1.0"
+            "reference": "8.x-1.1"
         },
         "dist": {
             "type": "zip",
-            "url": "https://ftp.drupal.org/files/projects/facets_pretty_paths-8.x-1.0.zip",
-            "reference": "8.x-1.0",
-            "shasum": "c6660cd296dd68e2f22d42337035eca65ce94ffb"
+            "url": "https://ftp.drupal.org/files/projects/facets_pretty_paths-8.x-1.1.zip",
+            "reference": "8.x-1.1",
+            "shasum": "ca7e362185e10d2b60b47f041adf018d660a14c6"
         },
         "require": {
-            "drupal/core": "~8.0",
-            "drupal/facets": "~1",
-            "drupal/pathauto": "~1"
+            "drupal/core": "^8 || ^9",
+            "drupal/facets": "^1",
+            "drupal/pathauto": "^1"
         },
         "require-dev": {
             "composer/installers": "^1.2",
-            "cweagans/composer-patches": "~1.4",
+            "cweagans/composer-patches": "^1.4",
             "dealerdirect/phpcodesniffer-composer-installer": "^0.5.0",
             "drupal-composer/drupal-scaffold": "^2.2",
-            "drupal/admin_toolbar": "^1.24",
+            "drupal/admin_toolbar": "^2",
             "drupal/coder": "^8.3",
-            "drupal/config_installer": "~1",
-            "drupal/console": "~1",
-            "drupal/search_api": "~1.5",
-            "drush/drush": "~9",
-            "openeuropa/drupal-core-require-dev": "~8.6@rc",
+            "drupal/search_api": "^1.5",
+            "drush/drush": ">=9.7",
+            "openeuropa/drupal-core-require-dev": "^8.6 || ^9",
             "openeuropa/task-runner": "~1.0-beta2"
         },
         "type": "drupal-module",
         "extra": {
-            "branch-alias": {
-                "dev-1.x": "1.x-dev"
-            },
             "drupal": {
-                "version": "8.x-1.0",
-                "datestamp": "1568102885",
+                "version": "8.x-1.1",
+                "datestamp": "1613565141",
                 "security-coverage": {
-                    "status": "not-covered",
-                    "message": "Project has not opted into security advisory coverage!"
+                    "status": "covered",
+                    "message": "Covered by Drupal's security advisory policy"
                 }
             },
             "composer-exit-on-patch-failure": true,
@@ -3892,7 +3823,7 @@
             ]
         },
         "license": [
-            "GPL-2.0+"
+            "GPL-2.0-or-later"
         ],
         "authors": [
             {
@@ -3904,11 +3835,11 @@
                 "homepage": "https://www.drupal.org/user/1885838"
             },
             {
-                "name": "dasjo",
-                "homepage": "https://www.drupal.org/user/228295"
+                "name": "phenaproxima",
+                "homepage": "https://www.drupal.org/user/205645"
             }
         ],
-        "description": "Facets Pretty Paths module.",
+        "description": "Pretty paths for Facets.",
         "homepage": "https://www.drupal.org/project/facets_pretty_paths",
         "keywords": [
             "drupal"
@@ -7153,80 +7084,6 @@
         }
     },
     {
-        "name": "drupal/stage_file_proxy",
-        "version": "1.0.0",
-        "version_normalized": "1.0.0.0",
-        "source": {
-            "type": "git",
-            "url": "https://git.drupalcode.org/project/stage_file_proxy.git",
-            "reference": "8.x-1.0"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://ftp.drupal.org/files/projects/stage_file_proxy-8.x-1.0.zip",
-            "reference": "8.x-1.0",
-            "shasum": "f101a07e0096f476c91cf23137469a5c5c18e2df"
-        },
-        "require": {
-            "drupal/core": ">=8.7.7"
-        },
-        "type": "drupal-module",
-        "extra": {
-            "drupal": {
-                "version": "8.x-1.0",
-                "datestamp": "1580492032",
-                "security-coverage": {
-                    "status": "covered",
-                    "message": "Covered by Drupal's security advisory policy"
-                }
-            }
-        },
-        "installation-source": "dist",
-        "notification-url": "https://packages.drupal.org/8/downloads",
-        "license": [
-            "GPL-2.0+"
-        ],
-        "authors": [
-            {
-                "name": "BarisW",
-                "homepage": "https://www.drupal.org/user/107229"
-            },
-            {
-                "name": "geek-merlin",
-                "homepage": "https://www.drupal.org/user/229048"
-            },
-            {
-                "name": "greggles",
-                "homepage": "https://www.drupal.org/user/36762"
-            },
-            {
-                "name": "markdorison",
-                "homepage": "https://www.drupal.org/user/346106"
-            },
-            {
-                "name": "moshe weitzman",
-                "homepage": "https://www.drupal.org/user/23"
-            },
-            {
-                "name": "msonnabaum",
-                "homepage": "https://www.drupal.org/user/75278"
-            },
-            {
-                "name": "netaustin",
-                "homepage": "https://www.drupal.org/user/199298"
-            },
-            {
-                "name": "robwilmshurst",
-                "homepage": "https://www.drupal.org/user/144488"
-            }
-        ],
-        "description": "Provides stage_file_proxy module.",
-        "homepage": "https://www.drupal.org/project/stage_file_proxy",
-        "support": {
-            "source": "https://git.drupalcode.org/project/stage_file_proxy"
-        }
-    },
-    {
         "name": "drupal/super_login",
         "version": "1.5.0",
         "version_normalized": "1.5.0.0",
@@ -7379,70 +7236,6 @@
         "homepage": "https://www.drupal.org/project/taxonomy_access_fix",
         "support": {
             "source": "https://git.drupalcode.org/project/taxonomy_access_fix"
-        }
-    },
-    {
-        "name": "drupal/taxonomy_manager",
-        "version": "1.0.0-alpha2",
-        "version_normalized": "1.0.0.0-alpha2",
-        "source": {
-            "type": "git",
-            "url": "https://git.drupalcode.org/project/taxonomy_manager.git",
-            "reference": "8.x-1.0-alpha2"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://ftp.drupal.org/files/projects/taxonomy_manager-8.x-1.0-alpha2.zip",
-            "reference": "8.x-1.0-alpha2",
-            "shasum": "7becfad1cad0d26f471b8e097afcadde94a9f266"
-        },
-        "require": {
-            "drupal/core": "^8"
-        },
-        "type": "drupal-module",
-        "extra": {
-            "drupal": {
-                "version": "8.x-1.0-alpha2",
-                "datestamp": "1538074980",
-                "security-coverage": {
-                    "status": "not-covered",
-                    "message": "Alpha releases are not covered by Drupal security advisories."
-                }
-            }
-        },
-        "installation-source": "dist",
-        "notification-url": "https://packages.drupal.org/8/downloads",
-        "license": [
-            "GPL-2.0+"
-        ],
-        "authors": [
-            {
-                "name": "Matthias Hutterer (mpdonadio)",
-                "homepage": "https://www.drupal.org/u/mh86",
-                "role": "Maintainer"
-            },
-            {
-                "name": "VladimirAus",
-                "homepage": "https://www.drupal.org/user/673120"
-            },
-            {
-                "name": "joaogarin",
-                "homepage": "https://www.drupal.org/user/612814"
-            },
-            {
-                "name": "kalinchernev",
-                "homepage": "https://www.drupal.org/user/231185"
-            },
-            {
-                "name": "mh86",
-                "homepage": "https://www.drupal.org/user/59747"
-            }
-        ],
-        "description": "Taxonomy_Manager provides a powerful interface for managing taxonomies via a tree view.",
-        "homepage": "https://drupal.org/project/taxonomy_manager",
-        "support": {
-            "source": "http://cgit.drupalcode.org/taxonomy_manager",
-            "issues": "https://drupal.org/project/issues/taxonomy_manager"
         }
     },
     {

@@ -27,7 +27,7 @@
     $('.js-facets-dropdown-links').once('facets-dropdown-transform').each(function () {
       var $ul = $(this);
       var $links = $ul.find('.facet-item a');
-      var $dropdown = $('<select />');
+      var $dropdown = $('<select></select>');
       // Preserve all attributes of the list.
       $ul.each(function() {
         $.each(this.attributes,function(idx, elem) {
@@ -47,18 +47,18 @@
       var default_option_label = settings.facets.dropdown_widget[id]['facet-default-option-label'];
 
       // Add empty text option first.
-      var $default_option = $('<option />')
+      var $default_option = $('<option></option>')
         .attr('value', '')
         .text(default_option_label);
       $dropdown.append($default_option);
 
-      $ul.prepend('<li class="default-option"><a href=".">' + default_option_label + '</a></li>');
+      $ul.prepend('<li class="default-option"><a href="' + window.location.href.split('?')[0] + '">' + Drupal.checkPlain(default_option_label) + '</a></li>');
 
       var has_active = false;
       $links.each(function () {
         var $link = $(this);
         var active = $link.hasClass('is-active');
-        var $option = $('<option />')
+        var $option = $('<option></option>')
           .attr('value', $link.attr('href'))
           .data($link.data());
         if (active) {
