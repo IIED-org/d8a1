@@ -168,9 +168,6 @@
       "drupal/leaflet_countries": {
         "Add compatibility with latest leaflet version and support for country outlines to be clickable and navigate to another url.": "https://www.drupal.org/files/issues/2020-01-08/leaflet_countries-grouped-entities-popup-3086578-11.patch"
       },
-      "drupal/facets": {
-        "Hierarchical Facets using Dropdown Widget": "https://www.drupal.org/files/issues/2019-07-08/3058431-5-facets-add-hierarchy-in-dropdown-widget.patch"
-      },
       "drupal/condition_query": {
         "Enable wildcard": "https://www.drupal.org/files/issues/2018-07-18/2986466-2-condition_query_wildcard.patch"
       }
