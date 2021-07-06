@@ -39,7 +39,6 @@ dependencies:
     - leaflet_countries
     - link
     - search_api
-    - shrinktheweb
     - text
     - user
     - video_embed_field

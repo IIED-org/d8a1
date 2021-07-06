@@ -1,6 +1,0 @@
-seven:
-  version: VERSION
-  css:
-    theme:
-      css/seven.label-help.css: {}
-

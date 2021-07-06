@@ -53,7 +53,6 @@ module:
   facets_summary: 0
   field: 0
   field_group: 0
-  field_group_ajaxified_multipage: 0
   field_layout: 0
   field_states_ui: 0
   field_ui: 0
@@ -110,13 +109,11 @@ module:
   responsive_image: 0
   rh_node: 0
   rh_taxonomy: 0
-  rules: 0
   search_api: 0
   search_api_db: 0
   search_api_solr: 0
   search_api_solr_defaults: 0
   shortcut: 0
-  shrinktheweb: 0
   simplify: 0
   social_api: 0
   social_auth: 0
@@ -132,7 +129,6 @@ module:
   token: 0
   toolbar: 0
   tour: 0
-  typed_data: 0
   update: 0
   upgrade_status: 0
   user: 0

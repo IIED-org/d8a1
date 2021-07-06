@@ -1,9 +1,0 @@
-table th .label-description {
-  text-transform: none;
-  font-weight: normal;
-}
-
-div.description.label-description,
-.form-item .description.label-description {
-  margin: 0 0 .2rem;
-}
