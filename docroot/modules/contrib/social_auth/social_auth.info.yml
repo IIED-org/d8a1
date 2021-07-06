@@ -1,13 +1,13 @@
 name: Social Auth
 type: module
 description: Allows user authentication with different services.
-core: 8.x
+core_version_requirement: ^8.8 || ^9
 package: Social
 configure: social_auth.integrations
 dependencies:
   - social_api:social_api
 
-# Information added by Drupal.org packaging script on 2019-12-20
-version: '8.x-2.0-rc2'
+# Information added by Drupal.org packaging script on 2021-01-04
+version: '3.0.1'
 project: 'social_auth'
-datestamp: 1576820604
+datestamp: 1609802469

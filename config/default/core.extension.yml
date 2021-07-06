@@ -77,7 +77,6 @@ module:
   imagemagick: 0
   inline_entity_form: 0
   inline_form_errors: 0
-  label_help: 0
   layout_discovery: 0
   leaflet: 0
   leaflet_countries: 0
@@ -135,6 +134,7 @@ module:
   tour: 0
   typed_data: 0
   update: 0
+  upgrade_status: 0
   user: 0
   username_enumeration_prevention: 0
   video_embed_field: 0

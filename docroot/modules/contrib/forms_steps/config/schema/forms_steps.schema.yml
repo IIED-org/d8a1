@@ -13,6 +13,12 @@ forms_steps.forms_steps.*:
     description:
       type: text
       label: 'Administrative description'
+    progress_steps_links_saved_only:
+      type: boolean
+      label: 'Show links only if concerning step has been saved to the database'
+    progress_steps_links_saved_only_next:
+      type: boolean
+      label: 'Show link of the step following the last step that has been saved to the database'
     redirection_policy:
       type: string
       label: 'Redirection policy'

@@ -8,9 +8,8 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
-use Drupal\Core\Field\FieldTypePluginManagerInterface;
 use Drupal\Core\Field\WidgetPluginManager;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
@@ -41,11 +40,11 @@ class EntityFormField extends FieldPluginBase implements CacheableDependencyInte
   protected $entityFieldManager;
 
   /**
-   * The entity manager.
+   * The entity type manager.
    *
-   * @var \Drupal\Core\Entity\EntityManagerInterface
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  protected $entityManager;
+  protected $entityTypeManager;
 
   /**
    * The entity type ID.
@@ -57,7 +56,7 @@ class EntityFormField extends FieldPluginBase implements CacheableDependencyInte
   /**
    * The field type manager.
    *
-   * @var FieldTypePluginManagerInterface
+   * @var \Drupal\Core\Field\FieldTypePluginManagerInterface
    */
   protected $fieldTypeManager;
 
@@ -93,18 +92,18 @@ class EntityFormField extends FieldPluginBase implements CacheableDependencyInte
    *   The plugin implementation definition.
    * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager
    *   The entity field manager.
-   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
-   *   The entity manager.
-   * @param \Drupal\Core\Field\WidgetPluginManager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
+   * @param \Drupal\Core\Field\WidgetPluginManager $field_widget_manager
    *   The field widget plugin manager.
    * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
    *   The language manager.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityFieldManagerInterface $entity_field_manager, EntityManagerInterface $entity_manager, WidgetPluginManager $field_widget_manager, LanguageManagerInterface $language_manager) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityFieldManagerInterface $entity_field_manager, EntityTypeManagerInterface $entity_type_manager, WidgetPluginManager $field_widget_manager, LanguageManagerInterface $language_manager) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->entityFieldManager = $entity_field_manager;
-    $this->entityManager = $entity_manager;
+    $this->entityTypeManager = $entity_type_manager;
     $this->fieldWidgetManager = $field_widget_manager;
     $this->languageManager = $language_manager;
   }
@@ -118,20 +117,20 @@ class EntityFormField extends FieldPluginBase implements CacheableDependencyInte
       $plugin_id,
       $plugin_definition,
       $container->get('entity_field.manager'),
-      $container->get('entity.manager'),
+      $container->get('entity_type.manager'),
       $container->get('plugin.manager.field.widget'),
       $container->get('language_manager')
     );
   }
 
   /**
-   * Returns the entity manager.
+   * Returns the entity type manager.
    *
-   * @return \Drupal\Core\Entity\EntityManagerInterface
-   *   The entity manager service.
+   * @return \Drupal\Core\Entity\EntityTypeManagerInterface
+   *   The entity type manager service.
    */
-  protected function getEntityManager() {
-    return $this->entityManager;
+  protected function getEntityTypeManager() {
+    return $this->entityTypeManager;
   }
 
   /**
@@ -210,7 +209,7 @@ class EntityFormField extends FieldPluginBase implements CacheableDependencyInte
   protected function getPluginDefaultOption($field_type) {
     $definition = $this->getFieldTypeManager()->getDefinition($field_type, FALSE);
     return ($definition && isset($definition['default_widget'])) ? $definition['default_widget'] : NULL;
-    }
+  }
 
   /**
    * Gets a bundle-specific field widget instance.
@@ -471,6 +470,7 @@ class EntityFormField extends FieldPluginBase implements CacheableDependencyInte
     // Initialize form values.
     $form['#cache']['max-age'] = 0;
     $form['#attached']['library'][] = 'views_entity_form_field/views_form';
+    $form['#attributes']['class'][] = 'views-entity-form';
     $form['#process'][] = [$this, 'viewsFormProcess'];
     $form['#tree'] = TRUE;
     $form += ['#parents' => []];
@@ -496,7 +496,11 @@ class EntityFormField extends FieldPluginBase implements CacheableDependencyInte
             $form[$this->options['id']][$row_index][$field_name]['#access'] = ($entity->access('update') && $items->access('edit'));
             $form[$this->options['id']][$row_index][$field_name]['#cache']['contexts'] = $entity->getCacheContexts();
             $form[$this->options['id']][$row_index][$field_name]['#cache']['tags'] = $entity->getCacheTags();
-            $form[$this->options['id']][$row_index][$field_name]['#parents'] = [$this->options['id'], $row_index, $field_name];
+            $form[$this->options['id']][$row_index][$field_name]['#parents'] = [
+              $this->options['id'],
+              $row_index,
+              $field_name,
+            ];
 
             // Hide field widget title.
             if ($this->options['plugin']['hide_title']) {
@@ -521,7 +525,7 @@ class EntityFormField extends FieldPluginBase implements CacheableDependencyInte
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the form.
    *
-   * @return array $element
+   * @return array
    *   The processed form element.
    */
   public function viewsFormProcess(array $element, FormStateInterface $form_state) {
@@ -562,11 +566,11 @@ class EntityFormField extends FieldPluginBase implements CacheableDependencyInte
     foreach ($this->getView()->result as $row_index => $row) {
       // Check to make sure that this entity has a relevant field.
       $entity = $this->getEntity($row);
-      if ($entity->hasField($field_name) && $this->getBundleFieldDefinition($entity->bundle())->isDisplayConfigurable('form')) {
+      if ($entity && $entity->hasField($field_name) && $this->getBundleFieldDefinition($entity->bundle())->isDisplayConfigurable('form')) {
         // Get current entity field values.
         $items = $entity->get($field_name)->filterEmptyItems();
 
-        // Extract values
+        // Extract values.
         $this->getPluginInstance($entity->bundle())->extractFormValues($items, $form[$this->options['id']][$row_index], $form_state);
 
         // Validate entity and add violations to field widget.
@@ -589,29 +593,34 @@ class EntityFormField extends FieldPluginBase implements CacheableDependencyInte
    *   The current state of the form.
    */
   public function saveEntities(array &$form, FormStateInterface $form_state) {
-    // We only want to save the entity once per relationship
+    // We only want to save the entity once per relationship.
     if (is_null($form_state->getTemporaryValue(['saved_relationships', $this->relationship]))) {
-      $storage = $this->getEntityManager()->getStorage($this->getEntityTypeId());
+      $storage = $this->getEntityTypeManager()->getStorage($this->getEntityTypeId());
 
       $rows_saved = [];
       $rows_failed = [];
 
-      // Try to save this field relationship's relevant entity from each row.
       foreach ($this->getView()->result as $row_index => $row) {
-        $entity = $this->getEntityTranslation($this->getEntity($row), $row);
+        $entity = $this->getEntity($row);
 
-        try {
-          $storage->save($entity);
-          $rows_saved[$row_index] = $entity->label();
-        }
-        catch (\Exception $exception) {
-          $rows_failed[$row_index] = $entity->label();
+        if ($entity) {
+          $entity = $this->getEntityTranslation($entity, $row);
+          $original_entity = $this->getEntityTranslation($storage->loadUnchanged($entity->id()), $row);
+
+          try {
+            if ($this->entityShouldBeSaved($entity, $original_entity)) {
+              $storage->save($entity);
+              $rows_saved[$row_index] = $entity->label();
+            }
+          } catch (\Exception $exception) {
+            $rows_failed[$row_index] = $entity->label();
+          }
         }
       }
 
       // Let the user know how many entities were saved.
       $messenger = \Drupal::messenger();
-      $entity_type_definition = $this->entityManager->getDefinition($this->getEntityTypeId());
+      $entity_type_definition = $this->entityTypeManager->getDefinition($this->getEntityTypeId());
       $messenger->addStatus($this->formatPlural(count($rows_saved), '@count @singular_label saved.', '@count @plural_label saved.', [
         '@count' => count($rows_saved),
         '@singular_label' => $entity_type_definition->getSingularLabel(),
@@ -631,6 +640,30 @@ class EntityFormField extends FieldPluginBase implements CacheableDependencyInte
       // Track that this relationship has been saved.
       $form_state->setTemporaryValue(['saved_relationships', $this->relationship], TRUE);
     }
+  }
+
+  /**
+   * Determines if an entity should be saved.
+   *
+   * @param EntityInterface $entity
+   *   The possibly modified entity in question.
+   * @param EntityInterface $original_entity
+   *   The original unmodified entity.
+   *
+   * @return bool
+   *   TRUE if the entity should be saved; FALSE otherwise.
+   */
+  protected function entityShouldBeSaved(EntityInterface $entity, EntityInterface $original_entity) {
+    $save_entity = FALSE;
+
+    foreach ($entity as $field_name => $new_field) {
+      $original_field = $original_entity->get($field_name);
+      if (!$new_field->equals($original_field)) {
+        $save_entity = TRUE;
+        break;
+      }
+    }
+    return $save_entity;
   }
 
   /**

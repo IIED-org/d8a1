@@ -60,7 +60,6 @@ Each line contains the country:
  - land borders (`borders`)
  - land area in km² (`area`)
  - Emoji flag (`flag`)
- - calling codes (`callingCodes`)
 
 #### Additional data
 The [data](https://github.com/mledoze/countries/tree/master/data) folder contains additional data such as the countries

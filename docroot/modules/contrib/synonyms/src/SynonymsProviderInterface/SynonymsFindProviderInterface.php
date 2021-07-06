@@ -43,7 +43,7 @@ interface SynonymsFindProviderInterface extends SynonymsProviderInterface {
    *   For ease of work with these placeholders, you may use the
    *   SynonymsFindTrait and then just invoke the
    *   $this->synonymsFindProcessCondition() method, so you won't have to worry
-   *   much about it
+   *   much about it.
    *
    * @return \Traversable
    *   Traversable result set of found synonyms and entity IDs to which those

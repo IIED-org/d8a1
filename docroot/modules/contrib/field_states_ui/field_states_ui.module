@@ -13,8 +13,7 @@ use Drupal\Core\Form\FormStateInterface;
  * Implements hook_field_widget_third_party_settings_form().
  */
 function field_states_ui_field_widget_third_party_settings_form(WidgetInterface $plugin, FieldDefinitionInterface $field_definition, $form_mode, $form, FormStateInterface $form_state) {
-  $form_state->loadInclude('field_states_ui', 'inc', 'field_states_ui.admin');
-  return field_states_ui_settings_form($plugin, $field_definition, $form_mode, $form, $form_state);
+  return \Drupal::service('plugin.manager.field_states_ui.fieldstate')->settingsForm($plugin, $field_definition, $form_mode, $form, $form_state);
 }
 
 /**
@@ -28,19 +27,14 @@ function field_states_ui_field_widget_settings_summary_alter(&$summary, $context
 }
 
 /**
- * Implements hook_field_widget_form_alter().
- */
-function field_states_ui_field_widget_form_alter(&$element, FormStateInterface $form_state, $context) {
-  Drupal::service('module_handler')->loadInclude('field_states_ui', 'inc', 'field_states_ui.form');
-  field_states_ui_field_widget_alter($element, $form_state, $context);
-}
-
-/**
  * Implements hook_field_widget_multivalue_form_alter().
  */
 function field_states_ui_field_widget_multivalue_form_alter(&$elements, FormStateInterface $form_state, $context) {
-  Drupal::service('module_handler')->loadInclude('field_states_ui', 'inc', 'field_states_ui.form');
-  field_states_ui_field_widget_alter($elements, $form_state, $context, TRUE);
+  // Don't show on default value forms.
+  if ($context['default']) {
+    return;
+  }
+  \Drupal::service('plugin.manager.field_states_ui.fieldstate')->apply($elements, $form_state, $context);
 }
 
 /**

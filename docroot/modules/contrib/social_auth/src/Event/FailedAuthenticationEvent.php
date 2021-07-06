@@ -3,7 +3,6 @@
 namespace Drupal\social_auth\Event;
 
 use Drupal\social_auth\SocialAuthDataHandler;
-use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
@@ -11,7 +10,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
  *
  * @see \Drupal\social_auth\Event\SocialAuthEvents
  */
-class FailedAuthenticationEvent extends Event {
+class FailedAuthenticationEvent extends SocialAuthEventBase {
 
   /**
    * The Social Auth data handler.

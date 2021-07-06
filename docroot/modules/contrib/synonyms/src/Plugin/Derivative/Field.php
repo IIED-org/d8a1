@@ -21,35 +21,44 @@ class Field extends DeriverBase implements ContainerDeriverInterface {
   use StringTranslationTrait;
 
   /**
-   * Entity type manager.
+   * The entity type manager.
    *
-   * @var EntityTypeManagerInterface
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
   protected $entityTypeManager;
 
   /**
-   * @var BehaviorService
+   * The synonyms behavior service.
+   *
+   * @var \Drupal\synonyms\SynonymsService\BehaviorService
    */
   protected $behaviorService;
 
   /**
-   * Entity type bundle info.
+   * The entity type bundle info.
    *
-   * @var EntityTypeBundleInfoInterface
+   * @var \Drupal\Core\Entity\EntityTypeBundleInfoInterface
    */
   protected $entityTypeBundleInfo;
 
   /**
-   * @var EntityFieldManagerInterface
+   * The entity field manager.
+   *
+   * @var \Drupal\Core\Entity\EntityFieldManagerInterface
    */
   protected $entityFieldManager;
 
   /**
-   * @var FieldTypeToSynonyms
+   * The field type to synonyms.
+   *
+   * @var \Drupal\synonyms\SynonymsService\FieldTypeToSynonyms
    */
   protected $fieldTypeToSynonyms;
 
-  function __construct(EntityTypeManagerInterface $entity_type_manager, BehaviorService $behavior_service, EntityTypeBundleInfoInterface $entity_type_bundle_info, EntityFieldManagerInterface $entity_field_manager, FieldTypeToSynonyms $field_type_to_synonyms) {
+  /**
+   * Field constructor.
+   */
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, BehaviorService $behavior_service, EntityTypeBundleInfoInterface $entity_type_bundle_info, EntityFieldManagerInterface $entity_field_manager, FieldTypeToSynonyms $field_type_to_synonyms) {
     $this->entityTypeManager = $entity_type_manager;
     $this->behaviorService = $behavior_service;
     $this->entityTypeBundleInfo = $entity_type_bundle_info;
@@ -74,52 +83,43 @@ class Field extends DeriverBase implements ContainerDeriverInterface {
    * {@inheritdoc}
    */
   public function getDerivativeDefinitions($base_plugin_definition) {
-    $implemented_interfaces = new \ReflectionClass($base_plugin_definition['class']);
-    $implemented_interfaces = $implemented_interfaces->getInterfaceNames();
 
     $field_type_to_property_map = $this->fieldTypeToSynonyms->getSimpleFieldTypeToPropertyMap();
     foreach ($this->behaviorService->getBehaviorServices() as $service_id => $behavior) {
-      $required_interfaces = $behavior['required_interfaces'];
+      foreach ($this->entityTypeManager->getDefinitions() as $entity_type) {
+        if ($entity_type instanceof ContentEntityType) {
+          foreach ($this->entityTypeBundleInfo->getBundleInfo($entity_type->id()) as $bundle => $bundle_info) {
+            $base_fields = $this->entityFieldManager->getBaseFieldDefinitions($entity_type->id());
+            $fields = $this->entityFieldManager->getFieldDefinitions($entity_type->id(), $bundle);
 
-      $diff = array_diff($required_interfaces, $implemented_interfaces);
-      if (empty($diff)) {
-        // This plugin has implemented all required interfaces for this
-        // behavior.
-        foreach ($this->entityTypeManager->getDefinitions() as $entity_type) {
-          if ($entity_type instanceof ContentEntityType) {
-            foreach ($this->entityTypeBundleInfo->getBundleInfo($entity_type->id()) as $bundle => $bundle_info) {
-              $base_fields = $this->entityFieldManager->getBaseFieldDefinitions($entity_type->id());
-              $fields = $this->entityFieldManager->getFieldDefinitions($entity_type->id(), $bundle);
+            switch ($base_plugin_definition['id']) {
+              case 'base_field':
+                $fields = $base_fields;
+                break;
 
-              switch ($base_plugin_definition['id']) {
-                case 'base_field':
-                  $fields = $base_fields;
-                  break;
+              case 'field':
+                $fields = array_diff_key($fields, $base_fields);
+                break;
+            }
 
-                case 'field':
-                  $fields = array_diff_key($fields, $base_fields);
-                  break;
-              }
+            foreach ($fields as $field) {
+              if ($field->getName() != 'synonyms' && isset($field_type_to_property_map[$field->getType()])) {
+                $derivative_name = implode('_', [
+                  $service_id,
+                  $entity_type->id(),
+                  $bundle,
+                  $field->getName(),
+                ]);
 
-              foreach ($fields as $field) {
-                if ($field->getName() != 'synonyms' && isset($field_type_to_property_map[$field->getType()])) {
-                  $derivative_name = implode('_', [
-                    $service_id,
-                    $entity_type->id(),
-                    $bundle,
-                    $field->getName(),
-                  ]);
-
-                  $this->derivatives[$derivative_name] = $base_plugin_definition;
-                  $this->derivatives[$derivative_name]['label'] = $this->t('@behavior on @field', [
-                    '@behavior' => $behavior['service']->getTitle(),
-                    '@field' => $field->getLabel(),
-                  ]);
-                  $this->derivatives[$derivative_name]['synonyms_behavior_service'] = $service_id;
-                  $this->derivatives[$derivative_name]['controlled_entity_type'] = $entity_type->id();
-                  $this->derivatives[$derivative_name]['controlled_bundle'] = $bundle;
-                  $this->derivatives[$derivative_name]['field'] = $field->getName();
-                }
+                $this->derivatives[$derivative_name] = $base_plugin_definition;
+                $this->derivatives[$derivative_name]['label'] = $this->t('@behavior on @field', [
+                  '@behavior' => $behavior['service']->getTitle(),
+                  '@field' => $field->getLabel(),
+                ]);
+                $this->derivatives[$derivative_name]['synonyms_behavior_service'] = $service_id;
+                $this->derivatives[$derivative_name]['controlled_entity_type'] = $entity_type->id();
+                $this->derivatives[$derivative_name]['controlled_bundle'] = $bundle;
+                $this->derivatives[$derivative_name]['field'] = $field->getName();
               }
             }
           }

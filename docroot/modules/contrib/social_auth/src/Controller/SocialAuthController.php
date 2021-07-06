@@ -36,7 +36,7 @@ class SocialAuthController extends SocialApiController {
    *   The module machine name.
    */
   public static function deleteLoginButtonSettings($module) {
-    $config = \Drupal::configFactory()->getEditable('social_auth.settings');;
+    $config = \Drupal::configFactory()->getEditable('social_auth.settings');
 
     $config->clear('auth.' . $module)
       ->save();

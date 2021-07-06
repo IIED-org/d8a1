@@ -17,7 +17,9 @@ use Symfony\Component\HttpFoundation\Request;
 class EntityAutocomplete extends ControllerBase {
 
   /**
-   * @var AutocompleteService
+   * The autocomplete service.
+   *
+   * @var \Drupal\synonyms\SynonymsService\Behavior\AutocompleteService
    */
   protected $autocompleteService;
 

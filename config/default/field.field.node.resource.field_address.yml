@@ -16,16 +16,16 @@ third_party_settings:
     reverse_geocode_field: field_geofield
     hidden: false
     disabled: false
-    plugins:
-      - googlemaps
-      - openstreetmap
-      - yandex
     dumper: geojson
     delta_handling: default
     failure:
       handling: preserve
       status_message: true
       log: true
+    providers:
+      - googlemaps
+      - openstreetmap
+      - yandex
 id: node.resource.field_address
 field_name: field_address
 entity_type: node

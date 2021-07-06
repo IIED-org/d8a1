@@ -25,8 +25,6 @@
 L.TileLayerQuad = L.TileLayer.extend({
 
   getTileUrl: function(tilePoint) {
-    this._adjustTilePoint(tilePoint);
-
     return L.Util.template(this._url, L.extend({
       s: this._getSubdomain(tilePoint),
       q: this._xyzToQuad(tilePoint.x, tilePoint.y, this._getZoomForUrl())

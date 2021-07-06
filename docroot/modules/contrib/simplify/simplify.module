@@ -5,10 +5,11 @@
  * Hooks implemented by the simplify module.
  */
 
-use Drupal\Core\Render\Element;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\user\Entity\Role;
+use Drupal\Core\Render\Element;
 use Drupal\Core\Url;
+use Drupal\user\Entity\Role;
+use Drupal\user\RoleInterface;
 
 /**
  * Implements hook_form_FORM_ID_alter() for node_type_form().
@@ -600,7 +601,8 @@ function _is_user_admin() {
     return TRUE;
   }
   foreach ($user->getRoles(TRUE) as $rid) {
-    if (Role::load($rid)->isAdmin()) {
+    $role = Role::load($rid);
+    if ($role instanceof RoleInterface && $role->isAdmin()) {
       return TRUE;
     }
   }

@@ -34,7 +34,7 @@ RECOMMENDED MODULES
   content) to node, blocks, etc.
 
 
-UPDATES IN V2
+UPDATES IN V2/V3
 -------------
 
   * Added default support for PHP League OAuth2 library that allows

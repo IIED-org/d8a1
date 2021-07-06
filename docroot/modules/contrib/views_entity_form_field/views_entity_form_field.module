@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Implements hook_help().
@@ -31,7 +32,7 @@ function views_entity_form_field_views_data_alter(array &$data) {
   $entity_field_manager = \Drupal::service('entity_field.manager');
   $bundle_info = \Drupal::service('entity_type.bundle.info')->getAllBundleInfo();
 
-  // Sets up form field options for all entities that have views support
+  // Sets up form field options for all entities that have views support.
   foreach (\Drupal::entityTypeManager()->getDefinitions() as $entity_type_id => $entity_type) {
     if ($entity_type->hasHandlerClass('views_data')) {
       $fields = [];
@@ -59,7 +60,7 @@ function views_entity_form_field_views_data_alter(array &$data) {
       foreach ($fields as $field_name => $field) {
         $data[$views_table]["form_field_{$field_name}"]['field'] = [
           'title' => t('Form field: @label', [
-            '@label' => $field['label']
+            '@label' => $field['label'],
           ]),
           'help' => t('Appears in: @bundles.', ['@bundles' => implode(', ', $field['bundles'])]),
           'id' => 'entity_form_field',
@@ -70,11 +71,4 @@ function views_entity_form_field_views_data_alter(array &$data) {
       }
     }
   }
-}
-
-/**
- * Implements hook_form_alter().
- */
-function views_entity_form_field_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
-  $a='a';
 }

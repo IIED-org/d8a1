@@ -12,7 +12,9 @@ use Symfony\Component\Routing\Route;
 class SynonymsBehaviorServiceParamConverter implements ParamConverterInterface {
 
   /**
-   * @var BehaviorService
+   * Synonyms Behavior Service.
+   *
+   * @var \Drupal\synonyms\SynonymsService\BehaviorService
    */
   protected $behaviorService;
 

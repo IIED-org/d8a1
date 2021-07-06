@@ -5,7 +5,7 @@ namespace Drupal\social_api\Settings;
 use Drupal\Core\Config\ImmutableConfig;
 
 /**
- * Class Settings.
+ * Base class for implementor module settings.
  *
  * @package Drupal\social_api\Settings
  */

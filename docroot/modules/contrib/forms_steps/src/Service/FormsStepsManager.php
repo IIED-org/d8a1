@@ -87,7 +87,7 @@ class FormsStepsManager {
 
       /** @var \Drupal\forms_steps\Entity\FormsSteps $formsSteps */
       $formsSteps = FormsSteps::load($matches[1]);
-      if (!$formsSteps) {
+      if ($formsSteps) {
         /** @var \Drupal\forms_steps\Step $nextStep */
         return $formsSteps->getNextStep($formsSteps->getStep($matches[2]));
       }

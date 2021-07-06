@@ -71,7 +71,7 @@ class EntityTypeInfo implements ContainerInjectionInterface {
    * @see hook_entity_type_alter()
    */
   public function entityTypeAlter(array &$entity_types) {
-    $available_entity_types = array_keys($this->formModeManager->getAllFormModesDefinitions());
+    $available_entity_types = array_keys($this->formModeManager->getAllFormModesDefinitions(FALSE, TRUE));
     foreach ($available_entity_types as $entity_type_id) {
       if ($entity_definition = $entity_types[$entity_type_id]) {
         $this->formModeManager->setEntityHandlersPerFormModes($entity_definition);
@@ -90,7 +90,9 @@ class EntityTypeInfo implements ContainerInjectionInterface {
    * @see hook_entity_type_build()
    */
   public function entityTypeBuild(array &$entity_types) {
-    $entity_types['entity_form_display']->setFormClass('edit', self::FMM_ENTITY_FORM_DISPLAY_EDIT);
+    if ($entity_types['entity_form_display']->getFormClass('edit')) {
+      $entity_types['entity_form_display']->setFormClass('edit', self::FMM_ENTITY_FORM_DISPLAY_EDIT);
+    }
   }
 
   /**
@@ -135,7 +137,7 @@ class EntityTypeInfo implements ContainerInjectionInterface {
    *   An array of operation definitions.
    *
    * @see hook_entity_operation_alter()
-   * @see EntityListBuilderInterface::getOperations()()
+   * @see EntityListBuilderInterface::getOperations()
    */
   public function entityOperationAlter(array &$operations, EntityInterface $entity) {
     if (empty($this->formModeManager->getFormModesByEntity($entity->getEntityTypeId()))) {
@@ -161,7 +163,7 @@ class EntityTypeInfo implements ContainerInjectionInterface {
    *
    * @see entityOperationAlter()
    */
-  public function grantAccessToEditOperation($operations, EntityInterface $entity) {
+  public function grantAccessToEditOperation(array $operations, EntityInterface $entity) {
     return isset($operations['edit']) && !$this->currentUser->hasPermission("use {$entity->getEntityTypeId()}.default form mode");
   }
 

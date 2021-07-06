@@ -2,8 +2,11 @@
 
 namespace Drupal\social_auth_google;
 
+use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\social_auth\AuthManager\OAuth2Manager;
 use Drupal\Core\Config\ConfigFactory;
+use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Contains all the logic for Google OAuth2 authentication.
@@ -15,24 +18,46 @@ class GoogleAuthManager extends OAuth2Manager {
    *
    * @param \Drupal\Core\Config\ConfigFactory $configFactory
    *   Used for accessing configuration object factory.
+   * @param \Drupal\Core\Logger\LoggerChannelFactoryInterface $logger_factory
+   *   The logger factory.
+   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
+   *   Used to get the authorization code from the callback request.
    */
-  public function __construct(ConfigFactory $configFactory) {
-    parent::__construct($configFactory->get('social_auth_google.settings'));
+  public function __construct(ConfigFactory $configFactory,
+                              LoggerChannelFactoryInterface $logger_factory,
+                              RequestStack $request_stack) {
+
+    parent::__construct($configFactory->get('social_auth_google.settings'),
+                        $logger_factory,
+                        $request_stack->getCurrentRequest());
   }
 
   /**
    * {@inheritdoc}
    */
   public function authenticate() {
-    $this->setAccessToken($this->client->getAccessToken('authorization_code',
-      ['code' => $_GET['code']]));
+    try {
+      $this->setAccessToken($this->client->getAccessToken('authorization_code',
+        ['code' => $this->request->query->get('code')]));
+    }
+    catch (IdentityProviderException $e) {
+      $this->loggerFactory->get('social_auth_google')
+        ->error('There was an error during authentication. Exception: ' . $e->getMessage());
+    }
   }
 
   /**
    * {@inheritdoc}
    */
   public function getUserInfo() {
-    $this->user = $this->client->getResourceOwner($this->getAccessToken());
+    $access_token = $this->getAccessToken();
+    if (!$this->user && $access_token != NULL) {
+      $this->user = $this->client->getResourceOwner($this->getAccessToken());
+    }
+    else {
+      $this->loggerFactory->get('social_auth_google')
+        ->error('There was an error fetching the access token for user.');
+    }
     return $this->user;
   }
 
@@ -45,14 +70,9 @@ class GoogleAuthManager extends OAuth2Manager {
       'profile',
     ];
 
-    $google_scopes = $this->getScopes();
-    if ($google_scopes) {
-      if (strpos($google_scopes, ',')) {
-        $scopes = array_merge($scopes, explode(',', $google_scopes));
-      }
-      else {
-        $scopes[] = $google_scopes;
-      }
+    $extra_scopes = $this->getScopes();
+    if ($extra_scopes) {
+      $scopes = array_merge($scopes, explode(',', $extra_scopes));
     }
 
     // Returns the URL where user will be redirected.
@@ -64,14 +84,24 @@ class GoogleAuthManager extends OAuth2Manager {
   /**
    * {@inheritdoc}
    */
-  public function requestEndPoint($path) {
-    $url = 'https://www.googleapis.com' . $path;
+  public function requestEndPoint($method, $path, $domain = NULL, array $options = []) {
+    if (!$domain) {
+      $domain = 'https://www.googleapis.com';
+    }
 
-    $request = $this->client->getAuthenticatedRequest('GET', $url, $this->getAccessToken());
+    $url = $domain . $path;
 
-    $response = $this->client->getResponse($request);
+    $request = $this->client->getAuthenticatedRequest($method, $url, $this->getAccessToken(), $options);
 
-    return $response->getBody()->getContents();
+    try {
+      return $this->client->getParsedResponse($request);
+    }
+    catch (IdentityProviderException $e) {
+      $this->loggerFactory->get('social_auth_google')
+        ->error('There was an error when requesting ' . $url . '. Exception: ' . $e->getMessage());
+    }
+
+    return NULL;
   }
 
   /**

@@ -2,6 +2,7 @@
 
 namespace Drupal\forms_steps\EventSubscriber;
 
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\State\StateInterface;
 use Drupal\Core\Routing\RouteSubscriberBase;
@@ -54,23 +55,34 @@ class RouteSubscriber extends RouteSubscriberBase {
   private $entityTypeManager;
 
   /**
+   * The config factory.
+   *
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
+   */
+  protected $configFactory;
+
+  /**
    * Constructs a \Drupal\forms_steps\EventSubscriber\RouteSubscriber instance.
    *
    * @param \Drupal\Core\State\StateInterface $state
    *   The state key value store.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   *   The config factory.
    *
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
   public function __construct(
     StateInterface $state,
-    EntityTypeManagerInterface $entity_type_manager
+    EntityTypeManagerInterface $entity_type_manager,
+    ConfigFactoryInterface $config_factory
   ) {
     $this->formsStepsStorage = $entity_type_manager->getStorage(FormsSteps::ENTITY_TYPE);
     $this->state = $state;
     $this->entityTypeManager = $entity_type_manager;
+    $this->configFactory = $config_factory;
   }
 
   /**
@@ -94,6 +106,11 @@ class RouteSubscriber extends RouteSubscriberBase {
       ->getStorage(FormsSteps::ENTITY_TYPE)
       ->loadMultiple($entity_ids);
 
+    $route_options = [];
+    if ($this->configFactory->get('node.settings')->get('use_admin_theme')) {
+      $route_options['_admin_route'] = TRUE;
+    }
+
     /** @var \Drupal\forms_steps\Entity\FormsSteps $form_steps */
     foreach ($forms_steps as $form_steps) {
       foreach ($form_steps->getSteps() as $step) {
@@ -109,7 +126,8 @@ class RouteSubscriber extends RouteSubscriberBase {
           [
             '_permission' => 'access content',
             'instance_id' => '^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$',
-          ]
+          ],
+          $route_options
         );
 
         $collection->add('forms_steps.' . $form_steps->id() . '.' . $step->id(), $route);

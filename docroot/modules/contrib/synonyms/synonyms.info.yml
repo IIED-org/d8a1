@@ -3,6 +3,7 @@ description: Provides synonyms feature for content entities.
 package: Synonyms
 type: module
 core: 8.x
+core_version_requirement: ^8 || ^9
 configure: entity.synonym.overview
 dependencies:
-  - system (>=8.2)
+  - drupal:system (>=8.2)

@@ -1,5 +1,5 @@
 id: d7_leaflet_mapbox_settings
-label: Leaflet MapBox configuration
+label: Leaflet Mapbox configuration
 migration_tags:
   - Drupal 7
 source:

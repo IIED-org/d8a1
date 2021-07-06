@@ -6,11 +6,6 @@ dependencies:
     - field.storage.node.field_related_resources
     - node.type.initiative
     - node.type.resource
-  module:
-    - label_help
-third_party_settings:
-  label_help:
-    label_help_description: "<p>Please provide information that describes your initiative in more detail (e.g. videos, reports) and any other supplementary material related to your initiative such as documents and web links that can be posted on the People Not Poaching learning platform.</p>\r\n<p>By uploading you agree that you have permission from any copyright holders for all materials to be re-used under the terms of Creative Commons Attribution-ShareAlike license (<a href=\"https://creativecommons.org/licenses/by-sa/4.0\">CC-BY-SA</a>)</p>"
 id: node.initiative.field_related_resources
 field_name: field_related_resources
 entity_type: node

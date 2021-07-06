@@ -8,8 +8,6 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\synonyms\SynonymInterface;
-use Drupal\synonyms\SynonymsProviderInterface\SynonymsFormatWordingProviderInterface;
-use Drupal\synonyms\SynonymsProviderInterface\SynonymsGetProviderInterface;
 use Drupal\synonyms\SynonymsService\BehaviorService;
 
 /**
@@ -20,12 +18,16 @@ class SelectService implements SynonymsBehaviorConfigurableInterface {
   use StringTranslationTrait;
 
   /**
-   * @var BehaviorService
+   * The synonyms behavior service.
+   *
+   * @var \Drupal\synonyms\SynonymsService\BehaviorService
    */
   protected $behaviorService;
 
   /**
-   * @var RendererInterface
+   * The renderer interface.
+   *
+   * @var \Drupal\Core\Render\RendererInterface
    */
   protected $renderer;
 
@@ -51,11 +53,12 @@ class SelectService implements SynonymsBehaviorConfigurableInterface {
     }
 
     $replacements = $this->renderer->renderRoot($replacements);
+    $wording = isset($configuration['wording']) ? $configuration['wording'] : '';
 
     $form['wording'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Wording for select entry'),
-      '#default_value' => $configuration['wording'],
+      '#default_value' => $wording,
       '#description' => $this->t('Specify the wording with which the select entry should be presented. Available replacement tokens are: @replacements', [
         '@replacements' => $replacements,
       ]),
@@ -88,20 +91,10 @@ class SelectService implements SynonymsBehaviorConfigurableInterface {
   }
 
   /**
-   * {@inheritdoc}
-   */
-  public function getRequiredInterfaces() {
-    return [
-      SynonymsGetProviderInterface::class,
-      SynonymsFormatWordingProviderInterface::class,
-    ];
-  }
-
-  /**
    * Extract a list of synonyms from an entity.
    *
-   * @param ContentEntityInterface $entity
-   *   Entity from which to extract the synonyms
+   * @param \Drupal\Core\Entity\ContentEntityInterface $entity
+   *   Entity from which to extract the synonyms.
    *
    * @return array
    *   Array of synonyms. Each sub array will have the following structure:
@@ -117,9 +110,9 @@ class SelectService implements SynonymsBehaviorConfigurableInterface {
   /**
    * Extract a list of synonyms from multiple entities.
    *
-   * @param ContentEntityInterface[] $entities
+   * @param array $entities
    *   Array of entities from which to extract the synonyms. It should be keyed
-   *   by entity ID and may only contain entities of the same type and bundle
+   *   by entity ID and may only contain entities of the same type and bundle.
    *
    * @return array
    *   Array of synonyms. The returned array will be keyed by entity ID and the
@@ -141,7 +134,7 @@ class SelectService implements SynonymsBehaviorConfigurableInterface {
     }
 
     foreach ($synonym_configs as $synonym_config) {
-      foreach ($synonym_config->getProviderPluginInstance()->getSynonymsMultiple($entities, $synonym_config->getBehaviorConfiguration()) as $entity_id => $entity_synonyms) {
+      foreach ($synonym_config->getProviderPluginInstance()->getSynonymsMultiple($entities) as $entity_id => $entity_synonyms) {
         foreach ($entity_synonyms as $entity_synonym) {
           $synonyms[$entity_id][] = [
             'synonym' => $entity_synonym,

@@ -155,6 +155,7 @@ class FormsStepsEditForm extends EntityForm {
           '#title_display' => 'invisible',
           '#default_value' => $step->weight(),
           '#attributes' => ['class' => ['step-weight']],
+          '#delta' => 100,
         ],
         'operations' => [
           '#type' => 'operations',
@@ -290,6 +291,7 @@ class FormsStepsEditForm extends EntityForm {
             '#title_display' => 'invisible',
             '#default_value' => $progress_step->weight(),
             '#attributes' => ['class' => ['progress-state-weight']],
+            '#delta' => 100,
           ],
           'operations' => [
             '#type' => 'operations',
@@ -300,6 +302,30 @@ class FormsStepsEditForm extends EntityForm {
       $form['progress_container']['progress_add'] = [
         '#markup' => $forms_steps->toLink($this->t('Add a new progress step'), 'add-progress-step-form')
           ->toString(),
+      ];
+
+      $linked_saved_only = $this->entity->getProgressStepsLinksSavedOnly();
+      $linked_saved_only_next = $this->entity->getProgressStepsLinksSavedOnlyNext();
+
+      $form['progress_container']['settings'] = [
+        '#type' => 'details',
+        '#title' => $this->t('Progress bar settings'),
+        '#open' => $linked_saved_only,
+      ];
+      $form['progress_container']['settings']['progress_steps_links_saved_only'] = [
+        '#type' => 'checkbox',
+        '#default_value' => $linked_saved_only,
+        '#title' => $this->t('Show links only if the concerning steps have been saved in the database'),
+      ];
+      $form['progress_container']['settings']['progress_steps_links_saved_only_next'] = [
+        '#type' => 'checkbox',
+        '#default_value' => $linked_saved_only_next,
+        '#title' => $this->t('Also show the link of the step following the last step that was saved to the database'),
+        '#states' => array(
+          'visible' => array(
+            ':input[name="progress_steps_links_saved_only"]' => array('checked' => TRUE),
+          ),
+        ),
       ];
     }
 
@@ -314,12 +340,13 @@ class FormsStepsEditForm extends EntityForm {
       'internal' => $this->t('Internal path'),
       'external' => $this->t('External url'),
       'route' => $this->t('Route'),
+      'entity' => $this->t('Current Entity'),
     ];
 
     $form['settings']['redirection_policy'] = [
       '#type' => 'select',
       '#title' => $this->t('Redirection policy'),
-      '#description' => $this->t('Defines how the user should be redirected after the last step submission.<br/><strong>Internal:</strong> An internal path that is accessible to the user.<br/><strong>External:</strong> An absolute URL to an external target.<br/><strong>Route:</strong> A route name. Forms Steps current route parameters will be passed to this route. Advanced user only.'),
+      '#description' => $this->t('Defines how the user should be redirected after the last step submission.<br/><strong>Internal:</strong> An internal path that is accessible to the user.<br/><strong>External:</strong> An absolute URL to an external target.<br/><strong>Route:</strong> A route name. Forms Steps current route parameters will be passed to this route. Advanced user only.<br/><strong>Current Entity:</strong> Redirects to the current Node View.'),
       '#options' => $redirection_options,
       '#default_value' => $this->entity->getRedirectionPolicy(),
     ];
@@ -331,9 +358,8 @@ class FormsStepsEditForm extends EntityForm {
       '#default_value' => $this->entity->getRedirectionTarget(),
       '#states' => [
         'invisible' => [
-          ':input[name="redirection_policy"]' => [
-            'value' => '',
-          ],
+          [':input[name="redirection_policy"]' => ['value' => '']],
+          [':input[name="redirection_policy"]' => ['value' => 'entity']],
         ],
       ],
     ];
@@ -374,6 +400,8 @@ class FormsStepsEditForm extends EntityForm {
     $entity->set('label', $values['label']);
     $entity->set('id', $values['id']);
     $entity->set('description', $values['description']);
+    $entity->set('progress_steps_links_saved_only', $values['progress_steps_links_saved_only']);
+    $entity->set('progress_steps_links_saved_only_next', $values['progress_steps_links_saved_only_next']);
     $entity->set('redirection_policy', $values['redirection_policy']);
     $entity->set('redirection_target', $values['redirection_target']);
 

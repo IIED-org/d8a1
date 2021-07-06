@@ -5,11 +5,6 @@ dependencies:
   config:
     - field.storage.node.field_primary_contact
     - node.type.initiative
-  module:
-    - label_help
-third_party_settings:
-  label_help:
-    label_help_description: 'The email address of the contact person'
 id: node.initiative.field_primary_contact
 field_name: field_primary_contact
 entity_type: node

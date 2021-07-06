@@ -13,13 +13,13 @@ services:
     class: Drupal\synonyms\SynonymsService\FieldTypeToSynonyms
     arguments: [ '@module_handler' ]
 
-  synonyms.synonyms_find:
-    class: Drupal\synonyms\SynonymsService\SynonymsFind
+  synonyms.find_synonyms:
+    class: Drupal\synonyms\SynonymsService\FindSynonyms
     arguments: [ '@synonyms.behaviors', '@entity_type.bundle.info' ]
 
-  synonyms.synonyms_entity_get:
-    class: Drupal\synonyms\SynonymsService\EntityGet
-    arguments: [ '@synonyms.synonyms_find', '@entity_type.manager', '@entity.query' ]
+  synonyms.entity_get_by_synonym:
+    class: Drupal\synonyms\SynonymsService\EntityGetBySynonym
+    arguments: [ '@synonyms.find_synonyms', '@entity_type.manager' ]
 
   synonyms.behavior.autocomplete:
     class: Drupal\synonyms\SynonymsService\Behavior\AutocompleteService

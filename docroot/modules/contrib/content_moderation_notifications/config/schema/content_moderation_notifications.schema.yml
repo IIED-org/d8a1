@@ -25,6 +25,9 @@ content_moderation_notifications.content_moderation_notification.*:
     author:
       type: boolean
       label: 'Author'
+    site_mail:
+      type: boolean
+      label: Disable site mail
     emails:
        type: string
        label: 'Emails'

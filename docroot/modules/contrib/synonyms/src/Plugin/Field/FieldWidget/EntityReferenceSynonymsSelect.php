@@ -3,7 +3,7 @@
 namespace Drupal\synonyms\Plugin\Field\FieldWidget;
 
 use Drupal\Core\Field\FieldItemListInterface;
-use Drupal\Core\Field\WidgetBase;
+use Drupal\Core\Field\Plugin\Field\FieldWidget\OptionsWidgetBase;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
@@ -19,38 +19,31 @@ use Drupal\Core\Form\FormStateInterface;
  *   multiple_values = TRUE
  * )
  */
-class EntityReferenceSynonymsSelect extends WidgetBase {
+class EntityReferenceSynonymsSelect extends OptionsWidgetBase {
 
   /**
    * {@inheritdoc}
    */
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
     $default_value = [];
+    $key_column = $this->fieldDefinition->getFieldStorageDefinition()->getPropertyNames()[0];
     foreach ($items as $item) {
-      if ($item->{$this->getKeyColumn()}) {
-        $default_value[] = $item->{$this->getKeyColumn()};
+      if ($item->{$key_column}) {
+        $default_value[] = $item->{$key_column};
       }
     }
 
+    $handler_settings = $this->fieldDefinition->getSetting('handler_settings') ?: [];
+    $target_bundles = isset($handler_settings['target_bundles']) ? $handler_settings['target_bundles'] : NULL;
     $element += [
       '#type' => 'synonyms_entity_select',
-      '#key_column' => $this->getKeyColumn(),
+      '#key_column' => $key_column,
       '#target_type' => $this->getFieldSetting('target_type'),
-      '#handler' => $this->fieldDefinition->getSetting('handler'),
-      '#handler_settings' => $this->fieldDefinition->getSetting('handler_settings') ?: [],
+      '#target_bundles' => $target_bundles,
       '#multiple' => $this->fieldDefinition->getFieldStorageDefinition()->isMultiple(),
       '#default_value' => $this->fieldDefinition->getFieldStorageDefinition()->isMultiple() ? $default_value : reset($default_value),
     ];
     return $element;
-  }
-
-  /**
-   * Get name of the column that is managed by this widget in the field
-   * .
-   * @return string
-   */
-  protected function getKeyColumn() {
-    return $this->fieldDefinition->getFieldStorageDefinition()->getPropertyNames()[0];
   }
 
 }

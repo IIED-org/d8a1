@@ -9,13 +9,10 @@ use Drupal\Core\Entity\EntityReferenceSelection\SelectionPluginManagerInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\KeyValueStore\KeyValueFactoryInterface;
-use Drupal\Core\KeyValueStore\KeyValueStoreInterface;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\synonyms\SynonymInterface;
 use Drupal\synonyms\SynonymsProviderInterface\SynonymsFindProviderInterface;
-use Drupal\synonyms\SynonymsProviderInterface\SynonymsFormatWordingProviderInterface;
-use Drupal\synonyms\SynonymsProviderInterface\SynonymsGetProviderInterface;
 use Drupal\synonyms\SynonymsService\BehaviorService;
 
 /**
@@ -26,37 +23,50 @@ class AutocompleteService implements SynonymsBehaviorConfigurableInterface {
   use StringTranslationTrait;
 
   /**
-   * @var KeyValueStoreInterface
+   * The key value.
+   *
+   * @var \Drupal\Core\KeyValueStore\KeyValueFactoryInterface
    */
   protected $keyValue;
 
   /**
    * The entity reference selection handler plugin manager.
    *
-   * @var SelectionPluginManagerInterface
+   * @var \Drupal\Core\Entity\EntityReferenceSelection\SelectionPluginManagerInterface
    */
   protected $selectionManager;
 
   /**
-   * @var BehaviorService
+   * The synonyms behavior service.
+   *
+   * @var \Drupal\synonyms\SynonymsService\BehaviorService
    */
   protected $behaviorService;
 
   /**
-   * @var Connection
+   * The database connection.
+   *
+   * @var \Drupal\Core\Database\Connection
    */
   protected $database;
 
   /**
-   * @var RendererInterface
+   * The entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
+   * The renderer interface.
+   *
+   * @var \Drupal\Core\Render\RendererInterface
    */
   protected $renderer;
 
   /**
-   * @var EntityTypeManagerInterface
+   * AutocompleteService constructor.
    */
-  protected $entityTypeManager;
-
   public function __construct(KeyValueFactoryInterface $key_value, SelectionPluginManagerInterface $selection_plugin_manager, BehaviorService $behavior_service, Connection $database, EntityTypeManagerInterface $entity_type_manager, RendererInterface $renderer) {
     $this->keyValue = $key_value->get('synonyms_entity_autocomplete');
     $this->selectionManager = $selection_plugin_manager;
@@ -80,11 +90,12 @@ class AutocompleteService implements SynonymsBehaviorConfigurableInterface {
     }
 
     $replacements = $this->renderer->renderRoot($replacements);
+    $wording = isset($configuration['wording']) ? $configuration['wording'] : '';
 
     $form['wording'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Wording for autocomplete suggestion'),
-      '#default_value' => $configuration['wording'],
+      '#default_value' => $wording,
       '#description' => $this->t('Specify the wording with which the autocomplete suggestion should be presented. Available replacement tokens are: @replacements', [
         '@replacements' => $replacements,
       ]),
@@ -117,24 +128,13 @@ class AutocompleteService implements SynonymsBehaviorConfigurableInterface {
   }
 
   /**
-   * {@inheritdoc}
-   */
-  public function getRequiredInterfaces() {
-    return [
-      SynonymsGetProviderInterface::class,
-      SynonymsFindProviderInterface::class,
-      SynonymsFormatWordingProviderInterface::class,
-    ];
-  }
-
-  /**
    * Execute synonym-friendly lookup of entities by a given keyword.
    *
    * @param string $keyword
-   *   Keyword to search for
+   *   Keyword to search for.
    * @param string $key_value_key
    *   Key under which additional settings about the lookup are stored in
-   *   key-value storage
+   *   key-value storage.
    *
    * @return array
    *   Array of looked up suggestions. Each array will have the following
@@ -153,19 +153,17 @@ class AutocompleteService implements SynonymsBehaviorConfigurableInterface {
       $suggested_entity_ids = [];
 
       $target_bundles = $settings['target_bundles'];
-      $handler_settings = [];
+      $options = [
+        'target_type' => $settings['target_type'],
+        'handler' => 'default',
+      ];
       if (!empty($target_bundles)) {
-        $handler_settings['target_bundles'] = $target_bundles;
+        $options['target_bundles'] = $target_bundles;
       }
       elseif (!$this->entityTypeManager->getDefinition($settings['target_type'])->hasKey('bundle')) {
         $target_bundles = [$settings['target_type']];
       }
 
-      $options = [
-        'target_type' => $settings['target_type'],
-        'handler' => 'default',
-        'handler_settings' => $handler_settings,
-      ];
       $handler = $this->selectionManager->getInstance($options);
 
       foreach ($handler->getReferenceableEntities($keyword, $settings['match'], $settings['suggestion_size']) as $suggested_entities) {
@@ -199,7 +197,6 @@ class AutocompleteService implements SynonymsBehaviorConfigurableInterface {
           if (!empty($suggested_entity_ids)) {
             $condition->condition(SynonymsFindProviderInterface::COLUMN_ENTITY_ID_PLACEHOLDER, $suggested_entity_ids, 'NOT IN');
           }
-
 
           foreach ($plugin_instance->synonymsFind($condition) as $row) {
             if (!in_array($row->entity_id, $suggested_entity_ids)) {

@@ -169,11 +169,13 @@ class Notification implements NotificationInterface {
       // Force to BCC.
       $data['params']['headers']['Bcc'] = implode(',', $data['to']);
 
-      // Displayed 'to' address.
-      // @todo Make this configurable.
-      $recipient = \Drupal::config('system.site')->get('mail');
-
-      $this->mailManager->mail('content_moderation_notifications', 'content_moderation_notification', $recipient, $data['langcode'], $data['params'], NULL, TRUE);
+      $recipient = '';
+      if (!$notification->disableSiteMail()) {
+        $recipient = \Drupal::config('system.site')->get('mail');
+      }
+      if (!empty($data['params']['headers']['Bcc'])) {
+        $this->mailManager->mail('content_moderation_notifications', 'content_moderation_notification', $recipient, $data['langcode'], $data['params'], NULL, TRUE);
+      }
     }
   }
 

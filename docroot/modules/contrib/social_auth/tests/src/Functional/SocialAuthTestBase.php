@@ -11,6 +11,13 @@ use Drupal\Tests\social_api\Functional\SocialApiTestBase;
 abstract class SocialAuthTestBase extends SocialApiTestBase {
 
   /**
+   * The default theme.
+   *
+   * @var string
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Modules to enable.
    *
    * @var array
