@@ -1,5 +1,5 @@
 leaflet_demo.demo_page:
-  path: '/admin/config/system/leaflet_more_maps/demo'
+  path: '/admin/config/system/leaflet-more-maps/demo'
   defaults:
     _form: '\Drupal\leaflet_demo\Form\LeafletDemoForm'
     _title: 'Leaflet Demo'

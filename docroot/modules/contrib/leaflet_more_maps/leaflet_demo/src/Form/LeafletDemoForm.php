@@ -9,18 +9,18 @@ use Drupal\leaflet\LeafletService;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Class WebformJira.
- *
- * @package Drupal\webform_jira\Form
+ * Class LeafletDemoForm.
  */
 class LeafletDemoForm extends FormBase {
 
-  const LEAFLET_DEMO_DEFAULT_LAT = 51.4777;
-  const LEAFLET_DEMO_DEFAULT_LNG = -0.0015;
+  // Old Royal Observatory, Greenwich, near London, England.
+  // It's right on the zero-meridian!
+  const LEAFLET_DEMO_DEFAULT_LAT = 51.47774;
+  const LEAFLET_DEMO_DEFAULT_LNG = -0.001164;
   const LEAFLET_DEMO_DEFAULT_ZOOM = 11;
 
   /**
-   * The leaflet Service.
+   * The Leaflet Service.
    *
    * @var \Drupal\leaflet\LeafletService
    */
@@ -34,7 +34,7 @@ class LeafletDemoForm extends FormBase {
   protected $renderer;
 
   /**
-   * Returns the form id.
+   * {@inheritdoc}
    */
   public function getFormId() {
     return 'leaflet_demo_page';
@@ -64,57 +64,50 @@ class LeafletDemoForm extends FormBase {
   }
 
   /**
-   * Submits the form.
+   * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $form_state['storage']['latitude']  = $form_state['values']['latitude'];
-    $form_state['storage']['longitude'] = $form_state['values']['longitude'];
-    $form_state['storage']['zoom'] = $form_state['values']['zoom'];
-    $form_state['rebuild'] = TRUE;
-
-    return $form_state;
+    $form_state->setRebuild(TRUE);
   }
 
   /**
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
+    global $base_url;
 
-    $values = $form_state->getStorage();
-    if (!empty($values['latitude'])) {
-      $latitude  = $values['latitude'];
-      $longitude = $values['longitude'];
+    $values = $form_state->getUserInput();
+    if (empty($values['latitude'])) {
+      $latitude = LeafletDemoForm::LEAFLET_DEMO_DEFAULT_LAT;
+      $longitude = LeafletDemoForm::LEAFLET_DEMO_DEFAULT_LNG;
     }
     else {
-      $latitude  = LeafletDemoForm::LEAFLET_DEMO_DEFAULT_LAT;
-      $longitude = LeafletDemoForm::LEAFLET_DEMO_DEFAULT_LNG;
+      $latitude = $values['latitude'];
+      $longitude = $values['longitude'];
     }
     $zoom = isset($values['zoom']) ? $values['zoom'] : LeafletDemoForm::LEAFLET_DEMO_DEFAULT_ZOOM;
 
-    $form['map_parameters'] = [
-      '#type' => 'fieldset',
-      '#collapsible' => TRUE,
-      '#collapsed' => FALSE,
+    $form['demo_map_parameters'] = [
+      '#type' => 'details',
+      '#open' => TRUE,
       '#title' => $this->t('Map parameters'),
       '#description' => $this->t('All maps below are centered on the same latitude, longitude and have the same initial zoom level.<br/>You may pan/drag and zoom each map individually.'),
     ];
-    $form['map_parameters']['latitude'] = [
+    $form['demo_map_parameters']['latitude'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Latitude'),
-      // '#field_suffix' => $this->t('degrees'),
       '#description' => $this->t('-90 .. 90 degrees'),
       '#size' => 12,
       '#default_value' => $latitude,
     ];
-    $form['map_parameters']['longitude'] = [
+    $form['demo_map_parameters']['longitude'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Longitude'),
-      // '#field_suffix' => $this->t('degrees'),
       '#description' => $this->t('-180 .. 180 degrees'),
       '#size' => 12,
       '#default_value' => $longitude,
     ];
-    $form['map_parameters']['zoom'] = [
+    $form['demo_map_parameters']['zoom'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Zoom'),
       '#field_suffix' => $this->t('(0..18)'),
@@ -122,7 +115,7 @@ class LeafletDemoForm extends FormBase {
       '#size' => 2,
       '#default_value' => $zoom,
     ];
-    $form['map_parameters']['submit'] = [
+    $form['demo_map_parameters']['submit'] = [
       '#type' => 'submit',
       '#value' => $this->t('Submit map parameters'),
     ];
@@ -130,10 +123,11 @@ class LeafletDemoForm extends FormBase {
     $form['#attached']['library'][] = 'leaflet_demo/leaflet_demo_form';
 
     $form['demo_maps'] = [
-      '#type' => 'fieldset',
-      '#collapsible' => TRUE,
-      '#collapsed' => TRUE,
-      '#attributes' => ['class' => ['leaflet-gallery-map']],
+      '#type' => 'details',
+      '#open' => TRUE,
+      '#title' => $this->t('All available maps'),
+      '#description' => '<em>' . $this->t('If some maps do not display, this may be due to a missing or invalid map provider API key.') . '<br/>' .
+      $this->t('You can enter API keys <a href="@config_page">here</a>.', ['@config_page' => $base_url . '/admin/config/system/leaflet-more-maps/']) . '</em>',
     ];
 
     $form['demo_maps'] = array_merge($form['demo_maps'], $this->outputDemoMaps($latitude, $longitude, $zoom));
@@ -144,48 +138,46 @@ class LeafletDemoForm extends FormBase {
   /**
    * Outputs the HTML for available Leaflet maps, centered on supplied coords.
    *
-   * @param string $latitude
-   *   The latitude.
-   * @param string $longitude
-   *   The longitude.
+   * @param float $latitude
+   *   The latitude, -90..90 degrees.
+   * @param float $longitude
+   *   The longitude, -180..180 degrees.
+   * @param int $zoom
+   *   The zoom level, typically 0..18.
    *
    * @return array
-   *   the map string as rendered html
+   *   An array of maps as renderable arrays.
    */
   protected function outputDemoMaps($latitude = LeafletDemoForm::LEAFLET_DEMO_DEFAULT_LAT, $longitude = LeafletDemoForm::LEAFLET_DEMO_DEFAULT_LNG, $zoom = LeafletDemoForm::LEAFLET_DEMO_DEFAULT_ZOOM) {
-
-    $demo_maps = [];
 
     if (!is_numeric($latitude) || !is_numeric($longitude) || !is_numeric($zoom)) {
       return [];
     }
-    $center = ['lat' => $latitude, 'lon' => $longitude, 'zoom' => $zoom];
-    $features = [
+    $center = ['lat' => $latitude, 'lon' => $longitude];
+    $feature = [
       'type' => 'point',
       'lat' => $latitude,
       'lon' => $longitude,
-      'popup' => 'Your auto-retrieved or manually entered location',
+      'popup' => $this->t('Location as entered above'),
     ];
 
+    $demo_maps = [];
     $map_info = leaflet_map_get_info();
-    foreach ($map_info as $map_id => $map) {
-      $title = $map_info[$map_id]['label'];
-      // This will generate a unique id.
-      $map['settings']['map_position'] = $center;
-      $map['id'] = $map_id;
-      $features['leaflet_id'] = $map_id;
 
-      $render_object = $this->leafletService->leafletRenderMap($map, $features, '350px');
-      $output = $this->renderer->render($render_object, FALSE);
+    foreach ($map_info as $map_id => $map) {
+      $map['id'] = $feature['leaflet_id'] = str_replace(' ', '-', $map_id);
+      $map['settings']['map_position'] = $center;
+      $map['settings']['zoom'] = $zoom;
+
+      $render_object = $this->leafletService->leafletRenderMap($map, [$feature], '350px');
 
       $demo_maps[$map_id] = [
         '#type' => 'item',
-        '#title' => $title,
-        '#markup' => $output,
+        '#title' => $map_info[$map_id]['label'],
+        '#markup' => $this->renderer->render($render_object),
         '#attributes' => ['class' => ['leaflet-gallery-map']],
       ];
     }
-
     return $demo_maps;
   }
 

@@ -2,7 +2,7 @@
 
   Drupal.Leaflet.prototype._create_layer_orig = Drupal.Leaflet.prototype.create_layer;
 
-  Drupal.Leaflet.prototype.create_layer = function(layer, key) {
+  Drupal.Leaflet.prototype.create_layer = function (layer, key) {
     if (layer.type === 'quad') {
       var mapLayer = new L.TileLayerQuad(layer.urlTemplate, layer.options);
       mapLayer._leaflet_id = key;
@@ -24,7 +24,7 @@
 
 L.TileLayerQuad = L.TileLayer.extend({
 
-  getTileUrl: function(tilePoint) {
+  getTileUrl: function (tilePoint) {
     return L.Util.template(this._url, L.extend({
       s: this._getSubdomain(tilePoint),
       q: this._xyzToQuad(tilePoint.x, tilePoint.y, this._getZoomForUrl())
@@ -37,7 +37,7 @@ L.TileLayerQuad = L.TileLayer.extend({
    *
    * Adapted from http://msdn.microsoft.com/en-us/library/bb259689.aspx
    */
-  _xyzToQuad: function(x, y, zoom) {
+  _xyzToQuad: function (x, y, zoom) {
     var quadKey = '', digit, mask;
     for (var z = zoom; z > 0; z--) {
       digit = 0;
@@ -55,4 +55,3 @@ L.TileLayerQuad = L.TileLayer.extend({
     return quadKey;
   }
 });
-
