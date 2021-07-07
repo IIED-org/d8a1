@@ -16,8 +16,8 @@
   "require": {
     "composer/installers": "^1.9",
     "cweagans/composer-patches": "^1.7",
-    "drupal/core-composer-scaffold": "^8.8",
-    "drupal/core-recommended": "^8.8",
+    "drupal/core-composer-scaffold": "^9",
+    "drupal/core-recommended": "^9",
     "drupal/admin_toolbar": "^2.0",
     "drush/drush": "^10",
     "drupal/bootstrap_barrio": "^4.14",
@@ -45,7 +45,7 @@
     "drupal/video_embed_field": "^2.0",
     "drupal/search_api_solr": "^4.2",
     "drupal/field_group": "^3.1",
-    "drupal/conditional_fields": "^1.0@alpha",
+    "drupal/conditional_fields": "^4.0",
     "drupal/chosen": "^2.6",
     "drupal/synonyms": "1.x-dev",
     "drupal/better_field_descriptions": "^1.4",
@@ -92,11 +92,11 @@
     "drupal/leaflet": "^2.1",
     "drupal/block_class": "^1.3",
     "drupal/upgrade_status": "^3.0",
-    "drupal/acquia_search": "^3.0"
+    "drupal/acquia_search": "^3.0",
+    "drupal/core-project-message": "^9"
   },
   "require-dev": {
-    "drupal/stage_file_proxy": "^1.0",
-    "drupal/core-dev": "8.9.16"
+    "drupal/stage_file_proxy": "^1.0"
   },
   "conflict": {
     "drupal/core": "7.*"
@@ -134,20 +134,11 @@
       "drupal/address": {
         "Integrate Address with Search API": "https://www.drupal.org/files/issues/2018-06-07/address-search-api-full-name-properties-2812659-37.patch"
       },
-      "drupal/label_help": {
-        "Improve Drupal 8 field compatibility": "https://www.drupal.org/files/issues/2018-06-05/label_help-2948501-5.patch"
-      },
       "drupal/paragraphs": {
-        "Error on upload via entity browser": "https://www.drupal.org/files/issues/paragraphs-missing-langcode-2901390-9.patch"
+        "Error on upload via entity browser": "https://www.drupal.org/files/issues/2021-05-03/paragraphs-2901390-82-withtests.patch"
       },
       "drupal/masquerade": {
         "Unmasquerade link always appears": "https://www.drupal.org/files/issues/2018-07-11/unmasquerade_link-2695779-17.patch"
-      },
-      "drupal/rules": {
-        "Condition UserHasRole throws an error": "https://www.drupal.org/files/issues/2816157-10.patch"
-      },
-      "drupal/leaflet_countries": {
-        "Add compatibility with latest leaflet version and support for country outlines to be clickable and navigate to another url.": "https://www.drupal.org/files/issues/2020-01-08/leaflet_countries-grouped-entities-popup-3086578-11.patch"
       },
       "drupal/condition_query": {
         "Enable wildcard": "https://www.drupal.org/files/issues/2021-06-04/2986466-25.patch"
