@@ -77,7 +77,6 @@
     "drupal/simplify": "^1.0",
     "drupal/rabbit_hole": "^1.0@beta",
     "drupal/honeypot": "^2.0",
-    "drupal/leaflet_countries": "^1.1",
     "mledoze/countries": "^4",
     "drupal/geolocation": "^3.0",
     "drupal/views_field_view": "^1.0@beta",

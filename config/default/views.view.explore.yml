@@ -36,7 +36,6 @@ dependencies:
     - file
     - geofield
     - image
-    - leaflet_countries
     - link
     - search_api
     - text

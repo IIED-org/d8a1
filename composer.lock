@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "90fab526fdc4c4c1fad67e0f7c6acd48",
+    "content-hash": "ff458242f7bd50e329dba8c9548dc97c",
     "packages": [
         {
             "name": "abraham/twitteroauth",
@@ -6053,53 +6053,6 @@
             }
         },
         {
-            "name": "drupal/leaflet_countries",
-            "version": "1.1.0",
-            "source": {
-                "type": "git",
-                "url": "https://git.drupalcode.org/project/leaflet_countries.git",
-                "reference": "8.x-1.1"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/leaflet_countries-8.x-1.1.zip",
-                "reference": "8.x-1.1",
-                "shasum": "cc545a8caecd6891e7dae20b962935cd2b3921a6"
-            },
-            "require": {
-                "drupal/core": "^8",
-                "drupal/leaflet": "*",
-                "drupal/leaflet_topojson": "*",
-                "drupal/leaflet_views": "*"
-            },
-            "type": "drupal-module",
-            "extra": {
-                "drupal": {
-                    "version": "8.x-1.1",
-                    "datestamp": "1538655184",
-                    "security-coverage": {
-                        "status": "covered",
-                        "message": "Covered by Drupal's security advisory policy"
-                    }
-                }
-            },
-            "notification-url": "https://packages.drupal.org/8/downloads",
-            "license": [
-                "GPL-2.0-or-later"
-            ],
-            "authors": [
-                {
-                    "name": "tanc",
-                    "homepage": "https://www.drupal.org/user/64430"
-                }
-            ],
-            "description": "Provides GeoJSON outlines for countries to be used in Leaflet maps",
-            "homepage": "https://www.drupal.org/project/leaflet_countries",
-            "support": {
-                "source": "https://git.drupalcode.org/project/leaflet_countries"
-            }
-        },
-        {
             "name": "drupal/leaflet_mapbox",
             "version": "dev-1.x",
             "source": {
@@ -6219,105 +6172,6 @@
             "support": {
                 "source": "https://git.drupalcode.org/project/leaflet_more_maps",
                 "issues": "https://www.drupal.org/project/issues/leaflet_more_maps"
-            }
-        },
-        {
-            "name": "drupal/leaflet_topojson",
-            "version": "1.0.0-beta1",
-            "source": {
-                "type": "git",
-                "url": "https://git.drupalcode.org/project/leaflet_topojson.git",
-                "reference": "8.x-1.0-beta1"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/leaflet_topojson-8.x-1.0-beta1.zip",
-                "reference": "8.x-1.0-beta1",
-                "shasum": "a5980b663fad655a30e30ad508d7cc5898d08d60"
-            },
-            "require": {
-                "drupal/core": "~8.0",
-                "drupal/leaflet": "*"
-            },
-            "type": "drupal-module",
-            "extra": {
-                "drupal": {
-                    "version": "8.x-1.0-beta1",
-                    "datestamp": "1484051884",
-                    "security-coverage": {
-                        "status": "not-covered",
-                        "message": "Project has not opted into security advisory coverage!"
-                    }
-                }
-            },
-            "notification-url": "https://packages.drupal.org/8/downloads",
-            "license": [
-                "GPL-2.0+"
-            ],
-            "authors": [
-                {
-                    "name": "tanc",
-                    "homepage": "https://www.drupal.org/user/64430"
-                }
-            ],
-            "description": "Extends the Leaflet module to provide TopoJSON functionality",
-            "homepage": "https://www.drupal.org/project/leaflet_topojson",
-            "keywords": [
-                "Drupal"
-            ],
-            "support": {
-                "source": "http://cgit.drupalcode.org/leaflet_topojson",
-                "issues": "http://drupal.org/project/issues/leaflet_topojson"
-            }
-        },
-        {
-            "name": "drupal/leaflet_views",
-            "version": "2.1.14",
-            "require": {
-                "drupal/core": "^8.8 || ^9",
-                "drupal/leaflet": "*"
-            },
-            "type": "metapackage",
-            "extra": {
-                "drupal": {
-                    "version": "2.1.14",
-                    "datestamp": "1622756655",
-                    "security-coverage": {
-                        "status": "covered",
-                        "message": "Covered by Drupal's security advisory policy"
-                    }
-                }
-            },
-            "notification-url": "https://packages.drupal.org/8/downloads",
-            "license": [
-                "GPL-2.0-or-later"
-            ],
-            "authors": [
-                {
-                    "name": "RdeBoer",
-                    "homepage": "https://www.drupal.org/user/404007"
-                },
-                {
-                    "name": "gcb",
-                    "homepage": "https://www.drupal.org/user/1682976"
-                },
-                {
-                    "name": "itamair",
-                    "homepage": "https://www.drupal.org/user/1179076"
-                },
-                {
-                    "name": "levelos",
-                    "homepage": "https://www.drupal.org/user/54135"
-                },
-                {
-                    "name": "pvhee",
-                    "homepage": "https://www.drupal.org/user/108811"
-                }
-            ],
-            "description": "Views integration for the Leaflet module.",
-            "homepage": "https://www.drupal.org/project/leaflet",
-            "support": {
-                "source": "https://git.drupalcode.org/project/leaflet"
             }
         },
         {
