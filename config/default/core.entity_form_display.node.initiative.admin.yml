@@ -82,7 +82,7 @@ dependencies:
     - field.field.node.initiative.field_year_finished
     - image.style.thumbnail
     - node.type.initiative
-    - workflows.workflow.node_added
+    - workflows.workflow.editorial
   module:
     - address
     - content_moderation
@@ -214,9 +214,9 @@ third_party_settings:
       weight: 0
       format_type: accordion
       format_settings:
-        id: ''
-        classes: ''
         effect: none
+        id: ''
+        classes: container
       label: Steps
       region: content
     group_step_1_overview:

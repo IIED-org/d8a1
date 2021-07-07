@@ -5,7 +5,7 @@
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => 'b6d082d704c8457f13602b5316834d28d4c6fbea',
+        'reference' => 'cf363a11b9afdf9e69ff9282984d7aae7d5b2952',
         'name' => 'acquia/acquia-ra-composer',
         'dev' => true,
     ),
@@ -25,7 +25,7 @@
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => 'b6d082d704c8457f13602b5316834d28d4c6fbea',
+            'reference' => 'cf363a11b9afdf9e69ff9282984d7aae7d5b2952',
             'dev_requirement' => false,
         ),
         'asm89/stack-cors' => array(
@@ -1135,6 +1135,15 @@
             'install_path' => __DIR__ . '/../../docroot/modules/contrib/jquery_ui',
             'aliases' => array(),
             'reference' => '8.x-1.4',
+            'dev_requirement' => false,
+        ),
+        'drupal/jquery_ui_accordion' => array(
+            'pretty_version' => '1.1.0',
+            'version' => '1.1.0.0',
+            'type' => 'drupal-module',
+            'install_path' => __DIR__ . '/../../docroot/modules/contrib/jquery_ui_accordion',
+            'aliases' => array(),
+            'reference' => '8.x-1.1',
             'dev_requirement' => false,
         ),
         'drupal/jquery_ui_datepicker' => array(

@@ -76,6 +76,8 @@ module:
   imagemagick: 0
   inline_entity_form: 0
   inline_form_errors: 0
+  jquery_ui: 0
+  jquery_ui_accordion: 0
   layout_discovery: 0
   leaflet: 0
   leaflet_demo: 0
