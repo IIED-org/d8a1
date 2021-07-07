@@ -6,7 +6,12 @@ dependencies:
     - system
 id: fixes
 label: fixes
-code: ".path-explore .view-footer {\n    padding: 0;\n    background-color: none;\n    border-radius: 0;\n}"
+code: |-
+  .path-explore .view-footer {
+      padding: 0;
+      background-color: none;
+      border-radius: 0;
+  }
 conditions_require_all: true
 conditions:
   request_path:

@@ -1,6 +1,6 @@
 uuid: 43ac8026-0c04-4fc9-8ff5-f929b225542f
 langcode: en
-status: true
+status: false
 dependencies:
   config:
     - search_api_solr.solr_cache.cache_document_default_7_0_0
