@@ -5,7 +5,10 @@ dependencies:
   config:
     - node.type.initiative
 id: node_type_initiative
+entity_type_id: node_type
+entity_id: initiative
 action: display_page
 allow_override: 1
 redirect: ''
 redirect_code: 301
+redirect_fallback_action: access_denied

@@ -14,7 +14,10 @@ use Drupal\Core\Url;
  * @runInSeparateProcess
  */
 class FormsStepsTest extends BrowserTestBase {
+
   use FormsStepsTestTrait;
+
+  protected $defaultTheme = 'stark';
 
   /**
    * Modules to install.
@@ -109,7 +112,10 @@ class FormsStepsTest extends BrowserTestBase {
     drupal_flush_all_caches();
 
     // Configure the visible fields.
-    $this->drupalGet(Url::fromRoute('entity.entity_form_display.node.form_mode', ['node_type' => 'article', 'form_mode_name' => $form_display_mode['id']]));
+    $this->drupalGet(Url::fromRoute('entity.entity_form_display.node.form_mode', [
+      'node_type' => 'article',
+      'form_mode_name' => $form_display_mode['id'],
+    ]));
     $this->assertSession()->statusCodeEquals(200);
     $this->drupalPostForm(NULL, [
       'fields[title][region]' => 'content',
@@ -182,7 +188,7 @@ class FormsStepsTest extends BrowserTestBase {
     // Access step 2.
     $this->assertSession()
       ->pageTextContains($this->data['forms_steps']['steps'][2]['label']);
-    $this->assertContains($this->data['forms_steps']['steps'][2]['url'], $this->getUrl());
+    $this->assertStringContainsStringIgnoringCase($this->data['forms_steps']['steps'][2]['url'], $this->getUrl());
     $this->assertSession()->pageTextContains($value);
   }
 

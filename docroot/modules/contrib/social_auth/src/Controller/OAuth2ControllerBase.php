@@ -141,7 +141,10 @@ class OAuth2ControllerBase extends ControllerBase {
     $this->dataHandler->setSessionPrefix($plugin_id);
 
     // Sets the session keys to nullify if user could not logged in.
-    $this->userAuthenticator->setSessionKeysToNullify(['access_token', 'oauth2state']);
+    $this->userAuthenticator->setSessionKeysToNullify([
+      'access_token',
+      'oauth2state',
+    ]);
   }
 
   /**
@@ -160,7 +163,7 @@ class OAuth2ControllerBase extends ControllerBase {
     /** @var \Drupal\Core\Routing\TrustedRedirectResponse|\Symfony\Component\HttpFoundation\RedirectResponse $response */
     $response = $this->renderer->executeInRenderContext($context, function () {
       try {
-        /* @var \League\OAuth2\Client\Provider\AbstractProvider|false $client */
+        /** @var \League\OAuth2\Client\Provider\AbstractProvider|false $client */
         $client = $this->networkManager->createInstance($this->pluginId)->getSdk();
 
         // If provider client could not be obtained.
@@ -222,7 +225,7 @@ class OAuth2ControllerBase extends ControllerBase {
    */
   public function processCallback() {
     try {
-      /* @var \League\OAuth2\Client\Provider\AbstractProvider|false $client */
+      /** @var \League\OAuth2\Client\Provider\AbstractProvider|false $client */
       $client = $this->networkManager->createInstance($this->pluginId)->getSdk();
 
       // If provider client could not be obtained.

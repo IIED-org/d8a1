@@ -2,8 +2,8 @@
 
 namespace Drupal\simplify\Tests;
 
-use Drupal\simpletest\WebTestBase;
 use Drupal\comment\Tests\CommentTestTrait;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Test simplify per comment-type settings.
@@ -12,7 +12,7 @@ use Drupal\comment\Tests\CommentTestTrait;
  *
  * @ingroup simplify
  */
-class PerCommentTypeSettingsTest extends WebTestBase {
+class PerCommentTypeSettingsTest extends BrowserTestBase {
   use CommentTestTrait;
 
   /**
@@ -98,7 +98,7 @@ class PerCommentTypeSettingsTest extends WebTestBase {
       'simplify_admin' => TRUE,
       'simplify_comments_global[format]' => 'format',
     ];
-    $this->drupalPostForm(NULL, $options, t('Save configuration'));
+    $this->drupalPostForm(NULL, $options, $this->t('Save configuration'));
 
     // Open admin UI.
     $this->drupalGet('/admin/structure/comment/manage/comment');
@@ -119,7 +119,7 @@ class PerCommentTypeSettingsTest extends WebTestBase {
       'simplify_admin' => TRUE,
       'simplify_comments_global[format]' => FALSE,
     ];
-    $this->drupalPostForm(NULL, $options, t('Save configuration'));
+    $this->drupalPostForm(NULL, $options, $this->t('Save configuration'));
 
     // Open admin UI.
     $this->drupalGet('/admin/structure/comment/manage/comment');
@@ -135,7 +135,7 @@ class PerCommentTypeSettingsTest extends WebTestBase {
     $options = [
       'simplify_comments[format]' => 'format',
     ];
-    $this->drupalPostForm(NULL, $options, t('Save'));
+    $this->drupalPostForm(NULL, $options, $this->t('Save'));
 
     /* -------------------------------------------------------.
      * 4/ Check if options are saved.

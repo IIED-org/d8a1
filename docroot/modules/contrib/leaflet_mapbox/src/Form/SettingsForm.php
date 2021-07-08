@@ -41,7 +41,7 @@ class SettingsForm extends ConfigFormBase {
       '#type' => 'textfield',
       '#title' => t('Map code'),
       '#default_value' => $config->get('code'),
-      '#description' => t('This code is obtained from MapBox by clicking on the mapbox.js button after publishing your map'),
+      '#description' => t('This code is obtained from Mapbox by clicking on the mapbox.js button after publishing your map'),
       '#states' => array(
         'visible' => array(
           ':input[name="api_version"]' => array('value' => '3'),
@@ -74,7 +74,7 @@ class SettingsForm extends ConfigFormBase {
       '#title' => t('Map access token'),
       '#required' => TRUE,
       '#default_value' => $config->get('token'),
-      '#description' => t('You will find this in the mapbox user account settings'),
+      '#description' => t('You will find this in the Mapbox user account settings'),
     );
 
     $form['zoomlevel'] = array(

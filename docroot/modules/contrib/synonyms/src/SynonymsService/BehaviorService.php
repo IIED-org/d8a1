@@ -3,9 +3,7 @@
 namespace Drupal\synonyms\SynonymsService;
 
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
-use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\synonyms\Entity\Synonym;
 use Drupal\synonyms\SynonymsService\Behavior\SynonymsBehaviorInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -18,15 +16,22 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class BehaviorService implements ContainerInjectionInterface {
 
   /**
+   * The behavior services.
+   *
    * @var array
    */
   protected $behaviorServices;
 
   /**
-   * @var EntityTypeManagerInterface
+   * The entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
   protected $entityTypeManager;
 
+  /**
+   * BehaviorService constructor.
+   */
   public function __construct(EntityTypeManagerInterface $entity_type_manager) {
     $this->behaviorServices = [];
 
@@ -45,26 +50,25 @@ class BehaviorService implements ContainerInjectionInterface {
   /**
    * Add a new discovered behavior service.
    *
-   * @param SynonymsBehaviorInterface $behavior_service
+   * @param \Drupal\synonyms\SynonymsService\Behavior\SynonymsBehaviorInterface $behavior_service
    *   Behavior service object that was discovered and should be added into the
-   *   list of known ones
+   *   list of known ones.
    * @param string $id
-   *   Service ID that corresponds to this behavior service
+   *   Service ID that corresponds to this behavior service.
    */
   public function addBehaviorService(SynonymsBehaviorInterface $behavior_service, $id) {
     if (!isset($this->behaviorServices[$id])) {
       $this->behaviorServices[$id] = [
         'service' => $behavior_service,
-        'required_interfaces' => [],
       ];
     }
-    $this->behaviorServices[$id]['required_interfaces'] = $behavior_service->getRequiredInterfaces();
   }
 
   /**
-   * Array of known synonyms behavior service.
+   * Array of known synonyms behavior services.
    *
    * @return array
+   *   The return value
    */
   public function getBehaviorServices() {
     return $this->behaviorServices;
@@ -74,38 +78,15 @@ class BehaviorService implements ContainerInjectionInterface {
    * Get a synonyms behavior service.
    *
    * @param string $behavior_service_id
-   *   ID of the service to retrieve
+   *   ID of the service to retrieve.
    *
    * @return array
    *   Array of information about the behavior service. The array will have the
    *   following structure:
    *   - service: (SynonymsBehaviorInterface) Initiated behavior service
-   *   - required_interfaces: (array) Array of PHP interfaces it requires
    */
   public function getBehaviorService($behavior_service_id) {
     return isset($this->behaviorServices[$behavior_service_id]) ? $this->behaviorServices[$behavior_service_id] : NULL;
-  }
-
-  /**
-   * Get a list of behavior services that require a given interface.
-   *
-   * @param string $interface
-   *   Full name of the interface
-   *
-   * @return array
-   *   The return structure of this method is identical of the return structure
-   *   of static::getBehaviorServices()
-   */
-  public function getBehaviorServicesWithInterface($interface) {
-    $return = [];
-
-    foreach ($this->getBehaviorServices() as $service_id => $service) {
-      if (in_array($interface, $service['required_interfaces'])) {
-        $return[$service_id] = $service;
-      }
-    }
-
-    return $return;
   }
 
   /**
@@ -113,14 +94,15 @@ class BehaviorService implements ContainerInjectionInterface {
    *
    * @param string $synonyms_behavior
    *   ID of the synonyms behavior services whose enabled providers should be
-   *   returned
+   *   returned.
    * @param string $entity_type
-   *   Entity type for which to conduct the search
+   *   Entity type for which to conduct the search.
    * @param string|array $bundle
    *   Single bundle or an array of them for which to conduct the search. If
-   *   null is given, then no restrictions are applied on bundle level
+   *   null is given, then no restrictions are applied on bundle level.
    *
-   * @return Synonym[]
+   * @return \Drupal\synonyms\Entity\Synonym[]
+   *   The array of enabled synonym providers
    */
   public function getSynonymConfigEntities($synonyms_behavior, $entity_type, $bundle) {
     $entities = [];

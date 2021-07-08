@@ -2,56 +2,14 @@
 
 namespace Drupal\social_auth_google\Form;
 
-use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Path\PathValidatorInterface;
-use Drupal\Core\Routing\RequestContext;
-use Drupal\Core\Routing\RouteProviderInterface;
+use Drupal\Core\Url;
 use Drupal\social_auth\Form\SocialAuthSettingsForm;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Settings form for Social Auth Google.
  */
 class GoogleAuthSettingsForm extends SocialAuthSettingsForm {
-
-  /**
-   * The request context.
-   *
-   * @var \Drupal\Core\Routing\RequestContext
-   */
-  protected $requestContext;
-
-  /**
-   * Constructor.
-   *
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
-   *   The configuration factory.
-   * @param \Drupal\Core\Routing\RouteProviderInterface $route_provider
-   *   Used to check if route exists.
-   * @param \Drupal\Core\Path\PathValidatorInterface $path_validator
-   *   Used to check if path is valid and exists.
-   * @param \Drupal\Core\Routing\RequestContext $request_context
-   *   Holds information about the current request.
-   */
-  public function __construct(ConfigFactoryInterface $config_factory, RouteProviderInterface $route_provider, PathValidatorInterface $path_validator, RequestContext $request_context) {
-    parent::__construct($config_factory, $route_provider, $path_validator);
-    $this->requestContext = $request_context;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    // Instantiates this class.
-    return new static(
-    // Load the services required to construct this class.
-      $container->get('config.factory'),
-      $container->get('router.route_provider'),
-      $container->get('path.validator'),
-      $container->get('router.request_context')
-    );
-  }
 
   /**
    * {@inheritdoc}
@@ -80,7 +38,8 @@ class GoogleAuthSettingsForm extends SocialAuthSettingsForm {
       '#type' => 'details',
       '#title' => $this->t('Google Client settings'),
       '#open' => TRUE,
-      '#description' => $this->t('You need to first create a Google App at <a href="@google-dev">@google-dev</a>', ['@google-dev' => 'https://console.developers.google.com']),
+      '#description' => $this->t('You need to first create a Google App at <a href="@google-dev">@google-dev</a>',
+        ['@google-dev' => 'https://console.developers.google.com']),
     ];
 
     $form['google_settings']['client_id'] = [
@@ -104,7 +63,7 @@ class GoogleAuthSettingsForm extends SocialAuthSettingsForm {
       '#disabled' => TRUE,
       '#title' => $this->t('Authorized redirect URIs'),
       '#description' => $this->t('Copy this value to <em>Authorized redirect URIs</em> field of your Google App settings.'),
-      '#default_value' => $GLOBALS['base_url'] . '/user/login/google/callback',
+      '#default_value' => Url::fromRoute('social_auth_google.callback')->setAbsolute()->toString(),
     ];
 
     $form['google_settings']['authorized_javascript_origin'] = [
@@ -126,7 +85,7 @@ class GoogleAuthSettingsForm extends SocialAuthSettingsForm {
       '#title' => $this->t('Scopes for API call'),
       '#default_value' => $config->get('scopes'),
       '#description' => $this->t('Define any additional scopes to be requested, separated by a comma (e.g.: https://www.googleapis.com/auth/youtube.upload,https://www.googleapis.com/auth/youtube.readonly).<br>
-                                  The scopes \'email\' and \'profile\' (from Google Plus) are added by default and always requested.<br>
+                                  The scopes  \'openid\' \'email\' and \'profile\' are added by default and always requested.<br>
                                   You can see the full list of valid scopes and their description <a href="@scopes">here</a>.', ['@scopes' => 'https://developers.google.com/apis-explorer/#p/']),
     ];
 

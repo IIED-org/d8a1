@@ -36,7 +36,7 @@ class FormsStepsProgressBarBlock extends DeriverBase implements ContainerDeriver
    */
   public static function create(ContainerInterface $container, $base_plugin_id) {
     return new static(
-      $container->get('entity.manager')->getStorage('forms_steps')
+      $container->get('entity_type.manager')->getStorage('forms_steps')
     );
   }
 

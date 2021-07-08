@@ -6,11 +6,7 @@ dependencies:
     - field.storage.node.field_4_3_1_details
     - node.type.initiative
   module:
-    - label_help
     - text
-third_party_settings:
-  label_help:
-    label_help_description: 'Further details about the key factors limiting success'
 id: node.initiative.field_4_3_1_details
 field_name: field_4_3_1_details
 entity_type: node

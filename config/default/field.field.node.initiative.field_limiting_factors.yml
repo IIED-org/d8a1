@@ -6,11 +6,7 @@ dependencies:
     - field.storage.node.field_limiting_factors
     - node.type.initiative
   module:
-    - label_help
     - options
-third_party_settings:
-  label_help:
-    label_help_description: 'Select up to three factors from the list of checkboxes. Please consider adding a brief explanation to help us understand how these factors influenced your project'
 id: node.initiative.field_limiting_factors
 field_name: field_limiting_factors
 entity_type: node

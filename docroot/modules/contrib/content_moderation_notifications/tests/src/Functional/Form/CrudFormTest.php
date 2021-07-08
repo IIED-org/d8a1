@@ -19,6 +19,11 @@ class CrudFormTest extends BrowserTestBase {
   use ContentModerationNotificationTestTrait;
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * An admin user.
    *
    * @var \Drupal\user\UserInterface

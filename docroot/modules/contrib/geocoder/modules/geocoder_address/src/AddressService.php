@@ -137,8 +137,7 @@ class AddressService extends ServiceProviderBase {
       ->withDependentLocality($values['dependent_locality'])
       ->withLocality($values['locality'])
       ->withAddressLine1($values['address_line1'])
-      ->withAddressLine2($values['address_line2'])
-      ->withOrganization($values['organization']);
+      ->withAddressLine2($values['address_line2']);
 
     $countrycode = isset($values['country_code']) ? $values['country_code'] : NULL;
     $langcode = !empty($values['langcode']) ? $values['langcode'] : 'en';
@@ -154,9 +153,9 @@ class AddressService extends ServiceProviderBase {
     $address_string = str_replace("<br>", ' ', $address_string);
     $address_string = strip_tags($address_string);
 
+    // Add Country code suffix, if defined.
     $address_string .= isset($countrycode) ? ' ' . $countrycode : '';
 
-    // Add Country code suffix, if defined.
     return $address_string;
   }
 

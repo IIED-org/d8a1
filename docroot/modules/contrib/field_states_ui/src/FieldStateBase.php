@@ -2,6 +2,8 @@
 
 namespace Drupal\field_states_ui;
 
+use Drupal\Component\Uuid\UuidInterface;
+use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\PluginBase;
@@ -25,19 +27,28 @@ abstract class FieldStateBase extends PluginBase implements FieldStateInterface,
   protected $uuid;
 
   /**
-   * A logger instance.
+   * The Uuid Service.
    *
-   * @var \Psr\Log\LoggerInterface
+   * @var \Drupal\Component\Uuid\UuidInterface
    */
-  protected $logger;
+  protected $uuidService;
+
+  /**
+   * The entityFieldManager Service.
+   *
+   * @var \Drupal\Core\Entity\EntityFieldManagerInterface
+   */
+  protected $entityFieldManager;
 
   /**
    * {@inheritdoc}
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, UuidInterface $uuid_service, EntityFieldManagerInterface $entity_field_manager) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
+    $this->uuidService = $uuid_service;
     $this->setConfiguration($configuration);
+    $this->entityFieldManager = $entity_field_manager;
   }
 
   /**
@@ -47,7 +58,9 @@ abstract class FieldStateBase extends PluginBase implements FieldStateInterface,
     return new static(
       $configuration,
       $plugin_id,
-      $plugin_definition
+      $plugin_definition,
+      $container->get('uuid'),
+      $container->get('entity_field.manager')
     );
   }
 
@@ -58,7 +71,6 @@ abstract class FieldStateBase extends PluginBase implements FieldStateInterface,
     $target_field = $form_state->getFormObject()
       ->getFormDisplay($form_state)
       ->getComponent($this->configuration['target']);
-
     // If dealing with a field on an Inline Entity Form or a Field Collection
     // have to include the field parents in the selector.
     if (!empty($parents)) {
@@ -133,7 +145,7 @@ abstract class FieldStateBase extends PluginBase implements FieldStateInterface,
     if (!$this->configuration['value']) {
       $this->configuration['value'] = TRUE;
     }
-    $this->uuid = $configuration['uuid'] ? $configuration['uuid'] : \Drupal::service('uuid')->generate();
+    $this->uuid = $configuration['uuid'] ? $configuration['uuid'] : $this->uuidService->generate();
     return $this;
   }
 
@@ -189,7 +201,7 @@ abstract class FieldStateBase extends PluginBase implements FieldStateInterface,
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
     $display = $form_state->getFormObject()->getEntity();
     $fields = [];
-    $definitions = \Drupal::entityManager()->getFieldDefinitions($display->getTargetEntityTypeId(), $display->getTargetBundle());
+    $definitions = $this->entityFieldManager->getFieldDefinitions($display->getTargetEntityTypeId(), $display->getTargetBundle());
     $current_field = $form_state->get('field_states_ui_edit');
     foreach ($display->getComponents() as $name => $field) {
       if (!isset($definitions[$name]) || $name === $current_field) {

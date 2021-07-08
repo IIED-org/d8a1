@@ -2,8 +2,6 @@
 
 namespace Drupal\synonyms\SynonymsProviderInterface;
 
-use Drupal\synonyms\SynonymsService\Behavior\SynonymsBehaviorInterface;
-
 /**
  * Most generic synonyms provider interface. All providers must implement it.
  */
@@ -20,7 +18,8 @@ interface SynonymsProviderInterface {
   /**
    * Fetch behavior service instance which corresponds to this provider.
    *
-   * @return SynonymsBehaviorInterface
+   * @return \Drupal\synonyms\SynonymsService\Behavior\SynonymsBehaviorInterface
+   *   The return value
    */
   public function getBehaviorServiceInstance();
 

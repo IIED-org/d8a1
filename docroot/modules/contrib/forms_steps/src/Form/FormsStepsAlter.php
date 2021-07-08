@@ -136,6 +136,16 @@ class FormsStepsAlter {
           case 'external':
             $form_state->setResponse(new TrustedRedirectResponse($redirection_target, 302));
             break;
+
+          case 'entity':
+            $parameters = $route->getParameters()->all();
+            // Add current entity to parameters.
+            $current_entity = $form_state->getformObject()->getEntity();
+            if (isset($current_entity)) {
+              $parameters[$current_entity->getEntityTypeId()] = $current_entity->id();
+            }
+            $form_state->setRedirect('entity.node.canonical', $parameters);
+            break;
         }
       }
     }

@@ -11,6 +11,7 @@ use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\forms_steps\Repository\WorkflowRepository;
 use Drupal\forms_steps\Service\FormsStepsHelper;
 use Drupal\forms_steps\Service\FormsStepsManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -55,6 +56,13 @@ class FormsStepsProgressBarBlock extends BlockBase implements ContainerFactoryPl
   private $formsStepsHelper;
 
   /**
+   * WorkflowRepository.
+   *
+   * @var \Drupal\forms_steps\Repository\WorkflowRepository
+   */
+  private $workflowRepository;
+
+  /**
    * {@inheritdoc}
    */
   public function __construct(
@@ -63,7 +71,8 @@ class FormsStepsProgressBarBlock extends BlockBase implements ContainerFactoryPl
     $plugin_definition,
     CurrentRouteMatch $current_route_match,
     FormsStepsManager $forms_steps_manager,
-    FormsStepsHelper $forms_steps_helper
+    FormsStepsHelper $forms_steps_helper,
+    WorkflowRepository $workflow_repository
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
@@ -71,6 +80,7 @@ class FormsStepsProgressBarBlock extends BlockBase implements ContainerFactoryPl
     $this->currentRouteMatch = $current_route_match;
     $this->formsStepsManager = $forms_steps_manager;
     $this->formsStepsHelper = $forms_steps_helper;
+    $this->workflowRepository = $workflow_repository;
   }
 
   /**
@@ -83,7 +93,8 @@ class FormsStepsProgressBarBlock extends BlockBase implements ContainerFactoryPl
       $plugin_definition,
       $container->get('current_route_match'),
       $container->get('forms_steps.manager'),
-      $container->get('forms_steps.helper')
+      $container->get('forms_steps.helper'),
+      $container->get('forms_steps.workflow.repository')
     );
   }
 
@@ -106,6 +117,11 @@ class FormsStepsProgressBarBlock extends BlockBase implements ContainerFactoryPl
       if ($forms_steps->id() === $this->derivativeId) {
         $items = [];
         $item_class = 'previous-step';
+
+        // Retrieve current workflow instance_id to add it to the link.
+        $instanceId = $this->formsStepsHelper->getWorkflowInstanceIdFromRoute();
+        $saved_steps = $this->workflowRepository->load(['instance_id' => $instanceId]);
+
         foreach ($forms_steps->getProgressSteps() as $progress_step) {
           $item = [];
 
@@ -113,12 +129,30 @@ class FormsStepsProgressBarBlock extends BlockBase implements ContainerFactoryPl
           // the existence of a link and its visibility configuration.
           $link_visibility = array_filter($progress_step->linkVisibility());
 
-          // Retrieve current workflow instance_id to add it to the link.
-          $instanceId = $this->formsStepsHelper->getWorkflowInstanceIdFromRoute();
+          if ($forms_steps->getProgressStepsLinksSavedOnly() && !empty($saved_steps)) {
+            $saved_steps_flat = [];
+            foreach ($saved_steps as $saved_step) {
+              $saved_steps_flat[$saved_step->step] = $saved_step->step;
+            }
+
+            if ($forms_steps->getProgressStepsLinksSavedOnlyNext()) {
+              $saved_step_last = end($saved_steps);
+              $saved_step_last_entity = $forms_steps->getStep($saved_step_last->step);
+              $saved_step_next = $forms_steps->getNextStep($saved_step_last_entity);
+              if ($saved_step_next) {
+                $saved_steps_flat[$saved_step_next->id()] = $saved_step_next->id();
+              }
+            }
+            $link_visibility_check = !in_array($progress_step->link(), $saved_steps_flat);
+          }
+          else {
+            $link_visibility_check = !in_array($step->id(), $link_visibility);
+          }
 
           // Display a simple label or the link.
           // @todo: Manage the specific case of "No workflow instance id" for the first step to avoid having no links at all on this step.
-          if (empty($progress_step->link()) || !in_array($step->id(), $link_visibility) || empty($instanceId)) {
+          //          if (empty($progress_step->link()) || $link_visibility_check || empty($instanceId)) {
+          if (empty($progress_step->link()) || $link_visibility_check || empty($instanceId)) {
             $item['#markup'] = $this->t($progress_step->label());
           }
           else {
@@ -130,7 +164,7 @@ class FormsStepsProgressBarBlock extends BlockBase implements ContainerFactoryPl
             $url = Url::fromRoute($forms_steps->getStepRoute($link_step), $options);
             $link = Link::fromTextAndUrl($this->t($progress_step->label()), $url);
             $toRenderable = $link->toRenderable();
-            $markup = render($toRenderable);
+            $markup = \Drupal::service('renderer')->renderPlain($toRenderable);
 
             $item['#markup'] = $markup->__toString();
           }

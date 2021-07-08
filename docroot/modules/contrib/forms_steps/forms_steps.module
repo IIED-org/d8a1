@@ -10,8 +10,10 @@ use Drupal\Core\Url;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\forms_steps\Form\FormsStepsAlter;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Entity\ContentEntityType;
+use Drupal\forms_steps\Entity\Workflow;
 
 /**
  * Implements hook_help().
@@ -63,7 +65,7 @@ function forms_steps_entity_presave(EntityInterface $entity) {
 /**
  * Implements hook_entity_base_field_info().
  */
-function forms_steps_entity_base_field_info(ContentEntityType $entity_type) {
+function forms_steps_entity_base_field_info(EntityTypeInterface $entity_type) {
   if ($entity_type->id() === 'node') {
     // If we have moved to new workflow management. We no longer need this
     // field.
@@ -142,4 +144,28 @@ function forms_steps_theme() {
       'preprocess functions' => ['template_preprocess_item_list'],
     ],
   ];
+}
+
+/**
+ * Implements hook_entity_predelete().
+ *
+ * Delete workflow entities when original entity is deleted
+ */
+function forms_steps_entity_predelete($entity) {
+  if ($entity->getEntityTypeId() !== 'forms_steps_workflow') {
+    // Get entity id.
+    $entity_id = $entity->id();
+
+    // EntityQuery on Workflow entities.
+    $query = \Drupal::entityQuery(Workflow::ENTITY_TYPE);
+    $query->condition('entity_id', $entity_id);
+    $workflow_entity_ids = $query->execute();
+    if ($workflow_entity_ids) {
+      // Loop through results so we can load the result as an entity to delete.
+      foreach ($workflow_entity_ids as $workflow_entity_id) {
+        $workflow_entity = Workflow::load($workflow_entity_id);
+        $workflow_entity->delete();
+      }
+    }
+  }
 }

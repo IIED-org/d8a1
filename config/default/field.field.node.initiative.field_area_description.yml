@@ -6,11 +6,7 @@ dependencies:
     - field.storage.node.field_area_description
     - node.type.initiative
   module:
-    - label_help
     - text
-third_party_settings:
-  label_help:
-    label_help_description: 'If possible, please include a description of the ecosystems and local communities where the initiative is taking place, and other key features important to understand as background.'
 id: node.initiative.field_area_description
 field_name: field_area_description
 entity_type: node

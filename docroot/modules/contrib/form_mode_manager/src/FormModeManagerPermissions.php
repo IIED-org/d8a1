@@ -115,7 +115,7 @@ class FormModeManagerPermissions implements ContainerInjectionInterface {
       if ($form_mode_loaded instanceof EntityFormMode) {
         $placeholders = array_merge($entity_placeholder, [
           '%form_mode_label' => $form_mode_loaded->label(),
-          ':url' => $form_mode_loaded->url(),
+          ':url' => $form_mode_loaded->toUrl()->toString(),
         ]);
 
         $perms_per_mode += [

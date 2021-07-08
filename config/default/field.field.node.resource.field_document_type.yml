@@ -6,11 +6,6 @@ dependencies:
     - field.storage.node.field_document_type
     - node.type.resource
     - taxonomy.vocabulary.document_type
-  module:
-    - label_help
-third_party_settings:
-  label_help:
-    label_help_description: 'Type of resource, for display on search result pages'
 id: node.resource.field_document_type
 field_name: field_document_type
 entity_type: node

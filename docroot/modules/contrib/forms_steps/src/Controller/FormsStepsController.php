@@ -101,7 +101,7 @@ class FormsStepsController extends ControllerBase {
             $storage = \Drupal::entityTypeManager()->getStorage($_entity->entity_type->value);
             $idKey = $storage->getEntityType()->getKey('id');
 
-            if ($_entity->getEntityType()->isRevisionable() == FALSE) {
+            if ($storage->getEntityType()->isRevisionable() == FALSE) {
               $revision = NULL;
             }
             else {
@@ -189,12 +189,6 @@ class FormsStepsController extends ControllerBase {
       }
       throw new NotFoundHttpException();
     }
-    $form = \Drupal::service('entity.form_builder')
-      ->getForm(
-        $entity,
-        preg_replace("/^{$step->entityType()}\./", '', $step->formMode()),
-        ['form_steps' => TRUE]
-      );
 
     // Hiding the button following to the configuration.
     if ($step->hideDelete()) {

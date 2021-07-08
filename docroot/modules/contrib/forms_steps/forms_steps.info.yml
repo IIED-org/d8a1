@@ -11,7 +11,7 @@ dependencies:
   - drupal:field_ui
   - drupal:block
 
-# Information added by Drupal.org packaging script on 2020-05-22
-version: '8.x-1.4'
+# Information added by Drupal.org packaging script on 2021-03-14
+version: '8.x-1.5'
 project: 'forms_steps'
-datestamp: 1590178035
+datestamp: 1615748295

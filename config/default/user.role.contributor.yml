@@ -30,6 +30,7 @@ permissions:
   - 'use editorial transition submit_for_review'
   - 'use moderation sidebar'
   - 'use new_species_added transition create_new_draft'
+  - 'use node.admin form mode'
   - 'use node.default form mode'
   - 'use node.popup form mode'
   - 'use node_added transition create_new_draft'

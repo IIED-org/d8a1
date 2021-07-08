@@ -17,11 +17,11 @@ trait SynonymsFindTrait {
    * internal processing of $condition object.
    *
    * @param \Drupal\Core\Database\Query\ConditionInterface $condition
-   *   Condition to be processed
+   *   Condition to be processed.
    * @param string $synonym_column
-   *   Actual name of the column where synonyms are kept in text
+   *   Actual name of the column where synonyms are kept in text.
    * @param string $entity_id_column
-   *   Actual name of the column where entity_ids are kept
+   *   Actual name of the column where entity_ids are kept.
    */
   public function synonymsFindProcessCondition(ConditionInterface $condition, $synonym_column, $entity_id_column) {
     $condition_array = &$condition->conditions();

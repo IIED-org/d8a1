@@ -5,11 +5,6 @@ dependencies:
   config:
     - field.storage.node.field_language
     - node.type.resource
-  module:
-    - label_help
-third_party_settings:
-  label_help:
-    label_help_description: 'What language is the resource in?'
 id: node.resource.field_language
 field_name: field_language
 entity_type: node

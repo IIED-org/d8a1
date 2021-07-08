@@ -12,7 +12,7 @@ use Drupal\Component\Annotation\Plugin;
 class SynonymsProvider extends Plugin {
 
   /**
-   * Machine readable name of this plugin,
+   * Machine readable name of this plugin.
    *
    * @var string
    */

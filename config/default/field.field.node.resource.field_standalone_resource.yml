@@ -5,11 +5,6 @@ dependencies:
   config:
     - field.storage.node.field_standalone_resource
     - node.type.resource
-  module:
-    - label_help
-third_party_settings:
-  label_help:
-    label_help_description: 'Resource not linked to specific case study (for display)'
 id: node.resource.field_standalone_resource
 field_name: field_standalone_resource
 entity_type: node

@@ -4,6 +4,8 @@ namespace Drupal\form_mode_manager\Form;
 
 use Drupal\Component\Plugin\PluginManagerBase;
 use Drupal\Core\Cache\CacheTagsInvalidatorInterface;
+use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
+use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Field\FieldTypePluginManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteBuilderInterface;
@@ -43,13 +45,17 @@ class FormModeManagerDisplayEditForm extends EntityFormDisplayEditForm {
    *   The field type manager.
    * @param \Drupal\Component\Plugin\PluginManagerBase $plugin_manager
    *   The widget or formatter plugin manager.
+   * @param \Drupal\Core\Entity\EntityDisplayRepositoryInterface|null $entity_display_repository
+   *   (optional) The entity display_repository.
+   * @param \Drupal\Core\Entity\EntityFieldManagerInterface|null $entity_field_manager
+   *   (optional) The entity field manager.
    * @param \Drupal\Core\Cache\CacheTagsInvalidatorInterface $cache_tags_invalidator
    *   The cache tags invalidator.
    * @param \Drupal\Core\Routing\RouteBuilderInterface $route_builder
    *   The route builder service.
    */
-  public function __construct(FieldTypePluginManagerInterface $field_type_manager, PluginManagerBase $plugin_manager, CacheTagsInvalidatorInterface $cache_tags_invalidator, RouteBuilderInterface $route_builder) {
-    parent::__construct($field_type_manager, $plugin_manager);
+  public function __construct(FieldTypePluginManagerInterface $field_type_manager, PluginManagerBase $plugin_manager, EntityDisplayRepositoryInterface $entity_display_repository, EntityFieldManagerInterface $entity_field_manager, CacheTagsInvalidatorInterface $cache_tags_invalidator, RouteBuilderInterface $route_builder) {
+    parent::__construct($field_type_manager, $plugin_manager, $entity_display_repository, $entity_field_manager);
     $this->cacheTagsInvalidator = $cache_tags_invalidator;
     $this->routeBuilder = $route_builder;
   }
@@ -61,6 +67,8 @@ class FormModeManagerDisplayEditForm extends EntityFormDisplayEditForm {
     return new static(
       $container->get('plugin.manager.field.field_type'),
       $container->get('plugin.manager.field.widget'),
+      $container->get('entity_display.repository'),
+      $container->get('entity_field.manager'),
       $container->get('cache_tags.invalidator'),
       $container->get('router.builder')
     );

@@ -166,15 +166,6 @@ class UserManager extends SocialApiUserManager {
     $name = $user->getName();
     $email = $user->getEmail();
 
-    // Make sure we have everything we need.
-    if (!$name) {
-      $this->loggerFactory
-        ->get($this->getPluginId())
-        ->error('Failed to create user. Name: @name', ['@name' => $name]);
-
-      return FALSE;
-    }
-
     // Check if site configuration allows new users to register.
     if ($this->isRegistrationDisabled()) {
       $this->loggerFactory
@@ -183,7 +174,15 @@ class UserManager extends SocialApiUserManager {
           ['@name' => $name, '@email' => $email]);
 
       $this->messenger->addError($this->t('User registration is disabled, please contact the administrator.'));
+      return FALSE;
+    }
 
+    // Make sure we have everything we need.
+    if (!$name) {
+      $this->loggerFactory
+        ->get($this->getPluginId())
+        ->error('Failed to create user. Name: @name', ['@name' => $name]);
+      $this->messenger->addError($this->t('You could not be authenticated, please contact the administrator.'));
       return FALSE;
     }
 

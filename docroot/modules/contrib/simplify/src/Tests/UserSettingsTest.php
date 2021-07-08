@@ -2,7 +2,7 @@
 
 namespace Drupal\simplify\Tests;
 
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Test simplify user settings.
@@ -11,7 +11,7 @@ use Drupal\simpletest\WebTestBase;
  *
  * @ingroup simplify
  */
-class UserSettingsTest extends WebTestBase {
+class UserSettingsTest extends BrowserTestBase {
 
   /**
    * Modules to enable.
@@ -68,7 +68,7 @@ class UserSettingsTest extends WebTestBase {
       'simplify_users_global[timezone]' => 'timezone',
       'simplify_users_global[contact]' => 'contact',
     ];
-    $this->drupalPostForm(NULL, $options, t('Save configuration'));
+    $this->drupalPostForm(NULL, $options, $this->t('Save configuration'));
     // Admin users setting.
     $this->assertFieldChecked('edit-simplify-admin', "Admin users can't see hidden fields too.");
 

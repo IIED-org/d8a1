@@ -1,3 +1,4 @@
+# Form Mode Manager UI routes
 form_mode_manager.admin_settings:
   path: '/admin/config/content/form_mode_manager'
   defaults:
@@ -7,6 +8,7 @@ form_mode_manager.admin_settings:
     _permission: 'administer site configuration'
   options:
     _admin_route: TRUE
+
 form_mode_manager.admin_settings_links_task:
   path: '/admin/config/content/form_mode_manager/links-task'
   defaults:
@@ -14,7 +16,5 @@ form_mode_manager.admin_settings_links_task:
     _title: 'Form Mode Manager settings Links task'
   requirements:
     _permission: 'administer site configuration'
-  options:
-    _admin_route: TRUE
   options:
     _admin_route: TRUE

@@ -12,6 +12,13 @@ use Drupal\Tests\BrowserTestBase;
 class UserTest extends BrowserTestBase {
 
   /**
+   * The default theme.
+   *
+   * @var string
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Modules to enable.
    *
    * @var array

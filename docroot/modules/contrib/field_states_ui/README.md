@@ -1,21 +1,56 @@
-Field States UI
-===============
+CONTENTS OF THIS FILE
+---------------------
 
-Field States UI allows sites builders with minimal PHP/Dev skills to configure the <a href='https://api.drupal.org/api/drupal/core%21includes%21common.inc/function/drupal_process_states/8.1.x'>Field States API</a>. This lets you configure a field to for example hide if another field has a certain value or hasn't been filled. While doing it via PHP can be be more powerful the UI can be very handy and in some cases quicker. Originally developed for <a href='https://metchosinkarate.ca>Metchosin Karate</a> for their student signup forms.
+ * Introduction
+ * Requirements
+ * Installation
+ * Configuration
+ * Maintainers
 
-##REQUIREMENTS
 
-Drupal 8 is required, Drupal 8.1.x or higher is suggested.
+INTRODUCTION
+------------
 
-##INSTALLATION
-Install as you would normally install a contributed Drupal module. See the <a href='http://drupal.org/documentation/install/modules-themes/modules-8'>Drupal 8 instructions </a> if required in the Drupal documentation for further information.
+Field States UI allows sites builders with minimal PHP/Dev skills to configure
+the Field States API. This lets you configure a field to for example hide if
+another field has a certain value or hasn't been filled. While doing it via PHP
+can be more powerful the UI can be very handy and in some cases quicker.
+Originally developed for Metchosin Karate for their student signup forms.
 
-##CONFIGURATION
-Configuration can be accessed per field instance wherever that field instance is usually configured. For example for the Node type Article that would be at /admin/structure/types/manage/article/form-display.
+ * For a full description of the module, visit the project page:
+   https://www.drupal.org/project/field_states_ui
 
-##FAQ
-Any questions? Ask away on the issue queue or email: design@briarmoon.ca.
+ * To submit bug reports and feature suggestions, or to track changes:
+   https://www.drupal.org/project/issues/field_states_ui
 
-This project has been sponsored by:
-###<a href="http://design.briarmoon.ca">BriarMoon Design</a>
-   Full service web development and design studio. Specializing in responsive, secure, optimized Drupal sites. BriarMoon Design can help you with all your Drupal needs including installation, module creation or debugging, themeing, customization, and hosting.
+
+REQUIREMENTS
+------------
+
+This module requires no modules outside of Drupal core.
+
+
+INSTALLATION
+------------
+
+ * Install the Field States UI module as you would normally install a
+   contributed Drupal module. Visit
+   https://www.drupal.org/node/1897420 for further information.
+
+
+CONFIGURATION
+-------------
+
+    1. Navigate to Administration > Extend and enable the module.
+    2. Configuration can be accessed per field instance wherever that field
+       instance is usually configured. For example for the Node type Article
+       that would be at /admin/structure/types/manage/article/form-display.
+    3. Use the contextual gear icon to edit to edit a field.
+    4. There is now a Manage Fields States field set, select a new field set.
+       Update and save.
+
+
+MAINTAINERS
+-----------
+
+ * Nick Wilde (NickWilde) - https://www.drupal.org/u/nickwilde

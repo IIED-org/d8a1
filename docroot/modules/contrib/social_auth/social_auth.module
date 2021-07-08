@@ -23,13 +23,9 @@ function social_auth_theme() {
  */
 function social_auth_preprocess_login_with(&$variables) {
   $request = \Drupal::request();
-
-  $variables['destination'] = $request->get('destination');
+  $variables['destination'] = $request->get('destination', $variables['destination']);
   $variables['base_path'] = base_path();
-
-  $variables['#cache'] = [
-    'contexts' => ['url.query_args:destination'],
-  ];
+  $variables['#cache'] = ['contexts' => ['url.query_args:destination']];
 }
 
 /**
@@ -41,7 +37,7 @@ function social_auth_user_delete(EntityInterface $account) {
     $storage = \Drupal::entityTypeManager()
       ->getStorage('social_auth');
 
-    /* @var \Drupal\social_auth\Entity\SocialAuth[] $socialAuthUser */
+    /** @var \Drupal\social_auth\Entity\SocialAuth[] $socialAuthUser */
     $users = $storage->loadByProperties([
       'user_id' => $account->id(),
     ]);

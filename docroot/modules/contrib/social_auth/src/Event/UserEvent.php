@@ -3,7 +3,6 @@
 namespace Drupal\social_auth\Event;
 
 use Drupal\user\UserInterface;
-use Symfony\Component\EventDispatcher\Event;
 use Drupal\social_auth\User\SocialAuthUserInterface;
 
 /**
@@ -11,7 +10,7 @@ use Drupal\social_auth\User\SocialAuthUserInterface;
  *
  * @see \Drupal\social_auth\Event\SocialAuthEvents
  */
-class UserEvent extends Event {
+class UserEvent extends SocialAuthEventBase {
 
   /**
    * The user.

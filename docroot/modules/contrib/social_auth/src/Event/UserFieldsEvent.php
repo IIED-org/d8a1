@@ -2,7 +2,6 @@
 
 namespace Drupal\social_auth\Event;
 
-use Symfony\Component\EventDispatcher\Event;
 use Drupal\social_auth\User\SocialAuthUserInterface;
 
 /**
@@ -12,7 +11,7 @@ use Drupal\social_auth\User\SocialAuthUserInterface;
  *
  * @see \Drupal\social_auth\Event\SocialAuthEvents
  */
-class UserFieldsEvent extends Event {
+class UserFieldsEvent extends SocialAuthEventBase {
 
   /**
    * The user fields.

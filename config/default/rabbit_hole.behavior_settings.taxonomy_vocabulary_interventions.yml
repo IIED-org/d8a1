@@ -1,9 +1,14 @@
 uuid: 8cf03fb9-65d1-4559-81ed-1e253596cd1c
 langcode: en
 status: true
-dependencies: {  }
+dependencies:
+  config:
+    - taxonomy.vocabulary.interventions
 id: taxonomy_vocabulary_interventions
+entity_type_id: taxonomy_vocabulary
+entity_id: interventions
 action: access_denied
 allow_override: 1
 redirect: ''
 redirect_code: 301
+redirect_fallback_action: access_denied

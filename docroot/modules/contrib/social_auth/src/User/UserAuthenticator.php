@@ -329,10 +329,10 @@ class UserAuthenticator extends SocialApiUserAuthenticator {
 
         return;
       }
-    }
 
-    if (!$this->isRegistrationDisabled()) {
-      $this->messenger->addError($this->t('You could not be authenticated. Contact site administrator.'));
+      if (!$this->isRegistrationDisabled()) {
+        $this->messenger->addError($this->t('You could not be authenticated. Contact site administrator.'));
+      }
     }
 
     $this->nullifySessionKeys();

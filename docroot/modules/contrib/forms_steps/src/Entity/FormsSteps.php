@@ -39,6 +39,8 @@ use Drupal\Core\Url;
  *     "id",
  *     "label",
  *     "description",
+ *     "progress_steps_links_saved_only",
+ *     "progress_steps_links_saved_only_next",
  *     "redirection_policy",
  *     "redirection_target",
  *     "steps",
@@ -83,6 +85,21 @@ class FormsSteps extends ConfigEntityBase implements FormsStepsInterface {
    * @var string
    */
   protected $description = '';
+
+  /**
+   * The progress_steps_links_saved_only setting of the FormsSteps.
+   *
+   * @var string
+   */
+  protected $progress_steps_links_saved_only = '';
+
+
+  /**
+   * The progress_steps_links_saved_only_next setting of the FormsSteps.
+   *
+   * @var string
+   */
+  protected $progress_steps_links_saved_only_next = '';
 
   /**
    * The redirection policy of the FormsSteps.
@@ -133,6 +150,20 @@ class FormsSteps extends ConfigEntityBase implements FormsStepsInterface {
    */
   public function getDescription() {
     return $this->description;
+  }
+
+  /**
+   * Returns the Progress steps links saved only setting.
+   */
+  public function getProgressStepsLinksSavedOnly() {
+    return $this->progress_steps_links_saved_only;
+  }
+
+  /**
+   * Returns the Progress steps links saved only next setting.
+   */
+  public function getProgressStepsLinksSavedOnlyNext() {
+    return $this->progress_steps_links_saved_only_next;
   }
 
   /**

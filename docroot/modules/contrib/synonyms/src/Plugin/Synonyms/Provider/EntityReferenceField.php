@@ -9,7 +9,6 @@ use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\Query\QueryBase;
 use Drupal\Core\Entity\Query\Sql\Condition;
-use Drupal\Core\Entity\Query\QueryFactory;
 use Drupal\synonyms\SynonymsProviderInterface\SynonymsFindProviderInterface;
 use Drupal\synonyms\SynonymsProviderInterface\SynonymsFindTrait;
 use Drupal\synonyms\SynonymsProviderInterface\SynonymsFormatWordingProviderInterface;
@@ -31,35 +30,35 @@ class EntityReferenceField extends AbstractProvider implements SynonymsGetProvid
   use SynonymsGetTrait, SynonymsFindTrait, SynonymsFormatWordingTrait;
 
   /**
-   * @var EntityFieldManagerInterface
+   * The entity field manager.
+   *
+   * @var \Drupal\Core\Entity\EntityFieldManagerInterface
    */
   protected $entityFieldManager;
 
   /**
-   * @var EntityTypeManagerInterface
+   * The entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
   protected $entityTypeManager;
 
   /**
-   * @var Connection
+   * The database connection.
+   *
+   * @var \Drupal\Core\Database\Connection
    */
   protected $database;
 
   /**
-   * @var QueryFactory
-   */
-  protected $entityQueryFactory;
-
-  /**
    * {@inheritdoc}
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityFieldManagerInterface $entity_field_manager, EntityTypeManagerInterface $entity_type_manager, Connection $database, QueryFactory $entity_query_factory, ContainerInterface $container) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityFieldManagerInterface $entity_field_manager, EntityTypeManagerInterface $entity_type_manager, Connection $database, ContainerInterface $container) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $container);
 
     $this->entityFieldManager = $entity_field_manager;
     $this->entityTypeManager = $entity_type_manager;
     $this->database = $database;
-    $this->entityQueryFactory = $entity_query_factory;
   }
 
   /**
@@ -73,7 +72,6 @@ class EntityReferenceField extends AbstractProvider implements SynonymsGetProvid
       $container->get('entity_field.manager'),
       $container->get('entity_type.manager'),
       $container->get('database'),
-      $container->get('entity.query'),
       $container
     );
   }
@@ -81,7 +79,7 @@ class EntityReferenceField extends AbstractProvider implements SynonymsGetProvid
   /**
    * {@inheritdoc}
    */
-  public function getSynonyms(ContentEntityInterface $entity, array $behavior_configuration = []) {
+  public function getSynonyms(ContentEntityInterface $entity) {
     $synonyms = [];
 
     foreach ($entity->get($this->getPluginDefinition()['field']) as $item) {
@@ -99,7 +97,7 @@ class EntityReferenceField extends AbstractProvider implements SynonymsGetProvid
     $field = $this->entityFieldManager->getFieldDefinitions($this->getPluginDefinition()['controlled_entity_type'], $this->getPluginDefinition()['controlled_bundle']);
     $field = $field[$this->getPluginDefinition()['field']];
 
-    $query = new FieldQuery($entity_type_definition, 'AND', $this->database, QueryBase::getNamespaces($this->entityQueryFactory->get($entity_type_definition->id(), 'AND')));
+    $query = new FieldQuery($entity_type_definition, 'AND', $this->database, QueryBase::getNamespaces($this->entityTypeManager->getStorage($entity_type_definition->id())->getQuery()));
 
     if ($entity_type_definition->hasKey('bundle')) {
       $query->condition($entity_type_definition->getKey('bundle'), $this->getPluginDefinition()['controlled_bundle']);

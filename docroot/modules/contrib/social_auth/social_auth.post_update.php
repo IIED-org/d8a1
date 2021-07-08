@@ -9,51 +9,30 @@
  * Encrypts all tokens currently stored by Social Auth.
  */
 function social_auth_post_update_encrypt_tokens(&$sandbox = NULL) {
-
-  $ids = \Drupal::entityQuery('social_auth')->execute();
-  $total = count($ids);
-
+  $storage = \Drupal::entityTypeManager()->getStorage('social_auth');
   // Initializes some variables during the first pass through.
   if (!isset($sandbox['total'])) {
-    $sandbox['total'] = $total;
+    $sandbox['total'] = $storage->getQuery()->count()->execute();
     $sandbox['progress'] = 0;
   }
 
-  $nodes_per_batch = 25;
-
-  // Handles one pass through.
-  $ids = \Drupal::entityQuery('social_auth')
-    ->range($sandbox['progress'], $sandbox['progress'] + $nodes_per_batch)
-    ->execute();
-
+  $ids = $storage->getQuery()->range($sandbox['progress'], 50)->execute();
   /** @var \Drupal\social_auth\Entity\SocialAuth[] $social_auth_users */
-  $social_auth_users = \Drupal::entityTypeManager()
-    ->getStorage('social_auth')
-    ->loadMultiple($ids);
-
+  $social_auth_users = $storage->loadMultiple($ids);
   foreach ($social_auth_users as $user) {
     $token = $user->get('token')->value;
-
     // Sets token take care of the encryption.
     $user->setToken($token)->save();
-
     $sandbox['progress']++;
   }
 
-  if ($sandbox['total'] == 0) {
-    $sandbox['#finished'] = 1;
-  }
-  else {
-    $sandbox['#finished'] = ($sandbox['progress'] / $sandbox['total']);
-  }
+  $sandbox['#finished'] = ($sandbox['total'] == $sandbox['progress']) ? 1 : $sandbox['progress'] / $sandbox['total'];
 
   // Once finished.
   if ($sandbox['#finished']) {
-    $ids = \Drupal::entityQuery('social_auth')->execute();
-
-    return t('Updated %n Social Auth users', [
-      '%n' => count($ids),
+    return t('Updated %n out of %t Social Auth users', [
+      '%n' => $sandbox['progress'],
+      '%t' => $sandbox['total'],
     ]);
   }
-
 }
