@@ -76,7 +76,7 @@ class FacebookAuthController extends OAuth2ControllerBase {
       return $redirect;
     }
 
-    /* @var \League\OAuth2\Client\Provider\FacebookUser|null $profile */
+    /** @var \League\OAuth2\Client\Provider\FacebookUser|null $profile */
     $profile = $this->processCallback();
 
     // If authentication was successful.

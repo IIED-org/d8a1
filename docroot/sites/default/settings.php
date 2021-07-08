@@ -790,6 +790,44 @@ if (isset($_ENV['AH_SITE_ENVIRONMENT'])) {
 }
 
 /**
+ * Acquia Search connection override for Drupal 8/9 using Search API Solr and Acquia Search
+ * From: https://docs.acquia.com/acquia-search/multiple-cores/override/
+ */
+function acquia_search_override_example_20210427() {
+
+  // EDIT THIS SECTION =================
+  //
+  // Edit [index ID] values according to your available Solr cores.
+  $solr_core_mapping = [
+    // Acquia environments.
+    'prod' => 'AHQT-177573.prod.d8a1',
+    'test' => 'AHQT-177573.test.d8a1',
+    'dev' =>  'AHQT-177573.dev.d8a1',
+    // Fallback Solr index to use for all other cases.
+    // Including Local or other non-acquia-hosted Drupal environment
+    'FALLBACK' => 'AHQT-177573.dev.d8a1'
+  ];
+
+  // END of editable part ==============
+
+  // Choose fallback core by default.
+  $chosen_core = $solr_core_mapping['FALLBACK'];
+
+  // Try to pick a core from the list according to the current environment.
+  $ah_env = @$GLOBALS['gardens_site_settings']['env'] ?: @$_ENV['AH_SITE_ENVIRONMENT'];
+  if (!empty($ah_env) && isset($solr_core_mapping[$ah_env])) {
+    $chosen_core = $solr_core_mapping[$ah_env];
+  }
+
+  return $chosen_core;
+}
+// Override the ID of the Search core to use.
+// For acquia_search-8.x-2.x
+$config['acquia_search.settings']['default_search_core'] = acquia_search_override_example_20210427();
+// For acquia_search-8.x-3.x
+$config['acquia_search.settings']['override_search_core'] = acquia_search_override_example_20210427();
+
+/**
  * Load local development override configuration, if available.
  *
  * Use settings.local.php to override variables on secondary (staging,

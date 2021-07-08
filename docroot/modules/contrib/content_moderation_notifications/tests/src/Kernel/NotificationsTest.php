@@ -110,6 +110,28 @@ class NotificationsTest extends KernelTestBase {
     $this->assertMail('id', 'content_moderation_notifications_content_moderation_notification');
     $this->assertMail('subject', PlainTextOutput::renderFromHtml($notification->getSubject()));
     $this->assertCount(3, $this->getMails());
+
+    // Do not send notifications to the site email address if settings enabled.
+    $notification->set('site_mail', TRUE)->save();
+    $entity = \Drupal::entityTypeManager()->getStorage('entity_test_rev')->loadUnchanged($entity->id());
+    $entity->moderation_state = 'published';
+    $entity->save();
+    $this->assertMail('from', 'admin@example.com');
+    $this->assertMail('to', '');
+    $this->assertBccRecipients('altered@example.com,foo' . $entity->id() . '@example.com');
+    $this->assertMail('id', 'content_moderation_notifications_content_moderation_notification');
+    $this->assertMail('subject', PlainTextOutput::renderFromHtml($notification->getSubject()));
+
+    // Send notication to the site email address if settings disabled.
+    $notification->set('site_mail', FALSE)->save();
+    $entity = \Drupal::entityTypeManager()->getStorage('entity_test_rev')->loadUnchanged($entity->id());
+    $entity->moderation_state = 'published';
+    $entity->save();
+    $this->assertMail('from', 'admin@example.com');
+    $this->assertMail('to', 'admin@example.com');
+    $this->assertBccRecipients('altered@example.com,foo' . $entity->id() . '@example.com');
+    $this->assertMail('id', 'content_moderation_notifications_content_moderation_notification');
+    $this->assertMail('subject', PlainTextOutput::renderFromHtml($notification->getSubject()));
   }
 
   /**

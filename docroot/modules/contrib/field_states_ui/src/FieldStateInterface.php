@@ -3,7 +3,7 @@
 namespace Drupal\field_states_ui;
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Component\Plugin\ConfigurablePluginInterface;
+use Drupal\Component\Plugin\ConfigurableInterface;
 use Drupal\Component\Plugin\PluginInspectionInterface;
 
 /**
@@ -14,7 +14,7 @@ use Drupal\Component\Plugin\PluginInspectionInterface;
  * @see \Drupal\field_states_ui\FieldStateManager
  * @see plugin_api
  */
-interface FieldStateInterface extends PluginInspectionInterface, ConfigurablePluginInterface {
+interface FieldStateInterface extends PluginInspectionInterface, ConfigurableInterface {
 
   /**
    * Applies a field state to the field widget's form element.

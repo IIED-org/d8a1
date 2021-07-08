@@ -29,27 +29,35 @@ class BaseField extends AbstractProvider implements SynonymsGetProviderInterface
   use SynonymsGetTrait, SynonymsFindTrait, SynonymsFormatWordingTrait;
 
   /**
-   * @var EntityFieldManagerInterface
+   * The entity field manager.
+   *
+   * @var \Drupal\Core\Entity\EntityFieldManagerInterface
    */
   protected $entityFieldManager;
 
   /**
-   * @var FieldTypeToSynonyms
+   * The field type to synonyms.
+   *
+   * @var \Drupal\synonyms\SynonymsService\FieldTypeToSynonyms
    */
   protected $fieldTypeToSynonyms;
 
   /**
-   * @var EntityTypeManagerInterface
+   * The entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
   protected $entityTypeManager;
 
   /**
-   * @var Connection
+   * The database connection.
+   *
+   * @var \Drupal\Core\Database\Connection
    */
   protected $database;
 
   /**
-   * {@inheritdoc}
+   * BaseField constructor.
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityFieldManagerInterface $entity_field_manager, FieldTypeToSynonyms $field_type_to_synonyms, EntityTypeManagerInterface $entity_type_manager, Connection $database, ContainerInterface $container) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $container);
@@ -79,7 +87,7 @@ class BaseField extends AbstractProvider implements SynonymsGetProviderInterface
   /**
    * {@inheritdoc}
    */
-  public function getSynonyms(ContentEntityInterface $entity, array $behavior_configuration = []) {
+  public function getSynonyms(ContentEntityInterface $entity) {
     $map = $this->fieldTypeToSynonyms->getSimpleFieldTypeToPropertyMap();
     $field_type = $entity->getFieldDefinition($this->getPluginDefinition()['field'])->getType();
 

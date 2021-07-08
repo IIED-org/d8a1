@@ -46,6 +46,6 @@ class FieldState extends Plugin {
    *
    * @ingroup plugin_translatable
    */
-  public $description = '';
+  public $description;
 
 }

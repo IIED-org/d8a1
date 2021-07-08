@@ -2,8 +2,8 @@
 
 namespace Drupal\simplify\Tests;
 
-use Drupal\simpletest\WebTestBase;
 use Drupal\taxonomy\Entity\Vocabulary;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Test simplify per vocabulary settings.
@@ -12,7 +12,7 @@ use Drupal\taxonomy\Entity\Vocabulary;
  *
  * @ingroup simplify
  */
-class PerVocabularySettingsTest extends WebTestBase {
+class PerVocabularySettingsTest extends BrowserTestBase {
 
   /**
    * Modules to enable.
@@ -79,7 +79,7 @@ class PerVocabularySettingsTest extends WebTestBase {
       'simplify_admin' => TRUE,
       'simplify_taxonomies_global[format]' => 'format',
     ];
-    $this->drupalPostForm(NULL, $options, t('Save configuration'));
+    $this->drupalPostForm(NULL, $options, $this->t('Save configuration'));
 
     // Open vocabulary admin UI.
     $this->drupalGet('/admin/structure/taxonomy/manage/testing_vocabulary');
@@ -104,7 +104,7 @@ class PerVocabularySettingsTest extends WebTestBase {
       'simplify_taxonomies[relations]' => 'relations',
       'simplify_taxonomies[path]' => 'path',
     ];
-    $this->drupalPostForm(NULL, $options, t('Save'));
+    $this->drupalPostForm(NULL, $options, $this->t('Save'));
 
     // Check if options are saved.
     $this->drupalGet('/admin/structure/taxonomy/manage/testing_vocabulary');

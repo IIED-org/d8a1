@@ -3,9 +3,10 @@ type: module
 description: 'Simplifies the user interface by hiding particular fields.'
 package: User interface
 core: 8.x
+core_version_requirement: ^8 || ^9
 configure: simplify.admin
 
-# Information added by Drupal.org packaging script on 2019-12-05
-version: '8.x-1.1'
+# Information added by Drupal.org packaging script on 2020-07-21
+version: '8.x-1.2'
 project: 'simplify'
-datestamp: 1575589384
+datestamp: 1595292173

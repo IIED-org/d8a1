@@ -13,6 +13,15 @@ function form_mode_manager_install() {
 }
 
 /**
+ * Implements hook_module_preinstall().
+ */
+function form_mode_manager_module_preinstall($module) {
+  \Drupal::configFactory()->getEditable('form_mode_manager.settings')
+    ->set("form_modes.user.to_exclude", ['register' => 'register'])
+    ->save(TRUE);
+}
+
+/**
  * Set the default Form Mode Manager general/links settings.
  */
 function form_mode_manager_update_8001() {

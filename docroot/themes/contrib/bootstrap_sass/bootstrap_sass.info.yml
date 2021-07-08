@@ -36,6 +36,6 @@ regions:
   footer_fifth: 'Footer fifth'
 
 # Information added by Drupal.org packaging script on 2020-06-18
-version: '8.x-1.13'
+version: '5.0.0'
 project: 'bootstrap_sass'
-datestamp: 1592503344
+datestamp: 1592503302

@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * "Leaflet MapBox" adds integration for Leftlet module and MapBox tiles.
+ * "Leaflet Mapbox" adds integration for Leaflet module and Mapbox tiles.
  */
 
 /**

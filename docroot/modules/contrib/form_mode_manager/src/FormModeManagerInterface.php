@@ -10,6 +10,16 @@ use Drupal\Core\Entity\EntityTypeInterface;
 interface FormModeManagerInterface {
 
   /**
+   * The add identifier for FMM FormClass.
+   */
+  const ADD_PREFIX = 'fmm_';
+
+  /**
+   * The add identifier for FMM FormClass.
+   */
+  const EDIT_PREFIX = 'fmm_edit_';
+
+  /**
    * Returns entity (form) displays for the current entity display type.
    *
    * @param string $entity_type_id
@@ -60,11 +70,15 @@ interface FormModeManagerInterface {
    *
    * @param bool $ignore_excluded
    *   Joker to determine if form modes to exclude list are used or ignored.
+   * @param bool $ignore_active_display
+   *   Flag to ignore if a form mode is used in bundle display.
+   *   This parameter doesn't not be activated in entityTypeAlter,
+   *   context caused by getStorage() call.
    *
    * @return array
    *   The collection without uneeded form modes.
    */
-  public function getAllFormModesDefinitions($ignore_excluded = FALSE);
+  public function getAllFormModesDefinitions($ignore_excluded = FALSE, $ignore_active_display = FALSE);
 
   /**
    * Filter a form mode collection to exclude all desired form mode id.
@@ -80,6 +94,23 @@ interface FormModeManagerInterface {
    *   The collection without uneeded form modes.
    */
   public function filterExcludedFormModes(array &$form_mode, $entity_type_id, $ignore_excluded);
+
+  /**
+   * Filter form mode collection depending activation in bundle.
+   *
+   * The getStorage() onto 'entity_form_display' can't be played ,
+   * in specific cases eg: entityTypeAlter because that cause an,
+   * endless loop caused by Annotation::reset during instantiation of plugin.
+   *
+   * @param array $form_mode
+   *   A form mode collection to be filtered.
+   * @param string $entity_type_id
+   *   The entity type ID of entity.
+   *
+   * @return array
+   *   The collection filtered without usage of storage.
+   */
+  public function filterInactiveDisplay(array &$form_mode, $entity_type_id);
 
   /**
    * Retrieve the list of form_modes unavailable to expose by Form Mode Manager.
@@ -110,11 +141,13 @@ interface FormModeManagerInterface {
    *   A form mode definition.
    * @param string $entity_type_id
    *   The entity type id.
+   * @param bool $ignore_excluded
+   *   Joker to determine if form modes to exclude list are used or ignored.
    *
    * @return bool
    *   True if form mode is candidate to be excluded or False if not.
    */
-  public function candidateToExclude(array $form_mode, $entity_type_id);
+  public function candidateToExclude(array $form_mode, $entity_type_id, $ignore_excluded);
 
   /**
    * Gets the entity form mode info for a specific bundle.
@@ -135,7 +168,7 @@ interface FormModeManagerInterface {
    * @param string $entity_type_id
    *   The entity type id.
    * @param string $bundle_id
-   *   Name of bundle for current entity.
+   *   (Optional) Name of bundle for current entity.
    * @param string $form_mode_machine_name
    *   Machine name of form mode.
    *

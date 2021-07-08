@@ -8,7 +8,6 @@ dependencies:
   module:
     - geocoder_field
     - geofield
-    - label_help
 third_party_settings:
   geocoder_field:
     method: source
@@ -17,17 +16,15 @@ third_party_settings:
     reverse_geocode_field: ''
     hidden: false
     disabled: false
-    plugins:
-      - openstreetmap
-      - googlemaps
     dumper: wkt
     delta_handling: default
     failure:
       handling: preserve
       status_message: true
       log: true
-  label_help:
-    label_help_description: 'Please add GPS coordinates if known, otherwise these will be calculated from the location(s) given above.'
+    providers:
+      - openstreetmap
+      - googlemaps
 id: node.initiative.field_geofield
 field_name: field_geofield
 entity_type: node
@@ -38,6 +35,5 @@ required: false
 translatable: true
 default_value: {  }
 default_value_callback: ''
-settings:
-  backend: geofield_backend_default
+settings: {  }
 field_type: geofield

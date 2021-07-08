@@ -9,6 +9,7 @@ services:
     arguments:
       - '@state'
       - '@entity_type.manager'
+      - '@config.factory'
     tags:
       - { name: 'event_subscriber' }
 

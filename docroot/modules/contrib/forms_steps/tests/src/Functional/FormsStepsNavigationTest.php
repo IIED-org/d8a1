@@ -17,6 +17,8 @@ class FormsStepsNavigationTest extends BrowserTestBase {
 
   use FormsStepsTestTrait;
 
+  protected $defaultTheme = 'stark';
+
   /**
    * Modules to install.
    *
@@ -65,7 +67,7 @@ class FormsStepsNavigationTest extends BrowserTestBase {
     // Access step 2.
     $this->assertSession()
       ->pageTextContains($this->data['forms_steps']['steps'][2]['label']);
-    $this->assertContains($this->data['forms_steps']['steps'][2]['url'], $this->getUrl());
+    $this->assertStringContainsStringIgnoringCase($this->data['forms_steps']['steps'][2]['url'], $this->getUrl());
     $this->assertSession()->pageTextContains($value);
 
     $value2 = 'This is an article Test Titre content 2';
@@ -76,7 +78,7 @@ class FormsStepsNavigationTest extends BrowserTestBase {
     // Access step 3.
     $this->assertSession()
       ->pageTextContains($this->data['forms_steps']['steps'][3]['label']);
-    $this->assertContains($this->data['forms_steps']['steps'][3]['url'], $this->getUrl());
+    $this->assertStringContainsStringIgnoringCase($this->data['forms_steps']['steps'][3]['url'], $this->getUrl());
 
     $value3 = 'This is a page Test Titre content';
     $this->drupalPostForm(NULL, [
@@ -86,7 +88,7 @@ class FormsStepsNavigationTest extends BrowserTestBase {
     // Access step 4.
     $this->assertSession()
       ->pageTextContains($this->data['forms_steps']['steps'][4]['label']);
-    $this->assertContains($this->data['forms_steps']['steps'][4]['url'], $this->getUrl());
+    $this->assertStringContainsStringIgnoringCase($this->data['forms_steps']['steps'][4]['url'], $this->getUrl());
     $this->assertSession()->fieldExists('title[0][value]');
     $this->assertSession()->buttonExists('Previous');
     $this->assertSession()->fieldValueEquals('title[0][value]', $value2);

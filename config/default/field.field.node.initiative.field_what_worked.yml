@@ -6,11 +6,7 @@ dependencies:
     - field.storage.node.field_what_worked
     - node.type.initiative
   module:
-    - label_help
     - text
-third_party_settings:
-  label_help:
-    label_help_description: 'Please share lessons from your experience on what has worked and why. You may want to highlight specific strategies you used (e.g. decreasing the costs of living with wildlife), broader aspects of your approach (e.g. building trust, working with traditional leaders), or wider factors (e.g. supportive national policy environment).'
 id: node.initiative.field_what_worked
 field_name: field_what_worked
 entity_type: node

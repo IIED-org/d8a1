@@ -3,14 +3,13 @@
 namespace Drupal\social_auth\Event;
 
 use Drupal\social_auth\SocialAuthDataHandler;
-use Symfony\Component\EventDispatcher\Event;
 
 /**
  * Dispatched before user is redirected to provider for authentication.
  *
  * @see \Drupal\social_auth\Event\SocialAuthEvents
  */
-class BeforeRedirectEvent extends Event {
+class BeforeRedirectEvent extends SocialAuthEventBase {
 
   /**
    * The Social Auth data handler.

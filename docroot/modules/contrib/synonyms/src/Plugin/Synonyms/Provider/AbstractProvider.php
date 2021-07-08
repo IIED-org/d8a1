@@ -16,7 +16,9 @@ abstract class AbstractProvider extends PluginBase implements SynonymsProviderIn
   use StringTranslationTrait;
 
   /**
-   * @var ContainerInterface
+   * The container.
+   *
+   * @var \Symfony\Component\DependencyInjection\ContainerInterface
    */
   protected $container;
 

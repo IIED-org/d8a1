@@ -3,7 +3,7 @@
 namespace Drupal\simplify\Tests;
 
 use Drupal\block_content\Entity\BlockContentType;
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Test simplify per block-type settings.
@@ -12,7 +12,7 @@ use Drupal\simpletest\WebTestBase;
  *
  * @ingroup simplify
  */
-class PerBlockTypeSettingsTest extends WebTestBase {
+class PerBlockTypeSettingsTest extends BrowserTestBase {
 
   /**
    * Modules to enable.
@@ -69,7 +69,7 @@ class PerBlockTypeSettingsTest extends WebTestBase {
       'simplify_admin' => TRUE,
       'simplify_blocks_global[format]' => 'format',
     ];
-    $this->drupalPostForm(NULL, $options, t('Save configuration'));
+    $this->drupalPostForm(NULL, $options, $this->t('Save configuration'));
     // Admin users setting.
     $this->assertFieldChecked('edit-simplify-admin', "Admin users can't see hidden fields too.");
 
@@ -103,7 +103,7 @@ class PerBlockTypeSettingsTest extends WebTestBase {
     $options = [
       'simplify_blocks[revision_information]' => 'format',
     ];
-    $this->drupalPostForm(NULL, $options, t('Save'));
+    $this->drupalPostForm(NULL, $options, $this->t('Save'));
 
     /* -------------------------------------------------------.
      * 3-bis/ Check if options are saved.

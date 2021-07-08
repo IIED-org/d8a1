@@ -2,7 +2,7 @@
 
 namespace Drupal\synonyms\Entity;
 
-use Drupal\Component\Plugin\ConfigurablePluginInterface;
+use Drupal\Component\Plugin\ConfigurableInterface;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
@@ -30,6 +30,14 @@ use Drupal\synonyms\SynonymsProviderInterface;
  *   admin_permission = "administer synonyms",
  *   entity_keys = {
  *     "id" = "id"
+ *   },
+ *   config_export = {
+ *     "id",
+ *     "provider_plugin",
+ *     "base_provider_plugin",
+ *     "provider_configuration",
+ *     "behavior",
+ *     "behavior_configuration"
  *   },
  *   links = {
  *     "edit-form" = "/admin/structure/synonyms/{synonym}",
@@ -113,8 +121,9 @@ class Synonym extends ConfigEntityBase implements SynonymInterface {
    * {@inheritdoc}
    */
   public function getProviderConfiguration() {
-    if ($this->getProviderPluginInstance() instanceof ConfigurablePluginInterface) {
-      return $this->getPluginCollection()->get($this->getProviderPlugin())->getConfiguration();
+    $plugin = $this->getProviderPluginInstance();
+    if ($plugin instanceof ConfigurableInterface) {
+      return $plugin->getConfiguration();
     }
     return $this->provider_configuration;
   }
@@ -123,8 +132,9 @@ class Synonym extends ConfigEntityBase implements SynonymInterface {
    * {@inheritdoc}
    */
   public function setProviderConfiguration(array $provider_configuration) {
-    if ($this->getProviderPluginInstance() instanceof ConfigurablePluginInterface) {
-      $this->getProviderPluginInstance()->setConfiguration($provider_configuration);
+    $plugin = $this->getProviderPluginInstance();
+    if ($plugin instanceof ConfigurableInterface) {
+      $plugin->setConfiguration($provider_configuration);
     }
     $this->provider_configuration = $provider_configuration;
   }
@@ -146,7 +156,7 @@ class Synonym extends ConfigEntityBase implements SynonymInterface {
   /**
    * Gets the plugin collections used by this entity.
    *
-   * @return SynonymProviderPluginCollection[]
+   * @return \Drupal\synonyms\SynonymProviderPluginCollection
    *   An array of plugin collections, keyed by the property name they use to
    *   store their configuration.
    */
@@ -160,7 +170,13 @@ class Synonym extends ConfigEntityBase implements SynonymInterface {
   public static function postLoad(EntityStorageInterface $storage, array &$entities) {
     parent::postLoad($storage, $entities);
     foreach ($entities as $entity) {
-      $entity->addCacheTags([self::cacheTagConstruct($entity->get('behavior'), $entity->getProviderPluginInstance()->getPluginDefinition()['controlled_entity_type'], $entity->getProviderPluginInstance()->getPluginDefinition()['controlled_bundle'])]);
+      $entity->addCacheTags([
+        self::cacheTagConstruct(
+          $entity->get('behavior'),
+          $entity->getProviderPluginInstance()->getPluginDefinition()['controlled_entity_type'],
+          $entity->getProviderPluginInstance()->getPluginDefinition()['controlled_bundle']
+        ),
+      ]);
     }
   }
 
@@ -177,7 +193,13 @@ class Synonym extends ConfigEntityBase implements SynonymInterface {
 
     // Make sure we have appropriate cache tags in this entity. If it was just
     // created and runs its first save it might not have it set up yet.
-    $this->addCacheTags([self::cacheTagConstruct($this->behavior, $this->getProviderPluginInstance()->getPluginDefinition()['controlled_entity_type'], $this->getProviderPluginInstance()->getPluginDefinition()['controlled_bundle'])]);
+    $this->addCacheTags([
+      self::cacheTagConstruct(
+        $this->behavior,
+        $this->getProviderPluginInstance()->getPluginDefinition()['controlled_entity_type'],
+        $this->getProviderPluginInstance()->getPluginDefinition()['controlled_bundle']
+      ),
+    ]);
   }
 
   /**
@@ -187,11 +209,11 @@ class Synonym extends ConfigEntityBase implements SynonymInterface {
    * entity type, and bundle.
    *
    * @param string $behavior
-   *   Synonyms behavior whose cache tag is requested
+   *   Synonyms behavior whose cache tag is requested.
    * @param string $entity_type
-   *   Entity type whose cache tag is requested
+   *   Entity type whose cache tag is requested.
    * @param string $bundle
-   *   Bundle whose cache tag is requested
+   *   Bundle whose cache tag is requested.
    *
    * @return string
    *   Cache tag
@@ -203,7 +225,7 @@ class Synonym extends ConfigEntityBase implements SynonymInterface {
   /**
    * Encapsulates the creation of entity's LazyPluginCollection.
    *
-   * @return SynonymProviderPluginCollection
+   * @return \Drupal\synonyms\SynonymProviderPluginCollection
    *   The entity's plugin collection.
    */
   protected function getPluginCollection() {

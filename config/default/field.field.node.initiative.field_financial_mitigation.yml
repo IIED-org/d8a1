@@ -5,11 +5,6 @@ dependencies:
   config:
     - field.storage.node.field_financial_mitigation
     - node.type.initiative
-  module:
-    - label_help
-third_party_settings:
-  label_help:
-    label_help_description: 'For example, compensation, insurance…'
 id: node.initiative.field_financial_mitigation
 field_name: field_financial_mitigation
 entity_type: node

@@ -37,11 +37,15 @@ class SynonymsEntityAutocomplete extends Textfield {
 
     // Operator to match keyword. Allowed values are:
     // - CONTAINS
-    // - STARTS_WITH
+    // - STARTS_WITH.
     $info['#match'] = 'CONTAINS';
 
-    array_unshift($info['#process'], [get_class($this), 'elementSynonymsEntityAutocomplete']);
-    $info['#element_validate'][] = [get_class($this), 'validateEntityAutocomplete'];
+    array_unshift($info['#process'], [
+      get_class($this), 'elementSynonymsEntityAutocomplete',
+    ]);
+    $info['#element_validate'][] = [
+      get_class($this), 'validateEntityAutocomplete',
+    ];
     return $info;
   }
 
@@ -61,7 +65,7 @@ class SynonymsEntityAutocomplete extends Textfield {
     // Potentially the #value is set directly, so it contains the 'target_id'
     // array structure instead of a string.
     elseif ($input !== FALSE && is_array($input)) {
-      $entity_ids = array_map(function(array $item) {
+      $entity_ids = array_map(function (array $item) {
         return $item['target_id'];
       }, $input);
       $entities = \Drupal::entityTypeManager()->getStorage($element['#target_type'])->loadMultiple($entity_ids);
@@ -133,6 +137,7 @@ class SynonymsEntityAutocomplete extends Textfield {
    *   The input coming from the autocompletion result.
    *
    * @return mixed|null
+   *   The return value
    */
   public static function extractEntityIdFromAutocompleteInput($input) {
     $match = NULL;

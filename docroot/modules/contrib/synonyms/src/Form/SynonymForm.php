@@ -4,13 +4,10 @@ namespace Drupal\synonyms\Form;
 
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
-use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\Entity\Query\QueryFactory;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\SubformState;
 use Drupal\Core\Plugin\PluginFormInterface;
-use Drupal\synonyms\SynonymInterface;
 use Drupal\synonyms\SynonymsProviderPluginManager;
 use Drupal\synonyms\SynonymsService\Behavior\SynonymsBehaviorConfigurableInterface;
 use Drupal\synonyms\SynonymsService\BehaviorService;
@@ -23,43 +20,44 @@ use Symfony\Component\HttpFoundation\Request;
 class SynonymForm extends EntityForm {
 
   /**
-   * @var SynonymInterface
+   * The synonym entity.
+   *
+   * @var \Drupal\synonyms\SynonymInterface
    */
   protected $entity;
 
   /**
-   * @var \Drupal\Core\Entity\Query\QueryFactory
-   */
-  protected $entityQuery;
-
-  /**
-   * Entity type manager.
+   * The entity type manager.
    *
-   * @var EntityTypeManagerInterface
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
   protected $entityTypeManager;
 
   /**
-   * Entity type bundle info.
+   * The entity type bundle info.
    *
-   * @var EntityTypeBundleInfoInterface
+   * @var \Drupal\Core\Entity\EntityTypeBundleInfoInterface
    */
   protected $entityTypeBundleInfo;
 
   /**
-   * @var SynonymsProviderPluginManager
+   * The synonyms provider plugin manager.
+   *
+   * @var \Drupal\synonyms\SynonymsProviderPluginManager
    */
   protected $synonymsProviderPluginManager;
 
   /**
-   * @var BehaviorService
+   * The synonyms behavior service.
+   *
+   * @var \Drupal\synonyms\SynonymsService\BehaviorService
    */
   protected $behaviorServices;
 
   /**
    * Entity type that is being edited/added.
    *
-   * @var EntityTypeInterface
+   * @var \Drupal\Core\Entity\EntityTypeInterface
    */
   protected $controlledEntityType;
 
@@ -78,12 +76,27 @@ class SynonymForm extends EntityForm {
   protected $behaviorServiceId;
 
   /**
-   * @var ContainerInterface
+   * The container.
+   *
+   * @var \Symfony\Component\DependencyInjection\ContainerInterface
    */
   protected $container;
 
-  public function __construct(QueryFactory $entity_query, EntityTypeManagerInterface $entity_type_manager, EntityTypeBundleInfoInterface $entity_type_bundle_info, SynonymsProviderPluginManager $synonyms_provider_plugin_manager, BehaviorService $behavior_services, ContainerInterface $container) {
-    $this->entityQuery = $entity_query;
+  /**
+   * SynonymForm constructor.
+   *
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
+   * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $entity_type_bundle_info
+   *   The entity type bundle info.
+   * @param \Drupal\synonyms\SynonymsProviderPluginManager $synonyms_provider_plugin_manager
+   *   The synonyms provider plugin_manager.
+   * @param \Drupal\synonyms\SynonymsService\BehaviorService $behavior_services
+   *   The behavior services.
+   * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
+   *   The container.
+   */
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, EntityTypeBundleInfoInterface $entity_type_bundle_info, SynonymsProviderPluginManager $synonyms_provider_plugin_manager, BehaviorService $behavior_services, ContainerInterface $container) {
     $this->entityTypeManager = $entity_type_manager;
     $this->entityTypeBundleInfo = $entity_type_bundle_info;
     $this->synonymsProviderPluginManager = $synonyms_provider_plugin_manager;
@@ -96,7 +109,6 @@ class SynonymForm extends EntityForm {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('entity.query'),
       $container->get('entity_type.manager'),
       $container->get('entity_type.bundle.info'),
       $container->get('plugin.manager.synonyms_provider'),
@@ -144,7 +156,7 @@ class SynonymForm extends EntityForm {
 
     $options = [];
     foreach ($this->synonymsProviderPluginManager->getDefinitions() as $plugin_id => $plugin) {
-      if ($plugin['controlled_entity_type'] ==  $this->controlledEntityType && $plugin['controlled_bundle'] == $this->controlledBundle && $plugin['synonyms_behavior_service'] == $this->behaviorServiceId) {
+      if ($plugin['controlled_entity_type'] == $this->controlledEntityType && $plugin['controlled_bundle'] == $this->controlledBundle && $plugin['synonyms_behavior_service'] == $this->behaviorServiceId) {
         $options[$plugin_id] = $plugin['label'];
       }
     }
@@ -236,14 +248,14 @@ class SynonymForm extends EntityForm {
     $status = $this->entity->save();
 
     if ($status) {
-      drupal_set_message($this->t('Saved the %label synonym configuration.', [
+      $this->messenger()->addStatus($this->t('Saved the %label synonym configuration.', [
         '%label' => $this->entity->label(),
       ]));
     }
     else {
-      drupal_set_message($this->t('The %label synonym configuration was not saved.', [
+      $this->messenger()->addError($this->t('The %label synonym configuration was not saved.', [
         '%label' => $this->entity->label(),
-      ]), 'error');
+      ]));
     }
 
     $form_state->setRedirect('entity.synonym.overview');
@@ -253,13 +265,13 @@ class SynonymForm extends EntityForm {
    * Check whether entity with such ID already exists.
    *
    * @param string $id
-   *   Entity ID to check
+   *   Entity ID to check.
    *
    * @return bool
    *   Whether entity with such ID already exists.
    */
   public function exist($id) {
-    $entity = $this->entityQuery->get('synonym')
+    $entity = $this->entityTypeManager->getStorage('synonym')->getQuery()
       ->condition('id', $id)
       ->execute();
     return (bool) $entity;
@@ -276,13 +288,13 @@ class SynonymForm extends EntityForm {
    * Supportive method to create sub-form-states.
    *
    * @param string $element_name
-   *   Name of the nested form element for which to create a sub form state
+   *   Name of the nested form element for which to create a sub form state.
    * @param array $form
-   *   Full form array
-   * @param FormStateInterface $form_state
-   *   Full form state out of which to create sub form state
+   *   Full form array.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   Full form state out of which to create sub form state.
    *
-   * @return SubformState
+   * @return \Drupal\Core\Form\SubformState
    *   Sub form state object generated based on the input arguments
    */
   protected function getSubFormState($element_name, array $form, FormStateInterface $form_state) {

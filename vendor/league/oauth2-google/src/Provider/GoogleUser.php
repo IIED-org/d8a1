@@ -19,10 +19,7 @@ class GoogleUser implements ResourceOwnerInterface
 
     public function getId()
     {
-        if (array_key_exists('sub', $this->response)) {
-            return $this->response['sub'];
-        }
-        return $this->response['id'];
+        return $this->response['sub'];
     }
 
     /**
@@ -32,36 +29,37 @@ class GoogleUser implements ResourceOwnerInterface
      */
     public function getName()
     {
-        if (array_key_exists('name', $this->response) && is_string($this->response['name'])) {
-            return $this->response['name'];
-        }
-        return $this->response['displayName'];
+        return $this->response['name'];
     }
 
     /**
      * Get preferred first name.
      *
-     * @return string
+     * @return string|null
      */
     public function getFirstName()
     {
-        if (array_key_exists('given_name', $this->response)) {
-            return $this->response['given_name'];
-        }
-        return $this->response['name']['givenName'];
+        return $this->getResponseValue('given_name');
     }
 
     /**
      * Get preferred last name.
      *
-     * @return string
+     * @return string|null
      */
     public function getLastName()
     {
-        if (array_key_exists('family_name', $this->response)) {
-            return $this->response['family_name'];
-        }
-        return $this->response['name']['familyName'];
+        return $this->getResponseValue('family_name');
+    }
+
+    /**
+     * Get locale.
+     *
+     * @return string|null
+     */
+    public function getLocale()
+    {
+        return $this->getResponseValue('locale');
     }
 
     /**
@@ -71,13 +69,7 @@ class GoogleUser implements ResourceOwnerInterface
      */
     public function getEmail()
     {
-        if (array_key_exists('email', $this->response)) {
-            return $this->response['email'];
-        }
-        if (!empty($this->response['emails'])) {
-            return $this->response['emails'][0]['value'];
-        }
-        return null;
+        return $this->getResponseValue('email');
     }
 
     /**
@@ -87,14 +79,7 @@ class GoogleUser implements ResourceOwnerInterface
      */
     public function getHostedDomain()
     {
-        if (array_key_exists('hd', $this->response)) {
-            return $this->response['hd'];
-        }
-        if (array_key_exists('domain', $this->response)) {
-            return $this->response['domain'];
-        }
-
-        return null;
+        return $this->getResponseValue('hd');
     }
 
     /**
@@ -104,13 +89,7 @@ class GoogleUser implements ResourceOwnerInterface
      */
     public function getAvatar()
     {
-        if (array_key_exists('picture', $this->response)) {
-            return $this->response['picture'];
-        }
-        if (!empty($this->response['image']['url'])) {
-            return $this->response['image']['url'];
-        }
-        return null;
+        return $this->getResponseValue('picture');
     }
 
     /**
@@ -121,5 +100,13 @@ class GoogleUser implements ResourceOwnerInterface
     public function toArray()
     {
         return $this->response;
+    }
+
+    private function getResponseValue($key)
+    {
+        if (array_key_exists($key, $this->response)) {
+            return $this->response[$key];
+        }
+        return null;
     }
 }

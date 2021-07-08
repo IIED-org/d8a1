@@ -83,7 +83,30 @@ class WorkflowManager {
     $workflow = NULL;
 
     // We load all the workflow of that entity type & bundle.
-    $workflows = $this->entityTypeManager
+    $workflows = $this-> getAllWorksflowByEntity($entity);
+
+    // Only returning the first one.
+    if (!empty($workflows)) {
+      $workflow = reset($workflows);
+    }
+
+    return $workflow;
+  }
+
+  /**
+   * Returns all workflow entries of the provided entity.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   Entity instance to get the workflow from.
+   *
+   * @return array|null
+   *   Returns an array of workflows if found, null otherwise.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   */
+  public function getAllWorksflowByEntity(EntityInterface $entity) {
+    return $this->entityTypeManager
       ->getStorage(Workflow::ENTITY_TYPE)
       ->loadByProperties(
         [
@@ -92,13 +115,6 @@ class WorkflowManager {
           'entity_id' => $entity->id(),
         ]
       );
-
-    // Only returning the first one.
-    if (!empty($workflows)) {
-      $workflow = reset($workflows);
-    }
-
-    return $workflow;
   }
 
   /**

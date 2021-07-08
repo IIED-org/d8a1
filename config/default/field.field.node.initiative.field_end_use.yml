@@ -6,11 +6,7 @@ dependencies:
     - field.storage.node.field_end_use
     - node.type.initiative
   module:
-    - label_help
     - text
-third_party_settings:
-  label_help:
-    label_help_description: 'For example, medicinal, trophies, fuel, fodder, clothing and ornaments, religious purposes, collections etc...'
 id: node.initiative.field_end_use
 field_name: field_end_use
 entity_type: node

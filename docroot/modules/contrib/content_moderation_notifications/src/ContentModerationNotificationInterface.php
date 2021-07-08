@@ -26,6 +26,14 @@ interface ContentModerationNotificationInterface extends ConfigEntityInterface {
   public function sendToAuthor();
 
   /**
+   * Send the notification to the site mail address.
+   *
+   * @return bool
+   *   Returns FALSE if the notification should be sent to site mail address.
+   */
+  public function disableSiteMail();
+
+  /**
    * Gets the workflow ID.
    *
    * @return string

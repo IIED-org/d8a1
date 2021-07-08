@@ -18,12 +18,16 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class SynonymConfigController extends ControllerBase {
 
   /**
-   * @var EntityTypeBundleInfoInterface
+   * The entity type bundle info.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeBundleInfoInterface
    */
   protected $entityTypeBundleInfo;
 
   /**
-   * @var BehaviorService
+   * The synonyms behavior service.
+   *
+   * @var \Drupal\synonyms\SynonymsService\BehaviorService
    */
   protected $behaviorService;
 

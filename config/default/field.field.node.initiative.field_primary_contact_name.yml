@@ -5,17 +5,12 @@ dependencies:
   config:
     - field.storage.node.field_primary_contact_name
     - node.type.initiative
-  module:
-    - label_help
-third_party_settings:
-  label_help:
-    label_help_description: 'The name of the contact person for further information and updates on the initiative. '
 id: node.initiative.field_primary_contact_name
 field_name: field_primary_contact_name
 entity_type: node
 bundle: initiative
 label: Contact
-description: ''
+description: 'The name of the contact person for further information and updates on the initiative. '
 required: false
 translatable: false
 default_value: {  }

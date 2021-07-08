@@ -5,11 +5,6 @@ dependencies:
   config:
     - field.storage.node.field_policy_regulatory_change
     - node.type.initiative
-  module:
-    - label_help
-third_party_settings:
-  label_help:
-    label_help_description: 'This may include national/international changes to policy to enable communities to benefit.'
 id: node.initiative.field_policy_regulatory_change
 field_name: field_policy_regulatory_change
 entity_type: node

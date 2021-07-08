@@ -51,6 +51,7 @@ use Drupal\Core\Entity\EntityStorageInterface;
  *     "transitions",
  *     "roles",
  *     "author",
+ *     "site_mail",
  *     "emails",
  *     "subject",
  *     "body",
@@ -66,6 +67,13 @@ class ContentModerationNotification extends ConfigEntityBase implements ContentM
    * @var bool
    */
   public $author = FALSE;
+
+  /**
+   * Disable notification to the site mail address.
+   *
+   * @var bool
+   */
+  public $site_mail = FALSE;
 
   /**
    * The notification body value and format.
@@ -175,6 +183,13 @@ class ContentModerationNotification extends ConfigEntityBase implements ContentM
    */
   public function sendToAuthor() {
     return $this->get('author');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function disableSiteMail() {
+    return (bool) $this->get('site_mail');
   }
 
 }

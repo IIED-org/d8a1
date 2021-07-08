@@ -3,6 +3,7 @@ type: module
 description: 'Allows emails to be sent on state transitions'
 package: Content moderation
 core: 8.x
+core_version_requirement: ^8 || ^9
 configure: entity.content_moderation_notification.collection
 dependencies:
   - drupal:content_moderation
@@ -11,7 +12,7 @@ dependencies:
 test_dependencies:
   - drupal:token
 
-# Information added by Drupal.org packaging script on 2019-12-23
-version: '8.x-3.2'
+# Information added by Drupal.org packaging script on 2021-02-25
+version: '8.x-3.3'
 project: 'content_moderation_notifications'
-datestamp: 1577134689
+datestamp: 1614276461

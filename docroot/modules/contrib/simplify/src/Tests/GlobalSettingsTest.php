@@ -2,7 +2,7 @@
 
 namespace Drupal\simplify\Tests;
 
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Test Simplify module global settings.
@@ -11,7 +11,7 @@ use Drupal\simpletest\WebTestBase;
  *
  * @ingroup simplify
  */
-class GlobalSettingsTest extends WebTestBase {
+class GlobalSettingsTest extends BrowserTestBase {
 
   /**
    * Modules to enable.
@@ -113,7 +113,7 @@ class GlobalSettingsTest extends WebTestBase {
       'simplify_taxonomies_global[format]' => 'format',
       'simplify_taxonomies_global[path]' => 'path',
     ];
-    $this->drupalPostForm(NULL, $options, t('Save configuration'));
+    $this->drupalPostForm(NULL, $options, $this->t('Save configuration'));
     // User1.
     $this->assertFieldChecked('edit-simplify-admin', 'Admin user option is checked.');
     // Nodes.

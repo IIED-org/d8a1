@@ -5,11 +5,6 @@ dependencies:
   config:
     - field.storage.node.field_performance_payments
     - node.type.initiative
-  module:
-    - label_help
-third_party_settings:
-  label_help:
-    label_help_description: 'That is, on top of salaries, such as bonuses for number of arrests, etc.'
 id: node.initiative.field_performance_payments
 field_name: field_performance_payments
 entity_type: node

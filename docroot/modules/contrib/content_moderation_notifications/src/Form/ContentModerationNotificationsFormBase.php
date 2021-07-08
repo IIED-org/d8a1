@@ -173,6 +173,12 @@ class ContentModerationNotificationsFormBase extends EntityForm {
       '#default_value' => $content_moderation_notification->sendToAuthor(),
       '#description' => $this->t('Send notifications to the current author of the content.'),
     ];
+    $form['site_mail'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Disable the site email address'),
+      '#default_value' => $content_moderation_notification->disableSiteMail(),
+      '#description' => $this->t('Do not send notifications to the site email address.'),
+    ];
 
     $form['emails'] = [
       '#type' => 'textarea',
@@ -187,6 +193,7 @@ class ContentModerationNotificationsFormBase extends EntityForm {
       '#title' => $this->t('Email Subject'),
       '#default_value' => $content_moderation_notification->getSubject(),
       '#required' => TRUE,
+      '#maxlength' => 1024,
     ];
 
     // Email body content.
@@ -201,7 +208,7 @@ class ContentModerationNotificationsFormBase extends EntityForm {
     if ($this->moduleHandler->moduleExists('token')) {
       $form['body']['token_tree_link'] =  [
         '#theme' => 'token_tree_link',
-        '#token_types' => array_unique(['user', $selected_workflow]),
+        '#token_types' => array_unique(['user', $selected_workflow, 'node']),
         '#weight' => 10
       ];
     }

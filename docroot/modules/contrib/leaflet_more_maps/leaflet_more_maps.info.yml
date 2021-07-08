@@ -1,13 +1,12 @@
 name: Leaflet More Maps
 type: module
 description: Adds a swag of map styles to Leaflet, e.g Thunderforest, Esri, Stamen, Google.
-package: Leaflet
-# core: 8.x
-# version: VERSION
+package: Geofield
+core_version_requirement: ^8.8 || ^9
 configure: admin/config/system/leaflet_more_maps
-
-# Information added by Drupal.org packaging script on 2016-09-08
-version: '8.x-1.0-alpha3'
-core: '8.x'
+dependencies:
+  - leaflet:leaflet
+# Information added by Drupal.org packaging script on 2021-05-15
+version: '2.1.2'
 project: 'leaflet_more_maps'
-datestamp: 1473326497
+datestamp: 1621116072

@@ -3,15 +3,27 @@
     "type": "drupal-module",
     "description": "Social Auth integration for Google.",
     "keywords": ["Drupal"],
-    "license": "GPL-2.0+",
+    "license": "GPL-2.0-or-later",
     "homepage": "https://www.drupal.org/project/social_auth_google",
-    "minimum-stability": "dev",
     "support": {
         "issues": "https://www.drupal.org/project/issues/social_auth_google",
-        "source": "http://cgit.drupalcode.org/social_auth_google"
+        "source": "https://git.drupalcode.org/project/social_auth_google"
     },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "repositories": [
+        {
+            "type": "composer",
+            "url":  "https://packages.drupal.org/8"
+        }
+    ],
     "require": {
-        "league/oauth2-google": "^2.0"
+        "league/oauth2-google": "^3.0",
+        "drupal/social_auth": "^3.0",
+        "drupal/core": "^8.8 || ^9"
+    },
+    "require-dev": {
+        "drupal/coder": "^8.3"
     },
     "authors": [
         {
@@ -21,6 +33,10 @@
         {
             "name": "Himanshu Dixit (himanshu-dixit)",
             "email": "hudixt@gmail.com"
+        },
+        {
+            "name": "Christopher C. Wells (wells)",
+            "email": "chris@chrxs.net"
         }
     ]
 }

@@ -23,7 +23,7 @@ abstract class KernelTestBase {
    */
   protected function setUp() {
 
-    $this->entityManager = $this->container->get('entity.manager');
+    $this->entityManager = $this->container->get('entity_type.manager');
     $this->state = $this->container->get('state');
 
     $this->installSchema('system', 'sequences');
@@ -161,7 +161,7 @@ abstract class KernelTestBase {
    */
   protected function refreshServices() {
     $this->container = \Drupal::getContainer();
-    $this->entityManager = $this->container->get('entity.manager');
+    $this->entityManager = $this->container->get('entity_type.manager');
     $this->state = $this->container->get('state');
   }
 

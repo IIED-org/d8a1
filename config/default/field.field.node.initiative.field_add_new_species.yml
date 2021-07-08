@@ -5,17 +5,12 @@ dependencies:
   config:
     - field.storage.node.field_add_new_species
     - node.type.initiative
-  module:
-    - label_help
-third_party_settings:
-  label_help:
-    label_help_description: 'You can add multiple species separated by a comma.'
 id: node.initiative.field_add_new_species
 field_name: field_add_new_species
 entity_type: node
 bundle: initiative
 label: 'Add new species if yours doesn''t appear in the above list'
-description: ''
+description: 'You can add multiple species separated by a comma.'
 required: false
 translatable: true
 default_value: {  }
