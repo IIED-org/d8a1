@@ -1,32 +1,19 @@
-# Documentation: https://dev.docs.agile.coop/docs/environment/intro
-
-name: pnp # Insert the project name here in the format [client][project], i.e. ethimain.
-recipe: drupal8
+name: d8a1
+recipe: acquia
 config:
-  xdebug: true
-  webroot: docroot
-  php: '7.2'
-proxy:
-  mailhog:
-    - mail.pnp.lndo.site # Change projectname to the same as the name key above.
-  adminer:
-    - adminer.pnp.lndo.site # Change projectname to the same as the name key above.
+  acli_version: latest
+  ah_application_uuid: ef43298b-5eac-4d9d-b465-5fd0b1af3281
+  ah_site_group: d8a1
+  php: '7.4'
+  cache: false
+  inbox: false
 services:
   appserver:
+    webroot: docroot
     overrides:
       environment:
         DRUSH_OPTIONS_ROOT: '/app/docroot'
-        DRUSH_OPTIONS_URI: 'http://pnp.lndo.site'
-  database:
-    creds:
-      user: database
-      password: database
-      database: database
-  mailhog:
-    type: mailhog
-    hogfrom:
-      - appserver
-    portforward: true
+        DRUSH_OPTIONS_URI: 'http://d8a1.lndo.site'
   adminer:
     type: compose
     services:
@@ -34,11 +21,10 @@ services:
       command: '/bin/s6-svscan /etc/services.d'
     portforward: true
   node:
-    type: 'node:10'
+    type: 'node:14'
     build:
       - 'if [ -d $LANDO_MOUNT/web/themes/custom/site_theme ]; then cd $LANDO_MOUNT/web/themes/custom/site_theme && yarn install --production; fi'
     overrides:
-      image: 'agilecollective/lando-node:2.0.2-node8'
       ports:
         - '3050:3050' # You should change this port to something random and then update gulpconfig.js in the theme to match
 tooling:
@@ -52,9 +38,6 @@ tooling:
     service: node
   backstop:
     service: node
-  drush:
-    service: appserver
-    cmd: '/app/bin/drush'
   xdebug-on:
     service: appserver
     description: Enable xdebug for apache.
@@ -65,4 +48,6 @@ tooling:
     description: Disable xdebug for apache.
     cmd: "rm /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini && /etc/init.d/apache2 reload"
     user: root
-
+proxy:
+  adminer:
+    - adminer.d8a1.lndo.site
