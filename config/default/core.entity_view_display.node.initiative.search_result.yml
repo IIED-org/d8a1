@@ -90,15 +90,15 @@ third_party_settings:
       disable_css: false
       entity_classes: all_classes
       settings:
+        classes:
+          layout_class: {  }
+          ds_content: {  }
         wrappers:
           ds_content: div
         outer_wrapper: article
         attributes: class|container
         link_attribute: content
         link_custom: ''
-        classes:
-          layout_class: {  }
-          ds_content: {  }
     regions:
       ds_content:
         - field_image
@@ -125,12 +125,14 @@ third_party_settings:
   field_group:
     group_list_card_group:
       children: {  }
+      label: 'List card group'
       parent_name: ''
+      region: hidden
       weight: 81
       format_type: html_element
       format_settings:
-        id: ''
         classes: ''
+        id: ''
         element: article
         show_label: false
         label_element: h3
@@ -138,8 +140,6 @@ third_party_settings:
         attributes: 'class="container"'
         effect: none
         speed: fast
-      label: 'List card group'
-      region: hidden
 id: node.initiative.search_result
 targetEntityType: node
 bundle: initiative
@@ -147,8 +147,6 @@ mode: search_result
 content:
   body:
     type: text_summary_or_trimmed
-    weight: 2
-    region: ds_content
     label: hidden
     settings:
       trim_length: 300
@@ -160,19 +158,19 @@ content:
             lb: ''
             lb-col: false
             classes: {  }
+    weight: 2
+    region: ds_content
   content_moderation_control:
-    weight: -20
     settings: {  }
     third_party_settings: {  }
+    weight: -20
     region: content
   field_image:
     type: image
-    weight: 0
-    region: ds_content
     label: hidden
     settings:
-      image_style: thumbnail
       image_link: ''
+      image_style: thumbnail
     third_party_settings:
       ds:
         ft:
@@ -181,6 +179,8 @@ content:
             lb: ''
             lb-col: false
             classes: {  }
+    weight: 0
+    region: ds_content
 hidden:
   addtoany: true
   field_3_2_1_details: true

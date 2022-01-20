@@ -23,25 +23,25 @@ default_value_callback: ''
 settings:
   handler: 'default:paragraph'
   handler_settings:
-    negate: 0
     target_bundles:
       _link_to_document_hosted_on_anot: _link_to_document_hosted_on_anot
       online_article_or_blog: online_article_or_blog
       video: video
+    negate: 0
     target_bundles_drag_drop:
-      document:
-        weight: -11
-        enabled: false
+      _link_to_document_hosted_on_anot:
+        weight: -9
+        enabled: true
       add_new_species:
         weight: -10
         enabled: false
-      _link_to_document_hosted_on_anot:
-        enabled: true
-        weight: -9
+      document:
+        weight: -11
+        enabled: false
       online_article_or_blog:
-        enabled: true
         weight: -8
-      video:
         enabled: true
+      video:
         weight: -7
+        enabled: true
 field_type: entity_reference_revisions

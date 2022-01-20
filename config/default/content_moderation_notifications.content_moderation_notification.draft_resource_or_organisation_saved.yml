@@ -9,15 +9,15 @@ transitions:
 roles:
   editor: editor
 author: false
-to: ''
-cc: ''
-bcc: ''
-from: ''
-replyto: ''
 subject: 'Draft {{ entity.type.entity.label }} created on People Not Poaching'
 body:
   value: "<p>Dear site editor,</p>\r\n\r\n<p>{{ entity.type.entity.label }}&nbsp;\"{{ entity.title.value }}\" has been submitted in draft. The URL to edit and publish the {{ entity.bundle }} is:</p>\r\n\r\n<p>&nbsp;&nbsp;{{ base_url }}node/{{ entity.nid.value }}/edit</p>\r\n\r\n<p>Best regards,<br />\r\nThe Rhinobot<br />\r\n{{ site_name }}</p>\r\n"
   format: basic_html
 label: 'Draft resource or organisation saved'
+to: ''
+cc: ''
+bcc: ''
+from: ''
+replyto: ''
 abort: ''
 debug: false

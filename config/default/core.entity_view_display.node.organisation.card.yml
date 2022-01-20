@@ -24,15 +24,15 @@ third_party_settings:
       disable_css: false
       entity_classes: all_classes
       settings:
+        classes:
+          layout_class: {  }
+          ds_content: {  }
         wrappers:
           ds_content: div
         outer_wrapper: div
         attributes: ''
         link_attribute: ''
         link_custom: ''
-        classes:
-          layout_class: {  }
-          ds_content: {  }
     regions:
       ds_content:
         - content_moderation_control
@@ -47,28 +47,28 @@ bundle: organisation
 mode: card
 content:
   body:
-    label: hidden
     type: text_default
-    weight: 101
+    label: hidden
     settings: {  }
     third_party_settings: {  }
+    weight: 101
     region: ds_content
   content_moderation_control:
-    weight: -20
-    region: ds_content
     settings: {  }
     third_party_settings: {  }
+    weight: -20
+    region: ds_content
   field_image:
-    weight: 103
+    type: image
     label: above
     settings:
-      image_style: ''
       image_link: ''
+      image_style: ''
     third_party_settings: {  }
-    type: image
+    weight: 103
     region: ds_content
   field_link:
-    weight: 102
+    type: link
     label: above
     settings:
       trim_length: 80
@@ -77,19 +77,19 @@ content:
       rel: ''
       target: ''
     third_party_settings: {  }
-    type: link
+    weight: 102
     region: ds_content
   field_organisation_type:
-    weight: 104
+    type: list_default
     label: above
     settings: {  }
     third_party_settings: {  }
-    type: list_default
+    weight: 104
     region: ds_content
   links:
-    weight: 100
-    region: ds_content
     settings: {  }
     third_party_settings: {  }
+    weight: 100
+    region: ds_content
 hidden:
   addtoany: true

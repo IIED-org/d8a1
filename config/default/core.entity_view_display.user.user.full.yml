@@ -22,17 +22,17 @@ third_party_settings:
       disable_css: false
       entity_classes: all_classes
       settings:
+        classes:
+          layout_class:
+            container: container
+          ds_content:
+            container: container
         wrappers:
           ds_content: div
         outer_wrapper: div
         attributes: ''
         link_attribute: ''
         link_custom: ''
-        classes:
-          layout_class:
-            container: container
-          ds_content:
-            container: container
     regions:
       ds_content:
         - username
@@ -53,22 +53,21 @@ bundle: user
 mode: full
 content:
   masquerade:
+    settings: {  }
+    third_party_settings: {  }
     weight: 3
     region: ds_content
+  member_for:
     settings: {  }
     third_party_settings: {  }
-  member_for:
     weight: 2
     region: ds_content
-    settings: {  }
-    third_party_settings: {  }
   user_picture:
     type: image
-    weight: 1
-    region: ds_content
+    label: hidden
     settings:
-      image_style: thumbnail
       image_link: ''
+      image_style: thumbnail
     third_party_settings:
       ds:
         ft:
@@ -77,5 +76,6 @@ content:
             lb: ''
             lb-col: false
             classes: {  }
-    label: hidden
+    weight: 1
+    region: ds_content
 hidden: {  }

@@ -2,14 +2,6 @@ uuid: bebbc34c-a57e-4438-aa7f-7faaa234ea4e
 langcode: en
 status: false
 dependencies:
-  module:
-    - node
-    - user
-    - paragraphs
-    - taxonomy
-    - synonyms
-    - search_api
-    - media
   config:
     - field.storage.node.field_address
     - field.storage.node.field_resource_type
@@ -23,6 +15,14 @@ dependencies:
     - field.storage.paragraph.field_video_url
     - search_api.server.default_server
     - core.entity_view_mode.node.search_index
+  module:
+    - node
+    - user
+    - paragraphs
+    - taxonomy
+    - synonyms
+    - search_api
+    - media
 _core:
   default_config_hash: GLmLegZGHtMF6annRqgjizJAoiAip-IT-XOsDMCZfog
 id: default_index
@@ -273,52 +273,38 @@ datasource_settings:
       default: true
       selected: {  }
 processor_settings:
+  add_url:
+    weights:
+      preprocess_index: -30
+  aggregated_field:
+    weights:
+      add_properties: 20
+  content_access:
+    weights:
+      preprocess_index: -6
+      preprocess_query: -4
   entity_status:
     weights:
       preprocess_index: -10
   hierarchy:
-    fields:
-      field_species_affected: taxonomy_term-parent
     weights:
       preprocess_index: -44
-  tokenizer:
-    all_fields: false
     fields:
-      - rendered_item
-      - title
-    spaces: ''
-    overlap_cjk: 1
-    minimum_word_size: '2'
-    weights:
-      preprocess_index: -45
-      preprocess_query: -5
-  aggregated_field:
-    weights:
-      add_properties: 20
-  ignorecase:
-    all_fields: false
-    fields:
-      - author
-      - name
-      - rendered_item
-      - synonyms
-      - title
-      - type
-    weights:
-      preprocess_index: -49
-      preprocess_query: -8
-  language_with_fallback: {  }
+      field_species_affected: taxonomy_term-parent
   highlight:
-    highlight: always
-    highlight_partial: false
+    weights:
+      postprocess_query: 0
+    prefix: '<strong>'
+    suffix: '</strong>'
     excerpt: true
     excerpt_length: 256
     exclude_fields: {  }
-    prefix: '<strong>'
-    suffix: '</strong>'
-    weights:
-      postprocess_query: 0
+    highlight: always
+    highlight_partial: false
   html_filter:
+    weights:
+      preprocess_index: -46
+      preprocess_query: -6
     all_fields: true
     fields:
       - author
@@ -342,17 +328,27 @@ processor_settings:
       h2: 3
       h3: 2
       string: 2
+  ignorecase:
     weights:
-      preprocess_index: -46
-      preprocess_query: -6
-  add_url:
-    weights:
-      preprocess_index: -30
+      preprocess_index: -49
+      preprocess_query: -8
+    all_fields: false
+    fields:
+      - author
+      - name
+      - rendered_item
+      - synonyms
+      - title
+      - type
+  language_with_fallback: {  }
   rendered_item:
     weights:
       add_properties: 0
       pre_index_save: -10
   stopwords:
+    weights:
+      preprocess_index: -48
+      preprocess_query: -10
     all_fields: false
     fields:
       - rendered_item
@@ -393,14 +389,21 @@ processor_settings:
       - was
       - will
       - with
+  tokenizer:
     weights:
-      preprocess_index: -48
-      preprocess_query: -10
-  content_access:
-    weights:
-      preprocess_index: -6
-      preprocess_query: -4
+      preprocess_index: -45
+      preprocess_query: -5
+    all_fields: false
+    fields:
+      - rendered_item
+      - title
+    spaces: ''
+    overlap_cjk: 1
+    minimum_word_size: '2'
   transliteration:
+    weights:
+      preprocess_index: -47
+      preprocess_query: -7
     all_fields: false
     fields:
       - author
@@ -409,13 +412,10 @@ processor_settings:
       - synonyms
       - title
       - type
-    weights:
-      preprocess_index: -47
-      preprocess_query: -7
 tracker_settings:
   default:
     indexing_order: fifo
 options:
-  index_directly: true
   cron_limit: 100
+  index_directly: true
 server: default_server

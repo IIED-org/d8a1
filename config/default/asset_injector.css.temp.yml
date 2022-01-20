@@ -27,8 +27,8 @@ code: |-
         padding: .6rem 1rem;
     }
   }
-conditions_require_all: true
-conditions: {  }
-contexts: {  }
 media: all
 preprocess: true
+conditions: {  }
+conditions_require_all: true
+contexts: {  }

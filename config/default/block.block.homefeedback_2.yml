@@ -18,14 +18,14 @@ plugin: 'block_content:caac4db9-e74c-4f2b-a085-3b50b481e854'
 settings:
   id: 'block_content:caac4db9-e74c-4f2b-a085-3b50b481e854'
   label: 'Home feedback'
-  provider: block_content
   label_display: '0'
+  provider: block_content
   status: true
   info: ''
   view_mode: full
 visibility:
   request_path:
     id: request_path
-    pages: "/about\r\n/our-approach\r\n/explore"
     negate: false
     context_mapping: {  }
+    pages: "/about\r\n/our-approach\r\n/explore"

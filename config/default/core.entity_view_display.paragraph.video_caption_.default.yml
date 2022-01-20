@@ -19,17 +19,17 @@ third_party_settings:
       disable_css: false
       entity_classes: all_classes
       settings:
-        label: ''
+        classes:
+          layout_class:
+            mb-4: mb-4
+          ds_content: {  }
         wrappers:
           ds_content: div
         outer_wrapper: div
         attributes: ''
         link_attribute: ''
         link_custom: ''
-        classes:
-          layout_class:
-            mb-4: mb-4
-          ds_content: {  }
+        label: ''
     regions:
       ds_content:
         - group_row
@@ -40,11 +40,14 @@ third_party_settings:
       children:
         - field_video_url
         - field_video_caption
+      label: Row
       parent_name: ''
+      region: ds_content
       weight: 0
       format_type: html_element
-      region: ds_content
       format_settings:
+        classes: row
+        id: ''
         element: div
         show_label: false
         label_element: h3
@@ -52,16 +55,13 @@ third_party_settings:
         attributes: ''
         effect: none
         speed: fast
-        id: ''
-        classes: row
-      label: Row
 id: paragraph.video_caption_.default
 targetEntityType: paragraph
 bundle: video_caption_
 mode: default
 content:
   field_video_caption:
-    weight: 2
+    type: text_default
     label: hidden
     settings: {  }
     third_party_settings:
@@ -70,69 +70,69 @@ content:
           id: expert
           settings:
             lb: ''
-            prefix: ''
+            lbw: false
             lbw-el: ''
             lbw-cl: ''
             lbw-at: ''
+            lb-col: false
             ow: true
             ow-el: div
             ow-cl: 'col-md-8 m-auto'
             ow-at: ''
+            ow-def-at: false
+            ow-def-cl: false
+            fis: false
             fis-el: ''
             fis-cl: ''
             fis-at: ''
+            fis-def-at: false
             fi: true
             fi-el: figcaption
             fi-cl: 'figure-caption text-muted'
             fi-at: ''
-            suffix: ''
-            lbw: false
-            lb-col: false
-            ow-def-at: false
-            ow-def-cl: false
-            fis: false
-            fis-def-at: false
             fi-def-at: false
-    type: text_default
+            prefix: ''
+            suffix: ''
+    weight: 2
     region: ds_content
   field_video_url:
-    weight: 1
+    type: video_embed_field_video
     label: hidden
     settings:
+      autoplay: false
       responsive: true
       width: 854
       height: 480
-      autoplay: false
     third_party_settings:
       ds:
         ft:
           id: expert
           settings:
             lb: ''
-            prefix: ''
+            lbw: false
             lbw-el: ''
             lbw-cl: ''
             lbw-at: ''
+            lb-col: false
             ow: true
             ow-el: div
             ow-cl: 'col-md-8 m-auto'
             ow-at: ''
-            fis-el: ''
-            fis-cl: ''
-            fis-at: ''
-            fi-el: ''
-            fi-cl: ''
-            fi-at: ''
-            suffix: ''
-            lbw: false
-            lb-col: false
             ow-def-at: false
             ow-def-cl: false
             fis: false
+            fis-el: ''
+            fis-cl: ''
+            fis-at: ''
             fis-def-at: false
             fi: false
+            fi-el: ''
+            fi-cl: ''
+            fi-at: ''
             fi-def-at: false
-    type: video_embed_field_video
+            prefix: ''
+            suffix: ''
+    weight: 1
     region: ds_content
 hidden:
   search_api_excerpt: true

@@ -19,19 +19,19 @@ third_party_settings:
       disable_css: false
       entity_classes: all_classes
       settings:
-        label: ''
-        wrappers:
-          ds_content: div
-        outer_wrapper: div
-        attributes: ''
-        link_attribute: ''
-        link_custom: ''
         classes:
           layout_class:
             row: row
             mb-4: mb-4
           ds_content:
             m-auto: m-auto
+        wrappers:
+          ds_content: div
+        outer_wrapper: div
+        attributes: ''
+        link_attribute: ''
+        link_custom: ''
+        label: ''
     regions:
       ds_content:
         - field_para_image
@@ -42,7 +42,7 @@ bundle: image_left_text_right
 mode: default
 content:
   field_para_image:
-    weight: 0
+    type: responsive_image
     label: hidden
     settings:
       responsive_image_style: normal
@@ -53,35 +53,33 @@ content:
           id: expert
           settings:
             lb: ''
-            prefix: ''
+            lbw: false
             lbw-el: ''
             lbw-cl: ''
             lbw-at: ''
+            lb-col: false
             ow: true
             ow-el: div
             ow-cl: col-md-6
             ow-at: ''
+            ow-def-at: false
+            ow-def-cl: false
+            fis: false
             fis-el: ''
             fis-cl: ''
             fis-at: ''
+            fis-def-at: false
             fi: true
             fi-el: div
             fi-cl: fluid-container
             fi-at: ''
-            suffix: ''
-            lbw: false
-            lb-col: false
-            ow-def-at: false
-            ow-def-cl: false
-            fis: false
-            fis-def-at: false
             fi-def-at: false
-    type: responsive_image
+            prefix: ''
+            suffix: ''
+    weight: 0
     region: ds_content
   field_text:
     type: text_default
-    weight: 1
-    region: ds_content
     label: hidden
     settings: {  }
     third_party_settings:
@@ -90,28 +88,30 @@ content:
           id: expert
           settings:
             lb: ''
-            prefix: ''
+            lbw: false
             lbw-el: ''
             lbw-cl: ''
             lbw-at: ''
+            lb-col: false
             ow: true
             ow-el: div
             ow-cl: col-md-6
             ow-at: ''
-            fis-el: ''
-            fis-cl: ''
-            fis-at: ''
-            fi-el: ''
-            fi-cl: ''
-            fi-at: ''
-            suffix: ''
-            lbw: false
-            lb-col: false
             ow-def-at: false
             ow-def-cl: false
             fis: false
+            fis-el: ''
+            fis-cl: ''
+            fis-at: ''
             fis-def-at: false
             fi: false
+            fi-el: ''
+            fi-cl: ''
+            fi-at: ''
             fi-def-at: false
+            prefix: ''
+            suffix: ''
+    weight: 1
+    region: ds_content
 hidden:
   search_api_excerpt: true

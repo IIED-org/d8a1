@@ -18,14 +18,14 @@ plugin: 'block_content:89dec9d4-d978-49cf-b543-d5e51a05f504'
 settings:
   id: 'block_content:89dec9d4-d978-49cf-b543-d5e51a05f504'
   label: 'About donors'
-  provider: block_content
   label_display: '0'
+  provider: block_content
   status: true
   info: ''
   view_mode: full
 visibility:
   request_path:
     id: request_path
-    pages: /node/16
     negate: false
     context_mapping: {  }
+    pages: /node/16

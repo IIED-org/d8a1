@@ -18,14 +18,14 @@ plugin: 'block_content:54e07c30-7c55-4cc1-9348-971003a8b151'
 settings:
   id: 'block_content:54e07c30-7c55-4cc1-9348-971003a8b151'
   label: 'Add initiative header'
-  provider: block_content
   label_display: '0'
+  provider: block_content
   status: true
   info: ''
   view_mode: full
 visibility:
   request_path:
     id: request_path
-    pages: /node/add/initiative
     negate: false
     context_mapping: {  }
+    pages: /node/add/initiative

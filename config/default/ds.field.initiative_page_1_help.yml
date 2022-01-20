@@ -1,18 +1,18 @@
 id: initiative_page_1_help
 label: 'initiative page 1 help'
 ui_limit: 'initiative|*'
+type: block
+type_label: 'Block field'
+entities:
+  node: node
 properties:
   block: 'block_content:929bd2fb-f4c7-4555-b039-eb3c850550cd'
   use_block_title: false
   config:
     id: 'block_content:929bd2fb-f4c7-4555-b039-eb3c850550cd'
     label: ''
-    provider: block_content
     label_display: visible
+    provider: block_content
     status: true
     info: ''
     view_mode: full
-type: block
-type_label: 'Block field'
-entities:
-  node: node

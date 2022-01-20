@@ -1,7 +1,42 @@
 uuid: a5c44a65-0c92-40f8-947d-7d4bb3c20da4
 langcode: en
 status: true
-dependencies: {  }
+dependencies:
+  config:
+    - filter.format.basic_html
+    - media.type.audio
+    - media.type.file
+    - media.type.image
+    - media.type.remote_video
+    - media.type.video
+    - node.type.article
+    - node.type.country_header
+    - node.type.event
+    - node.type.initiative
+    - node.type.organisation
+    - node.type.page
+    - node.type.resource
+    - node.type.training
+    - taxonomy.vocabulary.species
+    - workflows.workflow.editorial
+    - workflows.workflow.node_added
+    - workflows.workflow.test_type
+  module:
+    - captcha
+    - content_moderation
+    - contextual
+    - entity_browser
+    - filter
+    - form_mode_manager
+    - hide_revision_field
+    - masquerade
+    - media
+    - node
+    - rabbit_hole
+    - shortcut
+    - system
+    - taxonomy
+    - toolbar
 id: editor
 label: Editor
 weight: -7
@@ -9,7 +44,6 @@ is_admin: null
 permissions:
   - 'access add_new_organisation entity browser pages'
   - 'access add_new_resource entity browser pages'
-  - 'access add_species entity browser pages'
   - 'access content'
   - 'access content overview'
   - 'access contextual links'
@@ -73,17 +107,11 @@ permissions:
   - 'revert page revisions'
   - 'revert resource revisions'
   - 'skip CAPTCHA'
-  - 'use add_species_via_ief transition create_new_draft'
-  - 'use add_species_via_ief transition publish'
   - 'use editorial transition archive'
   - 'use editorial transition archived_draft'
-  - 'use editorial transition archived_published'
   - 'use editorial transition create_new_draft'
   - 'use editorial transition keep_in_draft'
   - 'use editorial transition publish'
-  - 'use moderation sidebar'
-  - 'use new_species_added transition create_new_draft'
-  - 'use new_species_added transition publish'
   - 'use node.admin form mode'
   - 'use node.default form mode'
   - 'use node.popup form mode'
@@ -101,4 +129,3 @@ permissions:
   - 'view media'
   - 'view own unpublished content'
   - 'view page revisions'
-  - 'view unpublished terms'

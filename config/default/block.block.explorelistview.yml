@@ -18,14 +18,14 @@ plugin: 'block_content:46783ba4-d98d-4253-9511-c18916ee4c2b'
 settings:
   id: 'block_content:46783ba4-d98d-4253-9511-c18916ee4c2b'
   label: 'Explore list view'
-  provider: block_content
   label_display: '0'
+  provider: block_content
   status: true
   info: ''
   view_mode: full
 visibility:
   request_path:
     id: request_path
-    pages: /explore/list
     negate: false
     context_mapping: {  }
+    pages: /explore/list

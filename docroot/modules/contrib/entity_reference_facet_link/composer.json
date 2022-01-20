@@ -15,7 +15,7 @@
     "source": "https://cgit.drupalcode.org/entity_reference_facet_link"
   },
   "license": "GPL-2.0+",
-  "require": {
-    "drupal/facets": "^1.0.0-beta1"
+  "conflict": {
+    "drupal/facets": "<1.0.0-beta1"
   }
 }

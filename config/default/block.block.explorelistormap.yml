@@ -18,14 +18,14 @@ plugin: 'block_content:e30f00b5-2bb2-45b7-98f4-711123870fc4'
 settings:
   id: 'block_content:e30f00b5-2bb2-45b7-98f4-711123870fc4'
   label: 'Explore list or map'
-  provider: block_content
   label_display: '0'
+  provider: block_content
   status: true
   info: ''
   view_mode: full
 visibility:
   request_path:
     id: request_path
-    pages: /explore
     negate: false
     context_mapping: {  }
+    pages: /explore

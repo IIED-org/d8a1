@@ -38,37 +38,37 @@ third_party_settings:
     group_new_species:
       children:
         - field_add_new_species
+      label: 'Add new species if yours doesn''t appear in the list'
+      region: content
       parent_name: ''
       weight: 9
       format_type: details
       format_settings:
         label: 'Add new species if yours doesn''t appear in the list'
-        required_fields: true
-        id: ''
         classes: field-card
+        id: ''
         open: false
-      label: 'Add new species if yours doesn''t appear in the list'
-      region: content
+        required_fields: true
     group_interventions:
       children:
         - field_interventions
+      label: 'Interventions (strategies)'
+      region: content
       parent_name: ''
       weight: 10
       format_type: html_element
       format_settings:
         label: 'Interventions (strategies)'
+        classes: ''
+        id: ''
         element: div
         show_label: true
         label_element: h3
         label_element_classes: ''
-        required_fields: true
         attributes: ''
         effect: none
         speed: fast
-        id: ''
-        classes: ''
-      label: 'Interventions (strategies)'
-      region: content
+        required_fields: true
 id: node.resource.editor
 targetEntityType: node
 bundle: resource
@@ -77,10 +77,11 @@ content:
   body:
     type: text_textarea_with_summary
     weight: 2
+    region: content
     settings:
       rows: 5
-      placeholder: ''
       summary_rows: 1
+      placeholder: ''
       show_summary: false
     third_party_settings:
       field_states_ui:
@@ -88,61 +89,61 @@ content:
           type: ''
           list: ''
           add: Add
-    region: content
   field_add_new_species:
+    type: string_textfield
     weight: 9
+    region: content
     settings:
       size: 60
       placeholder: ''
     third_party_settings: {  }
-    type: string_textfield
-    region: content
   field_address:
+    type: address_default
     weight: 7
+    region: content
     settings:
       default_country: null
     third_party_settings: {  }
-    type: address_default
-    region: content
   field_authors:
+    type: string_textfield
     weight: 3
+    region: content
     settings:
       size: 60
       placeholder: ''
     third_party_settings: {  }
-    type: string_textfield
-    region: content
   field_date_published:
-    weight: 5
-    settings: {  }
-    third_party_settings: {  }
     type: datetime_default
+    weight: 5
     region: content
-  field_interventions:
-    weight: 10
     settings: {  }
     third_party_settings: {  }
+  field_interventions:
     type: options_buttons
+    weight: 10
     region: content
+    settings: {  }
+    third_party_settings: {  }
   field_language:
+    type: string_textfield
     weight: 6
+    region: content
     settings:
       size: 60
       placeholder: ''
     third_party_settings: {  }
-    type: string_textfield
-    region: content
   field_publisher:
+    type: string_textfield
     weight: 4
+    region: content
     settings:
       size: 60
       placeholder: ''
     third_party_settings: {  }
-    type: string_textfield
-    region: content
   field_resource_type:
     type: paragraphs
     weight: 1
+    region: content
     settings:
       title: 'Resource type'
       title_plural: 'Resource types'
@@ -153,22 +154,21 @@ content:
       form_display_mode: default
       default_paragraph_type: _none
       features:
-        duplicate: '0'
-        collapse_edit_all: '0'
         add_above: '0'
+        collapse_edit_all: '0'
+        duplicate: '0'
     third_party_settings:
       field_states_ui:
         form:
           type: ''
           list: ''
           add: Add
-    region: content
   field_species_affected:
+    type: synonyms_select
     weight: 8
+    region: content
     settings: {  }
     third_party_settings: {  }
-    type: synonyms_select
-    region: content
   title:
     type: string_textfield
     weight: 0

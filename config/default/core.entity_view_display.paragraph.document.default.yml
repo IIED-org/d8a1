@@ -17,7 +17,7 @@ bundle: document
 mode: default
 content:
   field_document_url:
-    weight: 1
+    type: link
     label: hidden
     settings:
       trim_length: 80
@@ -33,10 +33,10 @@ content:
             lb: ''
             lb-col: false
             classes: {  }
-    type: link
+    weight: 1
     region: content
   field_file_upload:
-    weight: 2
+    type: pdfpreview
     label: hidden
     settings:
       image_style: uploaded_pdf_cover_thumbnail
@@ -52,6 +52,6 @@ content:
             lb: ''
             lb-col: false
             classes: {  }
-    type: pdfpreview
+    weight: 2
     region: content
 hidden: {  }

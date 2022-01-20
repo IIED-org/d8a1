@@ -18,14 +18,14 @@ plugin: 'block_content:5a0fe900-edff-404a-9278-4f60cb399195'
 settings:
   id: 'block_content:5a0fe900-edff-404a-9278-4f60cb399195'
   label: 'Explore filter text'
-  provider: block_content
   label_display: '0'
+  provider: block_content
   status: true
   info: ''
   view_mode: full
 visibility:
   request_path:
     id: request_path
-    pages: '/explore*'
     negate: false
     context_mapping: {  }
+    pages: '/explore*'

@@ -19,21 +19,21 @@ plugin: 'block_content:6af31ed0-70ce-47b9-a136-08dd2ef17b4e'
 settings:
   id: 'block_content:6af31ed0-70ce-47b9-a136-08dd2ef17b4e'
   label: 'Events crumb'
-  provider: block_content
   label_display: '0'
+  provider: block_content
   status: true
   info: ''
   view_mode: full
 visibility:
   'entity_bundle:node':
     id: 'entity_bundle:node'
-    bundles:
-      event: event
     negate: false
     context_mapping:
       node: '@node.node_route_context:node'
+    bundles:
+      event: event
   request_path:
     id: request_path
-    pages: '*/edit'
     negate: true
     context_mapping: {  }
+    pages: '*/edit'

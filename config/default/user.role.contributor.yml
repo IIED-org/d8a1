@@ -1,7 +1,28 @@
 uuid: 02db62e9-e9a3-4b40-bc81-68dbffaef2d9
 langcode: en
 status: true
-dependencies: {  }
+dependencies:
+  config:
+    - filter.format.basic_html
+    - media.type.audio
+    - media.type.file
+    - media.type.image
+    - media.type.remote_video
+    - media.type.video
+    - node.type.initiative
+    - node.type.organisation
+    - node.type.resource
+    - workflows.workflow.editorial
+    - workflows.workflow.node_added
+  module:
+    - content_moderation
+    - entity_browser
+    - filter
+    - form_mode_manager
+    - media
+    - node
+    - rabbit_hole
+    - shortcut
 id: contributor
 label: Contributor
 weight: -8
@@ -24,12 +45,9 @@ permissions:
   - 'create video media'
   - 'edit own initiative content'
   - 'rabbit hole bypass node'
-  - 'use add_species_via_ief transition create_new_draft'
   - 'use editorial transition create_new_draft'
   - 'use editorial transition keep_in_draft'
   - 'use editorial transition submit_for_review'
-  - 'use moderation sidebar'
-  - 'use new_species_added transition create_new_draft'
   - 'use node.admin form mode'
   - 'use node.default form mode'
   - 'use node.popup form mode'

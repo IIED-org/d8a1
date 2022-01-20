@@ -1,3 +1,16 @@
+_core:
+  default_config_hash: n7BH2fFu6vYb38Lmo7wHlUvyFlaBOYn2h8Ba-4z_i-0
+favicon:
+  path: ''
+  use_default: true
+features:
+  comment_user_picture: true
+  comment_user_verification: true
+  favicon: true
+  node_user_picture: true
+logo:
+  path: 'public://pnp-logo.png'
+  use_default: false
 bootstrap_barrio_library: production
 bootstrap_barrio_sidebar_position: both
 bootstrap_barrio_content_offset: '0'
@@ -18,19 +31,6 @@ bootstrap_barrio_navbar_position: ''
 bootstrap_barrio_navbar_color: navbar-light
 bootstrap_barrio_navbar_background: bg-white
 bootstrap_barrio_table_hover: 1
-_core:
-  default_config_hash: n7BH2fFu6vYb38Lmo7wHlUvyFlaBOYn2h8Ba-4z_i-0
-features:
-  node_user_picture: true
-  comment_user_picture: true
-  comment_user_verification: true
-  favicon: true
-logo:
-  use_default: false
-  path: 'public://pnp-logo.png'
-favicon:
-  use_default: true
-  path: ''
 bootstrap_barrio_region_clean_top_header: 1
 bootstrap_barrio_region_class_top_header: ''
 bootstrap_barrio_region_clean_top_header_form: 0

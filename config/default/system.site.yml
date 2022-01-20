@@ -1,6 +1,9 @@
+_core:
+  default_config_hash: yXadRE77Va-G6dxhd2kPYapAvbnSvTF6hO4oXiOEynI
+langcode: en
 uuid: c788f9df-a289-44b5-ac3b-5591716a7d0a
 name: 'People not poaching'
-mail: webmaster@iied.org
+mail: info@peoplenotpoaching.org
 slogan: ''
 page:
   403: ''
@@ -8,8 +11,5 @@ page:
   front: /node
 admin_compact_mode: false
 weight_select_max: 100
-langcode: en
 default_langcode: en
-_core:
-  default_config_hash: yXadRE77Va-G6dxhd2kPYapAvbnSvTF6hO4oXiOEynI
 mail_notification: info@peoplenotpoaching.org

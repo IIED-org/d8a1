@@ -19,22 +19,22 @@ plugin: 'block_content:6a0e5e37-3e30-4190-b40f-7228c96d67a4'
 settings:
   id: 'block_content:6a0e5e37-3e30-4190-b40f-7228c96d67a4'
   label: 'Add resource header'
-  provider: block_content
   label_display: '0'
+  provider: block_content
   status: true
   info: ''
   view_mode: full
 visibility:
   request_path:
     id: request_path
-    pages: /node/add/resource
     negate: false
     context_mapping: {  }
+    pages: /node/add/resource
   user_role:
     id: user_role
-    roles:
-      contributor: contributor
-      administrator: administrator
     negate: false
     context_mapping:
       user: '@user.current_user_context:current_user'
+    roles:
+      contributor: contributor
+      administrator: administrator

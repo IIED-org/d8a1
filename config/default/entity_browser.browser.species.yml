@@ -18,12 +18,12 @@ widget_selector: single
 widget_selector_configuration: {  }
 widgets:
   14498c7a-1a57-4be4-8d14-32aa8da79b1e:
+    id: entity_form
+    uuid: 14498c7a-1a57-4be4-8d14-32aa8da79b1e
+    label: ''
+    weight: 1
     settings:
+      submit_text: 'Create species'
       entity_type: taxonomy_term
       bundle: species
       form_mode: ief
-      submit_text: 'Create species'
-    uuid: 14498c7a-1a57-4be4-8d14-32aa8da79b1e
-    weight: 1
-    label: ''
-    id: entity_form

@@ -12,12 +12,12 @@ code: |-
       background-color: none;
       border-radius: 0;
   }
-conditions_require_all: true
+media: all
+preprocess: true
 conditions:
   request_path:
     id: request_path
-    pages: '/explore*'
     negate: false
+    pages: '/explore*'
+conditions_require_all: true
 contexts: {  }
-media: all
-preprocess: true

@@ -17,7 +17,7 @@ plugin: 'facet_block:species_2'
 settings:
   id: 'facet_block:species_2'
   label: Species
-  provider: facets
   label_display: visible
+  provider: facets
   block_id: species_2
 visibility: {  }

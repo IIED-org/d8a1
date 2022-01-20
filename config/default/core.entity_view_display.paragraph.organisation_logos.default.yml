@@ -15,13 +15,6 @@ third_party_settings:
       disable_css: false
       entity_classes: all_classes
       settings:
-        label: ''
-        wrappers:
-          ds_content: div
-        outer_wrapper: div
-        attributes: ''
-        link_attribute: ''
-        link_custom: ''
         classes:
           layout_class:
             row: row
@@ -29,6 +22,13 @@ third_party_settings:
           ds_content:
             col-md-8: col-md-8
             m-auto: m-auto
+        wrappers:
+          ds_content: div
+        outer_wrapper: div
+        attributes: ''
+        link_attribute: ''
+        link_custom: ''
+        label: ''
     regions:
       ds_content:
         - field_organisation
@@ -38,7 +38,7 @@ bundle: organisation_logos
 mode: default
 content:
   field_organisation:
-    weight: 0
+    type: entity_reference_entity_view
     label: hidden
     settings:
       view_mode: logo
@@ -50,30 +50,30 @@ content:
           id: expert
           settings:
             lb: ''
-            prefix: ''
+            lbw: false
             lbw-el: ''
             lbw-cl: ''
             lbw-at: ''
+            lb-col: false
+            ow: false
             ow-el: ''
             ow-cl: ''
             ow-at: ''
+            ow-def-at: false
+            ow-def-cl: false
+            fis: false
             fis-el: ''
             fis-cl: ''
             fis-at: ''
+            fis-def-at: false
             fi: true
             fi-el: div
             fi-cl: 'float-left mr-2'
             fi-at: ''
-            suffix: ''
-            lbw: false
-            lb-col: false
-            ow: false
-            ow-def-at: false
-            ow-def-cl: false
-            fis: false
-            fis-def-at: false
             fi-def-at: false
-    type: entity_reference_entity_view
+            prefix: ''
+            suffix: ''
+    weight: 0
     region: ds_content
 hidden:
   search_api_excerpt: true

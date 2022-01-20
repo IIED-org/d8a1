@@ -12,19 +12,19 @@ third_party_settings:
   geocoder_field:
     method: destination
     weight: 1
-    geocode_field: moderation_state
-    reverse_geocode_field: field_geofield
-    hidden: false
     disabled: false
+    hidden: false
+    providers:
+      - googlemaps
+      - openstreetmap
     dumper: geojson
     delta_handling: default
     failure:
       handling: preserve
       status_message: true
       log: true
-    providers:
-      - googlemaps
-      - openstreetmap
+    geocode_field: moderation_state
+    reverse_geocode_field: field_geofield
 id: node.initiative.field_address
 field_name: field_address
 entity_type: node

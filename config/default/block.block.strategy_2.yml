@@ -17,7 +17,7 @@ plugin: 'facet_block:strategy_2'
 settings:
   id: 'facet_block:strategy_2'
   label: Strategy
-  provider: facets
   label_display: visible
+  provider: facets
   block_id: strategy_2
 visibility: {  }

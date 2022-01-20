@@ -16,23 +16,23 @@ bundle: country_header
 mode: default
 content:
   body:
-    label: hidden
     type: text_default
-    weight: 101
+    label: hidden
     settings: {  }
     third_party_settings: {  }
+    weight: 101
     region: content
   field_country:
-    weight: 102
+    type: address_country_default
     label: above
     settings: {  }
     third_party_settings: {  }
-    type: address_country_default
+    weight: 102
     region: content
   links:
-    weight: 100
     settings: {  }
     third_party_settings: {  }
+    weight: 100
     region: content
 hidden:
   addtoany: true

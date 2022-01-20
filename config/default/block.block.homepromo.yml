@@ -18,14 +18,14 @@ plugin: 'block_content:2d59df7a-60a1-401c-b555-79bbb13a8202'
 settings:
   id: 'block_content:2d59df7a-60a1-401c-b555-79bbb13a8202'
   label: 'Home promo'
-  provider: block_content
   label_display: '0'
+  provider: block_content
   status: true
   info: ''
   view_mode: full
 visibility:
   request_path:
     id: request_path
-    pages: '<front>'
     negate: false
     context_mapping: {  }
+    pages: '<front>'

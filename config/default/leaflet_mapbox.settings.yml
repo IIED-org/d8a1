@@ -1,3 +1,5 @@
+_core:
+  default_config_hash: oI-Y4mB8QYSpqu4SNTU1CLM2MF-tegI-WxWZoS4OTt8
 label: 'IIED Mapbox'
 api_version: '4'
 code: 'mapbox://styles/iied/ck03pwvo2006v1co70ojs0oz2'
@@ -5,5 +7,3 @@ style_url: 'mapbox://styles/iied/ck03pwvo2006v1co70ojs0oz2'
 token: pk.eyJ1IjoiaWllZCIsImEiOiJjazAzcHVtMmcyYXZ5M2xvMXFlaWk2dWh3In0.cSVpPstX-AU9kPBR47kQuA
 zoomlevel: 2
 description: 'IIED Mapbox Tiles'
-_core:
-  default_config_hash: oI-Y4mB8QYSpqu4SNTU1CLM2MF-tegI-WxWZoS4OTt8

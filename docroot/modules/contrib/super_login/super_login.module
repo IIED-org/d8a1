@@ -135,6 +135,10 @@ function super_login_user_login_validate(&$form, FormStateInterface $form_state)
     ->get('super_login.login_type');
   $username = mb_strtolower(trim($form_state->getValue('name')));
 
+	if (user_is_blocked($username)) {
+		\Drupal::messenger()->addError(t('The user has not been activated yet or is blocked.'));
+	}
+	
   if (in_array($login_type, [0, 2]) && !empty($username)) {
     $user_storage = \Drupal::entityTypeManager()->getStorage('user');
     $user_ids = $user_storage

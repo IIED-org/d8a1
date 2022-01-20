@@ -18,14 +18,14 @@ plugin: 'block_content:3c0f0d83-6da4-4e16-91c7-7e3ae30e1237'
 settings:
   id: 'block_content:3c0f0d83-6da4-4e16-91c7-7e3ae30e1237'
   label: 'Explore heading'
-  provider: block_content
   label_display: '0'
+  provider: block_content
   status: true
   info: ''
   view_mode: full
 visibility:
   request_path:
     id: request_path
-    pages: '/explore*'
     negate: false
     context_mapping: {  }
+    pages: '/explore*'

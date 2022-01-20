@@ -32,42 +32,42 @@ bundle: resource
 mode: default
 content:
   body:
-    label: hidden
     type: text_default
-    weight: 3
+    label: hidden
     settings: {  }
     third_party_settings: {  }
+    weight: 3
     region: content
   content_moderation_control:
-    weight: 0
-    region: content
     settings: {  }
     third_party_settings: {  }
+    weight: 0
+    region: content
   field_add_new_species:
-    weight: 12
+    type: string
     label: above
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    type: string
+    weight: 12
     region: content
   field_address:
-    weight: 9
+    type: address_default
     label: inline
     settings: {  }
     third_party_settings: {  }
-    type: address_default
+    weight: 9
     region: content
   field_authors:
-    weight: 11
+    type: string
     label: above
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    type: string
+    weight: 11
     region: content
   field_date_published:
-    weight: 5
+    type: datetime_default
     label: hidden
     settings:
       timezone_override: ''
@@ -80,28 +80,36 @@ content:
             lb: 'Date published'
             lb-col: false
             classes: {  }
-    type: datetime_default
+    weight: 5
     region: content
   field_document_type:
-    weight: 13
+    type: entity_reference_label
     label: above
     settings:
       link: true
     third_party_settings: {  }
-    type: entity_reference_label
+    weight: 13
     region: content
   field_geofield:
-    weight: 10
+    type: leaflet_formatter_default
     label: hidden
     settings:
-      popup_content: ''
+      multiple_map: false
       leaflet_map: 'OSM Mapnik'
-      height: '400'
+      height: 400
+      hide_empty_map: false
+      disable_wheel: false
+      fullscreen_control: true
+      reset_map:
+        control: false
+        position: topright
+      popup: false
+      popup_content: ''
       map_position:
-        zoom: '3'
-        minZoom: '1'
-        maxZoom: '18'
-        force: 0
+        force: false
+        zoom: 3
+        minZoom: 1
+        maxZoom: 18
       icon:
         iconUrl: ''
         shadowUrl: ''
@@ -117,20 +125,12 @@ content:
         popupAnchor:
           x: ''
           'y': ''
-      multiple_map: 0
-      popup: 0
-      hide_empty_map: 0
-      disable_wheel: 0
-      fullscreen_control: 1
-      reset_map:
-        control: 0
-        position: topright
       leaflet_markercluster:
-        control: 0
+        control: false
         options: '{"spiderfyOnMaxZoom":true,"showCoverageOnHover":true,"removeOutsideVisibleBounds": false}'
       path: '{"color":"#3388ff","opacity":"1.0","stroke":true,"weight":3,"fill":"depends","fillColor":"*","fillOpacity":"0.2"}'
       geocoder:
-        control: 0
+        control: false
         settings:
           position: topright
           input_size: 25
@@ -138,31 +138,31 @@ content:
           min_terms: 4
           delay: 800
           zoom: 16
-          popup: 0
+          popup: false
           options: ''
     third_party_settings:
       ds:
         ds_limit: ''
-    type: leaflet_formatter_default
+    weight: 10
     region: content
   field_interventions:
-    weight: 8
+    type: entity_reference_label
     label: inline
     settings:
       link: true
     third_party_settings: {  }
-    type: entity_reference_label
+    weight: 8
     region: content
   field_language:
-    weight: 6
+    type: string
     label: inline
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    type: string
+    weight: 6
     region: content
   field_publisher:
-    weight: 4
+    type: string
     label: inline
     settings:
       link_to_entity: false
@@ -174,38 +174,38 @@ content:
             lb: ''
             lb-col: true
             classes: {  }
-    type: string
+    weight: 4
     region: content
   field_region:
-    weight: 14
+    type: entity_reference_label
     label: above
     settings:
       link: true
     third_party_settings: {  }
-    type: entity_reference_label
+    weight: 14
     region: content
   field_resource_type:
     type: entity_reference_revisions_entity_view
-    weight: 2
     label: hidden
     settings:
       view_mode: default
       link: ''
     third_party_settings: {  }
+    weight: 2
     region: content
   field_species_affected:
-    weight: 7
+    type: entity_reference_label
     label: inline
     settings:
       link: true
     third_party_settings: {  }
-    type: entity_reference_label
+    weight: 7
     region: content
   links:
-    weight: 1
-    region: content
     settings: {  }
     third_party_settings: {  }
+    weight: 1
+    region: content
 hidden:
   addtoany: true
   field_standalone_resource: true

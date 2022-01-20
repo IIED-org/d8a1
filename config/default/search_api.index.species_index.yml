@@ -2,11 +2,11 @@ uuid: ec7cced1-1997-4c11-b607-7aaf608bca98
 langcode: en
 status: false
 dependencies:
+  config:
+    - search_api.server.search_server
   module:
     - taxonomy
     - search_api
-  config:
-    - search_api.server.search_server
 id: species_index
 name: 'Species index'
 description: ''
@@ -30,14 +30,14 @@ datasource_settings:
       default: true
       selected: {  }
 processor_settings:
+  add_url: {  }
   aggregated_field: {  }
   language_with_fallback: {  }
-  add_url: {  }
   rendered_item: {  }
 tracker_settings:
   default:
     indexing_order: fifo
 options:
-  index_directly: true
   cron_limit: 50
+  index_directly: true
 server: search_server

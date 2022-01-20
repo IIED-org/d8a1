@@ -9,31 +9,6 @@ dependencies:
     - search_api
 id: current_search
 name: 'Current search'
-facets:
-  country_2:
-    checked: true
-    label: Country
-    separator: ', '
-    weight: 0
-    show_count: false
-  species_2:
-    checked: true
-    label: Species
-    separator: ', '
-    weight: 0
-    show_count: false
-  strategy_2:
-    checked: true
-    label: Strategy
-    separator: ', '
-    weight: 0
-    show_count: false
-  type_2:
-    checked: true
-    label: Type
-    separator: ', '
-    weight: 0
-    show_count: false
 facet_source_id: 'search_api:views_page__explore__page_2'
 processor_configs:
   reset_facets:
@@ -42,3 +17,28 @@ processor_configs:
       build: '30'
     settings:
       link_text: 'Clear filters'
+facets:
+  country_2:
+    checked: true
+    label: Country
+    separator: ', '
+    show_count: false
+    weight: 0
+  species_2:
+    checked: true
+    label: Species
+    separator: ', '
+    show_count: false
+    weight: 0
+  strategy_2:
+    checked: true
+    label: Strategy
+    separator: ', '
+    show_count: false
+    weight: 0
+  type_2:
+    checked: true
+    label: Type
+    separator: ', '
+    show_count: false
+    weight: 0

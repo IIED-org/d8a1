@@ -18,11 +18,11 @@ plugin: 'facets_summary_block:current_search'
 settings:
   id: 'facets_summary_block:current_search'
   label: 'Current search'
-  provider: facets_summary
   label_display: '0'
+  provider: facets_summary
 visibility:
   request_path:
     id: request_path
-    pages: /none
     negate: false
     context_mapping: {  }
+    pages: /none

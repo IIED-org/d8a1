@@ -100,40 +100,42 @@ third_party_settings:
           id: expert
           settings:
             lb: ''
-            prefix: ''
+            lbw: false
             lbw-el: ''
             lbw-cl: ''
             lbw-at: ''
+            lb-col: false
+            ow: false
             ow-el: ''
             ow-cl: ''
             ow-at: ''
-            fis-el: ''
-            fis-cl: ''
-            fis-at: ''
-            fi-el: ''
-            fi-cl: ''
-            fi-at: ''
-            suffix: ''
-            lbw: false
-            lb-col: false
-            ow: false
             ow-def-at: false
             ow-def-cl: false
             fis: false
+            fis-el: ''
+            fis-cl: ''
+            fis-at: ''
             fis-def-at: false
             fi: false
+            fi-el: ''
+            fi-cl: ''
+            fi-at: ''
             fi-def-at: false
+            prefix: ''
+            suffix: ''
   field_group:
     group_list_card_group:
       children:
         - node_link
         - node_title
+      label: 'List card group'
       parent_name: ''
+      region: hidden
       weight: -1
       format_type: html_element
       format_settings:
-        id: ''
         classes: ''
+        id: ''
         element: article
         show_label: false
         label_element: h3
@@ -141,17 +143,15 @@ third_party_settings:
         attributes: 'class="container"'
         effect: none
         speed: fast
-      label: 'List card group'
-      region: hidden
 id: node.initiative.list_card
 targetEntityType: node
 bundle: initiative
 mode: list_card
 content:
   content_moderation_control:
-    weight: -20
     settings: {  }
     third_party_settings: {  }
+    weight: -20
     region: content
 hidden:
   addtoany: true

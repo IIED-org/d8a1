@@ -23,11 +23,15 @@ third_party_settings:
     group_message:
       children:
         - message
+      label: 'Message group'
       parent_name: ''
+      region: hidden
       weight: -1
       format_type: html_element
       format_settings:
         label: 'Message group'
+        classes: col-md-6
+        id: ''
         element: div
         show_label: false
         label_element: h3
@@ -35,11 +39,7 @@ third_party_settings:
         attributes: ''
         effect: none
         speed: fast
-        id: ''
-        classes: col-md-6
         description: ''
-      label: 'Message group'
-      region: hidden
 id: contact_message.about_contact.default
 targetEntityType: contact_message
 bundle: about_contact
@@ -47,9 +47,7 @@ mode: default
 content:
   message:
     type: basic_string
-    weight: 0
     label: hidden
-    region: ds_content
     settings: {  }
     third_party_settings:
       ds:
@@ -57,27 +55,29 @@ content:
           id: expert
           settings:
             lb: ''
-            prefix: ''
+            lbw: false
             lbw-el: ''
             lbw-cl: ''
             lbw-at: ''
+            lb-col: false
+            ow: false
             ow-el: ''
             ow-cl: ''
             ow-at: ''
-            fis-el: ''
-            fis-cl: ''
-            fis-at: ''
-            fi-el: ''
-            fi-cl: ''
-            fi-at: ''
-            suffix: ''
-            lbw: false
-            lb-col: false
-            ow: false
             ow-def-at: false
             ow-def-cl: false
             fis: false
+            fis-el: ''
+            fis-cl: ''
+            fis-at: ''
             fis-def-at: false
             fi: false
+            fi-el: ''
+            fi-cl: ''
+            fi-at: ''
             fi-def-at: false
+            prefix: ''
+            suffix: ''
+    weight: 0
+    region: ds_content
 hidden: {  }

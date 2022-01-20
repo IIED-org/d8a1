@@ -8,15 +8,10 @@ transitions:
   create_new_draft: create_new_draft
 roles: {  }
 author: true
-to: ''
-cc: ''
-bcc: ''
-from: ''
-replyto: info@peoplenotpoaching.org
-subject: 'Draft {{ entity.bundle }} created on People Not Poaching'
+site_mail: false
+emails: ''
+subject: 'Draft [node:content-type] created on People Not Poaching'
 body:
-  value: "<p>Dear contributor,</p>\r\n\r\n<p>Thank you for adding the {{ entity.bundle }} \"{{ entity.title.value }}\". You will be notified when your {{ entity.bundle }} has been made live.</p>\r\n\r\n<p>Best regards,<br />\r\nThe Rhinobot<br />\r\n{{ site_name }}</p>\r\n"
+  value: "<p>Dear contributor,</p>\r\n\r\n<p>Thank you for adding the [node:content-type] \"[node:title]\". You will be notified when your [node:content-type] has been made live.</p>\r\n\r\n<p>Best regards,<br />\r\nThe Rhinobot<br />\r\n[site:name]</p>\r\n"
   format: basic_html
 label: 'Draft Resource or Organisation created'
-abort: ''
-debug: false
