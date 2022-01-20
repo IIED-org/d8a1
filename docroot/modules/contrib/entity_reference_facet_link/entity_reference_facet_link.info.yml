@@ -4,10 +4,8 @@ description: 'Provides a display plugin for Entity Reference fields that links t
 package: Search
 core: 8.x
 core_version_requirement: ^8 || ^9
-dependencies:
-  - facets:facets (>=8.x-1.0-beta1)
 
-# Information added by Drupal.org packaging script on 2020-06-07
-version: '8.x-1.0-beta6'
+# Information added by Drupal.org packaging script on 2021-12-28
+version: '2.0.0-beta1'
 project: 'entity_reference_facet_link'
-datestamp: 1591514633
+datestamp: 1640716043
