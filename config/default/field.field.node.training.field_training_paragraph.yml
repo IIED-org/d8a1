@@ -29,7 +29,6 @@ default_value_callback: ''
 settings:
   handler: 'default:paragraph'
   handler_settings:
-    negate: 0
     target_bundles:
       basic_text: basic_text
       image_caption: image_caption
@@ -40,6 +39,7 @@ settings:
       text_left_image_right: text_left_image_right
       video_caption_: video_caption_
       video_caption_wide_: video_caption_wide_
+    negate: 0
     target_bundles_drag_drop:
       _link_to_document_hosted_on_anot:
         weight: 12
@@ -48,42 +48,42 @@ settings:
         weight: 7
         enabled: false
       basic_text:
-        enabled: true
         weight: 16
+        enabled: true
       document:
         weight: 8
         enabled: false
       image_caption:
-        enabled: true
         weight: 18
+        enabled: true
       image_caption_wide_:
-        enabled: true
         weight: 19
-      image_left_text_right:
         enabled: true
+      image_left_text_right:
         weight: 20
+        enabled: true
       online_article_or_blog:
         weight: 9
         enabled: false
       organisation_logos:
-        enabled: true
         weight: 22
-      quote:
         enabled: true
+      quote:
         weight: 24
+        enabled: true
       text:
         weight: 10
         enabled: false
       text_left_image_right:
-        enabled: true
         weight: 24
+        enabled: true
       video:
         weight: 11
         enabled: false
       video_caption_:
-        enabled: true
         weight: 26
-      video_caption_wide_:
         enabled: true
+      video_caption_wide_:
         weight: 27
+        enabled: true
 field_type: entity_reference_revisions

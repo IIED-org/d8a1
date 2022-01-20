@@ -13,24 +13,28 @@ third_party_settings:
     coder: taxonomy_term_coder
 id: strategy
 name: Strategy
-url_alias: strategy
 weight: 0
 min_count: 1
-show_only_one_result: true
-field_identifier: field_interventions
+url_alias: strategy
 facet_source_id: 'search_api:views_page__explore_resources__page_2'
+field_identifier: field_interventions
+query_operator: and
+hard_limit: 0
+exclude: false
+use_hierarchy: false
+keep_hierarchy_parents_active: false
+expand_hierarchy: false
+enable_parent_when_child_gets_disabled: true
 widget:
   type: dropdown
   config:
     show_numbers: false
     default_option_label: '– Any –'
-query_operator: and
-use_hierarchy: false
-expand_hierarchy: false
-enable_parent_when_child_gets_disabled: true
-hard_limit: 0
-exclude: false
+empty_behavior:
+  behavior: none
 only_visible_when_facet_source_is_visible: true
+show_only_one_result: true
+show_title: false
 processor_configs:
   display_value_widget_order:
     processor_id: display_value_widget_order
@@ -49,6 +53,3 @@ processor_configs:
       pre_query: 50
       build: 15
     settings: {  }
-empty_behavior:
-  behavior: none
-show_title: false

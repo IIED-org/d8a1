@@ -18,14 +18,14 @@ plugin: 'block_content:f8eee970-e017-45a7-8fcb-76e758412b78'
 settings:
   id: 'block_content:f8eee970-e017-45a7-8fcb-76e758412b78'
   label: 'About LP'
-  provider: block_content
   label_display: '0'
+  provider: block_content
   status: true
   info: ''
   view_mode: full
 visibility:
   request_path:
     id: request_path
-    pages: /node/16
     negate: false
     context_mapping: {  }
+    pages: /node/16

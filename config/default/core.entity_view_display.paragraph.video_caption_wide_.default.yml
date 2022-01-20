@@ -18,19 +18,19 @@ third_party_settings:
       disable_css: false
       entity_classes: all_classes
       settings:
-        label: ''
-        wrappers:
-          ds_content: div
-        outer_wrapper: div
-        attributes: ''
-        link_attribute: ''
-        link_custom: ''
         classes:
           layout_class:
             mb-4: mb-4
           ds_content:
             col-md-12: col-md-12
             m-auto: m-auto
+        wrappers:
+          ds_content: div
+        outer_wrapper: div
+        attributes: ''
+        link_attribute: ''
+        link_custom: ''
+        label: ''
     regions:
       ds_content:
         - field_video_url
@@ -41,7 +41,7 @@ bundle: video_caption_wide_
 mode: default
 content:
   field_video_caption:
-    weight: 1
+    type: text_default
     label: hidden
     settings: {  }
     third_party_settings:
@@ -50,39 +50,39 @@ content:
           id: expert
           settings:
             lb: ''
-            prefix: ''
+            lbw: false
             lbw-el: ''
             lbw-cl: ''
             lbw-at: ''
+            lb-col: false
+            ow: false
             ow-el: ''
             ow-cl: ''
             ow-at: ''
+            ow-def-at: false
+            ow-def-cl: false
+            fis: false
             fis-el: ''
             fis-cl: ''
             fis-at: ''
+            fis-def-at: false
             fi: true
             fi-el: figcaption
             fi-cl: 'figure-caption text-muted'
             fi-at: ''
-            suffix: ''
-            lbw: false
-            lb-col: false
-            ow: false
-            ow-def-at: false
-            ow-def-cl: false
-            fis: false
-            fis-def-at: false
             fi-def-at: false
-    type: text_default
+            prefix: ''
+            suffix: ''
+    weight: 1
     region: ds_content
   field_video_url:
-    weight: 0
+    type: video_embed_field_video
     label: hidden
     settings:
+      autoplay: false
       responsive: true
       width: 854
       height: 480
-      autoplay: false
     third_party_settings:
       ds:
         ft:
@@ -91,7 +91,7 @@ content:
             lb: ''
             lb-col: false
             classes: {  }
-    type: video_embed_field_video
+    weight: 0
     region: ds_content
 hidden:
   search_api_excerpt: true

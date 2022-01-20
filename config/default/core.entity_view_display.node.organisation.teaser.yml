@@ -42,18 +42,16 @@ bundle: organisation
 mode: teaser
 content:
   content_moderation_control:
-    weight: -20
-    region: content
     settings: {  }
     third_party_settings: {  }
+    weight: -20
+    region: content
   field_image:
     type: image
-    weight: 0
-    region: content
     label: hidden
     settings:
-      image_style: thumbnail
       image_link: content
+      image_style: thumbnail
     third_party_settings:
       ds:
         ft:
@@ -62,6 +60,8 @@ content:
             lb: ''
             lb-col: false
             classes: {  }
+    weight: 0
+    region: content
 hidden:
   addtoany: true
   body: true

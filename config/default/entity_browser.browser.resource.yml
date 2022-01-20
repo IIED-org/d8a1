@@ -28,22 +28,22 @@ widget_selector: tabs
 widget_selector_configuration: {  }
 widgets:
   073e5b49-cae4-4932-a6ab-700df4964ef0:
+    id: entity_form
+    uuid: 073e5b49-cae4-4932-a6ab-700df4964ef0
+    label: 'Add new resource'
+    weight: -10
     settings:
+      submit_text: 'Add resource (scroll down and click Submit after adding)'
       entity_type: node
       bundle: resource
       form_mode: popup
-      submit_text: 'Add resource (scroll down and click Submit after adding)'
-    uuid: 073e5b49-cae4-4932-a6ab-700df4964ef0
-    weight: -10
-    label: 'Add new resource'
-    id: entity_form
   5068732e-8bcb-479b-9d19-f3e5275bafd0:
+    id: view
+    uuid: 5068732e-8bcb-479b-9d19-f3e5275bafd0
+    label: 'Select exisiting'
+    weight: -9
     settings:
-      view: select_organisation
-      view_display: entity_browser_4
       submit_text: 'Select resource(s)'
       auto_select: true
-    uuid: 5068732e-8bcb-479b-9d19-f3e5275bafd0
-    weight: -9
-    label: 'Select exisiting'
-    id: view
+      view: select_organisation
+      view_display: entity_browser_4

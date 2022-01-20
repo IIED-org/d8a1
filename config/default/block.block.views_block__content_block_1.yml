@@ -19,24 +19,24 @@ plugin: 'views_block:content-block_1'
 settings:
   id: 'views_block:content-block_1'
   label: ''
-  provider: views
   label_display: visible
-  views_label: ''
-  items_per_page: none
+  provider: views
   context_mapping:
     uid: '@user.current_user_context:current_user'
+  views_label: ''
+  items_per_page: none
 visibility:
   request_path:
     id: request_path
-    pages: '/user/*'
     negate: false
     context_mapping: {  }
+    pages: '/user/*'
   user_role:
     id: user_role
+    negate: false
+    context_mapping:
+      user: '@user.current_user_context:current_user'
     roles:
       contributor: contributor
       editor: editor
       administrator: administrator
-    negate: false
-    context_mapping:
-      user: '@user.current_user_context:current_user'

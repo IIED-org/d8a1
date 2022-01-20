@@ -17,7 +17,7 @@ plugin: 'facet_block:country_2'
 settings:
   id: 'facet_block:country_2'
   label: Country
-  provider: facets
   label_display: visible
+  provider: facets
   block_id: country_2
 visibility: {  }

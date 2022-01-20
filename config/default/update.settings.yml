@@ -1,3 +1,5 @@
+_core:
+  default_config_hash: 2QzULf0zovJQx3J06Y9rufzzfi-CY2CTTlEfJJh2Qyw
 check:
   disabled_extensions: false
   interval_days: 1
@@ -8,6 +10,4 @@ fetch:
 notification:
   emails:
     - webmaster@iied.org
-  threshold: all
-_core:
-  default_config_hash: 2QzULf0zovJQx3J06Y9rufzzfi-CY2CTTlEfJJh2Qyw
+  threshold: security

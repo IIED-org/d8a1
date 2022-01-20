@@ -22,19 +22,19 @@ bundle: video_caption_
 mode: default
 content:
   field_video_caption:
+    type: text_textarea
     weight: 1
+    region: content
     settings:
       rows: 5
       placeholder: ''
     third_party_settings: {  }
-    type: text_textarea
-    region: content
   field_video_url:
+    type: video_embed_field_textfield
     weight: 0
+    region: content
     settings: {  }
     third_party_settings: {  }
-    type: video_embed_field_textfield
-    region: content
 hidden:
   created: true
   status: true

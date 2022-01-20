@@ -22,21 +22,21 @@ plugin: 'system_menu_block:about-sub-menu'
 settings:
   id: 'system_menu_block:about-sub-menu'
   label: 'About sub menu'
-  provider: system
   label_display: '0'
+  provider: system
   level: 1
   depth: 0
   expand_all_items: false
 visibility:
   request_path:
     id: request_path
-    pages: "/node/6\r\n/node/16"
     negate: false
     context_mapping: {  }
-  node_type:
-    id: node_type
-    bundles:
-      page: page
+    pages: "/node/6\r\n/node/16"
+  'entity_bundle:node':
+    id: 'entity_bundle:node'
     negate: false
     context_mapping:
       node: '@node.node_route_context:node'
+    bundles:
+      page: page

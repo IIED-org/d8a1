@@ -27,16 +27,16 @@ third_party_settings:
       disable_css: false
       entity_classes: all_classes
       settings:
-        label: ''
+        classes:
+          layout_class: {  }
+          ds_content: {  }
         wrappers:
           ds_content: div
         outer_wrapper: div
         attributes: ''
         link_attribute: ''
         link_custom: ''
-        classes:
-          layout_class: {  }
-          ds_content: {  }
+        label: ''
     regions:
       ds_content:
         - links
@@ -51,35 +51,35 @@ bundle: training
 mode: default
 content:
   body:
-    label: hidden
     type: text_default
-    weight: 101
+    label: hidden
     settings: {  }
     third_party_settings: {  }
+    weight: 101
     region: ds_content
   content_moderation_control:
-    weight: -20
     settings: {  }
     third_party_settings: {  }
+    weight: -20
     region: content
   field_image:
-    weight: 103
+    type: image
     label: above
     settings:
-      image_style: ''
       image_link: ''
+      image_style: ''
     third_party_settings: {  }
-    type: image
+    weight: 103
     region: ds_content
   field_image_caption:
-    weight: 104
+    type: text_default
     label: above
     settings: {  }
     third_party_settings: {  }
-    type: text_default
+    weight: 104
     region: ds_content
   field_link:
-    weight: 107
+    type: link
     label: above
     settings:
       trim_length: 80
@@ -88,36 +88,36 @@ content:
       rel: ''
       target: ''
     third_party_settings: {  }
-    type: link
+    weight: 107
     region: content
   field_promote_front:
-    weight: 106
+    type: list_default
     label: above
     settings: {  }
     third_party_settings: {  }
-    type: list_default
+    weight: 106
     region: content
   field_training_paragraph:
     type: entity_reference_revisions_entity_view
-    weight: 102
     label: above
     settings:
       view_mode: default
       link: ''
     third_party_settings: {  }
+    weight: 102
     region: ds_content
   field_training_standfirst:
-    weight: 105
+    type: text_default
     label: above
     settings: {  }
     third_party_settings: {  }
-    type: text_default
+    weight: 105
     region: ds_content
   links:
-    weight: 100
-    region: ds_content
     settings: {  }
     third_party_settings: {  }
+    weight: 100
+    region: ds_content
 hidden:
   addtoany: true
   search_api_excerpt: true

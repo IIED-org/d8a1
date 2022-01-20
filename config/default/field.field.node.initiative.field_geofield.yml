@@ -12,19 +12,19 @@ third_party_settings:
   geocoder_field:
     method: source
     weight: 0
-    geocode_field: field_address
-    reverse_geocode_field: ''
-    hidden: false
     disabled: false
+    hidden: false
+    providers:
+      - openstreetmap
+      - googlemaps
     dumper: wkt
     delta_handling: default
     failure:
       handling: preserve
       status_message: true
       log: true
-    providers:
-      - openstreetmap
-      - googlemaps
+    geocode_field: field_address
+    reverse_geocode_field: ''
 id: node.initiative.field_geofield
 field_name: field_geofield
 entity_type: node

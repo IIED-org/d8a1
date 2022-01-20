@@ -18,14 +18,14 @@ plugin: 'block_content:c4dcf15a-079d-4922-9312-fad4fbd9b4e1'
 settings:
   id: 'block_content:c4dcf15a-079d-4922-9312-fad4fbd9b4e1'
   label: 'Home community'
-  provider: block_content
   label_display: '0'
+  provider: block_content
   status: true
   info: ''
   view_mode: full
 visibility:
   request_path:
     id: request_path
-    pages: '<front>'
     negate: false
     context_mapping: {  }
+    pages: '<front>'

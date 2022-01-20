@@ -1,33 +1,33 @@
+_core:
+  default_config_hash: jdY7AU0tU-QsjmiOw3W8vwpYMb-By--_MSFgbqKUTYM
 definitions:
   contact__site_page:
-    enabled: true
     menu_name: footer
     parent: ''
     weight: 0
     expanded: false
+    enabled: true
   standard__front_page:
-    weight: -43
     menu_name: main
     parent: ''
+    weight: -43
     expanded: false
     enabled: false
   user__page:
-    weight: -50
     menu_name: account
     parent: ''
+    weight: -50
     expanded: false
     enabled: false
   masquerade__unmasquerade:
+    menu_name: account
+    parent: ''
     weight: -48
-    menu_name: account
-    parent: ''
-    enabled: false
     expanded: false
+    enabled: false
   user__logout:
-    weight: -47
     menu_name: account
     parent: ''
+    weight: -47
     expanded: false
     enabled: true
-_core:
-  default_config_hash: jdY7AU0tU-QsjmiOw3W8vwpYMb-By--_MSFgbqKUTYM

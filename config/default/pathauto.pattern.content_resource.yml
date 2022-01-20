@@ -11,12 +11,12 @@ pattern: 'resource/[node:title]'
 selection_criteria:
   f03060c5-4580-4b62-a900-d2fa635fbfd3:
     id: node_type
-    bundles:
-      resource: resource
     negate: false
+    uuid: f03060c5-4580-4b62-a900-d2fa635fbfd3
     context_mapping:
       node: node
-    uuid: f03060c5-4580-4b62-a900-d2fa635fbfd3
+    bundles:
+      resource: resource
 selection_logic: and
 weight: -5
 relationships: {  }

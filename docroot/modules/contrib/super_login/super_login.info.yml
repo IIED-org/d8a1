@@ -5,7 +5,7 @@ type: module
 core: 8.x
 core_version_requirement: ^8 || ^9
 configure: super_login.settings
-# Information added by Drupal.org packaging script on 2020-07-08
-version: '8.x-1.6'
+# Information added by Drupal.org packaging script on 2022-01-05
+version: '8.x-1.7'
 project: 'super_login'
-datestamp: 1594239717
+datestamp: 1641387509

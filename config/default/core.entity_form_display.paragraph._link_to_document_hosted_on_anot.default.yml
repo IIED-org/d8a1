@@ -21,20 +21,20 @@ bundle: _link_to_document_hosted_on_anot
 mode: default
 content:
   field_document_url:
+    type: link_default
     weight: 0
+    region: content
     settings:
       placeholder_url: ''
       placeholder_title: ''
     third_party_settings: {  }
-    type: link_default
-    region: content
   field_file_upload:
+    type: file_generic
     weight: 1
+    region: content
     settings:
       progress_indicator: throbber
     third_party_settings: {  }
-    type: file_generic
-    region: content
 hidden:
   created: true
   moderation_state: true

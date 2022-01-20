@@ -18,14 +18,14 @@ plugin: 'block_content:1c3e2b52-2786-4e76-a0b3-87a39cb7d006'
 settings:
   id: 'block_content:1c3e2b52-2786-4e76-a0b3-87a39cb7d006'
   label: 'About header'
-  provider: block_content
   label_display: '0'
+  provider: block_content
   status: true
   info: ''
   view_mode: full
 visibility:
   request_path:
     id: request_path
-    pages: "/about\r\n/global-context"
     negate: false
     context_mapping: {  }
+    pages: "/about\r\n/global-context"

@@ -18,14 +18,14 @@ plugin: 'block_content:2079c1a3-7cb4-4617-8eb7-5c442d694e4a'
 settings:
   id: 'block_content:2079c1a3-7cb4-4617-8eb7-5c442d694e4a'
   label: 'Home who we are'
-  provider: block_content
   label_display: '0'
+  provider: block_content
   status: true
   info: ''
   view_mode: full
 visibility:
   request_path:
     id: request_path
-    pages: '<front>'
     negate: false
     context_mapping: {  }
+    pages: '<front>'

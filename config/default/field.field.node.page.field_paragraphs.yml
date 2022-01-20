@@ -21,10 +21,13 @@ default_value_callback: ''
 settings:
   handler: 'default:paragraph'
   handler_settings:
-    negate: 0
     target_bundles:
       text: text
+    negate: 0
     target_bundles_drag_drop:
+      _link_to_document_hosted_on_anot:
+        weight: 10
+        enabled: false
       add_new_species:
         weight: 6
         enabled: false
@@ -34,13 +37,10 @@ settings:
       online_article_or_blog:
         weight: 8
         enabled: false
+      text:
+        weight: 10
+        enabled: true
       video:
         weight: 9
-        enabled: false
-      text:
-        enabled: true
-        weight: 10
-      _link_to_document_hosted_on_anot:
-        weight: 10
         enabled: false
 field_type: entity_reference_revisions

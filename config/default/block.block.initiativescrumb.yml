@@ -18,16 +18,16 @@ plugin: 'block_content:fd553d12-afd7-4ac1-8219-42fcfbad4bb3'
 settings:
   id: 'block_content:fd553d12-afd7-4ac1-8219-42fcfbad4bb3'
   label: 'Initiatives crumb'
-  provider: block_content
   label_display: '0'
+  provider: block_content
   status: true
   info: ''
   view_mode: full
 visibility:
   'entity_bundle:node':
     id: 'entity_bundle:node'
-    bundles:
-      initiative: initiative
     negate: false
     context_mapping:
       node: '@node.node_route_context:node'
+    bundles:
+      initiative: initiative

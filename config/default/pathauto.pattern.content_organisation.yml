@@ -11,12 +11,12 @@ pattern: 'organisation/[node:title]'
 selection_criteria:
   e5ac7ad5-6156-4aba-899c-9f997e7bbc9d:
     id: node_type
-    bundles:
-      organisation: organisation
     negate: false
+    uuid: e5ac7ad5-6156-4aba-899c-9f997e7bbc9d
     context_mapping:
       node: node
-    uuid: e5ac7ad5-6156-4aba-899c-9f997e7bbc9d
+    bundles:
+      organisation: organisation
 selection_logic: and
 weight: -5
 relationships: {  }

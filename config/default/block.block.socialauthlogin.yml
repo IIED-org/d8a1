@@ -15,6 +15,6 @@ plugin: social_auth_login
 settings:
   id: social_auth_login
   label: 'Login via'
-  provider: social_auth
   label_display: visible
+  provider: social_auth
 visibility: {  }

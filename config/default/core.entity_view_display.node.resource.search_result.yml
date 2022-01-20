@@ -30,15 +30,15 @@ third_party_settings:
       disable_css: false
       entity_classes: all_classes
       settings:
+        classes:
+          layout_class: {  }
+          ds_content: {  }
         wrappers:
           ds_content: div
         outer_wrapper: article
         attributes: class|container
         link_attribute: tokens
         link_custom: '[node:field_resource_type:entity:field_file_upload]'
-        classes:
-          layout_class: {  }
-          ds_content: {  }
     regions:
       ds_content:
         - node_title
@@ -64,9 +64,8 @@ bundle: resource
 mode: search_result
 content:
   body:
-    label: hidden
     type: text_summary_or_trimmed
-    weight: 2
+    label: hidden
     settings:
       trim_length: 300
     third_party_settings:
@@ -77,16 +76,15 @@ content:
             lb: ''
             lb-col: false
             classes: {  }
+    weight: 2
     region: ds_content
   content_moderation_control:
-    weight: -20
     settings: {  }
     third_party_settings: {  }
+    weight: -20
     region: content
   field_date_published:
     type: datetime_custom
-    weight: 1
-    region: ds_content
     label: hidden
     settings:
       timezone_override: ''
@@ -99,10 +97,10 @@ content:
             lb: ''
             lb-col: false
             classes: {  }
+    weight: 1
+    region: ds_content
   field_resource_type:
     type: entity_reference_revisions_entity_view
-    weight: 5
-    region: ds_content
     label: hidden
     settings:
       view_mode: preview
@@ -115,6 +113,8 @@ content:
             lb: ''
             lb-col: false
             classes: {  }
+    weight: 5
+    region: ds_content
 hidden:
   addtoany: true
   field_add_new_species: true

@@ -30,17 +30,17 @@ third_party_settings:
         - field_link
         - field_image
         - field_organisation_type
+      label: 'After creating a new organisation please scroll to the bottom and click "Submit"'
+      region: content
       parent_name: ''
       weight: 2
       format_type: details
       format_settings:
         label: 'After creating a new organisation please scroll to the bottom and click "Submit"'
-        open: true
-        id: ''
         classes: ''
+        id: ''
+        open: true
         required_fields: false
-      label: 'After creating a new organisation please scroll to the bottom and click "Submit"'
-      region: content
 id: node.organisation.popup
 targetEntityType: node
 bundle: organisation
@@ -49,10 +49,11 @@ content:
   body:
     type: text_textarea_with_summary
     weight: 1
+    region: content
     settings:
       rows: 3
-      placeholder: ''
       summary_rows: 1
+      placeholder: ''
       show_summary: false
     third_party_settings:
       field_states_ui:
@@ -60,29 +61,28 @@ content:
           type: ''
           list: ''
           add: Add
-    region: content
   field_image:
+    type: image_image
     weight: 4
+    region: content
     settings:
       progress_indicator: throbber
       preview_image_style: thumbnail
     third_party_settings: {  }
-    type: image_image
-    region: content
   field_link:
+    type: link_default
     weight: 3
+    region: content
     settings:
       placeholder_url: ''
       placeholder_title: ''
     third_party_settings: {  }
-    type: link_default
-    region: content
   field_organisation_type:
+    type: options_select
     weight: 5
+    region: content
     settings: {  }
     third_party_settings: {  }
-    type: options_select
-    region: content
   title:
     type: string_textfield
     weight: 0

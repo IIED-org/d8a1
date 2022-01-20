@@ -13,14 +13,14 @@ bundle: video
 mode: default
 content:
   field_video_url:
-    weight: 2
+    type: video_embed_field_video
     label: hidden
     settings:
+      autoplay: true
       responsive: true
       width: 854
       height: 480
-      autoplay: true
     third_party_settings: {  }
-    type: video_embed_field_video
+    weight: 2
     region: content
 hidden: {  }

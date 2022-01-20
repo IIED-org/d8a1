@@ -18,12 +18,12 @@ widget_selector: single
 widget_selector_configuration: {  }
 widgets:
   05425cc9-c25d-4567-b172-13df08c6adf4:
+    id: entity_form
+    uuid: 05425cc9-c25d-4567-b172-13df08c6adf4
+    label: 'Add new organisation / community group'
+    weight: 1
     settings:
+      submit_text: 'Save organisation / group'
       entity_type: node
       bundle: organisation
       form_mode: popup
-      submit_text: 'Save organisation / group'
-    uuid: 05425cc9-c25d-4567-b172-13df08c6adf4
-    weight: 1
-    label: 'Add new organisation / community group'
-    id: entity_form

@@ -1,9 +1,9 @@
 enabled_pages:
-  login: login
+  page: '0'
   register: register
+  cancel: '0'
+  login: login
   password: password
-  page: 0
-  cancel: 0
 reload_on_success: 1
 dialog_width: '600'
 dialog_height: auto

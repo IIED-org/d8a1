@@ -28,18 +28,18 @@ third_party_settings:
       disable_css: false
       entity_classes: all_classes
       settings:
-        label: ''
+        classes:
+          layout_class:
+            pb-5: pb-5
+          ds_content:
+            pb-4: pb-4
         wrappers:
           ds_content: div
         outer_wrapper: div
         attributes: ''
         link_attribute: ''
         link_custom: ''
-        classes:
-          layout_class:
-            pb-5: pb-5
-          ds_content:
-            pb-4: pb-4
+        label: ''
     regions:
       ds_content:
         - content_moderation_control
@@ -60,45 +60,48 @@ third_party_settings:
         label: hidden
         formatter: default
         settings:
+          link: false
           wrapper: h1
           class: page-title
-          link: false
         ft:
           id: expert
           settings:
             lb: ''
-            prefix: ''
+            lbw: false
             lbw-el: ''
             lbw-cl: ''
             lbw-at: ''
+            lb-col: false
             ow: true
             ow-el: div
             ow-cl: col-md-6
             ow-at: ''
-            fis-el: ''
-            fis-cl: ''
-            fis-at: ''
-            fi-el: ''
-            fi-cl: ''
-            fi-at: ''
-            suffix: ''
-            lbw: false
-            lb-col: false
             ow-def-at: false
             ow-def-cl: false
             fis: false
+            fis-el: ''
+            fis-cl: ''
+            fis-at: ''
             fis-def-at: false
             fi: false
+            fi-el: ''
+            fi-cl: ''
+            fi-at: ''
             fi-def-at: false
+            prefix: ''
+            suffix: ''
   field_group:
     group_training_header:
       children:
         - group_training_header_row
+      label: 'Training header'
       parent_name: ''
+      region: ds_content
       weight: 0
       format_type: html_element
-      region: ds_content
       format_settings:
+        classes: 'container pt-5 mb-4'
+        id: ''
         element: div
         show_label: false
         label_element: h3
@@ -106,20 +109,18 @@ third_party_settings:
         attributes: ''
         effect: none
         speed: fast
-        id: ''
-        classes: 'container pt-5 mb-4'
-      label: 'Training header'
     group_training_header_row:
       children:
         - node_title
         - group_training_header_image
+      label: 'Training header row'
       parent_name: group_training_header
+      region: ds_content
       weight: 1
       format_type: html_element
-      region: ds_content
       format_settings:
-        id: ''
         classes: row
+        id: ''
         element: div
         show_label: false
         label_element: h3
@@ -127,18 +128,18 @@ third_party_settings:
         attributes: ''
         effect: none
         speed: fast
-      label: 'Training header row'
     group_training_header_image:
       children:
         - field_image
         - field_image_caption
+      label: 'Training header image'
       parent_name: group_training_header_row
+      region: ds_content
       weight: 2
       format_type: html_element
-      region: ds_content
       format_settings:
-        id: ''
         classes: col-md-6
+        id: ''
         element: div
         show_label: false
         label_element: h3
@@ -146,17 +147,17 @@ third_party_settings:
         attributes: ''
         effect: none
         speed: fast
-      label: 'Training header image'
     group_bg_light:
       children:
         - field_training_standfirst
+      label: bg-light
       parent_name: ''
+      region: ds_content
       weight: 1
       format_type: html_element
-      region: ds_content
       format_settings:
-        id: ''
         classes: 'bg-light '
+        id: ''
         element: div
         show_label: false
         label_element: h3
@@ -164,16 +165,14 @@ third_party_settings:
         attributes: ''
         effect: none
         speed: fast
-      label: bg-light
 id: node.training.full
 targetEntityType: node
 bundle: training
 mode: full
 content:
   body:
-    label: hidden
     type: text_default
-    weight: 3
+    label: hidden
     settings: {  }
     third_party_settings:
       ds:
@@ -181,74 +180,75 @@ content:
           id: expert
           settings:
             lb: ''
-            prefix: ''
+            lbw: false
             lbw-el: ''
             lbw-cl: ''
             lbw-at: ''
+            lb-col: false
             ow: true
             ow-el: div
             ow-cl: container
             ow-at: ''
+            ow-def-at: false
+            ow-def-cl: false
             fis: true
             fis-el: div
             fis-cl: row
             fis-at: ''
+            fis-def-at: false
             fi: true
             fi-el: div
             fi-cl: 'col-md-8 m-auto mb-4'
             fi-at: ''
-            suffix: ''
-            lbw: false
-            lb-col: false
-            ow-def-at: false
-            ow-def-cl: false
-            fis-def-at: false
             fi-def-at: false
+            prefix: ''
+            suffix: ''
+    weight: 3
     region: ds_content
   content_moderation_control:
-    weight: -20
-    region: ds_content
     settings: {  }
     third_party_settings: {  }
+    weight: -20
+    region: ds_content
   field_image:
-    weight: 1
+    type: image
     label: hidden
     settings:
-      image_style: main_570x380
       image_link: ''
+      image_style: main_570x380
     third_party_settings:
       ds:
         ft:
           id: expert
           settings:
             lb: ''
-            prefix: ''
+            lbw: false
             lbw-el: ''
             lbw-cl: ''
             lbw-at: ''
+            lb-col: false
+            ow: false
             ow-el: ''
             ow-cl: ''
             ow-at: ''
+            ow-def-at: false
+            ow-def-cl: false
+            fis: false
             fis-el: ''
             fis-cl: ''
             fis-at: ''
+            fis-def-at: false
             fi: true
             fi-el: div
             fi-cl: fluid-container
             fi-at: ''
-            suffix: ''
-            lbw: false
-            lb-col: false
-            ow: false
-            ow-def-at: false
-            ow-def-cl: false
-            fis: false
-            fis-def-at: false
             fi-def-at: false
-    type: image
+            prefix: ''
+            suffix: ''
+    weight: 1
     region: ds_content
   field_image_caption:
-    weight: 2
+    type: text_default
     label: hidden
     settings: {  }
     third_party_settings:
@@ -257,34 +257,33 @@ content:
           id: expert
           settings:
             lb: ''
-            prefix: ''
+            lbw: false
             lbw-el: ''
             lbw-cl: ''
             lbw-at: ''
+            lb-col: false
+            ow: false
             ow-el: ''
             ow-cl: ''
             ow-at: ''
+            ow-def-at: false
+            ow-def-cl: false
+            fis: false
             fis-el: ''
             fis-cl: ''
             fis-at: ''
+            fis-def-at: false
             fi: true
             fi-el: figcaption
             fi-cl: 'figure-caption text-muted'
             fi-at: ''
-            suffix: ''
-            lbw: false
-            lb-col: false
-            ow: false
-            ow-def-at: false
-            ow-def-cl: false
-            fis: false
-            fis-def-at: false
             fi-def-at: false
-    type: text_default
+            prefix: ''
+            suffix: ''
+    weight: 2
     region: ds_content
   field_training_paragraph:
     type: entity_reference_revisions_entity_view
-    weight: 4
     label: hidden
     settings:
       view_mode: default
@@ -296,32 +295,33 @@ content:
           id: expert
           settings:
             lb: ''
-            prefix: ''
+            lbw: false
             lbw-el: ''
             lbw-cl: ''
             lbw-at: ''
+            lb-col: false
             ow: true
             ow-el: div
             ow-cl: container
             ow-at: ''
-            fis-el: ''
-            fis-cl: ''
-            fis-at: ''
-            fi-el: ''
-            fi-cl: ''
-            fi-at: ''
-            suffix: ''
-            lbw: false
-            lb-col: false
             ow-def-at: false
             ow-def-cl: false
             fis: false
+            fis-el: ''
+            fis-cl: ''
+            fis-at: ''
             fis-def-at: false
             fi: false
+            fi-el: ''
+            fi-cl: ''
+            fi-at: ''
             fi-def-at: false
+            prefix: ''
+            suffix: ''
+    weight: 4
     region: ds_content
   field_training_standfirst:
-    weight: 2
+    type: text_default
     label: hidden
     settings: {  }
     third_party_settings:
@@ -330,30 +330,30 @@ content:
           id: expert
           settings:
             lb: ''
-            prefix: ''
+            lbw: false
             lbw-el: ''
             lbw-cl: ''
             lbw-at: ''
+            lb-col: false
             ow: true
             ow-el: div
             ow-cl: 'container py-4 mb-4'
             ow-at: ''
+            ow-def-at: false
+            ow-def-cl: false
             fis: true
             fis-el: div
             fis-cl: row
             fis-at: ''
+            fis-def-at: false
             fi: true
             fi-el: div
             fi-cl: 'col-md-8 m-auto lead'
             fi-at: ''
-            suffix: ''
-            lbw: false
-            lb-col: false
-            ow-def-at: false
-            ow-def-cl: false
-            fis-def-at: false
             fi-def-at: false
-    type: text_default
+            prefix: ''
+            suffix: ''
+    weight: 2
     region: ds_content
 hidden:
   addtoany: true

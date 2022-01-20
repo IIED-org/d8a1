@@ -18,12 +18,12 @@ widget_selector: single
 widget_selector_configuration: {  }
 widgets:
   0c49d59c-6415-482a-842b-3ce42f83597a:
+    id: entity_form
+    uuid: 0c49d59c-6415-482a-842b-3ce42f83597a
+    label: 'Add new resource'
+    weight: 1
     settings:
+      submit_text: 'Save resource'
       entity_type: node
       bundle: resource
       form_mode: popup
-      submit_text: 'Save resource'
-    uuid: 0c49d59c-6415-482a-842b-3ce42f83597a
-    weight: 1
-    label: 'Add new resource'
-    id: entity_form

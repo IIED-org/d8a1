@@ -17,8 +17,8 @@ plugin: 'block_content:a1a81862-0994-4018-bee8-e393265673ae'
 settings:
   id: 'block_content:a1a81862-0994-4018-bee8-e393265673ae'
   label: 'Pop up survey'
-  provider: block_content
   label_display: '0'
+  provider: block_content
   status: true
   info: ''
   view_mode: full

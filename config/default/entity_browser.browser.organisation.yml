@@ -29,22 +29,22 @@ widget_selector: tabs
 widget_selector_configuration: {  }
 widgets:
   c5cceafd-c9ae-4e48-8fc2-6b5c35991eaf:
+    id: view
+    uuid: c5cceafd-c9ae-4e48-8fc2-6b5c35991eaf
+    label: 'Select existing'
+    weight: -9
     settings:
-      view: select_organisation
-      view_display: entity_browser_1
       submit_text: Submit
       auto_select: true
-    uuid: c5cceafd-c9ae-4e48-8fc2-6b5c35991eaf
-    weight: -9
-    label: 'Select existing'
-    id: view
+      view: select_organisation
+      view_display: entity_browser_1
   251e2cbe-57d3-4cde-b2b7-a82ae694027d:
+    id: entity_form
+    uuid: 251e2cbe-57d3-4cde-b2b7-a82ae694027d
+    label: 'Add new'
+    weight: -10
     settings:
+      submit_text: 'Add organisation / group (scroll down and click Submit after adding)'
       entity_type: node
       bundle: organisation
       form_mode: popup
-      submit_text: 'Add organisation / group (scroll down and click Submit after adding)'
-    uuid: 251e2cbe-57d3-4cde-b2b7-a82ae694027d
-    weight: -10
-    label: 'Add new'
-    id: entity_form

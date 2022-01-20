@@ -102,17 +102,18 @@ datasource_settings:
       default: true
       selected: {  }
 processor_settings:
-  entity_status: {  }
+  add_url: {  }
   aggregated_field: {  }
+  entity_status: {  }
   ignore_character:
+    weights:
+      preprocess_index: -10
+      preprocess_query: -10
     all_fields: false
     fields:
       - additional_name
       - country_name
     ignorable: '[''¿¡!?,.:;]'
-    weights:
-      preprocess_index: -10
-      preprocess_query: -10
     ignorable_classes:
       - Pc
       - Pd
@@ -122,12 +123,11 @@ processor_settings:
       - Po
       - Ps
   language_with_fallback: {  }
-  add_url: {  }
   rendered_item: {  }
 tracker_settings:
   default:
     indexing_order: fifo
 options:
-  index_directly: true
   cron_limit: 50
+  index_directly: true
 server: search_server

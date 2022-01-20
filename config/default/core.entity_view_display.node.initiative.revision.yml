@@ -91,16 +91,16 @@ third_party_settings:
       disable_css: false
       entity_classes: all_classes
       settings:
+        classes:
+          layout_class: {  }
+          ds_content:
+            container: container
         wrappers:
           ds_content: div
         outer_wrapper: div
         attributes: ''
         link_attribute: ''
         link_custom: ''
-        classes:
-          layout_class: {  }
-          ds_content:
-            container: container
     regions:
       ds_content:
         - content_moderation_control
@@ -181,621 +181,621 @@ bundle: initiative
 mode: revision
 content:
   body:
-    label: hidden
     type: text_default
-    weight: 2
+    label: hidden
     settings: {  }
     third_party_settings: {  }
+    weight: 2
     region: ds_content
   content_moderation_control:
+    settings: {  }
+    third_party_settings: {  }
     weight: 0
     region: ds_content
-    settings: {  }
-    third_party_settings: {  }
   field_3_2_1_details:
-    weight: 48
+    type: text_default
     label: above
     settings: {  }
     third_party_settings: {  }
-    type: text_default
+    weight: 48
     region: ds_content
   field_3_2_1_other:
-    weight: 22
+    type: boolean
     label: above
     settings:
       format: default
       format_custom_false: ''
       format_custom_true: ''
     third_party_settings: {  }
-    type: boolean
+    weight: 22
     region: ds_content
   field_3_2_2_details:
-    weight: 42
+    type: text_default
     label: above
     settings: {  }
     third_party_settings: {  }
-    type: text_default
+    weight: 42
     region: ds_content
   field_3_2_2_other:
-    weight: 31
+    type: boolean
     label: above
     settings:
       format: default
       format_custom_false: ''
       format_custom_true: ''
     third_party_settings: {  }
-    type: boolean
+    weight: 31
     region: ds_content
   field_3_2_3_details:
-    weight: 43
+    type: text_default
     label: above
     settings: {  }
     third_party_settings: {  }
-    type: text_default
+    weight: 43
     region: ds_content
   field_3_2_3_other:
-    weight: 36
+    type: boolean
     label: above
     settings:
       format: default
       format_custom_false: ''
       format_custom_true: ''
     third_party_settings: {  }
-    type: boolean
+    weight: 36
     region: ds_content
   field_3_2_4_details:
-    weight: 44
+    type: text_default
     label: above
     settings: {  }
     third_party_settings: {  }
-    type: text_default
+    weight: 44
     region: ds_content
   field_3_2_4_other:
-    weight: 39
+    type: boolean
     label: above
     settings:
       format: default
       format_custom_false: ''
       format_custom_true: ''
     third_party_settings: {  }
-    type: boolean
+    weight: 39
     region: ds_content
   field_3_2_5_details:
-    weight: 68
+    type: text_default
     label: above
     settings: {  }
     third_party_settings: {  }
-    type: text_default
+    weight: 68
     region: ds_content
   field_3_2_6_details:
-    weight: 69
+    type: text_default
     label: above
     settings: {  }
     third_party_settings: {  }
-    type: text_default
+    weight: 69
     region: ds_content
   field_4_2_1_details:
-    weight: 53
+    type: text_default
     label: above
     settings: {  }
     third_party_settings: {  }
-    type: text_default
+    weight: 53
     region: ds_content
   field_4_3_1_details:
-    weight: 56
+    type: text_default
     label: above
     settings: {  }
     third_party_settings: {  }
-    type: text_default
+    weight: 56
     region: ds_content
   field_add_new_species:
     type: string
-    weight: 0
-    region: ds_content
     label: above
     settings:
       link_to_entity: false
     third_party_settings: {  }
+    weight: 0
+    region: ds_content
   field_address:
-    weight: 3
+    type: address_default
     label: above
     settings: {  }
     third_party_settings: {  }
-    type: address_default
+    weight: 3
     region: ds_content
   field_area_description:
-    weight: 5
+    type: text_default
     label: above
     settings: {  }
     third_party_settings: {  }
-    type: text_default
+    weight: 5
     region: ds_content
   field_buyers:
-    weight: 12
+    type: text_default
     label: above
     settings: {  }
     third_party_settings: {  }
-    type: text_default
+    weight: 12
     region: ds_content
   field_community_level_benefits:
-    weight: 38
+    type: boolean
     label: above
     settings:
       format: default
       format_custom_false: ''
       format_custom_true: ''
     third_party_settings: {  }
-    type: boolean
+    weight: 38
     region: ds_content
   field_decreasing_living_costs:
-    weight: 46
+    type: boolean
     label: above
     settings:
       format: default
       format_custom_false: ''
       format_custom_true: ''
     third_party_settings: {  }
-    type: boolean
+    weight: 46
     region: ds_content
   field_ecosystem_service_payments:
-    weight: 28
+    type: boolean
     label: above
     settings:
       format: default
       format_custom_false: ''
       format_custom_true: ''
     third_party_settings: {  }
-    type: boolean
+    weight: 28
     region: ds_content
   field_education_and_awareness:
-    weight: 41
+    type: boolean
     label: above
     settings:
       format: default
       format_custom_false: ''
       format_custom_true: ''
     third_party_settings: {  }
-    type: boolean
+    weight: 41
     region: ds_content
   field_end_use:
-    weight: 10
+    type: text_default
     label: above
     settings: {  }
     third_party_settings: {  }
-    type: text_default
+    weight: 10
     region: ds_content
   field_financial_mitigation:
-    weight: 34
+    type: boolean
     label: above
     settings:
       format: default
       format_custom_false: ''
       format_custom_true: ''
     third_party_settings: {  }
-    type: boolean
+    weight: 34
     region: ds_content
   field_geofield:
-    weight: 4
+    type: geofield_default
     label: above
     settings:
       output_format: wkt
     third_party_settings: {  }
-    type: geofield_default
+    weight: 4
     region: ds_content
   field_illegal_disincentives:
-    weight: 23
+    type: boolean
     label: above
     settings:
       format: default
       format_custom_false: ''
       format_custom_true: ''
     third_party_settings: {  }
-    type: boolean
+    weight: 23
     region: ds_content
   field_image:
-    weight: 59
+    type: image
     label: above
     settings:
-      image_style: ''
       image_link: ''
+      image_style: ''
     third_party_settings: {  }
-    type: image
+    weight: 59
     region: ds_content
   field_image_gallery:
-    weight: 60
+    type: image
     label: above
     settings:
-      image_style: ''
       image_link: ''
+      image_style: ''
     third_party_settings: {  }
-    type: image
+    weight: 60
     region: ds_content
   field_in_kind_incentives:
-    weight: 19
+    type: boolean
     label: above
     settings:
       format: default
       format_custom_false: ''
       format_custom_true: ''
     third_party_settings: {  }
-    type: boolean
+    weight: 19
     region: ds_content
   field_in_kind_scouts:
-    weight: 17
+    type: boolean
     label: above
     settings:
       format: default
       format_custom_false: ''
       format_custom_true: ''
     third_party_settings: {  }
-    type: boolean
+    weight: 17
     region: ds_content
   field_initiative_impact:
-    weight: 50
+    type: text_default
     label: above
     settings: {  }
     third_party_settings: {  }
-    type: text_default
+    weight: 50
     region: ds_content
   field_initiative_introduction:
-    weight: 13
+    type: text_default
     label: above
     settings: {  }
     third_party_settings: {  }
-    type: text_default
+    weight: 13
     region: ds_content
   field_initiative_status:
-    weight: 7
+    type: list_default
     label: above
     settings: {  }
     third_party_settings: {  }
-    type: list_default
+    weight: 7
     region: ds_content
   field_intelligence_incentives:
-    weight: 18
+    type: boolean
     label: above
     settings:
       format: default
       format_custom_false: ''
       format_custom_true: ''
     third_party_settings: {  }
-    type: boolean
+    weight: 18
     region: ds_content
   field_interventions:
-    weight: 49
+    type: entity_reference_label
     label: above
     settings:
       link: true
     third_party_settings: {  }
-    type: entity_reference_label
+    weight: 49
     region: ds_content
   field_lead_organisation:
-    weight: 6
+    type: entity_reference_label
     label: above
     settings:
       link: true
     third_party_settings: {  }
-    type: entity_reference_label
+    weight: 6
     region: ds_content
   field_lease_payments:
-    weight: 27
+    type: boolean
     label: above
     settings:
       format: default
       format_custom_false: ''
       format_custom_true: ''
     third_party_settings: {  }
-    type: boolean
+    weight: 27
     region: ds_content
   field_legal_trade:
-    weight: 29
+    type: boolean
     label: above
     settings:
       format: default
       format_custom_false: ''
       format_custom_true: ''
     third_party_settings: {  }
-    type: boolean
+    weight: 29
     region: ds_content
   field_limiting_factors:
-    weight: 55
+    type: list_default
     label: above
     settings: {  }
     third_party_settings: {  }
-    type: list_default
+    weight: 55
     region: ds_content
   field_non_wildlife_development:
-    weight: 37
+    type: boolean
     label: above
     settings:
       format: default
       format_custom_false: ''
       format_custom_true: ''
     third_party_settings: {  }
-    type: boolean
+    weight: 37
     region: ds_content
   field_non_wildlife_livelihoods:
-    weight: 47
+    type: boolean
     label: above
     settings:
       format: default
       format_custom_false: ''
       format_custom_true: ''
     third_party_settings: {  }
-    type: boolean
+    weight: 47
     region: ds_content
   field_organisers_donors_partners:
-    weight: 57
+    type: text_default
     label: above
     settings: {  }
     third_party_settings: {  }
-    type: text_default
+    weight: 57
     region: ds_content
   field_paid_scouts:
-    weight: 14
+    type: boolean
     label: above
     settings:
       format: default
       format_custom_false: ''
       format_custom_true: ''
     third_party_settings: {  }
-    type: boolean
+    weight: 14
     region: ds_content
   field_performance_payments:
-    weight: 15
+    type: boolean
     label: above
     settings:
       format: default
       format_custom_false: ''
       format_custom_true: ''
     third_party_settings: {  }
-    type: boolean
+    weight: 15
     region: ds_content
   field_permission_for_reuse:
-    weight: 65
+    type: boolean
     label: above
     settings:
       format: default
       format_custom_false: ''
       format_custom_true: ''
     third_party_settings: {  }
-    type: boolean
+    weight: 65
     region: ds_content
   field_permission_to_edit:
-    weight: 64
+    type: boolean
     label: above
     settings:
       format: default
       format_custom_false: ''
       format_custom_true: ''
     third_party_settings: {  }
-    type: boolean
+    weight: 64
     region: ds_content
   field_permission_to_use_photos:
-    weight: 66
+    type: boolean
     label: above
     settings:
       format: default
       format_custom_false: ''
       format_custom_true: ''
     third_party_settings: {  }
-    type: boolean
+    weight: 66
     region: ds_content
   field_personal_data:
-    weight: 67
+    type: boolean
     label: above
     settings:
       format: default
       format_custom_false: ''
       format_custom_true: ''
     third_party_settings: {  }
-    type: boolean
+    weight: 67
     region: ds_content
   field_physical_separation:
-    weight: 35
+    type: boolean
     label: above
     settings:
       format: default
       format_custom_false: ''
       format_custom_true: ''
     third_party_settings: {  }
-    type: boolean
+    weight: 35
     region: ds_content
   field_policy_regulatory_change:
-    weight: 30
+    type: boolean
     label: above
     settings:
       format: default
       format_custom_false: ''
       format_custom_true: ''
     third_party_settings: {  }
-    type: boolean
+    weight: 30
     region: ds_content
   field_preventive_measures_deter:
-    weight: 32
+    type: boolean
     label: above
     settings:
       format: default
       format_custom_false: ''
       format_custom_true: ''
     third_party_settings: {  }
-    type: boolean
+    weight: 32
     region: ds_content
   field_primary_contact:
-    weight: 62
+    type: basic_string
     label: above
     settings: {  }
     third_party_settings: {  }
-    type: basic_string
+    weight: 62
     region: ds_content
   field_primary_contact_name:
-    weight: 63
+    type: string
     label: above
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    type: string
+    weight: 63
     region: ds_content
   field_problem_overview:
-    weight: 11
+    type: text_default
     label: above
     settings: {  }
     third_party_settings: {  }
-    type: text_default
+    weight: 11
     region: ds_content
   field_products_in_trade:
-    weight: 70
+    type: text_default
     label: above
     settings: {  }
     third_party_settings: {  }
-    type: text_default
+    weight: 70
     region: ds_content
   field_raising_awareness:
-    weight: 20
+    type: boolean
     label: above
     settings:
       format: default
       format_custom_false: ''
       format_custom_true: ''
     third_party_settings: {  }
-    type: boolean
+    weight: 20
     region: ds_content
   field_reactive_measures:
-    weight: 33
+    type: boolean
     label: above
     settings:
       format: default
       format_custom_false: ''
       format_custom_true: ''
     third_party_settings: {  }
-    type: boolean
+    weight: 33
     region: ds_content
   field_related_resources:
-    weight: 58
+    type: entity_reference_label
     label: above
     settings:
       link: true
     third_party_settings: {  }
-    type: entity_reference_label
+    weight: 58
     region: ds_content
   field_role_or_relationship:
-    weight: 61
+    type: text_default
     label: above
     settings: {  }
     third_party_settings: {  }
-    type: text_default
+    weight: 61
     region: ds_content
   field_sense_of_ownership:
-    weight: 40
+    type: boolean
     label: above
     settings:
       format: default
       format_custom_false: ''
       format_custom_true: ''
     third_party_settings: {  }
-    type: boolean
+    weight: 40
     region: ds_content
   field_species_affected:
-    weight: 9
+    type: entity_reference_label
     label: above
     settings:
       link: true
     third_party_settings: {  }
-    type: entity_reference_label
+    weight: 9
     region: ds_content
   field_stewardship_incentives:
-    weight: 45
+    type: boolean
     label: above
     settings:
       format: default
       format_custom_false: ''
       format_custom_true: ''
     third_party_settings: {  }
-    type: boolean
+    weight: 45
     region: ds_content
   field_subsistence_resource_use:
-    weight: 26
+    type: boolean
     label: above
     settings:
       format: default
       format_custom_false: ''
       format_custom_true: ''
     third_party_settings: {  }
-    type: boolean
+    weight: 26
     region: ds_content
   field_success_factors:
-    weight: 52
+    type: list_default
     label: above
     settings: {  }
     third_party_settings: {  }
-    type: list_default
+    weight: 52
     region: ds_content
   field_supporting_sanctions:
-    weight: 21
+    type: boolean
     label: above
     settings:
       format: default
       format_custom_false: ''
       format_custom_true: ''
     third_party_settings: {  }
-    type: boolean
+    weight: 21
     region: ds_content
   field_tourism:
-    weight: 24
+    type: boolean
     label: above
     settings:
       format: default
       format_custom_false: ''
       format_custom_true: ''
     third_party_settings: {  }
-    type: boolean
+    weight: 24
     region: ds_content
   field_trophy_hunting:
-    weight: 25
+    type: boolean
     label: above
     settings:
       format: default
       format_custom_false: ''
       format_custom_true: ''
     third_party_settings: {  }
-    type: boolean
+    weight: 25
     region: ds_content
   field_voluntary_scouts:
-    weight: 16
+    type: boolean
     label: above
     settings:
       format: default
       format_custom_false: ''
       format_custom_true: ''
     third_party_settings: {  }
-    type: boolean
+    weight: 16
     region: ds_content
   field_what_isnt_working:
-    weight: 54
+    type: text_default
     label: above
     settings: {  }
     third_party_settings: {  }
-    type: text_default
+    weight: 54
     region: ds_content
   field_what_worked:
-    weight: 51
+    type: text_default
     label: above
     settings: {  }
     third_party_settings: {  }
-    type: text_default
+    weight: 51
     region: ds_content
   field_year_finished:
-    weight: 8
+    type: string
     label: above
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    type: string
+    weight: 8
     region: ds_content
   links:
-    weight: 1
-    region: ds_content
     settings: {  }
     third_party_settings: {  }
+    weight: 1
+    region: ds_content
 hidden:
   addtoany: true

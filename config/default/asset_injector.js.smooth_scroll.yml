@@ -16,10 +16,10 @@ preprocess: true
 conditions:
   request_path:
     id: request_path
-    pages: '/explore/*'
     negate: false
+    pages: '/explore/*'
   request_param:
     id: request_param
-    request_param: 'search=*'
     negate: false
+    request_param: 'search=*'
 conditions_require_all: false

@@ -18,14 +18,14 @@ plugin: 'block_content:35b07475-1320-437f-8551-d5e87e883e03'
 settings:
   id: 'block_content:35b07475-1320-437f-8551-d5e87e883e03'
   label: 'Training and resources header'
-  provider: block_content
   label_display: '0'
+  provider: block_content
   status: true
   info: ''
   view_mode: full
 visibility:
   request_path:
     id: request_path
-    pages: "/resources*\r\n/training"
     negate: false
     context_mapping: {  }
+    pages: "/resources*\r\n/training"

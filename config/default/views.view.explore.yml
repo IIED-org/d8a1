@@ -6,13 +6,11 @@ dependencies:
     - block.block.currentsearch
     - field.storage.media.field_media_oembed_video
     - field.storage.node.body
-    - field.storage.node.field_address
     - field.storage.node.field_authors
     - field.storage.node.field_date_published
     - field.storage.node.field_document_type
     - field.storage.node.field_geofield
     - field.storage.node.field_image
-    - field.storage.node.field_language
     - field.storage.node.field_link
     - field.storage.node.field_publisher
     - field.storage.node.field_resource_type
@@ -22,14 +20,12 @@ dependencies:
     - field.storage.paragraph.field_file_upload
     - field.storage.paragraph.field_video_url
     - image.style.large
-    - image.style.medium
     - image.style.thumbnail
     - search_api.index.acquia_search_index
     - taxonomy.vocabulary.document_type
   content:
     - 'taxonomy_term:document_type:8f79da1e-369d-4683-8f7a-3ebfac23746a'
   module:
-    - address
     - better_exposed_filters
     - datetime
     - entity_reference_revisions
@@ -50,49 +46,12 @@ base_table: search_api_index_acquia_search_index
 base_field: search_api_id
 display:
   default:
-    display_plugin: default
     id: default
     display_title: Master
+    display_plugin: default
     position: 0
     display_options:
-      access:
-        type: perm
-        options:
-          perm: 'access content'
-      cache:
-        type: search_api_tag
-        options: {  }
-      query:
-        type: views_query
-        options:
-          bypass_access: false
-          skip_access: false
-      exposed_form:
-        type: basic
-        options:
-          submit_button: Search
-          reset_button: true
-          reset_button_label: Reset
-          exposed_sorts_label: 'Sort by'
-          expose_sort_order: false
-          sort_asc_label: Asc
-          sort_desc_label: Desc
-      pager:
-        type: none
-        options:
-          offset: 0
-      style:
-        type: default
-        options:
-          grouping:
-            -
-              field: type
-              rendered: true
-              rendered_strip: false
-          row_class: ''
-          default_row_class: false
-      row:
-        type: fields
+      title: Explore
       fields:
         field_geofield:
           id: field_geofield
@@ -101,6 +60,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: search_api_field
           label: ''
           exclude: false
           alter:
@@ -163,7 +123,6 @@ display:
             use_highlighting: false
             multi_type: separator
             multi_separator: ', '
-          plugin_id: search_api_field
         nid:
           id: nid
           table: search_api_datasource_acquia_search_index_entity_node
@@ -171,6 +130,8 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          entity_type: node
+          plugin_id: search_api_field
           label: ''
           exclude: true
           alter:
@@ -245,8 +206,6 @@ display:
             format_plural_values:
               - '1'
               - '@count'
-          entity_type: node
-          plugin_id: search_api_field
         field_image:
           id: field_image
           table: search_api_datasource_acquia_search_index_entity_node
@@ -254,6 +213,8 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          entity_type: node
+          plugin_id: search_api_field
           label: ''
           exclude: false
           alter:
@@ -298,8 +259,8 @@ display:
           click_sort_column: target_id
           type: image
           settings:
-            image_style: thumbnail
             image_link: ''
+            image_style: thumbnail
           group_column: ''
           group_columns: {  }
           group_rows: true
@@ -317,8 +278,6 @@ display:
             use_highlighting: false
             multi_type: separator
             multi_separator: ', '
-          entity_type: node
-          plugin_id: search_api_field
         title:
           id: title
           table: search_api_index_acquia_search_index
@@ -326,6 +285,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: search_api_field
           label: ''
           exclude: false
           alter:
@@ -388,17 +348,16 @@ display:
             use_highlighting: false
             multi_type: separator
             multi_separator: ', '
-          plugin_id: search_api_field
         body:
+          id: body
           table: search_api_index_acquia_search_index
           field: body
-          id: body
-          entity_type: null
-          entity_field: null
-          plugin_id: search_api_field
           relationship: none
           group_type: group
           admin_label: ''
+          entity_type: null
+          entity_field: null
+          plugin_id: search_api_field
           label: ''
           exclude: false
           alter:
@@ -467,6 +426,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: search_api_field
           label: ''
           exclude: false
           alter:
@@ -532,7 +492,6 @@ display:
             display_methods:
               node_type:
                 display_method: label
-          plugin_id: search_api_field
         field_article_url:
           id: field_article_url
           table: search_api_index_acquia_search_index
@@ -540,6 +499,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: search_api_field
           label: ''
           exclude: true
           alter:
@@ -606,7 +566,6 @@ display:
             use_highlighting: false
             multi_type: separator
             multi_separator: ', '
-          plugin_id: search_api_field
         field_document_url:
           id: field_document_url
           table: search_api_index_acquia_search_index
@@ -614,6 +573,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: search_api_field
           label: ''
           exclude: true
           alter:
@@ -680,7 +640,6 @@ display:
             use_highlighting: false
             multi_type: separator
             multi_separator: ', '
-          plugin_id: search_api_field
         field_file_upload:
           id: field_file_upload
           table: search_api_index_acquia_search_index
@@ -688,6 +647,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: search_api_field
           label: ''
           exclude: true
           alter:
@@ -750,7 +710,6 @@ display:
             use_highlighting: false
             multi_type: separator
             multi_separator: ', '
-          plugin_id: search_api_field
         field_video_url:
           id: field_video_url
           table: search_api_index_acquia_search_index
@@ -758,6 +717,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: search_api_field
           label: ''
           exclude: true
           alter:
@@ -802,12 +762,12 @@ display:
           click_sort_column: value
           type: video_embed_field_colorbox
           settings:
-            image_style: thumbnail
-            link_image_to: ''
             autoplay: true
             responsive: true
             width: 854
             height: 480
+            image_style: thumbnail
+            link_image_to: ''
             modal_max_width: 854
           group_column: value
           group_columns: {  }
@@ -826,7 +786,6 @@ display:
             use_highlighting: false
             multi_type: separator
             multi_separator: ', '
-          plugin_id: search_api_field
         field_species_affected:
           id: field_species_affected
           table: search_api_index_acquia_search_index
@@ -834,6 +793,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: search_api_field
           label: 'Species affected'
           exclude: false
           alter:
@@ -906,7 +866,6 @@ display:
                 view_mode: default
               tags:
                 display_method: label
-          plugin_id: search_api_field
         nothing:
           id: nothing
           table: views
@@ -914,6 +873,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: custom
           label: ''
           exclude: false
           alter:
@@ -955,7 +915,30 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: false
-          plugin_id: custom
+      pager:
+        type: none
+        options:
+          offset: 0
+      exposed_form:
+        type: basic
+        options:
+          submit_button: Search
+          reset_button: true
+          reset_button_label: Reset
+          exposed_sorts_label: 'Sort by'
+          expose_sort_order: false
+          sort_asc_label: Asc
+          sort_desc_label: Desc
+      access:
+        type: perm
+        options:
+          perm: 'access content'
+      cache:
+        type: search_api_tag
+        options: {  }
+      empty: {  }
+      sorts: {  }
+      arguments: {  }
       filters:
         search_api_fulltext:
           id: search_api_fulltext
@@ -964,6 +947,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: search_api_fulltext
           operator: and
           value: ''
           group: 1
@@ -974,6 +958,8 @@ display:
             description: ''
             use_operator: false
             operator: search_api_fulltext_op
+            operator_limit_selection: false
+            operator_list: {  }
             identifier: search
             required: false
             remember: false
@@ -984,8 +970,6 @@ display:
               editor: '0'
               administrator: '0'
             placeholder: ''
-            operator_limit_selection: false
-            operator_list: {  }
           is_grouped: false
           group_info:
             label: ''
@@ -1001,7 +985,6 @@ display:
           parse_mode: terms
           min_length: 3
           fields: {  }
-          plugin_id: search_api_fulltext
         type:
           id: type
           table: search_api_index_acquia_search_index
@@ -1009,6 +992,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: search_api_options
           operator: or
           value:
             initiative: initiative
@@ -1021,6 +1005,8 @@ display:
             description: ''
             use_operator: false
             operator: ''
+            operator_limit_selection: false
+            operator_list: {  }
             identifier: ''
             required: false
             remember: false
@@ -1028,8 +1014,6 @@ display:
             remember_roles:
               authenticated: authenticated
             reduce: false
-            operator_limit_selection: false
-            operator_list: {  }
           is_grouped: false
           group_info:
             label: ''
@@ -1043,9 +1027,35 @@ display:
             default_group_multiple: {  }
             group_items: {  }
           reduce_duplicates: false
-          plugin_id: search_api_options
-      sorts: {  }
-      title: Explore
+      filter_groups:
+        operator: AND
+        groups:
+          1: AND
+      style:
+        type: default
+        options:
+          grouping:
+            -
+              field: type
+              rendered: true
+              rendered_strip: false
+          row_class: ''
+          default_row_class: false
+      row:
+        type: fields
+      query:
+        type: views_query
+        options:
+          bypass_access: false
+          skip_access: false
+      relationships: {  }
+      use_ajax: false
+      show_admin_links: true
+      use_more: false
+      use_more_always: false
+      use_more_text: more
+      link_display: page_1
+      link_url: ''
       header:
         area:
           id: area
@@ -1054,28 +1064,14 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: text
           empty: false
-          tokenize: false
           content:
             value: ''
             format: basic_html
-          plugin_id: text
+          tokenize: false
       footer: {  }
-      empty: {  }
-      relationships: {  }
-      arguments: {  }
       display_extenders: {  }
-      use_ajax: false
-      filter_groups:
-        operator: AND
-        groups:
-          1: AND
-      link_url: ''
-      link_display: page_1
-      show_admin_links: true
-      use_more: false
-      use_more_always: false
-      use_more_text: more
     cache_metadata:
       max-age: -1
       contexts:
@@ -1095,14 +1091,12 @@ display:
         - 'config:field.storage.paragraph.field_video_url'
         - 'config:search_api.index.acquia_search_index'
   attachment_1:
-    display_plugin: attachment
     id: attachment_1
     display_title: 'Country header'
+    display_plugin: attachment
     position: 3
     display_options:
-      display_extenders: {  }
-      displays: {  }
-      inherit_exposed_filters: true
+      title: '{{ arguments.country_name_2 }} '
       fields:
         title:
           id: title
@@ -1111,6 +1105,8 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          entity_type: node
+          plugin_id: search_api_field
           label: ''
           exclude: false
           alter:
@@ -1173,8 +1169,6 @@ display:
             use_highlighting: false
             multi_type: separator
             multi_separator: ', '
-          entity_type: node
-          plugin_id: search_api_field
         body:
           id: body
           table: search_api_datasource_acquia_search_index_entity_node
@@ -1182,6 +1176,8 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          entity_type: node
+          plugin_id: search_api_field
           label: ''
           exclude: false
           alter:
@@ -1243,83 +1239,11 @@ display:
             use_highlighting: false
             multi_type: separator
             multi_separator: ', '
-          entity_type: node
-          plugin_id: search_api_field
-      defaults:
-        fields: false
-        filters: false
-        filter_groups: false
-        style: false
-        row: false
-        header: false
-        arguments: false
-        use_ajax: false
-        link_display: false
-        link_url: false
-        use_more: false
-        use_more_always: false
-        use_more_text: false
-        css_class: false
-        title: false
-      filters:
-        type:
-          id: type
-          table: search_api_index_acquia_search_index
-          field: type
-          relationship: none
-          group_type: group
-          admin_label: ''
-          operator: or
-          value:
-            country_header: country_header
-          group: 1
-          exposed: false
-          expose:
-            operator_id: ''
-            label: ''
-            description: ''
-            use_operator: false
-            operator: ''
-            identifier: ''
-            required: false
-            remember: false
-            multiple: false
-            remember_roles:
-              authenticated: authenticated
-            reduce: false
-            operator_limit_selection: false
-            operator_list: {  }
-          is_grouped: false
-          group_info:
-            label: ''
-            description: ''
-            identifier: ''
-            optional: true
-            widget: select
-            multiple: false
-            remember: false
-            default_group: All
-            default_group_multiple: {  }
-            group_items: {  }
-          reduce_duplicates: false
-          plugin_id: search_api_options
-      filter_groups:
-        operator: AND
-        groups: {  }
-      style:
-        type: default
+      pager:
+        type: some
         options:
-          row_class: ''
-          default_row_class: false
-          uses_fields: false
-      row:
-        type: fields
-        options:
-          default_field_elements: true
-          inline: {  }
-          separator: ''
-          hide_empty: false
-      header: {  }
+          offset: 0
+          items_per_page: 1
       arguments:
         country_name_2:
           id: country_name_2
@@ -1328,6 +1252,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: search_api
           default_action: default
           exception:
             value: all
@@ -1352,21 +1277,92 @@ display:
           validate_options: {  }
           break_phrase: false
           not: false
-          plugin_id: search_api
-      use_ajax: true
-      pager:
-        type: some
+      filters:
+        type:
+          id: type
+          table: search_api_index_acquia_search_index
+          field: type
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: search_api_options
+          operator: or
+          value:
+            country_header: country_header
+          group: 1
+          exposed: false
+          expose:
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
+            operator: ''
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+            reduce: false
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          reduce_duplicates: false
+      filter_groups:
+        operator: AND
+        groups: {  }
+      style:
+        type: default
         options:
-          items_per_page: 1
-          offset: 0
-      link_display: page_2
-      link_url: ''
+          row_class: ''
+          default_row_class: false
+          uses_fields: false
+      row:
+        type: fields
+        options:
+          default_field_elements: true
+          inline: {  }
+          separator: ''
+          hide_empty: false
+      defaults:
+        title: false
+        css_class: false
+        use_ajax: false
+        use_more: false
+        use_more_always: false
+        use_more_text: false
+        link_display: false
+        link_url: false
+        style: false
+        row: false
+        fields: false
+        arguments: false
+        filters: false
+        filter_groups: false
+        header: false
+      css_class: ''
+      use_ajax: true
+      display_description: ''
       use_more: false
       use_more_always: false
       use_more_text: more
-      css_class: ''
-      title: '{{ arguments.country_name_2 }} '
-      display_description: ''
+      link_display: page_2
+      link_url: ''
+      header: {  }
+      display_extenders: {  }
+      displays: {  }
+      inherit_exposed_filters: true
     cache_metadata:
       max-age: -1
       contexts:
@@ -1379,58 +1375,13 @@ display:
         - 'config:field.storage.node.body'
         - 'config:search_api.index.acquia_search_index'
   page_2:
-    display_plugin: page
     id: page_2
     display_title: List
+    display_plugin: page
     position: 1
     display_options:
-      display_extenders: {  }
-      path: explore
-      style:
-        type: default
-        options:
-          grouping:
-            -
-              field: type
-              rendered: false
-              rendered_strip: false
-            -
-              field: field_document_type
-              rendered: true
-              rendered_strip: false
-          row_class: ''
-          default_row_class: false
-      defaults:
-        style: false
-        row: false
-        cache: false
-        fields: false
-        pager: false
-        filters: false
-        filter_groups: false
-        sorts: false
-        css_class: false
-        header: false
-        use_ajax: false
-        exposed_form: false
-        use_more: false
-        use_more_always: false
-        use_more_text: false
-        arguments: false
-        empty: false
-        title: false
-        footer: false
-      row:
-        type: fields
-        options:
-          default_field_elements: true
-          inline: {  }
-          separator: ''
-          hide_empty: false
-      exposed_block: true
-      cache:
-        type: none
-        options: {  }
+      enabled: true
+      title: Explore
       fields:
         type:
           id: type
@@ -1439,6 +1390,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: search_api_field
           label: ''
           exclude: true
           alter:
@@ -1504,7 +1456,6 @@ display:
             display_methods:
               node_type:
                 display_method: label
-          plugin_id: search_api_field
         field_document_type:
           id: field_document_type
           table: search_api_datasource_acquia_search_index_entity_node
@@ -1512,6 +1463,8 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          entity_type: node
+          plugin_id: search_api_field
           label: ''
           exclude: true
           alter:
@@ -1588,8 +1541,6 @@ display:
                 view_mode: default
               tags:
                 display_method: label
-          entity_type: node
-          plugin_id: search_api_field
         field_geofield:
           id: field_geofield
           table: search_api_index_acquia_search_index
@@ -1597,6 +1548,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: search_api_field
           label: ''
           exclude: true
           alter:
@@ -1659,7 +1611,6 @@ display:
             use_highlighting: false
             multi_type: separator
             multi_separator: ', '
-          plugin_id: search_api_field
         field_video_url_2:
           id: field_video_url_2
           table: search_api_datasource_acquia_search_index_entity_paragraph
@@ -1667,6 +1618,8 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          entity_type: paragraph
+          plugin_id: search_api_field
           label: ''
           exclude: true
           alter:
@@ -1711,12 +1664,12 @@ display:
           click_sort_column: value
           type: video_embed_field_colorbox
           settings:
-            image_style: large
-            link_image_to: ''
             autoplay: false
             responsive: true
             width: 854
             height: 480
+            image_style: large
+            link_image_to: ''
             modal_max_width: 854
           group_column: value
           group_columns: {  }
@@ -1735,8 +1688,6 @@ display:
             use_highlighting: false
             multi_type: separator
             multi_separator: ', '
-          entity_type: paragraph
-          plugin_id: search_api_field
         field_article_url:
           id: field_article_url
           table: search_api_index_acquia_search_index
@@ -1744,6 +1695,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: search_api_field
           label: ''
           exclude: true
           alter:
@@ -1810,7 +1762,6 @@ display:
             use_highlighting: false
             multi_type: separator
             multi_separator: ', '
-          plugin_id: search_api_field
         field_document_url:
           id: field_document_url
           table: search_api_index_acquia_search_index
@@ -1818,6 +1769,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: search_api_field
           label: ''
           exclude: true
           alter:
@@ -1884,7 +1836,6 @@ display:
             use_highlighting: false
             multi_type: separator
             multi_separator: ', '
-          plugin_id: search_api_field
         field_file_upload:
           id: field_file_upload
           table: search_api_index_acquia_search_index
@@ -1892,6 +1843,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: search_api_field
           label: ''
           exclude: true
           alter:
@@ -1954,7 +1906,6 @@ display:
             use_highlighting: false
             multi_type: separator
             multi_separator: ', '
-          plugin_id: search_api_field
         field_video_url:
           id: field_video_url
           table: search_api_index_acquia_search_index
@@ -1962,6 +1913,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: search_api_field
           label: ''
           exclude: true
           alter:
@@ -2027,7 +1979,6 @@ display:
             use_highlighting: false
             multi_type: separator
             multi_separator: ', '
-          plugin_id: search_api_field
         field_article_url_2:
           id: field_article_url_2
           table: search_api_index_acquia_search_index
@@ -2035,6 +1986,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: search_api_field
           label: ''
           exclude: true
           alter:
@@ -2101,7 +2053,6 @@ display:
             use_highlighting: false
             multi_type: separator
             multi_separator: ', '
-          plugin_id: search_api_field
         field_document_url_2:
           id: field_document_url_2
           table: search_api_index_acquia_search_index
@@ -2109,6 +2060,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: search_api_field
           label: ''
           exclude: true
           alter:
@@ -2175,7 +2127,6 @@ display:
             use_highlighting: false
             multi_type: separator
             multi_separator: ', '
-          plugin_id: search_api_field
         field_file_upload_2:
           id: field_file_upload_2
           table: search_api_index_acquia_search_index
@@ -2183,6 +2134,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: search_api_field
           label: ''
           exclude: true
           alter:
@@ -2245,7 +2197,6 @@ display:
             use_highlighting: false
             multi_type: separator
             multi_separator: ', '
-          plugin_id: search_api_field
         field_video_url_3:
           id: field_video_url_3
           table: search_api_index_acquia_search_index
@@ -2253,6 +2204,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: search_api_field
           label: ''
           exclude: true
           alter:
@@ -2318,7 +2270,6 @@ display:
             use_highlighting: false
             multi_type: separator
             multi_separator: ', '
-          plugin_id: search_api_field
         title:
           id: title
           table: search_api_datasource_acquia_search_index_entity_node
@@ -2326,6 +2277,8 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          entity_type: node
+          plugin_id: search_api_field
           label: ''
           exclude: true
           alter:
@@ -2388,8 +2341,6 @@ display:
             use_highlighting: false
             multi_type: separator
             multi_separator: ', '
-          entity_type: node
-          plugin_id: search_api_field
         body:
           id: body
           table: search_api_index_acquia_search_index
@@ -2397,6 +2348,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: search_api_field
           label: ''
           exclude: true
           alter:
@@ -2459,7 +2411,6 @@ display:
             use_highlighting: false
             multi_type: separator
             multi_separator: ', '
-          plugin_id: search_api_field
         field_date_published:
           id: field_date_published
           table: search_api_datasource_acquia_search_index_entity_node
@@ -2467,6 +2418,8 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          entity_type: node
+          plugin_id: search_api_field
           label: ''
           exclude: true
           alter:
@@ -2530,8 +2483,6 @@ display:
             use_highlighting: false
             multi_type: separator
             multi_separator: ', '
-          entity_type: node
-          plugin_id: search_api_field
         field_authors:
           id: field_authors
           table: search_api_datasource_acquia_search_index_entity_node
@@ -2539,6 +2490,8 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          entity_type: node
+          plugin_id: search_api_field
           label: ''
           exclude: true
           alter:
@@ -2601,8 +2554,6 @@ display:
             use_highlighting: false
             multi_type: separator
             multi_separator: ', '
-          entity_type: node
-          plugin_id: search_api_field
         langcode:
           id: langcode
           table: search_api_datasource_acquia_search_index_entity_node
@@ -2610,6 +2561,8 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          entity_type: node
+          plugin_id: search_api_field
           label: ''
           exclude: true
           alter:
@@ -2673,8 +2626,6 @@ display:
             use_highlighting: false
             multi_type: separator
             multi_separator: ', '
-          entity_type: node
-          plugin_id: search_api_field
         field_publisher:
           id: field_publisher
           table: search_api_datasource_acquia_search_index_entity_node
@@ -2682,6 +2633,8 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          entity_type: node
+          plugin_id: search_api_field
           label: ''
           exclude: true
           alter:
@@ -2744,8 +2697,6 @@ display:
             use_highlighting: false
             multi_type: separator
             multi_separator: ', '
-          entity_type: node
-          plugin_id: search_api_field
         field_media_oembed_video:
           id: field_media_oembed_video
           table: search_api_datasource_acquia_search_index_entity_media
@@ -2753,6 +2704,8 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          entity_type: media
+          plugin_id: search_api_field
           label: ''
           exclude: true
           alter:
@@ -2815,8 +2768,6 @@ display:
             use_highlighting: false
             multi_type: separator
             multi_separator: ', '
-          entity_type: media
-          plugin_id: search_api_field
         field_article_url_1:
           id: field_article_url_1
           table: search_api_datasource_acquia_search_index_entity_paragraph
@@ -2824,6 +2775,8 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          entity_type: paragraph
+          plugin_id: search_api_field
           label: ''
           exclude: true
           alter:
@@ -2890,8 +2843,6 @@ display:
             use_highlighting: false
             multi_type: separator
             multi_separator: ', '
-          entity_type: paragraph
-          plugin_id: search_api_field
         field_document_url_1:
           id: field_document_url_1
           table: search_api_datasource_acquia_search_index_entity_paragraph
@@ -2899,6 +2850,8 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          entity_type: paragraph
+          plugin_id: search_api_field
           label: ''
           exclude: true
           alter:
@@ -2965,8 +2918,6 @@ display:
             use_highlighting: false
             multi_type: separator
             multi_separator: ', '
-          entity_type: paragraph
-          plugin_id: search_api_field
         field_file_upload_1:
           id: field_file_upload_1
           table: search_api_datasource_acquia_search_index_entity_paragraph
@@ -2974,6 +2925,8 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          entity_type: paragraph
+          plugin_id: search_api_field
           label: ''
           exclude: true
           alter:
@@ -3036,8 +2989,6 @@ display:
             use_highlighting: false
             multi_type: separator
             multi_separator: ', '
-          entity_type: paragraph
-          plugin_id: search_api_field
         field_video_url_1:
           id: field_video_url_1
           table: search_api_datasource_acquia_search_index_entity_paragraph
@@ -3045,6 +2996,8 @@ display:
           relationship: none
           group_type: group
           admin_label: 'Paragraph datasource: Video URL footer link'
+          entity_type: paragraph
+          plugin_id: search_api_field
           label: ''
           exclude: true
           alter:
@@ -3110,8 +3063,6 @@ display:
             use_highlighting: false
             multi_type: separator
             multi_separator: ', '
-          entity_type: paragraph
-          plugin_id: search_api_field
         nid:
           id: nid
           table: search_api_datasource_acquia_search_index_entity_node
@@ -3119,6 +3070,8 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          entity_type: node
+          plugin_id: search_api_field
           label: ''
           exclude: true
           alter:
@@ -3193,8 +3146,6 @@ display:
             format_plural_values:
               - '1'
               - '@count'
-          entity_type: node
-          plugin_id: search_api_field
         field_image:
           id: field_image
           table: search_api_datasource_acquia_search_index_entity_node
@@ -3202,6 +3153,8 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          entity_type: node
+          plugin_id: search_api_field
           label: ''
           exclude: true
           alter:
@@ -3246,8 +3199,8 @@ display:
           click_sort_column: target_id
           type: image
           settings:
-            image_style: thumbnail
             image_link: content
+            image_style: thumbnail
           group_column: ''
           group_columns: {  }
           group_rows: true
@@ -3265,8 +3218,6 @@ display:
             use_highlighting: false
             multi_type: separator
             multi_separator: ', '
-          entity_type: node
-          plugin_id: search_api_field
         field_link:
           id: field_link
           table: search_api_datasource_acquia_search_index_entity_node
@@ -3274,6 +3225,8 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          entity_type: node
+          plugin_id: search_api_field
           label: ''
           exclude: true
           alter:
@@ -3340,8 +3293,6 @@ display:
             use_highlighting: false
             multi_type: separator
             multi_separator: ', '
-          entity_type: node
-          plugin_id: search_api_field
         field_image_1:
           id: field_image_1
           table: search_api_datasource_acquia_search_index_entity_node
@@ -3349,6 +3300,8 @@ display:
           relationship: none
           group_type: group
           admin_label: 'Content: Image – output view initiative link'
+          entity_type: node
+          plugin_id: search_api_field
           label: ''
           exclude: true
           alter:
@@ -3393,8 +3346,8 @@ display:
           click_sort_column: target_id
           type: image
           settings:
-            image_style: ''
             image_link: ''
+            image_style: ''
           group_column: ''
           group_columns: {  }
           group_rows: true
@@ -3412,8 +3365,6 @@ display:
             use_highlighting: false
             multi_type: separator
             multi_separator: ', '
-          entity_type: node
-          plugin_id: search_api_field
         field_video_url_4:
           id: field_video_url_4
           table: search_api_index_acquia_search_index
@@ -3421,6 +3372,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: search_api_field
           label: ''
           exclude: true
           alter:
@@ -3465,12 +3417,12 @@ display:
           click_sort_column: value
           type: video_embed_field_colorbox
           settings:
-            image_style: large
-            link_image_to: ''
             autoplay: false
             responsive: true
             width: 854
             height: 480
+            image_style: large
+            link_image_to: ''
             modal_max_width: 854
           group_column: value
           group_columns: {  }
@@ -3489,7 +3441,6 @@ display:
             use_highlighting: false
             multi_type: separator
             multi_separator: ', '
-          plugin_id: search_api_field
         field_resource_type:
           id: field_resource_type
           table: search_api_datasource_acquia_search_index_entity_node
@@ -3497,6 +3448,8 @@ display:
           relationship: none
           group_type: group
           admin_label: 'Resource body'
+          entity_type: node
+          plugin_id: search_api_field
           label: ''
           exclude: true
           alter:
@@ -3559,8 +3512,6 @@ display:
             use_highlighting: false
             multi_type: separator
             multi_separator: ', '
-          entity_type: node
-          plugin_id: search_api_field
         field_image_2:
           id: field_image_2
           table: search_api_datasource_acquia_search_index_entity_node
@@ -3568,6 +3519,8 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          entity_type: node
+          plugin_id: search_api_field
           label: ''
           exclude: true
           alter:
@@ -3612,8 +3565,8 @@ display:
           click_sort_column: target_id
           type: image
           settings:
-            image_style: thumbnail
             image_link: ''
+            image_style: thumbnail
           group_column: ''
           group_columns: {  }
           group_rows: true
@@ -3631,8 +3584,6 @@ display:
             use_highlighting: false
             multi_type: separator
             multi_separator: ', '
-          entity_type: node
-          plugin_id: search_api_field
         nothing:
           id: nothing
           table: views
@@ -3640,6 +3591,7 @@ display:
           relationship: none
           group_type: group
           admin_label: 'Field output'
+          plugin_id: custom
           label: ''
           exclude: false
           alter:
@@ -3681,18 +3633,16 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: false
-          plugin_id: custom
-      display_description: ''
       pager:
         type: full
         options:
-          items_per_page: 10
           offset: 0
-          id: 0
+          items_per_page: 10
           total_pages: null
+          id: 0
           tags:
-            previous: '‹ Previous'
             next: 'Next ›'
+            previous: '‹ Previous'
             first: '« First'
             last: 'Last »'
           expose:
@@ -3704,7 +3654,52 @@ display:
             offset: false
             offset_label: Offset
           quantity: 9
-      enabled: true
+      exposed_form:
+        type: bef
+        options:
+          submit_button: Search
+          reset_button: true
+          reset_button_label: Reset
+          exposed_sorts_label: 'Sort by'
+          expose_sort_order: false
+          sort_asc_label: Asc
+          sort_desc_label: Desc
+          input_required: false
+          text_input_required: 'Select any filter and click on Apply to see results'
+          text_input_required_format: basic_html
+          bef: {  }
+      cache:
+        type: none
+        options: {  }
+      empty: {  }
+      sorts:
+        type:
+          id: type
+          table: search_api_index_acquia_search_index
+          field: type
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: search_api
+          order: ASC
+          expose:
+            label: ''
+            field_identifier: type
+          exposed: false
+        created:
+          id: created
+          table: search_api_index_acquia_search_index
+          field: created
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: search_api
+          order: DESC
+          expose:
+            label: ''
+            field_identifier: created
+          exposed: false
+      arguments: {  }
       filters:
         status:
           id: status
@@ -3713,6 +3708,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: search_api_boolean
           operator: '='
           value: '1'
           group: 1
@@ -3723,14 +3719,14 @@ display:
             description: ''
             use_operator: false
             operator: ''
+            operator_limit_selection: false
+            operator_list: {  }
             identifier: ''
             required: false
             remember: false
             multiple: false
             remember_roles:
               authenticated: authenticated
-            operator_limit_selection: false
-            operator_list: {  }
           is_grouped: false
           group_info:
             label: ''
@@ -3743,7 +3739,6 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
-          plugin_id: search_api_boolean
         search_api_fulltext:
           id: search_api_fulltext
           table: search_api_index_acquia_search_index
@@ -3751,6 +3746,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: search_api_fulltext
           operator: and
           value: ''
           group: 1
@@ -3789,7 +3785,6 @@ display:
           parse_mode: terms
           min_length: 2
           fields: {  }
-          plugin_id: search_api_fulltext
         type:
           id: type
           table: search_api_index_acquia_search_index
@@ -3797,6 +3792,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: search_api_options
           operator: or
           value:
             initiative: initiative
@@ -3830,7 +3826,6 @@ display:
             default_group_multiple: {  }
             group_items: {  }
           reduce_duplicates: false
-          plugin_id: search_api_options
         field_document_type:
           id: field_document_type
           table: search_api_index_acquia_search_index
@@ -3838,6 +3833,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: search_api_term
           operator: or
           value:
             - 986
@@ -3871,52 +3867,63 @@ display:
             default_group_multiple: {  }
             group_items: {  }
           reduce_duplicates: false
-          type: textfield
-          limit: true
           vid: document_type
+          type: textfield
           hierarchy: false
+          limit: true
           error_message: true
-          plugin_id: search_api_term
       filter_groups:
         operator: AND
         groups:
           1: AND
           2: OR
-      menu:
-        type: none
-        title: List
-        description: 'View as list'
-        expanded: false
-        parent: 'menu_link_content:25f43f58-274d-473c-b12f-0e55ed2ed6cb'
-        weight: 0
-        context: '0'
-        menu_name: main
-      sorts:
-        type:
-          id: type
-          table: search_api_index_acquia_search_index
-          field: type
-          relationship: none
-          group_type: group
-          admin_label: ''
-          order: ASC
-          exposed: false
-          expose:
-            label: ''
-          plugin_id: search_api
-        created:
-          id: created
-          table: search_api_index_acquia_search_index
-          field: created
-          relationship: none
-          group_type: group
-          admin_label: ''
-          order: DESC
-          exposed: false
-          expose:
-            label: ''
-          plugin_id: search_api
+      style:
+        type: default
+        options:
+          grouping:
+            -
+              field: type
+              rendered: false
+              rendered_strip: false
+            -
+              field: field_document_type
+              rendered: true
+              rendered_strip: false
+          row_class: ''
+          default_row_class: false
+      row:
+        type: fields
+        options:
+          default_field_elements: true
+          inline: {  }
+          separator: ''
+          hide_empty: false
+      defaults:
+        empty: false
+        cache: false
+        title: false
+        css_class: false
+        use_ajax: false
+        pager: false
+        use_more: false
+        use_more_always: false
+        use_more_text: false
+        exposed_form: false
+        style: false
+        row: false
+        fields: false
+        sorts: false
+        arguments: false
+        filters: false
+        filter_groups: false
+        header: false
+        footer: false
       css_class: container
+      use_ajax: false
+      display_description: ''
+      use_more: false
+      use_more_always: false
+      use_more_text: More
       header:
         area:
           id: area
@@ -3925,12 +3932,12 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: text
           empty: true
-          tokenize: true
           content:
             value: '<span class="results">[view:total-rows] results&nbsp;<strong>{{ filters.search_api_fulltext }}</strong></span>'
             format: full_html
-          plugin_id: text
+          tokenize: true
         entity_block:
           id: entity_block
           table: views
@@ -3938,12 +3945,12 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: entity
           empty: true
-          tokenize: true
           target: currentsearch
           view_mode: default
+          tokenize: true
           bypass_access: true
-          plugin_id: entity
         view:
           id: view
           table: views
@@ -3951,31 +3958,10 @@ display:
           relationship: none
           group_type: group
           admin_label: 'Country header'
+          plugin_id: view
           empty: false
           view_to_insert: 'explore:attachment_1'
           inherit_arguments: true
-          plugin_id: view
-      use_ajax: false
-      exposed_form:
-        type: bef
-        options:
-          submit_button: Search
-          reset_button: true
-          reset_button_label: Reset
-          exposed_sorts_label: 'Sort by'
-          expose_sort_order: false
-          sort_asc_label: Asc
-          sort_desc_label: Desc
-          input_required: false
-          text_input_required: 'Select any filter and click on Apply to see results'
-          bef: {  }
-          text_input_required_format: basic_html
-      use_more: false
-      use_more_always: false
-      use_more_text: More
-      arguments: {  }
-      empty: {  }
-      title: Explore
       footer:
         area:
           id: area
@@ -3984,12 +3970,24 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: text
           empty: false
-          tokenize: false
           content:
             value: "<div class=\"bg-secondary text-white pt-3 pb-1 px-3 rounded\"><p><strong>Have we missed anything?</strong><br />\r\nPlease contact us at info@peoplenotpoaching.org, or complete our <a href=\"https://www.surveymonkey.com/r/5CMTPDV\" style=\"color: white; text-decoration: underline;\">feedback survey</a> to let us know.</p></div>"
             format: full_html
-          plugin_id: text
+          tokenize: false
+      exposed_block: true
+      display_extenders: {  }
+      path: explore
+      menu:
+        type: none
+        title: List
+        description: 'View as list'
+        weight: 0
+        expanded: false
+        menu_name: main
+        parent: 'menu_link_content:25f43f58-274d-473c-b12f-0e55ed2ed6cb'
+        context: '0'
     cache_metadata:
       max-age: -1
       contexts:

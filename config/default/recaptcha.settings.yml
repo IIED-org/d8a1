@@ -1,3 +1,5 @@
+_core:
+  default_config_hash: ZKQ03ePk4sH2zESRw4tdZYw__nG2YN4Ru5roPL23g3A
 site_key: 6Lci23UUAAAAACVHR9tJjn_-8GraaKhjWBhtvhF9
 secret_key: 6Lci23UUAAAAABsCdp2fSYQ_jNn5C-lDaBODOYOs
 widget:
@@ -6,5 +8,3 @@ widget:
   size: ''
   tabindex: 99
   noscript: true
-_core:
-  default_config_hash: ZKQ03ePk4sH2zESRw4tdZYw__nG2YN4Ru5roPL23g3A

@@ -11,12 +11,12 @@ pattern: 'training/[node:title]'
 selection_criteria:
   ae634cb4-db6f-4fc9-95c3-d723e7fd5013:
     id: node_type
-    bundles:
-      training: training
     negate: false
+    uuid: ae634cb4-db6f-4fc9-95c3-d723e7fd5013
     context_mapping:
       node: node
-    uuid: ae634cb4-db6f-4fc9-95c3-d723e7fd5013
+    bundles:
+      training: training
 selection_logic: and
 weight: -5
 relationships: {  }

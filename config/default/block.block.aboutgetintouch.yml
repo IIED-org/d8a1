@@ -18,14 +18,14 @@ plugin: 'block_content:e488f85c-4abe-446e-9e84-0a7100768587'
 settings:
   id: 'block_content:e488f85c-4abe-446e-9e84-0a7100768587'
   label: 'About get in touch'
-  provider: block_content
   label_display: '0'
+  provider: block_content
   status: true
   info: ''
   view_mode: full
 visibility:
   request_path:
     id: request_path
-    pages: /about
     negate: false
     context_mapping: {  }
+    pages: /about
