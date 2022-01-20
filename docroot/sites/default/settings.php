@@ -253,8 +253,6 @@ $databases = [];
  */
 // $config_directories['vcs'] = $app_root . '/../config/' . basename($site_path);
 
-$settings['config_sync_directory'] = $app_root . '/../config/default/';
-
 /**
  * Settings:
  *
@@ -842,3 +840,5 @@ $config['acquia_search.settings']['override_search_core'] = acquia_search_overri
 if (file_exists($app_root . '/' . $site_path . '/settings.local.php')) {
    include $app_root . '/' . $site_path . '/settings.local.php';
 }
+
+$settings['config_sync_directory'] = $app_root . '/../config/default/';
