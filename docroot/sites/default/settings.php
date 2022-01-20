@@ -253,7 +253,7 @@ $databases = [];
  */
 // $config_directories['vcs'] = $app_root . '/../config/' . basename($site_path);
 
-$settings['config_sync_directory'] = $app_root . '/../config/default';
+$settings['config_sync_directory'] = $app_root . '/../config/default/';
 
 /**
  * Settings:
