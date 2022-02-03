@@ -5,7 +5,7 @@
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => '25598664f002143e462e7e91073a9231d1c43a1c',
+        'reference' => '9c8df00932a3647d05f2dd577e7ecc122fea4ced',
         'name' => 'acquia/acquia-ra-composer',
         'dev' => true,
     ),
@@ -25,7 +25,7 @@
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => '25598664f002143e462e7e91073a9231d1c43a1c',
+            'reference' => '9c8df00932a3647d05f2dd577e7ecc122fea4ced',
             'dev_requirement' => false,
         ),
         'asm89/stack-cors' => array(
@@ -491,12 +491,12 @@
             ),
         ),
         'drupal/colorbox' => array(
-            'pretty_version' => '1.7.0',
-            'version' => '1.7.0.0',
+            'pretty_version' => '1.8.0',
+            'version' => '1.8.0.0',
             'type' => 'drupal-module',
             'install_path' => __DIR__ . '/../../docroot/modules/contrib/colorbox',
             'aliases' => array(),
-            'reference' => '8.x-1.7',
+            'reference' => '8.x-1.8',
             'dev_requirement' => false,
         ),
         'drupal/comment' => array(
