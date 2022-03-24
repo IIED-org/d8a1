@@ -418,4 +418,5 @@ tracker_settings:
 options:
   cron_limit: 100
   index_directly: true
+  track_changes_in_references: true
 server: default_server

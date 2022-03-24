@@ -456,4 +456,5 @@ options:
       weight: -50
       settings: {  }
       processorPluginId: language
+  track_changes_in_references: true
 server: acquia_search_server
