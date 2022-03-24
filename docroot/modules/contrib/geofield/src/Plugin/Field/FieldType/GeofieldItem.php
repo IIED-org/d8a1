@@ -190,20 +190,15 @@ class GeofieldItem extends FieldItemBase {
    * {@inheritdoc}
    */
   public function isEmpty() {
-    try {
-      $value = $this->get('value')->getValue();
-      if (!empty($value)) {
-        /* @var \Drupal\geofield\GeoPHP\GeoPHPInterface $geo_php_wrapper */
-        // Note: Geofield FieldType doesn't support Dependency Injection yet
-        // (https://www.drupal.org/node/2053415).
-        $geo_php_wrapper = \Drupal::service('geofield.geophp');
-        /* @var \Geometry|null $geometry */
-        $geometry = $geo_php_wrapper->load($value);
-        return $geometry instanceof \Geometry ? $geometry->isEmpty() : TRUE;
-      }
-    }
-    catch (\Exception $e) {
-      watchdog_exception('geofield get value exception', $e);
+    $value = $this->get('value')->getValue();
+    if (!empty($value)) {
+      /* @var \Drupal\geofield\GeoPHP\GeoPHPInterface $geo_php_wrapper */
+      // Note: Geofield FieldType doesn't support Dependency Injection yet
+      // (https://www.drupal.org/node/2053415).
+      $geo_php_wrapper = \Drupal::service('geofield.geophp');
+      /* @var \Geometry|null $geometry */
+      $geometry = $geo_php_wrapper->load($value);
+      return $geometry instanceof \Geometry ? $geometry->isEmpty() : FALSE;
     }
     return TRUE;
   }
@@ -220,9 +215,15 @@ class GeofieldItem extends FieldItemBase {
    * Populates computed variables.
    */
   protected function populateComputedValues() {
-
-    /* @var \Geometry $geom */
-    $geom = \Drupal::service('geofield.geophp')->load($this->value);
+    // Populate values only if $this->>value is not NULL.
+    // @see https://www.drupal.org/project/geofield/issues/3256644
+    // As passing null to parameter #2 ($data) of type string is deprecated in
+    // fwrite() of geoPHP::detectFormat()
+    // @see https://php.watch/versions/8.1/internal-func-non-nullable-null-deprecation
+    if ($this->value !== NULL) {
+      /* @var \Geometry $geom */
+      $geom = \Drupal::service('geofield.geophp')->load($this->value);
+    }
 
     if (!empty($geom) && !$geom->isEmpty()) {
       /* @var \Point $centroid */

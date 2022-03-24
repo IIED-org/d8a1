@@ -4,6 +4,8 @@ namespace Drupal\social_auth_twitter\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Messenger\MessengerInterface;
+use Drupal\Core\Render\RenderContext;
+use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Routing\TrustedRedirectResponse;
 use Drupal\social_auth\User\UserAuthenticator;
 use Drupal\social_auth\SocialAuthDataHandler;
@@ -60,6 +62,13 @@ class TwitterAuthController extends ControllerBase {
   protected $messenger;
 
   /**
+   * The renderer service.
+   *
+   * @var \Drupal\Core\Render\Renderer
+   */
+  protected $renderer;
+
+  /**
    * TwitterLoginController constructor.
    *
    * @param \Drupal\social_api\Plugin\NetworkManager $network_manager
@@ -74,25 +83,33 @@ class TwitterAuthController extends ControllerBase {
    *   SocialAuthDataHandler object.
    * @param \Drupal\Core\Messenger\MessengerInterface $messenger
    *   The messenger service.
+   * @param \Drupal\Core\Render\RendererInterface $renderer
+   *   Used to handle metadata for redirection to authentication URL.
    */
   public function __construct(NetworkManager $network_manager,
                               UserAuthenticator $user_authenticator,
                               TwitterAuthManager $twitter_manager,
                               RequestStack $request,
                               SocialAuthDataHandler $data_handler,
-                              MessengerInterface $messenger) {
+                              MessengerInterface $messenger,
+                              RendererInterface $renderer = NULL) {
     $this->networkManager = $network_manager;
     $this->userAuthenticator = $user_authenticator;
     $this->twitterManager = $twitter_manager;
     $this->request = $request;
     $this->dataHandler = $data_handler;
     $this->messenger = $messenger;
+    $this->renderer = $renderer;
 
     // Sets the plugin id.
     $this->userAuthenticator->setPluginId('social_auth_twitter');
 
     // Sets the session keys to nullify if user could not logged in.
     $this->userAuthenticator->setSessionKeysToNullify(['access_token']);
+
+    if (!$this->renderer) {
+      $this->renderer = \Drupal::service('renderer');
+    }
   }
 
   /**
@@ -105,7 +122,8 @@ class TwitterAuthController extends ControllerBase {
       $container->get('twitter_auth.manager'),
       $container->get('request_stack'),
       $container->get('social_auth.data_handler'),
-      $container->get('messenger')
+      $container->get('messenger'),
+      $container->get('renderer')
     );
   }
 
@@ -113,45 +131,61 @@ class TwitterAuthController extends ControllerBase {
    * Redirects to Twitter for authentication.
    */
   public function redirectToTwitter() {
-    try {
-      /* @var \Drupal\social_auth_twitter\Plugin\Network\TwitterAuth $network_plugin */
-      // Creates an instance of the social_auth_twitter Network Plugin.
-      $network_plugin = $this->networkManager->createInstance('social_auth_twitter');
+    $context = new RenderContext();
+    $response = $this->renderer->executeInRenderContext($context, function () {
+      try {
+        /* @var \Drupal\social_auth_twitter\Plugin\Network\TwitterAuth $network_plugin */
+        // Creates an instance of the social_auth_twitter Network Plugin.
+        $network_plugin = $this->networkManager->createInstance('social_auth_twitter');
 
-      // Destination parameter specified in url.
-      $destination = $this->request->getCurrentRequest()->get('destination');
-      // If destination parameter is set, save it.
-      if ($destination) {
-        $this->userAuthenticator->setDestination($destination);
+        // Destination parameter specified in url.
+        $destination = $this->request->getCurrentRequest()->get('destination');
+        // If destination parameter is set, save it.
+        if ($destination) {
+          $this->userAuthenticator->setDestination($destination);
+          $this->request->getCurrentRequest()->query->remove('destination');
+        }
+
+        /* @var \Abraham\TwitterOAuth\TwitterOAuth $connection */
+        $connection = $network_plugin->getSdk();
+
+        if ($connection) {
+
+          // Requests Twitter to get temporary tokens.
+          $request_token = $connection->oauth('oauth/request_token', ['oauth_callback' => $network_plugin->getOauthCallback()]);
+
+          // Saves the temporary token values in session.
+          $this->twitterManager->setOauthToken($request_token['oauth_token']);
+          $this->twitterManager->setOauthTokenSecret($request_token['oauth_token_secret']);
+
+          // Generates url for user authentication.
+          $url = $connection->url('oauth/authorize', ['oauth_token' => $request_token['oauth_token']]);
+
+          // Forces session to be saved before redirection.
+          $this->twitterManager->save();
+
+          return new TrustedRedirectResponse($url);
+        }
+        else {
+          $this->messenger->addError($this->t('Social Auth Twitter not configured properly. Contact site administrator.'));
+
+          return $this->redirect('user.login');
+        }
       }
+      catch (\Exception $ex) {
+        $this->messenger->addError($this->t('You could not be authenticated, please contact the administrator.'));
 
-      /* @var \Abraham\TwitterOAuth\TwitterOAuth $connection */
-      $connection = $network_plugin->getSdk();
+        return $this->redirect('user.login');
+      }
+    });
 
-      // Requests Twitter to get temporary tokens.
-      $request_token = $connection->oauth('oauth/request_token', ['oauth_callback' => $network_plugin->getOauthCallback()]);
-
-      // Saves the temporary token values in session.
-      $this->twitterManager->setOauthToken($request_token['oauth_token']);
-      $this->twitterManager->setOauthTokenSecret($request_token['oauth_token_secret']);
-
-      // Generates url for user authentication.
-      $url = $connection->url('oauth/authorize', ['oauth_token' => $request_token['oauth_token']]);
-
-      // Forces session to be saved before redirection.
-      $this->twitterManager->save();
-
-      $response = new TrustedRedirectResponse($url);
-      $response->send();
-
-      // Redirects the user to allow them to grant permissions.
-      return $response;
+    // Add bubbleable metadata to the response.
+    if ($response instanceof TrustedRedirectResponse && !$context->isEmpty()) {
+      $bubbleable_metadata = $context->pop();
+      $response->addCacheableDependency($bubbleable_metadata);
     }
-    catch (\Exception $ex) {
-      $this->messenger->addError($this->t('You could not be authenticated, please contact the administrator.'));
 
-      return $this->redirect('user.login');
-    }
+     return $response;
   }
 
   /**

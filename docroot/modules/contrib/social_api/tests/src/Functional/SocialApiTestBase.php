@@ -17,7 +17,7 @@ abstract class SocialApiTestBase extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['social_api'];
+  protected static $modules = ['social_api'];
 
   /**
    * The installation profile to use with this test.
@@ -92,7 +92,7 @@ abstract class SocialApiTestBase extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Create a non-administrative user.

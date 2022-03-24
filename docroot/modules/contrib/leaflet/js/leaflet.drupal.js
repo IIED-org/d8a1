@@ -83,6 +83,15 @@
         if (content.length) {
           let url = content.data('leaflet-ajax-popup');
           Drupal.ajax({url: url}).execute().done(function () {
+
+            // Copy the html we received via AJAX to the popup, so we won't
+            // have to make another AJAX call (#see 3258780).
+            e.popup.setContent(element.innerHTML);
+
+            //Call update() so Leaflet refreshes the map, panning it if
+            // necessary to bring the full popup into view (#see 3258780).
+            e.popup.update();
+
             // Attach drupal behaviors on new content.
             Drupal.attachBehaviors(element, drupalSettings);
           });
@@ -151,15 +160,11 @@
       self.lMap.fitWorld();
     }
 
-    // Add attribution.
-    if (self.settings.attributionControl && self.map_definition.attribution) {
-      self.lMap.attributionControl.setPrefix(self.map_definition.attribution.prefix);
-      self.attributionControl.addAttribution(self.map_definition.attribution.text);
-    }
-
     // Add Fullscreen Control, if requested.
-    if (self.settings.fullscreen_control) {
-      self.lMap.addControl(new L.Control.Fullscreen());
+    if (self.settings.fullscreen && self.settings.fullscreen.control) {
+      L.control.fullscreen(
+        JSON.parse(self.settings.fullscreen.options)
+      ).addTo(self.lMap);
     }
 
   };
@@ -573,7 +578,7 @@
   // @NOTE: This method used by Leaflet Markecluster module (don't remove/rename)
   Drupal.Leaflet.prototype.fitbounds = function(mapid) {
     let self = this;
-    let start_zoom = self.settings.zoom ?? 12;
+    let start_zoom = self.settings.zoom ? self.settings.zoom : 12;
     // Note: self.settings.center might not be defined in case of Leaflet widget and Automatically locate user current position.
     let start_center = self.settings.center ? new L.LatLng(self.settings.center.lat, self.settings.center.lon) : new L.LatLng(0,0);
 

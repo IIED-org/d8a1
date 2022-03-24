@@ -69,8 +69,14 @@ class BetterFieldDescriptionsSettingsForm extends ConfigFormBase {
   public function buildForm(array $form, FormStateInterface $form_state) {
     // Get info on bundles.
     $all_bundles = $this->bundleInfoService->getAllBundleInfo();
+    // Sort into order on entity ids.
+    ksort($all_bundles);
+    // Get editable config.
+    $config = $this->config('better_field_descriptions.settings');
+    // Get list of entity types selected for better desctiptions.
+    $bfde = $config->get('better_field_descriptions_entities');
     // Get list of fields selected for better descriptions.
-    $bfds = $this->config('better_field_descriptions.settings')->get('better_field_descriptions_settings');
+    $bfds = $config->get('better_field_descriptions_settings');
 
     $form['descriptions'] = [
       '#type' => 'markup',
@@ -84,8 +90,9 @@ class BetterFieldDescriptionsSettingsForm extends ConfigFormBase {
       '#tree' => TRUE,
     ];
 
+    $field_map = $this->entityFieldManager->getFieldMap();
     foreach ($all_bundles as $entity_type => $bundles) {
-      if (in_array($entity_type, ['node', 'paragraph'])) {
+      if (in_array($entity_type, $bfde) && in_array($entity_type, array_keys($field_map))) {
         foreach ($bundles as $bundle => $label) {
           // Array to hold fields in the node.
           $fields_instances = [];
@@ -144,6 +151,11 @@ class BetterFieldDescriptionsSettingsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
+    // Get the config settings.
+    $config = $this->config('better_field_descriptions.settings');
+    // Get list of fields selected for better descriptions.
+    $bfdescriptions = $config->get('better_field_descriptions');
+
     // We don't want our settings to contain 0-values, only selected values.
     $bfds = [];
 
@@ -155,15 +167,21 @@ class BetterFieldDescriptionsSettingsForm extends ConfigFormBase {
           // $value is (int) 0 if the field was not selected in the form.
           if (is_string($value)) {
             $bfds[$entity_type][$bundle_machine_name][$field_machine_name] = $field_machine_name;
-            $bfd[$entity_type][$bundle_machine_name][$field_machine_name]['description'] = 'Sample Description';
-            $bfd[$entity_type][$bundle_machine_name][$field_machine_name]['label'] = 'Label';
+            // Get any existing description and/or label.
+            $description = $bfdescriptions[$entity_type][$bundle_machine_name][$field_machine_name]['description'] ?? 'Sample Description';
+            $label = $bfdescriptions[$entity_type][$bundle_machine_name][$field_machine_name]['label'] ?? 'Label';
+            $position = $bfdescriptions[$entity_type][$bundle_machine_name][$field_machine_name]['position'] ?? 1;
+            // Store the existing description/label or default values.
+            $bfd[$entity_type][$bundle_machine_name][$field_machine_name]['description'] = $description;
+            $bfd[$entity_type][$bundle_machine_name][$field_machine_name]['label'] = $label;
+            $bfd[$entity_type][$bundle_machine_name][$field_machine_name]['position'] = $position;
           }
         }
       }
     }
 
-    $config = $this->config('better_field_descriptions.settings')->set('better_field_descriptions_settings', $bfds);
-    $config = $this->config('better_field_descriptions.settings')->set('better_field_descriptions', $bfd);
+    $config->set('better_field_descriptions_settings', $bfds);
+    $config->set('better_field_descriptions', $bfd);
     $config->save();
     parent::submitForm($form, $form_state);
   }

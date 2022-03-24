@@ -23,7 +23,7 @@ class UserTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['social_auth'];
+  protected static $modules = ['social_auth'];
 
   /**
    * The Drupal user.
@@ -49,7 +49,7 @@ class UserTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->user = $this->drupalCreateUser();

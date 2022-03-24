@@ -2,12 +2,6 @@
 
 declare(strict_types=1);
 
-/**
- * @see       https://github.com/laminas/laminas-servicemanager for the canonical source repository
- * @copyright https://github.com/laminas/laminas-servicemanager/blob/master/COPYRIGHT.md
- * @license   https://github.com/laminas/laminas-servicemanager/blob/master/LICENSE.md New BSD License
- */
-
 namespace Laminas\ServiceManager\Tool;
 
 use Interop\Container\ContainerInterface;
@@ -31,15 +25,15 @@ use function substr;
 
 class FactoryCreator
 {
-    const FACTORY_TEMPLATE = <<<'EOT'
+    public const FACTORY_TEMPLATE = <<<'EOT'
         <?php
-        
+
         declare(strict_types=1);
-        
+
         namespace %s;
-        
+
         %s
-        
+
         class %sFactory implements FactoryInterface
         {
             /**
@@ -53,7 +47,7 @@ class FactoryCreator
                 return new %s(%s);
             }
         }
-        
+
         EOT;
 
     private const IMPORT_ALWAYS = [
@@ -80,14 +74,9 @@ class FactoryCreator
         );
     }
 
-    /**
-     * @param $className
-     * @return string
-     */
-    private function getClassName($className)
+    private function getClassName(string $className): string
     {
-        $class = substr($className, strrpos($className, '\\') + 1);
-        return $class;
+        return substr($className, strrpos($className, '\\') + 1);
     }
 
     /**
@@ -115,7 +104,7 @@ class FactoryCreator
                     return false;
                 }
 
-                $type = $argument->getType();
+                $type  = $argument->getType();
                 $class = null !== $type && ! $type->isBuiltin() ? $type->getName() : null;
 
                 if (null === $class) {
@@ -146,9 +135,8 @@ class FactoryCreator
      */
     private function createArgumentString($className)
     {
-        $arguments = array_map(function (string $dependency): string {
-            return sprintf('$container->get(\\%s::class)', $dependency);
-        }, $this->getConstructorParameters($className));
+        $arguments = array_map(fn(string $dependency): string
+            => sprintf('$container->get(\\%s::class)', $dependency), $this->getConstructorParameters($className));
 
         switch (count($arguments)) {
             case 0:
@@ -157,7 +145,7 @@ class FactoryCreator
                 return array_shift($arguments);
             default:
                 $argumentPad = str_repeat(' ', 12);
-                $closePad = str_repeat(' ', 8);
+                $closePad    = str_repeat(' ', 8);
                 return sprintf(
                     "\n%s%s\n%s",
                     $argumentPad,
@@ -171,8 +159,6 @@ class FactoryCreator
     {
         $imports = array_merge(self::IMPORT_ALWAYS, [$className]);
         sort($imports);
-        return implode("\n", array_map(function (string $import): string {
-            return sprintf('use %s;', $import);
-        }, $imports));
+        return implode("\n", array_map(static fn(string $import): string => sprintf('use %s;', $import), $imports));
     }
 }

@@ -6,7 +6,7 @@ core: 8.x
 core_version_requirement: ^8 || ^9
 configure: better_field_descriptions_admin_settings
 
-# Information added by Drupal.org packaging script on 2019-11-30
-version: '8.x-1.5'
+# Information added by Drupal.org packaging script on 2021-10-27
+version: '8.x-1.7'
 project: 'better_field_descriptions'
-datestamp: 1575119893
+datestamp: 1635315762

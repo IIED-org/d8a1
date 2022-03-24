@@ -32,6 +32,7 @@ class AccountModalSettingsForm extends ConfigFormBase {
       ->set('profile_type', $form_state->getValue('profile_type'))
       ->set('header_blocks', $form_state->getValue('header_blocks'))
       ->set('footer_blocks', $form_state->getValue('footer_blocks'))
+      ->set('messages_position', $form_state->getValue('messages_position'))
       ->save();
 
     parent::submitForm($form, $form_state);
@@ -85,6 +86,17 @@ class AccountModalSettingsForm extends ConfigFormBase {
       '#title' => $this->t('Dialog height'),
       '#description' => $this->t('The value should either be the height of the modal window in pixels, or "auto". The default is auto.'),
       '#default_value' => $config->get('dialog_height'),
+    ];
+
+    $form['messages_position'] = [
+      '#type' => 'radios',
+      '#title' => $this->t('Messages position'),
+      '#options' => [
+        'append' => 'Below the form',
+        'prepend' => 'Above the form',
+      ],
+      '#description' => $this->t('The position of the status messages.'),
+      '#default_value' => $config->get('messages_position'),
     ];
 
     /** @var \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler */

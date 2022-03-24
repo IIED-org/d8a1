@@ -118,11 +118,13 @@ function better_field_descriptions_field_widget_form_alter(&$element, FormStateI
             ? $default_label
             : $data['label'];
 
-          if ($element['#type'] == 'managed_file' && $position == '#suffix') {
-            $position = '#field_suffix';
-          }
-          if ($element['#type'] == 'managed_file' && $position == '#prefix') {
-            $position = '#field_prefix';
+          if (isset($element['#type'])) {
+            if ($element['#type'] == 'managed_file' && $position == '#suffix') {
+              $position = '#field_suffix';
+            }
+            if ($element['#type'] == 'managed_file' && $position == '#prefix') {
+              $position = '#field_prefix';
+            }
           }
           break;
 

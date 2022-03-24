@@ -30,6 +30,7 @@ Each line contains the country:
  - code International Olympic Committee (`cioc`)
  - ISO 3166-1 independence status (`independent`) (denotes the country is considered a sovereign state)
  - ISO 3166-1 assignment status (`status`)
+ - UN Member status (`unMember`)
  - `currencies` - list of all currencies
  	- key: ISO 4217 currency code
  	- value: currency object
@@ -60,6 +61,7 @@ Each line contains the country:
  - land borders (`borders`)
  - land area in km² (`area`)
  - Emoji flag (`flag`)
+ - calling codes (`callingCodes`)
 
 #### Additional data
 The [data](https://github.com/mledoze/countries/tree/master/data) folder contains additional data such as the countries
@@ -86,7 +88,8 @@ GeoJSON outlines and flags in SVG format.
 	"cioc": "AUT",
 	"independent": true,
 	"status": "officially-assigned",
-	"currency": ["EUR"],
+	"unMember": true,
+	"currencies": {"EUR": {"name": "Euro", "symbol": "\u20ac"}},
 	"idd": {
 		"root": "+4",
 		"suffixes": ["3"]
@@ -111,7 +114,6 @@ GeoJSON outlines and flags in SVG format.
 		"spa": {"official": "República de Austria", "common": "Austria"}
 	},
 	"latlng": [47.33333333, 13.33333333],
-	"demonym": "Austrian",
 	"demonyms": {
 		"fra": {
 			"f": "Autrichienne",
@@ -125,6 +127,7 @@ GeoJSON outlines and flags in SVG format.
 	"landlocked": true,
 	"borders": ["CZE", "DEU", "HUN", "ITA", "LIE", "SVK", "SVN", "CHE"],
 	"area": 83871,
+	"callingCodes": ["+43"]
 	"flag": "\ud83c\udde6\ud83c\uddf9"
 }
 ```

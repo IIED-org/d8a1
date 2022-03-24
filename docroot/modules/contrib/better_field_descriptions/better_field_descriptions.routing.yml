@@ -13,3 +13,11 @@ better_field_descriptions_admin_settings.bundles:
     _title: 'Bundles'
   requirements:
     _permission: 'add better descriptions to fields'
+
+better_field_descriptions_admin_settings.entities:
+  path: '/admin/config/content/better_field_descriptions/entities'
+  defaults:
+    _form: '\Drupal\better_field_descriptions\Form\BetterFieldDescriptionsEntitiesForm'
+    _title: 'Entities'
+  requirements:
+    _permission: 'add better descriptions to fields'

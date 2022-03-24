@@ -6,6 +6,7 @@ use Drupal\account_modal\AjaxCommand\RefreshPageCommand;
 use Drupal\block\Entity\Block;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\AppendCommand;
+use Drupal\Core\Ajax\PrependCommand;
 use Drupal\Core\Ajax\CloseModalDialogCommand;
 use Drupal\Core\Ajax\OpenModalDialogCommand;
 use Drupal\Core\Ajax\RedirectCommand;
@@ -29,6 +30,7 @@ class AccountModalAjaxHelper {
   public static function ajaxCallback($pageId, array $form, FormStateInterface $formState) {
     $response = new AjaxResponse();
     $messages = \Drupal::messenger()->all();
+    $config = \Drupal::config('account_modal.settings');
 
     if (!isset($messages['error'])) {
       $response->addCommand(new CloseModalDialogCommand());
@@ -43,7 +45,6 @@ class AccountModalAjaxHelper {
         /** @var \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler */
         $moduleHandler = \Drupal::service('module_handler');
         $profileIsInstalled = $moduleHandler->moduleExists('profile');
-        $config = \Drupal::config('account_modal.settings');
 
         $command = ($config->get('create_profile_after_registration') && $profileIsInstalled)
           ? self::newProfileCommand($formState)
@@ -63,10 +64,19 @@ class AccountModalAjaxHelper {
     ];
 
     $response->addCommand(new RemoveCommand('.account-modal-messages'));
-    $response->addCommand(new AppendCommand(
-      '#account_modal_' . $pageId . '_wrapper',
-      $renderer->renderRoot($messagesElement)
-    ));
+
+    if($config->get('messages_position') == 'prepend'){
+      $response->addCommand(new PrependCommand(
+        '#account_modal_' . $pageId . '_wrapper',
+        $renderer->renderRoot($messagesElement)
+      ));
+    } else {
+      $response->addCommand(new AppendCommand(
+        '#account_modal_' . $pageId . '_wrapper',
+        $renderer->renderRoot($messagesElement)
+      ));
+    }
+
 
     return $response;
   }

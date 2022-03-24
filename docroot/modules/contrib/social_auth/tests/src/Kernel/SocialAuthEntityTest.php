@@ -38,12 +38,12 @@ class SocialAuthEntityTest extends EntityKernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['social_api', 'social_auth'];
+  protected static $modules = ['social_api', 'social_auth'];
 
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->installEntitySchema('social_auth');

@@ -57,6 +57,13 @@ This is a complete rewrite of the Geocoder module, based on the
 * Configure caching options at Configuration > System > Geocoder:
   `admin/config/system/geocoder`.
 
+* ### Support for [COI (Config Override Inspector) module](https://www.drupal.org/project/coi)
+  It is hard to confirm that the content overrides
+  are being applied correctly in productions. Also api keys are visible when
+  they are being overridden in the production environment.
+  The Geocoder module supports the use of the COI module to more easily see what
+  has been overridden and also hide overridden apiKeys.
+
 # Submodules
 The geocoder submodules are needed to set-up and implement Geocode and Reverse
 Geocode functionalities on Entity fields from the Drupal backend:
@@ -306,6 +313,15 @@ the Response result output is empty, with a 204 ("No content") response
 status code. See the Drupal logs for information regarding possible Geocoder
 wrong configurations causes.
 
+## Persistent cache for geocoded points
+Ref: Geocoder issue:
+[#2994249](https://www.drupal.org/project/geocoder/issues/2994249)
+It is possible to persist the geocode cache when drupal caches are cleared,
+enabling support and configuration for the
+.
+- install [Permanent Cache Bin module](https://www.drupal.org/project/pcb)
+- in your *settings.php add:
+  `$settings['cache']['bins']['geocoder'] = 'cache.backend.permanent_database'`
 
 # Upgrading from Geocoder 2.x to 3.x
 

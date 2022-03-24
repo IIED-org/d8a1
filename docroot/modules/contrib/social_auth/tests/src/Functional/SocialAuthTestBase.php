@@ -22,7 +22,7 @@ abstract class SocialAuthTestBase extends SocialApiTestBase {
    *
    * @var array
    */
-  public static $modules = ['block', 'social_auth'];
+  protected static $modules = ['block', 'social_auth'];
 
   /**
    * The block entity.
@@ -43,7 +43,7 @@ abstract class SocialAuthTestBase extends SocialApiTestBase {
    *
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
-  protected function setUp() {
+  protected function setUp(): void {
 
     $this->adminUserPermissions = ['administer social api authentication'];
     $this->moduleType = 'social-auth';

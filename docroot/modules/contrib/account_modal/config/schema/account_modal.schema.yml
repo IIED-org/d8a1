@@ -29,6 +29,9 @@ account_modal.settings:
     dialog_height:
       type: string
       label: 'Dialog height'
+    messages_position:
+      type: string
+      label: 'Messages position'
     create_profile_after_registration:
       type: boolean
       label: 'Create profile after registration'

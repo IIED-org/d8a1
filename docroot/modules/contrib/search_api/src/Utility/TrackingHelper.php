@@ -105,6 +105,12 @@ class TrackingHelper implements TrackingHelperInterface {
     // Original entity, if available.
     $original = $deleted ? NULL : ($entity->original ?? NULL);
     foreach ($indexes as $index) {
+      // Do not track changes to referenced entities if the option has been
+      // disabled.
+      if (!$index->getOption('track_changes_in_references')) {
+        continue;
+      }
+
       // Map of foreign entity relations. Will get lazily populated as soon as
       // we actually need it.
       $map = NULL;
@@ -186,7 +192,7 @@ class TrackingHelper implements TrackingHelperInterface {
       $seen_path_chunks = [];
       $property_definitions = $datasource->getPropertyDefinitions();
       $field_property = Utility::splitPropertyPath($field->getPropertyPath(), FALSE);
-      for (; $field_property[0]; $field_property = Utility::splitPropertyPath($field_property[1], FALSE)) {
+      for (; $field_property[0]; $field_property = Utility::splitPropertyPath($field_property[1] ?? '', FALSE)) {
         $property_definition = $this->fieldsHelper->retrieveNestedProperty($property_definitions, $field_property[0]);
         if (!$property_definition) {
           // Seems like we could not map it from the property path to some Typed
@@ -216,8 +222,17 @@ class TrackingHelper implements TrackingHelperInterface {
         }
 
         $entity_reference = $this->isEntityReferenceDataDefinition($property_definition, $cacheability);
-        if ($entity_reference
-            && $relation_info['entity_type'] !== $entity_reference['entity_type']) {
+        if ($entity_reference) {
+          // Unfortunately, the nested "entity" property for entity reference
+          // fields comes without a bundles restriction, so we need to copy the
+          // bundles information from the level above (on the field itself), if
+          // any.
+          if ($relation_info['entity_type'] === $entity_reference['entity_type']
+              && empty($entity_reference['bundles'])
+              && !empty($relation_info['bundles'])
+              && $field_property[0] === 'entity') {
+            $entity_reference['bundles'] = $relation_info['bundles'];
+          }
           $relation_info = $entity_reference;
           $relation_info['property_path_to_foreign_entity'] = implode(IndexInterface::PROPERTY_PATH_SEPARATOR, $seen_path_chunks);
           $relation_info['datasource'] = $datasource->getPluginId();

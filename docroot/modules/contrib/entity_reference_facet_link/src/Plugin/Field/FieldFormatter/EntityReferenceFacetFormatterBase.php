@@ -110,8 +110,12 @@ abstract class EntityReferenceFacetFormatterBase extends EntityReferenceFormatte
     $facets = $this->facetStorage->loadMultiple();
     $options = [];
     foreach ($facets as $facet) {
+      /** @var \Drupal\Core\Field\TypedData\FieldItemDataDefinition $definition */
+      $definition = $facet->getDataDefinition($facet->getFieldIdentifier());
+      $facet_field_name = $definition->getFieldDefinition()->getName();
+
       // Add a facet to the options only if that facet is faceting this field.
-      if ($facet->getFieldIdentifier() == $this->fieldDefinition->getName()) {
+      if ($facet_field_name == $this->fieldDefinition->getName()) {
         $options[$facet->id()] = $facet->label();
       }
     }
