@@ -8,6 +8,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
+use Drupal\Core\Field\TypedData\FieldItemDataDefinition;
 use Drupal\Core\Field\Plugin\Field\FieldFormatter\EntityReferenceFormatterBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
@@ -110,13 +111,15 @@ abstract class EntityReferenceFacetFormatterBase extends EntityReferenceFormatte
     $facets = $this->facetStorage->loadMultiple();
     $options = [];
     foreach ($facets as $facet) {
-      /** @var \Drupal\Core\Field\TypedData\FieldItemDataDefinition $definition */
       $definition = $facet->getDataDefinition($facet->getFieldIdentifier());
-      $facet_field_name = $definition->getFieldDefinition()->getName();
+      // Ensure that we are only dealing with facets associated with fields.
+      if ($definition instanceof FieldItemDataDefinition) {
+        $facet_field_name = $definition->getFieldDefinition()->getName();
 
-      // Add a facet to the options only if that facet is faceting this field.
-      if ($facet_field_name == $this->fieldDefinition->getName()) {
-        $options[$facet->id()] = $facet->label();
+        // Add a facet to the options only if that facet is faceting this field.
+        if ($facet_field_name == $this->fieldDefinition->getName()) {
+          $options[$facet->id()] = $facet->label();
+        }
       }
     }
 

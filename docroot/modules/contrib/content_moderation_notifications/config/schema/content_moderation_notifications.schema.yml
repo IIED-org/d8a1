@@ -32,7 +32,7 @@ content_moderation_notifications.content_moderation_notification.*:
        type: string
        label: 'Emails'
     subject:
-       type: label
+       type: string
        label: 'Subject'
     body:
       type: text_format

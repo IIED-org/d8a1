@@ -1597,6 +1597,7 @@ class ParagraphsWidget extends WidgetBase {
       // Even though operations are run through the "links" element type, the
       // theme system will render any render array passed as a link "title".
       '#links' => $operations,
+      '#dropbutton_type' => 'small',
     ];
 
     return $build + $elements;

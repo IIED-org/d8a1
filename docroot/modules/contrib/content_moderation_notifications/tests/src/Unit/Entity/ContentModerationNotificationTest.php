@@ -54,7 +54,7 @@ class ContentModerationNotificationTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp():void {
     parent::setUp();
 
     $this->notification = new ContentModerationNotification(static::$data, 'content_moderation_notification');
