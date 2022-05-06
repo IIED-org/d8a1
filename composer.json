@@ -135,9 +135,6 @@
       "drupal/address": {
         "Integrate Address with Search API": "https://www.drupal.org/files/issues/2018-06-07/address-search-api-full-name-properties-2812659-37.patch"
       },
-      "drupal/paragraphs": {
-        "Error on upload via entity browser": "https://www.drupal.org/files/issues/2021-05-03/paragraphs-2901390-82-withtests.patch"
-      },
       "drupal/masquerade": {
         "Unmasquerade link always appears": "https://www.drupal.org/files/issues/2018-07-11/unmasquerade_link-2695779-17.patch"
       },

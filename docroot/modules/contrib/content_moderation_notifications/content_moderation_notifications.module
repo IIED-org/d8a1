@@ -30,7 +30,7 @@ function content_moderation_notifications_entity_update(EntityInterface $entity)
 }
 
 /**
- * Implements hook_entity_update().
+ * Implements hook_entity_insert().
  */
 function content_moderation_notifications_entity_insert(EntityInterface $entity) {
   \Drupal::service('content_moderation_notifications.notification')->processEntity($entity);
