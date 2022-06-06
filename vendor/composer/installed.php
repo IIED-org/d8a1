@@ -5,9 +5,9 @@
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => '10d9136b74a9b3a60fab5582d133ac7053282373',
+        'reference' => 'bcd2c54a2f872b620dc833b236a2ffb572ecc8c0',
         'name' => 'acquia/acquia-ra-composer',
-        'dev' => false,
+        'dev' => true,
     ),
     'versions' => array(
         'abraham/twitteroauth' => array(
@@ -25,7 +25,7 @@
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => '10d9136b74a9b3a60fab5582d133ac7053282373',
+            'reference' => 'bcd2c54a2f872b620dc833b236a2ffb572ecc8c0',
             'dev_requirement' => false,
         ),
         'asm89/stack-cors' => array(
@@ -1349,6 +1349,15 @@
             'reference' => '8.x-1.14',
             'dev_requirement' => false,
         ),
+        'drupal/password_policy' => array(
+            'pretty_version' => '3.1.0',
+            'version' => '3.1.0.0',
+            'type' => 'drupal-module',
+            'install_path' => __DIR__ . '/../../docroot/modules/contrib/password_policy',
+            'aliases' => array(),
+            'reference' => '8.x-3.1',
+            'dev_requirement' => false,
+        ),
         'drupal/path' => array(
             'dev_requirement' => false,
             'replaced' => array(
@@ -1569,6 +1578,15 @@
             'aliases' => array(),
             'reference' => '8.x-1.2',
             'dev_requirement' => false,
+        ),
+        'drupal/stage_file_proxy' => array(
+            'pretty_version' => '1.2.0',
+            'version' => '1.2.0.0',
+            'type' => 'drupal-module',
+            'install_path' => __DIR__ . '/../../docroot/modules/contrib/stage_file_proxy',
+            'aliases' => array(),
+            'reference' => '8.x-1.2',
+            'dev_requirement' => true,
         ),
         'drupal/standard' => array(
             'dev_requirement' => false,
