@@ -9,6 +9,15 @@ dependencies:
     - search_api
 id: current_search
 name: 'Current search'
+facet_source_id: 'search_api:views_page__explore__page_2'
+processor_configs:
+  reset_facets:
+    processor_id: reset_facets
+    weights:
+      build: '30'
+    settings:
+      link_text: 'Clear filters'
+      position: before
 facets:
   country_2:
     checked: true
@@ -34,12 +43,3 @@ facets:
     separator: ', '
     show_count: false
     weight: 0
-facet_source_id: 'search_api:views_page__explore__page_2'
-processor_configs:
-  reset_facets:
-    processor_id: reset_facets
-    weights:
-      build: '30'
-    settings:
-      link_text: 'Clear filters'
-      position: before
