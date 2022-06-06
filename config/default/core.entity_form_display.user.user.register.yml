@@ -4,6 +4,9 @@ status: true
 dependencies:
   config:
     - core.entity_form_mode.user.register
+    - field.field.user.user.field_last_password_reset
+    - field.field.user.user.field_password_expiration
+    - field.field.user.user.field_pending_expire_sent
     - field.field.user.user.user_picture
   module:
     - field_layout
@@ -28,6 +31,9 @@ content:
     third_party_settings: {  }
 hidden:
   contact: true
+  field_last_password_reset: true
+  field_password_expiration: true
+  field_pending_expire_sent: true
   google_analytics: true
   language: true
   path: true
