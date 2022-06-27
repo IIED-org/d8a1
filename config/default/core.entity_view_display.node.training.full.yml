@@ -216,6 +216,8 @@ content:
     settings:
       image_link: ''
       image_style: main_570x380
+      image_loading:
+        attribute: lazy
     third_party_settings:
       ds:
         ft:

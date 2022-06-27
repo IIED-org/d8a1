@@ -19,6 +19,7 @@ dependencies:
     - field.field.node.initiative.field_4_3_1_details
     - field.field.node.initiative.field_add_new_species
     - field.field.node.initiative.field_address
+    - field.field.node.initiative.field_alternative_language_versi
     - field.field.node.initiative.field_area_description
     - field.field.node.initiative.field_buyers
     - field.field.node.initiative.field_community_level_benefits
@@ -27,9 +28,11 @@ dependencies:
     - field.field.node.initiative.field_education_and_awareness
     - field.field.node.initiative.field_end_use
     - field.field.node.initiative.field_financial_mitigation
+    - field.field.node.initiative.field_gender_age_ethnic
     - field.field.node.initiative.field_geofield
     - field.field.node.initiative.field_illegal_disincentives
     - field.field.node.initiative.field_image
+    - field.field.node.initiative.field_image_caption
     - field.field.node.initiative.field_image_gallery
     - field.field.node.initiative.field_in_kind_incentives
     - field.field.node.initiative.field_in_kind_scouts
@@ -42,6 +45,7 @@ dependencies:
     - field.field.node.initiative.field_lease_payments
     - field.field.node.initiative.field_legal_trade
     - field.field.node.initiative.field_limiting_factors
+    - field.field.node.initiative.field_main_image_caption
     - field.field.node.initiative.field_non_wildlife_development
     - field.field.node.initiative.field_non_wildlife_livelihoods
     - field.field.node.initiative.field_organisers_donors_partners
@@ -60,6 +64,7 @@ dependencies:
     - field.field.node.initiative.field_products_in_trade
     - field.field.node.initiative.field_raising_awareness
     - field.field.node.initiative.field_reactive_measures
+    - field.field.node.initiative.field_region
     - field.field.node.initiative.field_related_resources
     - field.field.node.initiative.field_role_or_relationship
     - field.field.node.initiative.field_sense_of_ownership
@@ -171,6 +176,8 @@ content:
     settings:
       image_link: ''
       image_style: thumbnail
+      image_loading:
+        attribute: lazy
     third_party_settings:
       ds:
         ft:
@@ -197,6 +204,7 @@ hidden:
   field_4_3_1_details: true
   field_add_new_species: true
   field_address: true
+  field_alternative_language_versi: true
   field_area_description: true
   field_buyers: true
   field_community_level_benefits: true
@@ -205,8 +213,10 @@ hidden:
   field_education_and_awareness: true
   field_end_use: true
   field_financial_mitigation: true
+  field_gender_age_ethnic: true
   field_geofield: true
   field_illegal_disincentives: true
+  field_image_caption: true
   field_image_gallery: true
   field_in_kind_incentives: true
   field_in_kind_scouts: true
@@ -219,6 +229,7 @@ hidden:
   field_lease_payments: true
   field_legal_trade: true
   field_limiting_factors: true
+  field_main_image_caption: true
   field_non_wildlife_development: true
   field_non_wildlife_livelihoods: true
   field_organisers_donors_partners: true
@@ -237,6 +248,7 @@ hidden:
   field_products_in_trade: true
   field_raising_awareness: true
   field_reactive_measures: true
+  field_region: true
   field_related_resources: true
   field_role_or_relationship: true
   field_sense_of_ownership: true
@@ -252,3 +264,4 @@ hidden:
   field_what_worked: true
   field_year_finished: true
   links: true
+  search_api_excerpt: true
