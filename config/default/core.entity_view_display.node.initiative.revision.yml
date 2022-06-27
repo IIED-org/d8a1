@@ -19,6 +19,7 @@ dependencies:
     - field.field.node.initiative.field_4_3_1_details
     - field.field.node.initiative.field_add_new_species
     - field.field.node.initiative.field_address
+    - field.field.node.initiative.field_alternative_language_versi
     - field.field.node.initiative.field_area_description
     - field.field.node.initiative.field_buyers
     - field.field.node.initiative.field_community_level_benefits
@@ -27,9 +28,11 @@ dependencies:
     - field.field.node.initiative.field_education_and_awareness
     - field.field.node.initiative.field_end_use
     - field.field.node.initiative.field_financial_mitigation
+    - field.field.node.initiative.field_gender_age_ethnic
     - field.field.node.initiative.field_geofield
     - field.field.node.initiative.field_illegal_disincentives
     - field.field.node.initiative.field_image
+    - field.field.node.initiative.field_image_caption
     - field.field.node.initiative.field_image_gallery
     - field.field.node.initiative.field_in_kind_incentives
     - field.field.node.initiative.field_in_kind_scouts
@@ -42,6 +45,7 @@ dependencies:
     - field.field.node.initiative.field_lease_payments
     - field.field.node.initiative.field_legal_trade
     - field.field.node.initiative.field_limiting_factors
+    - field.field.node.initiative.field_main_image_caption
     - field.field.node.initiative.field_non_wildlife_development
     - field.field.node.initiative.field_non_wildlife_livelihoods
     - field.field.node.initiative.field_organisers_donors_partners
@@ -60,6 +64,7 @@ dependencies:
     - field.field.node.initiative.field_products_in_trade
     - field.field.node.initiative.field_raising_awareness
     - field.field.node.initiative.field_reactive_measures
+    - field.field.node.initiative.field_region
     - field.field.node.initiative.field_related_resources
     - field.field.node.initiative.field_role_or_relationship
     - field.field.node.initiative.field_sense_of_ownership
@@ -398,6 +403,8 @@ content:
     settings:
       image_link: ''
       image_style: ''
+      image_loading:
+        attribute: lazy
     third_party_settings: {  }
     weight: 59
     region: ds_content
@@ -407,6 +414,8 @@ content:
     settings:
       image_link: ''
       image_style: ''
+      image_loading:
+        attribute: lazy
     third_party_settings: {  }
     weight: 60
     region: ds_content
@@ -799,3 +808,9 @@ content:
     region: ds_content
 hidden:
   addtoany: true
+  field_alternative_language_versi: true
+  field_gender_age_ethnic: true
+  field_image_caption: true
+  field_main_image_caption: true
+  field_region: true
+  search_api_excerpt: true

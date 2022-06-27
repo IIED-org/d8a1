@@ -102,6 +102,8 @@ content:
     settings:
       image_link: ''
       image_style: max_730
+      image_loading:
+        attribute: lazy
     third_party_settings:
       ds:
         ft:

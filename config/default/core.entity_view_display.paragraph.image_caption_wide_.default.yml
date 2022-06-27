@@ -82,6 +82,8 @@ content:
     settings:
       image_link: ''
       image_style: max_1300x1300
+      image_loading:
+        attribute: lazy
     third_party_settings:
       ds:
         ft:
