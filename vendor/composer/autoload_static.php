@@ -208,6 +208,7 @@ class ComposerStaticInit0dcb22fa594f9dd3f27c774278455d3a
         'A' => 
         array (
             'Asm89\\Stack\\' => 12,
+            'Acquia\\Hmac\\' => 12,
             'Abraham\\TwitterOAuth\\' => 21,
         ),
     );
@@ -644,6 +645,10 @@ class ComposerStaticInit0dcb22fa594f9dd3f27c774278455d3a
         'Asm89\\Stack\\' => 
         array (
             0 => __DIR__ . '/..' . '/asm89/stack-cors/src/Asm89/Stack',
+        ),
+        'Acquia\\Hmac\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/acquia/http-hmac-php/src',
         ),
         'Abraham\\TwitterOAuth\\' => 
         array (

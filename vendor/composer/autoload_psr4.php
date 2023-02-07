@@ -113,5 +113,6 @@ return array(
     'CommerceGuys\\Addressing\\' => array($vendorDir . '/commerceguys/addressing/src'),
     'Clue\\StreamFilter\\' => array($vendorDir . '/clue/stream-filter/src'),
     'Asm89\\Stack\\' => array($vendorDir . '/asm89/stack-cors/src/Asm89/Stack'),
+    'Acquia\\Hmac\\' => array($vendorDir . '/acquia/http-hmac-php/src'),
     'Abraham\\TwitterOAuth\\' => array($vendorDir . '/abraham/twitteroauth/src'),
 );
