@@ -33,7 +33,7 @@ class UserManager extends SocialApiUserManager {
   /**
    * Used for access Drupal user field definitions.
    *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   * @var \Drupal\Core\Entity\EntityFieldManagerInterface
    */
   protected $entityFieldManager;
 
@@ -210,7 +210,7 @@ class UserManager extends SocialApiUserManager {
 
       // Dispatches SocialAuthEvents::USER_CREATED event.
       $event = new UserEvent($new_user, $this->getPluginId(), $user);
-      $this->eventDispatcher->dispatch(SocialAuthEvents::USER_CREATED, $event);
+      $this->eventDispatcher->dispatch($event, SocialAuthEvents::USER_CREATED);
 
       return $new_user;
     }
@@ -505,7 +505,7 @@ class UserManager extends SocialApiUserManager {
     // Dispatches SocialAuthEvents::USER_FIELDS, so that other modules can
     // update this array before an user is saved.
     $event = new UserFieldsEvent($fields, $this->getPluginId(), $user);
-    $this->eventDispatcher->dispatch(SocialAuthEvents::USER_FIELDS, $event);
+    $this->eventDispatcher->dispatch($event, SocialAuthEvents::USER_FIELDS);
     $fields = $event->getUserFields();
 
     return $fields;
@@ -556,7 +556,7 @@ class UserManager extends SocialApiUserManager {
    * @see user_password
    */
   protected function userPassword($length) {
-    return user_password($length);
+    return \Drupal::service('password_generator')->generate($length);
   }
 
   /**

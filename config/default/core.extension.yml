@@ -70,6 +70,7 @@ module:
   geofield: 0
   geofield_map: 0
   google_analytics: 0
+  google_tag: 0
   help: 0
   history: 0
   honeypot: 0
@@ -121,7 +122,6 @@ module:
   search_api: 0
   search_api_db: 0
   search_api_solr: 0
-  search_api_solr_defaults: 0
   shortcut: 0
   simplify: 0
   social_api: 0

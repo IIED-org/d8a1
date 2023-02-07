@@ -12,19 +12,18 @@ use Psr\Container\ContainerExceptionInterface;
  *
  * A plugin manager is a specialized service locator used to create homogeneous objects
  *
- * @template InstanceType of object
+ * @template InstanceType
  */
 interface PluginManagerInterface extends ServiceLocatorInterface
 {
     /**
      * Validate an instance
      *
-     * @param  mixed $instance
      * @return void
      * @throws InvalidServiceException If created instance does not respect the
      *     constraint on type imposed by the plugin manager.
      * @throws ContainerExceptionInterface If any other error occurs.
      * @psalm-assert InstanceType $instance
      */
-    public function validate($instance);
+    public function validate(mixed $instance);
 }

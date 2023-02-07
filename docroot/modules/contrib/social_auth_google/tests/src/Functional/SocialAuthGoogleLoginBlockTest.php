@@ -18,12 +18,12 @@ class SocialAuthGoogleLoginBlockTest extends SocialAuthTestBase {
    *
    * @var array
    */
-  public static $modules = ['block', 'social_auth_google'];
+  protected static $modules = ['block', 'social_auth_google'];
 
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->provider = 'google';

@@ -374,6 +374,20 @@
   </analyzer>
 </fieldType>
 <!--
+  Fulltext String Field
+  6.0.0
+-->
+<fieldType name="text_string" class="solr.TextField" positionIncrementGap="100">
+  <analyzer type="index">
+    <tokenizer class="solr.PatternTokenizerFactory" pattern="[\t\r\n]"/>
+    <filters/>
+  </analyzer>
+  <analyzer type="query">
+    <tokenizer class="solr.PatternTokenizerFactory" pattern="[\t\r\n]"/>
+    <filters/>
+  </analyzer>
+</fieldType>
+<!--
   German Text Field
   6.0.0
 -->
@@ -668,7 +682,7 @@
   Language Undefined Text Field collated
   6.0.0
 -->
-<fieldType name="collated_und" class="solr.ICUCollationField" locale="en" strength="primary" caseLevel="false"/>
+<fieldType name="collated_und" class="solr.ICUCollationField" locale="" strength="primary" caseLevel="false"/>
 <!--
   NGram String Field
   6.0.0

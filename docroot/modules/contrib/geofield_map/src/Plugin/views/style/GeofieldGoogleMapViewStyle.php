@@ -338,7 +338,7 @@ class GeofieldGoogleMapViewStyle extends DefaultStyle implements ContainerFactor
 
       // Eventually try to set entity type & info from base table suffix
       // (i.e. Search API views).
-      if (!isset($this->entityType)) {
+      if (!isset($this->entityType) && $this->moduleHandler->moduleExists('search_api')) {
         $index_id = substr($base_table, 17);
         $index = Index::load($index_id);
         foreach ($index->getDatasources() as $datasource) {
@@ -871,7 +871,7 @@ class GeofieldGoogleMapViewStyle extends DefaultStyle implements ContainerFactor
 
     // If the Geofield field is not null, and there are results or a not null
     // empty behaviour has been set, render the results.
-    if (!empty($geofield_names) && (!empty($this->view->result) || !$this->options['map_empty']['empty_behaviour'])) {
+    if (!empty($geofield_names) && (!empty($this->view->result) || $this->options['map_empty']['empty_behaviour'] == '1')) {
       $this->renderFields($this->view->result);
 
       // Iterate on each geofields set as source of Geofield Map View geodata.

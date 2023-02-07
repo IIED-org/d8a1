@@ -33,6 +33,13 @@ class IntegrationTest extends ViewTestBase {
   protected $webUser;
 
   /**
+   * A test user with node viewing access only.
+   *
+   * @var \Drupal\user\Entity\User
+   */
+  protected $deniedUser;
+
+  /**
    * Stores the node object which is used by the test.
    *
    * @var \Drupal\node\Entity\Node
@@ -46,6 +53,9 @@ class IntegrationTest extends ViewTestBase {
    */
   public static $testViews = ['test_statistics_integration'];
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp($import_test_views = TRUE, $modules = ['statistics_test_views']): void {
     parent::setUp($import_test_views, $modules);
 

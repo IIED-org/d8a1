@@ -169,14 +169,6 @@ trait LeafletSettingsElementsTrait {
       ],
     ];
 
-    $elements['disable_wheel'] = [
-      '#type' => 'checkbox',
-      '#title' => $this->t('Disable zoom using mouse wheel'),
-      '#description' => $this->t("If enabled, the mouse wheel won't change the zoom level of the map."),
-      '#default_value' => $settings['disable_wheel'],
-      '#return_value' => 1,
-    ];
-
     $elements['gesture_handling'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Gesture Handling'),
@@ -188,6 +180,19 @@ trait LeafletSettingsElementsTrait {
       ]),
       '#default_value' => $settings['gesture_handling'],
       '#return_value' => 1,
+    ];
+
+    $elements['disable_wheel'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Disable zoom using mouse wheel'),
+      '#description' => $this->t("If enabled, the mouse wheel won't change the zoom level of the map."),
+      '#default_value' => $settings['disable_wheel'],
+      '#return_value' => 1,
+      '#states' => [
+        'invisible' => [
+          ':input[name="style_options[gesture_handling]"]' => ['checked' => TRUE],
+        ],
+      ],
     ];
 
   }
@@ -349,7 +354,7 @@ trait LeafletSettingsElementsTrait {
   protected function generateIconFormElement(array $icon_options) {
     $default_settings = $this::getDefaultSettings();
     $token_replacement_disclaimer = $this->t('<b>Note: </b> Using <strong>Replacement Patterns</strong> it is possible to dynamically define the Marker Icon output, with the composition of Marker Icon paths including entity properties or fields values.');
-    $icon_url_description = $this->t('Can be an absolute or relative URL. <b>If left empty the default Leaflet Marker will be used.</b><br>@token_replacement_disclaimer', [
+    $icon_url_description = $this->t('Can be an absolute or relative URL (as Drupal root folder relative paths <strong>without the leading slash</strong>) <br><b>If left empty the default Leaflet Marker will be used.</b><br>@token_replacement_disclaimer', [
       '@token_replacement_disclaimer' => $token_replacement_disclaimer,
     ]);
 

@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\content_moderation_notifications\Unit\Entity;
 
+use Prophecy\PhpUnit\ProphecyTrait;
 use Drupal\content_moderation_notifications\Entity\ContentModerationNotification;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Entity\EntityStorageInterface;
@@ -19,6 +20,7 @@ use Drupal\Tests\UnitTestCase;
  */
 class ContentModerationNotificationTest extends UnitTestCase {
 
+  use ProphecyTrait;
   /**
    * Test fixture.
    *

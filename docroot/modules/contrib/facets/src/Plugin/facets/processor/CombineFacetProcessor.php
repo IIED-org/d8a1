@@ -2,6 +2,7 @@
 
 namespace Drupal\facets\Plugin\facets\processor;
 
+use Drupal\Core\Cache\UnchangingCacheableDependencyTrait;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\facets\FacetInterface;
 use Drupal\facets\Processor\BuildProcessorInterface;
@@ -17,13 +18,15 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @FacetsProcessor(
  *   id = "combine_processor",
  *   label = @Translation("Combine facets"),
- *   description = @Translation("Combine the results of two or more facets. The raw value of a result item is used to identify a resuls item. It is up to you to ensure that the combination of the result sets makes sense. As the combination bases on the raw calues it makes sense to place this processor on an early position, especially before the URL handler"),
+ *   description = @Translation("Combine the results of two or more facets. The raw value of a result item is used to identify a results item. It is up to you to ensure that the combination of the result sets makes sense. As the combination bases on the raw values it makes sense to place this processor on an early position, especially before the URL handler"),
  *   stages = {
  *     "build" = 5
  *   }
  * )
  */
 class CombineFacetProcessor extends ProcessorPluginBase implements BuildProcessorInterface, ContainerFactoryPluginInterface {
+
+  use UnchangingCacheableDependencyTrait;
 
   /**
    * The language manager.
@@ -148,7 +151,6 @@ class CombineFacetProcessor extends ProcessorPluginBase implements BuildProcesso
       /** @var \Drupal\facets\Entity\Facet $current_facet */
       $current_facet = $this->facetStorage->load($facet_id);
       $current_facet = $this->facetsManager->returnBuiltFacet($current_facet);
-
       switch ($settings['mode']) {
         case 'union':
           $results = $keyed_results + $current_facet->getResultsKeyedByRawValue();
@@ -162,6 +164,8 @@ class CombineFacetProcessor extends ProcessorPluginBase implements BuildProcesso
           $results = array_intersect_key($keyed_results, $current_facet->getResultsKeyedByRawValue());
           break;
       }
+      // Pass build processor information into current facet.
+      $facet->addCacheableDependency($current_facet);
     }
 
     return $results;

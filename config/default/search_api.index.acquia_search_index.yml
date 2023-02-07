@@ -51,6 +51,9 @@ third_party_settings:
     multilingual:
       limit_to_content_language: false
       include_language_independent: true
+      specific_languages: {  }
+      use_language_undefined_as_fallback_language: false
+      use_universal_collation: false
 _core:
   default_config_hash: '-ggwZpvT2-Ey1fqPkREitA6TGI_m5dTHD9vZm9FrlSQ'
 id: acquia_search_index

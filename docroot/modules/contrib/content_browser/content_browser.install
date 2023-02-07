@@ -18,7 +18,7 @@ function content_browser_install() {
   if (!\Drupal::isConfigSyncing()) {
     $data = file_get_contents(dirname(__FILE__) . '/content_browser_icon.png');
     /** @var \Drupal\file\FileInterface $file */
-    $file = file_save_data($data, 'public://content_browser_icon.png', FileSystemInterface::EXISTS_REPLACE);
+    $file = \Drupal::service('file.repository')->writeData($data, 'public://content_browser_icon.png', FileSystemInterface::EXISTS_REPLACE);
     if ($file) {
       // Set file uuid same as default config.
       $uuid = Yaml::decode(file_get_contents(dirname(__FILE__) . '/config/install/embed.button.content_browser.yml'))['icon_uuid'];

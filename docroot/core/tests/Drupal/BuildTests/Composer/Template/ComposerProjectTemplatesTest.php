@@ -4,7 +4,7 @@ namespace Drupal\BuildTests\Composer\Template;
 
 use Composer\Json\JsonFile;
 use Composer\Semver\VersionParser;
-use Drupal\BuildTests\Framework\BuildTestBase;
+use Drupal\BuildTests\Composer\ComposerBuildTestBase;
 use Drupal\Composer\Composer;
 
 /**
@@ -25,7 +25,7 @@ use Drupal\Composer\Composer;
  *
  * @requires externalCommand composer
  */
-class ComposerProjectTemplatesTest extends BuildTestBase {
+class ComposerProjectTemplatesTest extends ComposerBuildTestBase {
 
   /**
    * The minimum stability requirement for dependencies.
@@ -143,7 +143,7 @@ class ComposerProjectTemplatesTest extends BuildTestBase {
    */
   public function testVerifyTemplateTestProviderIsAccurate() {
     $root = $this->getDrupalRoot();
-    $data = $this->provideTemplateCreateProject($root);
+    $data = $this->provideTemplateCreateProject();
 
     // Find all the templates.
     $template_files = Composer::composerSubprojectPaths($root, 'Template');
@@ -244,6 +244,14 @@ class ComposerProjectTemplatesTest extends BuildTestBase {
 
     $this->executeCommand("COMPOSER_HOME=$composer_home COMPOSER_ROOT_VERSION=$simulated_core_version composer create-project --no-ansi $project testproject $simulated_core_version -vvv --repository $repository_path");
     $this->assertCommandSuccessful();
+    // Check the output of the project creation for the absence of warnings
+    // about any non-allowed composer plugins.
+    // Note: There are different warnings for unallowed composer plugins
+    // depending on running in non-interactive mode or not. It seems the Drupal
+    // CI environment always forces composer commands to run in the
+    // non-interactive mode. The only thing these messages have in common is the
+    // following string.
+    $this->assertErrorOutputNotContains('See https://getcomposer.org/allow-plugins');
 
     // Ensure we used the project from our codebase.
     $this->assertErrorOutputContains("Installing $project ($simulated_core_version): Symlinking from $package_dir");
@@ -287,26 +295,6 @@ class ComposerProjectTemplatesTest extends BuildTestBase {
         }
       }
     }
-  }
-
-  /**
-   * Assert that the VERSION constant in Drupal.php is the expected value.
-   *
-   * @param string $expectedVersion
-   *   The expected version.
-   * @param string $dir
-   *   The path to the site root.
-   *
-   * @internal
-   */
-  protected function assertDrupalVersion(string $expectedVersion, string $dir): void {
-    $drupal_php_path = $dir . '/core/lib/Drupal.php';
-    $this->assertFileExists($drupal_php_path);
-
-    // Read back the Drupal version that was set and assert it matches expectations.
-    $this->executeCommand("php -r 'include \"$drupal_php_path\"; print \Drupal::VERSION;'");
-    $this->assertCommandSuccessful();
-    $this->assertCommandOutputContains($expectedVersion);
   }
 
   /**
@@ -386,6 +374,16 @@ JSON;
             "version" => $version,
           ],
         ];
+        // Ensure composer plugins are registered correctly.
+        $package_json = json_decode(file_get_contents($full_path . '/composer.json'), TRUE);
+        if (isset($package_json['type']) && $package_json['type'] === 'composer-plugin') {
+          $packages['packages'][$name][$version]['type'] = $package_json['type'];
+          $packages['packages'][$name][$version]['require'] = $package_json['require'];
+          $packages['packages'][$name][$version]['extra'] = $package_json['extra'];
+          if (isset($package_json['autoload'])) {
+            $packages['packages'][$name][$version]['autoload'] = $package_json['autoload'];
+          }
+        }
       }
     }
 

@@ -2,13 +2,17 @@
 
 namespace Drupal\addtoany\Form;
 
+use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Entity\ContentEntityType;
+use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Extension\ExtensionList;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Extension\ModuleHandler;
+use Drupal\Core\Link;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\Core\Entity\ContentEntityType;
-use Drupal\Core\Link;
 
 /**
  * Configure AddToAny settings for this site.
@@ -17,18 +21,41 @@ class AddToAnySettingsForm extends ConfigFormBase {
   /**
    * Drupal\Core\Extension\ModuleHandler definition.
    *
-   * @var Drupal\Core\Extension\ModuleHandler
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
    */
   protected $moduleHandler;
 
   /**
+   * The module extension list service.
+   *
+   * @var \Drupal\Core\Extension\ExtensionList
+   */
+  protected $moduleExtensionList;
+
+  /**
+   * The entity type bundle info service.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeBundleInfoInterface
+   */
+  protected $entityTypeBundleInfo;
+
+  /**
    * Constructs a AddToAnySettingsForm object.
    *
-   * @param \Drupal\Core\Extension\ModuleHandler $module_handler
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The factory for configuration objects.
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   *   The module handler to invoke the alter hook with.
+   * @param \Drupal\Core\Extension\ExtensionList $module_extension_list
+   *   The module extension list service.
+   * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $entity_type_bundle_info
+   *  The entity type bundle info service.
    */
-  public function __construct(ModuleHandler $module_handler) {
+  public function __construct(ConfigFactoryInterface $config_factory, ModuleHandlerInterface $module_handler, ExtensionList $module_extension_list, EntityTypeBundleInfoInterface $entity_type_bundle_info) {
+    parent::__construct($config_factory);
     $this->moduleHandler = $module_handler;
+    $this->moduleExtensionList = $module_extension_list;
+    $this->entityTypeBundleInfo = $entity_type_bundle_info;
   }
 
   /**
@@ -36,7 +63,10 @@ class AddToAnySettingsForm extends ConfigFormBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('module_handler')
+      $container->get('config.factory'),
+      $container->get('module_handler'),
+      $container->get('extension.list.module'),
+      $container->get('entity_type.bundle.info'),
     );
   }
 
@@ -64,8 +94,11 @@ class AddToAnySettingsForm extends ConfigFormBase {
     global $base_path;
 
     $addtoany_settings = $this->config('addtoany.settings');
+    $html_value = $addtoany_settings->get('additional_html');
+    $js_value = $addtoany_settings->get('additional_js');
+    $css_value = $addtoany_settings->get('additional_css');
 
-    $button_img = '<img src="' . $base_path . drupal_get_path('module', 'addtoany') . '/images/%s" width="%d" height="%d"%s />';
+    $button_img = '<img src="' . $base_path . $this->moduleExtensionList->getPath('addtoany') . '/images/%s" width="%d" height="%d"%s />';
 
     $button_options = [
       'default' => sprintf($button_img, 'a2a_32_32.svg', 32, 32, ' class="addtoany-round-icon"'),
@@ -100,24 +133,22 @@ class AddToAnySettingsForm extends ConfigFormBase {
       '#required'      => TRUE,
     ];
     $form['addtoany_button_settings']['addtoany_service_button_settings'] = [
-      '#type'         => 'details',
-      '#title'        => $this->t('Service Buttons'),
-      '#collapsible'  => TRUE,
-      '#collapsed'    => TRUE,
+      '#type'  => 'details',
+      '#title' => $this->t('Service Buttons'),
+      '#open'  => ($html_value !== '') ? TRUE : FALSE,
     ];
     $form['addtoany_button_settings']['addtoany_service_button_settings']['addtoany_additional_html'] = [
       '#type'          => 'textarea',
       '#title'         => $this->t('Service Buttons HTML code'),
-      '#default_value' => $addtoany_settings->get('additional_html'),
+      '#default_value' => $html_value,
       '#description'   => $this->t('You can add HTML code to display customized <a href="https://www.addtoany.com/buttons/customize/drupal/standalone_services" target="_blank">standalone service buttons</a> next to each universal share button. For example: <br /> <code>&lt;a class=&quot;a2a_button_facebook&quot;&gt;&lt;/a&gt;<br />&lt;a class=&quot;a2a_button_twitter&quot;&gt;&lt;/a&gt;<br />&lt;a class=&quot;a2a_button_pinterest&quot;&gt;&lt;/a&gt;</code>
       '),
       '#attributes' => $attributes_for_code,
     ];
     $form['addtoany_button_settings']['universal_button'] = [
-      '#type'         => 'details',
-      '#title'        => $this->t('Universal Button'),
-      '#collapsible'  => TRUE,
-      '#collapsed'    => TRUE,
+      '#type'  => 'details',
+      '#title' => $this->t('Universal Button'),
+      '#open'  => FALSE,
       /* #states workaround in addtoany.admin.js */
     ];
     $form['addtoany_button_settings']['universal_button']['addtoany_universal_button'] = [
@@ -156,22 +187,21 @@ class AddToAnySettingsForm extends ConfigFormBase {
     ];
 
     $form['addtoany_additional_settings'] = [
-      '#type'         => 'details',
-      '#title'        => $this->t('Additional options'),
-      '#collapsible'  => TRUE,
-      '#collapsed'    => TRUE,
+      '#type'  => 'details',
+      '#title' => $this->t('Additional options'),
+      '#open'  => ($js_value !== '' || $css_value !== '') ? TRUE : FALSE,
     ];
     $form['addtoany_additional_settings']['addtoany_additional_js'] = [
       '#type'          => 'textarea',
       '#title'         => $this->t('Additional JavaScript'),
-      '#default_value' => $addtoany_settings->get('additional_js'),
+      '#default_value' => $js_value,
       '#description'   => $this->t('You can add special JavaScript code for AddToAny. See <a href="https://www.addtoany.com/buttons/customize/drupal" target="_blank">AddToAny documentation</a>.'),
       '#attributes' => $attributes_for_code,
     ];
     $form['addtoany_additional_settings']['addtoany_additional_css'] = [
       '#type'          => 'textarea',
       '#title'         => $this->t('Additional CSS'),
-      '#default_value' => $addtoany_settings->get('additional_css'),
+      '#default_value' => $css_value,
       '#description'   => $this->t('You can add special CSS code for AddToAny. See <a href="https://www.addtoany.com/buttons/customize/drupal" target="_blank">AddToAny documentation</a>.'),
       '#attributes' => $attributes_for_code,
     ];
@@ -203,7 +233,7 @@ class AddToAnySettingsForm extends ConfigFormBase {
     $entities = self::getContentEntities();
 
     // Allow modules to alter the entity types.
-    \Drupal::moduleHandler()->alter('addtoany_entity_types', $entities);
+    $this->moduleHandler->alter('addtoany_entity_types', $entities);
 
     // Whitelist the entity IDs that let us link to each bundle's Manage Display page.
     $linkableEntities = [
@@ -215,7 +245,7 @@ class AddToAnySettingsForm extends ConfigFormBase {
       $entityId = $entity->id();
       $entityType = $entity->getBundleEntityType();
       // Get all available bundles for the current entity.
-      $bundles = \Drupal::service('entity_type.bundle.info')->getBundleInfo($entityId);
+      $bundles = $this->entityTypeBundleInfo->getBundleInfo($entityId);
       $links = [];
 
       foreach($bundles as $machine_name => $bundle) {

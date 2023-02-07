@@ -55,7 +55,7 @@
           });
         }
 
-        $(context).find('.geofield-google-map').once('geofield-processed').each(function (index, element) {
+        once('geofield-processed', 'html .geofield-google-map').forEach(function (element) {
           const mapId = $(element).attr('id');
           if (drupalSettings['geofield_google_map'][mapId]) {
             const map_settings = drupalSettings['geofield_google_map'][mapId]['map_settings'];
@@ -112,7 +112,7 @@
       let self = this;
       // Wait until the window load event to try to use the maps library.
       $(document).ready(function (e) {
-        _.each(self.googleCallbacks, function (callback) {
+        self.googleCallbacks.forEach(function (callback) {
           callback.callback();
         });
         self.googleCallbacks = [];

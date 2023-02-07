@@ -15,6 +15,8 @@ id: strategy_2
 name: Strategy
 weight: 1
 min_count: 1
+missing: false
+missing_label: others
 url_alias: strategy
 facet_source_id: 'search_api:views_page__explore__page_2'
 field_identifier: field_interventions

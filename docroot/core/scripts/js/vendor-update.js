@@ -77,7 +77,7 @@ const assetsFolder = `${coreFolder}/assets/vendor`;
     {
       pack: 'backbone',
       library: 'internal.backbone',
-      files: ['backbone.js', 'backbone-min.js', 'backbone-min.map'],
+      files: ['backbone.js', 'backbone-min.js', 'backbone-min.js.map'],
     },
     // Only used to update the version number of the deprecated library.
     {
@@ -175,7 +175,12 @@ const assetsFolder = `${coreFolder}/assets/vendor`;
     },
     {
       pack: 'shepherd.js',
+      library: 'shepherd',
+    },
+    {
+      pack: 'shepherd.js',
       folder: 'shepherd',
+      library: 'internal.shepherd',
       files: [
         { from: 'dist/js/shepherd.min.js', to: 'shepherd.min.js' },
         { from: 'dist/js/shepherd.min.js.map', to: 'shepherd.min.js.map' },

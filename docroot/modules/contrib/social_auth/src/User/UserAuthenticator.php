@@ -357,7 +357,7 @@ class UserAuthenticator extends SocialApiUserAuthenticator {
 
       // Dispatches SocialAuthEvents::USER_LOGIN event.
       $event = new UserEvent($drupal_user, $this->getPluginId());
-      $this->eventDispatcher->dispatch(SocialAuthEvents::USER_LOGIN, $event);
+      $this->eventDispatcher->dispatch($event, SocialAuthEvents::USER_LOGIN);
 
       return TRUE;
     }
@@ -400,7 +400,7 @@ class UserAuthenticator extends SocialApiUserAuthenticator {
    * not using them directly in our own methods. This way we can unit test our
    * own methods.
    *
-   * @param \Drupal\User\UserInterface $account
+   * @param \Drupal\user\UserInterface $account
    *   The Drupal user.
    *
    * @see user_password
@@ -420,7 +420,7 @@ class UserAuthenticator extends SocialApiUserAuthenticator {
    */
   public function dispatchAuthenticationError($error = NULL) {
     $event = new FailedAuthenticationEvent($this->dataHandler, $this->getPluginId(), $error ?? NULL);
-    $this->eventDispatcher->dispatch(SocialAuthEvents::FAILED_AUTH, $event);
+    $this->eventDispatcher->dispatch($event, SocialAuthEvents::FAILED_AUTH);
 
     if ($event->hasResponse()) {
       return $event->getResponse();
@@ -437,7 +437,7 @@ class UserAuthenticator extends SocialApiUserAuthenticator {
    */
   public function dispatchBeforeRedirect($destination = NULL) {
     $event = new BeforeRedirectEvent($this->dataHandler, $this->getPluginId(), $destination);
-    $this->eventDispatcher->dispatch(SocialAuthEvents::BEFORE_REDIRECT, $event);
+    $this->eventDispatcher->dispatch($event, SocialAuthEvents::BEFORE_REDIRECT);
   }
 
 }

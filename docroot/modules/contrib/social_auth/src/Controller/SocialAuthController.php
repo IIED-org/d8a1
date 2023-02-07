@@ -22,7 +22,7 @@ class SocialAuthController extends SocialApiController {
   public static function setLoginButtonSettings($module, $route, $img_path) {
     $config = \Drupal::configFactory()->getEditable('social_auth.settings');
 
-    $img_path = drupal_get_path('module', $module) . '/' . $img_path;
+    $img_path = \Drupal::service('extension.list.module')->getPath($module) . '/' . $img_path;
 
     $config->set('auth.' . $module . '.route', $route)
       ->set('auth.' . $module . '.img_path', $img_path)

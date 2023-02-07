@@ -53,7 +53,7 @@ class InstallerTest extends InstallerTestBase {
   protected function setUpLanguage() {
     // Test that \Drupal\Core\Render\BareHtmlPageRenderer adds assets and
     // metatags as expected to the first page of the installer.
-    $this->assertSession()->responseContains("core/themes/seven/css/components/buttons.css");
+    $this->assertSession()->responseContains("css/components/button.css");
     $this->assertSession()->responseContains('<meta charset="utf-8" />');
 
     // Assert that the expected title is present.
@@ -130,6 +130,9 @@ class InstallerTest extends InstallerTestBase {
     $database = Database::getConnection();
     $module = $database->getProvider();
     $module_handler = \Drupal::service('module_handler');
+
+    // Ensure the update module is not installed.
+    $this->assertFalse($module_handler->moduleExists('update'), 'The Update module is not installed.');
 
     // Assert that the module that is providing the database driver has been
     // installed.

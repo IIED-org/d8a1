@@ -8,6 +8,7 @@ view:
   dependencies:
     - core/jquery
     - core/drupal
+    - core/once
     - content_browser/masonry
 
 masonry:

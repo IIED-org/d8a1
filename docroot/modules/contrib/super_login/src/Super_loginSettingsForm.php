@@ -126,14 +126,6 @@ class super_loginSettingsForm extends ConfigFormBase {
       '#default_value' => $config->get('super_login.capslock'),
     ];
 
-    $form['options']['button_theme'] = [
-      '#type'  => 'checkbox',
-      '#title' => $this->t('Enable replacement of standard submit button with CSS3 theme.'),
-      '#disabled' => $config->get('super_login.css') ? FALSE : TRUE,
-      '#description' => t('Disable this option to remove the CSS3 theme on the submit buttons.'),
-      '#default_value' => $config->get('super_login.button_theme'),
-    ];
-
     $form['options']['autofocus'] = [
       '#type'  => 'checkbox',
       '#title' => $this->t('Enable autofocus for username field'),

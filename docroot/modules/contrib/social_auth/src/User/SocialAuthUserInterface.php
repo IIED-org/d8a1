@@ -159,7 +159,7 @@ interface SocialAuthUserInterface {
    * @param mixed $value
    *   The value associated to the key.
    *
-   * @return \Drupal\social_auth\User\User
+   * @return \Drupal\social_auth\User\SocialAuthUser
    *   The User instance.
    */
   public function addData($key, $value);
