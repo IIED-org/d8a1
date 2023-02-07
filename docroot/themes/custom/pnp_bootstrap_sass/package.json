@@ -20,7 +20,7 @@
     },
     "dependencies": {
         "bootstrap": "^4.3.1",
-        "browser-sync": "^2.26.7",
+        "browser-sync": "^2.27.11",
         "jquery": "^3.4.1",
         "natives": "^1.1.6",
         "popper.js": "^1.14.3"
