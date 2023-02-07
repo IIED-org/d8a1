@@ -8,7 +8,7 @@
         "source": "https://git.drupalcode.org/project/leaflet_more_maps"
     },
     "require": {
-        "drupal/leaflet": "^2.1.0"
+        "drupal/leaflet": "^2.1.0 || ^10.0"
     },
     "extra": {
         "branch-alias": {

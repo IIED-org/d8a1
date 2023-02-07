@@ -587,9 +587,10 @@
  *
  * @section configuration Configuration
  *
- * By default cached data is stored in the database. This can be configured
- * though so that all cached data, or that of an individual cache bin, uses a
- * different cache backend, such as APCu or Memcache, for storage.
+ * By default, cached data is stored in the database. However, Drupal can be
+ * configured to use a different backend (specified in their service
+ * definition), e.g. APCu or Memcache. This configuration can nominate a
+ * different backend for all cached data or for specific cache bins.
  *
  * In a settings.php file, you can override the service used for a particular
  * cache bin. For example, if your service implementation of
@@ -887,6 +888,10 @@
  *   @endcode
  *   Note that $container here is an instance of
  *   \Drupal\Core\DependencyInjection\ContainerBuilder.
+ *
+ * @section lazy_services Lazy services
+ * Some services can be declared as lazy to improve performance. See @link
+ * lazy_services Lazy Services @endlink for details.
  *
  * @see https://www.drupal.org/node/2133171
  * @see core.services.yml
@@ -2490,6 +2495,32 @@ function hook_validation_constraint_alter(array &$definitions) {
  * information on services and the dependency injection container.
  *
  * @}
+ */
+
+/**
+ * @defgroup lazy_services Lazy Services
+ * @{
+ * Lazy services overview
+ *
+ * A service can be declared as lazy in order to improve performance. Classes
+ * that inject a lazy service receive a proxy class instead, and when a method
+ * on the lazy service is called, the proxy class gets the service from the
+ * container and forwards the method call. This means that the lazy service is
+ * only instantiated when it is needed.
+ *
+ * This is useful because some classes may inject a service which is expensive
+ * to instantiate (because it has multiple dependencies of its own), but is only
+ * used in exceptional cases. This would make the class dependent on the
+ * expensive service and all of the expensive service's dependencies.
+ *
+ * Making the expensive service lazy means that the class is only dependent on
+ * the proxy service, and not on all the dependencies of the lazy service.
+ *
+ * To define a service as lazy, add @code lazy: true @endcode to the service
+ * definition, and use the @code core/scripts/generate-proxy.sh @endcode script
+ * to generate the proxy class.
+ *
+ * @see core/scripts/generate-proxy.sh
  */
 
 /**

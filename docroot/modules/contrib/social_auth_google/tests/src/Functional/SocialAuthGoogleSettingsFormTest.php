@@ -18,12 +18,12 @@ class SocialAuthGoogleSettingsFormTest extends SocialAuthTestBase {
    *
    * @var array
    */
-  public static $modules = ['social_auth_google'];
+  protected static $modules = ['social_auth_google'];
 
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     $this->module = 'social_auth_google';
     $this->provider = 'google';
 

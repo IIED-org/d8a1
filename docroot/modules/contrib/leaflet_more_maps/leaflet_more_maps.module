@@ -326,7 +326,7 @@ function _leaflet_more_maps_assemble_default_map_info(array &$map_info, array $d
   // OSM Thunderforest.
   // Maps still display without API key, but appear with API KEY watermark.
   $attr_thunderforest = '<a href="https://www.thunderforest.com">Thunderforest</a>. ' . $attr_osm;
-  $thunderforest_api_key = trim($config_settings->get('thunderforest_api_key'));
+  $thunderforest_api_key = trim($config_settings->get('thunderforest_api_key') ?? '');
   $thunderforest_api_key = empty($thunderforest_api_key) ? '' : '?apikey=' . $thunderforest_api_key;
 
   $map_info['osm-cycle'] = [
@@ -482,7 +482,7 @@ function _leaflet_more_maps_assemble_default_map_info(array &$map_info, array $d
 
   // HERE maps.
   $attr_here = 'Data &copy; <a href="https://here.com">HERE</a> maps.';
-  $here_api_key = trim($config_settings->get('here_api_key'));
+  $here_api_key = trim($config_settings->get('here_api_key') ?? '');
   $code = 'base'; // also 'traffic' and 'aerial'
   $tile_size = 256; // or 512
   $format = 'png8'; // or png or jpg (best for satellite)
@@ -555,6 +555,10 @@ function _leaflet_more_maps_assemble_default_map_info(array &$map_info, array $d
       ],
     ],
   ];
+
+  // Add hook to change default list of maps.
+  // Let other modules alter the default map info.
+  \Drupal::moduleHandler()->invokeAll('leaflet_more_maps_list_alter', array(&$map_info));
 }
 
 /**
@@ -606,8 +610,8 @@ function _leaflet_more_maps_get_navionics_navtoken() {
   // Get Navionics configuration: API key and Authorized Domain.
   $config = Drupal::config('leaflet_more_maps.settings');
 
-  $api_key = trim($config->get('navionics_api_key'));
-  $authorized_domain = trim($config->get('navionics_authorized_domain'));
+  $api_key = trim($config->get('navionics_api_key') ?? '');
+  $authorized_domain = trim($config->get('navionics_authorized_domain') ?? '');
 
   if (empty($api_key) || empty($authorized_domain)) {
     return '';

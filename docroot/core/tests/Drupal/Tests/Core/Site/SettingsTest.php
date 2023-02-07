@@ -322,6 +322,10 @@ class SettingsTest extends UnitTestCase {
         'twig_sandbox_whitelisted_prefixes',
         'The "twig_sandbox_whitelisted_prefixes" setting is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use "twig_sandbox_allowed_prefixes" instead. See https://www.drupal.org/node/3162897.',
       ],
+      [
+        'block_interest_cohort',
+        'The "block_interest_cohort" setting is deprecated in drupal:9.5.0. This setting should be removed from the settings file, since its usage has been removed. See https://www.drupal.org/node/3320787.',
+      ],
     ];
   }
 
@@ -353,7 +357,7 @@ class SettingsTest extends UnitTestCase {
     if (!empty($expected_autoload)) {
       $class_loader->expects($this->once())
         ->method('addPsr4')
-        ->with($expected_namespace . '\\', $expected_autoload);
+        ->with($expected_namespace . '\\', vfsStream::url('root') . '/' . $expected_autoload);
     }
     else {
       $class_loader->expects($this->never())

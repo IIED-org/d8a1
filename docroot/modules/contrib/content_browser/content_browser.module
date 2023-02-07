@@ -1,9 +1,11 @@
 <?php
 
 /**
- * @file Contains logic for content_browser.
+ * @file
+ * Contains logic for content_browser.
  */
 
+use Drupal\views\ViewExecutable;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Form\FormStateInterface;
 
@@ -50,7 +52,7 @@ function content_browser_form_alter(&$form, FormStateInterface &$form_state) {
     elseif (isset($form['#id']) && $form['#id'] == 'views-exposed-form-content-browser-entity-browser') {
       /** @var \Drupal\views\ViewExecutable $view */
       $view = $form_state->get('view');
-      if ($view instanceof \Drupal\views\ViewExecutable && isset($view->argument['type'])) {
+      if ($view instanceof ViewExecutable && isset($view->argument['type'])) {
         /** @var \Drupal\node\Plugin\views\argument\Type $type */
         $type = $view->argument['type'];
         $value = $type->getValue();

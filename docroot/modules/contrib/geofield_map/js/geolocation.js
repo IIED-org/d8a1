@@ -11,38 +11,45 @@
     attach: function (context, settings) {
 
       let first_geofield_map = 0;
+      let geolocation_position;
 
-      // Trigger the HTML5 Geocoding only if not in the Geofield Field
-      // configuration page.
-      if ($(context).find('#edit-field-geofield-wrapper').length && navigator.geolocation) {
+      // Trigger the HTML5 Geocoding only if defined.
+      if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(updateLocation, errorUpdateLocation);
       }
 
       // Update Location for each Geofield Map based on the HTML5 Geolocation
       // Position of the user.
       function updateLocation(position) {
-
-        const geofield_maps_array = Object.entries(settings['geofield_map']).reverse();
-        for (const [mapid, options] of geofield_maps_array) {
-          if (mapid.includes('-0-value')) {
-            first_geofield_map = 1;
-          }
-          else {
-            first_geofield_map = 0;
-          }
-          if (options.geolocation) {
-            updateGeoLocationFields($('#' + mapid, context).parents('.geofieldmap-widget-auto-geocode'), position, options);
+        geolocation_position = position;
+        // Set Location the HTML5 Geolocation Position for each Geofield Map
+        // if not in the Geofield Field configuration page.
+        if (!$(context).find("#edit-default-value-input").length && typeof geolocation_position !== 'undefined') {
+          const geofield_maps_array = Object.entries(settings['geofield_map']).reverse();
+          for (const [mapid, options] of geofield_maps_array) {
+            if (mapid.includes('-0-value')) {
+              first_geofield_map = 1;
+            }
+            else {
+              first_geofield_map = 0;
+            }
+            if (options.geolocation) {
+              updateGeoLocationFields($('#' + mapid, context).parents('.geofieldmap-widget-auto-geocode'), position, options);
+            }
           }
         }
-
-        // Bind the "updateGeoLocationFields" click eent to the
-        // "geofield-html5-geocode-button" button.
-        $('input[name="geofield-html5-geocode-button"]').once('geofield_geolocation').click(function (e) {
-          e.preventDefault();
-          updateGeoLocationFields($(this).parents('.geofieldmap-widget-auto-geocode').parent(), position, []);
-        });
-
       }
+
+      // Bind the "updateGeoLocationFields" click event to the
+      // "geofield-html5-geocode-button" button.
+      once('geofield_geolocation', 'input[name="geofield-html5-geocode-button"]').forEach(function (e) {
+        $(e).click(function (e) {
+          e.preventDefault();
+          if (typeof geolocation_position !== 'undefined') {
+            updateGeoLocationFields($(this).parents('.geofieldmap-widget-auto-geocode').parent(), geolocation_position, []);
+          }
+        });
+      });
 
       // Update Geolocation Fields based on the user position,.
       function updateGeoLocationFields(fields, position, options) {
@@ -54,9 +61,7 @@
 
       // Error callback for getCurrentPosition.
       function errorUpdateLocation() {
-        /* eslint-disable no-console */
-        console.log('Couldn\'t find any HTML5 position');
-        /* eslint-enable no-console */
+        console.log("Couldn't find any HTML5 position");
       }
     }
   };

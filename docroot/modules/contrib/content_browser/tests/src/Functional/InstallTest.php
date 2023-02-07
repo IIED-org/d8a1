@@ -22,7 +22,7 @@ class InstallTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['content_browser'];
+  protected static $modules = ['content_browser'];
 
   /**
    * {@inheritdoc}

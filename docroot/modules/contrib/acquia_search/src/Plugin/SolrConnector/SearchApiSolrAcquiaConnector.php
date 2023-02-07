@@ -11,7 +11,9 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\search_api_solr\SolrConnector\SolrConnectorPluginBase;
+use GuzzleHttp\Client as GuzzleClient;
 use Http\Adapter\Guzzle6\Client as Guzzle6Client;
+use Psr\Http\Client\ClientInterface;
 use Solarium\Core\Client\Client;
 use Solarium\Core\Client\Endpoint;
 use Solarium\Exception\UnexpectedValueException;
@@ -205,19 +207,17 @@ class SearchApiSolrAcquiaConnector extends SolrConnectorPluginBase {
       $form['connector']['#markup'] = $this->t('Search settings are being automatically set by your <a href=":connector">Acquia Connector</a> subscription.', [
         ':connector' => base_path() . Url::fromRoute('acquia_connector.settings')->getInternalPath(),
       ]);
-
-      $subscription = \Drupal::state()->get('acquia_subscription_data');
       $form['identifier'] = [
         '#type' => 'value',
-        '#value' => \Drupal::state()->get('acquia_connector.identifier') ?? '',
+        '#value' => $this->storage::getIdentifier(),
       ];
       $form['api_key'] = [
         '#type' => 'value',
-        '#value' => \Drupal::state()->get('acquia_connector.key') ?? '',
+        '#value' => $this->storage::getApiKey(),
       ];
       $form['uuid'] = [
         '#type' => 'value',
-        '#value' => $subscription['uuid'] ?? '',
+        '#value' => $this->storage::getUuid(),
       ];
     }
     else {
@@ -325,7 +325,18 @@ class SearchApiSolrAcquiaConnector extends SolrConnectorPluginBase {
     // incompatible with remote_stream_wrapper.
     // See https://www.drupal.org/project/acquia_search/issues/3209704
     // And https://www.drupal.org/project/acquia_search_solr/issues/3171407
-    $httpClient = new Guzzle6Client();
+    $httpClient = new GuzzleClient();
+    if (!($httpClient instanceof ClientInterface)) {
+      // BC for Drupal 9 and 8 using Guzzle 6.
+      if (class_exists(Guzzle6Client::class)) {
+        $httpClient = new Guzzle6Client();
+      }
+      else {
+        \Drupal::logger('acquia_search')->error("Guzzle7 or php-http/guzzle6-adapter is required to use Acquia Search");
+        return FALSE;
+      }
+    }
+
     $adapter = new TimeoutAwarePsr18Adapter($httpClient);
 
     $this->solr = new Client($adapter, $this->eventDispatcher);

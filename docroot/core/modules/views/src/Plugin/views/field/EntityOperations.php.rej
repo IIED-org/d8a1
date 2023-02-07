@@ -1,0 +1,12 @@
+--- modules/views/src/Plugin/views/field/EntityOperations.php
++++ modules/views/src/Plugin/views/field/EntityOperations.php
+@@ -108,6 +108,9 @@ public function buildOptionsForm(&$form, FormStateInterface $form_state) {
+    * {@inheritdoc}
+    */
+   public function render(ResultRow $values) {
++    if (empty($this->getEntity($values))) {
++      return [];
++    }
+     $entity = $this->getEntityTranslation($this->getEntity($values), $values);
+     $operations = $this->entityManager->getListBuilder($entity->getEntityTypeId())->getOperations($entity);
+     if ($this->options['destination']) {

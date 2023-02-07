@@ -73,13 +73,13 @@ class EntityBrowserController extends ControllerBase {
     if ($operation && $form_state && !$form_state->isExecuted()) {
       // Return the form as a modal dialog.
       $form['#attached']['library'][] = 'core/drupal.dialog.ajax';
-      $title = $this->t('Edit entity @entity', ['@entity' => $entity->label()]);
-      $response = AjaxResponse::create()->addCommand(new OpenDialogCommand('#' . $entity->getEntityTypeId() . '-' . $entity->id() . '-edit-dialog', $title, $form, ['modal' => TRUE, 'width' => 800]));
+      $title = $this->t('Edit @entity', ['@entity' => $entity->label()]);
+      $response = (new AjaxResponse())->addCommand(new OpenDialogCommand('#' . $entity->getEntityTypeId() . '-' . $entity->id() . '-edit-dialog', $title, $form, ['modal' => TRUE, 'width' => 800]));
       return $response;
     }
     else {
       // Return command for closing the modal.
-      $response = AjaxResponse::create()->addCommand(new CloseDialogCommand('#' . $entity->getEntityTypeId() . '-' . $entity->id() . '-edit-dialog'));
+      $response = (new AjaxResponse())->addCommand(new CloseDialogCommand('#' . $entity->getEntityTypeId() . '-' . $entity->id() . '-edit-dialog'));
       // Also refresh the widget if "details_id" is provided.
       $details_id = $request->query->get('details_id');
       if (!empty($details_id)) {

@@ -42,6 +42,9 @@ Example:
   }
 ```
 
+You can add or alter the default list of maps used as layers by implementing `hook_leaflet_more_maps_list_alter()`.
+See `leaflet_more_maps.api.php` for more info.
+
 #### References and licensing terms:
 
 - https://leafletjs.com

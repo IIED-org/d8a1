@@ -117,7 +117,7 @@ class FacetBlockAjaxController extends ControllerBase {
 
     // Rebuild the request and the current path, needed for facets.
     $path = $request->request->get('facet_link');
-    $facets_blocks = $request->request->get('facets_blocks');
+    $facets_blocks = $request->request->all()['facets_blocks'] ?? [];
 
     if (empty($path) || empty($facets_blocks)) {
       throw new NotFoundHttpException('No facet link or facet blocks found.');
@@ -127,15 +127,8 @@ class FacetBlockAjaxController extends ControllerBase {
     $facets_blocks = array_unique($facets_blocks);
 
     $new_request = Request::create($path);
-    // Support 9.3+.
-    // @todo remove after 9.3 or greater is required.
-    if (class_exists(DrupalRequestStack::class)) {
-      $request_stack = new DrupalRequestStack();
-    }
-    // Legacy request stack.
-    else {
-      $request_stack = new SymfonyRequestStack();
-    }
+    $request_stack = new DrupalRequestStack();
+
     $processed = $this->pathProcessor->processInbound($path, $new_request);
     $processed_request = Request::create($processed);
 

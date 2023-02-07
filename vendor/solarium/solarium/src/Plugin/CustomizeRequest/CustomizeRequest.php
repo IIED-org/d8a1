@@ -87,7 +87,7 @@ class CustomizeRequest extends AbstractPlugin
 
         // check for a unique key
         if (\array_key_exists($key, $this->customizations)) {
-            //double add calls for the same customization are ignored, others cause an exception
+            // double add calls for the same customization are ignored, others cause an exception
             if ($this->customizations[$key] !== $customization) {
                 throw new InvalidArgumentException('A Customization must have a unique key value');
             }
@@ -252,13 +252,26 @@ class CustomizeRequest extends AbstractPlugin
     /**
      * Plugin init function.
      *
-     * Register event listeners
+     * Register event listeners.
      */
     protected function initPluginType()
     {
         $dispatcher = $this->client->getEventDispatcher();
         if (is_subclass_of($dispatcher, '\Symfony\Component\EventDispatcher\EventDispatcherInterface')) {
             $dispatcher->addListener(Events::POST_CREATE_REQUEST, [$this, 'postCreateRequest']);
+        }
+    }
+
+    /**
+     * Plugin cleanup function.
+     *
+     * Unregister event listeners.
+     */
+    public function deinitPlugin()
+    {
+        $dispatcher = $this->client->getEventDispatcher();
+        if (is_subclass_of($dispatcher, '\Symfony\Component\EventDispatcher\EventDispatcherInterface')) {
+            $dispatcher->removeListener(Events::POST_CREATE_REQUEST, [$this, 'postCreateRequest']);
         }
     }
 }

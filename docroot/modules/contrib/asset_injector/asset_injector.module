@@ -72,7 +72,7 @@ function asset_injector_css_alter(array &$css, AttachedAssetsInterface $assets) 
  */
 function asset_injector_ckeditor_css_alter(array &$css, Editor $editor) {
   foreach (asset_injector_get_assets(TRUE, ['asset_injector_css']) as $asset) {
-    $css[] = file_create_url($asset->internalFileUri());
+    $css[] = \Drupal::service('file_url_generator')->generateAbsoluteString($asset->internalFileUri());
   }
 }
 
@@ -119,7 +119,7 @@ function asset_injector_library_info_build() {
 function asset_injector_page_attachments(array &$attachments) {
   /** @var \Drupal\Core\Render\RendererInterface $renderer */
   $renderer = \Drupal::service('renderer');
-  /** @var \Drupal\Core\Asset\AttachedAssetsInterface $asset */
+  /** @var \Drupal\asset_injector\AssetInjectorInterface $asset */
   foreach (asset_injector_get_assets(TRUE) as $asset) {
     $attachments['#attached']['library'][] = 'asset_injector/' . $asset->libraryNameSuffix();
     $renderer->addCacheableDependency($attachments, $asset);

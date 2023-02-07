@@ -5,6 +5,7 @@ namespace Drupal\content_browser\Plugin\Block;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Form\SubformStateInterface;
 use Drupal\node\Entity\Node;
 
 /**
@@ -47,6 +48,16 @@ class ContentEmbedBlock extends BlockBase {
    * {@inheritdoc}
    */
   public function blockForm($form, FormStateInterface $form_state) {
+    // This method receives a sub form state instead of the full form state.
+    // There is an ongoing discussion around this which could result in the
+    // passed form state going back to a full form state. In order to prevent
+    // future breakage because of a core update we'll just check which type of
+    // FormStateInterface we've been passed and act accordingly.
+    // @See https://www.drupal.org/node/2798261
+    if ($form_state instanceof SubformStateInterface) {
+      $form_state = $form_state->getCompleteFormState();
+    }
+
     $entities = $form_state->getValue([
       'settings',
       'selection',
@@ -58,7 +69,7 @@ class ContentEmbedBlock extends BlockBase {
       $nids[] = $entity->id();
     }
     if (empty($nids)) {
-      $nids = $this->getDefaultNIDs();
+      $nids = $this->getDefaultNids();
     }
 
     $form['selection'] = $this->browserForm($nids);
@@ -86,7 +97,7 @@ class ContentEmbedBlock extends BlockBase {
    * @return array
    *   A render array representing Entity Browser components.
    */
-  public function browserForm($nids) {
+  public function browserForm(array $nids) {
     $selection = [
       '#type' => 'container',
       '#attributes' => ['id' => 'content-embed-block-browser'],
@@ -197,7 +208,7 @@ class ContentEmbedBlock extends BlockBase {
     $build = [];
     $view_builder = \Drupal::entityTypeManager()->getViewBuilder('node');
 
-    foreach ($this->getDefaultNIDs() as $nid) {
+    foreach ($this->getDefaultNids() as $nid) {
       /** @var \Drupal\node\Entity\Node $node */
       $node = Node::load($nid);
       if ($node && $node->access('view')) {
@@ -226,7 +237,7 @@ class ContentEmbedBlock extends BlockBase {
    * @return array
    *   An array of Node IDs that are currently set in the Block configuration.
    */
-  protected function getDefaultNIDs() {
+  protected function getDefaultNids() {
     // We optionally support UUIDs being put directly to our configuration, to
     // support profiles providing Content Embed Blocks with default config.
     if (!empty($this->configuration['uuids'])) {
