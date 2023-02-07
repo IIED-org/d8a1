@@ -15,6 +15,8 @@ id: species_2
 name: Species
 weight: 0
 min_count: 1
+missing: false
+missing_label: others
 url_alias: species
 facet_source_id: 'search_api:views_page__explore__page_2'
 field_identifier: field_species_affected
@@ -55,4 +57,9 @@ processor_configs:
     weights:
       pre_query: 50
       build: 15
+    settings: {  }
+  hierarchy_processor:
+    id: hierarchy_processor
+    weights:
+      build: 100
     settings: {  }

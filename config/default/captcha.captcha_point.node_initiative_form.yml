@@ -4,4 +4,4 @@ status: true
 dependencies: {  }
 formId: node_initiative_form
 captchaType: default
-label: null
+label: node_initiative_form

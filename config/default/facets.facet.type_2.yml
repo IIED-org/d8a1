@@ -11,6 +11,8 @@ id: type_2
 name: Type
 weight: 2
 min_count: 0
+missing: false
+missing_label: others
 url_alias: type
 facet_source_id: 'search_api:views_page__explore__page_2'
 field_identifier: type
