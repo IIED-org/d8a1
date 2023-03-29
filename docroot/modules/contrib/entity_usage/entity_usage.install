@@ -286,9 +286,17 @@ function entity_usage_update_8205(&$sandbox) {
  * Enlarge 'target_id_string' and 'source_id_string' columns to 255 (#3335488).
  */
 function entity_usage_update_8206(): void {
-  $schema = \Drupal::database()->schema();
+  // In early alpha versions of the module, the "target_id_string" column was
+  // nullable. We will update the column definition to NOT NULL, so make sure no
+  // NULL values are present.
+  $database = \Drupal::database();
+  $database->update('entity_usage')
+    ->fields(['target_id_string' => ''])
+    ->condition('target_id_string', NULL, 'IS NULL')
+    ->execute();
 
   // Drop all indices involving columns we want to change.
+  $schema = $database->schema();
   $schema->dropPrimaryKey('entity_usage');
   $schema->dropIndex('entity_usage', 'target_entity_string');
   $schema->dropIndex('entity_usage', 'source_entity_string');

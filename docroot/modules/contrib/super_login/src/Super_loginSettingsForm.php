@@ -163,6 +163,20 @@ class super_loginSettingsForm extends ConfigFormBase {
       '#default_value' => $config->get('super_login.pass_placeholder'),
     ];
 
+    $form['text']['login_button_text'] = [
+      '#type'  => 'textfield',
+      '#title' => $this->t('Login Button Text'),
+      '#description' => $this->t('Enter the text to be displayed in the log in button. Leave blank for default value.'),
+      '#default_value' => $config->get('super_login.login_button_text'),
+    ];
+
+    $form['text']['reg_button_text'] = [
+      '#type'  => 'textfield',
+      '#title' => $this->t('Register Button Text'),
+      '#description' => $this->t('Enter the text to be displayed in the register button. Leave blank for default value.'),
+      '#default_value' => $config->get('super_login.reg_button_text'),
+    ];
+
     return parent::buildForm($form, $form_state);
   }
 
@@ -187,11 +201,13 @@ class super_loginSettingsForm extends ConfigFormBase {
     $config->set('super_login.login_placeholder', $form_state->getValue('login_placeholder'));
     $config->set('super_login.pass_placeholder', $form_state->getValue('pass_placeholder'));
     $config->set('super_login.autofocus', $form_state->getValue('autofocus'));
+    $config->set('super_login.login_button_text', $form_state->getValue('login_button_text'));
+    $config->set('super_login.reg_button_text', $form_state->getValue('reg_button_text'));
+
 
     $config->save();
 
     parent::submitForm($form, $form_state);
     $module_data = \Drupal::service('extension.list.module')->reset()->getList();
   }
-
 }

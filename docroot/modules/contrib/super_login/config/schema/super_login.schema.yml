@@ -53,3 +53,9 @@ super_login.settings:
         pass_placeholder:
           type: label
           label: 'Password Placeholder'
+        login_button_text:
+          type: label
+          label: 'Login Button Text'
+        reg_button_text:
+          type: label
+          label: 'Registration Button Text'
