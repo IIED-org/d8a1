@@ -1,16 +1,17 @@
 <?php
 
+use Drupal\user\UserInterface;
 use Drupal\Core\Url;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Link;
 
 /**
- * @file
+ * @file 
  * Functions related to altering of login form.
  */
 
 /**
- * Implements hook_form_alter().
+ * Implements hook_form_alter(). 
  * Adjusts login page form
  */
 function super_login_form_alter(&$form, FormStateInterface $form_state, $form_id) {
@@ -18,6 +19,10 @@ function super_login_form_alter(&$form, FormStateInterface $form_state, $form_id
   if ($form_id == 'user_register_form' && \Drupal::currentUser()->isAnonymous()) {
     $config = \Drupal::config('super_login.settings');
 
+    $reg_button_text = $config->get('super_login.reg_button_text');
+    if (!empty($reg_button_text)) {
+      $form['actions']['submit']['#value'] = $reg_button_text;
+    }
     unset($form['account']['mail']['#description']);
     unset($form['account']['name']['#description']);
 
@@ -29,6 +34,7 @@ function super_login_form_alter(&$form, FormStateInterface $form_state, $form_id
   }
 
   if ($form_id == 'user_login_form' || $form_id == 'user_pass') {
+
     $config = \Drupal::config('super_login.settings');
 
     // Global form functions.
@@ -45,6 +51,12 @@ function super_login_form_alter(&$form, FormStateInterface $form_state, $form_id
   }
 
   if ($form_id == 'user_login_form') {
+
+    $login_button_text = $config->get('super_login.login_button_text');
+    if (!empty($login_button_text)) {
+      $form['actions']['submit']['#value'] = $login_button_text;
+    }
+
     $form['#attached']['library'][] = 'super_login/super_login_js';
     $form['#attached']['drupalSettings']['show_messages'] = $config->get('super_login.messages');
     $form['title'] = [
@@ -67,7 +79,7 @@ function super_login_form_alter(&$form, FormStateInterface $form_state, $form_id
 
     $user_config = \Drupal::config('user.settings');
 
-    if ($user_config->get('register') != \Drupal\user\UserInterface::REGISTER_ADMINISTRATORS_ONLY) {
+    if ($user_config->get('register') != UserInterface::REGISTER_ADMINISTRATORS_ONLY) {
       $actions_suffix = '<div class="actions-suffix">';
 
       $internal_link = Link::createFromRoute(t($config->get('super_login.new_account_text')), 'user.register')->toString();
