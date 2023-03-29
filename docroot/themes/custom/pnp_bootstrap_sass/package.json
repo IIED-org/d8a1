@@ -20,18 +20,19 @@
     },
     "dependencies": {
         "bootstrap": "^4.3.1",
-        "browser-sync": "^2.26.7",
-        "jquery": "^3.4.1",
+        "browser-sync": "^2.29.1",
+        "jquery": "^3.6.4",
         "natives": "^1.1.6",
-        "popper.js": "^1.14.3"
+        "popper.js": "^1.16.1"
     },
     "devDependencies": {
-        "gulp": "^3.9.1",
-        "gulp-autoprefixer": "~4.0.0",
+        "gulp": "^4.0.2",
+        "gulp-autoprefixer": "^8.0.0",
         "gulp-clean-css": "^3.1.0",
         "gulp-concat": "^2.6.1",
-        "gulp-sass": "~3.1.0",
-        "gulp-sourcemaps": "^2.6.0",
-        "gulp-uglify": "~3.0.0"
+        "gulp-sass": "^5.1.0",
+        "gulp-sourcemaps": "^3.0.0",
+        "gulp-uglify": "~3.0.0",
+        "sass": "^1.60.0"
     }
 }

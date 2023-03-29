@@ -1,10 +1,11 @@
 var gulp = require('gulp');
 var browserSync = require('browser-sync').create();
-var sass = require('gulp-sass');
+// var sass = require('gulp-sass');
 var concat = require("gulp-concat");
 var cleanCSS = require("gulp-clean-css");
 var uglify = require("gulp-uglify");
 var sourcemaps = require('gulp-sourcemaps');
+const sass = require('gulp-sass')(require('sass'));
 
 // Compile sass into CSS & auto-inject into browsers
 gulp.task('sass', function() {
@@ -26,14 +27,14 @@ gulp.task('js', function() {
 });
 
 // Static Server + watching scss/html files
-gulp.task('serve', ['sass'], function() {
+gulp.task('serve', gulp.series('sass'), function() {
 
     browserSync.init({
-        proxy: "http://pnp.dev.dd:8083",
+        proxy: "https://d8a1.lndo.site",
     });
 
     gulp.watch(['node_modules/bootstrap/scss/bootstrap.scss', 'scss/*.scss', 'scss/components/*.scss'], ['sass']);
     //    gulp.watch("src/*.html").on('change', browserSync.reload);
 });
 
-gulp.task('default', ['js', 'serve']);
+gulp.task('default', gulp.series('js', 'serve'));
