@@ -5,6 +5,7 @@ var concat = require("gulp-concat");
 var cleanCSS = require("gulp-clean-css");
 var uglify = require("gulp-uglify");
 var sourcemaps = require('gulp-sourcemaps');
+var rename = require('gulp-rename');
 const sass = require('gulp-sass')(require('sass'));
 
 // Compile sass into CSS & auto-inject into browsers
@@ -14,14 +15,15 @@ gulp.task('sass', function() {
         .pipe(sass().on('error', sass.logError))
         .pipe(sass({ outputStyle: 'compressed' }))      // nested | compressed etc.
         .pipe(sourcemaps.write())                    // Comment out in prod mode
-        .pipe(cleanCSS({compatibility: 'ie10'}))      // Remove comment in prod mode
+        .pipe(cleanCSS())      // Remove comment in prod mode
+        .pipe(rename({ suffix: '.min' }))
         .pipe(gulp.dest("css"))
         .pipe(browserSync.stream());
 });
 
 // Move the javascript files into our js folder
 gulp.task('js', function() {
-    return gulp.src(['node_modules/bootstrap/dist/js/bootstrap.min.js', 'node_modules/jquery/dist/jquery.min.js', 'node_modules/popper.js/dist/umd/popper.min.js'])
+    return gulp.src(['node_modules/bootstrap/dist/js/bootstrap.min.js', 'node_modules/jquery/dist/jquery.min.js', 'node_modules/popper.js/dist/umd/popper.min.js', 'node_modules/popper.js/dist/umd/popper.min.js.map', 'node_modules/bootstrap/dist/js/bootstrap.min.js.map'])
         .pipe(gulp.dest("js"))
         .pipe(browserSync.stream());
 });

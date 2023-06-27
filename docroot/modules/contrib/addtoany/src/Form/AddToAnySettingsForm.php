@@ -5,7 +5,6 @@ namespace Drupal\addtoany\Form;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\ContentEntityType;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
-use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Extension\ExtensionList;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\ConfigFormBase;

@@ -6,7 +6,7 @@ global-styling:
     js/global.js: {}
   css:
     component:
-      css/style.css: {}
+      css/style.min.css: {}
   dependencies:
     - core/jquery
     - core/drupal

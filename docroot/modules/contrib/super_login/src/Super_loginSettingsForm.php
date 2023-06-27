@@ -4,7 +4,6 @@ namespace Drupal\super_login;
 
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Extension\ModuleExtensionList;
 
 /**
  * Configure Super Login settings for this site.
