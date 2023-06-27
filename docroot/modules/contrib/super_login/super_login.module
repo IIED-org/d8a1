@@ -148,6 +148,7 @@ function super_login_user_login_validate(&$form, FormStateInterface $form_state)
     $user_storage = \Drupal::entityTypeManager()->getStorage('user');
     $user_ids = $user_storage
       ->getQuery()
+      ->accessCheck()
       ->condition('mail', $username)
       ->condition('status', 1)
       ->range(0, 1)
