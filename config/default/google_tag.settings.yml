@@ -3,11 +3,24 @@ _core:
 uri: 'public:/'
 compact_snippet: true
 include_file: true
-rebuild_snippets: false
+rebuild_snippets: true
 flush_snippets: false
 debug_output: false
 _default_container:
   container_id: ''
+  data_layer: dataLayer
+  include_classes: false
+  whitelist_classes: |-
+    google
+    nonGooglePixels
+    nonGoogleScripts
+    nonGoogleIframes
+  blacklist_classes: |-
+    customScripts
+    customPixels
+  include_environment: false
+  environment_id: ''
+  environment_token: ''
   path_toggle: 'exclude listed'
   path_list: |-
     /admin*
@@ -27,16 +40,3 @@ _default_container:
   status_list: |-
     403
     404
-  data_layer: dataLayer
-  include_classes: false
-  whitelist_classes: |-
-    google
-    nonGooglePixels
-    nonGoogleScripts
-    nonGoogleIframes
-  blacklist_classes: |-
-    customScripts
-    customPixels
-  include_environment: false
-  environment_id: ''
-  environment_token: ''

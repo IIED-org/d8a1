@@ -1,10 +1,13 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Drupal\field_states_ui;
 
-use Drupal\Core\Form\FormStateInterface;
 use Drupal\Component\Plugin\ConfigurableInterface;
 use Drupal\Component\Plugin\PluginInspectionInterface;
+use Drupal\Component\Render\MarkupInterface;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Defines the interface for field states.
@@ -19,11 +22,11 @@ interface FieldStateInterface extends PluginInspectionInterface, ConfigurableInt
   /**
    * Applies a field state to the field widget's form element.
    *
-   * @param array $states
+   * @param mixed[] $states
    *   An array to hold states.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the form.
-   * @param array $context
+   * @param mixed[] $context
    *   An associative array containing the following key-value pairs:
    *   - form: The form structure to which widgets are being attached. This may
    *     be a full form structure, or a sub-element of a larger form.
@@ -33,9 +36,9 @@ interface FieldStateInterface extends PluginInspectionInterface, ConfigurableInt
    *   - delta: The order of this item in the array of sub-elements (0, 1, n).
    *   - default: A boolean indicating whether the form is being shown as a
    *     dummy form to set default values.
-   * @param array $element
+   * @param mixed[] $element
    *   The field widget form element as constructed by hook_field_widget_form().
-   * @param array $parents
+   * @param string[] $parents
    *   The parents array from the element.
    *
    * @see \Drupal\Core\Field\WidgetBase::formSingleElement()
@@ -44,15 +47,15 @@ interface FieldStateInterface extends PluginInspectionInterface, ConfigurableInt
    * @return bool
    *   TRUE on success. FALSE if unable to calculate the field state.
    */
-  public function applyState(array &$states, FormStateInterface $form_state, array $context, array $element, array $parents = NULL);
+  public function applyState(array &$states, FormStateInterface $form_state, array $context, array $element, array $parents = NULL): bool;
 
   /**
    * Returns a render array summarizing the configuration of the image effect.
    *
-   * @return array
+   * @return mixed[]
    *   A render array.
    */
-  public function getSummary();
+  public function getSummary(): array;
 
   /**
    * Returns the field state label.
@@ -60,7 +63,7 @@ interface FieldStateInterface extends PluginInspectionInterface, ConfigurableInt
    * @return string
    *   The field state label.
    */
-  public function label();
+  public function label(): string|MarkupInterface;
 
   /**
    * Returns the unique ID representing the field state.
@@ -68,6 +71,6 @@ interface FieldStateInterface extends PluginInspectionInterface, ConfigurableInt
    * @return string
    *   The field state ID.
    */
-  public function getUuid();
+  public function getUuid(): string|MarkupInterface;
 
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Drupal\field_states_ui\Plugin\FieldState;
 
 use Drupal\field_states_ui\FieldStateBase;
