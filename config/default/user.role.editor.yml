@@ -18,6 +18,7 @@ dependencies:
     - node.type.resource
     - node.type.training
     - taxonomy.vocabulary.species
+    - user.role.contributor
     - workflows.workflow.editorial
     - workflows.workflow.node_added
     - workflows.workflow.test_type
@@ -26,6 +27,7 @@ dependencies:
     - content_moderation
     - contextual
     - entity_browser
+    - eu_cookie_compliance
     - filter
     - form_mode_manager
     - hide_revision_field
@@ -79,6 +81,7 @@ permissions:
   - 'delete own country_header content'
   - 'delete own event content'
   - 'delete own training content'
+  - 'display eu cookie compliance popup'
   - 'edit any article content'
   - 'edit any country_header content'
   - 'edit any event content'

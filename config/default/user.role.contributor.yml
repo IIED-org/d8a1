@@ -17,6 +17,7 @@ dependencies:
   module:
     - content_moderation
     - entity_browser
+    - eu_cookie_compliance
     - filter
     - form_mode_manager
     - media
@@ -43,6 +44,7 @@ permissions:
   - 'create remote_video media'
   - 'create resource content'
   - 'create video media'
+  - 'display eu cookie compliance popup'
   - 'edit own initiative content'
   - 'rabbit hole bypass node'
   - 'use editorial transition create_new_draft'

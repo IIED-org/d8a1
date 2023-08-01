@@ -56,7 +56,6 @@ module:
   field: 0
   field_group: 0
   field_layout: 0
-  field_states_ui: 0
   field_ui: 0
   file: 0
   file_mdm: 0
@@ -69,7 +68,6 @@ module:
   geocoder_geofield: 0
   geofield: 0
   geofield_map: 0
-  google_analytics: 0
   google_tag: 0
   help: 0
   history: 0
@@ -155,8 +153,10 @@ module:
   password_policy: 10
   views: 10
   paragraphs: 11
+  field_states_ui: 200
   standard: 1000
   readonlymode: 9999
+  eu_cookie_compliance: 10000
 theme:
   bartik: 0
   seven: 0
