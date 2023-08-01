@@ -46,7 +46,7 @@ class MasqueradeCallbacks implements TrustedCallbackInterface {
   }
 
   /**
-   * #post_render_cache callback; replaces placeholder with masquerade link.
+   * The #post_render_cache callback; replaces placeholder with masquerade link.
    *
    * @param int $account_id
    *   The account ID.

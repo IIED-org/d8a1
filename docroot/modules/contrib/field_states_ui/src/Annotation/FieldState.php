@@ -1,8 +1,11 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Drupal\field_states_ui\Annotation;
 
 use Drupal\Component\Annotation\Plugin;
+use Drupal\Core\Annotation\Translation;
 
 /**
  * Defines a field state annotation object.
@@ -26,7 +29,7 @@ class FieldState extends Plugin {
    *
    * @var string
    */
-  public $id;
+  public string $id;
 
   /**
    * The human-readable name of the field state.
@@ -35,7 +38,7 @@ class FieldState extends Plugin {
    *
    * @ingroup plugin_translatable
    */
-  public $label;
+  public Translation $label;
 
   /**
    * Optional: a brief description of the field state.
@@ -46,6 +49,6 @@ class FieldState extends Plugin {
    *
    * @ingroup plugin_translatable
    */
-  public $description;
+  public Translation $description;
 
 }

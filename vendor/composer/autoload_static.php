@@ -223,7 +223,7 @@ class ComposerStaticInit0dcb22fa594f9dd3f27c774278455d3a
         ),
         'lsolesen\\pel\\' => 
         array (
-            0 => __DIR__ . '/..' . '/lsolesen/pel/src',
+            0 => __DIR__ . '/..' . '/fileeye/pel/src',
         ),
         'cweagans\\Composer\\' => 
         array (

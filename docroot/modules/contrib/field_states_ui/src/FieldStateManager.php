@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Drupal\field_states_ui;
 
 use Drupal\Core\Cache\CacheBackendInterface;
@@ -11,7 +13,6 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Plugin\DefaultPluginManager;
 use Drupal\Core\Url;
-use Drupal\field_ui\Form\EntityFormDisplayEditForm;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -30,7 +31,7 @@ class FieldStateManager extends DefaultPluginManager {
    *
    * @var \Psr\Log\LoggerInterface
    */
-  private $logger;
+  private LoggerInterface $logger;
 
   /**
    * Constructs a new FieldStateManager.
@@ -61,24 +62,24 @@ class FieldStateManager extends DefaultPluginManager {
    * locations are `value` and `target_id` or for multiple value forms, on the
    * wrapper.
    *
-   * @param array $element
+   * @param mixed[] $element
    *   The field widget form elements as constructed by
    *   \Drupal\Core\Field\WidgetBase::formMultipleElements().
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the form.
-   * @param array $context
+   * @param mixed[] $context
    *   An associative array containing the following key-value pairs:
-   *   - form: The form structure to which widgets are being attached. This may be
-   *     a full form structure, or a sub-element of a larger form.
+   *   - form: The form structure to which widgets are being attached. This may
+   *     be a full form structure, or a sub-element of a larger form.
    *   - widget: The widget plugin instance.
    *   - items: The field values, as a
    *     \Drupal\Core\Field\FieldItemListInterface object.
-   *   - default: A boolean indicating whether the form is being shown as a dummy
-   *     form to set default values.
+   *   - default: A boolean indicating whether the form is being shown as a
+   *     dummy form to set default values.
    *
-   * @see hook_field_widget_multivalue_form_alter().
+   * @see hook_field_widget_multivalue_form_alter()
    */
-  public function apply(&$element, FormStateInterface $form_state, $context) {
+  public function apply(array &$element, FormStateInterface $form_state, array $context) {
     /** @var \Drupal\Core\Field\PluginSettingsInterface $plugin */
     $plugin = $context['widget'];
 
@@ -100,9 +101,13 @@ class FieldStateManager extends DefaultPluginManager {
       case 'entity_reference':
         switch ($plugin_id) {
           case 'chosen_select':
+          case 'inline_entity_form_simple':
+          case 'inline_entity_form_complex':
+          case 'ief_table_view_complex':
           case 'options_select':
           case 'options_buttons':
           case 'media_library_widget':
+          case 'select2_entity_reference':
             $target = &$element;
             break;
 
@@ -117,7 +122,11 @@ class FieldStateManager extends DefaultPluginManager {
 
           case 'entity_reference_autocomplete':
           case 'entity_reference_autocomplete_tags':
-            if (!isset($element[0])) {
+            if (isset($element['#media_help'])) {
+              $target = &$element;
+              $container = TRUE;
+            }
+            elseif (!isset($element[0])) {
               $target = &$element['target_id'];
             }
             else {
@@ -128,28 +137,34 @@ class FieldStateManager extends DefaultPluginManager {
           default:
             // Log a notice so that user(s) can report unrecognized field
             // plugin_id.
-            $this->logger->notice(
-              t(
-                'Field type: "@type" with plugin_id "@id" was unrecognized. Please report on the @link. For quickest resolution, please include what module it comes from.',
-                [
-                  '@type' => $type,
-                  '@id' => $plugin_id,
-                  '@link' => Link::fromTextAndUrl(
-                    t('Field States UI Issue Queue'),
-                    Url::fromUri('https://www.drupal.org/project/issues/field_states_ui')
-                  )->toString(),
-                ]
-              )
-            );
-            if (isset($element[0]['target_id'])) {
-              $target = &$element[0]['target_id'];
-            }
-            elseif (isset($element['target_id'])) {
+            $target = $this->logMissingType($type, $plugin_id, $element);
+            break;
+        }
+        break;
+
+      case 'entity_reference_revisions':
+        switch ($plugin_id) {
+          case 'entity_reference_revisions_autocomplete':
+            if (!isset($element[0])) {
               $target = &$element['target_id'];
             }
             else {
-              $target = &$element;
+              $target = &$element[0]['target_id'];
             }
+            break;
+
+          case 'entity_reference_paragraphs':
+          case 'layout_paragraphs':
+          case 'options_select':
+          case 'options_buttons':
+          case 'paragraphs':
+            $target = &$element;
+            break;
+
+          default:
+            // Log a notice so that user(s) can report unrecognized field
+            // plugin_id.
+            $target = $this->logMissingType($type, $plugin_id, $element);
             break;
         }
         break;
@@ -157,7 +172,7 @@ class FieldStateManager extends DefaultPluginManager {
       case 'boolean':
         switch ($plugin_id) {
           case 'options_buttons':
-            $target = &$element[0];
+            $target = &$element;
             break;
 
           case 'boolean_checkbox':
@@ -172,20 +187,23 @@ class FieldStateManager extends DefaultPluginManager {
 
       case 'address_country':
       case 'decimal':
+      case 'email':
       case 'float':
+      case 'geofield':
       case 'integer':
       case 'string':
       case 'string_long':
+      case 'telephone':
         $target = &$element[0]['value'];
         break;
 
+      case 'text':
       case 'text_with_summary':
       case 'text_long':
       case 'list_float':
       case 'list_integer':
       case 'list_string':
       case 'link':
-      case 'entity_reference_revisions':
       case 'datetime':
       case 'color_field_type':
       case 'address_zone':
@@ -198,68 +216,89 @@ class FieldStateManager extends DefaultPluginManager {
         }
         break;
 
-      case 'name':
+      case 'daterange':
+        switch ($plugin_id) {
+          case 'smartdate_only':
+          case 'smartdate_inline':
+          case 'smartdate_default':
+            $target = &$element[0];
+            $target['#type'] = 'container';
+            break;
+
+          default:
+            if (!isset($element[0])) {
+              $target = &$element;
+            }
+            else {
+              $target = &$element[0];
+            }
+        }
+        break;
+
+      case 'smartdate':
         $target = &$element[0];
+        $target['#type'] = 'container';
+        break;
+
+      case 'created':
+      case 'name':
+      case 'timestamp':
+      case 'youtube':
+        $target = &$element[0];
+        $container = TRUE;
+        break;
+
+      case 'file':
+      case 'image':
+      case 'markup':
+      case 'viewsreference':
+      case 'webform':
+        $target = &$element;
         $container = TRUE;
         break;
 
       default:
         // Log a notice so that user(s) can report unrecognized field types.
-        $this->logger->notice(
-          t(
-            'Field type: "@type" was unrecognized. Please report on the @link. For quickest resolution, please include the element details: @details',
-            [
-              '@type' => $type,
-              '@link' => Link::fromTextAndUrl(
-                t('Field States UI Issue Queue'),
-                Url::fromUri('https://www.drupal.org/project/issues/field_states_ui')
-              )->toString(),
-              '@details' => var_export(array_keys($element[0]),TRUE),
-            ]
-          )
-        );
-
-        $target = &$element[0];
+        $target = $this->logMissingType($type, $plugin_id, $element);
         $container = TRUE;
         break;
     }
 
-    if (!isset($target['#field_parents'])) {
+    if (isset($target['#field_parents'])) {
+      $parents = $target['#field_parents'];
+    }
+    else {
       $parents = [];
       $this->logger->notice(
         t(
-          '#field_parents key not found. This will may cause problems. If so, please report on the @link. For quickest resolution, please include the element details: @details',
+          '#field_parents key not found. This may cause problems. If so, please report on the @link. For quickest resolution, please include the element details: @details',
           [
             '@link' => Link::fromTextAndUrl(
               t('Field States UI Issue Queue'),
               Url::fromUri('https://www.drupal.org/project/issues/field_states_ui')
             )->toString(),
-            '@details' => var_export(array_keys($element[0]),TRUE),
+            '@details' => var_export(array_keys($element[0] ?? $element), TRUE),
           ]
         )
       );
     }
-    else {
-      $parents = $target['#field_parents'];
-    }
-    if (isset($element['#cardinality_multiple']) && $element['#cardinality_multiple']) {
-      // Multiple widget field. Put states on the wrapper.
-      $element = [
-        'element' => $element,
-        '#type'   => 'container',
-        '#states' => $this->getStates($states, $form_state, $context, $element, $parents),
-      ];
-    }
-    elseif (isset($container)) {
+    if (isset($container) || (isset($element['#cardinality_multiple']) && $element['#cardinality_multiple'])) {
+      // Multiple widget field or special field that needs a wrapper.
       // Add a container element and set states on that to ensure it works.
-      // This increases divitis which is already common on Drupal forms so
-      // it is better to handle the element properly. There are elements that it
-      // does make sense to do this to (ie name) but avoid if possible.
-      $element = [
-        'element' => $element,
-        '#type'   => 'container',
-        '#states' => $this->getStates($states, $form_state, $context, $element, $parents),
-      ];
+      // This increases divitis which is already common on Drupal forms but for
+      // multiple value fields or some fields with multiple items this is the
+      // best solution.
+      if (isset($element['#type'])) {
+        $element = [
+          'element' => $element,
+          '#type' => 'container',
+          '#states' => $this->getStates($states, $form_state, $context, $element, $parents),
+        ];
+      }
+      else {
+        $element['#type'] = 'container';
+        $element['#states'] = $this->getStates($states, $form_state, $context, $element, $parents);
+      }
     }
     else {
       $target['#states'] = $this->getStates($states, $form_state, $context, $element, $parents);
@@ -267,53 +306,9 @@ class FieldStateManager extends DefaultPluginManager {
   }
 
   /**
-   * Returns the field states for a given element.
-   *
-   * @param array[] $field_states
-   *   An array of field state configuration.
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   Provides an interface for an object containing the current state of a form.
-   * @param array $context
-   *   An associative array containing the following key-value pairs:
-   *   - form: The form structure to which widgets are being attached. This may be
-   *     a full form structure, or a sub-element of a larger form.
-   *   - widget: The widget plugin instance.
-   *   - items: The field values, as a
-   *     \Drupal\Core\Field\FieldItemListInterface object.
-   *   - delta: The order of this item in the array of subelements (0, 1, 2, etc).
-   *   - default: A boolean indicating whether the form is being shown as a dummy
-   *     form to set default values.
-   * @param array $element
-   *   The field widget form element as constructed by
-   *   \Drupal\Core\Field\WidgetBaseInterface::form().
-   * @param array $parents
-   *   The current element's parents in the form.
-   *
-   * @return array
-   *   An array of states to render.
-   */
-  protected function getStates(array $field_states, FormStateInterface $form_state, array $context, array $element, array $parents) {
-    $states = [];
-    foreach ($field_states as $state) {
-      if (!isset($state['id'])) {
-        continue;
-      }
-      try {
-        /** @var \Drupal\field_states_ui\FieldStateInterface $field_state */
-        $field_state = $this->createInstance($state['id'], $state);
-      }
-      catch (\Exception $exception) {
-        continue;
-      }
-      $field_state->applyState($states, $form_state, $context, $element, $parents);
-    }
-    return $states;
-  }
-
-  /**
    * Implements hook_field_widget_third_party_settings_form().
    */
-  public function settingsForm(WidgetInterface $plugin, FieldDefinitionInterface $field_definition, $form_mode, $form, FormStateInterface $form_state) {
+  public function settingsForm(WidgetInterface $plugin, FieldDefinitionInterface $field_definition, string $form_mode, array $form, FormStateInterface $form_state): array {
     $field_name = $field_definition->getName();
     $element = [
       'form' => [
@@ -392,7 +387,7 @@ class FieldStateManager extends DefaultPluginManager {
     }
 
     // Provide form elements to edit/add form states.
-    if ($form_state->get('field_states_ui_edit') == $field_name) {
+    if ($form_state->get('field_states_ui_edit') === $field_name) {
       if ($form_state->get('field_states_ui_target')) {
         $target = $form_state->get('field_states_ui_target');
         $states = $plugin->getThirdPartySettings('field_states_ui')['field_states'];
@@ -438,7 +433,7 @@ class FieldStateManager extends DefaultPluginManager {
     }
 
     // Provide form elements to confirm delete action.
-    elseif ($form_state->get('field_states_ui_edit') == 'delete') {
+    elseif ($form_state->get('field_states_ui_edit') === 'delete') {
       $element['form']['delete'] = [
         '#type' => 'fieldset',
         '#tree' => FALSE,
@@ -484,8 +479,8 @@ class FieldStateManager extends DefaultPluginManager {
   /**
    * Submit function to add/edit field states.
    *
-   * @param array $form
-   *   The whole EntityFormDisplay form array
+   * @param mixed[] $form
+   *   The whole EntityFormDisplay form array.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The form state.
    */
@@ -499,30 +494,30 @@ class FieldStateManager extends DefaultPluginManager {
     $entity = $form_object->getEntity();
 
     // Show the add new field state form for the specified field state type.
-    if ($trigger['#op'] == 'add') {
+    if ($trigger['#op'] === 'add') {
       $form_state->set('field_states_ui_edit', $field_name);
     }
 
     // Cancel editing/creating/deleting a field state.
-    elseif ($trigger['#op'] == 'cancel') {
+    elseif ($trigger['#op'] === 'cancel') {
       $form_state->set('field_states_ui_edit', NULL);
       $form_state->set('field_states_ui_target', NULL);
     }
 
     // Show the edit field state form for the selected field state.
-    elseif ($trigger['#op'] == 'edit') {
+    elseif ($trigger['#op'] === 'edit') {
       $form_state->set('field_states_ui_edit', $field_name);
       $form_state->set('field_states_ui_target', $trigger['#key']);
     }
 
     // Show confirm dialogue for form state deletion.
-    elseif ($trigger['#op'] == 'delete') {
+    elseif ($trigger['#op'] === 'delete') {
       $form_state->set('field_states_ui_edit', 'delete');
       $form_state->set('field_states_ui_target', $trigger['#key']);
     }
 
     // Process deleting a field state.
-    elseif ($trigger['#op'] == 'process_delete') {
+    elseif ($trigger['#op'] === 'process_delete') {
       $field = $entity->getComponent($field_name);
       unset($field['third_party_settings']['field_states_ui']['field_states'][$form_state->get('field_states_ui_target')]);
       $entity->setComponent($field_name, $field);
@@ -532,7 +527,7 @@ class FieldStateManager extends DefaultPluginManager {
     }
 
     // Add a new field state and save the field/entity.
-    elseif ($trigger['#op'] == 'new') {
+    elseif ($trigger['#op'] === 'new') {
       $field = $entity->getComponent($field_name);
       $field_state = self::getManager()->createInstance($trigger['#plugin']);
       $field_state_data = $form_state->getValue([
@@ -552,7 +547,7 @@ class FieldStateManager extends DefaultPluginManager {
     }
 
     // Update a field state and save the field/entity.
-    elseif ($trigger['#op'] == 'process_update') {
+    elseif ($trigger['#op'] === 'process_update') {
       $field = $entity->getComponent($field_name);
       $target = $form_state->get('field_states_ui_target');
       $field_state = self::getManager()->createInstance($trigger['#plugin'], $field['third_party_settings']['field_states_ui']['field_states'][$target]);
@@ -579,8 +574,8 @@ class FieldStateManager extends DefaultPluginManager {
   /**
    * Validation function for adding/editing field states.
    *
-   * @param array $form
-   *   The whole EntityFormDisplay form array
+   * @param mixed[] $form
+   *   The whole EntityFormDisplay form array.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The form state.
    */
@@ -589,7 +584,7 @@ class FieldStateManager extends DefaultPluginManager {
     $field_name = $trigger['#field_name'];
     $op = $trigger['#op'];
 
-    if ($op == 'add') {
+    if ($op === 'add') {
       $element = "fields][$field_name][settings_edit_form][third_party_settings][field_states_ui][form][type";
       $type = $form_state->getValue([
         'fields',
@@ -606,6 +601,96 @@ class FieldStateManager extends DefaultPluginManager {
     }
   }
 
+  /**
+   * Log a message about missing type/widget.
+   *
+   * @param string $type
+   *   The field type id.
+   * @param string $widget
+   *   The field widget plugin id.
+   * @param mixed[] $element
+   *   The element form array being processed.
+   *
+   * @return mixed[]
+   *   A hopefully correct target section.
+   */
+  protected function logMissingType(string $type, string $widget, array $element): array {
+    $this->logger->notice(
+      t(
+        'Field type: "@type" with widget "@widget" was unrecognized. Please report on the @link. For quickest resolution, please include the element details: @details and source module',
+        [
+          '@type' => $type,
+          '@widget' => $widget,
+          '@link' => Link::fromTextAndUrl(
+            t('Field States UI Issue Queue'),
+            Url::fromUri('https://www.drupal.org/project/issues/field_states_ui')
+          )->toString(),
+          '@details' => var_export(array_keys($element[0] ?? $element), TRUE),
+        ]
+      )
+    );
+    if (isset($element[0]['target_id'])) {
+      $target = &$element[0]['target_id'];
+    }
+    elseif (isset($element['target_id'])) {
+      $target = &$element['target_id'];
+    }
+    else {
+      $target = &$element;
+    }
+    return $target;
+  }
+
+  /**
+   * Returns the field states for a given element.
+   *
+   * @param mixed[] $field_states
+   *   An array of field state configuration.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   Provides a object for the current state of a form.
+   * @param mixed[] $context
+   *   An associative array containing the following key-value pairs:
+   *   - form: The form structure to which widgets are being attached. This may
+   *     be a full form structure, or a sub-element of a larger form.
+   *   - widget: The widget plugin instance.
+   *   - items: The field values, as a
+   *     \Drupal\Core\Field\FieldItemListInterface object.
+   *   - delta: The order of this item in the array of subelements (0, 1, etc).
+   *   - default: A boolean indicating whether the form is being shown as a
+   *     dummy form to set default values.
+   * @param mixed[] $element
+   *   The field widget form element as constructed by
+   *   \Drupal\Core\Field\WidgetBaseInterface::form().
+   * @param string[] $parents
+   *   The current element's parents in the form.
+   *
+   * @return mixed[]
+   *   An array of states to render.
+   */
+  protected function getStates(array $field_states, FormStateInterface $form_state, array $context, array $element, array $parents) {
+    $states = [];
+    foreach ($field_states as $state) {
+      if (!isset($state['id'])) {
+        continue;
+      }
+      try {
+        /** @var \Drupal\field_states_ui\FieldStateInterface $field_state */
+        $field_state = $this->createInstance($state['id'], $state);
+      }
+      catch (\Throwable $exception) {
+        continue;
+      }
+      $field_state->applyState($states, $form_state, $context, $element, $parents);
+    }
+    return $states;
+  }
+
+  /**
+   * Get the plugin manager.
+   *
+   * @return \Drupal\field_states_ui\FieldStateManager
+   *   The plugin manager
+   */
   protected static function getManager() {
     return \Drupal::service('plugin.manager.field_states_ui.fieldstate');
   }

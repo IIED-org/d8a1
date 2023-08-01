@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Drupal\field_states_ui;
 
+use Drupal\Component\Render\MarkupInterface;
 use Drupal\Component\Uuid\UuidInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -24,21 +27,21 @@ abstract class FieldStateBase extends PluginBase implements FieldStateInterface,
    *
    * @var string
    */
-  protected $uuid;
+  protected string $uuid;
 
   /**
    * The Uuid Service.
    *
    * @var \Drupal\Component\Uuid\UuidInterface
    */
-  protected $uuidService;
+  protected UuidInterface $uuidService;
 
   /**
    * The entityFieldManager Service.
    *
    * @var \Drupal\Core\Entity\EntityFieldManagerInterface
    */
-  protected $entityFieldManager;
+  protected EntityFieldManagerInterface $entityFieldManager;
 
   /**
    * {@inheritdoc}
@@ -54,20 +57,10 @@ abstract class FieldStateBase extends PluginBase implements FieldStateInterface,
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('uuid'),
-      $container->get('entity_field.manager')
-    );
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function applyState(array &$states, FormStateInterface $form_state, array $context, array $element, array $parents = NULL) {
+  public function applyState(array &$states, FormStateInterface $form_state, array $context, array $element, array $parents = NULL): bool {
+    if (empty($this->configuration['target']) || empty($this->configuration['comparison'])) {
+      return FALSE;
+    }
     $target_field = $form_state->getFormObject()
       ->getFormDisplay($form_state)
       ->getComponent($this->configuration['target']);
@@ -89,9 +82,15 @@ abstract class FieldStateBase extends PluginBase implements FieldStateInterface,
         break;
     }
 
+    if ($this->configuration['comparison'] === 'value') {
+      $value = $this->configuration['value'];
+    }
+    else {
+      $value = TRUE;
+    }
     $states[$this->pluginDefinition['id']][] = [
       $selector => [
-        $this->configuration['comparison'] => $this->configuration['value'],
+        $this->configuration['comparison'] => $value,
       ],
     ];
 
@@ -101,7 +100,7 @@ abstract class FieldStateBase extends PluginBase implements FieldStateInterface,
   /**
    * {@inheritdoc}
    */
-  public function getSummary() {
+  public function getSummary(): array {
     return [
       '#theme' => 'field_states_ui_summary',
       '#data' => $this->configuration,
@@ -111,14 +110,14 @@ abstract class FieldStateBase extends PluginBase implements FieldStateInterface,
   /**
    * {@inheritdoc}
    */
-  public function label() {
+  public function label(): string|MarkupInterface {
     return $this->pluginDefinition['label'];
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getUuid() {
+  public function getUuid(): string|MarkupInterface {
     return $this->uuid;
   }
 
@@ -142,10 +141,10 @@ abstract class FieldStateBase extends PluginBase implements FieldStateInterface,
       'uuid' => '',
     ];
     $this->configuration = $configuration['data'] + $this->defaultConfiguration();
-    if (!$this->configuration['value']) {
+    if (!isset($this->configuration['value'])) {
       $this->configuration['value'] = TRUE;
     }
-    $this->uuid = $configuration['uuid'] ? $configuration['uuid'] : $this->uuidService->generate();
+    $this->uuid = $configuration['uuid'] ?? $this->uuidService->generate();
     return $this;
   }
 
@@ -203,7 +202,7 @@ abstract class FieldStateBase extends PluginBase implements FieldStateInterface,
     $fields = [];
     $definitions = $this->entityFieldManager->getFieldDefinitions($display->getTargetEntityTypeId(), $display->getTargetBundle());
     $current_field = $form_state->get('field_states_ui_edit');
-    foreach ($display->getComponents() as $name => $field) {
+    foreach (array_keys($display->getComponents()) as $name) {
       if (!isset($definitions[$name]) || $name === $current_field) {
         continue;
       }
@@ -219,7 +218,7 @@ abstract class FieldStateBase extends PluginBase implements FieldStateInterface,
       '#other' => t('Other element on the page'),
       '#other_description' => t('Should be a valid jQuery style element selector.'),
       '#options' => $fields,
-      '#default_value' => isset($this->configuration['target']) ? $this->configuration['target'] : '',
+      '#default_value' => $this->configuration['target'] ?? '',
     ];
     $form['comparison'] = [
       '#type' => 'select',
@@ -233,12 +232,12 @@ abstract class FieldStateBase extends PluginBase implements FieldStateInterface,
         'collapsed' => 'collapsed',
         'value' => 'value',
       ],
-      '#default_value' => isset($this->configuration['comparison']) ? $this->configuration['comparison'] : '',
+      '#default_value' => $this->configuration['comparison'] ?? '',
     ];
     $form['value'] = [
       '#type' => 'textfield',
       '#title' => t('Value'),
-      '#default_value' => isset($this->configuration['value']) ? $this->configuration['value'] : '',
+      '#default_value' => $this->configuration['value'] ?? '',
       '#states' => [
         'visible' => [
           'select[name$="[comparison]"]' => ['value' => 'value'],
@@ -246,6 +245,19 @@ abstract class FieldStateBase extends PluginBase implements FieldStateInterface,
       ],
     ];
     return $form;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('uuid'),
+      $container->get('entity_field.manager')
+    );
   }
 
 }

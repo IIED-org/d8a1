@@ -58,7 +58,7 @@
     "drupal/hide_revision_field": "^2.1",
     "drupal/entity_browser": "^2.0",
     "drupal/content_browser": "^1.0@alpha",
-    "drupal/field_states_ui": "^2.0",
+    "drupal/field_states_ui": "^3.0",
     "drupal/config_split": "^1.4",
     "drupal/entity_reference_facet_link": "^2.0",
     "drupal/menu_link_attributes": "^1.0",
@@ -96,7 +96,8 @@
     "drupal/core-project-message": "^9",
     "drupal/jquery_ui_accordion": "^1.1",
     "drupal/password_policy": "^3.1",
-    "drupal/google_tag": "^1.6"
+    "drupal/google_tag": "^1.6",
+    "drupal/eu_cookie_compliance": "^1.24"
   },
   "require-dev": {
     "drupal/stage_file_proxy": "^1.0"
