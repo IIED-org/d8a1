@@ -4,6 +4,7 @@ namespace Drupal\addtoany\Plugin\Block;
 
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\node\Entity\Node;
 use Drupal\node\NodeInterface;
 
 /**

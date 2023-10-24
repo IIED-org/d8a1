@@ -1,0 +1,20 @@
+{
+    "name": "drupal/condition_query",
+    "type": "drupal-module",
+    "description": "Adds condition plugin by query parameter",
+    "homepage": "https://www.drupal.org/project/condition_query",
+    "license": "GPL-2.0-or-later",
+    "authors": [
+        {
+            "name": "dww",
+            "homepage": "https://www.drupal.org/user/46549"
+        },
+        {
+            "name": "logan.H",
+            "homepage": "https://www.drupal.org/user/629136"
+        }
+    ],
+    "support": {
+        "source": "https://git.drupalcode.org/project/condition_query"
+    }
+}

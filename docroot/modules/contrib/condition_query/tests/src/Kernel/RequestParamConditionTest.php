@@ -64,7 +64,7 @@ class RequestParamConditionTest extends KernelTestBase {
    *   The expected return value from the evaluate() method.
    */
   public function testEvaluate(string $request_path, array $config, bool $expected) : void {
-    /** @var \Drupal\condition_query\Plugin\Condition\RequestParam $condition */
+    /* @var \Drupal\condition_query\Plugin\Condition\RequestParam $condition */
     $condition = $this->pluginManager->createInstance('request_param');
     foreach ($config as $key => $value) {
       $condition->setConfig($key, $value);
@@ -132,66 +132,6 @@ class RequestParamConditionTest extends KernelTestBase {
         ],
         'expected' => FALSE,
       ],
-      'case sensitive - uppercase parameter, matching' => [
-        'request_path' => '/my/page?TEST=yes',
-        'config' => [
-          'request_param' => "TEST=yes",
-          'case_sensitive' => TRUE,
-        ],
-        'expected' => TRUE,
-      ],
-      'case sensitive - uppercase parameter, no match' => [
-        'request_path' => '/my/page?Test=yes',
-        'config' => [
-          'request_param' => "TEST=yes",
-          'case_sensitive' => TRUE,
-        ],
-        'expected' => FALSE,
-      ],
-      'case sensitive - uppercase value, matching' => [
-        'request_path' => '/my/page?test=YES',
-        'config' => [
-          'request_param' => "test=YES",
-          'case_sensitive' => TRUE,
-        ],
-        'expected' => TRUE,
-      ],
-      'case sensitive - uppercase value, no match' => [
-        'request_path' => '/my/page?test=Yes',
-        'config' => [
-          'request_param' => "test=YES",
-          'case_sensitive' => TRUE,
-        ],
-        'expected' => FALSE,
-      ],
-      'wildcard - match' => [
-        'request_path' => '/my/page?test=foo',
-        'config' => [
-          'request_param' => 'test=*',
-        ],
-        'expected' => TRUE,
-      ],
-      'wildcard - wrong query parameter' => [
-        'request_path' => '/my/page?test=foo',
-        'config' => [
-          'request_param' => 'foo=*',
-        ],
-        'expected' => FALSE,
-      ],
-      'wildcard with exclusion, no match' => [
-        'request_path' => '/my/page?page=1',
-        'config' => [
-          'request_param' => 'page=*\1',
-        ],
-        'expected' => FALSE,
-      ],
-      'wildcard with exclusion, match' => [
-        'request_path' => '/my/page?page=2',
-        'config' => [
-          'request_param' => 'page=*\1',
-        ],
-        'expected' => TRUE,
-      ],
     ];
   }
 
@@ -207,7 +147,7 @@ class RequestParamConditionTest extends KernelTestBase {
    *   The expected summary.
    */
   public function testSummary(array $config, string $expected) : void {
-    /** @var \Drupal\condition_query\Plugin\Condition\RequestParam $condition */
+    /* @var \Drupal\condition_query\Plugin\Condition\RequestParam $condition */
     $condition = $this->pluginManager->createInstance('request_param');
     foreach ($config as $key => $value) {
       $condition->setConfig($key, $value);
@@ -255,6 +195,7 @@ class RequestParamConditionTest extends KernelTestBase {
         ],
         'expected' => 'Do not return true on the following query parameters: test=yes, foo=no, empty',
       ],
+
     ];
   }
 

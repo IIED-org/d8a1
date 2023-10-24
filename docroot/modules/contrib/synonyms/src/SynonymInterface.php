@@ -22,7 +22,7 @@ interface SynonymInterface extends ConfigEntityInterface, EntityWithPluginCollec
   /**
    * Get instance of the synonyms provider plugin that is set up in this entity.
    *
-   * @return \Drupal\synonyms\SynonymsProviderInterface\SynonymsProviderInterface
+   * @return \Drupal\synonyms\ProviderInterface\ProviderInterface
    *   Initiated synonyms provider instance that corresponds to this
    *   configuration entity
    */
@@ -51,21 +51,5 @@ interface SynonymInterface extends ConfigEntityInterface, EntityWithPluginCollec
    *   Array of synonyms provider plugin configuration to set.
    */
   public function setProviderConfiguration(array $provider_configuration);
-
-  /**
-   * Get synonyms behavior configuration from this entity.
-   *
-   * @return array
-   *   Array of synonyms behavior configuration
-   */
-  public function getBehaviorConfiguration();
-
-  /**
-   * Set synonyms behavior configuration for this entity.
-   *
-   * @param array $behavior_configuration
-   *   Array of synonyms behavior configuration to set.
-   */
-  public function setBehaviorConfiguration(array $behavior_configuration);
 
 }

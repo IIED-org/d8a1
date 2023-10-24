@@ -7,12 +7,9 @@ use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\SubformState;
-use Drupal\Core\Plugin\PluginFormInterface;
-use Drupal\synonyms\SynonymsProviderPluginManager;
-use Drupal\synonyms\SynonymsService\Behavior\SynonymsBehaviorConfigurableInterface;
-use Drupal\synonyms\SynonymsService\BehaviorService;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Drupal\synonyms\ProviderPluginManager;
 
 /**
  * Entity form for 'synonym' config entity type.
@@ -43,16 +40,9 @@ class SynonymForm extends EntityForm {
   /**
    * The synonyms provider plugin manager.
    *
-   * @var \Drupal\synonyms\SynonymsProviderPluginManager
+   * @var \Drupal\synonyms\ProviderPluginManager
    */
   protected $synonymsProviderPluginManager;
-
-  /**
-   * The synonyms behavior service.
-   *
-   * @var \Drupal\synonyms\SynonymsService\BehaviorService
-   */
-  protected $behaviorServices;
 
   /**
    * Entity type that is being edited/added.
@@ -69,13 +59,6 @@ class SynonymForm extends EntityForm {
   protected $controlledBundle;
 
   /**
-   * Service ID that is being edited/added.
-   *
-   * @var string
-   */
-  protected $behaviorServiceId;
-
-  /**
    * The container.
    *
    * @var \Symfony\Component\DependencyInjection\ContainerInterface
@@ -89,18 +72,15 @@ class SynonymForm extends EntityForm {
    *   The entity type manager.
    * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $entity_type_bundle_info
    *   The entity type bundle info.
-   * @param \Drupal\synonyms\SynonymsProviderPluginManager $synonyms_provider_plugin_manager
+   * @param \Drupal\synonyms\ProviderPluginManager $synonyms_provider_plugin_manager
    *   The synonyms provider plugin_manager.
-   * @param \Drupal\synonyms\SynonymsService\BehaviorService $behavior_services
-   *   The behavior services.
    * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
    *   The container.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, EntityTypeBundleInfoInterface $entity_type_bundle_info, SynonymsProviderPluginManager $synonyms_provider_plugin_manager, BehaviorService $behavior_services, ContainerInterface $container) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, EntityTypeBundleInfoInterface $entity_type_bundle_info, ProviderPluginManager $synonyms_provider_plugin_manager, ContainerInterface $container) {
     $this->entityTypeManager = $entity_type_manager;
     $this->entityTypeBundleInfo = $entity_type_bundle_info;
     $this->synonymsProviderPluginManager = $synonyms_provider_plugin_manager;
-    $this->behaviorServices = $behavior_services;
     $this->container = $container;
   }
 
@@ -112,7 +92,6 @@ class SynonymForm extends EntityForm {
       $container->get('entity_type.manager'),
       $container->get('entity_type.bundle.info'),
       $container->get('plugin.manager.synonyms_provider'),
-      $container->get('synonyms.behaviors'),
       $container
     );
   }
@@ -126,13 +105,11 @@ class SynonymForm extends EntityForm {
     if ($this->entity->isNew()) {
       $this->controlledEntityType = $this->getRequest()->get('synonyms_entity_type')->id();
       $this->controlledBundle = $this->getRequest()->get('bundle');
-      $this->behaviorServiceId = $this->getRouteMatch()->getRawParameter('synonyms_behavior_service');
     }
     else {
       $plugin_definition = $this->entity->getProviderPluginInstance()->getPluginDefinition();
       $this->controlledEntityType = $plugin_definition['controlled_entity_type'];
       $this->controlledBundle = $plugin_definition['controlled_bundle'];
-      $this->behaviorServiceId = $plugin_definition['synonyms_behavior_service'];
     }
   }
 
@@ -144,7 +121,7 @@ class SynonymForm extends EntityForm {
 
     $class = get_class($this);
 
-    $provider_plugin = $this->entity->getProviderPlugin();
+    $provider_plugin = $this->entity->getProviderPlugin() ?? '';
     if ($form_state->getValue('provider_plugin')) {
       $provider_plugin = $form_state->getValue('provider_plugin');
     }
@@ -156,7 +133,7 @@ class SynonymForm extends EntityForm {
 
     $options = [];
     foreach ($this->synonymsProviderPluginManager->getDefinitions() as $plugin_id => $plugin) {
-      if ($plugin['controlled_entity_type'] == $this->controlledEntityType && $plugin['controlled_bundle'] == $this->controlledBundle && $plugin['synonyms_behavior_service'] == $this->behaviorServiceId) {
+      if ($plugin['controlled_entity_type'] == $this->controlledEntityType && $plugin['controlled_bundle'] == $this->controlledBundle) {
         $options[$plugin_id] = $plugin['label'];
       }
     }
@@ -186,26 +163,11 @@ class SynonymForm extends EntityForm {
       '#open' => TRUE,
     ];
 
-    $form['ajax_wrapper']['behavior_configuration'] = [
-      '#tree' => TRUE,
-      '#title' => $this->t('Behavior settings'),
-      '#open' => TRUE,
-    ];
-
     if ($provider_plugin) {
-      $provider_plugin_instance = $this->entity->getProviderPluginInstance();
-
-      if ($provider_plugin_instance instanceof PluginFormInterface) {
+      if ($this->showWordingForm()) {
         $form['ajax_wrapper']['provider_configuration']['#type'] = 'details';
-        $form['ajax_wrapper']['provider_configuration'] += $provider_plugin_instance->buildConfigurationForm($form['ajax_wrapper']['provider_configuration'], $form_state);
+        $form['ajax_wrapper']['provider_configuration'] += $this->entity->getProviderPluginInstance()->buildConfigurationForm($form['ajax_wrapper']['provider_configuration'], $form_state, $this->entity->getProviderConfiguration(), $this->entity);
       }
-
-      $behavior_service_instance = $provider_plugin_instance->getBehaviorServiceInstance();
-      if ($behavior_service_instance instanceof SynonymsBehaviorConfigurableInterface) {
-        $form['ajax_wrapper']['behavior_configuration']['#type'] = 'details';
-        $form['ajax_wrapper']['behavior_configuration'] += $behavior_service_instance->buildConfigurationForm($form['ajax_wrapper']['behavior_configuration'], $form_state, $this->entity->getBehaviorConfiguration(), $this->entity);
-      }
-
     }
 
     return $form;
@@ -216,13 +178,8 @@ class SynonymForm extends EntityForm {
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
     parent::validateForm($form, $form_state);
-
-    if ($this->entity->getProviderPluginInstance() instanceof PluginFormInterface) {
-      $this->entity->getProviderPluginInstance()->validateConfigurationForm($form['ajax_wrapper']['provider_configuration'], $this->getSubFormState('provider_configuration', $form, $form_state));
-    }
-
-    if ($this->entity->getProviderPluginInstance()->getBehaviorServiceInstance() instanceof SynonymsBehaviorConfigurableInterface) {
-      $this->entity->getProviderPluginInstance()->getBehaviorServiceInstance()->validateConfigurationForm($form['ajax_wrapper']['behavior_configuration'], $this->getSubFormState('behavior_configuration', $form, $form_state), $this->entity);
+    if ($this->showWordingForm()) {
+      $this->entity->getProviderPluginInstance()->validateConfigurationForm($form['ajax_wrapper']['provider_configuration'], $this->getSubFormState('provider_configuration', $form, $form_state), $this->entity);
     }
   }
 
@@ -231,13 +188,9 @@ class SynonymForm extends EntityForm {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     parent::submitForm($form, $form_state);
-
-    if ($this->entity->getProviderPluginInstance() instanceof PluginFormInterface) {
-      $this->entity->getProviderPluginInstance()->submitConfigurationForm($form['ajax_wrapper']['provider_configuration'], $this->getSubFormState('provider_configuration', $form, $form_state));
-    }
-
-    if ($this->entity->getProviderPluginInstance()->getBehaviorServiceInstance() instanceof SynonymsBehaviorConfigurableInterface) {
-      $this->entity->setBehaviorConfiguration($this->entity->getProviderPluginInstance()->getBehaviorServiceInstance()->submitConfigurationForm($form['ajax_wrapper']['behavior_configuration'], $this->getSubFormState('behavior_configuration', $form, $form_state), $this->entity));
+    if ($this->showWordingForm()) {
+      $provider_configuration = $this->entity->getProviderPluginInstance()->submitConfigurationForm($form['ajax_wrapper']['provider_configuration'], $this->getSubFormState('provider_configuration', $form, $form_state), $this->entity);
+      $this->entity->setProviderConfiguration($provider_configuration);
     }
   }
 
@@ -258,7 +211,10 @@ class SynonymForm extends EntityForm {
       ]));
     }
 
-    $form_state->setRedirect('entity.synonym.overview');
+    $form_state->setRedirect('synonym.entity_type.bundle', [
+      'synonyms_entity_type' => $this->controlledEntityType,
+      'bundle' => $this->controlledBundle,
+    ]);
   }
 
   /**
@@ -299,6 +255,16 @@ class SynonymForm extends EntityForm {
    */
   protected function getSubFormState($element_name, array $form, FormStateInterface $form_state) {
     return SubformState::createForSubform($form['ajax_wrapper'][$element_name], $form, $form_state);
+  }
+
+  /**
+   * Helper function which return depends on wording type.
+   *
+   * @return bool
+   *   Whether wording forms should be visible or hidden.
+   */
+  public function showWordingForm() {
+    return \Drupal::config('synonyms.settings')->get('wording_type') == 'provider';
   }
 
 }

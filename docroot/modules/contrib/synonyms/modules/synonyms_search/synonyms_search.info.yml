@@ -1,0 +1,8 @@
+name: Synonyms Search
+description: Integrates Synonyms with core Search module.
+package: Synonyms
+type: module
+core_version_requirement: ^9 || ^10
+dependencies:
+  - synonyms:synonyms
+  - drupal:search

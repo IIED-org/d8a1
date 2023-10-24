@@ -1,7 +1,3 @@
 administer synonyms:
   title: 'Administer synonyms'
   description: 'Administer synonyms of entities.'
-
-access synonyms entity autocomplete:
-  title: 'Access synonyms entity autocomplete'
-  description: 'Access synonyms-friendly entity autocomplete'

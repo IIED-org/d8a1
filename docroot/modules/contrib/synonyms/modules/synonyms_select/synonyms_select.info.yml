@@ -1,0 +1,8 @@
+name: Synonyms Select Widget
+description: Provides Synonyms friendly select widget.
+package: Synonyms
+type: module
+core_version_requirement: ^9 || ^10
+configure: synonyms_select.settings
+dependencies:
+  - synonyms:synonyms

@@ -1,0 +1,8 @@
+name: Synonyms List Field
+description: Provides a list of entity synonyms as a field.
+package: Synonyms
+type: module
+core_version_requirement: ^9 || ^10
+configure: synonyms_list_field.settings
+dependencies:
+  - synonyms:synonyms

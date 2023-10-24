@@ -216,7 +216,8 @@ class FormModeManagerRouteTest extends FormModeManagerBase {
     $this->drupalGet("admin/structure/types/manage/{$node_type_fmm2->id()}/form-display");
 
     $edit = ["display_modes_custom[$node_form_mode_id]" => TRUE];
-    $this->drupalPostForm("admin/structure/types/manage/{$node_type_fmm2->id()}/form-display", $edit, t('Save'));
+    $this->drupalGet("admin/structure/types/manage/{$node_type_fmm2->id()}/form-display");
+    $this->submitForm($edit, t('Save'));
 
     $this->drupalGet("node/add-list/$node_form_mode_id");
     $this->assertSession()->linkExists($this->nodeTypeFmm1->label());

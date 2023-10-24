@@ -37,6 +37,6 @@ function hook_simplify_get_fields_alter(array &$fields, $type) {
 function hook_simplify_hide_field_alter(array &$form, array $field) {
   // Hide our module's custom 'foo' node field.
   if ($field == 'foo') {
-    $form['foo']['#access'] = FALSE;
+    $form['foo']['#attributes']['class'][] = 'visually-hidden';
   }
 }

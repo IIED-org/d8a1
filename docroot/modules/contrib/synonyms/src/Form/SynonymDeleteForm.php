@@ -22,7 +22,7 @@ class SynonymDeleteForm extends EntityConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelUrl() {
-    return new Url('entity.synonym.overview');
+    return new Url('synonyms.overview');
   }
 
   /**

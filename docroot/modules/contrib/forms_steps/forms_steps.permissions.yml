@@ -1,5 +1,0 @@
-# Permissions for forms_steps.
-
-administer forms_steps:
-  title: 'Administer Forms Steps'
-  description: 'Administer all Forms Steps configurations and settings.'
