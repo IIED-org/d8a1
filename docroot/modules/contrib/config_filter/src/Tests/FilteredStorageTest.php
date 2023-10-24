@@ -7,9 +7,9 @@ use Drupal\config_filter\Config\FilteredStorageInterface;
 use Drupal\config_filter\Config\ReadOnlyStorage;
 use Drupal\config_filter\Config\StorageFilterInterface;
 use Drupal\config_filter\Exception\InvalidStorageFilterException;
-use Drupal\Core\Config\CachedStorage;
+use Drupal\Core\Config\MemoryStorage;
 use Drupal\Core\Config\StorageInterface;
-use Drupal\KernelTests\Core\Config\Storage\CachedStorageTest;
+use Drupal\KernelTests\Core\Config\Storage\MemoryStorageTest;
 use Prophecy\Argument;
 
 /**
@@ -17,7 +17,7 @@ use Prophecy\Argument;
  *
  * @group config_filter
  */
-class FilteredStorageTest extends CachedStorageTest {
+class FilteredStorageTest extends MemoryStorageTest {
 
   /**
    * {@inheritdoc}
@@ -44,7 +44,7 @@ class FilteredStorageTest extends CachedStorageTest {
       $storageProperty = $readonlyReflection->getProperty('storage');
       $storageProperty->setAccessible(TRUE);
       $source = $storageProperty->getValue($readonly);
-      $this->assertInstanceOf(CachedStorage::class, $source);
+      $this->assertInstanceOf(MemoryStorage::class, $source);
 
       // Assert that the filter gets the storage.
       $this->assertEquals($this->storage, $filter->getPrivateFilteredStorage());
@@ -218,7 +218,7 @@ class FilteredStorageTest extends CachedStorageTest {
     $interim = is_array($interim) ? $interim : [];
     $filterB->filterWrite($name, $interim)->willReturn($expected);
 
-    if ($expected) {
+    if (is_array($expected)) {
       $source->write($name, $expected)->willReturn(TRUE);
     }
     else {
@@ -242,8 +242,9 @@ class FilteredStorageTest extends CachedStorageTest {
       [$this->randomArray(), $this->randomArray()],
       [NULL, $this->randomArray()],
       [[], $this->randomArray()],
+      [$this->randomArray(), []],
       [$this->randomArray(), NULL, FALSE],
-      [$this->randomArray(), [], FALSE],
+      [$this->randomArray(), FALSE, FALSE],
       [$this->randomArray(), NULL, TRUE],
     ];
   }

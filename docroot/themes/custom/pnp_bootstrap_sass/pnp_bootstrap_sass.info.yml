@@ -3,14 +3,13 @@ type: theme
 description: 'PNP theme based on bootstrap_barrio and pnp_bootstrap_sass'
 # version: VERSION
 # core: 8.x
-core_version_requirement: ^8 || ^9
+core_version_requirement: ^8 || ^9 || ^10
 base theme: bootstrap_barrio
 
 libraries:
   - pnp_bootstrap_sass/global-styling
 libraries-override:
   bootstrap_barrio/global-styling: false
-  ckeditor_stylesheets: false
 
 #  bootstrap_barrio/file: false
 regions:

@@ -270,7 +270,7 @@ function geocoder_field_entity_presave(EntityInterface $entity) {
             // Single-to-multiple handling - if we can, explode out the
             // component geometries.
             case 's_to_m':
-              foreach ($geo_collection->all() as $collection_delta => $address) {
+              foreach ($geo_collection->all() as $address) {
                 $this_result = $dumper->dump($address);
                 // Check|Fix some incompatibility between Dumper output and
                 // Field Config.

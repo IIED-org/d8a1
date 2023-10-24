@@ -1,6 +1,7 @@
+# Editors
+.idea
+.vscode
+
 # Composer
 composer.phar
 vendor/
-
-# Bower
-bower_components

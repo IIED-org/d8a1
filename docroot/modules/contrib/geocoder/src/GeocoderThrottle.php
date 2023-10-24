@@ -44,7 +44,7 @@ class GeocoderThrottle implements GeocoderThrottleInterface {
       // The throttle mechanism uses milliseconds, so we convert the argument
       // and convert back the result as sleep() uses seconds.
       $time_to_wait = $this->throttle->throttle($key, $throttle_info['limit'], $throttle_info['period'] * 1000);
-      sleep($time_to_wait / 1000);
+      sleep(ceil($time_to_wait / 1000));
     }
   }
 

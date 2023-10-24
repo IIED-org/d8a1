@@ -211,7 +211,7 @@ abstract class GeocodeFormatterBase extends FormatterBase implements ContainerFa
       '#title' => 'Output format',
       '#default_value' => $this->getSetting('dumper'),
       '#options' => $this->dumperPluginManager->getPluginsAsOptions(),
-      '#description' => t('Set the output format of the value. Ex, for a geofield, the format must be set to WKT.'),
+      '#description' => $this->t('Set the output format of the value. Ex, for a geofield, the format must be set to WKT.'),
     ];
 
     return $element;

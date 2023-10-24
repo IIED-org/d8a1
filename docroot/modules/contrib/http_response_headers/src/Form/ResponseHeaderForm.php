@@ -116,7 +116,8 @@ class ResponseHeaderForm extends EntityForm {
    * Helper function to check whether an Response Header configuration entity exists.
    */
   public function exist($id) {
-    $entity = $this->entityTypeManager->getStorage('response_header')->accesCheck(FALSE)->getQuery()
+    $entity = $this->entityTypeManager->getStorage('response_header')->getQuery()
+      ->accessCheck(FALSE)
       ->condition('id', $id)
       ->execute();
     return (bool) $entity;

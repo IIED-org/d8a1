@@ -1,6 +1,5 @@
 {
   "name": "mledoze/countries",
-  "version": "4.1.0",
   "description": "List of world countries in JSON, CSV, XML and Yaml",
   "keywords": [
     "world",
@@ -24,12 +23,14 @@
     }
   ],
   "require": {
-    "php": ">=7.3",
-    "symfony/console": "4.4.x|~5.3",
-    "symfony/yaml": "4.4.x|~5.3"
+    "ext-dom": "*",
+    "ext-gettext": "*",
+    "php": ">=8.1",
+    "symfony/console": "~5.4|~6.3",
+    "symfony/yaml": "~5.4|~6.3"
   },
   "require-dev": {
-    "roave/security-advisories": "dev-master"
+    "roave/security-advisories": "dev-latest"
   },
   "autoload": {
     "psr-4": {
@@ -38,5 +39,8 @@
   },
   "bin": [
     "countries.php"
-  ]
+  ],
+  "scripts": {
+    "convert": "@php countries.php convert"
+  }
 }

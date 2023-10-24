@@ -170,7 +170,7 @@ abstract class GeoPhpGeocodeFormatter extends FileGeocodeFormatter {
     $summary['intro'] = $this->pluginDefinition['description'];
     $summary += parent::settingsSummary();
     unset($summary['dumper']);
-    $summary['adapter'] = t('Output format: @format', [
+    $summary['adapter'] = $this->t('Output format: @format', [
       '@format' => !empty($adapter) ? $adapters[$adapter] : $this->t('Not set'),
     ]);
     return $summary;

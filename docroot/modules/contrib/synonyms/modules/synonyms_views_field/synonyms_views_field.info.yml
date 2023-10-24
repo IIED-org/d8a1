@@ -7,3 +7,8 @@ dependencies:
   - synonyms:synonyms
   - synonyms:synonyms_list_field
   - drupal:views
+
+# Information added by Drupal.org packaging script on 2022-10-14
+version: '2.1.2'
+project: 'synonyms'
+datestamp: 1665785029

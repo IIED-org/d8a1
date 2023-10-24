@@ -22,7 +22,6 @@ permissions:
   - 'access comments'
   - 'access content'
   - 'access site-wide contact form'
-  - 'access synonyms entity autocomplete'
   - 'display eu cookie compliance popup'
   - 'post comments'
   - 'skip comment approval'
