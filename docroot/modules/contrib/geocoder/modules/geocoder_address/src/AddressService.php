@@ -151,8 +151,13 @@ class AddressService extends ServiceProviderBase {
     $address_string = str_replace("<br>", ' ', $address_string);
     $address_string = strip_tags($address_string);
 
-    // Add Country code suffix, if defined.
-    $address_string .= isset($countrycode) ? ' ' . $countrycode : '';
+    // In case of a country-only address, use the full country name.
+    if (empty($address_string) && !empty($countrycode)) {
+      $address_string = $this->countryRepository->get($countrycode)->getName();
+    } elseif (isset($countrycode)) {
+      // Otherwise add Country code suffix, if defined.
+      $address_string .= !empty($countrycode) ? ' ' . $countrycode : '';
+    }
 
     return $address_string;
   }

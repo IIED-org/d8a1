@@ -231,7 +231,7 @@ field_settings:
     datasource_id: 'entity:node'
     property_path: title
     type: text
-    boost: !!float 5
+    boost: 5.0
     dependencies:
       module:
         - node
@@ -422,31 +422,31 @@ processor_settings:
       preprocess_index: -43
     boosts:
       'entity:block_content':
-        datasource_boost: !!float 1
+        datasource_boost: 1.0
       'entity:media':
-        datasource_boost: !!float 1
+        datasource_boost: 1.0
       'entity:node':
-        datasource_boost: !!float 1
+        datasource_boost: 1.0
         bundle_boosts:
-          article: !!float 0
-          initiative: !!float 0
-          organisation: !!float 0
-          page: !!float 0
-          resource: !!float 0
+          article: 0.0
+          initiative: 0.0
+          organisation: 0.0
+          page: 0.0
+          resource: 0.0
       'entity:paragraph':
-        datasource_boost: !!float 1
+        datasource_boost: 1.0
         bundle_boosts:
-          _link_to_document_hosted_on_anot: !!float 0
-          document: !!float 0
-          online_article_or_blog: !!float 0
-          video: !!float 0
+          _link_to_document_hosted_on_anot: 0.0
+          document: 0.0
+          online_article_or_blog: 0.0
+          video: 0.0
       'entity:taxonomy_term':
-        datasource_boost: !!float 1
+        datasource_boost: 1.0
         bundle_boosts:
-          interventions: !!float 0
-          products_in_trade: !!float 0
-          species: !!float 0
-          tags: !!float 0
+          interventions: 0.0
+          products_in_trade: 0.0
+          species: 0.0
+          tags: 0.0
 tracker_settings:
   default:
     indexing_order: fifo

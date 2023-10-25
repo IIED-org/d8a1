@@ -237,6 +237,8 @@ content:
     settings:
       responsive_image_style: normal
       image_link: ''
+      image_loading:
+        attribute: eager
     third_party_settings:
       ds:
         ft:

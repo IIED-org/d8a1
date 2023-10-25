@@ -23,7 +23,7 @@ class SocialAuthTwitterSettingsFormTest extends SocialAuthTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     $this->module = 'social_auth_twitter';
     $this->provider = 'twitter';
     $this->moduleType = 'social-auth';
@@ -42,9 +42,6 @@ class SocialAuthTwitterSettingsFormTest extends SocialAuthTestBase {
 
   /**
    * Test if permissions are set correctly for settings page.
-   *
-   * @throws \Behat\Mink\Exception\ElementNotFoundException
-   * @throws \Behat\Mink\Exception\ExpectationException
    */
   public function testPermissionForSettingsPage() {
     $this->checkPermissionForSettingsPage();

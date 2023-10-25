@@ -37,7 +37,7 @@ class FormModeManagerExamplesTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  public function setUp(): void {
     parent::setUp();
     // Theme needs to be set before enabling form_mode_manager_examples because,
     // of dependency.

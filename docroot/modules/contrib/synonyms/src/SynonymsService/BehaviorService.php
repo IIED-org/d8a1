@@ -3,9 +3,9 @@
 namespace Drupal\synonyms\SynonymsService;
 
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\synonyms\SynonymsService\Behavior\SynonymsBehaviorInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\synonyms\BehaviorInterface\BehaviorInterface;
+use Drupal\synonyms\BehaviorInterface\WidgetInterface;
 
 /**
  * Collect all known synonyms behavior services.
@@ -16,56 +16,57 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class BehaviorService implements ContainerInjectionInterface {
 
   /**
-   * The behavior services.
+   * Collected behavior services.
    *
    * @var array
    */
   protected $behaviorServices;
 
   /**
-   * The entity type manager.
+   * Collected widget services.
    *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   * @var array
    */
-  protected $entityTypeManager;
+  protected $widgetServices;
 
   /**
    * BehaviorService constructor.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager) {
+  public function __construct() {
     $this->behaviorServices = [];
-
-    $this->entityTypeManager = $entity_type_manager;
   }
 
   /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('entity_type.manager')
-    );
+    return new static();
   }
 
   /**
    * Add a new discovered behavior service.
    *
-   * @param \Drupal\synonyms\SynonymsService\Behavior\SynonymsBehaviorInterface $behavior_service
+   * @param \Drupal\synonyms\BehaviorInterface\BehaviorInterface $behavior_service
    *   Behavior service object that was discovered and should be added into the
    *   list of known ones.
    * @param string $id
    *   Service ID that corresponds to this behavior service.
    */
-  public function addBehaviorService(SynonymsBehaviorInterface $behavior_service, $id) {
-    if (!isset($this->behaviorServices[$id])) {
-      $this->behaviorServices[$id] = [
-        'service' => $behavior_service,
-      ];
+  public function addBehaviorService(BehaviorInterface $behavior_service, $id) {
+    // It is more convenient to use machine readable IDs as array keys here.
+    $machine_id = $behavior_service->getId();
+    // Behavior services collector.
+    if (!isset($this->behaviorServices[$machine_id])) {
+      $this->behaviorServices[$machine_id] = $behavior_service;
+    }
+    // Widget services collector.
+    if ($behavior_service instanceof WidgetInterface && !isset($this->widgetServices[$machine_id])) {
+      $this->widgetServices[$machine_id] = $behavior_service;
     }
   }
 
   /**
-   * Array of known synonyms behavior services.
+   * Array of known behavior services.
    *
    * @return array
    *   The return value
@@ -75,51 +76,13 @@ class BehaviorService implements ContainerInjectionInterface {
   }
 
   /**
-   * Get a synonyms behavior service.
-   *
-   * @param string $behavior_service_id
-   *   ID of the service to retrieve.
+   * Array of known widget services.
    *
    * @return array
-   *   Array of information about the behavior service. The array will have the
-   *   following structure:
-   *   - service: (SynonymsBehaviorInterface) Initiated behavior service
+   *   The return value
    */
-  public function getBehaviorService($behavior_service_id) {
-    return isset($this->behaviorServices[$behavior_service_id]) ? $this->behaviorServices[$behavior_service_id] : NULL;
-  }
-
-  /**
-   * Get a list of enabled synonym providers for a requested synonyms behavior.
-   *
-   * @param string $synonyms_behavior
-   *   ID of the synonyms behavior services whose enabled providers should be
-   *   returned.
-   * @param string $entity_type
-   *   Entity type for which to conduct the search.
-   * @param string|array $bundle
-   *   Single bundle or an array of them for which to conduct the search. If
-   *   null is given, then no restrictions are applied on bundle level.
-   *
-   * @return \Drupal\synonyms\Entity\Synonym[]
-   *   The array of enabled synonym providers
-   */
-  public function getSynonymConfigEntities($synonyms_behavior, $entity_type, $bundle) {
-    $entities = [];
-
-    if (is_scalar($bundle) && !is_null($bundle)) {
-      $bundle = [$bundle];
-    }
-
-    foreach ($this->entityTypeManager->getStorage('synonym')->loadMultiple() as $entity) {
-      $provider_instance = $entity->getProviderPluginInstance();
-      $provider_definition = $provider_instance->getPluginDefinition();
-      if ($provider_definition['synonyms_behavior_service'] == $synonyms_behavior && $provider_definition['controlled_entity_type'] == $entity_type && (!is_array($bundle) || in_array($provider_definition['controlled_bundle'], $bundle))) {
-        $entities[] = $entity;
-      }
-    }
-
-    return $entities;
+  public function getWidgetServices() {
+    return $this->widgetServices;
   }
 
 }

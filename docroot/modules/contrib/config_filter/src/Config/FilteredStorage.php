@@ -102,7 +102,7 @@ class FilteredStorage implements FilteredStorageInterface {
       }
     }
 
-    if ($data) {
+    if (is_array($data)) {
       return $this->storage->write($name, $data);
     }
 

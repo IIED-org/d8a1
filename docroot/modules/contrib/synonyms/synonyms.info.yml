@@ -1,9 +1,11 @@
 name: Synonyms
-description: Provides synonyms feature for content entities.
+description: 'Provides synonyms feature for all entities.'
 package: Synonyms
 type: module
-core: 8.x
-core_version_requirement: ^8 || ^9
-configure: entity.synonym.overview
-dependencies:
-  - drupal:system (>=8.2)
+core_version_requirement: ^9 || ^10
+configure: synonyms.overview
+
+# Information added by Drupal.org packaging script on 2022-10-14
+version: '2.1.2'
+project: 'synonyms'
+datestamp: 1665785029

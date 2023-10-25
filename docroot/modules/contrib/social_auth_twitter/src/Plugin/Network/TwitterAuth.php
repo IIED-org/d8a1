@@ -105,14 +105,13 @@ class TwitterAuth extends NetworkBase implements TwitterAuthInterface {
   /**
    * Parse proxy settings.
    *
-   * @return array
+   * @return array|null
    *   The proxy settings or NULL if not set.
    */
   private function getProxy() {
     $proxy = NULL;
 
-    $proxyUrl = $this->siteSettings->get('http_client_config')['proxy']['https'];
-
+    $proxyUrl = $this->siteSettings->get('http_client_config')['proxy']['http'] ?? NULL;
     if ($proxyUrl) {
       $proxy_settings = parse_url($proxyUrl);
 

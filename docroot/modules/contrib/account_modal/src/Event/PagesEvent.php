@@ -2,7 +2,7 @@
 
 namespace Drupal\account_modal\Event;
 
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 /**
  * Defines the cart empty event.

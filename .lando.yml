@@ -4,7 +4,7 @@ config:
   acli_version: latest
   ah_application_uuid: ef43298b-5eac-4d9d-b465-5fd0b1af3281
   ah_site_group: d8a1
-  php: '8.1'
+  php: '8.2'
   cache: false
   inbox: false
 services:

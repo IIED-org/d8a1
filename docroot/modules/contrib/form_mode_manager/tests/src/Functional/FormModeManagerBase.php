@@ -109,7 +109,7 @@ abstract class FormModeManagerBase extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Setup correct blocks in regions.

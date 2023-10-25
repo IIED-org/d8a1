@@ -6,6 +6,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [5.0.0] - 2023-09-17
+### Breaking changes
+- drop support for old versions of PHP and Symfony
+  - the minimum version of PHP is 8.1
+  - the supported Symfony versions are 5.4 and 6.3
+- remove Bower integration
+
+### Changed
+- update official name of Turkey (#458)
+- update flags for Afghanistan, France, Honduras and Mauritania (#455)
+- remove empty strings (#488)
+- fix polish translation of United Kingdom (#453)
+- refactor build script
+- add Dependabot integration
+
+## [v4.1.1] - 2023-09-17
+### Fixed
+- adjust package.json for ES6 and CommonJS support (#486)
+- change demonyms property type (#483)
+- fix files listed in npm package (#481)
+- add symfony/console 6.0 support (#450)
+- add ESM support (#469)
+- add Bosnia and Herzegovina convertible mark currency symbol (#464)
+- updated Croatia's currency to EUR as the HRK (#472)
+- mark Guinea-Bissau as a UN member (#473)
+
 ## [v4.1.0] - 2022-02-25
 ### Added
 - add Swedish translation (#398)

@@ -74,7 +74,7 @@ class FormModeManagerUiTest extends FormModeManagerBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Hide field for already existing form modes.
@@ -336,7 +336,8 @@ class FormModeManagerUiTest extends FormModeManagerBase {
 
     $this->drupalGet("admin/config/people/accounts/form-display");
     $edit = ["display_modes_custom[{$this->formModeManager->getFormModeMachineName($user_form_mode->id())}]" => TRUE];
-    $this->drupalPostForm("admin/config/people/accounts/form-display", $edit, t('Save'));
+    $this->drupalGet("admin/config/people/accounts/form-display");
+    $this->submitForm($edit, t('Save'));
 
     $this->drupalLogin($this->adminUser);
     $this->drupalGet('admin/people');
@@ -356,7 +357,8 @@ class FormModeManagerUiTest extends FormModeManagerBase {
 
     $this->drupalGet("admin/structure/taxonomy/manage/{$this->vocabulary->id()}/overview/form-display");
     $edit = ["display_modes_custom[{$this->formModeManager->getFormModeMachineName($term_form_mode->id())}]" => TRUE];
-    $this->drupalPostForm("admin/structure/taxonomy/manage/{$this->vocabulary->id()}/overview/form-display", $edit, t('Save'));
+    $this->drupalGet("admin/structure/taxonomy/manage/{$this->vocabulary->id()}/overview/form-display");
+    $this->submitForm($edit, t('Save'));
 
     Role::load($this->adminUser->getRoles()[1])
       ->grantPermission('administer taxonomy')

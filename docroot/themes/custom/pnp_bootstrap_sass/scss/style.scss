@@ -581,6 +581,9 @@ button#edit-submit-explore-::before {
   .views-exposed-form .form-row {
     justify-content: center;
     margin-bottom: 1rem;
+    button {
+      @extend .btn-primary;
+    }
   }
   .card {
     @extend .mb-5;

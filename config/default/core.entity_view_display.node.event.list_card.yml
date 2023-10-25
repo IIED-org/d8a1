@@ -8,9 +8,12 @@ dependencies:
     - field.field.node.event.field_event_attachment
     - field.field.node.event.field_event_date
     - field.field.node.event.field_event_dates
+    - field.field.node.event.field_event_image
     - field.field.node.event.field_event_link
     - field.field.node.event.field_event_locations
     - field.field.node.event.field_event_type
+    - field.field.node.event.field_no_further_info
+    - field.field.node.event.field_promote_front
     - node.type.event
   module:
     - ds
@@ -63,15 +66,23 @@ id: node.event.list_card
 targetEntityType: node
 bundle: event
 mode: list_card
-content: {  }
+content:
+  content_moderation_control:
+    weight: -20
+    settings: {  }
+    third_party_settings: {  }
+    region: content
 hidden:
   addtoany: true
   body: true
   field_event_attachment: true
   field_event_date: true
   field_event_dates: true
+  field_event_image: true
   field_event_link: true
   field_event_locations: true
   field_event_type: true
+  field_no_further_info: true
+  field_promote_front: true
   links: true
   search_api_excerpt: true

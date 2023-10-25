@@ -11,7 +11,7 @@ id: node.initiative.field_what_isnt_working
 field_name: field_what_isnt_working
 entity_type: node
 bundle: initiative
-label: 'What doesn''t (or didn''t) work and why?'
+label: "What doesn't (or didn't) work and why?"
 description: ''
 required: false
 translatable: false

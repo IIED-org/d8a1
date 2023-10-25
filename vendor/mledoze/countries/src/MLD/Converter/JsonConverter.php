@@ -1,19 +1,22 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MLD\Converter;
 
+use JsonException;
+
 /**
- * Class JsonConverter
+ * Convert countries data to JSON format
  */
 class JsonConverter extends AbstractJsonConverter
 {
-
     /**
-     * @return string minified JSON, one country per line
+     * @inheritDoc
+     * @throws JsonException
      */
-    public function convert()
+    protected function jsonEncode(array $countries): string
     {
-        $this->processEmptyArrays();
-        return preg_replace("@},{@", "},\n{", json_encode($this->countries) . "\n");
+        return json_encode($countries, JSON_THROW_ON_ERROR);
     }
 }

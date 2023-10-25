@@ -27,7 +27,7 @@ class GeocoderKernelTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->provider = GeocoderProvider::create([
       'id' => 'random',

@@ -23,7 +23,7 @@ class SocialAuthTwitterLoginBlockTest extends SocialAuthTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->provider = 'twitter';
@@ -31,8 +31,6 @@ class SocialAuthTwitterLoginBlockTest extends SocialAuthTestBase {
 
   /**
    * Test that the path is included in the login block.
-   *
-   * @throws \Behat\Mink\Exception\ResponseTextException
    */
   public function testLinkExistsInBlock() {
     $this->checkLinkToProviderExists();

@@ -25,8 +25,8 @@ function super_login_form_alter(&$form, FormStateInterface $form_state, $form_id
     }
     unset($form['account']['mail']['#description']);
     unset($form['account']['name']['#description']);
-
-    $internal_link = Link::createFromRoute(t($config->get('super_login.back_link')), 'user.login')->toString();
+    $params = \Drupal::request()->query->all();
+    $internal_link = Link::createFromRoute(t($config->get('super_login.back_link')), 'user.login', $params)->toString();
     $form['reset'] = [
         '#markup' => '<p class="back-to-login">' . $internal_link . '</p>',
         '#weight' => 100,
@@ -63,8 +63,8 @@ function super_login_form_alter(&$form, FormStateInterface $form_state, $form_id
       '#markup' => '<p class="login-title">' . t($config->get('super_login.login_title')) . '</p>',
       '#weight' => -100,
     ];
-
-    $internal_link = Link::createFromRoute(t($config->get('super_login.forgot_pw_text')), 'user.pass')->toString();
+    $params = \Drupal::request()->query->all();
+    $internal_link = Link::createFromRoute(t($config->get('super_login.forgot_pw_text')), 'user.pass', $params)->toString();
     $form['reset'] = [
       '#markup' => '<p class="forgot-password">' . $internal_link . '</p>',
       '#weight' => 1,
@@ -81,8 +81,8 @@ function super_login_form_alter(&$form, FormStateInterface $form_state, $form_id
 
     if ($user_config->get('register') != UserInterface::REGISTER_ADMINISTRATORS_ONLY) {
       $actions_suffix = '<div class="actions-suffix">';
-
-      $internal_link = Link::createFromRoute(t($config->get('super_login.new_account_text')), 'user.register')->toString();
+      $params = \Drupal::request()->query->all();
+      $internal_link = Link::createFromRoute(t($config->get('super_login.new_account_text')), 'user.register', $params)->toString();
       $actions_suffix .= $internal_link;
       $actions_suffix .= '</div>';
       $form['actions']['#suffix'] = $actions_suffix;
@@ -126,8 +126,8 @@ function super_login_form_alter(&$form, FormStateInterface $form_state, $form_id
       '#markup' => '<p class="login-title">' . t($config->get('super_login.password_reset_title')) . '</p>',
       '#weight' => -100,
     ];
-
-    $internal_link = Link::createFromRoute(t($config->get('super_login.back_link')), 'user.login')->toString();
+    $params = \Drupal::request()->query->all();
+    $internal_link = Link::createFromRoute(t($config->get('super_login.back_link')), 'user.login', $params)->toString();
     $form['reset'] = [
       '#markup' => '<p class="back-to-login">' . $internal_link . '</p>',
       '#weight' => 1,

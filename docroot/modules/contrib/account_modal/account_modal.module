@@ -1,5 +1,6 @@
 <?php
 
+use Drupal\Component\Serialization\Json;
 use Drupal\account_modal\AccountModalAjaxHelper;
 use Drupal\account_modal\AccountPageHelper;
 use Drupal\Core\Form\FormStateInterface;
@@ -57,7 +58,7 @@ function account_modal_link_alter(&$variables) {
 
   $variables['options']['attributes']['class'][] = 'use-ajax';
   $variables['options']['attributes']['data-dialog-type'] = 'modal';
-  $variables['options']['attributes']['data-dialog-options'] = \Drupal\Component\Serialization\Json::encode([
+  $variables['options']['attributes']['data-dialog-options'] = Json::encode([
     'width' => $dialog_width,
     'height' => $dialog_height,
     'dialogClass' => 'account-modal account-modal--' . $page,

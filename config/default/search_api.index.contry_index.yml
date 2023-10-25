@@ -52,7 +52,7 @@ field_settings:
       config:
         - field.storage.node.field_initiative_introduction
   field_interventions:
-    label: '3.2 Please select all the option(s) that apply to your project''s strategy by ticking the relevant boxes.'
+    label: "3.2 Please select all the option(s) that apply to your project's strategy by ticking the relevant boxes."
     datasource_id: 'entity:node'
     property_path: field_interventions
     type: string
@@ -113,7 +113,7 @@ processor_settings:
     fields:
       - additional_name
       - country_name
-    ignorable: '[''¿¡!?,.:;]'
+    ignorable: "['¿¡!?,.:;]"
     ignorable_classes:
       - Pc
       - Pd

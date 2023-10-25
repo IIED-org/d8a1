@@ -5,6 +5,7 @@
  * Hooks implemented by the simplify module.
  */
 
+use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Url;
@@ -117,7 +118,7 @@ function simplify_form_taxonomy_vocabulary_form_alter(&$form, FormStateInterface
     '#type' => 'details',
     '#title' => t('Simplify'),
     '#description' => t('These fields will be hidden from <em>@vocabulary</em> taxonomy term forms. Disabled checkboxes indicate fields that have been hidden globally on the <a href="@global">Simplify administration page</a>.', [
-      '@vocabulary' => $form['name']['#default_value'],
+      '@vocabulary' => $form['name']['#default_value'] ?? '',
       '@global' => Url::fromRoute('simplify.admin')->toString(),
     ]),
     '#access' => \Drupal::currentUser()->hasPermission('administer simplify'),
@@ -318,6 +319,33 @@ function simplify_form_alter(&$form, FormStateInterface $form_state, $form_id) {
 }
 
 /**
+ * Implements hook_field_widget_WIDGET_TYPE_form_alter().
+ *
+ * Because of #2937730 we want to visually-hidden the fields. The comment field
+ * in form display actually add the 'comment_default' widget which needs to be
+ * preprocessed to hide.
+ */
+function simplify_field_widget_comment_default_form_alter(&$element, FormStateInterface $form_state, $context) {
+  $entity = $form_state->getFormObject()->getEntity();
+  $entity_type = $entity->getEntityTypeId();
+  $entity_bundle_type = NULL;
+  if ($entity instanceof ContentEntityBase) {
+    $type = $entity->type;
+    $entity_bundle_type = $type ? $type->entity : NULL;
+  }
+
+  // Get array of fields to hide.
+  $global_fields = _simplify_get_config_value("simplify_{$entity_type}s_global");
+  $type_fields = $entity_bundle_type ? _simplify_get_config_value('simplify_nodes', [], 'simplify.content_type.' . $entity_bundle_type->get('type')) : [];
+  $fields = array_merge($global_fields, $type_fields);
+
+  if (isset($fields['comment']) && $fields['comment']) {
+    $element['#attributes']['class'][] = 'visually-hidden';
+    $element['status']['#attributes']['class'][] = 'visually-hidden';
+  }
+}
+
+/**
  * Implements hook_module_implements_alter().
  *
  * Make sure that our form alter is called AFTER the same hook provided in xxx.
@@ -358,6 +386,7 @@ function simplify_get_fields($type) {
       $fields['format'] = t('Text format selection');
       $fields['options'] = t('Promotion options');
       $fields['revision_information'] = t('Revision information');
+      $fields['meta'] = t('Status metadata');
       if (\Drupal::moduleHandler()->moduleExists('book')) {
         $fields['book'] = t('Book outline');
       }
@@ -368,10 +397,13 @@ function simplify_get_fields($type) {
         $fields['menu'] = t('Menu settings');
       }
       if (\Drupal::moduleHandler()->moduleExists('path')) {
-        $fields['path_settings'] = t('URL path settings');
+        $fields['path'] = t('URL path settings');
+      }
+      if (\Drupal::moduleHandler()->moduleExists('content_translation')) {
+        $fields['content_translation'] = t('Content translation');
       }
       // Third-party modules:
-      if (\Drupal::moduleHandler()->moduleExists('domain')) {
+      if (\Drupal::moduleHandler()->moduleExists('domain_access')) {
         $fields['domain'] = t('Domain access');
       }
       if (\Drupal::moduleHandler()->moduleExists('entity_translation') && entity_translation_enabled('node')) {
@@ -384,10 +416,16 @@ function simplify_get_fields($type) {
         $fields['node_noindex'] = t('Node noindex');
       }
       if (\Drupal::moduleHandler()->moduleExists('redirect')) {
-        $fields['redirect'] = t('URL redirects');
+        $fields['url_redirects'] = t('URL redirects');
       }
-      if (\Drupal::moduleHandler()->moduleExists('xmlsitemap_node')) {
+      if (\Drupal::moduleHandler()->moduleExists('simple_sitemap')) {
+        $fields['simple_sitemap'] = t('Simple XML Sitemap');
+      }
+      if (\Drupal::moduleHandler()->moduleExists('xmlsitemap')) {
         $fields['xmlsitemap'] = t('XML sitemap');
+      }
+      if (\Drupal::moduleHandler()->moduleExists('print')) {
+        $fields['print'] = t('Printer-friendly pages');
       }
       break;
 
@@ -403,12 +441,24 @@ function simplify_get_fields($type) {
       if (\Drupal::moduleHandler()->moduleExists('overlay')) {
         $fields['overlay_control'] = t('Administrative overlay');
       }
+      if (\Drupal::moduleHandler()->moduleExists('content_translation')) {
+        $fields['content_translation'] = t('Content translation');
+      }
+      if (\Drupal::moduleHandler()->moduleExists('comment')) {
+        $fields['comment'] = t('Comment settings');
+      }
       // Third-party modules:
+      if (\Drupal::moduleHandler()->moduleExists('domain_access')) {
+        $fields['domain'] = t('Domain access');
+      }
       if (\Drupal::moduleHandler()->moduleExists('metatag')) {
         $fields['metatags'] = t('Meta tags');
       }
       if (\Drupal::moduleHandler()->moduleExists('redirect')) {
-        $fields['redirect'] = t('URL redirects');
+        $fields['url_redirects'] = t('URL redirects');
+      }
+      if (\Drupal::moduleHandler()->moduleExists('xmlsitemap')) {
+        $fields['xmlsitemap'] = t('XML sitemap');
       }
       break;
 
@@ -426,14 +476,20 @@ function simplify_get_fields($type) {
       if (\Drupal::moduleHandler()->moduleExists('path')) {
         $fields['path'] = t('URL alias');
       }
+      if (\Drupal::moduleHandler()->moduleExists('content_translation')) {
+        $fields['content_translation'] = t('Content translation');
+      }
+      if (\Drupal::moduleHandler()->moduleExists('comment')) {
+        $fields['comment'] = t('Comment settings');
+      }
       // Third-party modules:
       if (\Drupal::moduleHandler()->moduleExists('metatag')) {
         $fields['metatags'] = t('Meta tags');
       }
       if (\Drupal::moduleHandler()->moduleExists('redirect')) {
-        $fields['redirect'] = t('URL redirects');
+        $fields['url_redirects'] = t('URL redirects');
       }
-      if (\Drupal::moduleHandler()->moduleExists('xmlsitemap_taxonomy')) {
+      if (\Drupal::moduleHandler()->moduleExists('xmlsitemap')) {
         $fields['xmlsitemap'] = t('XML sitemap');
       }
       break;
@@ -491,9 +547,22 @@ function simplify_hide_fields(array $fields, array &$form) {
 function simplify_hide_field(string $field, array &$form) {
   switch ($field) {
 
+    // Node meta.
+    case 'meta':
+      $form['meta']['#attributes']['class'][] = 'visually-hidden';
+      break;
+
     // Entity translation.
     case 'entity_translation':
-      $form['translation']['#access'] = FALSE;
+      $form['translation']['#attributes']['class'][] = 'visually-hidden';
+      break;
+
+    // Domain Access.
+    case 'domain':
+      $form['domain']['#attributes']['class'][] = 'visually-hidden';
+      $form['field_domain_access']['#attributes']['class'][] = 'visually-hidden';
+      $form['field_domain_admin']['#attributes']['class'][] = 'visually-hidden';
+      $form['field_domain_all_affiliates']['#attributes']['class'][] = 'visually-hidden';
       break;
 
     // Text format selection.
@@ -503,12 +572,22 @@ function simplify_hide_field(string $field, array &$form) {
 
     // Status.
     case 'status':
-      $form['account']['status']['#access'] = FALSE;
+      $form['account']['status']['#attributes']['class'][] = 'visually-hidden';
+      break;
+
+    // Path.
+    case 'path':
+      $form['path']['#attributes']['class'][] = 'visually-hidden';
+      $form['path']['widget'][0]['#after_build'][] = 'simplify_hide_path_element';
+      break;
+
+    // Revision.
+    case 'revision_information':
+      $form['revision_information']['#access'] = FALSE;
       break;
 
     default:
-      $form[$field]['#access'] = FALSE;
-
+      $form[$field]['#attributes']['class'][] = 'visually-hidden';
   }
 
   // Allow other modules to alter the way fields are hidden.
@@ -545,6 +624,20 @@ function simplify_hide_text_format_element(array $element) {
   if (!empty($element['format'])) {
     $element['format']['#attributes']['class'][] = 'hidden';
   }
+  return $element;
+}
+
+/**
+ * Hide a given path element.
+ *
+ * @param array $element
+ *   The element to hide.
+ *
+ * @return array
+ *   The hidden element.
+ */
+function simplify_hide_path_element(array $element) {
+  $element['#attributes']['class'][] = 'visually-hidden';
   return $element;
 }
 

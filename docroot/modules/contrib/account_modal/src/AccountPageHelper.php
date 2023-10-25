@@ -66,7 +66,7 @@ class AccountPageHelper {
     $event = new PagesEvent($pages);
     /** @var \Symfony\Component\EventDispatcher\EventDispatcherInterface $eventDispatcher */
     $eventDispatcher = \Drupal::service('event_dispatcher');
-    $eventDispatcher->dispatch(AccountModalEvents::PAGES, $event);
+    $eventDispatcher->dispatch($event, AccountModalEvents::PAGES);
     return $event->getPages();
   }
 

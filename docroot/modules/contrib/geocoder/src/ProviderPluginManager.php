@@ -135,7 +135,7 @@ class ProviderPluginManager extends GeocoderPluginManagerBase {
    *   The plugins table list.
    */
   public function providersPluginsTableList(array $enabled_provider_ids): array {
-    $providers_link = $this->link->generate(t('Geocoder providers configuration page'), Url::fromRoute('entity.geocoder_provider.collection', [], [
+    $providers_link = $this->link->generate($this->t('Geocoder providers configuration page'), Url::fromRoute('entity.geocoder_provider.collection', [], [
       'attributes' => ['target' => '_blank'],
     ]));
 

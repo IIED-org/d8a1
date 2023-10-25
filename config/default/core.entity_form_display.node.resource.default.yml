@@ -38,7 +38,7 @@ third_party_settings:
     group_new_species:
       children:
         - field_add_new_species
-      label: 'Add new species if yours doesn''t appear in the list'
+      label: "Add new species if yours doesn't appear in the list"
       region: content
       parent_name: ''
       weight: 13

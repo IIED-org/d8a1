@@ -1,6 +1,0 @@
-better_field_descriptions:
-  title: 'Better Field Descriptions'
-  description: 'Administer how and where Better Field Descriptions is used.'
-  route_name: better_field_descriptions_admin_settings
-  parent: system.admin_content
-  weight: 10

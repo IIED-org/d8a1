@@ -4,16 +4,23 @@ namespace Drupal\synonyms\Plugin\Synonyms\Provider;
 
 use Drupal\Component\Plugin\PluginBase;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Drupal\synonyms\SynonymsProviderInterface\SynonymsProviderInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\synonyms\ProviderInterface\ProviderInterface;
+use Drupal\synonyms\ProviderInterface\ConfigurationInterface;
+use Drupal\synonyms\ProviderInterface\ConfigurationTrait;
+use Drupal\synonyms\ProviderInterface\FindInterface;
+use Drupal\synonyms\ProviderInterface\FindTrait;
+use Drupal\synonyms\ProviderInterface\FormatWordingInterface;
+use Drupal\synonyms\ProviderInterface\FormatWordingTrait;
+use Drupal\synonyms\ProviderInterface\GetInterface;
+use Drupal\synonyms\ProviderInterface\GetTrait;
 
 /**
  * Good starting point for a synonyms provider plugin.
  */
-abstract class AbstractProvider extends PluginBase implements SynonymsProviderInterface, ContainerFactoryPluginInterface {
+abstract class AbstractProvider extends PluginBase implements ProviderInterface, ContainerFactoryPluginInterface, ConfigurationInterface, GetInterface, FindInterface, FormatWordingInterface {
 
-  use StringTranslationTrait;
+  use ConfigurationTrait, GetTrait, FindTrait, FormatWordingTrait;
 
   /**
    * The container.
@@ -41,20 +48,6 @@ abstract class AbstractProvider extends PluginBase implements SynonymsProviderIn
       $plugin_definition,
       $container
     );
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getBehaviorService() {
-    return $this->getPluginDefinition()['synonyms_behavior_service'];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getBehaviorServiceInstance() {
-    return $this->container->get($this->getPluginDefinition()['synonyms_behavior_service']);
   }
 
 }

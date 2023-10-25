@@ -92,6 +92,7 @@ class RequestParam extends ConditionPluginBase implements ContainerFactoryPlugin
         '%example_4' => 'page=*\0,1,2 (all pages but the first three)',
       ]),
     ];
+
     $form['case_sensitive'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Case sensitive'),
@@ -120,7 +121,6 @@ class RequestParam extends ConditionPluginBase implements ContainerFactoryPlugin
     if (!empty($this->configuration['negate'])) {
       return $this->t('Do not return true on the following query parameters: @params', ['@params' => $params]);
     }
-
     return $this->t('Return true on the following query parameters: @params', ['@params' => $params]);
   }
 
@@ -222,7 +222,7 @@ class RequestParam extends ConditionPluginBase implements ContainerFactoryPlugin
    *   The values for the given parameter in the current request.
    */
   protected function getRequestValues($key) {
-    $values = (array) $this->requestStack->getCurrentRequest()->get($key);
+    $values = (array) $this->requestStack->getCurrentRequest()->query->get($key);
 
     // If not case sensitive, convert all values to lowercase.
     if (!$this->configuration['case_sensitive']) {

@@ -2,12 +2,17 @@
 
 namespace Drupal\Tests\masquerade\Functional;
 
+use Drupal\block\Entity\Block;
+use Drupal\Tests\block\Traits\BlockCreationTrait;
+
 /**
  * Tests form permissions and user switching functionality.
  *
  * @group masquerade
  */
 class MasqueradeTest extends MasqueradeWebTestBase {
+
+  use BlockCreationTrait;
 
   /**
    * Tests masquerade user links.
@@ -43,6 +48,41 @@ class MasqueradeTest extends MasqueradeWebTestBase {
     $this->unmasquerade($this->authUser);
     $this->assertNoSessionByUid($this->authUser->id());
     $this->assertSessionByUid($this->adminUser->id());
+  }
+
+  /**
+   * Tests the unmasquerade block link.
+   */
+  public function testUnmasqueradeBlockLink(): void {
+    $this->placeBlock('masquerade', [
+      'region' => 'header',
+      'id' => 'masquerade',
+    ]);
+
+    $this->drupalLogin($this->adminUser);
+
+    // Check that the 'Switch back' link won't show in block if not enabled.
+    $this->submitForm(['masquerade_as' => $this->authUser->getDisplayName()], 'Switch');
+    $this->assertSessionByUid($this->authUser->id(), $this->adminUser->id());
+    $this->assertSession()->linkNotExistsExact('Switch back');
+
+    $this->clickLink('Unmasquerade');
+    $this->assertSession()->pageTextContains("You are no longer masquerading as {$this->authUser->getDisplayName()}.");
+
+    // Turn the link on in block settings.
+    $block = Block::load('masquerade');
+    $settings = $block->get('settings');
+    $settings['show_unmasquerade_link'] = TRUE;
+    $block->set('settings', $settings)->save();
+
+    // Check that the 'Switch back' link shows in the block.
+    $this->submitForm(['masquerade_as' => $this->authUser->getDisplayName()], 'Switch');
+    $this->assertSessionByUid($this->authUser->id(), $this->adminUser->id());
+    $this->assertSession()->linkExistsExact('Switch back');
+
+    // Check that the link works.
+    $this->clickLink('Switch back');
+    $this->assertSession()->pageTextContains("You are no longer masquerading as {$this->authUser->getDisplayName()}.");
   }
 
 }

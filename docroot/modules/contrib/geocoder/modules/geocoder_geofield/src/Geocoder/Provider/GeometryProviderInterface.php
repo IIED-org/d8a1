@@ -6,9 +6,6 @@ namespace Drupal\geocoder_geofield\Geocoder\Provider;
 
 /**
  * Providers GeometryProvider interface..
- *
- * @author William Durand <william.durand1@gmail.com>
- * @author Tobias Nyholm <tobias.nyholm@gmail.com>
  */
 interface GeometryProviderInterface {
 

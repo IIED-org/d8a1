@@ -4,13 +4,12 @@ namespace Drupal\chosen_lib\Commands;
 
 use Drush\Commands\DrushCommands;
 use Drush\Drush;
-use Symfony\Component\Filesystem\Filesystem;
 use Psr\Log\LogLevel;
 
 /**
  * The Chosen plugin URI.
  */
-define('CHOSEN_DOWNLOAD_URI', 'https://github.com/harvesthq/chosen/releases/download/v1.8.7/chosen_v1.8.7.zip');
+define('CHOSEN_DOWNLOAD_URI', 'https://github.com/JJJ/chosen/archive/refs/tags/2.2.1.zip');
 
 /**
  * A Drush commandfile.
@@ -58,9 +57,10 @@ class ChosenLibCommands extends DrushCommands {
       $dirname = basename($filepath, '.zip');
 
       // Remove any existing Chosen plugin directory.
-      if (is_dir($dirname) || is_dir('chosen')) {
-        Filesystem::remove($dirname, TRUE);
-        Filesystem::remove('chosen', TRUE);
+      if (is_dir('chosen')) {
+        $fileservice = \Drupal::service('file_system');
+        $fileservice->deleteRecursive('chosen');
+
         $this->drush_log(dt('A existing Chosen plugin was deleted from @path', ['@path' => $path]), 'notice');
       }
 
@@ -69,7 +69,14 @@ class ChosenLibCommands extends DrushCommands {
 
       // Change the directory name to "chosen" if needed.
       if ('chosen' !== $dirname) {
-        $this->drush_move_dir($dirname, 'chosen');
+        $subdirname = $dirname . '/chosen-' . $dirname;
+        if (is_dir($subdirname)) {
+          $this->drush_move_dir($subdirname, 'chosen');
+          $fileservice = \Drupal::service('file_system');
+          $fileservice->deleteRecursive($dirname);
+        } else {
+          $this->drush_move_dir($dirname, 'chosen');
+        }
         $dirname = 'chosen';
       }
 
@@ -141,8 +148,8 @@ class ChosenLibCommands extends DrushCommands {
       throw new \Exception(dt("The URL !url could not be downloaded.", ['!url' => $url]));
     }
     if ($destination) {
-      $fs = new Filesystem();
-      $fs->rename($destination_tmp, $destination, TRUE);
+      $fileservice = \Drupal::service('file_system');
+      $fileservice->move($destination_tmp, $destination, TRUE);
       return $destination;
     }
     return $destination_tmp;
@@ -156,8 +163,8 @@ class ChosenLibCommands extends DrushCommands {
    * @return bool
    */
   public function drush_move_dir($src, $dest) {
-    $fs = new Filesystem();
-    $fs->rename($src, $dest, TRUE);
+    $fileservice = \Drupal::service('file_system');
+    $fileservice->move($src, $dest, TRUE);
     return TRUE;
   }
 
@@ -167,8 +174,8 @@ class ChosenLibCommands extends DrushCommands {
    * @return bool
    */
   public function drush_mkdir($path) {
-    $fs = new Filesystem();
-    $fs->mkdir($path);
+    $fileservice = \Drupal::service('file_system');
+    $fileservice->mkdir($path);
     return TRUE;
   }
 
@@ -191,7 +198,7 @@ class ChosenLibCommands extends DrushCommands {
       drush_op('chdir', $cwd);
 
       if (!$return) {
-        throw new \Exception(dt('Unable to extract !filename.' . PHP_EOL . implode(PHP_EOL, $process->getOutput()), ['!filename' => $path]));
+        throw new \Exception(dt('Unable to extract !filename.' . PHP_EOL . $process->getOutput(), ['!filename' => $path]));
       }
     }
     else {
@@ -202,7 +209,7 @@ class ChosenLibCommands extends DrushCommands {
       drush_op('chdir', $cwd);
 
       if (!$return) {
-        throw new \Exception(dt('Unable to extract !filename.' . PHP_EOL . implode(PHP_EOL, $process->getOutput()), ['!filename' => $path]));
+        throw new \Exception(dt('Unable to extract !filename.' . PHP_EOL . $process->getOutput(), ['!filename' => $path]));
       }
     }
 
