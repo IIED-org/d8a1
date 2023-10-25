@@ -4423,6 +4423,9 @@
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
                     }
+                },
+                "patches_applied": {
+                    "3336646": "https://www.drupal.org/files/issues/2023-08-16/3336646-function-is-deprecated.patch"
                 }
             },
             "installation-source": "dist",
