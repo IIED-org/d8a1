@@ -362,7 +362,7 @@ third_party_settings:
     group_please_select:
       children:
         - group_strategy_text
-      label: 'Please select all the option(s) that apply to your project''s strategy by ticking the relevant boxes.'
+      label: "Please select all the option(s) that apply to your project's strategy by ticking the relevant boxes."
       region: content
       parent_name: group_3_2
       weight: 20

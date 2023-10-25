@@ -5,5 +5,5 @@ dependencies: {  }
 id: add_new_species
 label: 'Add new species'
 icon_uuid: null
-description: 'Allows user to add new species (taxonomy term) not already listed. Will not appear until Administrator/Editor has approved/''published'' the term.'
+description: "Allows user to add new species (taxonomy term) not already listed. Will not appear until Administrator/Editor has approved/'published' the term."
 behavior_plugins: {  }

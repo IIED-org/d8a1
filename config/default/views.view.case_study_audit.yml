@@ -970,7 +970,7 @@ display:
           group_type: group
           admin_label: ''
           plugin_id: field
-          label: 'What doesn''t (or didn''t) work and why?'
+          label: "What doesn't (or didn't) work and why?"
           exclude: false
           alter:
             alter_text: false

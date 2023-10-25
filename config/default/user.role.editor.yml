@@ -28,6 +28,7 @@ dependencies:
     - contextual
     - entity_browser
     - eu_cookie_compliance
+    - file
     - filter
     - form_mode_manager
     - hide_revision_field
@@ -80,6 +81,7 @@ permissions:
   - 'delete event revisions'
   - 'delete own country_header content'
   - 'delete own event content'
+  - 'delete own files'
   - 'delete own training content'
   - 'display eu cookie compliance popup'
   - 'edit any article content'

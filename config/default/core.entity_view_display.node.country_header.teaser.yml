@@ -5,6 +5,7 @@ dependencies:
   config:
     - core.entity_view_mode.node.teaser
     - field.field.node.country_header.body
+    - field.field.node.country_header.field_country
     - node.type.country_header
   module:
     - text

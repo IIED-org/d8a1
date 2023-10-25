@@ -8,9 +8,9 @@ dependencies:
     - comment
     - contact
     - eu_cookie_compliance
+    - file
     - filter
     - media
-    - synonyms
     - system
 _core:
   default_config_hash: dJ0L2DNSj5q6XVZAGsuVDpJTh5UeYkIPwKrUOOpr8YI
@@ -22,6 +22,7 @@ permissions:
   - 'access comments'
   - 'access content'
   - 'access site-wide contact form'
+  - 'delete own files'
   - 'display eu cookie compliance popup'
   - 'post comments'
   - 'skip comment approval'

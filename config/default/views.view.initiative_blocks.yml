@@ -4002,6 +4002,15 @@ display:
             date_format: custom
             custom_date_format: 'F Y'
             timezone: ''
+            tooltip:
+              date_format: ''
+              custom_date_format: ''
+            time_diff:
+              enabled: false
+              future_format: '@interval hence'
+              past_format: '@interval ago'
+              granularity: 2
+              refresh: 60
           group_column: value
           group_columns: {  }
           group_rows: true
@@ -5277,8 +5286,8 @@ display:
           map_position:
             force: false
             center:
-              lat: !!float -4
-              lon: !!float 0
+              lat: -4.0
+              lon: 0.0
             zoom: 6
             minZoom: 2
             maxZoom: 9

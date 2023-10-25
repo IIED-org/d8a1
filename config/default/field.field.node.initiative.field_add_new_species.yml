@@ -9,7 +9,7 @@ id: node.initiative.field_add_new_species
 field_name: field_add_new_species
 entity_type: node
 bundle: initiative
-label: 'Add new species if yours doesn''t appear in the above list'
+label: "Add new species if yours doesn't appear in the above list"
 description: 'You can add multiple species separated by a comma.'
 required: false
 translatable: true

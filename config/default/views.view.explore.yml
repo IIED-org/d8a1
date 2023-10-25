@@ -1090,6 +1090,7 @@ display:
         - 'config:field.storage.paragraph.field_file_upload'
         - 'config:field.storage.paragraph.field_video_url'
         - 'config:search_api.index.acquia_search_index'
+        - 'search_api_list:acquia_search_index'
   attachment_1:
     id: attachment_1
     display_title: 'Country header'
@@ -1374,6 +1375,7 @@ display:
       tags:
         - 'config:field.storage.node.body'
         - 'config:search_api.index.acquia_search_index'
+        - 'search_api_list:acquia_search_index'
   page_2:
     id: page_2
     display_title: List
@@ -3671,7 +3673,20 @@ display:
       cache:
         type: none
         options: {  }
-      empty: {  }
+      empty:
+        area:
+          id: area
+          table: views
+          field: area
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: text
+          empty: true
+          content:
+            value: 'There were no results for your search.'
+            format: basic_html
+          tokenize: false
       sorts:
         type:
           id: type
@@ -4014,3 +4029,4 @@ display:
         - 'config:field.storage.paragraph.field_file_upload'
         - 'config:field.storage.paragraph.field_video_url'
         - 'config:search_api.index.acquia_search_index'
+        - 'search_api_list:acquia_search_index'
