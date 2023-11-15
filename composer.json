@@ -26,7 +26,7 @@
     "drupal/entity": "^1.0",
     "drupal/addtoany": "^2.0",
     "drupal/ds": "^3.1",
-    "drupal/geofield_map": "^2.13",
+    "drupal/geofield_map": "^3.0",
     "drupal/back_to_top": "^3.0",
     "drupal/address": "~1.0",
     "drupal/contact_block": "^1.4",
@@ -83,7 +83,7 @@
     "drupal/memcache": "^2.0",
     "drupal/pathauto": "^1.8",
     "drupal/content_moderation_notifications": "^3.2",
-    "drupal/leaflet": "^2.1",
+    "drupal/leaflet": "^10.2",
     "drupal/block_class": "^2.0",
     "drupal/acquia_search": "^3.1",
     "drupal/core-project-message": "^10",
@@ -93,7 +93,8 @@
     "drupal/eu_cookie_compliance": "^1.24",
     "drupal/jquery_ui_slider": "^2.0",
     "mglaman/composer-drupal-lenient": "^1.0",
-    "drupal/condition_query": "^1.0"
+    "drupal/condition_query": "^1.0",
+    "drupal/leaflet_mapbox": "^1.0@alpha"
   },
   "conflict": {
     "drupal/core": "7.*"
@@ -124,6 +125,9 @@
       "docroot/themes/contrib/{$name}": ["type:drupal-theme"]
     },
     "patches": {
+      "drupal/core": {
+        "3361177": "https://www.drupal.org/files/issues/2023-05-30/3361177-8.patch"
+      },
       "drupal/address": {
         "Integrate Address with Search API": "https://www.drupal.org/files/issues/2018-06-07/address-search-api-full-name-properties-2812659-37.patch"
       },
@@ -145,10 +149,19 @@
       },
       "drupal/facets": {
         "3336646":"https://www.drupal.org/files/issues/2023-08-16/3336646-function-is-deprecated.patch"
+      },
+      "drupal/leaflet_mapbox": {
+        "3288279": "https://www.drupal.org/files/issues/2023-11-06/leaflet_mapbox_alpha1_d10.patch"
       }
     },
     "drupal-lenient": {
-      "allowed-list": ["drupal/condition_query", "drupal/account_modal", "drupal/form_mode_manager", "drupal/jquery_ui_slider"]
+      "allowed-list": [
+        "drupal/condition_query", 
+        "drupal/account_modal", 
+        "drupal/form_mode_manager",
+        "drupal/jquery_ui_slider",
+        "drupal/leaflet_mapbox"
+      ]
     }
   },
   "scripts": {

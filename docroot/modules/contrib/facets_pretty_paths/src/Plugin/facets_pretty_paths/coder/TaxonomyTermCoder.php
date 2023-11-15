@@ -27,7 +27,8 @@ class TaxonomyTermCoder extends CoderPluginBase {
    */
   public function encode($id) {
     if ($term = Term::load($id)) {
-      $term_name = $term->get('name')->value;
+      $term_trans = \Drupal::service('entity.repository')->getTranslationFromContext($term);
+      $term_name = $term_trans->get('name')->value;
       $term_name = \Drupal::service('pathauto.alias_cleaner')
         ->cleanString($term_name);
       return $term_name . '-' . $id;

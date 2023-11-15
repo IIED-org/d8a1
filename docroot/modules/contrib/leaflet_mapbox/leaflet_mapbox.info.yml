@@ -1,0 +1,14 @@
+name: Leaflet Mapbox
+type: module
+description: Provides Leaflet integration with Mapbox
+package: Leaflet
+configure: leaflet_mapbox.settings
+dependencies:
+  - leaflet
+
+core_version_requirement: ^8.7.7 || ^9 || ^10
+
+# Information added by Drupal.org packaging script on 2020-12-04
+version: '8.x-1.0-alpha1'
+project: 'leaflet_mapbox'
+datestamp: 1607109401

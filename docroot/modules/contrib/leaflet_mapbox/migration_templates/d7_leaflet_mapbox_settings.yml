@@ -1,0 +1,25 @@
+id: d7_leaflet_mapbox_settings
+label: Leaflet Mapbox configuration
+migration_tags:
+  - Drupal 7
+source:
+  plugin: variable
+  variables:
+    - leaflet_mapbox_label
+    - leaflet_mapbox_api_version
+    - leaflet_mapbox_code
+    - leaflet_mapbox_style_url
+    - leaflet_mapbox_token
+    - leaflet_mapbox_zoomlevel
+    - leaflet_mapbox_description
+process:
+  label: leaflet_mapbox_label
+  api_version: leaflet_mapbox_api_version
+  code: leaflet_mapbox_code
+  style_url: leaflet_mapbox_style_url
+  token: leaflet_mapbox_token
+  zoomlevel: leaflet_mapbox_zoomlevel
+  description: leaflet_mapbox_description
+destination:
+  plugin: config
+  config_name: leaflet_mapbox.settings
