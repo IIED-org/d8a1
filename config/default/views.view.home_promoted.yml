@@ -4,7 +4,6 @@ status: true
 dependencies:
   config:
     - field.storage.node.field_image
-    - image.style.card_270x130_
     - node.type.initiative
   module:
     - image
@@ -781,7 +780,7 @@ display:
           admin_label: ''
           plugin_id: result
           empty: false
-          content: '<div class="pl-3 mb-3"><p>We have @total case studies, here are some highlights</p></div>'
+          content: '<div class="pl-3 mb-3"><p>We have 160 case studies, here are some highlights</p></div>'
       display_extenders: {  }
       block_description: 'homepage initiatives'
     cache_metadata:

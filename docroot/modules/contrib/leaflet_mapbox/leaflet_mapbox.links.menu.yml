@@ -1,0 +1,5 @@
+leaflet_mapbox.settings:
+  title: 'Leaflet Mapbox'
+  parent: system.admin_config_services
+  description: 'Leaflet Mapbox configuration panel.'
+  route_name: leaflet_mapbox.settings

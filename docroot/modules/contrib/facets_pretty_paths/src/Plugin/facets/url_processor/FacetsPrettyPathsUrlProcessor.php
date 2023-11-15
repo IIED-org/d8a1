@@ -7,10 +7,12 @@ use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
 use Drupal\facets\Entity\Facet;
+use Drupal\facets\Event\UrlCreated;
 use Drupal\facets\FacetInterface;
 use Drupal\facets\UrlProcessor\UrlProcessorPluginBase;
 use Drupal\facets_pretty_paths\PrettyPathsActiveFilters;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -39,6 +41,20 @@ class FacetsPrettyPathsUrlProcessor extends UrlProcessorPluginBase implements Co
   protected $activeFiltersService;
 
   /**
+   * Records active children/parents to deselect with "use hierarchy" option.
+   *
+   * @var array
+   */
+  protected $activeHierarchy = [];
+
+  /**
+   * The event dispatcher.
+   *
+   * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
+   */
+  protected $eventDispatcher;
+
+  /**
    * Constructs FacetsPrettyPathsUrlProcessor object.
    *
    * @param array $configuration
@@ -55,14 +71,17 @@ class FacetsPrettyPathsUrlProcessor extends UrlProcessorPluginBase implements Co
    *   The route match service.
    * @param \Drupal\facets_pretty_paths\PrettyPathsActiveFilters $activeFilters
    *   The active filters service.
+   * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $eventDispatcher
+   *   The event dispatcher.
    *
    * @throws \Drupal\facets\Exception\InvalidProcessorException
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, Request $request, EntityTypeManagerInterface $entity_type_manager, RouteMatchInterface $routeMatch, PrettyPathsActiveFilters $activeFilters) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, Request $request, EntityTypeManagerInterface $entity_type_manager, RouteMatchInterface $routeMatch, PrettyPathsActiveFilters $activeFilters, EventDispatcherInterface $eventDispatcher) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $request, $entity_type_manager);
     $this->routeMatch = $routeMatch;
     $this->activeFiltersService = $activeFilters;
     $this->initializeActiveFilters();
+    $this->eventDispatcher = $eventDispatcher;
   }
 
   /**
@@ -76,7 +95,8 @@ class FacetsPrettyPathsUrlProcessor extends UrlProcessorPluginBase implements Co
       version_compare(\Drupal::VERSION, '9.3', '>=') ? $container->get('request_stack')->getMainRequest() : $container->get('request_stack')->getMasterRequest(),
       $container->get('entity_type.manager'),
       $container->get('current_route_match'),
-      $container->get('facets_pretty_paths.active_filters')
+      $container->get('facets_pretty_paths.active_filters'),
+      $container->get('event_dispatcher')
     );
   }
 
@@ -96,6 +116,7 @@ class FacetsPrettyPathsUrlProcessor extends UrlProcessorPluginBase implements Co
     $coder_plugin_manager = \Drupal::service('plugin.manager.facets_pretty_paths.coder');
     $coder_id = $facet->getThirdPartySetting('facets_pretty_paths', 'coder', 'default_coder');
     $coder = $coder_plugin_manager->createInstance($coder_id, ['facet' => $facet]);
+    $facet_source_url = Url::fromUri('internal:' . $facet->getFacetSource()->getPath());
 
     /** @var \Drupal\facets\Result\ResultInterface $result */
     foreach ($results as &$result) {
@@ -126,13 +147,17 @@ class FacetsPrettyPathsUrlProcessor extends UrlProcessorPluginBase implements Co
         }
 
         if ($result->getFacet()->getUseHierarchy()) {
-          // If hierarchy is active, unset parent trail and every child when
-          // building the enable-link to ensure those are not enabled anymore.
-          $parent_ids = $result->getFacet()->getHierarchyInstance()->getParentIds($raw_value);
-          $child_ids = $result->getFacet()->getHierarchyInstance()->getNestedChildIds($raw_value);
-          $parents_and_child_ids = array_merge($parent_ids, $child_ids);
-          foreach ($parents_and_child_ids as $id) {
-            if (($key = array_search($id, $filters_current_result[$result->getFacet()->id()])) !== FALSE) {
+
+          foreach (($this->activeFilters[$result->getFacet()->id()] ?? []) as $activeFilter) {
+            // Cache hierarchical queries at request level:
+            if (!array_key_exists($activeFilter, $this->activeHierarchy)) {
+              $parents = $result->getFacet()->getHierarchyInstance()->getParentIds($activeFilter);
+              $childs = $result->getFacet()->getHierarchyInstance()->getChildIds([$activeFilter]);
+              $childs = $childs[$activeFilter] ?? [];
+              $this->activeHierarchy[$activeFilter] = array_merge($parents, $childs);
+            }
+            if (in_array($raw_value, $this->activeHierarchy[$activeFilter])) {
+              $key = array_search($activeFilter, $filters_current_result[$result->getFacet()->id()]);
               unset($filters_current_result[$result->getFacet()->id()][$key]);
             }
           }
@@ -162,11 +187,19 @@ class FacetsPrettyPathsUrlProcessor extends UrlProcessorPluginBase implements Co
       }
       $pretty_paths_presort_data = $this->sortByWeightAndName($pretty_paths_presort_data);
       $pretty_paths_string = implode('', array_column($pretty_paths_presort_data, 'pretty_path_alias'));
-      $url = Url::fromUri('internal:' . $facet->getFacetSource()->getPath() . $pretty_paths_string);
+      // Remove the leading slash.
+      $pretty_paths_string = ltrim($pretty_paths_string, '/');
+
+      // Reset the URL for each result.
+      $url = clone $facet_source_url;
+      // Set the facets_query to the updated facets.
+      $url->setRouteParameter('facets_query', trim($pretty_paths_string, '/'));
+      $url->setRouteParameter('facets_query', $pretty_paths_string);
       $url->setOption('attributes', ['rel' => 'nofollow']);
 
       // First get the current list of get parameters.
       $get_params = $this->request->query;
+
       // When adding/removing a filter the number of pages may have changed,
       // possibly resulting in an invalid page parameter.
       if ($get_params->has('page')) {
@@ -174,7 +207,12 @@ class FacetsPrettyPathsUrlProcessor extends UrlProcessorPluginBase implements Co
         $get_params->remove('page');
       }
       $url->setOption('query', $get_params->all());
-      $result->setUrl($url);
+
+      // Allow other modules to alter the result url built.
+      $event = new UrlCreated($url, $result, $facet);
+      $this->eventDispatcher->dispatch($event);
+
+      $result->setUrl($event->getUrl());
       // Restore page parameter again. See https://www.drupal.org/node/2726455.
       if (isset($current_page)) {
         $get_params->set('page', $current_page);

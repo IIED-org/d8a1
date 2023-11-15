@@ -1,55 +1,72 @@
+# AddToAny Share Buttons
 
-CONTENTS OF THIS FILE
----------------------
+Share buttons for Drupal including AddToAny's universal sharing button,
+Facebook, Mastodon, Pinterest, WhatsApp, Reddit, SMS, email and many more.
 
- * Introduction
- * Configuration
- * Features
- * More information
+Vector share buttons use [AddToAny](https://www.addtoany.com/) SVG sharing
+icons. AddToAny vector icons load efficiently, are mathematically precise,
+scalable to any size, and stunning on High-PPI screens such as Retina displays.
 
-INTRODUCTION
-------------
+For a full description of the module, visit the
+[project page](https://www.drupal.org/project/addtoany).
 
-The AddToAny module provides social media buttons for Drupal. Sharing icons and
-features are maintained by AddToAny, the universal sharing platform.
+Submit feature suggestions, bug reports, or track changes in the
+[issue queue](https://www.drupal.org/project/issues/addtoany).
 
-By default, the module places share buttons below node content.
 
-CONFIGURATION
--------------
+## Table of contents
+
+- Requirements
+- Installation
+- Configuration
+- Features
+
+
+## Requirements
+
+This module requires no modules outside of Drupal core.
+
+
+## Installation
+
+Install as you would normally install a contributed Drupal module. For further
+information, see
+[Installing Drupal Modules](https://www.drupal.org/docs/extending-drupal/installing-modules).
+
+
+## Configuration
 
 To configure AddToAny, go to:
-Administration > Configuration > Web services > AddToAny.
+`Administration > Configuration > Web services > AddToAny`.
 
-Explore AddToAny's documentation for the Drupal module:
-https://www.addtoany.com/buttons/customize/drupal
+See the Drupal Wiki's documentation:
+[Configuring AddToAny](https://www.drupal.org/docs/contributed-modules/addtoany-share-buttons/configuring-addtoany).
 
-FEATURES
---------
+Explore AddToAny's documentation:
+[Drupal Sharing Customization](https://www.addtoany.com/buttons/customize/drupal).
+
+
+## Features
 
 The module strives to remain lightweight & efficient while integrating with
 core Drupal features and major contributed modules such as:
 
- * Blocks
- * Views
- * Display Suite (contributed)
+- Blocks
+- Views
+- Display Suite (contributed)
 
-AddToAny core is optimized to load asynchronously, and many sharing and social
-media features come from AddToAny core including:
+AddToAny is optimized to load asynchronously, and many sharing and social
+media features come from AddToAny including:
 
- * Universal share menus
- * Share buttons
- * Share counters
- * Share templates
- * Follow buttons
- * Custom icons
- * Automatic Google Analytics integration
- * Event tracking (useful for integration with other analytics software)
- * Link tracking using bit.ly and custom URL shorteners
- * Automatic localization (over 50 languages)
-
-MORE INFORMATION
-----------------
-
- * AddToAny's official website:
-   https://www.addtoany.com/
+- Universal share menu
+- Native share menu
+- Share buttons
+- Share counters
+- Share templates
+- Follow buttons
+- Custom color buttons
+- Custom icons
+- Google Analytics integration
+- Event tracking (useful for integrating with analytics software)
+- Link tracking using Bitly, custom URL shorteners, UTM parameters
+- Automatic localization (in over 50 languages)

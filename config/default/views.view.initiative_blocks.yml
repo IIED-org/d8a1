@@ -5205,7 +5205,7 @@ display:
           type: geofield_latlon
           settings:
             output_format: decimal
-            output_escape: 0
+            output_escape: false
           group_column: value
           group_columns: {  }
           group_rows: true
@@ -5269,33 +5269,50 @@ display:
         type: leaflet_map
         options:
           grouping: {  }
-          data_source: field_geofield
+          data_source:
+            field_geofield: field_geofield
           entity_source: __base_table
           name_field: field_address_country_code
-          description_field: nothing
-          view_mode: full
+          leaflet_tooltip:
+            value: ''
+            options: '{"permanent":false,"direction":"center"}'
+          leaflet_popup:
+            value: nothing
+            options: '{"maxWidth":"300","minWidth":"50","autoPan":true}'
+            view_mode: full
           leaflet_map: leaflet-mapbox
           height: '358'
           height_unit: px
           hide_empty_map: false
           disable_wheel: true
-          fullscreen_control: false
+          gesture_handling: false
+          fitbounds_options: '{"padding":[0,0]}'
           reset_map:
             control: true
-            position: topleft
+            options: '{"position":"topleft","title":"Reset View"}'
+          map_scale:
+            control: false
+            options: '{"position":"bottomright","maxWidth":100,"metric":true,"imperial":false,"updateWhenIdle":false}'
+          locate:
+            control: false
+            options: '{"position":"topright","setView":"untilPanOrZoom","returnToPrevBounds":true,"keepCurrentZoomLevel":true,"strings":{"title":"Locate my position"}}'
+            automatic: false
           map_position:
             force: false
             center:
               lat: -4.0
               lon: 0.0
+            zoomControlPosition: topleft
             zoom: 6
             minZoom: 2
             maxZoom: 9
             zoomFiner: 0
+          weight: ''
           icon:
             iconType: marker
             iconUrl: '/sites/default/files/markers/{{ type }}.png'
             shadowUrl: /sites/default/files/markers/pin-shadow.png
+            className: ''
             iconSize:
               x: '25'
               'y': '40'
@@ -5313,80 +5330,32 @@ display:
               'y': '-30'
             html: '<div></div>'
             html_class: leaflet-map-divicon
+            circle_marker_options: '{"radius":100,"color":"red","fillColor":"#f03","fillOpacity":0.5}'
           leaflet_markercluster:
             control: false
+            include_path: false
             options: '{"spiderfyOnMaxZoom":true,"showCoverageOnHover":true,"removeOutsideVisibleBounds":false}'
+            excluded: '0'
+          fullscreen:
+            control: false
+            options: '{"position":"topleft","pseudoFullscreen":false}'
           path: '{"color":"#3388ff","opacity":"1.0","stroke":true,"weight":3,"fill":"depends","fillColor":"*","fillOpacity":"0.2"}'
           geocoder:
             control: false
             settings:
+              autocomplete:
+                placeholder: 'Search Address'
+                title: 'Search an Address on the Map'
               position: topright
               input_size: 25
               providers:
-                arcgisonline:
-                  weight: '0'
-                  checked: 0
-                bingmaps:
-                  weight: '0'
-                  checked: 0
                 file:
-                  weight: '0'
-                  checked: 0
-                freegeoip:
                   weight: '0'
                   checked: 0
                 gpxfile:
                   weight: '0'
                   checked: 0
-                geojsonfile:
-                  weight: '0'
-                  checked: 0
-                geoplugin:
-                  weight: '0'
-                  checked: 0
-                geoip:
-                  weight: '0'
-                  checked: 0
-                geonames:
-                  weight: '0'
-                  checked: 0
-                googlemaps:
-                  weight: '0'
-                  checked: 0
-                googlemaps_business:
-                  weight: '0'
-                  checked: 0
-                hostip:
-                  weight: '0'
-                  checked: 0
-                ipinfodb:
-                  weight: '0'
-                  checked: 0
-                kmlfile:
-                  weight: '0'
-                  checked: 0
-                mapquest:
-                  weight: '0'
-                  checked: 0
-                maxmind:
-                  weight: '0'
-                  checked: 0
-                nominatim:
-                  weight: '0'
-                  checked: 0
-                opencage:
-                  weight: '0'
-                  checked: 0
-                openstreetmap:
-                  weight: '0'
-                  checked: 0
                 random:
-                  weight: '0'
-                  checked: 0
-                tomtom:
-                  weight: '0'
-                  checked: 0
-                yandex:
                   weight: '0'
                   checked: 0
               min_terms: 4
@@ -5394,6 +5363,10 @@ display:
               zoom: 16
               popup: false
               options: ''
+          map_lazy_load:
+            lazy_load: true
+          feature_properties:
+            values: ''
       row:
         type: fields
         options:

@@ -276,7 +276,8 @@ abstract class SqlBase extends PagerPluginBase implements CacheableDependencyInt
     }
 
     $limit = $this->options['items_per_page'];
-    $offset = $this->current_page * $this->options['items_per_page'] + $this->options['offset'];
+    $offset_value = $this->options['offset'] ? $this->options['offset'] : 0;
+    $offset = $this->current_page * $this->options['items_per_page'] + $offset_value;
     if (!empty($this->options['total_pages'])) {
       if ($this->current_page >= $this->options['total_pages']) {
         $limit = $this->options['items_per_page'];

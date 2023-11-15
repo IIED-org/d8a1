@@ -250,6 +250,28 @@ class FilteredStorageTest extends MemoryStorageTest {
   }
 
   /**
+   * Test the write method invokes the filterWrite in filters.
+   */
+  public function testWriteFilterDeleting() {
+    $name = $this->randomString();
+    $data = $this->randomArray();
+    $source = $this->prophesize(StorageInterface::class);
+    $filterA = $this->prophesizeFilter();
+    $filterB = new TransparentFilter();
+
+    $filterA->filterWrite($name, $data)->willReturn(FALSE);
+
+    $source->write(Argument::any())->shouldNotBeCalled();
+    $source->exists($name)->willReturn(TRUE);
+
+    $filterA->filterWriteEmptyIsDelete($name)->willReturn(TRUE);
+    $source->delete($name)->willReturn(TRUE);
+
+    $storage = new FilteredStorage($source->reveal(), [$filterA->reveal(), $filterB]);
+    $this->assertTrue($storage->write($name, $data));
+  }
+
+  /**
    * Test the delete method invokes the filterDelete in filters.
    *
    * @dataProvider deleteFilterProvider

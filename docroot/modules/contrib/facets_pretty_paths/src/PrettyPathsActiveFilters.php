@@ -2,6 +2,7 @@
 
 namespace Drupal\facets_pretty_paths;
 
+use Drupal\Core\Batch\BatchStorageInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
@@ -42,6 +43,13 @@ class PrettyPathsActiveFilters {
   protected $request;
 
   /**
+   * The batch storage.
+   *
+   * @var \Drupal\Core\Batch\BatchStorageInterface
+   */
+  protected $batchStorage;
+
+  /**
    * Constructs an instance of PrettyPathsActiveFilters.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
@@ -52,12 +60,15 @@ class PrettyPathsActiveFilters {
    *   The Coder plugin manager.
    * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
    *   The request stack.
+   * @param \Drupal\Core\Batch\BatchStorageInterface $batch_storage
+   *   The batch storage.
    */
-  public function __construct(EntityTypeManagerInterface $entityTypeManager, RouteMatchInterface $routeMatch, CoderPluginManager $coderManager, RequestStack $requestStack) {
+  public function __construct(EntityTypeManagerInterface $entityTypeManager, RouteMatchInterface $routeMatch, CoderPluginManager $coderManager, RequestStack $requestStack, BatchStorageInterface $batch_storage) {
     $this->entityTypeManager = $entityTypeManager;
     $this->routeMatch = $routeMatch;
     $this->coderManager = $coderManager;
     $this->request = $requestStack->getCurrentRequest();
+    $this->batchStorage = $batch_storage;
   }
 
   /**
@@ -166,8 +177,25 @@ class PrettyPathsActiveFilters {
     // defined as GET parameter.
     if ($this->routeMatch->getRouteName() === 'views.ajax') {
       $q = $this->request->query->get('q');
+      if ($q === NULL && $this->request->isMethod('POST') && !empty($_REQUEST['view_path'])) {
+        $q = str_replace($this->request->getSchemeAndHttpHost(), '', $this->request->headers->get('referer'));
+      }
       if ($q) {
+        $q = preg_replace('/^' . str_replace('/', '\/', base_path()) . '/', '/', $q);
         $route_params = Url::fromUserInput($q)->getRouteParameters();
+        if (isset($route_params['facets_query'])) {
+          return $route_params['facets_query'];
+        }
+      }
+    }
+
+    // For views data export with batch, retrieve filters from the batch source
+    // URL, defined as GET parameter.
+    if (strpos($this->routeMatch->getRouteName(), 'system.batch_page') === 0) {
+      $batch_id = $this->request->query->get('id');
+      $batch_set = $this->batchStorage->load($batch_id);
+      if (!empty($batch_set['source_url'])) {
+        $route_params = $batch_set['source_url']->getRouteParameters();
         if (isset($route_params['facets_query'])) {
           return $route_params['facets_query'];
         }

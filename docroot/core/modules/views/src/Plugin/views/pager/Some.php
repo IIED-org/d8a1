@@ -66,7 +66,8 @@ class Some extends PagerPluginBase {
 
   public function query() {
     $this->view->query->setLimit($this->options['items_per_page']);
-    $this->view->query->setOffset($this->options['offset']);
+    $offset = $this->options['offset'] ? $this->options['offset'] : 0;
+    $this->view->query->setOffset($offset);
   }
 
   /**
