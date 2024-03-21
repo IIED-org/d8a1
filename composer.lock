@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "06221c117a885fba60dadcf29822f224",
+    "content-hash": "5fcf30e67a8bb9e988d8cce8b2ff4767",
     "packages": [
         {
             "name": "abraham/twitteroauth",
@@ -5788,6 +5788,35 @@
             }
         },
         {
+            "name": "drupal/leaflet_countries",
+            "version": "dev-3086578-leaflet-views-country",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/issue/leaflet_countries-3086578.git",
+                "reference": "fdfaee7648055671e5d8e3622848020b148bf271"
+            },
+            "require": {
+                "drupal/core": "^8 || ^9 || ^10",
+                "drupal/leaflet": "^2.1 || ^10.2",
+                "drupal/leaflet_topojson": "^2.0@alpha",
+                "mledoze/countries": "^5.0"
+            },
+            "type": "drupal-module",
+            "license": [
+                "GPL-2.0+"
+            ],
+            "description": "Provides GeoJSON outlines for countries to be used in Leaflet maps",
+            "homepage": "https://www.drupal.org/project/leaflet_countries",
+            "keywords": [
+                "Drupal"
+            ],
+            "support": {
+                "issues": "http://drupal.org/project/issues/leaflet_countries",
+                "source": "http://cgit.drupalcode.org/leaflet_countries"
+            },
+            "time": "2024-03-21T14:19:42+00:00"
+        },
+        {
             "name": "drupal/leaflet_mapbox",
             "version": "1.0.0-alpha1",
             "source": {
@@ -5914,6 +5943,59 @@
             "support": {
                 "source": "https://git.drupalcode.org/project/leaflet_more_maps",
                 "issues": "https://www.drupal.org/project/issues/leaflet_more_maps"
+            }
+        },
+        {
+            "name": "drupal/leaflet_topojson",
+            "version": "2.0.0-alpha2",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/leaflet_topojson.git",
+                "reference": "2.0.0-alpha2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/leaflet_topojson-2.0.0-alpha2.zip",
+                "reference": "2.0.0-alpha2",
+                "shasum": "be4e00cbec956f402a6a0c3800adca30929de3ac"
+            },
+            "require": {
+                "drupal/core": "^8 || ^9 || ^10",
+                "drupal/leaflet": "^2.1 || ^10.2"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "2.0.0-alpha2",
+                    "datestamp": "1710419094",
+                    "security-coverage": {
+                        "status": "not-covered",
+                        "message": "Project has not opted into security advisory coverage!"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0+"
+            ],
+            "authors": [
+                {
+                    "name": "stephen-cox",
+                    "homepage": "https://www.drupal.org/user/2862323"
+                },
+                {
+                    "name": "tanc",
+                    "homepage": "https://www.drupal.org/user/64430"
+                }
+            ],
+            "description": "Extends the Leaflet module to provide TopoJSON functionality",
+            "homepage": "https://www.drupal.org/project/leaflet_topojson",
+            "keywords": [
+                "Drupal"
+            ],
+            "support": {
+                "source": "http://cgit.drupalcode.org/leaflet_topojson",
+                "issues": "http://drupal.org/project/issues/leaflet_topojson"
             }
         },
         {
@@ -13823,7 +13905,8 @@
         "drupal/views_field_view": 10,
         "drupal/views_entity_form_field": 10,
         "drupal/http_response_headers": 10,
-        "drupal/leaflet_mapbox": 15
+        "drupal/leaflet_mapbox": 15,
+        "drupal/leaflet_countries": 20
     },
     "prefer-stable": true,
     "prefer-lowest": false,
