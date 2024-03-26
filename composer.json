@@ -6,7 +6,14 @@
   "repositories": [
     {
       "type": "composer",
-      "url": "https://packages.drupal.org/8"
+      "url": "https://packages.drupal.org/8",
+        "exclude": [
+          "drupal/leaflet_countries"
+        ]
+    },
+    {
+      "type": "git",
+      "url": "https://git.drupalcode.org/issue/leaflet_countries-3086578.git"
     },
     {
       "type": "composer",
@@ -94,7 +101,8 @@
     "drupal/jquery_ui_slider": "^2.0",
     "mglaman/composer-drupal-lenient": "^1.0",
     "drupal/condition_query": "^1.0",
-    "drupal/leaflet_mapbox": "^1.0@alpha"
+    "drupal/leaflet_mapbox": "^1.0@alpha",
+    "drupal/leaflet_countries": "dev-3086578-leaflet-views-country"
   },
   "conflict": {
     "drupal/core": "7.*"
@@ -156,8 +164,8 @@
     },
     "drupal-lenient": {
       "allowed-list": [
-        "drupal/condition_query", 
-        "drupal/account_modal", 
+        "drupal/condition_query",
+        "drupal/account_modal",
         "drupal/form_mode_manager",
         "drupal/jquery_ui_slider",
         "drupal/leaflet_mapbox"
