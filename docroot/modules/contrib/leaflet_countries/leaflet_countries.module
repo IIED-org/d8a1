@@ -1,7 +1,12 @@
 <?php
 
-use Drupal\views\ViewExecutable;
+/**
+ * @file
+ * Leaflet Countries module file.
+ */
+
 use Drupal\leaflet_countries\Countries;
+use Drupal\views\ViewExecutable;
 
 /**
  * Implements hook_theme().

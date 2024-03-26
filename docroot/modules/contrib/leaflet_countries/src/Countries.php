@@ -3,11 +3,9 @@
 namespace Drupal\leaflet_countries;
 
 /**
- * Class Countries
- * @package Drupal\leaflet_countries
+ * Contains helper methods for accessing GeoJSON library data.
  *
- * Contains helper methods for accessing GeoJSON library data
- * and processing the data with GeoPHP.
+ * @package Drupal\leaflet_countries
  */
 class Countries {
 
@@ -20,15 +18,18 @@ class Countries {
    * @return string
    *   The JSON string contained in the loaded file.
    */
-  protected static function getJSONContent($path) {
+  protected static function getJsonContent($path): string {
+
     // Try loading from libraries and then vendor.
     $realpath = \Drupal::service('file_system')->realpath('libraries/countries/' . $path);
     if (!$realpath) {
       $realpath = \Drupal::service('file_system')->realpath('../vendor/mledoze/countries/' . $path);
     }
-    $file = file_get_contents($realpath);
+    if (!$realpath) {
+      return '';
+    }
 
-    return $file;
+    return file_get_contents($realpath);
   }
 
   /**
@@ -37,28 +38,31 @@ class Countries {
    * @return string
    *   The contents of the JSON file.
    */
-  protected static function getCountriesJSON() {
-    return self::getJSONContent('countries.json');
+  protected static function getCountriesJson(): string {
+    return self::getJsonContent('countries.json');
   }
 
   /**
    * Decodes the countries JSON data and returns it.
+   *
+   * @return mixed
+   *   The country data.
    */
-  public static function getCountries() {
-    $countries = json_decode(self::getCountriesJSON());
+  public static function getCountries(): mixed {
+    $countries = json_decode(self::getCountriesJson());
     return $countries;
   }
 
   /**
    * Gets the country codes and returns an array of them.
    *
-   * @return array
+   * @return string[]
    *   A simple array of country codes.
    */
-  public static function getCodes() {
+  public static function getCodes(): array {
     $list = self::getCodesAndLabels();
-    $codes = array();
-    foreach($list as $code => $name) {
+    $codes = [];
+    foreach ($list as $code => $name) {
       $codes[] = $code;
     }
     return $codes;
@@ -67,14 +71,14 @@ class Countries {
   /**
    * Gets the country codes and labels and returns a keyed value pair.
    *
-   * @return array
-   *   An array with the key being the country code and the value being
-   *   the country's common name.
+   * @return string[]
+   *   An array with the key being the country code and the value being the
+   *   country's common name.
    */
-  public static function getCodesAndLabels() {
+  public static function getCodesAndLabels(): array {
     $list = self::getCountries();
-    $labels = array();
-    foreach($list as $item) {
+    $labels = [];
+    foreach ($list as $item) {
       $labels[$item->cca3] = $item->name->common;
     }
     asort($labels);
@@ -90,10 +94,11 @@ class Countries {
    * @return string
    *   The JSON string for the country.
    */
-  public static function getIndividualCountryJSON($code) {
+  public static function getIndividualCountryJson($code): string {
     $filepath = 'data/' . strtolower($code) . '.topo.json';
-    return self::getJSONContent($filepath);
+    return self::getJsonContent($filepath);
   }
+
   /**
    * Gets an individual country's cca3 code from its cca2 code.
    *
@@ -106,7 +111,7 @@ class Countries {
   public static function getCca3($cca2) {
     $list = self::getCountries();
     $cca3 = [];
-    foreach($list as $item) {
+    foreach ($list as $item) {
       $cca3[$item->cca2] = $item->cca3;
     }
     return $cca3[$cca2] ?? '';

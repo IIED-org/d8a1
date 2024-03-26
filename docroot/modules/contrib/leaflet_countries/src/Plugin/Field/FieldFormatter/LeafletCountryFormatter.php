@@ -2,11 +2,9 @@
 
 namespace Drupal\leaflet_countries\Plugin\Field\FieldFormatter;
 
-use Drupal\leaflet\Plugin\Field\FieldFormatter\LeafletDefaultFormatter;
 use Drupal\Core\Field\FieldItemListInterface;
-use Drupal\leaflet\Plugin\Field\FieldFormatter;
-use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\leaflet\Plugin\Field\FieldFormatter\LeafletDefaultFormatter;
 use Drupal\leaflet_countries\Countries;
 
 /**
@@ -26,13 +24,13 @@ class LeafletCountryFormatter extends LeafletDefaultFormatter {
    * {@inheritdoc}
    */
   public static function defaultSettings() {
-    return parent::defaultSettings() + array(
-        'linecolor' => '666666',
-        'lineweight' => '1.5',
-        'fillopacity' => '0.5',
-        'fillcolor' => '666666',
-        'zoom' => 'auto'
-      );
+    return parent::defaultSettings() + [
+      'linecolor' => '666666',
+      'lineweight' => '1.5',
+      'fillopacity' => '0.5',
+      'fillcolor' => '666666',
+      'zoom' => 'auto',
+    ];
   }
 
   /**
@@ -42,7 +40,7 @@ class LeafletCountryFormatter extends LeafletDefaultFormatter {
     $elements = parent::settingsForm($form, $form_state);
 
     // The outline of a country.
-    $elements['linecolor'] = array(
+    $elements['linecolor'] = [
       '#type' => 'textfield',
       '#title' => 'Outline color',
       '#description' => $this->t('Enter a hex value for the outline colour.'),
@@ -51,10 +49,10 @@ class LeafletCountryFormatter extends LeafletDefaultFormatter {
       '#default_value' => $this->getSetting('linecolor'),
       '#empty_value' => '666666',
       '#required' => TRUE,
-    );
+    ];
 
     // The line weight of the line surrounding the country.
-    $elements['lineweight'] = array(
+    $elements['lineweight'] = [
       '#type' => 'textfield',
       '#title' => 'Weight of the outline',
       '#description' => $this->t('Enter a value like 1 or 1.5'),
@@ -62,10 +60,10 @@ class LeafletCountryFormatter extends LeafletDefaultFormatter {
       '#default_value' => $this->getSetting('lineweight'),
       '#empty_value' => '1.5',
       '#required' => TRUE,
-    );
+    ];
 
     // The hex value for the fill colour.
-    $elements['fillcolor'] = array(
+    $elements['fillcolor'] = [
       '#type' => 'textfield',
       '#title' => 'Fill color',
       '#description' => $this->t('Enter a hex value for the fill colour of a country'),
@@ -74,10 +72,10 @@ class LeafletCountryFormatter extends LeafletDefaultFormatter {
       '#default_value' => $this->getSetting('fillcolor'),
       '#empty_value' => '666666',
       '#required' => TRUE,
-    );
+    ];
 
     // The opacity value for the fill.
-    $elements['fillopacity'] = array(
+    $elements['fillopacity'] = [
       '#type' => 'textfield',
       '#title' => 'Fill opacity',
       '#description' => $this->t('Enter an opacity value from 0 to 1.'),
@@ -85,7 +83,7 @@ class LeafletCountryFormatter extends LeafletDefaultFormatter {
       '#default_value' => $this->getSetting('fillopacity'),
       '#empty_value' => '1',
       '#required' => TRUE,
-    );
+    ];
 
     return $elements;
 
@@ -108,7 +106,7 @@ class LeafletCountryFormatter extends LeafletDefaultFormatter {
     $elements = [];
     foreach ($items as $delta => $item) {
       // Load the GeoJSON file.
-      $data = json_decode(Countries::getIndividualCountryJSON($item->value), TRUE);
+      $data = json_decode(Countries::getIndividualCountryJson($item->value), TRUE);
       $feature = [
         'type' => 'topojson',
         'json' => $data,

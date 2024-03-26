@@ -2,15 +2,14 @@
 
 namespace Drupal\leaflet_countries\Plugin\views\style;
 
-
-use Drupal\Core\Render\BubbleableMetadata;
+use Drupal\Component\Utility\Html;
 use Drupal\Core\Entity\Plugin\DataType\EntityAdapter;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\leaflet_views\Plugin\views\style\LeafletMap;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\Component\Utility\Html;
-use Drupal\views\ResultRow;
+use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\leaflet_countries\Countries;
+use Drupal\leaflet_views\Plugin\views\style\LeafletMap;
+use Drupal\views\ResultRow;
 
 /**
  * Style plugin to render a View output as a Leaflet map.
@@ -87,7 +86,7 @@ class LeafletCountriesMap extends LeafletMap implements ContainerFactoryPluginIn
           'linecolor' => '666666',
           'lineweight' => '1.5',
           'lineopacity' => '1',
-          'fillopacity' =>  '1',
+          'fillopacity' => '1',
           'fillcolor' => 'CCCCCC',
           'name_trigger_popup' => TRUE,
           'onclick_href' => FALSE,
@@ -157,7 +156,7 @@ class LeafletCountriesMap extends LeafletMap implements ContainerFactoryPluginIn
             ['checked' => TRUE],
           ],
         ],
-      ]
+      ],
     ];
     $form['leaflet_country_map']['name_field'] = [
       '#type' => 'select',
@@ -313,7 +312,7 @@ class LeafletCountriesMap extends LeafletMap implements ContainerFactoryPluginIn
    * @param string $field_name
    *   The field name.
    *
-   * @return string $field_type
+   * @return string
    *   The field type.
    */
   protected function getDataSourceFieldType($field_name) {
@@ -324,12 +323,12 @@ class LeafletCountriesMap extends LeafletMap implements ContainerFactoryPluginIn
     }
 
     // We can assume the data source is a field within the view.
-    /* @var \Drupal\views\Plugin\views\ViewsHandlerInterface $handler) */
+    /** @var \Drupal\views\Plugin\views\ViewsHandlerInterface $handler) */
     foreach ($this->displayHandler->getHandlers('field') as $field_id => $handler) {
       $label = $handler->adminLabel() ?: $field_id;
       $this->viewFields[$field_id] = $label;
       if (is_a($handler, '\Drupal\views\Plugin\views\field\FieldPluginBase')) {
-        /* @var \Drupal\views\Plugin\views\field\EntityField $handler */
+        /** @var \Drupal\views\Plugin\views\field\EntityField $handler */
         try {
           $entity_type = $handler->getEntityType();
         }
@@ -445,12 +444,14 @@ class LeafletCountriesMap extends LeafletMap implements ContainerFactoryPluginIn
         foreach ($field_values as $field_value) {
           switch ($geofield_type) {
             case 'leaflet_country_item':
-              $cca3  = $field_value['value'];
+              $cca3 = $field_value['value'];
               break;
+
             case 'address':
               $country_code = strtoupper($field_value['country_code']);
               $cca3 = Countries::getCca3($country_code);
               break;
+
             case 'address_country':
               $country_code = strtoupper($field_value['value']);
               $cca3 = Countries::getCca3($country_code);
@@ -463,23 +464,24 @@ class LeafletCountriesMap extends LeafletMap implements ContainerFactoryPluginIn
       }
     }
 
-    // We should now have an array of countries, indexed by cca3 code, each with one or more rows.
-    foreach ($countries as $cca3 => $country){
-      // Render outlines, one per country, passing just the first row to render the outline.
+    // We should now have an array of countries, indexed by cca3 code, each with
+    // one or more rows.
+    foreach ($countries as $cca3 => $country) {
+      // Render outlines, one per country, passing just the first row to render
+      // the outline.
       $country_data = $this->renderCountryRow($country['rows'][0], $cca3);
-      $newoutput['rows'][$cca3] = $country_data ;
+      $newoutput['rows'][$cca3] = $country_data;
       // If a description field is set, add a popup.
       if ($this->options['leaflet_country_map']['description_field']) {
-        // render popup content, one per row in each country
+        // Render popup content, one per row in each country.
         $newoutput['rows'][$cca3]['popup'] = $this->renderPopupRows($country);
       }
 
       if ($this->options['leaflet_country_map']['country_name_tooltip']) {
         // If we have a label, add it.
-
-        //$newoutput['rows'][$cca3]['label'] = $country['name'];
+        // $newoutput['rows'][$cca3]['label'] = $country['name'];.
         $newoutput['rows'][$cca3]['tooltip'] = $country['name'];
-        //$newoutput['rows'][$cca3]['popup'] = $country['name'];
+        // $newoutput['rows'][$cca3]['popup'] = $country['name'];
       }
     }
 
@@ -506,7 +508,6 @@ class LeafletCountriesMap extends LeafletMap implements ContainerFactoryPluginIn
     return $output;
   }
 
-
   /**
    * {@inheritdoc}
    */
@@ -525,13 +526,15 @@ class LeafletCountriesMap extends LeafletMap implements ContainerFactoryPluginIn
     return $outline;
   }
 
-    /**
+  /**
    * Converts the given geo data points into a leaflet feature.
    *
    * @param array $feature
    *   A list of points.
-   * @param ResultRow $row
+   * @param \Drupal\views\ResultRow $row
    *   The views result row.
+   * @param string $code
+   *   The country code.
    *
    * @return array
    *   Leaflet features.
@@ -570,13 +573,11 @@ class LeafletCountriesMap extends LeafletMap implements ContainerFactoryPluginIn
   /**
    * Renders the row content for leaflet popup.
    *
-   * @param array $features
-   *   A list of points.
-   * @param ResultRow $row
+   * @param \Drupal\views\ResultRow $row
    *   The views result row.
    *
    * @return string
-   *   Markup to pupulate the popup.
+   *   Markup to populate the popup.
    */
   protected function renderRowContent(ResultRow $row) {
     $popup_body = '';
@@ -602,16 +603,16 @@ class LeafletCountriesMap extends LeafletMap implements ContainerFactoryPluginIn
    * @return string
    *   Rendered markup.
    */
-  protected function renderPopupRows($country) {
+  protected function renderPopupRows($rows) {
     $markup = '';
-    foreach ($country['rows'] as $row) {
+    foreach ($rows['rows'] as $row) {
       $markup .= $this->renderRowContent($row);
     }
     $renderable = [
       '#theme' => 'leaflet_countries_popup',
       '#items' => ['#markup' => $markup],
-      '#rows' => $country['rows'],
-      '#country_name' => $country['name'],
+      '#rows' => $rows['rows'],
+      '#country_name' => $rows['name'],
     ];
     $rendered = \Drupal::service('renderer')->render($renderable);
     return $rendered;

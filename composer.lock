@@ -5793,7 +5793,7 @@
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/issue/leaflet_countries-3086578.git",
-                "reference": "fdfaee7648055671e5d8e3622848020b148bf271"
+                "reference": "60b8913cdcd57a5745233565040203fd2ada1033"
             },
             "require": {
                 "drupal/core": "^8 || ^9 || ^10",
@@ -5814,7 +5814,7 @@
                 "issues": "http://drupal.org/project/issues/leaflet_countries",
                 "source": "http://cgit.drupalcode.org/leaflet_countries"
             },
-            "time": "2024-03-21T14:19:42+00:00"
+            "time": "2024-03-26T16:07:52+00:00"
         },
         {
             "name": "drupal/leaflet_mapbox",

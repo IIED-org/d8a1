@@ -2,18 +2,19 @@
 
 namespace Drupal\leaflet_countries\Plugin\views\row;
 
+use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
+use Drupal\Core\Entity\EntityFieldManagerInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Render\RendererInterface;
+use Drupal\leaflet_countries\Countries;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Plugin\views\row\RowPluginBase;
 use Drupal\views\ResultRow;
 use Drupal\views\ViewExecutable;
-use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\Entity\EntityFieldManagerInterface;
-use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
-use Drupal\Core\Render\RendererInterface;
 use Drupal\views\ViewsData;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Plugin which formats a row as a country outline.
@@ -29,6 +30,8 @@ class LeafletCountry extends RowPluginBase implements ContainerFactoryPluginInte
 
   /**
    * Overrides Drupal\views\Plugin\Plugin::$usesOptions.
+   *
+   * @var bool
    */
   protected $usesOptions = TRUE;
 
@@ -90,25 +93,27 @@ class LeafletCountry extends RowPluginBase implements ContainerFactoryPluginInte
    *   The plugin_id for the formatter.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param EntityTypeManagerInterface $entity_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_manager
    *   The entity manager.
-   * @param EntityFieldManagerInterface $entity_field_manager
+   * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager
    *   The entity field manager.
-   * @param EntityDisplayRepositoryInterface $entity_display
+   * @param \Drupal\Core\Entity\EntityDisplayRepositoryInterface $entity_display
    *   The entity display manager.
-   * @param RendererInterface $renderer
+   * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer.
+   * @param \Drupal\views\ViewsData $view_data
+   *   The View Data service.
    */
   public function __construct(
-    array $configuration,
-    $plugin_id,
-    $plugin_definition,
-    EntityTypeManagerInterface $entity_manager,
-    EntityFieldManagerInterface $entity_field_manager,
-    EntityDisplayRepositoryInterface $entity_display,
-    RendererInterface $renderer,
-    ViewsData $view_data
-  ) {
+        array $configuration,
+        $plugin_id,
+        $plugin_definition,
+        EntityTypeManagerInterface $entity_manager,
+        EntityFieldManagerInterface $entity_field_manager,
+        EntityDisplayRepositoryInterface $entity_display,
+        RendererInterface $renderer,
+        ViewsData $view_data
+    ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->entityManager = $entity_manager;
@@ -123,15 +128,15 @@ class LeafletCountry extends RowPluginBase implements ContainerFactoryPluginInte
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('entity_type.manager'),
-      $container->get('entity_field.manager'),
-      $container->get('entity_display.repository'),
-      $container->get('renderer'),
-      $container->get('views.views_data')
-    );
+          $configuration,
+          $plugin_id,
+          $plugin_definition,
+          $container->get('entity_type.manager'),
+          $container->get('entity_field.manager'),
+          $container->get('entity_display.repository'),
+          $container->get('renderer'),
+          $container->get('views.views_data')
+      );
   }
 
   /**
@@ -153,8 +158,8 @@ class LeafletCountry extends RowPluginBase implements ContainerFactoryPluginInte
 
     // Get a list of fields and a sublist of geo data fields in this view.
     // @todo use $fields = $this->displayHandler->getFieldLabels();
-    $fields = array();
-    $fields_geo_data = array();
+    $fields = [];
+    $fields_geo_data = [];
     foreach ($this->displayHandler->getHandlers('field') as $field_id => $handler) {
       $label = $handler->adminLabel() ?: $field_id;
       $fields[$field_id] = $label;
@@ -171,14 +176,14 @@ class LeafletCountry extends RowPluginBase implements ContainerFactoryPluginInte
 
     // Check whether we have a geo data field we can work with.
     if (!count($fields_geo_data)) {
-      $form['error'] = array(
+      $form['error'] = [
         '#markup' => $this->t('Please add at least one leaflet country field to the view.'),
-      );
+      ];
       return;
     }
 
     // Map preset.
-    $form['data_source'] = array(
+    $form['data_source'] = [
       '#type' => 'select',
       '#title' => $this->t('Data Source'),
       '#description' => $this->t('Which field associates the country?'),
@@ -186,10 +191,10 @@ class LeafletCountry extends RowPluginBase implements ContainerFactoryPluginInte
       '#default_value' => $this->options['data_source'],
       '#required' => TRUE,
       '#weight' => 0,
-    );
+    ];
 
     // Name field.
-    $form['name_field'] = array(
+    $form['name_field'] = [
       '#type' => 'select',
       '#title' => $this->t('Title Field'),
       '#description' => $this->t('Choose the field which will appear as a label over the country outline.'),
@@ -197,25 +202,25 @@ class LeafletCountry extends RowPluginBase implements ContainerFactoryPluginInte
       '#default_value' => $this->options['name_field'],
       '#empty_value' => '',
       '#weight' => 1,
-    );
+    ];
 
-    $form['name_trigger_popup'] = array(
+    $form['name_trigger_popup'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Trigger the popup when clicking on the label'),
       '#description' => $this->t('With this option disabled the popup can only be triggered by clicking on the country layer.'),
       '#default_value' => !empty($this->options['name_trigger_popup']) ? $this->options['name_trigger_popup'] : TRUE,
       '#weight' => 2,
-    );
+    ];
 
     $desc_options = $fields;
     // Add an option to render the entire entity using a view mode.
     if ($this->entityTypeId) {
-      $desc_options += array(
-        '#rendered_entity' => '<' . $this->t('Rendered @entity entity', array('@entity' => $this->entityTypeId)) . '>',
-      );
+      $desc_options += [
+        '#rendered_entity' => '<' . $this->t('Rendered @entity entity', ['@entity' => $this->entityTypeId]) . '>',
+      ];
     }
 
-    $form['description_field'] = array(
+    $form['description_field'] = [
       '#type' => 'select',
       '#title' => $this->t('Description Field'),
       '#description' => $this->t('Choose the field or rendering method which will appear as a description in popups.'),
@@ -223,35 +228,35 @@ class LeafletCountry extends RowPluginBase implements ContainerFactoryPluginInte
       '#default_value' => $this->options['description_field'],
       '#empty_value' => '',
       '#weight' => 3,
-    );
+    ];
 
     if ($this->entityTypeId) {
       // Get the human readable labels for the entity view modes.
-      $view_mode_options = array();
+      $view_mode_options = [];
       foreach ($this->entityDisplay->getViewModes($this->entityTypeId) as $key => $view_mode) {
         $view_mode_options[$key] = $view_mode['label'];
       }
       // The View Mode drop-down is visible conditional on "#rendered_entity"
       // being selected in the Description drop-down above.
-      $form['view_mode'] = array(
+      $form['view_mode'] = [
         '#type' => 'select',
         '#title' => $this->t('View mode'),
         '#description' => $this->t('View modes are ways of displaying entities.'),
         '#options' => $view_mode_options,
         '#default_value' => !empty($this->options['view_mode']) ? $this->options['view_mode'] : 'full',
-        '#states' => array(
-          'visible' => array(
-            ':input[name="row_options[description_field]"]' => array(
+        '#states' => [
+          'visible' => [
+            ':input[name="row_options[description_field]"]' => [
               'value' => '#rendered_entity',
-            ),
-          ),
-        ),
+            ],
+          ],
+        ],
         '#weight' => 5,
-      );
+      ];
     }
 
     // The outline of a country.
-    $form['linecolor'] = array(
+    $form['linecolor'] = [
       '#type' => 'textfield',
       '#title' => 'Outline color',
       '#description' => $this->t('Enter a hex value for the outline colour.'),
@@ -260,10 +265,10 @@ class LeafletCountry extends RowPluginBase implements ContainerFactoryPluginInte
       '#default_value' => $this->options['linecolor'],
       '#empty_value' => '666666',
       '#weight' => 6,
-    );
+    ];
 
     // The line weight of the line surrounding the country.
-    $form['lineweight'] = array(
+    $form['lineweight'] = [
       '#type' => 'textfield',
       '#title' => 'Weight of the outline',
       '#description' => $this->t('Enter a value like 1 or 1.5'),
@@ -271,10 +276,10 @@ class LeafletCountry extends RowPluginBase implements ContainerFactoryPluginInte
       '#default_value' => $this->options['lineweight'],
       '#empty_value' => '1.5',
       '#weight' => 7,
-    );
+    ];
 
     // The opacity of the line surrounding the country.
-    $form['lineopacity'] = array(
+    $form['lineopacity'] = [
       '#type' => 'textfield',
       '#title' => 'Opacity of the outline',
       '#description' => $this->t('Enter an opacity value from 0 to 1.'),
@@ -282,10 +287,10 @@ class LeafletCountry extends RowPluginBase implements ContainerFactoryPluginInte
       '#default_value' => $this->options['lineopacity'],
       '#empty_value' => '1',
       '#weight' => 7,
-    );
+    ];
 
     // The hex value for the fill colour.
-    $form['fillcolor'] = array(
+    $form['fillcolor'] = [
       '#type' => 'textfield',
       '#title' => 'Fill color',
       '#description' => $this->t('Enter a hex value for the fill colour of a country'),
@@ -294,10 +299,10 @@ class LeafletCountry extends RowPluginBase implements ContainerFactoryPluginInte
       '#default_value' => $this->options['fillcolor'],
       '#empty_value' => '666666',
       '#weight' => 8,
-    );
+    ];
 
     // The opacity value for the fill.
-    $form['fillopacity'] = array(
+    $form['fillopacity'] = [
       '#type' => 'textfield',
       '#title' => 'Fill opacity',
       '#description' => $this->t('Enter an opacity value from 0 to 1.'),
@@ -305,7 +310,7 @@ class LeafletCountry extends RowPluginBase implements ContainerFactoryPluginInte
       '#default_value' => $this->options['fillopacity'],
       '#empty_value' => '1',
       '#weight' => 9,
-    );
+    ];
 
   }
 
@@ -313,8 +318,8 @@ class LeafletCountry extends RowPluginBase implements ContainerFactoryPluginInte
    * {@inheritdoc}
    */
   public function validateOptionsForm(&$form, FormStateInterface $form_state) {
-    $lineopacity = $form_state->getValue(array('row_options', 'lineopacity'));
-    $fillopacity = $form_state->getValue(array('row_options', 'fillopacity'));
+    $lineopacity = $form_state->getValue(['row_options', 'lineopacity']);
+    $fillopacity = $form_state->getValue(['row_options', 'fillopacity']);
 
     if ($lineopacity < 0 || $lineopacity > 1) {
       $form_state->setError($form['lineopacity'], $this->t('Please select an opacity value between 0 and 1'));
@@ -336,14 +341,14 @@ class LeafletCountry extends RowPluginBase implements ContainerFactoryPluginInte
     }
 
     // Load the GeoJSON file.
-    $data = json_decode(\Drupal\leaflet_countries\Countries::getIndividualCountryJSON($code), TRUE);
+    $data = json_decode(Countries::getIndividualCountryJson($code), TRUE);
     // Process the GeoJSON data.
-    $geojson = array(
+    $geojson = [
       'type' => 'topojson',
       'json' => $data,
-    );
+    ];
     // Prepare the leaflet features.
-    return $this->renderLeafletOutlines(array($geojson), $row);
+    return $this->renderLeafletOutlines([$geojson], $row);
   }
 
   /**
@@ -351,7 +356,7 @@ class LeafletCountry extends RowPluginBase implements ContainerFactoryPluginInte
    *
    * @param array $features
    *   A list of points.
-   * @param ResultRow $row
+   * @param \Drupal\views\ResultRow $row
    *   The views result row.
    *
    * @return array
@@ -380,13 +385,13 @@ class LeafletCountry extends RowPluginBase implements ContainerFactoryPluginInte
       $feature['labelTriggerPopup'] = $this->options['name_trigger_popup'];
       $feature['code'] = $this->view->getStyle()->getFieldValue($row->index, $this->options['data_source']);
 
-      $feature['options'] = array(
+      $feature['options'] = [
         'color' => isset($this->options['lineopacity']) ? '#' . $this->options['linecolor'] : '#666666',
-        'weight' => isset($this->options['lineweight']) ? $this->options['lineweight'] : '1.5',
-        'lineOpacity' => isset($this->options['lineopacity']) ? $this->options['lineopacity'] : '1',
+        'weight' => $this->options['lineweight'] ?? '1.5',
+        'lineOpacity' => $this->options['lineopacity'] ?? '1',
         'fillColor' => isset($this->options['fillcolor']) ? '#' . $this->options['fillcolor'] : '#666666',
-        'fillOpacity' => isset($this->options['fillopacity']) ? $this->options['fillopacity'] : '1',
-      );
+        'fillOpacity' => $this->options['fillopacity'] ?? '1',
+      ];
 
       // Allow sub-classes to adjust the feature.
       $this->alterLeafletFeature($feature, $row);
@@ -405,10 +410,10 @@ class LeafletCountry extends RowPluginBase implements ContainerFactoryPluginInte
    *
    * @param array $feature
    *   The country outline feature.
-   * @param ResultRow $row
+   * @param \Drupal\views\ResultRow $row
    *   The Result rows.
    */
-  protected function alterLeafletFeature(array &$point, ResultRow $row) {
+  protected function alterLeafletFeature(array &$feature, ResultRow $row) {
   }
 
   /**
@@ -418,7 +423,7 @@ class LeafletCountry extends RowPluginBase implements ContainerFactoryPluginInte
     $errors = parent::validate();
     // @todo raise validation error if we have no geofield.
     if (empty($this->options['data_source'])) {
-      $errors[] = $this->t('Row @row requires the data source to be configured.', array('@row' => $this->definition['title']));
+      $errors[] = $this->t('Row @row requires the data source to be configured.', ['@row' => $this->definition['title']]);
     }
     return $errors;
   }
@@ -429,17 +434,18 @@ class LeafletCountry extends RowPluginBase implements ContainerFactoryPluginInte
   protected function defineOptions() {
     $options = parent::defineOptions();
 
-    $options['data_source'] = array('default' => '');
-    $options['name_field'] = array('default' => '');
-    $options['description_field'] = array('default' => '');
-    $options['view_mode'] = array('default' => 'teaser');
-    $options['linecolor'] = array('default' => '666666');
-    $options['lineweight'] = array('default' => '1.5');
-    $options['lineopacity'] = array('default' => '1');
-    $options['fillopacity'] = array('default' => '1');
-    $options['fillcolor'] = array('default' => '666666');
-    $options['name_trigger_popup'] = array('default' => TRUE);
+    $options['data_source'] = ['default' => ''];
+    $options['name_field'] = ['default' => ''];
+    $options['description_field'] = ['default' => ''];
+    $options['view_mode'] = ['default' => 'teaser'];
+    $options['linecolor'] = ['default' => '666666'];
+    $options['lineweight'] = ['default' => '1.5'];
+    $options['lineopacity'] = ['default' => '1'];
+    $options['fillopacity'] = ['default' => '1'];
+    $options['fillcolor'] = ['default' => '666666'];
+    $options['name_trigger_popup'] = ['default' => TRUE];
 
     return $options;
   }
+
 }

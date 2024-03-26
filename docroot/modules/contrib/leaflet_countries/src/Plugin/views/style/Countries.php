@@ -2,11 +2,11 @@
 
 namespace Drupal\leaflet_countries\Plugin\views\style;
 
+use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\views\Plugin\views\style\StylePluginBase;
 use Drupal\views\ResultRow;
-use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\Core\Extension\ModuleHandlerInterface;
 
 /**
  * Style plugin to render leaflet features.
@@ -69,15 +69,15 @@ class Countries extends StylePluginBase implements ContainerFactoryPluginInterfa
    *   The plugin_id for the formatter.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param ModuleHandlerInterface $module_handler
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The modules handler.
    */
   public function __construct(
-    array $configuration,
-    $plugin_id,
-    $plugin_definition,
-    ModuleHandlerInterface $module_handler
-  ) {
+        array $configuration,
+        $plugin_id,
+        $plugin_definition,
+        ModuleHandlerInterface $module_handler
+    ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->moduleHandler = $module_handler;
@@ -89,18 +89,18 @@ class Countries extends StylePluginBase implements ContainerFactoryPluginInterfa
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('module_handler')
-    );
+          $configuration,
+          $plugin_id,
+          $plugin_definition,
+          $container->get('module_handler')
+      );
   }
 
   /**
    * {@inheritdoc}
    */
   public function renderGroupingSets($sets, $level = 0) {
-    $output = array();
+    $output = [];
     foreach ($sets as $set) {
       if ($this->usesRowPlugin()) {
         foreach ($set['rows'] as $index => $row) {
@@ -112,7 +112,7 @@ class Countries extends StylePluginBase implements ContainerFactoryPluginInterfa
           }
         }
       }
-      $set['features'] = array();
+      $set['features'] = [];
       foreach ($set['rows'] as $group) {
         $set['features'] = array_merge($set['features'], $group);
       }
@@ -145,7 +145,7 @@ class Countries extends StylePluginBase implements ContainerFactoryPluginInterfa
    *
    * @param array $points
    *   The marker Points.
-   * @param ResultRow $row
+   * @param \Drupal\views\ResultRow $row
    *   The Result rows.
    */
   protected function alterLeafletFeaturePoints(&$points, ResultRow $row) {
@@ -164,11 +164,11 @@ class Countries extends StylePluginBase implements ContainerFactoryPluginInterfa
    * @return array
    *   Definition of leaflet features, compatible with leaflet_render_map().
    */
-  protected function renderLeafletGroup(array $features = array(), $title, $level) {
-    return array(
+  protected function renderLeafletGroup(array $features, $title, $level) {
+    return [
       'group' => FALSE,
       'features' => $features,
-    );
+    ];
   }
 
 }

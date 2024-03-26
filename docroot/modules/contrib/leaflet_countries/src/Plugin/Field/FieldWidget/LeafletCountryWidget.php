@@ -29,19 +29,18 @@ class LeafletCountryWidget extends OptionsSelectWidget {
    */
   public static function validateElement(array $element, FormStateInterface $form_state) {
     if ($element['#required'] && $element['#value'] == '_none') {
-      $form_state->setError($element, t('@name field is required.', array('@name' => $element['#title'])));
+      $form_state->setError($element, t('@name field is required.', ['@name' => $element['#title']]));
     }
 
     // Massage submitted form values.
     // Drupal\Core\Field\WidgetBase::submit() expects values as
     // an array of values keyed by delta first, then by column, while our
     // widgets return the opposite.
-
     if (is_array($element['#value'])) {
       $values = array_values($element['#value']);
     }
     else {
-      $values = array($element['#value']);
+      $values = [$element['#value']];
     }
 
     // Filter out the 'none' option. Use a strict comparison, because
@@ -52,9 +51,9 @@ class LeafletCountryWidget extends OptionsSelectWidget {
     }
 
     // Transpose selections from field => delta to delta => field.
-    $items = array();
+    $items = [];
     foreach ($values as $value) {
-      $items[] = array($element['#key_column'] => $value);
+      $items[] = [$element['#key_column'] => $value];
     }
 
     // As there is only one item allowed we'll pass the only item back.

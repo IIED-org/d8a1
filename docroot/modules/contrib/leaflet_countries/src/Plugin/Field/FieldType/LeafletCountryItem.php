@@ -2,15 +2,14 @@
 
 namespace Drupal\leaflet_countries\Plugin\Field\FieldType;
 
-use Drupal\Component\Utility\Random;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemBase;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
-use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\TypedData\DataDefinition;
 use Drupal\Core\TypedData\OptionsProviderInterface;
+use Drupal\leaflet_countries\Countries;
 
 /**
  * Plugin implementation of the 'leaflet_country_item' field type.
@@ -43,25 +42,25 @@ class LeafletCountryItem extends FieldItemBase implements OptionsProviderInterfa
    * {@inheritdoc}
    */
   public function getSettableValues(AccountInterface $account = NULL) {
-    return \Drupal\leaflet_countries\Countries::getCodes();
+    return Countries::getCodes();
   }
 
   /**
    * {@inheritdoc}
    */
   public function getSettableOptions(AccountInterface $account = NULL) {
-    return \Drupal\leaflet_countries\Countries::getCodesAndLabels();
+    return Countries::getCodesAndLabels();
   }
 
   /**
    * {@inheritdoc}
    */
   public static function defaultStorageSettings() {
-    return array(
+    return [
       'max_length' => 255,
       'is_ascii' => FALSE,
       'case_sensitive' => FALSE,
-    ) + parent::defaultStorageSettings();
+    ] + parent::defaultStorageSettings();
   }
 
   /**
@@ -71,7 +70,7 @@ class LeafletCountryItem extends FieldItemBase implements OptionsProviderInterfa
     // Prevent early t() calls by using the TranslatableMarkup.
     $properties['value'] = DataDefinition::create('string')
       ->setLabel(new TranslatableMarkup('Country code'))
-      ->addConstraint('Length', array('max' => 3))
+      ->addConstraint('Length', ['max' => 3])
       ->setRequired(TRUE);
 
     return $properties;
@@ -81,17 +80,17 @@ class LeafletCountryItem extends FieldItemBase implements OptionsProviderInterfa
    * {@inheritdoc}
    */
   public static function schema(FieldStorageDefinitionInterface $field_definition) {
-    $schema = array(
-      'columns' => array(
-        'value' => array(
+    $schema = [
+      'columns' => [
+        'value' => [
           'type' => 'varchar',
           'length' => 3,
-        ),
-      ),
-      'indexes' => array(
-        'value' => array('value'),
-      ),
-    );
+        ],
+      ],
+      'indexes' => [
+        'value' => ['value'],
+      ],
+    ];
 
     return $schema;
   }
@@ -100,8 +99,8 @@ class LeafletCountryItem extends FieldItemBase implements OptionsProviderInterfa
    * {@inheritdoc}
    */
   public static function generateSampleValue(FieldDefinitionInterface $field_definition) {
-    // @todo: populate the possible countries and then randomly return one.
-    $possible_countries = array();
+    // @todo populate the possible countries and then randomly return one.
+    $possible_countries = [];
     $values = '';
     return $values;
   }
