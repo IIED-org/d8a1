@@ -42,6 +42,8 @@ class ComposerStaticInit102e3ef181e3919390ea5de6deb1dfeb
         'c' => 
         array (
             'cweagans\\Composer\\' => 18,
+            'chillerlan\\Settings\\' => 20,
+            'chillerlan\\QRCode\\' => 18,
         ),
         'Z' => 
         array (
@@ -103,6 +105,11 @@ class ComposerStaticInit102e3ef181e3919390ea5de6deb1dfeb
             'Psr\\Cache\\' => 10,
             'PhpParser\\' => 10,
             'Peast\\' => 6,
+            'ParagonIE\\ConstantTime\\' => 23,
+        ),
+        'O' => 
+        array (
+            'Otp\\' => 4,
         ),
         'M' => 
         array (
@@ -160,6 +167,7 @@ class ComposerStaticInit102e3ef181e3919390ea5de6deb1dfeb
             'Doctrine\\Common\\Collections\\' => 28,
             'Doctrine\\Common\\Annotations\\' => 28,
             'Dflydev\\DotAccessData\\' => 22,
+            'Defuse\\Crypto\\' => 14,
         ),
         'C' => 
         array (
@@ -205,6 +213,14 @@ class ComposerStaticInit102e3ef181e3919390ea5de6deb1dfeb
         'cweagans\\Composer\\' => 
         array (
             0 => __DIR__ . '/..' . '/cweagans/composer-patches/src',
+        ),
+        'chillerlan\\Settings\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/chillerlan/php-settings-container/src',
+        ),
+        'chillerlan\\QRCode\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/chillerlan/php-qrcode/src',
         ),
         'ZipStream\\' => 
         array (
@@ -391,6 +407,14 @@ class ComposerStaticInit102e3ef181e3919390ea5de6deb1dfeb
         array (
             0 => __DIR__ . '/..' . '/mck89/peast/lib/Peast',
         ),
+        'ParagonIE\\ConstantTime\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/paragonie/constant_time_encoding/src',
+        ),
+        'Otp\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/christian-riesen/otp/src',
+        ),
         'Masterminds\\' => 
         array (
             0 => __DIR__ . '/..' . '/masterminds/html5/src',
@@ -524,6 +548,10 @@ class ComposerStaticInit102e3ef181e3919390ea5de6deb1dfeb
         'Dflydev\\DotAccessData\\' => 
         array (
             0 => __DIR__ . '/..' . '/dflydev/dot-access-data/src',
+        ),
+        'Defuse\\Crypto\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/defuse/php-encryption/src',
         ),
         'Consolidation\\SiteProcess\\' => 
         array (

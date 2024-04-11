@@ -102,7 +102,9 @@
     "mglaman/composer-drupal-lenient": "^1.0",
     "drupal/condition_query": "^1.0",
     "drupal/leaflet_mapbox": "^1.0@alpha",
-    "drupal/leaflet_countries": "dev-3086578-leaflet-views-country"
+    "drupal/leaflet_countries": "dev-3086578-leaflet-views-country",
+    "drupal/tfa": "^1.6",
+    "drupal/real_aes": "^2.5"
   },
   "conflict": {
     "drupal/core": "7.*"
