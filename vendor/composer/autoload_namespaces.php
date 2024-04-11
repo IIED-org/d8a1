@@ -9,5 +9,4 @@ return array(
     'Stiphle' => array($vendorDir . '/davedevelopment/stiphle/src'),
     'Console' => array($vendorDir . '/pear/console_getopt'),
     'Archive_Tar' => array($vendorDir . '/pear/archive_tar'),
-    '' => array($vendorDir . '/pear/pear-core-minimal/src'),
 );
