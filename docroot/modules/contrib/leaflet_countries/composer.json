@@ -1,0 +1,19 @@
+{
+  "name": "drupal/leaflet_countries",
+  "type": "drupal-module",
+  "description": "Provides GeoJSON outlines for countries to be used in Leaflet maps",
+  "keywords": ["Drupal"],
+  "license": "GPL-2.0+",
+  "homepage": "https://www.drupal.org/project/leaflet_countries",
+  "minimum-stability": "dev",
+  "support": {
+    "issues": "http://drupal.org/project/issues/leaflet_countries",
+    "source": "http://cgit.drupalcode.org/leaflet_countries"
+  },
+  "require": {
+    "drupal/core": "^8 || ^9 || ^10",
+    "drupal/leaflet": "^2.1 || ^10.2",
+    "drupal/leaflet_topojson": "^2.0@alpha",
+    "mledoze/countries": "^5.0"
+  }
+}
