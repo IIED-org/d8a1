@@ -3,11 +3,11 @@
         'name' => 'acquia/acquia-ra-composer',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => 'bacc875164652a9777f4320aa21c5bf5709a6ba8',
+        'reference' => '97384ccd44921773c4f73598da6ee5c6bad7ecb0',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'dev' => false,
+        'dev' => true,
     ),
     'versions' => array(
         'abraham/twitteroauth' => array(
@@ -22,7 +22,7 @@
         'acquia/acquia-ra-composer' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => 'bacc875164652a9777f4320aa21c5bf5709a6ba8',
+            'reference' => '97384ccd44921773c4f73598da6ee5c6bad7ecb0',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -1079,9 +1079,9 @@
             'dev_requirement' => false,
         ),
         'drupal/registration_role' => array(
-            'pretty_version' => '2.0.0',
-            'version' => '2.0.0.0',
-            'reference' => '2.0.0',
+            'pretty_version' => '2.0.1',
+            'version' => '2.0.1.0',
+            'reference' => '2.0.1',
             'type' => 'drupal-module',
             'install_path' => __DIR__ . '/../../docroot/modules/contrib/registration_role',
             'aliases' => array(),
