@@ -42,6 +42,8 @@ class ComposerStaticInit102e3ef181e3919390ea5de6deb1dfeb
         'c' => 
         array (
             'cweagans\\Composer\\' => 18,
+            'chillerlan\\Settings\\' => 20,
+            'chillerlan\\QRCode\\' => 18,
         ),
         'Z' => 
         array (
@@ -103,6 +105,11 @@ class ComposerStaticInit102e3ef181e3919390ea5de6deb1dfeb
             'Psr\\Cache\\' => 10,
             'PhpParser\\' => 10,
             'Peast\\' => 6,
+            'ParagonIE\\ConstantTime\\' => 23,
+        ),
+        'O' => 
+        array (
+            'Otp\\' => 4,
         ),
         'M' => 
         array (
@@ -160,6 +167,7 @@ class ComposerStaticInit102e3ef181e3919390ea5de6deb1dfeb
             'Doctrine\\Common\\Collections\\' => 28,
             'Doctrine\\Common\\Annotations\\' => 28,
             'Dflydev\\DotAccessData\\' => 22,
+            'Defuse\\Crypto\\' => 14,
         ),
         'C' => 
         array (
@@ -205,6 +213,14 @@ class ComposerStaticInit102e3ef181e3919390ea5de6deb1dfeb
         'cweagans\\Composer\\' => 
         array (
             0 => __DIR__ . '/..' . '/cweagans/composer-patches/src',
+        ),
+        'chillerlan\\Settings\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/chillerlan/php-settings-container/src',
+        ),
+        'chillerlan\\QRCode\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/chillerlan/php-qrcode/src',
         ),
         'ZipStream\\' => 
         array (
@@ -391,6 +407,14 @@ class ComposerStaticInit102e3ef181e3919390ea5de6deb1dfeb
         array (
             0 => __DIR__ . '/..' . '/mck89/peast/lib/Peast',
         ),
+        'ParagonIE\\ConstantTime\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/paragonie/constant_time_encoding/src',
+        ),
+        'Otp\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/christian-riesen/otp/src',
+        ),
         'Masterminds\\' => 
         array (
             0 => __DIR__ . '/..' . '/masterminds/html5/src',
@@ -525,6 +549,10 @@ class ComposerStaticInit102e3ef181e3919390ea5de6deb1dfeb
         array (
             0 => __DIR__ . '/..' . '/dflydev/dot-access-data/src',
         ),
+        'Defuse\\Crypto\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/defuse/php-encryption/src',
+        ),
         'Consolidation\\SiteProcess\\' => 
         array (
             0 => __DIR__ . '/..' . '/consolidation/site-process/src',
@@ -615,10 +643,6 @@ class ComposerStaticInit102e3ef181e3919390ea5de6deb1dfeb
         ),
     );
 
-    public static $fallbackDirsPsr0 = array (
-        0 => __DIR__ . '/..' . '/pear/pear-core-minimal/src',
-    );
-
     public static $classMap = array (
         'Attribute' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
         'CURLStringFile' => __DIR__ . '/..' . '/symfony/polyfill-php81/Resources/stubs/CURLStringFile.php',
@@ -646,6 +670,10 @@ class ComposerStaticInit102e3ef181e3919390ea5de6deb1dfeb
         'Drupal\\Core\\Installer\\InstallerRedirectTrait' => __DIR__ . '/../..' . '/docroot/core/lib/Drupal/Core/Installer/InstallerRedirectTrait.php',
         'Drupal\\Core\\Site\\Settings' => __DIR__ . '/../..' . '/docroot/core/lib/Drupal/Core/Site/Settings.php',
         'Normalizer' => __DIR__ . '/..' . '/symfony/polyfill-intl-normalizer/Resources/stubs/Normalizer.php',
+        'OS_Guess' => __DIR__ . '/..' . '/pear/pear-core-minimal/src/OS/Guess.php',
+        'PEAR' => __DIR__ . '/..' . '/pear/pear-core-minimal/src/PEAR.php',
+        'PEAR_Error' => __DIR__ . '/..' . '/pear/pear-core-minimal/src/PEAR.php',
+        'PEAR_ErrorStack' => __DIR__ . '/..' . '/pear/pear-core-minimal/src/PEAR/ErrorStack.php',
         'PEAR_Exception' => __DIR__ . '/..' . '/pear/pear_exception/PEAR/Exception.php',
         'PhpToken' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/PhpToken.php',
         'ReturnTypeWillChange' => __DIR__ . '/..' . '/symfony/polyfill-php81/Resources/stubs/ReturnTypeWillChange.php',
@@ -666,6 +694,7 @@ class ComposerStaticInit102e3ef181e3919390ea5de6deb1dfeb
         'SebastianBergmann\\Diff\\Parser' => __DIR__ . '/..' . '/sebastian/diff/src/Parser.php',
         'SebastianBergmann\\Diff\\TimeEfficientLongestCommonSubsequenceCalculator' => __DIR__ . '/..' . '/sebastian/diff/src/TimeEfficientLongestCommonSubsequenceCalculator.php',
         'Stringable' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Stringable.php',
+        'System' => __DIR__ . '/..' . '/pear/pear-core-minimal/src/System.php',
         'UnhandledMatchError' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/UnhandledMatchError.php',
         'ValueError' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/ValueError.php',
         'geoPHP' => __DIR__ . '/..' . '/itamair/geophp/geoPHP.inc',
@@ -677,7 +706,6 @@ class ComposerStaticInit102e3ef181e3919390ea5de6deb1dfeb
             $loader->prefixLengthsPsr4 = ComposerStaticInit102e3ef181e3919390ea5de6deb1dfeb::$prefixLengthsPsr4;
             $loader->prefixDirsPsr4 = ComposerStaticInit102e3ef181e3919390ea5de6deb1dfeb::$prefixDirsPsr4;
             $loader->prefixesPsr0 = ComposerStaticInit102e3ef181e3919390ea5de6deb1dfeb::$prefixesPsr0;
-            $loader->fallbackDirsPsr0 = ComposerStaticInit102e3ef181e3919390ea5de6deb1dfeb::$fallbackDirsPsr0;
             $loader->classMap = ComposerStaticInit102e3ef181e3919390ea5de6deb1dfeb::$classMap;
 
         }, null, ClassLoader::class);

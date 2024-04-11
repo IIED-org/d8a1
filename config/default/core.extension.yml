@@ -43,6 +43,7 @@ module:
   dblog: 0
   dynamic_page_cache: 0
   editor: 0
+  encrypt: 0
   entity: 0
   entity_browser: 0
   entity_browser_entity_form: 0
@@ -81,6 +82,7 @@ module:
   jquery_ui_datepicker: 0
   jquery_ui_slider: 0
   jquery_ui_touch_punch: 0
+  key: 0
   layout_discovery: 0
   leaflet: 0
   leaflet_countries: 0
@@ -111,6 +113,7 @@ module:
   phpass: 0
   r4032login: 0
   rabbit_hole: 0
+  real_aes: 0
   recaptcha: 0
   redirect: 0
   registration_role: 0
@@ -133,6 +136,7 @@ module:
   system: 0
   taxonomy: 0
   text: 0
+  tfa: 0
   token: 0
   toolbar: 0
   tour: 0
