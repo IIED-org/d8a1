@@ -11,7 +11,7 @@ third_party_settings:
 name: Event
 type: event
 description: 'An upcoming or archived event'
-help: ''
+help: null
 new_revision: true
 preview_mode: 1
 display_submitted: false

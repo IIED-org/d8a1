@@ -6,3 +6,4 @@ name: 'Products in trade'
 vid: products_in_trade
 description: 'Items in Illegal wildlife trade'
 weight: 0
+new_revision: false

@@ -1,3 +1,4 @@
+langcode: en
 id: initiative_list_card
 label: 'Initiative list card'
 ui_limit: initiative|list_card

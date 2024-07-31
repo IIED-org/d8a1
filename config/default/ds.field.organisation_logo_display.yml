@@ -1,3 +1,4 @@
+langcode: en
 id: organisation_logo_display
 label: 'Organisation logo display'
 ui_limit: organisation

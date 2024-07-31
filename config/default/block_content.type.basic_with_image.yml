@@ -4,5 +4,5 @@ status: true
 dependencies: {  }
 id: basic_with_image
 label: 'Basic with image'
-revision: 1
+revision: true
 description: 'A basic block contains a title, body and image'

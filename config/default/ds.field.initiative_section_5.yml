@@ -1,3 +1,4 @@
+langcode: en
 id: initiative_section_5
 label: 'Initiative section 5'
 ui_limit: initiative|full

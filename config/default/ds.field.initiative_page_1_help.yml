@@ -1,3 +1,4 @@
+langcode: en
 id: initiative_page_1_help
 label: 'initiative page 1 help'
 ui_limit: 'initiative|*'

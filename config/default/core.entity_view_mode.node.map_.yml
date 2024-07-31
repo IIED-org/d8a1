@@ -6,5 +6,6 @@ dependencies:
     - node
 id: node.map_
 label: 'Map card'
+description: ''
 targetEntityType: node
 cache: true

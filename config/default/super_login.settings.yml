@@ -1,3 +1,6 @@
+_core:
+  default_config_hash: LmPnyWGjnerstvvV_7kuxofM0TCr_46oT3YaWy9HYJs
+langcode: en
 super_login:
   login_text: 'Username or email'
   forgot_pw_text: 'Forgot password?'
@@ -6,13 +9,11 @@ super_login:
   login_title: ''
   password_reset_title: 'Reset password'
   back_link: ''
-  messages: 0
-  css: 0
-  button_theme: 0
-  placeholder: 1
-  login_type: '0'
-  capslock: 0
+  messages: false
+  css: false
+  button_theme: false
+  placeholder: true
+  login_type: 0
+  capslock: false
   login_placeholder: email@example.org
   pass_placeholder: ''
-_core:
-  default_config_hash: LmPnyWGjnerstvvV_7kuxofM0TCr_46oT3YaWy9HYJs

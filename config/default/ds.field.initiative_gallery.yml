@@ -1,3 +1,4 @@
+langcode: en
 id: initiative_gallery
 label: 'Initiative gallery'
 ui_limit: initiative|full
