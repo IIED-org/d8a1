@@ -67,10 +67,10 @@ class MenuLinksInfo implements ContainerInjectionInterface {
    *   The group of contextual links being rendered.
    * @param array $route_parameters
    *   The route parameters passed to each route_name of the contextual links.
-   *   For example :.
+   *   For example:
    *
    * @code
-   *   array('entityTypeId' => $entity->id())
+   *   ['entityTypeId' => $entity->id()]
    * @endcode
    *
    * @see hook_contextual_links_alter()

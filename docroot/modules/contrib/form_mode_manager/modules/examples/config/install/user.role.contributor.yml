@@ -1,6 +1,9 @@
 langcode: en
 status: true
-dependencies: {  }
+dependencies:
+  enforced:
+    module:
+      - form_mode_manager_examples
 id: contributor
 label: Contributor
 weight: 3

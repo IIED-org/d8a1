@@ -1,0 +1,15 @@
+--- tests/src/Functional/FormModeManagerRouteTest.php
++++ tests/src/Functional/FormModeManagerRouteTest.php
+@@ -233,9 +233,11 @@ class FormModeManagerRouteTest extends FormModeManagerBase {
+ 
+     // Add a content type and attach it to form mode.
+     $this->drupalGet("admin/structure/types/manage/{$node_type_fmm2->id()}/form-display");
++    $this->assertSession()->statusCodeEquals(200);
+ 
+     $edit = ["display_modes_custom[$node_form_mode_id]" => TRUE];
+-    $this->drupalPostForm("admin/structure/types/manage/{$node_type_fmm2->id()}/form-display", $edit, 'Save');
++    $this->drupalGet("admin/structure/types/manage/{$node_type_fmm2->id()}/form-display");
++    $this->submitForm($edit, 'Save');
+ 
+     $this->drupalGet("node/add-list/$node_form_mode_id");
+     $this->assertSession()->linkExists($this->nodeTypeFmm1->label());

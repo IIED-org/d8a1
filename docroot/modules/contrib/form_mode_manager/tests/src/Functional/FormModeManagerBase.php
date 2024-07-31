@@ -100,17 +100,32 @@ abstract class FormModeManagerBase extends BrowserTestBase {
   /**
    * Disable strict config schema checking for this test.
    *
-   * @todo Remove the disabled strict config schema checking.
-   *
    * @var bool
+   *
+   * @todo Remove the disabled strict config schema checking.
    */
   protected $strictConfigSchema = FALSE;
+
+  /**
+   * Path use when accessing block admin pages.
+   *
+   * @var string
+   *
+   * @see https://www.drupal.org/node/3320855
+   */
+  protected $blockAdminPath = 'admin/structure/block-content/';
 
   /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
     parent::setUp();
+
+    // Use correct block URL based on Drupal Core version.
+    // @see https://www.drupal.org/node/3320855
+    if (version_compare(\Drupal::VERSION, '10.1.0', '<')) {
+      $this->blockAdminPath = 'admin/structure/block/block-content/';
+    }
 
     // Setup correct blocks in regions.
     $this->drupalPlaceBlock('local_actions_block');
@@ -166,9 +181,10 @@ abstract class FormModeManagerBase extends BrowserTestBase {
    */
   public function setUpFormMode($path, $form_mode_id) {
     $this->drupalGet($path);
+    $this->assertSession()->statusCodeEquals(200);
     $this->formModeManager = $this->container->get('form_mode.manager');
     $edit = ["display_modes_custom[{$this->formModeManager->getFormModeMachineName($form_mode_id)}]" => TRUE];
-    $this->submitForm($edit, t('Save'));
+    $this->submitForm($edit, 'Save');
   }
 
   /**
@@ -176,8 +192,9 @@ abstract class FormModeManagerBase extends BrowserTestBase {
    */
   public function setHiddenFieldFormMode($path, $field_name) {
     $this->drupalGet($path);
+    $this->assertSession()->statusCodeEquals(200);
     $edit = ["fields[$field_name][region]" => 'hidden'];
-    $this->submitForm($edit, t('Save'));
+    $this->submitForm($edit, 'Save');
   }
 
   /**

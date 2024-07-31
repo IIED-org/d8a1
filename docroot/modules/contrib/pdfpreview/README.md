@@ -5,7 +5,6 @@ CONTENTS OF THIS FILE
  * Requirements
  * Installation
  * Configuration
- * Maintainers
 
 
 INTRODUCTION
@@ -59,11 +58,3 @@ CONFIGURATION
     4. Navigate to Administration > Configuration > PDF Preview to set up the
        preview path, preview size, image quality, and preview image type.
     5. Save configuration.
-
-
-MAINTAINERS
------------
-
- * Drupal 8 - Michael Strelan (mstrelan) - https://www.drupal.org/u/mstrelan
- * Drupal 7 - Pierre Buyle (pbuyle) - https://www.drupal.org/u/pbuyle
- * Drupal 7 - Juanjo García (juanjo_dv) - https://www.drupal.org/u/juanjo_dv

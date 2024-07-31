@@ -6,6 +6,9 @@ dependencies:
     - node.type.node_form_mode_example
   module:
     - text
+  enforced:
+    module:
+      - form_mode_manager_examples
 id: node.node_form_mode_example.body
 field_name: body
 entity_type: node

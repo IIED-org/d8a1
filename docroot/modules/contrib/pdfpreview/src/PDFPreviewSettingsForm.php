@@ -4,21 +4,11 @@ namespace Drupal\pdfpreview;
 
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Configure PDF preview settings for this site.
  */
 class PDFPreviewSettingsForm extends ConfigFormBase {
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('config.factory')
-    );
-  }
 
   /**
    * {@inheritdoc}

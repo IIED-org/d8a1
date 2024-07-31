@@ -9,6 +9,9 @@ dependencies:
   module:
     - path
     - text
+  enforced:
+    module:
+      - form_mode_manager_examples
 id: node.node_form_mode_example.contributor
 targetEntityType: node
 bundle: node_form_mode_example

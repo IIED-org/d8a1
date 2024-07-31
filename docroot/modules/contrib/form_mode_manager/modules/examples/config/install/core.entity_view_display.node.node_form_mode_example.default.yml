@@ -9,6 +9,9 @@ dependencies:
     - image
     - text
     - user
+  enforced:
+    module:
+      - form_mode_manager_examples
 id: node.node_form_mode_example.default
 targetEntityType: node
 bundle: node_form_mode_example

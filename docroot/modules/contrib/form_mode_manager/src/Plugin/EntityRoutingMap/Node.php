@@ -5,7 +5,7 @@ namespace Drupal\form_mode_manager\Plugin\EntityRoutingMap;
 use Drupal\form_mode_manager\EntityRoutingMapBase;
 
 /**
- * Class Node.
+ * Maps node routes.
  *
  * @EntityRoutingMap(
  *   id = "node",
@@ -20,6 +20,4 @@ use Drupal\form_mode_manager\EntityRoutingMapBase;
  *   }
  * )
  */
-class Node extends EntityRoutingMapBase {
-
-}
+class Node extends EntityRoutingMapBase {}

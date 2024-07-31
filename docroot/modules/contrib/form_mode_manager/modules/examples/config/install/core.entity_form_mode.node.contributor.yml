@@ -3,6 +3,9 @@ status: true
 dependencies:
   module:
     - node
+  enforced:
+    module:
+      - form_mode_manager_examples
 id: node.contributor
 label: Contributor
 targetEntityType: node

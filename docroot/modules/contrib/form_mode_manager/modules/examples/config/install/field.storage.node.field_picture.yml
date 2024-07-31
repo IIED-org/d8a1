@@ -5,6 +5,9 @@ dependencies:
     - file
     - image
     - node
+  enforced:
+    module:
+      - form_mode_manager_examples
 id: node.field_picture
 field_name: field_picture
 entity_type: node

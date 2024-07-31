@@ -1,0 +1,7 @@
+http_response_headers.form:
+  version: VERSION
+  js:
+    assets/form.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal

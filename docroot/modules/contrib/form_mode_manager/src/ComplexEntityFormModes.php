@@ -171,7 +171,7 @@ class ComplexEntityFormModes extends AbstractEntityFormModesFactory {
       'bundle_entity_type' => $bundle_entity_type_id,
       'entity_key' => $entity_type_key,
       'entity_type_id' => $entity_type_id,
-      'form_mode' => isset($form_mode_definition[$entity_type_id][$form_mode]) ? $form_mode_definition[$entity_type_id][$form_mode] : NULL,
+      'form_mode' => $form_mode_definition[$entity_type_id][$form_mode] ?? NULL,
     ];
   }
 

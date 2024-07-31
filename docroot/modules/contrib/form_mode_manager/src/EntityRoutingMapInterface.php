@@ -2,9 +2,9 @@
 
 namespace Drupal\form_mode_manager;
 
-use Drupal\Component\Plugin\PluginInspectionInterface;
 use Drupal\Component\Plugin\ConfigurableInterface;
 use Drupal\Component\Plugin\DependentPluginInterface;
+use Drupal\Component\Plugin\PluginInspectionInterface;
 
 /**
  * EntityRoutingMapInterface interface class.

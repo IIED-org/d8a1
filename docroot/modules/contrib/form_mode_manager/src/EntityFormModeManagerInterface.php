@@ -5,19 +5,19 @@ namespace Drupal\form_mode_manager;
 use Drupal\Core\Routing\RouteMatchInterface;
 
 /**
- * Interface EntityFormModeManagerInterface.
+ * Interface for managing entity form modes.
  */
 interface EntityFormModeManagerInterface {
 
   /**
-   * Displays add content links for available entity types.
+   * Displays links to add content for available entity types.
    *
-   * Redirects to entity/add/[bundle] if only one content type is available.
+   * Redirects to entity/add/[bundle] if only one bundle is available.
    */
   public function addPage(RouteMatchInterface $route_match);
 
   /**
-   * The _title_callback for the entity.add routes.
+   * Generates the title for the 'add' page routes.
    *
    * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
    *   The current route match.
@@ -25,7 +25,7 @@ interface EntityFormModeManagerInterface {
   public function addPageTitle(RouteMatchInterface $route_match);
 
   /**
-   * Checks access for the Form Mode Manager routes.
+   * Checks access permissions for the form mode manager routes.
    *
    * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
    *   The current route match.
@@ -49,7 +49,7 @@ interface EntityFormModeManagerInterface {
   public function entityAdd(RouteMatchInterface $route_match);
 
   /**
-   * Provides the entity 'edit' form.
+   * Provides the 'edit' form for an entity.
    *
    * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
    *   The current route match.

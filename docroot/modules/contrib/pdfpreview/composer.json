@@ -17,6 +17,7 @@
   "license": "GPL-2.0-or-later",
   "minimum-stability": "dev",
   "require": {
-    "drupal/imagemagick": "^2.3 || ^3.0"
+    "drupal/core": "^10 || ^11",
+    "drupal/imagemagick": "^3.7 || ^4.0"
   }
 }

@@ -11,6 +11,9 @@ imagemagick.settings:
     binaries:
       type: string
       label: 'Graphics package - ImageMagick/GraphicsMagick'
+    imagemagick_version:
+      type: string
+      label: 'ImageMagick version'
     path_to_binaries:
       type: string
       label: 'Path to the binaries'
@@ -23,9 +26,6 @@ imagemagick.settings:
     debug:
       type: boolean
       label: 'Display debugging information'
-    locale:
-      type: string
-      label: 'Locale for escaping shell commands'
     image_formats:
       type: sequence
       sequence:

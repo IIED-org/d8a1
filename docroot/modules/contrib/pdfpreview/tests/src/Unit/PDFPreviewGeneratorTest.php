@@ -2,12 +2,12 @@
 
 namespace Drupal\Tests\pdfpreview\Unit;
 
-use Prophecy\PhpUnit\ProphecyTrait;
 use Drupal\Component\Transliteration\TransliterationInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\ImmutableConfig;
 use Drupal\pdfpreview\PDFPreviewGenerator;
 use Drupal\Tests\UnitTestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 /**
  * @coversDefaultClass \Drupal\pdfpreview\PDFPreviewGenerator

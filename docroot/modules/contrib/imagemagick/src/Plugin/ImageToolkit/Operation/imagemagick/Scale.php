@@ -1,24 +1,28 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\imagemagick\Plugin\ImageToolkit\Operation\imagemagick;
+
+use Drupal\Core\ImageToolkit\Attribute\ImageToolkitOperation;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Defines imagemagick Scale operation.
- *
- * @ImageToolkitOperation(
- *   id = "imagemagick_scale",
- *   toolkit = "imagemagick",
- *   operation = "scale",
- *   label = @Translation("Scale"),
- *   description = @Translation("Scales an image while maintaining aspect ratio. The resulting image can be smaller for one or both target dimensions.")
- * )
  */
+#[ImageToolkitOperation(
+  id: "imagemagick_scale",
+  toolkit: "imagemagick",
+  operation: "scale",
+  label: new TranslatableMarkup("Scale"),
+  description: new TranslatableMarkup("Scales an image while maintaining aspect ratio. The resulting image can be smaller for one or both target dimensions.")
+)]
 class Scale extends Resize {
 
   /**
    * {@inheritdoc}
    */
-  protected function arguments() {
+  protected function arguments(): array {
     return [
       'width' => [
         'description' => 'The target width, in pixels. This value is omitted then the scaling will based only on the height value',
@@ -46,7 +50,7 @@ class Scale extends Resize {
   /**
    * {@inheritdoc}
    */
-  protected function validateArguments(array $arguments) {
+  protected function validateArguments(array $arguments): array {
     // Fail if no dimensions available for current image.
     if (is_null($this->getToolkit()->getWidth()) || is_null($this->getToolkit()->getHeight())) {
       throw new \RuntimeException("No image dimensions available for the image '{$this->getPluginDefinition()['operation']}' operation");
@@ -88,7 +92,7 @@ class Scale extends Resize {
   /**
    * {@inheritdoc}
    */
-  protected function execute(array $arguments = []) {
+  protected function execute(array $arguments = []): bool {
     // Don't scale if we don't change the dimensions at all.
     if ($arguments['width'] !== $this->getToolkit()->getWidth() || $arguments['height'] !== $this->getToolkit()->getHeight()) {
       // Don't upscale if the option isn't enabled.

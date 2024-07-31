@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\imagemagick;
 
 /**
@@ -20,44 +22,44 @@ interface ImagemagickExecManagerInterface {
    *
    * To disable the timeout, set this value to null.
    *
-   * @param int|null $timeout
+   * @param int $timeout
    *   The timeout in seconds.
    *
    * @return $this
    */
-  public function setTimeout(int $timeout): ImagemagickExecManagerInterface;
+  public function setTimeout(int $timeout): static;
 
   /**
    * Gets the binaries package in use.
    *
    * @param string $package
-   *   (optional) Force the graphics package.
+   *   (optional) Force the graphics package suite.
    *
-   * @return string
-   *   The default package ('imagemagick'|'graphicsmagick'), or the $package
-   *   argument.
+   * @return \Drupal\imagemagick\PackageSuite
+   *   The package suite.
    */
-  public function getPackage(string $package = NULL): string;
+  public function getPackageSuite(?string $package = NULL): PackageSuite;
 
   /**
-   * Gets a translated label of the binaries package in use.
+   * Gets the version of the package in use.
    *
-   * @param string $package
-   *   (optional) Force the package.
+   * @param \Drupal\imagemagick\PackageSuite|null $packageSuite
+   *   (optional) Force the graphics package suite.
    *
    * @return string
-   *   A translated label of the binaries package in use, or the $package
-   *   argument.
+   *   The version of the package suite.
    */
-  public function getPackageLabel(string $package = NULL): string;
+  public function getPackageSuiteVersion(?PackageSuite $packageSuite = NULL): string;
 
   /**
    * Verifies file path of the executable binary by checking its version.
    *
    * @param string $path
    *   The user-submitted file path to the convert binary.
-   * @param string $package
+   * @param ?PackageSuite $package
    *   (optional) The graphics package to use.
+   * @param ?string $packageSuiteVersion
+   *   (optional) The graphics package version.
    *
    * @return array
    *   An associative array containing:
@@ -65,21 +67,19 @@ interface ImagemagickExecManagerInterface {
    *   - errors: A list of error messages indicating if the executable could
    *     not be found or executed.
    */
-  public function checkPath(string $path, string $package = NULL): array;
+  public function checkPath(string $path, ?PackageSuite $package = NULL, ?string $packageSuiteVersion = NULL): array;
 
   /**
    * Executes the convert executable as shell command.
    *
-   * @param string $command
+   * @param \Drupal\imagemagick\PackageCommand $command
    *   The executable to run.
    * @param \Drupal\imagemagick\ImagemagickExecArguments $arguments
    *   An ImageMagick execution arguments object.
    * @param string &$output
-   *   (optional) A variable to assign the shell stdout to, passed by
-   *   reference.
+   *   A variable to assign the shell STDOUT to, passed by reference.
    * @param string &$error
-   *   (optional) A variable to assign the shell stderr to, passed by
-   *   reference.
+   *   A variable to assign the shell STDERR to, passed by reference.
    * @param string $path
    *   (optional) A custom file path to the executable binary.
    *
@@ -87,31 +87,20 @@ interface ImagemagickExecManagerInterface {
    *   TRUE if the command succeeded, FALSE otherwise. The error exit status
    *   code integer returned by the executable is logged.
    */
-  public function execute(string $command, ImagemagickExecArguments $arguments, string &$output = NULL, string &$error = NULL, string $path = NULL): bool;
+  public function execute(PackageCommand $command, ImagemagickExecArguments $arguments, string &$output, string &$error, ?string $path = NULL): bool;
 
   /**
-   * Executes a command on the operating system.
+   * Executes a command on the operating system, via Symfony Process.
    *
-   * This differs from ::runOsCommand in the sense that here the command to be
-   * executed and its arguments are passed separately.
-   *
-   * @param string $command
-   *   The command to run.
-   * @param string $arguments
-   *   The arguments of the command to run.
+   * @param string[] $command
+   *   The command to run and its arguments listed as separate entries.
    * @param string $id
    *   An identifier for the process to be spawned on the operating system.
    * @param string &$output
-   *   (optional) A variable to assign the shell stdout to, passed by
-   *   reference.
+   *   A variable to assign the shell STDOUT to, passed by reference.
    * @param string &$error
-   *   (optional) A variable to assign the shell stderr to, passed by
-   *   reference.
-   *
-   * @return int|bool
-   *   The operating system returned code, or FALSE if it was not possible to
-   *   execute the command.
+   *   A variable to assign the shell STDERR to, passed by reference.
    */
-  public function runOsShell(string $command, string $arguments, string $id, string &$output = NULL, string &$error = NULL): int;
+  public function runProcess(array $command, string $id, string &$output, string &$error): int|bool;
 
 }

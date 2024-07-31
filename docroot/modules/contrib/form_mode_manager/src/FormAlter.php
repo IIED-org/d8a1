@@ -107,7 +107,7 @@ class FormAlter implements ContainerInjectionInterface {
     }
 
     if ($this->appliesUserRegistrationPasswordFormAlter($formId, $dynamicFormId)) {
-      user_registrationpassword_form_user_register_form_alter($form, $formState);
+      user_registrationpassword_form_user_register_form_alter($form, $formState, $formId);
     }
   }
 

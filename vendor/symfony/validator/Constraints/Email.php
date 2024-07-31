@@ -53,6 +53,7 @@ class Email extends Constraint
 
     public $message = 'This value is not a valid email address.';
     public $mode;
+    /** @var callable|null */
     public $normalizer;
 
     public function __construct(
@@ -64,6 +65,10 @@ class Email extends Constraint
         mixed $payload = null
     ) {
         if (\is_array($options) && \array_key_exists('mode', $options) && !\in_array($options['mode'], self::VALIDATION_MODES, true)) {
+            throw new InvalidArgumentException('The "mode" parameter value is not valid.');
+        }
+
+        if (null !== $mode && !\in_array($mode, self::VALIDATION_MODES, true)) {
             throw new InvalidArgumentException('The "mode" parameter value is not valid.');
         }
 

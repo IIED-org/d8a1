@@ -5,7 +5,7 @@ namespace Drupal\form_mode_manager\Plugin\EntityRoutingMap;
 use Drupal\form_mode_manager\EntityRoutingMapBase;
 
 /**
- * Class BlockContent.
+ * Maps block content routes.
  *
  * @EntityRoutingMap(
  *   id = "block_content",
@@ -23,6 +23,4 @@ use Drupal\form_mode_manager\EntityRoutingMapBase;
  *   }
  * )
  */
-class BlockContent extends EntityRoutingMapBase {
-
-}
+class BlockContent extends EntityRoutingMapBase {}

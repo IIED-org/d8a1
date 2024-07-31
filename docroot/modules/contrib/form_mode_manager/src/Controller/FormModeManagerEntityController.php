@@ -12,10 +12,10 @@ use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\form_mode_manager\ComplexEntityFormModes;
 use Drupal\form_mode_manager\EntityFormModeManagerInterface;
-use Drupal\form_mode_manager\MediaEntityFormModes;
-use Drupal\form_mode_manager\SimpleEntityFormModes;
 use Drupal\form_mode_manager\EntityRoutingMapManager;
 use Drupal\form_mode_manager\FormModeManagerInterface;
+use Drupal\form_mode_manager\MediaEntityFormModes;
+use Drupal\form_mode_manager\SimpleEntityFormModes;
 use Drupal\form_mode_manager\TaxonomyEntityFormModes;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 

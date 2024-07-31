@@ -1,5 +1,7 @@
 <?php
 
+// phpcs:disable Drupal.NamingConventions.ValidFunctionName.ScopeNotCamelCaps
+
 namespace Drupal\pdfpreview;
 
 use Drupal\Component\Transliteration\TransliterationInterface;
@@ -72,7 +74,7 @@ class PDFPreviewGenerator {
   }
 
   /**
-   * Gets the preview image if it exists, or creates it if it doesnt.
+   * Gets the preview image if it exists, or creates it if it doesn't.
    *
    * @param \Drupal\file\Entity\File $file
    *   The file to generate a preview for.
@@ -104,8 +106,10 @@ class PDFPreviewGenerator {
    */
   public function deletePDFPreview(File $file) {
     $uri = $this->getDestinationURI($file);
-    $this->fileSystem->delete($uri);
-    image_path_flush($uri);
+    if (file_exists($uri)) {
+      $this->fileSystem->delete($uri);
+      image_path_flush($uri);
+    }
   }
 
   /**
@@ -144,10 +148,11 @@ class PDFPreviewGenerator {
 
     $directory = $this->fileSystem->dirname($destination);
     $this->fileSystem->prepareDirectory($directory, FileSystemInterface::CREATE_DIRECTORY);
-    $toolkit->arguments()->add('-background white');
-    $toolkit->arguments()->add('-flatten');
-    $toolkit->arguments()->add('-resize ' . $toolkit->arguments()->escape($config->get('size')));
-    $toolkit->arguments()->add('-quality ' . $toolkit->arguments()->escape($config->get('quality')));
+    $toolkit->arguments()
+      ->add(['-background', 'white'])
+      ->add(['-flatten'])
+      ->add(['-resize', $config->get('size')])
+      ->add(['-quality', (string) $config->get('quality')]);
     if ($config->get('type') == 'png') {
       $toolkit->arguments()->setDestinationFormat('PNG');
     }

@@ -1,9 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\imagemagick\Plugin\ImageToolkit\Operation\imagemagick;
 
 use Drupal\Core\ImageToolkit\ImageToolkitOperationBase;
+use Drupal\imagemagick\ArgumentMode;
 use Drupal\imagemagick\ImagemagickExecArguments;
+use Drupal\imagemagick\Plugin\ImageToolkit\ImagemagickToolkit;
 
 /**
  * Base image toolkit operation class for Imagemagick.
@@ -16,23 +20,23 @@ abstract class ImagemagickImageToolkitOperationBase extends ImageToolkitOperatio
    * @return \Drupal\imagemagick\Plugin\ImageToolkit\ImagemagickToolkit
    *   The correctly typed image toolkit for imagemagick operations.
    */
-  // @codingStandardsIgnoreStart
-  protected function getToolkit() {
-    return parent::getToolkit();
+  protected function getToolkit(): ImagemagickToolkit {
+    /** @var \Drupal\imagemagick\Plugin\ImageToolkit\ImagemagickToolkit $toolkit */
+    $toolkit = parent::getToolkit();
+    return $toolkit;
   }
-  // @codingStandardsIgnoreEnd
 
   /**
-   * Helper to add a command line argument.
+   * Helper to add command line arguments.
    *
    * Adds the originating operation and plugin id to the $info array.
    *
-   * @param string $argument
-   *   The command line argument to be added.
-   * @param int $mode
+   * @param string[] $arguments
+   *   The command line arguments to be added.
+   * @param \Drupal\imagemagick\ArgumentMode $mode
    *   (optional) The mode of the argument in the command line. Determines if
    *   the argument should be placed before or after the source image file path.
-   *   Defaults to ImagemagickExecArguments::POST_SOURCE.
+   *   Defaults to ArgumentMode::PostSource.
    * @param int $index
    *   (optional) The position of the argument in the arguments array.
    *   Reflects the sequence of arguments in the command line. Defaults to
@@ -44,27 +48,13 @@ abstract class ImagemagickImageToolkitOperationBase extends ImageToolkitOperatio
    * @return \Drupal\imagemagick\ImagemagickExecArguments
    *   The Imagemagick arguments.
    */
-  protected function addArgument(string $argument, int $mode = ImagemagickExecArguments::POST_SOURCE, int $index = ImagemagickExecArguments::APPEND, array $info = []): ImagemagickExecArguments {
+  protected function addArguments(array $arguments, ArgumentMode $mode = ArgumentMode::PostSource, int $index = ImagemagickExecArguments::APPEND, array $info = []): ImagemagickExecArguments {
     $plugin_definition = $this->getPluginDefinition();
     $info = array_merge($info, [
       'image_toolkit_operation' => $plugin_definition['operation'],
       'image_toolkit_operation_plugin_id' => $plugin_definition['id'],
     ]);
-    return $this->getToolkit()->arguments()->add($argument, $mode, $index, $info);
-  }
-
-  /**
-   * Helper to escape a command line argument.
-   *
-   * @param string $argument
-   *   The string to escape.
-   *
-   * @return string
-   *   An escaped string for use in the
-   *   ImagemagickExecManagerInterface::execute method.
-   */
-  protected function escapeArgument(string $argument): string {
-    return $this->getToolkit()->arguments()->escape($argument);
+    return $this->getToolkit()->arguments()->add($arguments, $mode, $index, $info);
   }
 
 }

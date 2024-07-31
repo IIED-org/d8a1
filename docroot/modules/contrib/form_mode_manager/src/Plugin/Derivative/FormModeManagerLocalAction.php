@@ -78,7 +78,7 @@ class FormModeManagerLocalAction extends DeriverBase implements ContainerDeriver
 
           $this->setDefaultLocalTask($form_mode, $entity_type_id, $form_mode_name);
 
-          // @TODO Use EntityRoutingMap to retrieve route_name,
+          // @todo Use EntityRoutingMap to retrieve route_name,
           // of admin_create operation.
           if ($this->isUserEntityType($entity_type_id)) {
             $this->derivatives[$form_mode['id']]['route_name'] = "user.admin_create.$form_mode_name";
@@ -118,7 +118,7 @@ class FormModeManagerLocalAction extends DeriverBase implements ContainerDeriver
         '@entity_label' => strtolower($entity_storage->getEntityType()->getLabel()),
       ]),
       'route_parameters' => ['form_mode_name' => $form_mode_name],
-      // @TODO Use EntityRoutingMap to retrieve generic appears_on.
+      // @todo Use EntityRoutingMap to retrieve generic appears_on.
       'appears_on' => ["entity.{$entity_type_id}.collection"],
       'cache_tags' => $this->formModeManager->getListCacheTags(),
     ];
@@ -152,7 +152,7 @@ class FormModeManagerLocalAction extends DeriverBase implements ContainerDeriver
    * @param string $entity_type_id
    *   An entity type id.
    *
-   * @TODO Use EntityRoutingMap to retrieve appears_on.
+   * @todo Use EntityRoutingMap to retrieve appears_on.
    */
   public function setNodeEntityType(array $form_mode, $entity_type_id) {
     if ('node' === $entity_type_id) {
@@ -168,7 +168,7 @@ class FormModeManagerLocalAction extends DeriverBase implements ContainerDeriver
    * @param string $entity_type_id
    *   An entity type id.
    *
-   * @TODO Use EntityRoutingMap to retrieve appears_on.
+   * @todo Use EntityRoutingMap to retrieve appears_on.
    */
   public function setMediaEntityType(array $form_mode, $entity_type_id) {
     if ('media' === $entity_type_id) {
@@ -184,7 +184,7 @@ class FormModeManagerLocalAction extends DeriverBase implements ContainerDeriver
    * @param string $entity_type_id
    *   An entity type id.
    *
-   * @TODO Use EntityRoutingMap to retrieve appears_on.
+   * @todo Use EntityRoutingMap to retrieve appears_on.
    */
   public function setTaxonomyTermEntityType(array $form_mode, $entity_type_id) {
     if ('taxonomy_term' === $entity_type_id) {

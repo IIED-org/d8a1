@@ -5,7 +5,7 @@ namespace Drupal\form_mode_manager;
 use Drupal\Core\Entity\EntityTypeInterface;
 
 /**
- * Interface FormModeManagerInterface.
+ * Defines an interface to return information on form modes.
  */
 interface FormModeManagerInterface {
 
@@ -193,9 +193,9 @@ interface FormModeManagerInterface {
    * The list cache tags associated with form display entities.
    *
    * Enables code listing entities of this type to ensure that newly created
-   * entities show up immediately. This is wrapped by Form Mode Manager to,
-   * permit a more precise cache strategy and allow Form Mode Manager to,
-   * add her permissions tags.
+   * entities show up immediately. This is wrapped by Form Mode Manager to
+   * permit a more precise cache strategy and allow the form mode manager to
+   * add its permissions tags.
    *
    * @return string[]
    *   List of cache Tags to invalidate.
