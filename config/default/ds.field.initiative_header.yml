@@ -1,3 +1,4 @@
+langcode: en
 id: initiative_header
 label: 'Initiative header'
 ui_limit: initiative|full

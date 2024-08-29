@@ -1,10 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\imagemagick\Functional;
 
-use Drupal\Core\File\FileSystemInterface;
+use Drupal\Core\Extension\ModuleExtensionList;
+use Drupal\Core\File\FileExists;
 use Drupal\Core\Image\ImageInterface;
 use Drupal\imagemagick\EventSubscriber\ImagemagickEventSubscriber;
+use Drupal\imagemagick\PackageSuite;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\imagemagick\Kernel\ToolkitSetupTrait;
 
@@ -19,20 +23,20 @@ class ToolkitImagemagickTest extends BrowserTestBase {
 
   // Colors that are used in testing.
   // @codingStandardsIgnoreStart
-  protected $black             = [  0,   0,   0,   0];
-  protected $red               = [255,   0,   0,   0];
-  protected $green             = [  0, 255,   0,   0];
-  protected $blue              = [  0,   0, 255,   0];
-  protected $yellow            = [255, 255,   0,   0];
-  protected $fuchsia           = [255,   0, 255,   0];
-  protected $cyan              = [  0, 255, 255,   0];
-  protected $white             = [255, 255, 255,   0];
-  protected $grey              = [128, 128, 128,   0];
-  protected $transparent       = [  0,   0,   0, 127];
-  protected $rotateTransparent = [255, 255, 255, 127];
+  protected array $black             = [  0,   0,   0,   0];
+  protected array $red               = [255,   0,   0,   0];
+  protected array $green             = [  0, 255,   0,   0];
+  protected array $blue              = [  0,   0, 255,   0];
+  protected array $yellow            = [255, 255,   0,   0];
+  protected array $fuchsia           = [255,   0, 255,   0];
+  protected array $cyan              = [  0, 255, 255,   0];
+  protected array $white             = [255, 255, 255,   0];
+  protected array $grey              = [128, 128, 128,   0];
+  protected array $transparent       = [  0,   0,   0, 127];
+  protected array $rotateTransparent = [255, 255, 255, 127];
 
-  protected $width = 40;
-  protected $height = 20;
+  protected int $width = 40;
+  protected int $height = 20;
   // @codingStandardsIgnoreEnd
 
   /**
@@ -40,7 +44,7 @@ class ToolkitImagemagickTest extends BrowserTestBase {
    *
    * Enable 'file_test' to be able to work with dummy_remote:// stream wrapper.
    *
-   * @var array
+   * @var string[]
    */
   protected static $modules = [
     'system',
@@ -55,9 +59,9 @@ class ToolkitImagemagickTest extends BrowserTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * @var \Drupal\Core\Extension\ModuleExtensionList
+   * Provides a list of available modules.
    */
-  protected $moduleList;
+  protected ModuleExtensionList $moduleList;
 
   /**
    * {@inheritdoc}
@@ -92,7 +96,9 @@ class ToolkitImagemagickTest extends BrowserTestBase {
 
     // Get metadata from a remote file.
     $image = $this->imageFactory->get('dummy-remote://image-test.png');
-    $image->getToolkit()->getExifOrientation();
+    /** @var \Drupal\imagemagick\Plugin\ImageToolkit\ImagemagickToolkit $toolkit */
+    $toolkit = $image->getToolkit();
+    $toolkit->getExifOrientation();
     $this->assertCount(1, $this->fileSystem->scanDirectory('temporary://', '/ima.*/'), 'A temporary file has been created for getting metadata from a remote file.');
 
     // Simulate Drupal shutdown.
@@ -302,6 +308,8 @@ class ToolkitImagemagickTest extends BrowserTestBase {
       foreach ($operations as $op => $values) {
         // Load up a fresh image.
         $image = $this->imageFactory->get($image_uri);
+        /** @var \Drupal\imagemagick\Plugin\ImageToolkit\ImagemagickToolkit $toolkit */
+        $toolkit = $image->getToolkit();
         if (!$image->isValid()) {
           // WEBP may be not supported by the binaries.
           if ($file === 'img-test.webp') {
@@ -311,7 +319,7 @@ class ToolkitImagemagickTest extends BrowserTestBase {
         }
 
         // Check that no multi-frame information is set.
-        $this->assertSame(1, $image->getToolkit()->getFrames());
+        $this->assertSame(1, $toolkit->getFrames());
 
         // Perform our operation.
         $image->apply($values['function'], $values['arguments']);
@@ -328,8 +336,8 @@ class ToolkitImagemagickTest extends BrowserTestBase {
         $this->assertTrue($image->isValid());
 
         // @todo Suite specifics, temporarily adjust tests.
-        $package = $image->getToolkit()->getExecManager()->getPackage();
-        if ($package === 'graphicsmagick') {
+        $package = $toolkit->getExecManager()->getPackageSuite();
+        if ($package === PackageSuite::Graphicsmagick) {
           // @todo Issues with crop and convert on GIF files, investigate.
           if (in_array($file, [
             'image-test.gif', 'image-test-no-transparency.gif',
@@ -339,7 +347,7 @@ class ToolkitImagemagickTest extends BrowserTestBase {
             continue;
           }
         }
-        if ($package === 'imagemagick') {
+        if ($package === PackageSuite::Imagemagick) {
           // @todo Issues with crop and convert on GIF files, investigate.
           if (in_array($file, [
             'image-test.gif', 'image-test-no-transparency.gif',
@@ -352,8 +360,9 @@ class ToolkitImagemagickTest extends BrowserTestBase {
 
         // Reload with GD to be able to check results at pixel level.
         $image = $this->imageFactory->get($file_path, 'gd');
+        /** @var \Drupal\system\Plugin\ImageToolkit\GDToolkit $toolkit */
         $toolkit = $image->getToolkit();
-        $toolkit->getResource();
+        $toolkit->getImage();
         $this->assertTrue($image->isValid());
 
         // Check MIME type if needed.
@@ -367,8 +376,8 @@ class ToolkitImagemagickTest extends BrowserTestBase {
         $correct_dimensions_object = TRUE;
 
         // Check the real dimensions of the image first.
-        $actual_toolkit_width = imagesx($toolkit->getResource());
-        $actual_toolkit_height = imagesy($toolkit->getResource());
+        $actual_toolkit_width = imagesx($toolkit->getImage());
+        $actual_toolkit_height = imagesy($toolkit->getImage());
         if ($actual_toolkit_height != $values['height'] || $actual_toolkit_width != $values['width']) {
           $correct_dimensions_real = FALSE;
         }
@@ -384,12 +393,12 @@ class ToolkitImagemagickTest extends BrowserTestBase {
         $this->assertTrue($correct_dimensions_object, "Image '$file' object after '$op' action is reporting the proper height and width values.  Expected {$values['width']}x{$values['height']}, actual {$actual_image_width}x{$actual_image_height}.");
 
         // GraphicsMagick on WEBP requires higher tolerance.
-        if ($file === 'img-test.webp' && $package === 'graphicsmagick') {
+        if ($file === 'img-test.webp' && $package === PackageSuite::Graphicsmagick) {
           $values['tolerance'] += 4800;
         }
 
         // JPEG colors will always be messed up due to compression.
-        if ($image->getToolkit()->getType() != IMAGETYPE_JPEG) {
+        if ($toolkit->getType() != IMAGETYPE_JPEG) {
           // Now check each of the corners to ensure color correctness.
           foreach ($values['corners'] as $key => $corner) {
             // The test gif that does not have transparency has yellow where the
@@ -452,67 +461,38 @@ class ToolkitImagemagickTest extends BrowserTestBase {
 
       // Reload saved image.
       $image_reloaded = $this->imageFactory->get($file_path, 'gd');
+      /** @var \Drupal\system\Plugin\ImageToolkit\GDToolkit $gd_toolkit */
+      $gd_toolkit = $image_reloaded->getToolkit();
       if (!$image_reloaded->isValid()) {
         $this->fail("Could not load image '$file'.");
-        continue;
       }
       $this->assertEquals(50, $image_reloaded->getWidth(), "Image file '$file' has the correct width.");
       $this->assertEquals(20, $image_reloaded->getHeight(), "Image file '$file' has the correct height.");
       $this->assertEquals(image_type_to_mime_type($type), $image_reloaded->getMimeType(), "Image file '$file' has the correct MIME type.");
-      if ($image_reloaded->getToolkit()->getType() == IMAGETYPE_GIF) {
-        $this->assertEquals('#ffff00', $image_reloaded->getToolkit()->getTransparentColor(), "Image file '$file' has the correct transparent color channel set.");
+      if ($gd_toolkit->getType() == IMAGETYPE_GIF) {
+        $this->assertEquals('#ffff00', $gd_toolkit->getTransparentColor(), "Image file '$file' has the correct transparent color channel set.");
       }
       else {
-        $this->assertEquals(NULL, $image_reloaded->getToolkit()->getTransparentColor(), "Image file '$file' has no color channel set.");
+        $this->assertEquals(NULL, $gd_toolkit->getTransparentColor(), "Image file '$file' has no color channel set.");
       }
-    }
-
-    // Test saving image files with filenames having non-ascii characters.
-    $file_names = [
-      'greek εικόνα δοκιμής.png',
-      'russian Тестовое изображение.png',
-      'simplified chinese 测试图片.png',
-      'japanese 試験画像.png',
-      'arabic صورة الاختبار.png',
-      'armenian փորձարկման պատկերը.png',
-      'bengali পরীক্ষা ইমেজ.png',
-      'hebraic תמונת בדיקה.png',
-      'hindi परीक्षण छवि.png',
-      'viet hình ảnh thử nghiệm.png',
-      'viet \'with quotes\' hình ảnh thử nghiệm.png',
-      'viet "with double quotes" hình ảnh thử nghiệm.png',
-    ];
-    foreach ($file_names as $file) {
-      // @todo on Windows, GraphicsMagick fails.
-      if (substr(PHP_OS, 0, 3) === 'WIN' && $toolkit_settings['binaries'] === 'graphicsmagick') {
-        continue;
-      }
-      // On Windows, skip filenames with non-allowed characters.
-      if (substr(PHP_OS, 0, 3) === 'WIN' && preg_match('/[:*?"<>|]/', $file)) {
-        continue;
-      }
-      $image = $this->imageFactory->get();
-      $this->assertTrue($image->createNew(50, 20, 'png'));
-      $file_path = $this->testDirectory . '/' . $file;
-      $this->assertTrue($image->save($file_path), $file);
-      $image_reloaded = $this->imageFactory->get($file_path, 'gd');
-      $this->assertTrue($image_reloaded->isValid(), "Image file '$file' loaded successfully.");
     }
 
     // Test handling a file stored through a remote stream wrapper.
     $image = $this->imageFactory->get('dummy-remote://image-test.png');
+    /** @var \Drupal\imagemagick\Plugin\ImageToolkit\ImagemagickToolkit $toolkit */
+    $toolkit = $image->getToolkit();
     // Source file should be equal to the copied local temp source file.
-    $this->assertEquals(filesize('dummy-remote://image-test.png'), filesize($image->getToolkit()->arguments()->getSourceLocalPath()));
+    $this->assertEquals(filesize('dummy-remote://image-test.png'), filesize($toolkit->arguments()->getSourceLocalPath()));
     $image->desaturate();
     $this->assertTrue($image->save('dummy-remote://remote-image-test.png'));
     // Destination file should exists, and destination local temp file should
     // have been reset.
-    $this->assertTrue(file_exists($image->getToolkit()->arguments()->getDestination()));
-    $this->assertEquals('dummy-remote://remote-image-test.png', $image->getToolkit()->arguments()->getDestination());
-    $this->assertSame('', $image->getToolkit()->arguments()->getDestinationLocalPath());
+    $this->assertTrue(file_exists($toolkit->arguments()->getDestination()));
+    $this->assertEquals('dummy-remote://remote-image-test.png', $toolkit->arguments()->getDestination());
+    $this->assertSame('', $toolkit->arguments()->getDestinationLocalPath());
 
     // Test retrieval of EXIF information.
-    $this->fileSystem->copy($this->moduleList->getPath('imagemagick') . '/misc/test-exif.jpeg', 'public://', FileSystemInterface::EXISTS_REPLACE);
+    $this->fileSystem->copy($this->moduleList->getPath('imagemagick') . '/misc/test-exif.jpeg', 'public://', FileExists::Replace);
     // The image files that will be tested.
     $image_files = [
       [
@@ -546,7 +526,9 @@ class ToolkitImagemagickTest extends BrowserTestBase {
     ];
     foreach ($image_files as $image_file) {
       $image = $this->imageFactory->get($image_file['path']);
-      $this->assertSame($image_file['orientation'], $image->getToolkit()->getExifOrientation());
+      /** @var \Drupal\imagemagick\Plugin\ImageToolkit\ImagemagickToolkit $toolkit */
+      $toolkit = $image->getToolkit();
+      $this->assertSame($image_file['orientation'], $toolkit->getExifOrientation());
     }
 
     // Test multi-frame GIF image.
@@ -563,9 +545,11 @@ class ToolkitImagemagickTest extends BrowserTestBase {
     ];
     foreach ($image_files as $image_file) {
       $image = $this->imageFactory->get($image_file['source']);
+      /** @var \Drupal\imagemagick\Plugin\ImageToolkit\ImagemagickToolkit $toolkit */
+      $toolkit = $image->getToolkit();
       $this->assertSame($image_file['width'], $image->getWidth());
       $this->assertSame($image_file['height'], $image->getHeight());
-      $this->assertSame($image_file['frames'], $image->getToolkit()->getFrames());
+      $this->assertSame($image_file['frames'], $toolkit->getFrames());
 
       // Scaling should preserve frames.
       $image->scale(30);
@@ -573,21 +557,23 @@ class ToolkitImagemagickTest extends BrowserTestBase {
       $image = $this->imageFactory->get($image_file['destination']);
       $this->assertSame($image_file['scaled_width'], $image->getWidth());
       $this->assertSame($image_file['scaled_height'], $image->getHeight());
-      $this->assertSame($image_file['frames'], $image->getToolkit()->getFrames());
+      $this->assertSame($image_file['frames'], $toolkit->getFrames());
 
       // Converting to PNG should drop frames.
       $image->convert('png');
       $this->assertTrue($image->save($image_file['destination']));
       $image = $this->imageFactory->get($image_file['destination']);
-      $this->assertSame(1, $image->getToolkit()->getFrames());
+      /** @var \Drupal\imagemagick\Plugin\ImageToolkit\ImagemagickToolkit $toolkit */
+      $toolkit = $image->getToolkit();
+      $this->assertSame(1, $toolkit->getFrames());
       $this->assertSame($image_file['scaled_width'], $image->getWidth());
       $this->assertSame($image_file['scaled_height'], $image->getHeight());
-      $this->assertSame(1, $image->getToolkit()->getFrames());
+      $this->assertSame(1, $toolkit->getFrames());
     }
   }
 
   /**
-   * Tests legacy rotate operation.
+   * Test saving image files with filenames having non-ascii characters.
    *
    * @param string $toolkit_id
    *   The id of the toolkit to set up.
@@ -596,253 +582,92 @@ class ToolkitImagemagickTest extends BrowserTestBase {
    * @param array $toolkit_settings
    *   The settings of the toolkit to set up.
    *
-   * @group legacy
-   *
    * @dataProvider providerToolkitConfiguration
    */
-  public function testLegacyRotateOperation(string $toolkit_id, string $toolkit_config, array $toolkit_settings): void {
-    $this->expectDeprecation('\Drupal\imagemagick\Plugin\ImageToolkit\Operation\imagemagick\Rotate is deprecated in imagemagick:8.x-3.3 and is removed from imagemagick:4.0.0. Use the rotate operation provided by the Image Effects module instead. See https://www.drupal.org/project/imagemagick/issues/3251438');
+  public function testNonAsciiFileNames(string $toolkit_id, string $toolkit_config, array $toolkit_settings): void {
+    // @todo on Windows, GraphicsMagick fails.
+    if (substr(PHP_OS, 0, 3) === 'WIN' && $toolkit_settings['binaries'] === 'graphicsmagick') {
+      $this->markTestSkipped('On Windows, GraphicsMagick fails.');
+    }
+
     $this->setUpToolkit($toolkit_id, $toolkit_config, $toolkit_settings);
     $this->prepareImageFileHandling();
 
-    // Typically the corner colors will be unchanged. These colors are in the
-    // order of top-left, top-right, bottom-right, bottom-left.
-    $default_corners = [
-      $this->red,
-      $this->green,
-      $this->blue,
-      $this->transparent,
+    $file_names = [
+      'ascii_test.png',
+      'εικόναδοκιμής.png',
+      'greek εικόνα δοκιμής.png',
+      'russian Тестовое изображение.png',
+      'simplified chinese 测试图片.png',
+      'japanese 試験画像.png',
+      'arabic صورة الاختبار.png',
+      'armenian փորձարկման պատկերը.png',
+      'bengali পরীক্ষা ইমেজ.png',
+      'hebraic תמונת בדיקה.png',
+      'hindi परीक्षण छवि.png',
+      'viet hình ảnh thử nghiệm.png',
+      'viet \'with quotes\' hình ảnh thử nghiệm.png',
+      'viet "with double quotes" hình ảnh thử nghiệm.png',
     ];
-
-    // A list of files that will be tested.
-    $files = [
-      'image-test.png',
-      'image-test.gif',
-      'image-test-no-transparency.gif',
-      'image-test.jpg',
-      'img-test.webp',
-    ];
-
-    // Setup a list of tests to perform on each type.
-    $operations = [
-      'rotate_5' => [
-        'function' => 'rotate',
-        'arguments' => [
-          'degrees' => 5,
-          'background' => '#FF00FF',
-          'resize_filter' => 'Box',
-        ],
-        'width' => 41,
-        'height' => 23,
-        'corners' => array_fill(0, 4, $this->fuchsia),
-        'tolerance' => 5,
-      ],
-      'rotate_minus_10' => [
-        'function' => 'rotate',
-        'arguments' => [
-          'degrees' => -10,
-          'background' => '#FF00FF',
-          'resize_filter' => 'Box',
-        ],
-        'width' => 41,
-        'height' => 26,
-        'corners' => array_fill(0, 4, $this->fuchsia),
-        'tolerance' => 15,
-      ],
-      'rotate_90' => [
-        'function' => 'rotate',
-        'arguments' => ['degrees' => 90, 'background' => '#FF00FF'],
-        'width' => 20,
-        'height' => 40,
-        'corners' => [$this->transparent, $this->red, $this->green, $this->blue],
-        'tolerance' => 0,
-      ],
-      'rotate_transparent_5' => [
-        'function' => 'rotate',
-        'arguments' => ['degrees' => 5, 'resize_filter' => 'Box'],
-        'width' => 41,
-        'height' => 23,
-        'corners' => array_fill(0, 4, $this->transparent),
-        'tolerance' => 0,
-      ],
-      'rotate_transparent_90' => [
-        'function' => 'rotate',
-        'arguments' => ['degrees' => 90],
-        'width' => 20,
-        'height' => 40,
-        'corners' => [$this->transparent, $this->red, $this->green, $this->blue],
-        'tolerance' => 0,
-      ],
-    ];
-
-    foreach ($files as $file) {
-      $image_uri = 'public://' . $file;
-      foreach ($operations as $op => $values) {
-        // Load up a fresh image.
-        $image = $this->imageFactory->get($image_uri);
-        if (!$image->isValid()) {
-          // WEBP may be not supported by the binaries.
-          if ($file === 'img-test.webp') {
-            continue 2;
-          }
-          $this->fail("Could not load image $file.");
-        }
-
-        // Check that no multi-frame information is set.
-        $this->assertSame(1, $image->getToolkit()->getFrames());
-
-        // Perform our operation.
-        $image->apply($values['function'], $values['arguments']);
-
-        // Save and reload image.
-        $file_path = $this->testDirectory . '/' . $op . substr($file, -4);
-        $save_result = $image->save($file_path);
-        // WEBP may be not supported by the binaries.
-        if (!$save_result && $op === 'convert_webp') {
-          continue 2;
-        }
-        $this->assertTrue($save_result);
-        $image = $this->imageFactory->get($file_path);
-        $this->assertTrue($image->isValid());
-
-        $package = $image->getToolkit()->getExecManager()->getPackage();
-
-        // Reload with GD to be able to check results at pixel level.
-        $image = $this->imageFactory->get($file_path, 'gd');
-        $toolkit = $image->getToolkit();
-        $toolkit->getResource();
-        $this->assertTrue($image->isValid());
-
-        // Check MIME type if needed.
-        if (isset($values['mimetype'])) {
-          $this->assertEquals($values['mimetype'], $toolkit->getMimeType(), "Image '$file' after '$op' action has proper MIME type ({$values['mimetype']}).");
-        }
-
-        // To keep from flooding the test with assert values, make a general
-        // value for whether each group of values fail.
-        $correct_dimensions_real = TRUE;
-        $correct_dimensions_object = TRUE;
-
-        // Check the real dimensions of the image first.
-        $actual_toolkit_width = imagesx($toolkit->getResource());
-        $actual_toolkit_height = imagesy($toolkit->getResource());
-        if ($actual_toolkit_height != $values['height'] || $actual_toolkit_width != $values['width']) {
-          $correct_dimensions_real = FALSE;
-        }
-
-        // Check that the image object has an accurate record of the dimensions.
-        $actual_image_width = $image->getWidth();
-        $actual_image_height = $image->getHeight();
-        if ($actual_image_width != $values['width'] || $actual_image_height != $values['height']) {
-          $correct_dimensions_object = FALSE;
-        }
-
-        $this->assertTrue($correct_dimensions_real, "Image '$file' after '$op' action has proper dimensions. Expected {$values['width']}x{$values['height']}, actual {$actual_toolkit_width}x{$actual_toolkit_height}.");
-        $this->assertTrue($correct_dimensions_object, "Image '$file' object after '$op' action is reporting the proper height and width values.  Expected {$values['width']}x{$values['height']}, actual {$actual_image_width}x{$actual_image_height}.");
-
-        // GraphicsMagick on WEBP requires higher tolerance.
-        if ($file === 'img-test.webp' && $package === 'graphicsmagick') {
-          $values['tolerance'] += 4800;
-        }
-
-        // JPEG colors will always be messed up due to compression.
-        if ($image->getToolkit()->getType() != IMAGETYPE_JPEG) {
-          // Now check each of the corners to ensure color correctness.
-          foreach ($values['corners'] as $key => $corner) {
-            // The test gif that does not have transparency has yellow where the
-            // others have transparent.
-            if ($file === 'image-test-no-transparency.gif' && $corner === $this->transparent && $op != 'rotate_transparent_5') {
-              $corner = $this->yellow;
-            }
-            // Get the location of the corner.
-            switch ($key) {
-              case 0:
-                $x = 0;
-                $y = 0;
-                break;
-
-              case 1:
-                $x = $image->getWidth() - 1;
-                $y = 0;
-                break;
-
-              case 2:
-                $x = $image->getWidth() - 1;
-                $y = $image->getHeight() - 1;
-                break;
-
-              case 3:
-                $x = 0;
-                $y = $image->getHeight() - 1;
-                break;
-
-            }
-            $this->assertColorsAreClose($corner, $this->getPixelColor($image, $x, $y), $values['tolerance'], $file, $op);
-          }
-        }
+    foreach ($file_names as $file) {
+      // On Windows, skip filenames with non-allowed characters.
+      if (substr(PHP_OS, 0, 3) === 'WIN' && preg_match('/[:*?"<>|]/', $file)) {
+        continue;
       }
+      $image = $this->imageFactory->get();
+      $this->assertTrue($image->createNew(50, 20, 'png'));
+      $file_path = $this->testDirectory . '/' . $file;
+      $this->assertTrue($image->save($file_path), $file);
+      $image_reloaded = $this->imageFactory->get($file_path, 'gd');
+      $this->assertTrue($image_reloaded->isValid(), "Image file '$file' loaded successfully.");
     }
+  }
 
-    // Test multi-frame GIF image.
-    $image_files = [
-      [
-        'source' => $this->moduleList->getPath('imagemagick') . '/misc/test-multi-frame.gif',
-        'destination' => $this->testDirectory . '/test-multi-frame.gif',
-        'width' => 60,
-        'height' => 29,
-        'frames' => 13,
-        'scaled_width' => 30,
-        'scaled_height' => 15,
-        'rotated_width' => 33,
-        'rotated_height' => 26,
-      ],
-    ];
-    foreach ($image_files as $image_file) {
-      $image = $this->imageFactory->get($image_file['source']);
-      $this->assertSame($image_file['width'], $image->getWidth());
-      $this->assertSame($image_file['height'], $image->getHeight());
-      $this->assertSame($image_file['frames'], $image->getToolkit()->getFrames());
+  /**
+   * Tests parsing an invalid image.
+   *
+   * @param string $toolkit_id
+   *   The id of the toolkit to set up.
+   * @param string $toolkit_config
+   *   The config object of the toolkit to set up.
+   * @param array $toolkit_settings
+   *   The settings of the toolkit to set up.
+   *
+   * @dataProvider providerToolkitConfiguration
+   */
+  public function testInvalidImage(string $toolkit_id, string $toolkit_config, array $toolkit_settings): void {
+    $this->setUpToolkit($toolkit_id, $toolkit_config, $toolkit_settings);
 
-      // Scaling should preserve frames.
-      $image->scale(30);
-      $this->assertTrue($image->save($image_file['destination']));
-      $image = $this->imageFactory->get($image_file['destination']);
-      $this->assertSame($image_file['scaled_width'], $image->getWidth());
-      $this->assertSame($image_file['scaled_height'], $image->getHeight());
-      $this->assertSame($image_file['frames'], $image->getToolkit()->getFrames());
+    // Load up an invalid image.
+    $image = $this->imageFactory->get(\Drupal::root() . '/core/tests/fixtures/files/README.txt');
 
-      // Rotating should preserve frames.
-      $image->rotate(24);
-      $this->assertTrue($image->save($image_file['destination']));
-      $image = $this->imageFactory->get($image_file['destination']);
-      $this->assertSame($image_file['rotated_width'], $image->getWidth());
-      $this->assertSame($image_file['rotated_height'], $image->getHeight());
-      $this->assertSame($image_file['frames'], $image->getToolkit()->getFrames());
+    /** @var \Drupal\imagemagick\Plugin\ImageToolkit\ImagemagickToolkit $toolkit */
+    $toolkit = $image->getToolkit();
 
-      // Converting to PNG should drop frames.
-      $image->convert('png');
-      $this->assertTrue($image->save($image_file['destination']));
-      $image = $this->imageFactory->get($image_file['destination']);
-      $this->assertSame(1, $image->getToolkit()->getFrames());
-      $this->assertSame($image_file['rotated_width'], $image->getWidth());
-      $this->assertSame($image_file['rotated_height'], $image->getHeight());
-      $this->assertSame(1, $image->getToolkit()->getFrames());
-    }
+    $this->assertFalse($toolkit->isValid());
+    $this->assertNull($toolkit->getWidth());
+    $this->assertNull($toolkit->getHeight());
+    $this->assertSame([], $toolkit->getProfiles());
+    $this->assertNull($toolkit->getFrames());
+    $this->assertNull($toolkit->getExifOrientation());
+    $this->assertNull($toolkit->getColorspace());
+    $this->assertSame('', $toolkit->getMimeType());
   }
 
   /**
    * Function for finding a pixel's RGBa values.
    */
   protected function getPixelColor(ImageInterface $image, int $x, int $y): array {
+    /** @var \Drupal\system\Plugin\ImageToolkit\GDToolkit $toolkit */
     $toolkit = $image->getToolkit();
-    $color_index = imagecolorat($toolkit->getResource(), $x, $y);
+    $color_index = imagecolorat($toolkit->getImage(), $x, $y);
 
-    $transparent_index = imagecolortransparent($toolkit->getResource());
+    $transparent_index = imagecolortransparent($toolkit->getImage());
     if ($color_index == $transparent_index) {
       return [0, 0, 0, 127];
     }
 
-    return array_values(imagecolorsforindex($toolkit->getResource(), $color_index));
+    return array_values(imagecolorsforindex($toolkit->getImage(), $color_index));
   }
 
   /**

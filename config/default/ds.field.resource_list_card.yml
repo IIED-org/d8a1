@@ -1,3 +1,4 @@
+langcode: en
 id: resource_list_card
 label: 'Resource list card'
 ui_limit: resource|list_card

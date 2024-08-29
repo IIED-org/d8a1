@@ -1,5 +1,6 @@
 _core:
   default_config_hash: JUHKHJeHl1bWXY41HMIcDR-VmAWvJ4OJycDubCkIeDU
+langcode: en
 minimum_single: 4
 minimum_multiple: 4
 disable_search_threshold: 4

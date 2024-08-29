@@ -5,7 +5,7 @@ namespace Drupal\form_mode_manager\Plugin\EntityRoutingMap;
 use Drupal\form_mode_manager\EntityRoutingMapBase;
 
 /**
- * Class Term.
+ * Maps taxonomy term routes.
  *
  * @EntityRoutingMap(
  *   id = "taxonomy_term",
@@ -20,6 +20,4 @@ use Drupal\form_mode_manager\EntityRoutingMapBase;
  *   }
  * )
  */
-class Term extends EntityRoutingMapBase {
-
-}
+class Term extends EntityRoutingMapBase {}

@@ -6,5 +6,6 @@ dependencies:
     - taxonomy
 id: taxonomy_term.ief
 label: IEF
+description: ''
 targetEntityType: taxonomy_term
 cache: true

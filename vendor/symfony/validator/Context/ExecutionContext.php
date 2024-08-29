@@ -139,10 +139,10 @@ class ExecutionContext implements ExecutionContextInterface
         $this->constraint = $constraint;
     }
 
-    public function addViolation(string $message, array $parameters = []): void
+    public function addViolation(string|\Stringable $message, array $parameters = []): void
     {
         $this->violations->add(new ConstraintViolation(
-            false === $this->translationDomain ? strtr($message, $parameters) : $this->translator->trans($message, $parameters, $this->translationDomain),
+            $this->translator->trans($message, $parameters, $this->translationDomain),
             $message,
             $parameters,
             $this->root,
@@ -154,7 +154,7 @@ class ExecutionContext implements ExecutionContextInterface
         ));
     }
 
-    public function buildViolation(string $message, array $parameters = []): ConstraintViolationBuilderInterface
+    public function buildViolation(string|\Stringable $message, array $parameters = []): ConstraintViolationBuilderInterface
     {
         return new ConstraintViolationBuilder(
             $this->violations,

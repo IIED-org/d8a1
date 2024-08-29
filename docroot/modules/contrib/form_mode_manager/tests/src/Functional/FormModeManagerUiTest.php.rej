@@ -1,0 +1,159 @@
+--- tests/src/Functional/FormModeManagerUiTest.php
++++ tests/src/Functional/FormModeManagerUiTest.php
+@@ -74,7 +74,7 @@ class FormModeManagerUiTest extends FormModeManagerBase {
+   /**
+    * {@inheritdoc}
+    */
+-  protected function setUp() {
++  protected function setUp(): void {
+     parent::setUp();
+ 
+     // Hide field for already existing form modes.
+@@ -89,6 +89,7 @@ class FormModeManagerUiTest extends FormModeManagerBase {
+       $this->terms[] = $this->createTerm($this->vocabulary, ['title' => "Term $i"]);
+       $this->nodes[] = $this->createNode(['type' => $this->nodeTypeFmm1->id()]);
+       $this->blocks[] = $this->createBlockContent(['type' => $this->blockType->id()]);
++
+       $this->users[] = $this->createUser([
+         'access content',
+         'access administration pages',
+@@ -113,8 +114,14 @@ class FormModeManagerUiTest extends FormModeManagerBase {
+     $this->drupalLogin($this->rootUser);
+ 
+     $this->blockFormMode = $this->drupalCreateFormMode('block_content');
+-    $this->setUpFormMode("admin/structure/block/block-content/manage/{$this->blockType->id()}/form-display", $this->blockFormMode->id());
+-    $this->setHiddenFieldFormMode("admin/structure/block/block-content/manage/{$this->blockType->id()}/form-display", 'info');
++    $this->setUpFormMode(
++      $this->blockAdminPath . "manage/{$this->blockType->id()}/form-display",
++      $this->blockFormMode->id()
++    );
++    $this->setHiddenFieldFormMode(
++      $this->blockAdminPath . "manage/{$this->blockType->id()}/form-display",
++      'info'
++    );
+ 
+     $this->taxonomyFormMode = $this->drupalCreateFormMode('taxonomy_term');
+     $this->setUpFormMode("admin/structure/taxonomy/manage/{$this->vocabulary->id()}/overview/form-display", $this->taxonomyFormMode->id());
+@@ -152,17 +159,16 @@ class FormModeManagerUiTest extends FormModeManagerBase {
+   public function testFieldFormFormModeManager(array $test_parameters, $add_path, $edit_path, $field_name) {
+     $form_mode_machine_name = $this->{$test_parameters[2]}->id();
+     $this->setUsersTestPermissions(["use $form_mode_machine_name form mode"]);
+-    $add_path = new FormattableMarkup($add_path, ['@type' => isset($test_parameters[1]) ? $this->{$test_parameters[1]}->id() : 'people']);
+-    $edit_path = new FormattableMarkup($edit_path, ['@id' => $this->{$test_parameters[0]}[0]->id()]);
++    $edit_path = (string) new FormattableMarkup($edit_path, ['@id' => $this->{$test_parameters[0]}[0]->id()]);
++    $add_path = (string) new FormattableMarkup($add_path, ['@type' => isset($test_parameters[1]) ? $this->{$test_parameters[1]}->id() : 'people']);
+     $form_mode_name = $this->formModeManager->getFormModeMachineName($form_mode_machine_name);
+-
+-    $this->drupalGet("$add_path/$form_mode_name");
++    $this->drupalGet($add_path . "/" . $form_mode_name);
+     $this->assertSession()->statusCodeEquals(200);
+     $this->assertSession()->fieldExists($field_name);
+     $this->drupalGet($add_path);
+     $this->assertSession()->statusCodeEquals(200);
+     $this->assertSession()->fieldNotExists($field_name);
+-    $this->drupalGet("$edit_path/$form_mode_name");
++    $this->drupalGet($edit_path . "/" . $form_mode_name);
+     $this->assertSession()->statusCodeEquals(200);
+     $this->assertSession()->fieldExists($field_name);
+     $this->drupalGet($edit_path);
+@@ -187,7 +193,7 @@ class FormModeManagerUiTest extends FormModeManagerBase {
+         'userFormMode',
+       ],
+       'admin/@type/create',
+-      "user/@id/edit",
++      'user/@id/edit',
+       'timezone',
+     ];
+     $data[] = [
+@@ -197,7 +203,7 @@ class FormModeManagerUiTest extends FormModeManagerBase {
+         'nodeFormMode',
+       ],
+       'node/add/@type',
+-      "node/@id/edit",
++      'node/@id/edit',
+       'body[0][value]',
+     ];
+     $data[] = [
+@@ -207,7 +213,11 @@ class FormModeManagerUiTest extends FormModeManagerBase {
+         'blockFormMode',
+       ],
+       'block/add/@type',
+-      "block/@id",
++      // Use correct path based on Drupal core version. Unable to use variable
++      // as this function is called before parent::setUp().
++      version_compare(\Drupal::VERSION, '10.1.0', '>=')
++        ? 'admin/content/block/@id'
++        : 'block/@id',
+       'info[0][value]',
+     ];
+     $data[] = [
+@@ -217,7 +227,7 @@ class FormModeManagerUiTest extends FormModeManagerBase {
+         'taxonomyFormMode',
+       ],
+       'admin/structure/taxonomy/manage/@type/add',
+-      "taxonomy/term/@id/edit",
++      'taxonomy/term/@id/edit',
+       'description[0][value]',
+     ];
+     return $data;
+@@ -298,6 +308,8 @@ class FormModeManagerUiTest extends FormModeManagerBase {
+       ->grantPermission('access content overview')
+       ->save();
+ 
++    // Refresh local actions after role permission change.
++    drupal_flush_all_caches();
+     $this->drupalLogin($this->adminUser);
+     $this->drupalGet('admin/content');
+     $this->assertSession()
+@@ -329,17 +341,29 @@ class FormModeManagerUiTest extends FormModeManagerBase {
+   public function testFormModeManagerUserOverview() {
+     $user_form_mode = $this->drupalCreateFormMode('user');
+ 
++    $this->drupalGet("admin/config/people/accounts/form-display");
++    $this->assertSession()->statusCodeEquals(200);
++    $edit = ["display_modes_custom[{$this->formModeManager->getFormModeMachineName($user_form_mode->id())}]" => TRUE];
++    $this->drupalGet("admin/config/people/accounts/form-display");
++    $this->submitForm($edit, 'Save');
++
+     Role::load($this->adminUser->getRoles()[1])
+       ->grantPermission('administer users')
+       ->grantPermission('use ' . $user_form_mode->id() . ' form mode')
+       ->save();
+ 
++    // Refresh local actions after role permission change.
++    drupal_flush_all_caches();
++
+     $this->drupalGet("admin/config/people/accounts/form-display");
++    $this->assertSession()->statusCodeEquals(200);
+     $edit = ["display_modes_custom[{$this->formModeManager->getFormModeMachineName($user_form_mode->id())}]" => TRUE];
+-    $this->drupalPostForm("admin/config/people/accounts/form-display", $edit, 'Save');
++    $this->drupalGet("admin/config/people/accounts/form-display");
++    $this->submitForm($edit, 'Save');
+ 
+     $this->drupalLogin($this->adminUser);
+     $this->drupalGet('admin/people');
++    $this->assertSession()->statusCodeEquals(200);
+     $this->assertSession()
+       ->linkExists("Add user as {$user_form_mode->label()}");
+     $this->assertSession()
+@@ -355,14 +379,19 @@ class FormModeManagerUiTest extends FormModeManagerBase {
+     $term_form_mode = $this->drupalCreateFormMode('taxonomy_term');
+ 
+     $this->drupalGet("admin/structure/taxonomy/manage/{$this->vocabulary->id()}/overview/form-display");
++    $this->assertSession()->statusCodeEquals(200);
+     $edit = ["display_modes_custom[{$this->formModeManager->getFormModeMachineName($term_form_mode->id())}]" => TRUE];
+-    $this->drupalPostForm("admin/structure/taxonomy/manage/{$this->vocabulary->id()}/overview/form-display", $edit, 'Save');
++    $this->drupalGet("admin/structure/taxonomy/manage/{$this->vocabulary->id()}/overview/form-display");
++    $this->submitForm($edit, 'Save');
+ 
+     Role::load($this->adminUser->getRoles()[1])
+       ->grantPermission('administer taxonomy')
+       ->grantPermission('use ' . $term_form_mode->id() . ' form mode')
+       ->save();
+ 
++    // Refresh local actions after role permission change.
++    drupal_flush_all_caches();
++
+     $this->drupalLogin($this->adminUser);
+     $this->drupalGet("admin/structure/taxonomy/manage/{$this->vocabulary->id()}/overview");
+     $this->assertSession()

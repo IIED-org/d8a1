@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\imagemagick\Kernel;
 
+use Drupal\imagemagick\ImagemagickExecManagerInterface;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
@@ -19,28 +22,27 @@ class ExecManagerTest extends KernelTestBase {
   /**
    * Test missing command on ExecManager.
    */
-  public function testExecManagerCommandNotFound(): void {
-    $exec_manager = \Drupal::service('imagemagick.exec_manager');
+  public function testProcessCommandNotFound(): void {
+    $execManager = \Drupal::service(ImagemagickExecManagerInterface::class);
     $output = '';
     $error = '';
-    $expected = substr(PHP_OS, 0, 3) !== 'WIN' ? 127 : 1;
-    $ret = $exec_manager->runOsShell('pinkpanther', '-inspector Clouseau', 'blake', $output, $error);
-    $this->assertEquals($expected, $ret, $error);
+    $ret = $execManager->runProcess(['pinkpanther', '-inspector', 'Clouseau'], 'blake', $output, $error);
+    $this->assertTrue(in_array($ret, [1, 127], TRUE), $error);
   }
 
   /**
    * Test timeout on ExecManager.
    */
-  public function testExecManagerTimeout(): void {
-    $exec_manager = \Drupal::service('imagemagick.exec_manager');
+  public function testProcessTimeout(): void {
+    $execManager = \Drupal::service(ImagemagickExecManagerInterface::class);
     $output = '';
     $error = '';
-    $expected = substr(PHP_OS, 0, 3) !== 'WIN' ? 143 : 1;
+    $expected = substr(PHP_OS, 0, 3) !== 'WIN' ? [143, -1] : [1];
     // Set a short timeout (1 sec.) and run a process that is expected to last
     // longer (10 secs.). Should return a 'terminate' exit code.
-    $exec_manager->setTimeout(1);
-    $ret = $exec_manager->runOsShell('sleep', '10', 'sleep', $output, $error);
-    $this->assertEquals($expected, $ret, $error);
+    $execManager->setTimeout(1);
+    $ret = $execManager->runProcess(['sleep', '10'], 'sleep', $output, $error);
+    $this->assertTrue(in_array($ret, $expected, TRUE), $error);
   }
 
 }

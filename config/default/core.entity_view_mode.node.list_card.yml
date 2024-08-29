@@ -6,5 +6,6 @@ dependencies:
     - node
 id: node.list_card
 label: 'List card'
+description: ''
 targetEntityType: node
 cache: true

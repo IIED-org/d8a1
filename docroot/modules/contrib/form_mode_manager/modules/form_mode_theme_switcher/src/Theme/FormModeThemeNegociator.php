@@ -2,14 +2,14 @@
 
 namespace Drupal\form_mode_manager_theme_switcher\Theme;
 
-use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Theme\ThemeNegotiatorInterface;
 use Symfony\Component\Routing\Route;
 
 /**
- * Class FormModeThemeNegociator.
+ * Provides a theme negotiator to switch themes based on form modes.
  */
 class FormModeThemeNegociator implements ThemeNegotiatorInterface {
 

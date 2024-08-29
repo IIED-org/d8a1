@@ -22,6 +22,7 @@ class FormModeManagerExamplesTest extends BrowserTestBase {
     'menu_ui',
     'path',
     'node',
+    'field_ui',
     'block',
     'block_content',
     'media',
@@ -39,13 +40,12 @@ class FormModeManagerExamplesTest extends BrowserTestBase {
    */
   public function setUp(): void {
     parent::setUp();
-    // Theme needs to be set before enabling form_mode_manager_examples because,
-    // of dependency.
-    \Drupal::service('theme_installer')->install(['bartik']);
-    $this->config('system.theme')
-      ->set('default', 'bartik')
-      ->save();
-    $this->assertTrue(\Drupal::service('module_installer')->install(['form_mode_manager_examples']), 'form_mode_manager_examples installed.');
+
+    $this->assertTrue(
+      \Drupal::service('module_installer')
+        ->install(['form_mode_manager_examples']),
+      'form_mode_manager_examples installed.'
+    );
     $this->drupalPlaceBlock('local_actions_block');
     \Drupal::service('router.builder')->rebuild();
   }

@@ -7,8 +7,8 @@ use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Routing\RouteSubscriberBase;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Drupal\form_mode_manager\FormModeManagerInterface;
 use Drupal\form_mode_manager\EntityRoutingMapManager;
+use Drupal\form_mode_manager\FormModeManagerInterface;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 

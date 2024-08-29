@@ -1,3 +1,4 @@
+langcode: en
 id: initiative_prob_overview
 label: 'Initiative prob overview'
 ui_limit: initiative|full

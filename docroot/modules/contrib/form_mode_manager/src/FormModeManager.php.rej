@@ -1,0 +1,17 @@
+--- src/FormModeManager.php
++++ src/FormModeManager.php
+@@ -71,7 +71,13 @@ class FormModeManager implements FormModeManagerInterface {
+    * @param \Drupal\form_mode_manager\EntityRoutingMapManager $plugin_routes_manager
+    *   Plugin EntityRoutingMap to retrieve entity form operation routes.
+    */
+-  public function __construct(EntityTypeManagerInterface $entity_type_manager, ConfigFactoryInterface $config_factory, EntityDisplayRepositoryInterface $entity_display_repository, EntityTypeBundleInfoInterface $entity_type_bundle_info, EntityRoutingMapManager $plugin_routes_manager) {
++  public function __construct(
++    EntityTypeManagerInterface $entity_type_manager,
++    ConfigFactoryInterface $config_factory,
++    EntityDisplayRepositoryInterface $entity_display_repository,
++    EntityTypeBundleInfoInterface $entity_type_bundle_info,
++    EntityRoutingMapManager $plugin_routes_manager
++    ) {
+     $this->entityTypeManager = $entity_type_manager;
+     $this->configFactory = $config_factory;
+     $this->entityDisplayRepository = $entity_display_repository;

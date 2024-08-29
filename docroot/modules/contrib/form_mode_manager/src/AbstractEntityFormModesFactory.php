@@ -165,7 +165,7 @@ abstract class AbstractEntityFormModesFactory implements EntityFormModeManagerIn
       $entity_type_id = $route_object->getOption('_form_mode_manager_entity_type_id');
     }
 
-    $entity_type_id = isset($entity_type_id) ? $entity_type_id : $entity->getEntityTypeId();
+    $entity_type_id = $entity_type_id ?? $entity->getEntityTypeId();
     $operation = $this->getFormModeOperationName($this->formModeManager->getFormModeMachineName($form_mode_id));
     $is_active_form_mode = $this->formModeManager->isActive($entity_type_id, $bundle_id, $operation);
 

@@ -37,7 +37,7 @@ class SimpleEntityFormModes extends AbstractEntityFormModesFactory {
       $entity_type_id = $route_entity_type_info['entity_type_id'];
     }
 
-    $entity_type_id = isset($entity_type_id) ? $entity_type_id : $entity->getEntityTypeId();
+    $entity_type_id = $entity_type_id ?? $entity->getEntityTypeId();
     $operation = $this->getFormModeOperationName($this->formModeManager->getFormModeMachineName($form_mode_id));
 
     return AccessResult::allowedIf($this->formModeManager->isActive($entity_type_id, $entity_type_id, $operation))
@@ -59,7 +59,7 @@ class SimpleEntityFormModes extends AbstractEntityFormModesFactory {
 
     return [
       'entity_type_id' => $entity_type_id,
-      'form_mode' => isset($form_mode_definition[$entity_type_id][$form_mode]) ? $form_mode_definition[$entity_type_id][$form_mode] : NULL,
+      'form_mode' => $form_mode_definition[$entity_type_id][$form_mode] ?? NULL,
     ];
   }
 

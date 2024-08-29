@@ -6,19 +6,22 @@ use Drupal\Core\Cache\CacheTagsInvalidatorInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\ConfigFormBase;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\form_mode_manager\FormModeManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Base for implementing system configuration forms for Form Mode Manager.
  *
- * This abstract class allow you to play with all entities and form modes,
- * without write ton of redondant code to loop on each entities compatible,
- * with form mode manager and his form modes associated.
+ * This abstract class allows interaction with all entities and form modes,
+ * without writing redundant code to loop through each compatible entity,
+ * with the form mode manager and its associated form modes.
  */
 abstract class FormModeManagerFormBase extends ConfigFormBase {
+
+  use StringTranslationTrait;
 
   /**
    * The entity type manager service.
@@ -83,7 +86,13 @@ abstract class FormModeManagerFormBase extends ConfigFormBase {
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager service.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, EntityDisplayRepositoryInterface $entity_display_repository, FormModeManagerInterface $form_mode_manager, CacheTagsInvalidatorInterface $cache_tags_invalidator, EntityTypeManagerInterface $entity_type_manager) {
+  public function __construct(
+    ConfigFactoryInterface $config_factory,
+    EntityDisplayRepositoryInterface $entity_display_repository,
+    FormModeManagerInterface $form_mode_manager,
+    CacheTagsInvalidatorInterface $cache_tags_invalidator,
+    EntityTypeManagerInterface $entity_type_manager
+  ) {
     parent::__construct($config_factory);
     $this->settings = $this->getConfig();
     $this->entityDisplayRepository = $entity_display_repository;
@@ -136,7 +145,7 @@ abstract class FormModeManagerFormBase extends ConfigFormBase {
     $form_modes = $this->formModeManager->getAllFormModesDefinitions($this->ignoreExcluded, $this->ignoreActiveDisplay);
 
     if (empty($form_modes)) {
-      $form['empty']['#markup'] = t('Any Form modes activated in form display found.');
+      $form['empty']['#markup'] = $this->t('Any Form modes activated in form display found.');
 
       return $form;
     }

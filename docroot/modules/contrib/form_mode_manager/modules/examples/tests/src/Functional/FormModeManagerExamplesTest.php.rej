@@ -1,0 +1,25 @@
+--- modules/examples/tests/src/Functional/FormModeManagerExamplesTest.php
++++ modules/examples/tests/src/Functional/FormModeManagerExamplesTest.php
+@@ -38,15 +38,14 @@ class FormModeManagerExamplesTest extends BrowserTestBase {
+   /**
+    * {@inheritdoc}
+    */
+-  public function setUp() {
++  public function setUp(): void {
+     parent::setUp();
+-    // Theme needs to be set before enabling form_mode_manager_examples because,
+-    // of dependency.
+-    \Drupal::service('theme_installer')->install(['bartik']);
+-    $this->config('system.theme')
+-      ->set('default', 'bartik')
+-      ->save();
+-    $this->assertTrue(\Drupal::service('module_installer')->install(['form_mode_manager_examples']), 'form_mode_manager_examples installed.');
++
++    $this->assertTrue(
++      \Drupal::service('module_installer')
++        ->install(['form_mode_manager_examples']),
++      'form_mode_manager_examples installed.'
++    );
+     $this->drupalPlaceBlock('local_actions_block');
+     \Drupal::service('router.builder')->rebuild();
+   }

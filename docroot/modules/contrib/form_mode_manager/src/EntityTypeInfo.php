@@ -4,6 +4,7 @@ namespace Drupal\form_mode_manager;
 
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\Exception\UndefinedLinkTemplateException;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -111,14 +112,20 @@ class EntityTypeInfo implements ContainerInjectionInterface {
     $form_modes = $this->formModeManager->getFormModesByEntity($entity->getEntityTypeId());
     foreach ($form_modes as $form_mode_name => $form_mode) {
       if ($this->grantAccessToFormModeOperation($form_mode, $entity)) {
-        $operations += [
-          $form_mode_name => [
-            'title' => $this->t('Edit as @form_mode_name', ['@form_mode_name' => $form_mode['label']])
-              ->render(),
-            'url' => $entity->toUrl("edit-form.$form_mode_name"),
-            'weight' => 31,
-          ],
-        ];
+        try {
+          $operations += [
+            $form_mode_name => [
+              'title' => $this->t('Edit as @form_mode_name', ['@form_mode_name' => $form_mode['label']])
+                ->render(),
+              'url' => $entity->toUrl("edit-form.$form_mode_name"),
+              'weight' => 31,
+            ],
+          ];
+        }
+        // There is no link template for this form mode; do not add operation.
+        catch (UndefinedLinkTemplateException $e) {
+          // No-op.
+        }
       }
     }
 

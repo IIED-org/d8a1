@@ -3,20 +3,20 @@
 namespace Drupal\form_mode_manager;
 
 use Drupal\Component\Plugin\PluginBase;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Base class for form mode manager entity routing plugin.
  *
- * This plugin are used to abstract the concepts implemented by EntityPlugin.
- * In Entity API we have possibility to linked entity form 'handlers' to a,
- * specific FormClass, but the operation name and routes linked with her are,
- * very arbitrary and unpredictable specially in custom entities cases.
- * In that plugin you have the possibility to map operation and,
- * others useful information about entity to reduce complexity of,
- * retrieving each possible cases.
+ * This plugin is used to abstract the concepts implemented by EntityPlugin.
+ * In the Entity API, we have the possibility to link entity form 'handlers' to
+ * a specific FormClass, but the operation name and routes linked with it are
+ * very arbitrary and unpredictable, especially in custom entities cases.
+ * In this plugin, you have the possibility to map operations and
+ * other useful information about an entity to reduce the complexity of
+ * retrieving each possible case.
  */
 abstract class EntityRoutingMapBase extends PluginBase implements EntityRoutingMapInterface, ContainerFactoryPluginInterface {
 

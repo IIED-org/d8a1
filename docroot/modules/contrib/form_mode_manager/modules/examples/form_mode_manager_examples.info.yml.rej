@@ -1,0 +1,23 @@
+--- modules/examples/form_mode_manager_examples.info.yml
++++ modules/examples/form_mode_manager_examples.info.yml
+@@ -1,13 +1,15 @@
+ name: Form Mode Manager examples
+ type: module
+-description: Form Mode Manager allows to use form_mode implement on Drupal 8 on each Entity.
+-core: 8.x
+-core_version_requirement: ^8 || ^9
++description: Form Mode Manager allows to use form_mode with each entity.
++core_version_requirement: ^8.8 || ^9 || ^10
+ package: Examples
+ dependencies:
+   - drupal:node
++  - drupal:file
+   - drupal:image
+   - drupal:user
++  - drupal:toolbar
++  - drupal:path
++  - drupal:text
++  - drupal:menu_ui
+   - form_mode_manager:form_mode_manager
+-theme:
+-  - bartik

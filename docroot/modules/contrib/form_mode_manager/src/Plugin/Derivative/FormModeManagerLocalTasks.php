@@ -4,9 +4,9 @@ namespace Drupal\form_mode_manager\Plugin\Derivative;
 
 use Drupal\Component\Plugin\Derivative\DeriverBase;
 use Drupal\Core\Plugin\Discovery\ContainerDeriverInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\form_mode_manager\FormModeManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
  * Defines dynamic 'Form Mode Manager' local tasks.
@@ -93,8 +93,8 @@ class FormModeManagerLocalTasks extends DeriverBase implements ContainerDeriverI
    * @param bool $is_default_task
    *   Determine context of tasks (defaults or form mode manager) derivative.
    *
-   * @TODO Use EntityRoutingMap to format an entity generic route_name.
-   * @TODO Use EntityRoutingMap to retrieve parent_id route_name.
+   * @todo Use EntityRoutingMap to format an entity generic route_name.
+   * @todo Use EntityRoutingMap to retrieve parent_id route_name.
    */
   private function blockContentEnhancer($element_name, $entity_type_id, $is_default_task = TRUE) {
     if ('block_content' === $entity_type_id) {
@@ -112,8 +112,8 @@ class FormModeManagerLocalTasks extends DeriverBase implements ContainerDeriverI
    * @param string $entity_type_id
    *   The entity type ID.
    *
-   * @TODO Use EntityRoutingMap to format an entity generic route_name.
-   * @TODO Use EntityRoutingMap to retrieve parent_id route_name.
+   * @todo Use EntityRoutingMap to format an entity generic route_name.
+   * @todo Use EntityRoutingMap to retrieve parent_id route_name.
    */
   private function setDefaultTasks($entity_type_id) {
     $this->derivatives["form_mode_manager.$entity_type_id.default.task_tab"] = [
@@ -159,9 +159,9 @@ class FormModeManagerLocalTasks extends DeriverBase implements ContainerDeriverI
    * @param string $entity_type_id
    *   The entity type ID.
    *
-   * @TODO Use EntityRoutingMap to format an entity generic route_name.
-   * @TODO Use EntityRoutingMap to retrieve base_route.
-   * @TODO Make this part more generic now.
+   * @todo Use EntityRoutingMap to format an entity generic route_name.
+   * @todo Use EntityRoutingMap to retrieve base_route.
+   * @todo Make this part more generic now.
    */
   private function setUserRegisterTasks(array $form_mode, $entity_type_id) {
     if ('user' === $entity_type_id) {
@@ -181,8 +181,8 @@ class FormModeManagerLocalTasks extends DeriverBase implements ContainerDeriverI
    * @param string $entity_type_id
    *   The entity type ID.
    *
-   * @TODO Use EntityRoutingMap to format an entity generic route_name.
-   * @TODO Use EntityRoutingMap to retrieve parent_id route_name.
+   * @todo Use EntityRoutingMap to format an entity generic route_name.
+   * @todo Use EntityRoutingMap to retrieve parent_id route_name.
    */
   private function setFormModesTasksBase(array $form_mode, $entity_type_id) {
     $this->derivatives["form_mode_manager.{$form_mode['id']}.task_tab"] = [

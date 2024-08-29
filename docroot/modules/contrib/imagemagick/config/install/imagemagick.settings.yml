@@ -1,10 +1,10 @@
 quality: 75
 binaries: 'imagemagick'
+imagemagick_version: 'v6'
 path_to_binaries: ''
 prepend: ''
 log_warnings: TRUE
 debug: FALSE
-locale: 'en_US.UTF-8'
 advanced:
   density: 0
   colorspace: '0'

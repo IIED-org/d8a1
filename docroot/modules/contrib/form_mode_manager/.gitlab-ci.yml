@@ -1,0 +1,26 @@
+include:
+  - project: $_GITLAB_TEMPLATES_REPO
+    ref: $_GITLAB_TEMPLATES_REF
+    file:
+      - '/includes/include.drupalci.main.yml'
+      - '/includes/include.drupalci.variables.yml'
+      - '/includes/include.drupalci.workflows.yml'
+
+variables:
+  SKIP_ESLINT: '1'
+
+phpcs:
+  allow_failure: false
+
+phpstan:
+  stage: validate
+  rules:
+    - if: '$SKIP_PHPSTAN == "1"'
+      when: never
+    - when: on_success
+  artifacts:
+    when: always
+    reports:
+      codequality: phpstan-report.json
+  script:
+    - vendor/bin/phpstan analyze --memory-limit=2G --no-interaction --no-progress --error-format=gitlab $_WEB_ROOT/modules/custom | tee phpstan-report.json

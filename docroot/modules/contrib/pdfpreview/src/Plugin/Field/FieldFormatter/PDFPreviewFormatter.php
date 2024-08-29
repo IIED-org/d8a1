@@ -2,13 +2,12 @@
 
 namespace Drupal\pdfpreview\Plugin\Field\FieldFormatter;
 
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Image\ImageFactory;
 use Drupal\image\Plugin\Field\FieldFormatter\ImageFormatter;
-use Drupal\Core\Cache\Cache;
-use Drupal\Core\Url;
 use Drupal\pdfpreview\PDFPreviewGenerator;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -41,6 +40,7 @@ class PDFPreviewFormatter extends ImageFormatter {
 
   /**
    * The PDF Preview generator.
+   *
    * @var \Drupal\pdfpreview\PDFPreviewGenerator
    */
   protected $pdfPreviewGenerator;

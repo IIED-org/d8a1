@@ -1,0 +1,12 @@
+--- modules/form_mode_theme_switcher/form_mode_manager_theme_switcher.info.yml
++++ modules/form_mode_theme_switcher/form_mode_manager_theme_switcher.info.yml
+@@ -1,8 +1,7 @@
+ name: Form Mode Manager Theme Switcher
+ type: module
+ description: Allows to define theme applicable per form_mode using form mode manager.
+-core: 8.x
+-core_version_requirement: ^8 || ^9
++core_version_requirement: ^8.8 || ^9 || ^10
+ package: Fields
+ configure: form_mode_manager.theme_switcher_settings
+ dependencies:

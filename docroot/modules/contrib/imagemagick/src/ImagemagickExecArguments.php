@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\imagemagick;
 
 /**
@@ -13,125 +15,102 @@ class ImagemagickExecArguments {
   const APPEND = -1;
 
   /**
-   * Mode for arguments to be placed before the source path.
-   */
-  const PRE_SOURCE = 0;
-
-  /**
-   * Mode for arguments to be placed after the source path.
-   */
-  const POST_SOURCE = 1;
-
-  /**
-   * Mode for arguments not to be placed on the command line.
-   */
-  const INTERNAL = 2;
-
-  /**
-   * The ImageMagick execution manager service.
-   *
-   * @var \Drupal\imagemagick\ImagemagickExecManagerInterface
-   */
-  protected $execManager;
-
-  /**
    * The array of command line arguments to be used by 'convert'.
    *
-   * @var string[]
+   * @var array<int,array{mode: ArgumentMode, argument: string, info: array}>
    */
-  protected $arguments = [];
+  protected array $arguments = [];
 
   /**
    * Path of the image file.
-   *
-   * @var string
    */
-  protected $source = '';
+  protected string $source = '';
 
   /**
    * The local filesystem path to the source image file.
-   *
-   * @var string
    */
-  protected $sourceLocalPath = '';
+  protected string $sourceLocalPath = '';
 
   /**
    * The source image format.
-   *
-   * @var string
    */
-  protected $sourceFormat = '';
+  protected string $sourceFormat = '';
 
   /**
    * The source image frames to access.
-   *
-   * @var string
    */
-  protected $sourceFrames;
+  protected string $sourceFrames;
 
   /**
    * The image destination URI/path on saving.
-   *
-   * @var string
    */
-  protected $destination = NULL;
+  protected ?string $destination = NULL;
 
   /**
    * The local filesystem path to the image destination.
-   *
-   * @var string
    */
-  protected $destinationLocalPath = '';
+  protected string $destinationLocalPath = '';
 
   /**
    * The image destination format on saving.
-   *
-   * @var string
    */
-  protected $destinationFormat = '';
+  protected string $destinationFormat = '';
 
   /**
    * Constructs an ImagemagickExecArguments object.
    *
-   * @param \Drupal\imagemagick\ImagemagickExecManagerInterface $exec_manager
+   * @param \Drupal\imagemagick\ImagemagickExecManagerInterface $execManager
    *   The ImageMagick execution manager service.
    */
-  public function __construct(ImagemagickExecManagerInterface $exec_manager) {
-    $this->execManager = $exec_manager;
+  public function __construct(
+    protected readonly ImagemagickExecManagerInterface $execManager,
+  ) {
   }
 
   /**
-   * Gets a portion of the command line arguments string.
+   * Gets the arguments as a list of command line arguments.
    *
-   * @param int $mode
-   *   The mode of the string on the command line. Can be self::PRE_SOURCE or
-   *   self::POST_SOURCE.
+   * @param ArgumentMode $mode
+   *   The mode of the string on the command line.
    *
-   * @return string
-   *   The sring of command line arguments.
+   * @return list<string>
+   *   The list.
    */
-  public function toString(int $mode): string {
-    if (!$this->arguments) {
-      return '';
-    }
+  public function toArray(ArgumentMode $mode): array {
     $ret = [];
     foreach ($this->arguments as $a) {
       if ($a['mode'] === $mode) {
         $ret[] = $a['argument'];
       }
     }
-    return implode(' ', $ret);
+    return $ret;
+  }
+
+  /**
+   * Gets a portion of the command line arguments string, for debugging.
+   *
+   * @param ArgumentMode $mode
+   *   The mode of the string on the command line.
+   *
+   * @return string
+   *   The string of command line arguments.
+   */
+  public function toDebugString(ArgumentMode $mode): string {
+    if (!$this->arguments) {
+      return '';
+    }
+    return '[' . implode('] [', $this->toArray($mode)) . ']';
   }
 
   /**
    * Adds a command line argument.
    *
-   * @param string $argument
-   *   The command line argument to be added.
-   * @param int $mode
+   * @param string[] $arguments
+   *   The command line arguments to be added.
+   * @param ArgumentMode $mode
    *   (optional) The mode of the argument in the command line. Determines if
    *   the argument should be placed before or after the source image file path.
-   *   Defaults to self::POST_SOURCE.
+   *   Defaults to ArgumentMode::PostSource.
    * @param int $index
    *   (optional) The position of the argument in the arguments array.
    *   Reflects the sequence of arguments in the command line. Defaults to
@@ -142,21 +121,30 @@ class ImagemagickExecArguments {
    *
    * @return $this
    */
-  public function add(string $argument, int $mode = self::POST_SOURCE, int $index = self::APPEND, array $info = []): ImagemagickExecArguments {
-    $argument = [
-      'argument' => $argument,
-      'mode' => $mode,
-      'info' => $info,
-    ];
-    if ($index === self::APPEND) {
-      $this->arguments[] = $argument;
+  public function add(array $arguments, ArgumentMode $mode = ArgumentMode::PostSource, int $index = self::APPEND, array $info = []): static {
+    if ($arguments === []) {
+      return $this;
     }
-    elseif ($index === 0) {
-      array_unshift($this->arguments, $argument);
+
+    // Add each token as a separate argument.
+    foreach ($arguments as $token) {
+      $arg = [
+        'argument' => $token,
+        'mode' => $mode,
+        'info' => $info,
+      ];
+      if ($index === self::APPEND) {
+        $this->arguments[] = $arg;
+      }
+      elseif ($index === 0) {
+        array_unshift($this->arguments, $arg);
+        $index++;
+      }
+      else {
+        array_splice($this->arguments, $index++, 0, [$arg]);
+      }
     }
-    else {
-      array_splice($this->arguments, $index, 0, [$argument]);
-    }
+
     return $this;
   }
 
@@ -165,7 +153,7 @@ class ImagemagickExecArguments {
    *
    * @param string $regex
    *   The regular expression pattern to be matched in the argument.
-   * @param int $mode
+   * @param ?ArgumentMode $mode
    *   (optional) If set, limits the search to the mode of the argument.
    *   Defaults to NULL.
    * @param array $info
@@ -175,10 +163,10 @@ class ImagemagickExecArguments {
    * @return array
    *   Returns an array with the matching arguments.
    */
-  public function find(string $regex, int $mode = NULL, array $info = []): array {
+  public function find(string $regex, ?ArgumentMode $mode = NULL, array $info = []): array {
     $ret = [];
     foreach ($this->arguments as $i => $a) {
-      if ($mode !== NULL && $a['mode'] !== $mode) {
+      if ($mode && $a['mode'] !== $mode) {
         continue;
 
       }
@@ -189,7 +177,7 @@ class ImagemagickExecArguments {
 
         }
       }
-      if (preg_match($regex, $a['argument']) === 1) {
+      if (preg_match($regex, (string) $a['argument']) === 1) {
         $ret[$i] = $a;
       }
     }
@@ -204,7 +192,7 @@ class ImagemagickExecArguments {
    *
    * @return $this
    */
-  public function remove(int $index): ImagemagickExecArguments {
+  public function remove(int $index): static {
     if (isset($this->arguments[$index])) {
       unset($this->arguments[$index]);
     }
@@ -216,7 +204,7 @@ class ImagemagickExecArguments {
    *
    * @return $this
    */
-  public function reset(): ImagemagickExecArguments {
+  public function reset(): static {
     $this->arguments = [];
     return $this;
   }
@@ -229,7 +217,7 @@ class ImagemagickExecArguments {
    *
    * @return $this
    */
-  public function setSource(string $source): ImagemagickExecArguments {
+  public function setSource(string $source): static {
     $this->source = $source;
     return $this;
   }
@@ -253,7 +241,7 @@ class ImagemagickExecArguments {
    *
    * @return $this
    */
-  public function setSourceLocalPath(string $path): ImagemagickExecArguments {
+  public function setSourceLocalPath(string $path): static {
     $this->sourceLocalPath = $path;
     return $this;
   }
@@ -276,7 +264,7 @@ class ImagemagickExecArguments {
    *
    * @return $this
    */
-  public function setSourceFormat(string $format): ImagemagickExecArguments {
+  public function setSourceFormat(string $format): static {
     $this->sourceFormat = $this->execManager->getFormatMapper()->isFormatEnabled($format) ? $format : '';
     return $this;
   }
@@ -289,7 +277,7 @@ class ImagemagickExecArguments {
    *
    * @return $this
    */
-  public function setSourceFormatFromExtension(string $extension): ImagemagickExecArguments {
+  public function setSourceFormatFromExtension(string $extension): static {
     $this->sourceFormat = $this->execManager->getFormatMapper()->getFormatFromExtension($extension) ?: '';
     return $this;
   }
@@ -314,7 +302,7 @@ class ImagemagickExecArguments {
    *
    * @see http://www.imagemagick.org/script/command-line-processing.php
    */
-  public function setSourceFrames(string $frames): ImagemagickExecArguments {
+  public function setSourceFrames(string $frames): static {
     $this->sourceFrames = $frames;
     return $this;
   }
@@ -327,8 +315,8 @@ class ImagemagickExecArguments {
    *
    * @see http://www.imagemagick.org/script/command-line-processing.php
    */
-  public function getSourceFrames() {
-    return $this->sourceFrames;
+  public function getSourceFrames(): ?string {
+    return $this->sourceFrames ?? NULL;
   }
 
   /**
@@ -339,7 +327,7 @@ class ImagemagickExecArguments {
    *
    * @return $this
    */
-  public function setDestination(string $destination): ImagemagickExecArguments {
+  public function setDestination(string $destination): static {
     $this->destination = $destination;
     return $this;
   }
@@ -362,7 +350,7 @@ class ImagemagickExecArguments {
    *
    * @return $this
    */
-  public function setDestinationLocalPath(string $path): ImagemagickExecArguments {
+  public function setDestinationLocalPath(string $path): static {
     $this->destinationLocalPath = $path;
     return $this;
   }
@@ -389,7 +377,7 @@ class ImagemagickExecArguments {
    *
    * @return $this
    */
-  public function setDestinationFormat(string $format): ImagemagickExecArguments {
+  public function setDestinationFormat(string $format): static {
     $this->destinationFormat = $format;
     return $this;
   }
@@ -406,7 +394,7 @@ class ImagemagickExecArguments {
    *
    * @return $this
    */
-  public function setDestinationFormatFromExtension(string $extension): ImagemagickExecArguments {
+  public function setDestinationFormatFromExtension(string $extension): static {
     $this->destinationFormat = $this->execManager->getFormatMapper()->getFormatFromExtension($extension) ?: '';
     return $this;
   }
@@ -423,20 +411,6 @@ class ImagemagickExecArguments {
    */
   public function getDestinationFormat(): string {
     return $this->destinationFormat;
-  }
-
-  /**
-   * Escapes a string.
-   *
-   * @param string $argument
-   *   The string to escape.
-   *
-   * @return string
-   *   An escaped string for use in the
-   *   ImagemagickExecManagerInterface::execute method.
-   */
-  public function escape(string $argument): string {
-    return $this->execManager->escapeShellArg($argument);
   }
 
 }

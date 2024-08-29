@@ -6,5 +6,6 @@ dependencies:
     - node
 id: node.logo
 label: Logo
+description: ''
 targetEntityType: node
 cache: true

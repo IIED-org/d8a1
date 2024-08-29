@@ -5,7 +5,7 @@ namespace Drupal\form_mode_manager\Plugin\EntityRoutingMap;
 use Drupal\form_mode_manager\EntityRoutingMapBase;
 
 /**
- * Class User.
+ * Maps user routes.
  *
  * @EntityRoutingMap(
  *   id = "user",

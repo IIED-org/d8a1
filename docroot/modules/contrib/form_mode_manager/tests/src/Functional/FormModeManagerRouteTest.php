@@ -26,6 +26,12 @@ class FormModeManagerRouteTest extends FormModeManagerBase {
   public function testAnonymousSpecificFormModeManagerRoutes() {
     $node_form_mode_id = $this->formModeManager->getFormModeMachineName($this->nodeFormMode->id());
 
+    $this->drupalCreateContentType([
+      'type' => 'test_page',
+      'name' => 'Test Page',
+    ]);
+    $this->setUpFormMode("admin/structure/types/manage/test_page/form-display", $this->nodeFormMode->id());
+
     $this->drupalLogin($this->anonymousUser);
     Role::load($this->anonymousUser->getRoles()[1])
       ->grantPermission("use {$this->nodeFormMode->id()} form mode")
@@ -54,6 +60,19 @@ class FormModeManagerRouteTest extends FormModeManagerBase {
     // Edit a node with default form mode not available.
     $this->drupalGet("node/{$this->node1->id()}/edit");
     $this->assertSession()->statusCodeEquals(403);
+
+    // Make sure we can't add test_page content as this "anonymous" user.
+    $this->drupalGet("node/add/test_page");
+    $this->assertSession()->statusCodeEquals(403);
+    // Even if using a specific form mode.
+    $this->drupalGet("node/add/test_page/{$node_form_mode_id}");
+    $this->assertSession()->statusCodeEquals(403);
+
+    $this->drupalLogin($this->rootUser);
+    $this->drupalGet("node/add/test_page");
+    $this->assertSession()->statusCodeEquals(200);
+    $this->drupalGet("node/add/test_page/{$node_form_mode_id}");
+    $this->assertSession()->statusCodeEquals(200);
   }
 
   /**
@@ -214,10 +233,11 @@ class FormModeManagerRouteTest extends FormModeManagerBase {
 
     // Add a content type and attach it to form mode.
     $this->drupalGet("admin/structure/types/manage/{$node_type_fmm2->id()}/form-display");
+    $this->assertSession()->statusCodeEquals(200);
 
     $edit = ["display_modes_custom[$node_form_mode_id]" => TRUE];
     $this->drupalGet("admin/structure/types/manage/{$node_type_fmm2->id()}/form-display");
-    $this->submitForm($edit, t('Save'));
+    $this->submitForm($edit, 'Save');
 
     $this->drupalGet("node/add-list/$node_form_mode_id");
     $this->assertSession()->linkExists($this->nodeTypeFmm1->label());

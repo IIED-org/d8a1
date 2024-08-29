@@ -71,13 +71,18 @@ class FormModeManager implements FormModeManagerInterface {
    * @param \Drupal\form_mode_manager\EntityRoutingMapManager $plugin_routes_manager
    *   Plugin EntityRoutingMap to retrieve entity form operation routes.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, ConfigFactoryInterface $config_factory, EntityDisplayRepositoryInterface $entity_display_repository, EntityTypeBundleInfoInterface $entity_type_bundle_info, EntityRoutingMapManager $plugin_routes_manager) {
+  public function __construct(
+    EntityTypeManagerInterface $entity_type_manager,
+    ConfigFactoryInterface $config_factory,
+    EntityDisplayRepositoryInterface $entity_display_repository,
+    EntityTypeBundleInfoInterface $entity_type_bundle_info,
+    EntityRoutingMapManager $plugin_routes_manager
+    ) {
     $this->entityTypeManager = $entity_type_manager;
     $this->configFactory = $config_factory;
     $this->entityDisplayRepository = $entity_display_repository;
     $this->entityTypeBundleInfo = $entity_type_bundle_info;
     $this->entityRoutingMap = $plugin_routes_manager;
-    $this->setFormModesToExclude();
   }
 
   /**
@@ -218,6 +223,10 @@ class FormModeManager implements FormModeManagerInterface {
   public function getFormModeExcluded($entity_type_id) {
     $form_modes = [];
 
+    if (!$this->formModesExcluded) {
+      $this->setFormModesToExclude();
+    }
+
     if (isset($this->formModesExcluded[$entity_type_id])) {
       $form_modes = $this->formModesExcluded[$entity_type_id];
     }
@@ -244,7 +253,7 @@ class FormModeManager implements FormModeManagerInterface {
    * {@inheritdoc}
    */
   public function isActive($entity_type_id, $bundle_id, $form_mode_machine_name) {
-    $bundle_id = isset($bundle_id) ? $bundle_id : $entity_type_id;
+    $bundle_id = $bundle_id ?? $entity_type_id;
     $form_mode_active = array_keys($this->entityDisplayRepository->getFormModeOptionsByBundle($entity_type_id, $bundle_id));
     return in_array($form_mode_machine_name, $form_mode_active);
   }
@@ -304,7 +313,7 @@ class FormModeManager implements FormModeManagerInterface {
     $form_modes_to_exclude = [];
     $config = $this->configFactory->get('form_mode_manager.settings')
       ->get('form_modes');
-    $excluded_form_modes = isset($config) ? $config : [];
+    $excluded_form_modes = $config ?? [];
     foreach ($excluded_form_modes as $entity_type_id => $modes_excluded) {
       $form_modes_to_exclude[$entity_type_id][] = $modes_excluded;
     }
@@ -366,7 +375,7 @@ class FormModeManager implements FormModeManagerInterface {
     $load_ids = [];
     for ($index = 0; count($ids) > $index; $index++) {
       $config_id = str_replace(self::ENTITY_FORM_DISPLAY_CONFIG_PREFIX . '.', '', $ids[$index]);
-      list(,, $form_mode_name) = explode('.', $config_id);
+      [,, $form_mode_name] = explode('.', $config_id);
       if ($form_mode_name !== 'default') {
         $load_ids[] = $config_id;
       }
