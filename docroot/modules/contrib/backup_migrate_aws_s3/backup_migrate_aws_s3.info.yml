@@ -1,0 +1,14 @@
+name: 'Backup and Migrate: AWS S3'
+description: 'Provides AWS S3 destination for Backup & Migrate module.'
+package: 'AWS S3'
+type: module
+core_version_requirement: ^8.8 || ^9 || ^10
+configure: backup_migrate.quick_backup
+dependencies:
+  - backup_migrate:backup_migrate
+  - key:key
+
+# Information added by Drupal.org packaging script on 2022-10-24
+version: '5.0.7'
+project: 'backup_migrate_aws_s3'
+datestamp: 1666612678

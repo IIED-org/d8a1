@@ -104,7 +104,10 @@
     "drupal/leaflet_mapbox": "^1.0@alpha",
     "drupal/leaflet_countries": "dev-3086578-leaflet-views-country",
     "drupal/tfa": "^1.6",
-    "drupal/real_aes": "^2.5"
+    "drupal/real_aes": "^2.5",
+    "drupal/backup_migrate": "^5.0",
+    "drupal/backup_migrate_aws_s3": "^5.0",
+    "drupal/key": "^1.19"
   },
   "conflict": {
     "drupal/core": "7.*"
