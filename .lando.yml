@@ -20,6 +20,12 @@ services:
       image: dehy/adminer
       command: '/bin/s6-svscan /etc/services.d'
     portforward: true
+  database:
+    type: mariadb:10.6
+    creds:
+      user: database
+      password: database
+      database: database
   node:
     type: 'node:14'
     overrides:
@@ -30,6 +36,12 @@ services:
     hogfrom:
       - appserver
     portforward: true
+  solr:
+    type: solr:8
+    portforward: true
+    core: drupal
+    config:
+      dir: config/solr
 tooling:
   composer:
     service: appserver
