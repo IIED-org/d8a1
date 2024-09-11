@@ -137,6 +137,7 @@ module:
   sophron: 0
   super_login: 0
   synonyms: 0
+  syslog: 0
   system: 0
   taxonomy: 0
   text: 0
