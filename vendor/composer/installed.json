@@ -7591,6 +7591,9 @@
                     "services": {
                         "drush.services.yml": ">=10"
                     }
+                },
+                "patches_applied": {
+                    "Headers larger than 8174 bytes break PHP-FPM": "patches/purge-limit-header-size.patch"
                 }
             },
             "installation-source": "dist",

@@ -66,7 +66,7 @@ class CacheableResponseSubscriber implements EventSubscriberInterface {
             throw new \LogicException("Header plugin '$pluginId' should return a non-empty string on ::getHeaderName()!");
           }
 
-          $response->headers->set($name, $header->getValue($tags));
+          $response->headers->set($name, substr($header->getValue($tags), 0, 8174));
         }
       }
     }

@@ -167,6 +167,9 @@
       },
       "drupal/leaflet_mapbox": {
         "3288279": "https://www.drupal.org/files/issues/2023-11-06/leaflet_mapbox_alpha1_d10.patch"
+      },
+      "drupal/purge": {
+        "Headers larger than 8174 bytes break PHP-FPM": "patches/purge-limit-header-size.patch"
       }
     },
     "drupal-lenient": {
