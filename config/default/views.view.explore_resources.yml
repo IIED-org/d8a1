@@ -1088,6 +1088,7 @@ display:
         - 'config:field.storage.paragraph.field_file_upload'
         - 'config:field.storage.paragraph.field_video_url'
         - 'config:search_api.index.acquia_search_index'
+        - 'search_api_list:acquia_search_index'
   attachment_1:
     id: attachment_1
     display_title: 'Country header'
@@ -1372,6 +1373,7 @@ display:
       tags:
         - 'config:field.storage.node.body'
         - 'config:search_api.index.acquia_search_index'
+        - 'search_api_list:acquia_search_index'
   page_2:
     id: page_2
     display_title: 'Resources list'
@@ -3635,6 +3637,7 @@ display:
         type: full
         options:
           offset: 0
+          pagination_heading_level: h4
           items_per_page: 10
           total_pages: null
           id: 0
@@ -3652,7 +3655,6 @@ display:
             offset: false
             offset_label: Offset
           quantity: 9
-          pagination_heading_level: h4
       exposed_form:
         type: bef
         options:
@@ -3863,7 +3865,7 @@ display:
           plugin_id: text
           empty: true
           content:
-            value: "<p>Here you can find a selection of useful resources on communities and IWT. Please contact us at info@peoplenotpoaching.org, or complete our <a href=\"https://www.surveymonkey.com/r/5CMTPDV\">feedback survey</a> to let us know if we are missing anything.</p>\r\n\r\n<p class=\"results\">[view:total-rows] results&nbsp;<strong>{{ filters.search_api_fulltext }}</strong></p>"
+            value: "<p>Here you can find a selection of useful resources on communities and IWT. Please contact us at info@peoplenotpoaching.org, or complete our <a href=\"https://www.surveymonkey.com/r/5CMTPDV\">feedback survey</a> to let us know if we are missing anything.</p>\r\n\r\n<p class=\"results\">[view:total-rows] results</p>"
             format: full_html
           tokenize: true
         entity_block:
@@ -3931,3 +3933,4 @@ display:
         - 'config:field.storage.paragraph.field_file_upload'
         - 'config:field.storage.paragraph.field_video_url'
         - 'config:search_api.index.acquia_search_index'
+        - 'search_api_list:acquia_search_index'

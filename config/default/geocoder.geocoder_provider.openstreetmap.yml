@@ -1,0 +1,16 @@
+uuid: 861be1f6-47d6-4bfe-b107-fdbd53e7d30d
+langcode: en
+status: true
+dependencies: {  }
+id: openstreetmap
+label: OpenStreetMap
+plugin: openstreetmap
+configuration:
+  throttle:
+    period: 2
+    limit: 1
+  geocoder:
+    locale: ''
+  rootUrl: 'https://nominatim.openstreetmap.org'
+  userAgent: 'Drupal peoplenotpoaching.org'
+  referer: 'https://www.peoplenotpoaching.org'
