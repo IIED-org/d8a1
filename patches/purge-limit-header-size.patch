@@ -1,0 +1,14 @@
+diff --git a/src/EventSubscriber/CacheableResponseSubscriber.php b/src/EventSubscriber/CacheableResponseSubscriber.php
+index f9fe74c..f48a9cc 100644
+--- a/src/EventSubscriber/CacheableResponseSubscriber.php
++++ b/src/EventSubscriber/CacheableResponseSubscriber.php
+@@ -66,7 +66,7 @@ class CacheableResponseSubscriber implements EventSubscriberInterface {
+             throw new \LogicException("Header plugin '$pluginId' should return a non-empty string on ::getHeaderName()!");
+           }
+
+-          $response->headers->set($name, $header->getValue($tags));
++          $response->headers->set($name, substr($header->getValue($tags), 0, 8174));
+         }
+       }
+     }
+

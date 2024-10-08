@@ -109,7 +109,10 @@
     "drupal/backup_migrate_aws_s3": "^5.0",
     "drupal/key": "^1.19",
     "geocoder-php/google-maps-provider": "^4.7",
-    "geocoder-php/nominatim-provider": "^5.7"
+    "geocoder-php/nominatim-provider": "^5.7",
+    "drupal/purge": "^3.6",
+    "drupal/varnish_purge": "^2.2",
+    "drupal/stage_file_proxy": "^3.1"
   },
   "conflict": {
     "drupal/core": "7.*"
@@ -164,6 +167,9 @@
       },
       "drupal/leaflet_mapbox": {
         "3288279": "https://www.drupal.org/files/issues/2023-11-06/leaflet_mapbox_alpha1_d10.patch"
+      },
+      "drupal/purge": {
+        "Headers larger than 8174 bytes break PHP-FPM": "patches/purge-limit-header-size.patch"
       }
     },
     "drupal-lenient": {

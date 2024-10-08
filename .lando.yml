@@ -1,15 +1,15 @@
 name: d8a1
-recipe: acquia
+recipe: drupal10
 config:
-  acli_version: latest
-  ah_application_uuid: ef43298b-5eac-4d9d-b465-5fd0b1af3281
-  ah_site_group: d8a1
   php: '8.2'
-  cache: false
-  inbox: false
+  webroot: docroot
+proxy:
+  adminer:
+    - adminer.d8a1.lndo.site
+  mailhog:
+    - mail.d8a1.lndo.site
 services:
   appserver:
-    webroot: docroot
     overrides:
       environment:
         DRUSH_OPTIONS_ROOT: '/app/docroot'
@@ -20,14 +20,32 @@ services:
       image: dehy/adminer
       command: '/bin/s6-svscan /etc/services.d'
     portforward: true
+  database:
+    type: mariadb:10.11
+    creds:
+      user: database
+      password: database
+      database: database
   node:
     type: 'node:14'
-    build:
-      - 'if [ -d $LANDO_MOUNT/web/themes/custom/site_theme ]; then cd $LANDO_MOUNT/web/themes/custom/site_theme && yarn install --production; fi'
     overrides:
       ports:
         - '3050:3050' # You should change this port to something random and then update gulpconfig.js in the theme to match
+  mailhog:
+    type: mailhog
+    hogfrom:
+      - appserver
+    portforward: true
+  solr:
+    type: solr:8
+    portforward: true
+    core: drupal
+    config:
+      dir: config/solr
 tooling:
+  composer:
+    service: appserver
+    cmd: '/usr/local/bin/composer'
   npm:
     service: node
   yarn:
@@ -48,6 +66,3 @@ tooling:
     description: Disable xdebug for apache.
     cmd: "rm /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini && /etc/init.d/apache2 reload"
     user: root
-proxy:
-  adminer:
-    - adminer.d8a1.lndo.site

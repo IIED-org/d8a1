@@ -23,3 +23,11 @@ node_modules
 
 # Mac files
 .DS_Store
+
+# IDE files
+.idea
+
+# DB dumps
+*.sql
+*.sql.gz
+*.mysql
