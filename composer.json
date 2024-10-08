@@ -107,7 +107,9 @@
     "drupal/real_aes": "^2.5",
     "drupal/backup_migrate": "^5.0",
     "drupal/backup_migrate_aws_s3": "^5.0",
-    "drupal/key": "^1.19"
+    "drupal/key": "^1.19",
+    "geocoder-php/google-maps-provider": "^4.7",
+    "geocoder-php/nominatim-provider": "^5.7"
   },
   "conflict": {
     "drupal/core": "7.*"
@@ -157,9 +159,6 @@
       "drupal/account_modal": {
         "3285913":"https://www.drupal.org/files/issues/2022-07-19/account_modal.1.x-dev.rector.patch"
       },
-      "drupal/form_mode_manager": {
-        "3297262": "https://git.drupalcode.org/project/form_mode_manager/-/merge_requests/8.diff"
-      },
       "drupal/facets": {
         "3336646":"https://www.drupal.org/files/issues/2023-08-16/3336646-function-is-deprecated.patch"
       },
@@ -186,7 +185,8 @@
       "cweagans/composer-patches": true,
       "drupal/core-composer-scaffold": true,
       "drupal/core-project-message": true,
-      "mglaman/composer-drupal-lenient": true
+      "mglaman/composer-drupal-lenient": true,
+      "php-http/discovery": true
     }
   }
 }
