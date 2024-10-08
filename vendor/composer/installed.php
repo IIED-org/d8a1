@@ -3,7 +3,7 @@
         'name' => 'acquia/acquia-ra-composer',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '5ccc3c90f89eefee4a45cf596650ff95511638c8',
+        'reference' => 'aea16801845e45826d6911bbdf3304266063629d',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -22,7 +22,7 @@
         'acquia/acquia-ra-composer' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '5ccc3c90f89eefee4a45cf596650ff95511638c8',
+            'reference' => 'aea16801845e45826d6911bbdf3304266063629d',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -863,18 +863,18 @@
             'dev_requirement' => false,
         ),
         'drupal/geocoder' => array(
-            'pretty_version' => '4.10.0',
-            'version' => '4.10.0.0',
-            'reference' => '8.x-4.10',
+            'pretty_version' => '4.25.0',
+            'version' => '4.25.0.0',
+            'reference' => '8.x-4.25',
             'type' => 'drupal-module',
             'install_path' => __DIR__ . '/../../docroot/modules/contrib/geocoder',
             'aliases' => array(),
             'dev_requirement' => false,
         ),
         'drupal/geofield' => array(
-            'pretty_version' => '1.56.0',
-            'version' => '1.56.0.0',
-            'reference' => '8.x-1.56',
+            'pretty_version' => '1.57.0',
+            'version' => '1.57.0.0',
+            'reference' => '8.x-1.57',
             'type' => 'drupal-module',
             'install_path' => __DIR__ . '/../../docroot/modules/contrib/geofield',
             'aliases' => array(),
@@ -1420,6 +1420,39 @@
             'aliases' => array(),
             'dev_requirement' => false,
         ),
+        'geocoder-php/common-http' => array(
+            'pretty_version' => '4.6.0',
+            'version' => '4.6.0.0',
+            'reference' => 'd8c22a66120daed35ba8017467bc1ebfec28a63e',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../geocoder-php/common-http',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'geocoder-php/google-maps-provider' => array(
+            'pretty_version' => '4.7.1',
+            'version' => '4.7.1.0',
+            'reference' => 'ee0dbc229380903043542ae2a79b4518b9f0df17',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../geocoder-php/google-maps-provider',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'geocoder-php/nominatim-provider' => array(
+            'pretty_version' => '5.7.0',
+            'version' => '5.7.0.0',
+            'reference' => 'a50486161f6babad7b1ed7ee7bf86147b0844413',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../geocoder-php/nominatim-provider',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'geocoder-php/provider-implementation' => array(
+            'dev_requirement' => false,
+            'provided' => array(
+                0 => '1.0',
+            ),
+        ),
         'google/recaptcha' => array(
             'pretty_version' => '1.3.0',
             'version' => '1.3.0.0',
@@ -1690,14 +1723,25 @@
         'php-http/async-client-implementation' => array(
             'dev_requirement' => false,
             'provided' => array(
-                0 => '1.0',
+                0 => '*',
+                1 => '1.0',
             ),
         ),
         'php-http/client-implementation' => array(
             'dev_requirement' => false,
             'provided' => array(
-                0 => '1.0',
+                0 => '*',
+                1 => '1.0',
             ),
+        ),
+        'php-http/discovery' => array(
+            'pretty_version' => '1.20.0',
+            'version' => '1.20.0.0',
+            'reference' => '82fe4c73ef3363caed49ff8dd1539ba06044910d',
+            'type' => 'composer-plugin',
+            'install_path' => __DIR__ . '/../php-http/discovery',
+            'aliases' => array(),
+            'dev_requirement' => false,
         ),
         'php-http/guzzle7-adapter' => array(
             'pretty_version' => '1.0.0',
@@ -1812,6 +1856,7 @@
             'dev_requirement' => false,
             'provided' => array(
                 0 => '1.0',
+                1 => '*',
             ),
         ),
         'psr/http-factory' => array(
@@ -1828,6 +1873,7 @@
             'provided' => array(
                 0 => '1.0',
                 1 => '^1.0',
+                2 => '*',
             ),
         ),
         'psr/http-message' => array(
@@ -1843,6 +1889,7 @@
             'dev_requirement' => false,
             'provided' => array(
                 0 => '1.0',
+                1 => '*',
             ),
         ),
         'psr/log' => array(
