@@ -3,7 +3,7 @@
         'name' => 'acquia/acquia-ra-composer',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '5ccc3c90f89eefee4a45cf596650ff95511638c8',
+        'reference' => 'aea16801845e45826d6911bbdf3304266063629d',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -22,7 +22,7 @@
         'acquia/acquia-ra-composer' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '5ccc3c90f89eefee4a45cf596650ff95511638c8',
+            'reference' => 'aea16801845e45826d6911bbdf3304266063629d',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -1723,15 +1723,15 @@
         'php-http/async-client-implementation' => array(
             'dev_requirement' => false,
             'provided' => array(
-                0 => '1.0',
-                1 => '*',
+                0 => '*',
+                1 => '1.0',
             ),
         ),
         'php-http/client-implementation' => array(
             'dev_requirement' => false,
             'provided' => array(
-                0 => '1.0',
-                1 => '*',
+                0 => '*',
+                1 => '1.0',
             ),
         ),
         'php-http/discovery' => array(

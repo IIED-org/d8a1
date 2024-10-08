@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "14966d94fcd0b0ef4751fd3187448b1d",
+    "content-hash": "8c422cf8dc029c55f0d0b1443f1ac317",
     "packages": [
         {
             "name": "abraham/twitteroauth",
@@ -3173,8 +3173,7 @@
             "version": "4.0.0",
             "require": {
                 "drupal/chosen": "^4",
-                "drupal/core": "^9.2 || ^10",
-                "php": ">=5.6.0"
+                "drupal/core": "^9.2 || ^10"
             },
             "type": "metapackage",
             "extra": {
@@ -3184,11 +3183,6 @@
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
-                    }
-                },
-                "drush": {
-                    "services": {
-                        "drush.services.yml": "^9 || ^10 || ^11"
                     }
                 }
             },
@@ -3206,11 +3200,11 @@
                     "homepage": "https://www.drupal.org/user/1305230"
                 },
                 {
-                    "name": "Dave Reid",
+                    "name": "dave reid",
                     "homepage": "https://www.drupal.org/user/53892"
                 },
                 {
-                    "name": "Hydra",
+                    "name": "hydra",
                     "homepage": "https://www.drupal.org/user/647364"
                 },
                 {
@@ -3234,7 +3228,7 @@
                     "homepage": "https://www.drupal.org/user/235438"
                 }
             ],
-            "description": "This module provides the basic integration with the Chosen jQuery plugin.",
+            "description": "Add <a href=\"https://github.com/JJJ/chosen\">chosen</a> library definition.",
             "homepage": "https://www.drupal.org/project/chosen",
             "support": {
                 "source": "https://git.drupalcode.org/project/chosen"
@@ -15497,7 +15491,7 @@
     },
     "prefer-stable": true,
     "prefer-lowest": false,
-    "platform": [],
-    "platform-dev": [],
+    "platform": {},
+    "platform-dev": {},
     "plugin-api-version": "2.6.0"
 }
