@@ -21,7 +21,7 @@ services:
       command: '/bin/s6-svscan /etc/services.d'
     portforward: true
   database:
-    type: mariadb:10.6
+    type: mariadb:10.11
     creds:
       user: database
       password: database
