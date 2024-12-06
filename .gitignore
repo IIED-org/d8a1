@@ -31,3 +31,6 @@ node_modules
 *.sql
 *.sql.gz
 *.mysql
+
+# Ignore ack folder
+ack
