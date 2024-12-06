@@ -1,0 +1,13 @@
+uuid: b78569b1-add4-4747-a0c2-8a6d0eaaa3d0
+langcode: en
+status: true
+dependencies: {  }
+id: daily_database_schedule
+label: 'Daily database schedule'
+enabled: true
+keep: 7
+period: 86400
+cron: null
+source_id: default_db
+destination_id: aws_s3
+settings_profile_id: pnp_daily_database

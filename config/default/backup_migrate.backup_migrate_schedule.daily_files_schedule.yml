@@ -1,0 +1,13 @@
+uuid: f8574492-20de-4356-bebb-4db1e8c1295d
+langcode: en
+status: true
+dependencies: {  }
+id: daily_files_schedule
+label: 'Daily files schedule'
+enabled: true
+keep: 7
+period: 86400
+cron: null
+source_id: default_db
+destination_id: aws_s3
+settings_profile_id: pnp_daily_files
