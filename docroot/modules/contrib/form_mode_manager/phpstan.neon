@@ -1,0 +1,22 @@
+# This file is copied from ./core/phpstan.neon.dist then set to only
+# ignore errors applicable to this project rather than all errors ignored
+# from Core as phpstan throws errors when ignore lines here are unused.
+
+# Configuration file for PHPStan static code checking, see https://phpstan.org .
+# PHPStan is triggered on Drupal CI in commit-code-check.sh.
+includes:
+  - phar://phpstan.phar/conf/bleedingEdge.neon
+
+parameters:
+  level: 1
+
+  paths:
+    - .
+
+  ignoreErrors:
+    # new static() is a best practice in Drupal, so we cannot fix that.
+    - "#^Unsafe usage of new static#"
+    # we need to extend EntityFormDisplayEditForm as that is key to this
+    # module, therefore we need to ignore this warning, accept the risk,
+    # and expect tests to flag if any changes in core will cause issues.
+    - "#FormModeManagerDisplayEditForm extends @internal class#"

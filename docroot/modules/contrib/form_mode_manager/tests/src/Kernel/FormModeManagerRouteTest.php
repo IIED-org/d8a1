@@ -44,7 +44,7 @@ class FormModeManagerRouteTest extends KernelTestBase {
    *
    * @see self::testFormModeManagerPlugin()
    */
-  public function providerEntityRouteInfos() {
+  public static function providerEntityRouteInfos() {
     $data = [];
     $data[] = ['node', 'add_form', 'node.add'];
     $data[] = ['node', 'edit_form', 'entity.node.edit_form'];
@@ -81,7 +81,7 @@ class FormModeManagerRouteTest extends KernelTestBase {
    *
    * @see \Drupal\Tests\form_mode_manager\Functional\FormModeManagerRouteTest::testAdminRoutes()
    */
-  public function providerAdminRoutes() {
+  public static function providerAdminRoutes() {
     $data = [];
     $data[] = ['form_mode_manager.admin_settings'];
     $data[] = ['form_mode_manager.admin_settings_links_task'];

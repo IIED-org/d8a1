@@ -183,7 +183,7 @@ abstract class EntityRoutingMapBase extends PluginBase implements EntityRoutingM
   /**
    * {@inheritdoc}
    */
-  public function setContextualLinks() {
+  public function setContextualLinks(): void {
     if ($this->doGenerateContextualLinks()) {
       $operations = [
         'edit' => "entity.{$this->targetEntityType}.edit_form",

@@ -4,6 +4,7 @@ namespace Drupal\form_mode_manager\Form;
 
 use Drupal\Core\Cache\CacheTagsInvalidatorInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\ConfigFormBase;
@@ -77,6 +78,8 @@ abstract class FormModeManagerFormBase extends ConfigFormBase {
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The factory for configuration objects.
+   * @param \Drupal\Core\Config\TypedConfigManagerInterface $typed_config_manager
+   *   The typed config manager.
    * @param \Drupal\Core\Entity\EntityDisplayRepositoryInterface $entity_display_repository
    *   The entity display repository.
    * @param \Drupal\form_mode_manager\FormModeManagerInterface $form_mode_manager
@@ -86,14 +89,8 @@ abstract class FormModeManagerFormBase extends ConfigFormBase {
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager service.
    */
-  public function __construct(
-    ConfigFactoryInterface $config_factory,
-    EntityDisplayRepositoryInterface $entity_display_repository,
-    FormModeManagerInterface $form_mode_manager,
-    CacheTagsInvalidatorInterface $cache_tags_invalidator,
-    EntityTypeManagerInterface $entity_type_manager
-  ) {
-    parent::__construct($config_factory);
+  public function __construct(ConfigFactoryInterface $config_factory, TypedConfigManagerInterface $typed_config_manager, EntityDisplayRepositoryInterface $entity_display_repository, FormModeManagerInterface $form_mode_manager, CacheTagsInvalidatorInterface $cache_tags_invalidator, EntityTypeManagerInterface $entity_type_manager) {
+    parent::__construct($config_factory, $typed_config_manager);
     $this->settings = $this->getConfig();
     $this->entityDisplayRepository = $entity_display_repository;
     $this->formModeManager = $form_mode_manager;
@@ -109,6 +106,7 @@ abstract class FormModeManagerFormBase extends ConfigFormBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('config.factory'),
+      $container->get('config.typed'),
       $container->get('entity_display.repository'),
       $container->get('form_mode.manager'),
       $container->get('cache_tags.invalidator'),
@@ -145,7 +143,7 @@ abstract class FormModeManagerFormBase extends ConfigFormBase {
     $form_modes = $this->formModeManager->getAllFormModesDefinitions($this->ignoreExcluded, $this->ignoreActiveDisplay);
 
     if (empty($form_modes)) {
-      $form['empty']['#markup'] = $this->t('Any Form modes activated in form display found.');
+      $form['empty']['#markup'] = $this->t('There were no Form Modes activated in manage form display. Please via Administration > Structure > Display modes.');
 
       return $form;
     }
@@ -170,7 +168,7 @@ abstract class FormModeManagerFormBase extends ConfigFormBase {
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the form.
    */
-  public function setFormModeFormSettings(FormStateInterface $form_state) {
+  public function setFormModeFormSettings(FormStateInterface $form_state): void {
     $form_modes = $this->formModeManager->getAllFormModesDefinitions($this->ignoreExcluded, $this->ignoreActiveDisplay);
 
     if (empty($form_modes)) {
@@ -224,9 +222,6 @@ abstract class FormModeManagerFormBase extends ConfigFormBase {
    *   The form modes collection for given entity type.
    * @param string $entity_type_id
    *   The entity type ID of entity.
-   *
-   * @return $this|false
-   *   The form Object.
    */
   abstract public function setSettingsPerEntity(FormStateInterface $form_state, array $form_modes, $entity_type_id);
 
@@ -239,11 +234,8 @@ abstract class FormModeManagerFormBase extends ConfigFormBase {
    *   The form mode definition.
    * @param string $entity_type_id
    *   The entity type ID of entity.
-   *
-   * @return $this|false
-   *   The form Object.
    */
-  abstract public function setSettingsPerFormMode(FormStateInterface $form_state, array $form_mode, $entity_type_id);
+  abstract public function setSettingsPerFormMode(FormStateInterface $form_state, array $form_mode, $entity_type_id): void;
 
   /**
    * {@inheritdoc}

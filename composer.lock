@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "14966d94fcd0b0ef4751fd3187448b1d",
+    "content-hash": "4f3abf94c76ebc0121c36c7998e28e48",
     "packages": [
         {
             "name": "abraham/twitteroauth",
@@ -5198,17 +5198,17 @@
         },
         {
             "name": "drupal/form_mode_manager",
-            "version": "3.0.0",
+            "version": "3.1.0",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/form_mode_manager.git",
-                "reference": "3.0.0"
+                "reference": "3.1.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/form_mode_manager-3.0.0.zip",
-                "reference": "3.0.0",
-                "shasum": "b2c4bcc388cb2b06262770a1399340827449230f"
+                "url": "https://ftp.drupal.org/files/projects/form_mode_manager-3.1.0.zip",
+                "reference": "3.1.0",
+                "shasum": "75dab1d4b0572760ed2088ebd5d8ba93c86b3422"
             },
             "require": {
                 "drupal/core": "^8 || ^9 || ^10"
@@ -5216,8 +5216,8 @@
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "3.0.0",
-                    "datestamp": "1709749099",
+                    "version": "3.1.0",
+                    "datestamp": "1732915976",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"

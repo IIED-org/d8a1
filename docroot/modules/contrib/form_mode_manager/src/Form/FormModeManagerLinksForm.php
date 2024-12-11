@@ -4,6 +4,7 @@ namespace Drupal\form_mode_manager\Form;
 
 use Drupal\Core\Cache\CacheTagsInvalidatorInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -17,8 +18,8 @@ class FormModeManagerLinksForm extends FormModeManagerFormBase {
   /**
    * {@inheritdoc}
    */
-  public function __construct(ConfigFactoryInterface $config_factory, EntityDisplayRepositoryInterface $entity_display_repository, FormModeManagerInterface $form_mode_manager, CacheTagsInvalidatorInterface $cache_tags_invalidator, EntityTypeManagerInterface $entity_type_manager) {
-    parent::__construct($config_factory, $entity_display_repository, $form_mode_manager, $cache_tags_invalidator, $entity_type_manager);
+  public function __construct(ConfigFactoryInterface $config_factory, TypedConfigManagerInterface $typed_config_manager, EntityDisplayRepositoryInterface $entity_display_repository, FormModeManagerInterface $form_mode_manager, CacheTagsInvalidatorInterface $cache_tags_invalidator, EntityTypeManagerInterface $entity_type_manager) {
+    parent::__construct($config_factory, $typed_config_manager, $entity_display_repository, $form_mode_manager, $cache_tags_invalidator, $entity_type_manager);
 
     $this->ignoreExcluded = FALSE;
     $this->ignoreActiveDisplay = FALSE;
@@ -58,13 +59,13 @@ class FormModeManagerLinksForm extends FormModeManagerFormBase {
       return $form;
     }
 
-    $form['local_taks'] = [
+    $form['local_tasks'] = [
       '#type' => 'details',
       '#title' => $this->t('Local Tasks'),
       '#open' => TRUE,
     ];
 
-    $form['local_taks']['vertical_tabs'] = [
+    $form['local_tasks']['vertical_tabs'] = [
       '#type' => 'vertical_tabs',
     ];
 
@@ -78,14 +79,14 @@ class FormModeManagerLinksForm extends FormModeManagerFormBase {
    */
   public function buildFormPerEntity(array &$form, array $form_modes, $entity_type_id) {
     $entity_label = $this->entityTypeManager->getStorage($entity_type_id)->getEntityType()->getLabel();
-    $form['local_taks']["{$entity_type_id}_local_taks"] = [
+    $form['local_tasks']["{$entity_type_id}_local_tasks"] = [
       '#type' => 'details',
       '#title' => $entity_label,
       '#description' => $this->t('The following options are available for make a better flexibility of local task displaying.'),
       '#group' => 'vertical_tabs',
     ];
 
-    $form['local_taks']["{$entity_type_id}_local_taks"]['tasks_location_' . $entity_type_id] = [
+    $form['local_tasks']["{$entity_type_id}_local_tasks"]['tasks_location_' . $entity_type_id] = [
       '#title' => $this->t('Position of Local tasks'),
       '#type' => 'select',
       '#options' => $this->localTaskTypes,
@@ -114,8 +115,7 @@ class FormModeManagerLinksForm extends FormModeManagerFormBase {
   /**
    * {@inheritdoc}
    */
-  public function setSettingsPerFormMode(FormStateInterface $form_state, array $form_mode, $entity_type_id) {
-    return FALSE;
+  public function setSettingsPerFormMode(FormStateInterface $form_state, array $form_mode, $entity_type_id): void {
   }
 
   /**

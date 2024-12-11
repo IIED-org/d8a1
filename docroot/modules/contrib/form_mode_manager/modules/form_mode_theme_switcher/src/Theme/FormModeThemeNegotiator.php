@@ -11,7 +11,7 @@ use Symfony\Component\Routing\Route;
 /**
  * Provides a theme negotiator to switch themes based on form modes.
  */
-class FormModeThemeNegociator implements ThemeNegotiatorInterface {
+class FormModeThemeNegotiator implements ThemeNegotiatorInterface {
 
   /**
    * Protected theme variable to store the theme to active.
@@ -89,7 +89,7 @@ class FormModeThemeNegociator implements ThemeNegotiatorInterface {
     }
 
     $route_form_mode_theme = $route->getOption('form_mode_theme');
-    $form_mode_id = str_replace('.', '_', $route->getDefault('_entity_form'));
+    $form_mode_id = str_replace('.', '_', $route->getDefault('_entity_form') ?? '');
     $form_mode_theme_type = $this->formModeThemeSwitcherConfig->get("type.$form_mode_id");
 
     return (isset($form_mode_theme_type) || isset($route_form_mode_theme));
@@ -108,13 +108,16 @@ class FormModeThemeNegociator implements ThemeNegotiatorInterface {
     $route_object = $route_match->getRouteObject();
     $route_form_mode_theme = $route_object->getOption('form_mode_theme');
 
-    // Priority to route 'form_mode_theme' parametter theme.
+    // Priority to route 'form_mode_theme' parameter theme.
     if (isset($route_form_mode_theme)) {
       return $route_form_mode_theme;
     }
 
     $form_mode_id = str_replace('.', '_', $route_object->getDefault('_entity_form'));
     $theme_type = $this->formModeThemeSwitcherConfig->get("type.$form_mode_id");
+    if (!$theme_type) {
+      return $this->theme;
+    }
 
     // If theme set from settings is set to 'default admin theme'.
     if ($this->isAdminTheme($route_match, $theme_type)) {
@@ -161,8 +164,8 @@ class FormModeThemeNegociator implements ThemeNegotiatorInterface {
    * @return bool
    *   True if the theme type from settings is set to "Specific theme".
    */
-  public function isCustomTheme($theme_type) {
-    return isset($theme_type) && $theme_type === '_custom';
+  public function isCustomTheme(string $theme_type): bool {
+    return $theme_type === '_custom';
   }
 
 }

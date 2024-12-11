@@ -46,7 +46,7 @@ env:
     # Drupal specific variables.
     - DRUPAL_TI_DB="drupal_travis_db"
     - DRUPAL_TI_DB_URL="mysql://root:@127.0.0.1/drupal_travis_db"
-    - DRUPAL_TI_CORE_BRANCH="8.5.x"
+    - DRUPAL_TI_CORE_BRANCH="10.3.x"
 
     # Note: Do not add a trailing slash here.
     - DRUPAL_TI_WEBSERVER_URL="http://127.0.0.1"

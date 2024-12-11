@@ -8,6 +8,8 @@ include:
 
 variables:
   SKIP_ESLINT: '1'
+  _CSPELL_IGNORE_PATHS: "\"composer.json\""
+  OPT_IN_TEST_NEXT_MAJOR: 1
 
 phpcs:
   allow_failure: false
@@ -24,3 +26,8 @@ phpstan:
       codequality: phpstan-report.json
   script:
     - vendor/bin/phpstan analyze --memory-limit=2G --no-interaction --no-progress --error-format=gitlab $_WEB_ROOT/modules/custom | tee phpstan-report.json
+
+phpstan (next major):
+  allow_failure: false
+phpunit (next major):
+  allow_failure: false

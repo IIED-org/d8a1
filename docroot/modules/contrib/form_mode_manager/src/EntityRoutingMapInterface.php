@@ -73,12 +73,9 @@ interface EntityRoutingMapInterface extends PluginInspectionInterface, Configura
   public function getDefaultFormClass();
 
   /**
-   * Return contextual links route mapping.
-   *
-   * @return array[]
-   *   The mapping of each entity contextual links given by plugin annotation.
+   * Set contextual links route mapping.
    */
-  public function setContextualLinks();
+  public function setContextualLinks(): void;
 
   /**
    * Set the default form class Definition.

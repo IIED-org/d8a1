@@ -56,4 +56,12 @@ interface EntityFormModeManagerInterface {
    */
   public function entityEdit(RouteMatchInterface $route_match);
 
+  /**
+   * Provides the entity 'content_translation_add' form.
+   *
+   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
+   *   The current route match.
+   */
+  public function entityTranslationAdd(RouteMatchInterface $route_match);
+
 }
