@@ -6,8 +6,6 @@
  */
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\facets\FacetSourceInterface;
-use Drupal\search_api\Plugin\views\query\SearchApiQuery;
 
 /**
  * Implements hook_form_FORM_ID_alter().
@@ -21,7 +19,7 @@ function facets_pretty_paths_form_facets_facet_edit_form_alter(&$form, FormState
   // Only alter form when pretty paths is active.
   if ($facetsource_config->getUrlProcessorName() == 'facets_pretty_paths') {
 
-    /* @var $pretty_paths_coder_manager \Drupal\facets_pretty_paths\Coder\CoderPluginManager */
+    /** @var \Drupal\facets_pretty_paths\Coder\CoderPluginManager $pretty_paths_coder_manager */
     $pretty_paths_coder_manager = \Drupal::service('plugin.manager.facets_pretty_paths.coder');
     $coders = [];
     $coder_descriptions = [];
@@ -54,46 +52,4 @@ function facets_pretty_paths_facet_edit_form_submit(&$form, FormStateInterface $
   $facet = \Drupal::routeMatch()->getParameter('facets_facet');
   $facet->setThirdPartySetting('facets_pretty_paths', 'coder', $coder);
   $facet->save();
-}
-
-/**
- * Implements hook_form_FORM_ID_alter().
- *
- * Using views exposed form in combination with pretty paths can lead to the
- * facet selection being reset when submitting the exposed form. This is caused
- * by the form action being set to the default view URL, instead of the
- * current path created by pretty paths. This alter hooks attempts to fix this.
- */
-function facets_pretty_paths_form_views_exposed_form_alter(&$form, FormStateInterface $form_state, $form_id): void {
-  if ($form_id !== 'views_exposed_form') {
-    return;
-  }
-
-  // Get the current view query.
-  $query = $form_state->getStorage()['view']->getQuery();
-  // @TODO add support for core search.
-  if (!($query instanceof SearchApiQuery)) {
-    return;
-  }
-  $search_api_query = $query->getSearchApiQuery();
-  if (!$search_api_query) {
-    return;
-  }
-  $facet_source_id = 'search_api__' . str_replace(':', '__', $search_api_query->getSearchId());
-
-  // Get the current facet source.
-  $facet_source = \Drupal::entityTypeManager()
-    ->getStorage('facets_facet_source')
-    ->load($facet_source_id);
-  if (!($facet_source instanceof FacetSourceInterface)) {
-    return;
-  }
-
-  // Only alter form when pretty paths is active.
-  if ($facet_source->getUrlProcessorName() !== 'facets_pretty_paths') {
-    return;
-  }
-
-  // See ViewsExposedForm::buildForm to see how '#action' gets set by default.
-  $form['#action'] = \Drupal::service('path.current')->getPath();
 }
