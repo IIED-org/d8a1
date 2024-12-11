@@ -2986,27 +2986,27 @@
         },
         {
             "name": "drupal/block_class",
-            "version": "2.0.11",
-            "version_normalized": "2.0.11.0",
+            "version": "3.0.0",
+            "version_normalized": "3.0.0.0",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/block_class.git",
-                "reference": "2.0.11"
+                "reference": "3.0.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/block_class-2.0.11.zip",
-                "reference": "2.0.11",
-                "shasum": "bd098ef0071b5baca1248c0deaa9bbedc0ddcaf4"
+                "url": "https://ftp.drupal.org/files/projects/block_class-3.0.0.zip",
+                "reference": "3.0.0",
+                "shasum": "41993c9ee6b925ec30e927cb557bafd9d5c05461"
             },
             "require": {
-                "drupal/core": "^8 || ^9 || ^10"
+                "drupal/core": "^9 || ^10 || ^11"
             },
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "2.0.11",
-                    "datestamp": "1672065313",
+                    "version": "3.0.0",
+                    "datestamp": "1723241676",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -5089,29 +5089,29 @@
         },
         {
             "name": "drupal/facets",
-            "version": "2.0.6",
-            "version_normalized": "2.0.6.0",
+            "version": "2.0.9",
+            "version_normalized": "2.0.9.0",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/facets.git",
-                "reference": "2.0.6"
+                "reference": "2.0.9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/facets-2.0.6.zip",
-                "reference": "2.0.6",
-                "shasum": "e984e6ce69026c20d2049d4ec53748e67c5e70de"
+                "url": "https://ftp.drupal.org/files/projects/facets-2.0.9.zip",
+                "reference": "2.0.9",
+                "shasum": "54512df3448c2464ef2bee7eefa825115562c9d5"
             },
             "require": {
-                "drupal/core": "^9.3 || ^10.0"
+                "drupal/core": "^10 || ^11"
             },
             "conflict": {
-                "drupal/search_api": "<1.14"
+                "drupal/search_api": "<1.30"
             },
             "require-dev": {
-                "drupal/jquery_ui_slider": "~2.0",
-                "drupal/jquery_ui_touch_punch": "~1.1",
-                "drupal/search_api": "^1.28||1.x-dev"
+                "drupal/jquery_ui_slider": "^2.1",
+                "drupal/jquery_ui_touch_punch": "^1.1",
+                "drupal/search_api": "1.x-dev"
             },
             "suggest": {
                 "drupal/jquery_ui_slider": "Required for the 'Facets Range Widget' module to work",
@@ -5120,16 +5120,14 @@
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "2.0.6",
-                    "datestamp": "1671207897",
+                    "version": "2.0.9",
+                    "datestamp": "1728492418",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
                     }
                 },
-                "patches_applied": {
-                    "3336646": "https://www.drupal.org/files/issues/2023-08-16/3336646-function-is-deprecated.patch"
-                }
+                "patches_applied": []
             },
             "installation-source": "dist",
             "notification-url": "https://packages.drupal.org/8/downloads",
@@ -5150,18 +5148,18 @@
                     "homepage": "https://www.drupal.org/user/124705"
                 },
                 {
-                    "name": "Nick_vh",
+                    "name": "nick_vh",
                     "homepage": "https://www.drupal.org/user/122682"
                 },
                 {
-                    "name": "StryKaizer",
+                    "name": "strykaizer",
                     "homepage": "https://www.drupal.org/user/462700"
                 }
             ],
             "description": "The Facet module allows site builders to easily create and manage faceted search interfaces.",
             "homepage": "https://www.drupal.org/project/facets",
             "support": {
-                "source": "git://git.drupal.org/project/facets.git",
+                "source": "https://git.drupalcode.org/project/facets",
                 "issues": "https://www.drupal.org/project/issues/facets",
                 "irc": "irc://irc.freenode.org/drupal-search-api"
             },
