@@ -9,8 +9,8 @@ label: 'AWS S3'
 type: awss3
 config:
   s3_endpoint: 'https://s3.eu-west-2.amazonaws.com'
-  s3_access_key_name: aws_access_key
-  s3_secret_key_name: aws_secret_key
+  s3_access_key_name: aws_access_key_1
+  s3_secret_key_name: aws_secret_key_1
   s3_bucket: iied-backup
   s3_folder_prefix: PnP
   s3_region: eu-west-2
