@@ -776,6 +776,6 @@ $settings['entity_update_batch_size'] = 50;
 if (file_exists($app_root . '/' . $site_path . '/settings.local.php')) {
   include $app_root . '/' . $site_path . '/settings.local.php';
 }
-elseif (getenv('LANDO_SERVICE_NAME') == 'appserver' && file_exists($app_root . '/' . $site_path . '/settings.lando.php')) {
+if (getenv('LANDO_SERVICE_NAME') == 'appserver' && file_exists($app_root . '/' . $site_path . '/settings.lando.php')) {
   include $app_root . '/' . $site_path . '/settings.lando.php';
 }
