@@ -4,7 +4,7 @@ status: true
 dependencies: {  }
 id: daily_files_schedule
 label: 'Daily files schedule'
-enabled: true
+enabled: false
 keep: 7
 period: 86400
 cron: null
