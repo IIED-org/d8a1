@@ -76,7 +76,7 @@ interface FormModeManagerInterface {
    *   context caused by getStorage() call.
    *
    * @return array
-   *   The collection without uneeded form modes.
+   *   The collection without unneeded form modes.
    */
   public function getAllFormModesDefinitions($ignore_excluded = FALSE, $ignore_active_display = FALSE);
 
@@ -89,11 +89,8 @@ interface FormModeManagerInterface {
    *   The entity type ID of entity.
    * @param bool $ignore_excluded
    *   Joker to determine if form modes to exclude list are used or ignored.
-   *
-   * @return array
-   *   The collection without uneeded form modes.
    */
-  public function filterExcludedFormModes(array &$form_mode, $entity_type_id, $ignore_excluded);
+  public function filterExcludedFormModes(array &$form_mode, $entity_type_id, $ignore_excluded): void;
 
   /**
    * Filter form mode collection depending activation in bundle.
@@ -106,11 +103,8 @@ interface FormModeManagerInterface {
    *   A form mode collection to be filtered.
    * @param string $entity_type_id
    *   The entity type ID of entity.
-   *
-   * @return array
-   *   The collection filtered without usage of storage.
    */
-  public function filterInactiveDisplay(array &$form_mode, $entity_type_id);
+  public function filterInactiveDisplay(array &$form_mode, $entity_type_id): void;
 
   /**
    * Retrieve the list of form_modes unavailable to expose by Form Mode Manager.
@@ -130,7 +124,7 @@ interface FormModeManagerInterface {
    *   A form mode definition to fetch.
    *
    * @return bool
-   *   True if Form mode have a minimum informations or false.
+   *   True if Form mode has minimal information or false.
    */
   public function isValidFormMode(array $form_mode);
 
@@ -184,7 +178,7 @@ interface FormModeManagerInterface {
    *   Identifier of form mode prefixed by entity type id.
    *
    * @return string
-   *   The form mode machine name without prefixe of,
+   *   The form mode machine name without prefix of,
    *   entity (entity.form_mode_name).
    */
   public function getFormModeMachineName($form_mode_id);

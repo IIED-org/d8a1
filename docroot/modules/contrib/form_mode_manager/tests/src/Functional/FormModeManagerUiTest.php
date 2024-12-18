@@ -184,7 +184,7 @@ class FormModeManagerUiTest extends FormModeManagerBase {
    *
    * @see \Drupal\Tests\form_mode_manager\Functional\FormModeManagerUiTest::testFieldFormFormModeManager()
    */
-  public function entityFormModeTestProvider() {
+  public static function entityFormModeTestProvider() {
     $data = [];
     $data[] = [
       [
@@ -254,12 +254,12 @@ class FormModeManagerUiTest extends FormModeManagerBase {
 
     $this->assertLocalTasks(self::$uiLocalTabsExpected);
 
-    // Check existance of select element.
-    $this->assertSession()->selectExists('element_node[]');
+    // Check the existence of the checkboxes element.
+    $this->assertSession()->checkboxNotChecked('element_node[' . $node_form_mode_id . ']');
 
     $this->getSession()
       ->getPage()
-      ->selectFieldOption('element_node[]', $node_form_mode_id);
+      ->checkField('element_node[' . $node_form_mode_id . ']');
 
     $this->getSession()->getPage()->pressButton('Save configuration');
     $this->assertSession()

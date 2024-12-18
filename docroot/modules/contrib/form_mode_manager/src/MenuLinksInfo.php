@@ -6,7 +6,7 @@ use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Manipulates Menus Links informations.
+ * Manipulates Menus Links information.
  *
  * This class contains primarily bridged hooks for menu links like :
  * links.actions, links.contextual, links.task, links.menu plugins.

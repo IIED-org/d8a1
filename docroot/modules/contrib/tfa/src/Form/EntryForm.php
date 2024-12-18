@@ -9,8 +9,8 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Drupal\tfa\TfaLoginPluginManager;
 use Drupal\tfa\TfaValidationPluginManager;
-use Drupal\user\UserDataInterface;
 use Drupal\user\Entity\User;
+use Drupal\user\UserDataInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -125,8 +125,8 @@ class EntryForm extends FormBase {
     $this->userData = $user_data;
     $this->request = $request;
     if (!$lock) {
-      @trigger_error('Constructing ' . __CLASS__ . ' without the lock service parameter is deprecated in TFA 8.x-1.3 and will be required before TFA 2.0.0.', E_USER_DEPRECATED);
-      // @phpcs:ignore DrupalPractice.Objects.GlobalDrupal.GlobalDrupal
+      @trigger_error('Constructing ' . __CLASS__ . ' without the lock service parameter is deprecated in tfa:8.x-1.3 and will be required before tfa:2.0.0. See https://www.drupal.org/node/3396512', E_USER_DEPRECATED);
+      // phpcs:ignore DrupalPractice.Objects.GlobalDrupal.GlobalDrupal
       $lock = \Drupal::service('lock');
     }
     $this->lock = $lock;

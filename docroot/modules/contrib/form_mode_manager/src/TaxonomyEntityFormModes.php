@@ -7,8 +7,9 @@ use Drupal\Core\Routing\RouteMatchInterface;
 /**
  * Route controller factory specific for Taxonomy Term entities.
  *
- * This Factory are herited from "ComplexEntityFormModes" because this entity,
- * implement some specific things proper to Taxonomy term like 'type' => 'vid'.
+ * This Factory are inherited from "ComplexEntityFormModes" because this
+ * entity implements some specific things proper to Taxonomy term like
+ * 'type' => 'vid'.
  */
 class TaxonomyEntityFormModes extends ComplexEntityFormModes {
 

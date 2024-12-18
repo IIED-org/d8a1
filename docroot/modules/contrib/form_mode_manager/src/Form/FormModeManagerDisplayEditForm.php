@@ -19,7 +19,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * formDisplay entity form elements. We haven't more common way to be plugged,
  * in EntityDisplay form edit event and identify with precision when an user,
  * add a form-mode onto an EntityType. With following code we have a flexible,
- * and light way to add Form Mode Manager custom comportements like field_ui,
+ * and light way to add Form Mode Manager custom compartments like field_ui,
  * way with `EntityFormDisplayEditForm`.
  */
 class FormModeManagerDisplayEditForm extends EntityFormDisplayEditForm {

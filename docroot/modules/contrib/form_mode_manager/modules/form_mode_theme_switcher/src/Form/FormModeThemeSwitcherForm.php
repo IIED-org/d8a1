@@ -4,6 +4,7 @@ namespace Drupal\form_mode_manager_theme_switcher\Form;
 
 use Drupal\Core\Cache\CacheTagsInvalidatorInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -21,6 +22,8 @@ class FormModeThemeSwitcherForm extends FormModeManagerFormBase {
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The factory for configuration objects.
+   * @param \Drupal\Core\Config\TypedConfigManagerInterface $typed_config_manager
+   *   The typed config manager.
    * @param \Drupal\Core\Entity\EntityDisplayRepositoryInterface $entity_display_repository
    *   The entity display repository.
    * @param \Drupal\form_mode_manager\FormModeManagerInterface $form_mode_manager
@@ -30,8 +33,8 @@ class FormModeThemeSwitcherForm extends FormModeManagerFormBase {
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager service.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, EntityDisplayRepositoryInterface $entity_display_repository, FormModeManagerInterface $form_mode_manager, CacheTagsInvalidatorInterface $cache_tags_invalidator, EntityTypeManagerInterface $entity_type_manager) {
-    parent::__construct($config_factory, $entity_display_repository, $form_mode_manager, $cache_tags_invalidator, $entity_type_manager);
+  public function __construct(ConfigFactoryInterface $config_factory, TypedConfigManagerInterface $typed_config_manager, EntityDisplayRepositoryInterface $entity_display_repository, FormModeManagerInterface $form_mode_manager, CacheTagsInvalidatorInterface $cache_tags_invalidator, EntityTypeManagerInterface $entity_type_manager) {
+    parent::__construct($config_factory, $typed_config_manager, $entity_display_repository, $form_mode_manager, $cache_tags_invalidator, $entity_type_manager);
 
     $this->ignoreExcluded = FALSE;
     $this->ignoreActiveDisplay = FALSE;
@@ -173,13 +176,12 @@ class FormModeThemeSwitcherForm extends FormModeManagerFormBase {
    * {@inheritdoc}
    */
   public function setSettingsPerEntity(FormStateInterface $form_state, array $form_modes, $entity_type_id) {
-    return FALSE;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function setSettingsPerFormMode(FormStateInterface $form_state, array $form_mode, $entity_type_id) {
+  public function setSettingsPerFormMode(FormStateInterface $form_state, array $form_mode, $entity_type_id): void {
     $form_mode_id = str_replace('.', '_', $form_mode['id']);
     $user_input = $form_state->getUserInput();
     $this->settings

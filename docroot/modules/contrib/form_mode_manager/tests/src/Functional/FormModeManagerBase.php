@@ -2,9 +2,9 @@
 
 namespace Drupal\Tests\form_mode_manager\Functional;
 
+use Drupal\Tests\BrowserTestBase;
 use Drupal\block_content\Entity\BlockContent;
 use Drupal\block_content\Entity\BlockContentType;
-use Drupal\Tests\BrowserTestBase;
 
 /**
  * Provides a test case for form_mode_manager functional tests.
@@ -31,6 +31,7 @@ abstract class FormModeManagerBase extends BrowserTestBase {
     'user',
     'form_mode_manager',
     'taxonomy',
+    'content_translation',
   ];
 
   /**

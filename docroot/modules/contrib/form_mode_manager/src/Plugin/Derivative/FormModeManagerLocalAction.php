@@ -82,7 +82,9 @@ class FormModeManagerLocalAction extends DeriverBase implements ContainerDeriver
           // of admin_create operation.
           if ($this->isUserEntityType($entity_type_id)) {
             $this->derivatives[$form_mode['id']]['route_name'] = "user.admin_create.$form_mode_name";
-            unset($this->derivatives[$form_mode['id']]['route_parameters']);
+            if (isset($this->derivatives[$form_mode['id']]['route_parameters'])) {
+              unset($this->derivatives[$form_mode['id']]['route_parameters']);
+            }
           }
 
           $this->setNodeEntityType($form_mode, $entity_type_id);

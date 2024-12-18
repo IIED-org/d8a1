@@ -10,6 +10,10 @@
  */
 function form_mode_manager_install() {
   _form_mode_manager_exclude_commerce_form_mode();
+
+  // Set module weight to higher than "content_translation" to be
+  // able to alter its routes.
+  module_set_weight('form_mode_manager', 11);
 }
 
 /**
@@ -61,4 +65,11 @@ function _form_mode_manager_exclude_commerce_form_mode() {
 
     \Drupal::entityTypeManager()->clearCachedDefinitions();
   }
+}
+
+/**
+ * Set weight higher than "content_translation" to alter its routes.
+ */
+function form_mode_manager_update_8003() {
+  module_set_weight('form_mode_manager', 11);
 }

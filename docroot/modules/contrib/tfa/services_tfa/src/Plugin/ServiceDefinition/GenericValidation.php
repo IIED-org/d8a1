@@ -27,6 +27,9 @@ use Symfony\Component\Serializer\SerializerInterface;
  *   category = @Translation("Security"),
  *   path = "auth/tfa"
  * )
+ *
+ * @deprecated in tfa:8.x-1.4 and is removed from tfa:2.0.0-alpha3. No replacement is provided.
+ * @see https://www.drupal.org/node/3395756
  */
 class GenericValidation extends ServiceDefinitionBase implements ContainerFactoryPluginInterface {
   use DependencySerializationTrait;
@@ -88,7 +91,7 @@ class GenericValidation extends ServiceDefinitionBase implements ContainerFactor
     $this->userData = $user_data;
     $this->tfaValidationManager = $tfa_validation_manager;
     if (!$lock) {
-      @trigger_error('Constructing ' . __CLASS__ . ' without the lock service parameter is deprecated in TFA 8.x-1.3 and will be required before TFA 2.0.0.', E_USER_DEPRECATED);
+      @trigger_error('Constructing ' . __CLASS__ . ' without the lock service parameter is deprecated in tfa:8.x-1.3 and will be required before tfa:2.0.0. See https://www.drupal.org/node/3396512', E_USER_DEPRECATED);
       $lock = \Drupal::service('lock');
     }
     $this->lock = $lock;

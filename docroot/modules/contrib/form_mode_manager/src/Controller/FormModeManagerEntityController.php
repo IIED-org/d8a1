@@ -2,6 +2,7 @@
 
 namespace Drupal\form_mode_manager\Controller;
 
+use Drupal\Core\DependencyInjection\ClassResolverInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityFormBuilderInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
@@ -30,87 +31,35 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class FormModeManagerEntityController implements EntityFormModeManagerInterface, ContainerInjectionInterface {
 
   /**
-   * The date formatter service.
-   *
-   * @var \Drupal\Core\Datetime\DateFormatterInterface
-   */
-  protected $dateFormatter;
-
-  /**
-   * The renderer service.
-   *
-   * @var \Drupal\Core\Render\RendererInterface
-   */
-  protected $renderer;
-
-  /**
-   * The current user.
-   *
-   * @var \Drupal\Core\Session\AccountInterface
-   */
-  protected $account;
-
-  /**
-   * The entity display repository.
-   *
-   * @var \Drupal\form_mode_manager\FormModeManagerInterface
-   */
-  protected $formModeManager;
-
-  /**
-   * The entity form builder service.
-   *
-   * @var \Drupal\Core\Entity\EntityFormBuilderInterface
-   */
-  protected $entityFormBuilder;
-
-  /**
-   * The Routes Manager Plugin.
-   *
-   * @var \Drupal\form_mode_manager\EntityRoutingMapManager
-   */
-  protected $entityRoutingMap;
-
-  /**
-   * The form builder.
-   *
-   * @var \Drupal\Core\Form\FormBuilderInterface
-   */
-  protected $formBuilder;
-
-  /**
-   * The entity type manager service.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
    * Constructs a EntityFormModeController object.
    *
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer service.
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The current user.
-   * @param \Drupal\form_mode_manager\FormModeManagerInterface $form_mode_manager
+   * @param \Drupal\form_mode_manager\FormModeManagerInterface $formModeManager
    *   The form mode manager.
-   * @param \Drupal\Core\Entity\EntityFormBuilderInterface $entity_form_builder
+   * @param \Drupal\Core\Entity\EntityFormBuilderInterface $entityFormBuilder
    *   The entity form builder service.
-   * @param \Drupal\form_mode_manager\EntityRoutingMapManager $plugin_routes_manager
+   * @param \Drupal\form_mode_manager\EntityRoutingMapManager $entityRoutingMap
    *   Plugin EntityRoutingMap to retrieve entity form operation routes.
-   * @param \Drupal\Core\Form\FormBuilderInterface $form_builder
+   * @param \Drupal\Core\Form\FormBuilderInterface $formBuilder
    *   The form builder.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager.
+   * @param \Drupal\Core\DependencyInjection\ClassResolverInterface $classResolver
+   *   The class resolver.
    */
-  public function __construct(RendererInterface $renderer, AccountInterface $account, FormModeManagerInterface $form_mode_manager, EntityFormBuilderInterface $entity_form_builder, EntityRoutingMapManager $plugin_routes_manager, FormBuilderInterface $form_builder, EntityTypeManagerInterface $entity_type_manager) {
-    $this->renderer = $renderer;
-    $this->account = $account;
-    $this->formModeManager = $form_mode_manager;
-    $this->entityFormBuilder = $entity_form_builder;
-    $this->entityRoutingMap = $plugin_routes_manager;
-    $this->formBuilder = $form_builder;
-    $this->entityTypeManager = $entity_type_manager;
+  public function __construct(
+    protected RendererInterface $renderer,
+    protected AccountInterface $account,
+    protected FormModeManagerInterface $formModeManager,
+    protected EntityFormBuilderInterface $entityFormBuilder,
+    protected EntityRoutingMapManager $entityRoutingMap,
+    protected FormBuilderInterface $formBuilder,
+    protected EntityTypeManagerInterface $entityTypeManager,
+    protected ClassResolverInterface $classResolver,
+  ) {
   }
 
   /**
@@ -124,7 +73,8 @@ class FormModeManagerEntityController implements EntityFormModeManagerInterface,
       $container->get('entity.form_builder'),
       $container->get('plugin.manager.entity_routing_map'),
       $container->get('form_builder'),
-      $container->get('entity_type.manager')
+      $container->get('entity_type.manager'),
+      $container->get('class_resolver'),
     );
   }
 
@@ -171,6 +121,13 @@ class FormModeManagerEntityController implements EntityFormModeManagerInterface,
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function entityTranslationAdd(RouteMatchInterface $route_match) {
+    return $this->getEntityControllerResponse(__FUNCTION__, $route_match);
+  }
+
+  /**
    * Instantiate correct objects depending entities.
    *
    * Contain all the logic to use the abstract factory and call,
@@ -202,7 +159,6 @@ class FormModeManagerEntityController implements EntityFormModeManagerInterface,
     if (!method_exists($controller_object, $method)) {
       throw new \Exception('Specified ' . $method . ' method not found.');
     }
-
     return $controller_object->{$method}($route_match);
   }
 
@@ -225,7 +181,8 @@ class FormModeManagerEntityController implements EntityFormModeManagerInterface,
           $this->entityFormBuilder,
           $this->entityRoutingMap,
           $this->formBuilder,
-          $this->entityTypeManager
+          $this->entityTypeManager,
+          $this->classResolver,
         );
 
         break;
@@ -238,7 +195,8 @@ class FormModeManagerEntityController implements EntityFormModeManagerInterface,
           $this->entityFormBuilder,
           $this->entityRoutingMap,
           $this->formBuilder,
-          $this->entityTypeManager
+          $this->entityTypeManager,
+          $this->classResolver,
         );
 
         break;
@@ -251,7 +209,8 @@ class FormModeManagerEntityController implements EntityFormModeManagerInterface,
           $this->entityFormBuilder,
           $this->entityRoutingMap,
           $this->formBuilder,
-          $this->entityTypeManager
+          $this->entityTypeManager,
+          $this->classResolver,
         );
 
         break;
@@ -264,7 +223,8 @@ class FormModeManagerEntityController implements EntityFormModeManagerInterface,
           $this->entityFormBuilder,
           $this->entityRoutingMap,
           $this->formBuilder,
-          $this->entityTypeManager
+          $this->entityTypeManager,
+          $this->classResolver,
         );
         break;
     }

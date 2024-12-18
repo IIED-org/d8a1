@@ -25,6 +25,13 @@ class TfaLoginForm extends UserLoginForm {
   protected $destination;
 
   /**
+   * The current session.
+   *
+   * @var \Symfony\Component\HttpFoundation\Session\SessionInterface
+   */
+  protected $session;
+
+  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
@@ -38,6 +45,7 @@ class TfaLoginForm extends UserLoginForm {
 
     $instance->destination = $container->get('redirect.destination');
     $instance->privateTempStore = $container->get('tempstore.private')->get('tfa');
+    $instance->session = $container->get('session');
 
     return $instance;
   }
@@ -66,6 +74,9 @@ class TfaLoginForm extends UserLoginForm {
       return;
     }
 
+    // Regenerate the session ID to prevent against session fixation attacks.
+    $this->session->migrate();
+
     // Similar to tfa_user_login() but not required to force user logout.
     /** @var \Drupal\user\UserInterface $user */
     $user = $this->userStorage->load($uid);
@@ -89,7 +100,17 @@ class TfaLoginForm extends UserLoginForm {
       else {
         if ($this->canLoginWithoutTfa($this->logger('tfa'))) {
           $this->doUserLogin();
-          $form_state->setRedirect('<front>');
+          $redirect_config = $this->config('tfa.settings')->get('users_without_tfa_redirect');
+          if ($redirect_config && $user->hasPermission("setup own tfa")) {
+            // Redirect user directly to the TFA account setup overview page.
+            if ($this->getRequest()->request->has('destination')) {
+              $this->getRequest()->query->remove('destination');
+            }
+            $form_state->setRedirect('tfa.overview', ['user' => $user->id()]);
+          }
+          else {
+            $form_state->setRedirect('<front>');
+          }
         }
       }
     }

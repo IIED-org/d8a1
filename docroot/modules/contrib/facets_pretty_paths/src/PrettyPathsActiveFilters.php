@@ -3,7 +3,9 @@
 namespace Drupal\facets_pretty_paths;
 
 use Drupal\Core\Batch\BatchStorageInterface;
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
 use Drupal\facets_pretty_paths\Coder\CoderPluginManager;
@@ -50,6 +52,20 @@ class PrettyPathsActiveFilters {
   protected $batchStorage;
 
   /**
+   * The configuration object factory.
+   *
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
+   */
+  protected $configFactory;
+
+  /**
+   * The module handler.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   */
+  protected $moduleHandler;
+
+  /**
    * Constructs an instance of PrettyPathsActiveFilters.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
@@ -62,13 +78,19 @@ class PrettyPathsActiveFilters {
    *   The request stack.
    * @param \Drupal\Core\Batch\BatchStorageInterface $batch_storage
    *   The batch storage.
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
+   *   The configuration object factory.
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   *   The module handler to invoke the alter hook with.
    */
-  public function __construct(EntityTypeManagerInterface $entityTypeManager, RouteMatchInterface $routeMatch, CoderPluginManager $coderManager, RequestStack $requestStack, BatchStorageInterface $batch_storage) {
+  public function __construct(EntityTypeManagerInterface $entityTypeManager, RouteMatchInterface $routeMatch, CoderPluginManager $coderManager, RequestStack $requestStack, BatchStorageInterface $batch_storage, ConfigFactoryInterface $config_factory, ModuleHandlerInterface $module_handler) {
     $this->entityTypeManager = $entityTypeManager;
     $this->routeMatch = $routeMatch;
     $this->coderManager = $coderManager;
     $this->request = $requestStack->getCurrentRequest();
     $this->batchStorage = $batch_storage;
+    $this->configFactory = $config_factory;
+    $this->moduleHandler = $module_handler;
   }
 
   /**
@@ -90,7 +112,7 @@ class PrettyPathsActiveFilters {
 
     $mapping[$facet_source_id] = [];
 
-    // Keep a local cache of already initialised coders.
+    // Keep a local cache of already initialized coders.
     $initialized_coders = [];
 
     $filters = $this->getFiltersFromRoute();
@@ -177,10 +199,25 @@ class PrettyPathsActiveFilters {
     // defined as GET parameter.
     if ($this->routeMatch->getRouteName() === 'views.ajax') {
       $q = $this->request->query->get('q');
-      if ($q === NULL && $this->request->isMethod('POST') && !empty($_REQUEST['view_path'])) {
+
+      if (version_compare(\Drupal::VERSION, '10.1', '>=')) {
+        $condition = $q === NULL && !empty($_REQUEST['view_path']);
+      }
+      else {
+        $condition = $q === NULL && $this->request->isMethod('POST') && !empty($_REQUEST['view_path']);
+      }
+
+      if ($condition) {
         $q = str_replace($this->request->getSchemeAndHttpHost(), '', $this->request->headers->get('referer'));
       }
       if ($q) {
+        if ($this->moduleHandler->moduleExists('language')) {
+          $url_config = $this->configFactory->get('language.negotiation')->get('url');
+          if ($url_config['source'] === 'domain') {
+            $parsed_url = parse_url($q);
+            $q = $parsed_url['path'];
+          }
+        }
         $q = preg_replace('/^' . str_replace('/', '\/', base_path()) . '/', '/', $q);
         $route_params = Url::fromUserInput($q)->getRouteParameters();
         if (isset($route_params['facets_query'])) {

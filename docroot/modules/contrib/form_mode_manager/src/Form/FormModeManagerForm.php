@@ -4,6 +4,7 @@ namespace Drupal\form_mode_manager\Form;
 
 use Drupal\Core\Cache\CacheTagsInvalidatorInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -17,8 +18,8 @@ class FormModeManagerForm extends FormModeManagerFormBase {
   /**
    * {@inheritdoc}
    */
-  public function __construct(ConfigFactoryInterface $config_factory, EntityDisplayRepositoryInterface $entity_display_repository, FormModeManagerInterface $form_mode_manager, CacheTagsInvalidatorInterface $cache_tags_invalidator, EntityTypeManagerInterface $entity_type_manager) {
-    parent::__construct($config_factory, $entity_display_repository, $form_mode_manager, $cache_tags_invalidator, $entity_type_manager);
+  public function __construct(ConfigFactoryInterface $config_factory, TypedConfigManagerInterface $typed_config_manager, EntityDisplayRepositoryInterface $entity_display_repository, FormModeManagerInterface $form_mode_manager, CacheTagsInvalidatorInterface $cache_tags_invalidator, EntityTypeManagerInterface $entity_type_manager) {
+    parent::__construct($config_factory, $typed_config_manager, $entity_display_repository, $form_mode_manager, $cache_tags_invalidator, $entity_type_manager);
 
     $this->ignoreExcluded = TRUE;
   }
@@ -60,7 +61,7 @@ class FormModeManagerForm extends FormModeManagerFormBase {
    * {@inheritdoc}
    */
   public function buildFormPerEntity(array &$form, array $form_modes, $entity_type_id) {
-    $options = array_combine(array_keys($form_modes[$entity_type_id]), array_keys($form_modes[$entity_type_id]));
+    $options = array_combine(array_keys($form_modes[$entity_type_id]), array_column($form_modes[$entity_type_id], 'label'));
     $entity_label = $this->entityTypeManager->getStorage($entity_type_id)->getEntityType()->getLabel();
     $form[$entity_type_id] = [
       '#type' => 'details',
@@ -68,15 +69,15 @@ class FormModeManagerForm extends FormModeManagerFormBase {
       '#group' => 'vertical_tabs',
     ];
 
-    $form[$entity_type_id]['element_' . $entity_type_id] = [
-      '#type' => 'select',
-      '#title' => $this->t('Choose what form_mode you need to exclude of Form Mode Manager process.'),
-      '#options' => $options,
-      '#multiple' => TRUE,
-      '#default_value' => $this->settings->get("form_modes.{$entity_type_id}.to_exclude"),
-      '#empty_value' => '_none',
-      '#empty_option' => $this->t('- Any -'),
-    ];
+    if ($options) {
+      $form[$entity_type_id]['element_' . $entity_type_id] = [
+        '#type' => 'checkboxes',
+        '#title' => $this->t('Choose which form modes you would like to exclude from being processed by the Form Mode Manager.'),
+        '#options' => $options,
+        '#multiple' => TRUE,
+        '#default_value' => $this->settings->get("form_modes.{$entity_type_id}.to_exclude") ?: [],
+      ];
+    }
 
     return $this;
   }
@@ -98,8 +99,7 @@ class FormModeManagerForm extends FormModeManagerFormBase {
   /**
    * {@inheritdoc}
    */
-  public function setSettingsPerFormMode(FormStateInterface $form_state, array $form_mode, $entity_type_id) {
-    return FALSE;
+  public function setSettingsPerFormMode(FormStateInterface $form_state, array $form_mode, $entity_type_id): void {
   }
 
   /**

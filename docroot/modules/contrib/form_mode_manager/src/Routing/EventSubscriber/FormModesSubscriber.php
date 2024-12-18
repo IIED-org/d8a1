@@ -6,6 +6,7 @@ use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Routing\RouteSubscriberBase;
+use Drupal\Core\Routing\RoutingEvents;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\form_mode_manager\EntityRoutingMapManager;
 use Drupal\form_mode_manager\FormModeManagerInterface;
@@ -102,6 +103,16 @@ class FormModesSubscriber extends RouteSubscriberBase {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public static function getSubscribedEvents(): array {
+    $events = parent::getSubscribedEvents();
+    // In order to run after ContentTranslationRouteSubscriber.
+    $events[RoutingEvents::ALTER] = ['onAlterRoutes', -210];
+    return $events;
+  }
+
+  /**
    * Add one route collection per entity using form modes.
    *
    * {@inheritdoc}
@@ -150,6 +161,9 @@ class FormModesSubscriber extends RouteSubscriberBase {
       if (!empty($this->entityDefinition->getKey('bundle'))) {
         $this->setAddPageCollection($form_mode_infos);
       }
+      if ($this->entityDefinition->isTranslatable()) {
+        $this->setContentTranslationCollection($form_mode_infos);
+      }
     }
   }
 
@@ -157,10 +171,10 @@ class FormModesSubscriber extends RouteSubscriberBase {
    * Create a route for given form mode and operation form handler.
    *
    * This method add a route for given form mode and respect the standard,
-   * of parent entity routing naming. All routes added in collection are,
-   * based on parrent route parameters and only add only,
-   * the minimum to use form modes. The route add only if parent entity,
-   * declare to use this operation in `entityRoutingMap` plugin.
+   * of parent entity routing naming. All routes added in collection are
+   * based on parent route parameters and add only the minimum needed to use
+   * form modes. Add the route only if parent entity declares using this
+   * operation in the `entityRoutingMap` plugin.
    *
    * @param array $form_mode_infos
    *   A form-mode for specified entity_type_id.
@@ -261,7 +275,7 @@ class FormModesSubscriber extends RouteSubscriberBase {
   }
 
   /**
-   * Get options parameters nedeed to build Form Mode Manager routes.
+   * Get options parameters needed to build Form Mode Manager routes.
    *
    * @param array $form_mode_infos
    *   The form mode info.
@@ -291,7 +305,7 @@ class FormModesSubscriber extends RouteSubscriberBase {
   }
 
   /**
-   * Get options requirements nedeed to build Form Mode Manager routes.
+   * Get options requirements needed to build Form Mode Manager routes.
    *
    * @param array $form_mode_infos
    *   The form mode info.
@@ -312,10 +326,10 @@ class FormModesSubscriber extends RouteSubscriberBase {
    * This page concern only bundled entities using a route for listing all,
    * bundles using by this entity. Form mode manager add more granularity ,
    * permit to choose what bundle is compatible with a specific form mode.
-   * This method add one listing route by form mode to provide,
-   * these granularity. Not all entities declare a `add_page` operation,
-   * because this isn't needed for all usecases but Form mode manager need,
-   * to add this possibility as a standard.
+   * This method adds one listing route by form mode to provide this
+   * granularity. Not all entities declare a `add_page` operation,
+   * because this isn't needed for all use cases but Form mode manager
+   * needs to add this possibility as a standard.
    * All routes key are named with to follow these standard,
    * `form_mode_manager.ENTITY_TYPE_ID.add_page.FORM_MODE_NAME`
    *
@@ -371,6 +385,54 @@ class FormModesSubscriber extends RouteSubscriberBase {
     }
 
     return $route;
+  }
+
+  /**
+   * Add one route for `content_translation_add` entity operation.
+   */
+  public function setContentTranslationCollection(array $form_mode_infos) {
+    $form_mode_machine_name = $this->formModeManager->getFormModeMachineName($form_mode_infos['id']);
+    $entity_type_id = $this->entityDefinition->id();
+    if ($entity_type_id === 'node' && $this->formModeManager->hasActiveFormMode($entity_type_id, $form_mode_machine_name)) {
+      $form_mode_name = $this->formModeManager->getFormModeMachineName($form_mode_infos['id']);
+
+      // Unlike other paths added by form mode manager, the content_translation
+      // dynamic routes cannot end with the form mode or content_translation
+      // handles the route instead of form mode manager.
+      $route_path = '/' . $entity_type_id . '/{' . $entity_type_id . '}/translations/add/' . $form_mode_name . '/{source}/{target}';
+      $route = new Route(
+        $route_path,
+        [
+          '_controller' => '\Drupal\form_mode_manager\Controller\FormModeManagerEntityController::entityTranslationAdd',
+          'entity_type_id' => $entity_type_id,
+          'source' => NULL,
+          'target' => NULL,
+        ],
+        [
+          '_entity_access' => $entity_type_id . '.view',
+          '_access_content_translation_manage' => 'create',
+        ],
+        [
+          'parameters' => [
+            'source' => [
+              'type' => 'language',
+            ],
+            'target' => [
+              'type' => 'language',
+            ],
+            'node' => [
+              'type' => 'entity:' . $entity_type_id,
+              'load_latest_revision' => TRUE,
+            ],
+            'form_mode' => $form_mode_infos + ['type' => NULL],
+          ],
+          '_admin_route' => TRUE,
+          '_form_mode_manager_entity_type_id' => $entity_type_id,
+          'form_mode_theme' => NULL,
+        ]
+      );
+      $this->routeCollection->add("form_mode_manager.$entity_type_id.content_translation_add.$form_mode_name", $route);
+    }
   }
 
   /**

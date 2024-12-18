@@ -3,6 +3,7 @@
 namespace Drupal\form_mode_manager;
 
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 
 /**
@@ -32,12 +33,14 @@ class SimpleEntityFormModes extends AbstractEntityFormModesFactory {
 
     // When we need to check access for actions links,
     // we don't have entity to load.
-    if (empty($entity)) {
+    if ($entity instanceof EntityInterface) {
+      $entity_type_id = $entity->getEntityTypeId();
+    }
+    else {
       $route_entity_type_info = $this->getEntityTypeFromRouteMatch($route_match);
       $entity_type_id = $route_entity_type_info['entity_type_id'];
     }
 
-    $entity_type_id = $entity_type_id ?? $entity->getEntityTypeId();
     $operation = $this->getFormModeOperationName($this->formModeManager->getFormModeMachineName($form_mode_id));
 
     return AccessResult::allowedIf($this->formModeManager->isActive($entity_type_id, $entity_type_id, $operation))
@@ -75,7 +78,7 @@ class SimpleEntityFormModes extends AbstractEntityFormModesFactory {
   public function getEntity(RouteMatchInterface $route_match) {
     /** @var \Drupal\Core\Entity\EntityInterface $entity */
     $entity = $this->getEntityFromRouteMatch($route_match);
-    if (empty($entity)) {
+    if (!$entity instanceof EntityInterface) {
       $route_entity_type_info = $this->getEntityTypeFromRouteMatch($route_match);
       /** @var \Drupal\Core\Entity\EntityInterface $entity */
       $entity = $this->entityTypeManager->getStorage($route_entity_type_info['entity_type_id'])->create();

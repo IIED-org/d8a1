@@ -15,5 +15,5 @@ Modules:
 Configuration
 -------------
 
-* Create an content to test differents cases.
+* Create an content to test different cases.
     * Create Node Form Mode Example (`node/add/form_mode_manager_examples`)

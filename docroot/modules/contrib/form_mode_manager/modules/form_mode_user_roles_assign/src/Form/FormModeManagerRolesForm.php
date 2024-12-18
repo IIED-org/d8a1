@@ -4,11 +4,13 @@ namespace Drupal\form_mode_user_roles_assign\Form;
 
 use Drupal\Core\Cache\CacheTagsInvalidatorInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\form_mode_manager\Form\FormModeManagerFormBase;
 use Drupal\form_mode_manager\FormModeManagerInterface;
+use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 
 /**
@@ -19,8 +21,8 @@ class FormModeManagerRolesForm extends FormModeManagerFormBase {
   /**
    * {@inheritdoc}
    */
-  public function __construct(ConfigFactoryInterface $config_factory, EntityDisplayRepositoryInterface $entity_display_repository, FormModeManagerInterface $form_mode_manager, CacheTagsInvalidatorInterface $cache_tags_invalidator, EntityTypeManagerInterface $entity_type_manager) {
-    parent::__construct($config_factory, $entity_display_repository, $form_mode_manager, $cache_tags_invalidator, $entity_type_manager);
+  public function __construct(ConfigFactoryInterface $config_factory, TypedConfigManagerInterface $typed_config_manager, EntityDisplayRepositoryInterface $entity_display_repository, FormModeManagerInterface $form_mode_manager, CacheTagsInvalidatorInterface $cache_tags_invalidator, EntityTypeManagerInterface $entity_type_manager) {
+    parent::__construct($config_factory, $typed_config_manager, $entity_display_repository, $form_mode_manager, $cache_tags_invalidator, $entity_type_manager);
 
     $this->ignoreExcluded = FALSE;
     $this->ignoreActiveDisplay = FALSE;
@@ -41,13 +43,23 @@ class FormModeManagerRolesForm extends FormModeManagerFormBase {
   }
 
   /**
-   * {@inheritdoc}
+   * Get available role options.
+   *
+   * @return array
+   *   The role labels keyed by role IDs.
    */
-  public function getAvailableRoleOptions() {
-    $roles = array_map(['\Drupal\Component\Utility\Html', 'escape'], user_role_names(TRUE));
-    unset($roles[RoleInterface::AUTHENTICATED_ID]);
+  public function getAvailableRoleOptions(): array {
+    $options = [];
 
-    return $roles;
+    if ($all_roles = Role::loadMultiple()) {
+      unset($all_roles[RoleInterface::ANONYMOUS_ID]);
+      unset($all_roles[RoleInterface::AUTHENTICATED_ID]);
+      foreach ($all_roles as $role) {
+        $options[$role->id()] = $role->label();
+      }
+    }
+
+    return $options;
   }
 
   /**
@@ -128,15 +140,14 @@ class FormModeManagerRolesForm extends FormModeManagerFormBase {
    * {@inheritdoc}
    */
   public function setSettingsPerEntity(FormStateInterface $form_state, array $form_modes, $entity_type_id) {
-    return FALSE;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function setSettingsPerFormMode(FormStateInterface $form_state, array $form_mode, $entity_type_id) {
+  public function setSettingsPerFormMode(FormStateInterface $form_state, array $form_mode, $entity_type_id): void {
     if ('user' !== $entity_type_id) {
-      return $this;
+      return;
     }
 
     $form_mode_id = str_replace('.', '_', $form_mode['id']);

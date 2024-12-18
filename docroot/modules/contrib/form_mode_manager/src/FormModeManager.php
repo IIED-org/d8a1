@@ -181,7 +181,7 @@ class FormModeManager implements FormModeManagerInterface {
   /**
    * {@inheritdoc}
    */
-  public function filterExcludedFormModes(array &$form_modes, $entity_type_id, $ignore_excluded) {
+  public function filterExcludedFormModes(array &$form_modes, $entity_type_id, $ignore_excluded): void {
     foreach ($form_modes as $form_mode_id => $form_mode_definition) {
       // Exclude if current form_mode is malformed eg: "entity_test".
       if ($this->candidateToExclude($form_mode_definition, $entity_type_id, $ignore_excluded)) {
@@ -193,7 +193,7 @@ class FormModeManager implements FormModeManagerInterface {
   /**
    * {@inheritdoc}
    */
-  public function filterInactiveDisplay(array &$form_modes, $entity_type_id) {
+  public function filterInactiveDisplay(array &$form_modes, $entity_type_id): void {
     foreach ($form_modes as $form_mode_id => $form_mode_definition) {
       if (!array_key_exists($this->getFormModeMachineName($form_mode_id), $this->getActiveDisplays($entity_type_id))) {
         unset($form_modes[$form_mode_id]);
@@ -253,7 +253,7 @@ class FormModeManager implements FormModeManagerInterface {
    * {@inheritdoc}
    */
   public function isActive($entity_type_id, $bundle_id, $form_mode_machine_name) {
-    $bundle_id = $bundle_id ?? $entity_type_id;
+    $bundle_id = $bundle_id ?: $entity_type_id;
     $form_mode_active = array_keys($this->entityDisplayRepository->getFormModeOptionsByBundle($entity_type_id, $bundle_id));
     return in_array($form_mode_machine_name, $form_mode_active);
   }

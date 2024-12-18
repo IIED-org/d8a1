@@ -3,6 +3,8 @@
 namespace Drupal\form_mode_manager;
 
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\DependencyInjection\ClassResolverInterface;
+use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityFormBuilderInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -12,6 +14,8 @@ use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\content_translation\ContentTranslationManager;
+use Drupal\content_translation\Controller\ContentTranslationController;
 
 /**
  * Abstract Factory to generate object used by routing of Form Mode Manager.
@@ -32,87 +36,35 @@ abstract class AbstractEntityFormModesFactory implements EntityFormModeManagerIn
   use StringTranslationTrait;
 
   /**
-   * The date formatter service.
-   *
-   * @var \Drupal\Core\Datetime\DateFormatterInterface
-   */
-  protected $dateFormatter;
-
-  /**
-   * The renderer service.
-   *
-   * @var \Drupal\Core\Render\RendererInterface
-   */
-  protected $renderer;
-
-  /**
-   * The current user.
-   *
-   * @var \Drupal\Core\Session\AccountInterface
-   */
-  protected $account;
-
-  /**
-   * The entity display repository.
-   *
-   * @var \Drupal\form_mode_manager\FormModeManagerInterface
-   */
-  protected $formModeManager;
-
-  /**
-   * The entity form builder service.
-   *
-   * @var \Drupal\Core\Entity\EntityFormBuilderInterface
-   */
-  protected $entityFormBuilder;
-
-  /**
-   * The Routes Manager Plugin.
-   *
-   * @var \Drupal\form_mode_manager\EntityRoutingMapManager
-   */
-  protected $entityRoutingMap;
-
-  /**
-   * The form builder.
-   *
-   * @var \Drupal\Core\Form\FormBuilderInterface
-   */
-  protected $formBuilder;
-
-  /**
-   * The entity type manager service.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
    * Constructs a EntityFormModeController object.
    *
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer service.
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The current user.
-   * @param \Drupal\form_mode_manager\FormModeManagerInterface $form_mode_manager
+   * @param \Drupal\form_mode_manager\FormModeManagerInterface $formModeManager
    *   The form mode manager.
-   * @param \Drupal\Core\Entity\EntityFormBuilderInterface $entity_form_builder
+   * @param \Drupal\Core\Entity\EntityFormBuilderInterface $entityFormBuilder
    *   The entity form builder service.
-   * @param \Drupal\form_mode_manager\EntityRoutingMapManager $plugin_routes_manager
+   * @param \Drupal\form_mode_manager\EntityRoutingMapManager $entityRoutingMap
    *   Plugin EntityRoutingMap to retrieve entity form operation routes.
-   * @param \Drupal\Core\Form\FormBuilderInterface $form_builder
+   * @param \Drupal\Core\Form\FormBuilderInterface $formBuilder
    *   The form builder.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager.
+   * @param \Drupal\Core\DependencyInjection\ClassResolverInterface $classResolver
+   *   The class resolver.
    */
-  public function __construct(RendererInterface $renderer, AccountInterface $account, FormModeManagerInterface $form_mode_manager, EntityFormBuilderInterface $entity_form_builder, EntityRoutingMapManager $plugin_routes_manager, FormBuilderInterface $form_builder, EntityTypeManagerInterface $entity_manager) {
-    $this->renderer = $renderer;
-    $this->account = $account;
-    $this->formModeManager = $form_mode_manager;
-    $this->entityFormBuilder = $entity_form_builder;
-    $this->entityRoutingMap = $plugin_routes_manager;
-    $this->formBuilder = $form_builder;
-    $this->entityTypeManager = $entity_manager;
+  public function __construct(
+    protected RendererInterface $renderer,
+    protected AccountInterface $account,
+    protected FormModeManagerInterface $formModeManager,
+    protected EntityFormBuilderInterface $entityFormBuilder,
+    protected EntityRoutingMapManager $entityRoutingMap,
+    protected FormBuilderInterface $formBuilder,
+    protected EntityTypeManagerInterface $entityTypeManager,
+    protected ClassResolverInterface $classResolver,
+  ) {
   }
 
   /**
@@ -161,11 +113,13 @@ abstract class AbstractEntityFormModesFactory implements EntityFormModeManagerIn
 
     // When we need to check access for actions links,
     // we don't have entity to load.
-    if (empty($entity)) {
+    if ($entity instanceof EntityInterface) {
+      $entity_type_id = $entity->getEntityTypeId();
+    }
+    else {
       $entity_type_id = $route_object->getOption('_form_mode_manager_entity_type_id');
     }
 
-    $entity_type_id = $entity_type_id ?? $entity->getEntityTypeId();
     $operation = $this->getFormModeOperationName($this->formModeManager->getFormModeMachineName($form_mode_id));
     $is_active_form_mode = $this->formModeManager->isActive($entity_type_id, $bundle_id, $operation);
 
@@ -200,6 +154,43 @@ abstract class AbstractEntityFormModesFactory implements EntityFormModeManagerIn
 
     if ($entity instanceof EntityInterface) {
       return $this->getForm($entity, $operation);
+    }
+
+    throw new \Exception("Entity retrieve from route isn't an instance of EntityInterface.");
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function entityTranslationAdd(RouteMatchInterface $route_match) {
+    $entity = $this->getEntity($route_match);
+    $operation = $this->getOperation($route_match, $entity->getEntityTypeId());
+
+    if ($entity instanceof ContentEntityInterface) {
+      $source = $route_match->getParameter('source');
+      $target = $route_match->getParameter('target');
+      /** @var \Drupal\content_translation\Controller\ContentTranslationController $content_translation_controller */
+      $content_translation_controller = $this->classResolver->getInstanceFromDefinition(ContentTranslationController::class);
+
+      // Duplicates \Drupal\content_translation\Controller\ContentTranslationController::add().
+      if (!$entity->isDefaultRevision() && ContentTranslationManager::isPendingRevisionSupportEnabled($entity->getEntityTypeId(), $entity->bundle())) {
+        /** @var \Drupal\Core\Entity\ContentEntityStorageInterface $storage */
+        $storage = $this->entityTypeManager->getStorage($entity->getEntityTypeId());
+        $revision_id = $storage->getLatestTranslationAffectedRevisionId($entity->id(), $source->getId());
+        if ($revision_id != $entity->getRevisionId()) {
+          $entity = $storage->loadRevision($revision_id);
+        }
+      }
+
+      $content_translation_controller->prepareTranslation($entity, $source, $target);
+
+      $form_state_additions = [];
+      $form_state_additions['langcode'] = $target->getId();
+      $form_state_additions['content_translation']['source'] = $source;
+      $form_state_additions['content_translation']['target'] = $target;
+      $form_state_additions['content_translation']['translation_form'] = !$entity->access('update');
+
+      return $this->getForm($entity, $operation, $form_state_additions);
     }
 
     throw new \Exception("Entity retrieve from route isn't an instance of EntityInterface.");
