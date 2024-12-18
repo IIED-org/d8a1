@@ -1,6 +1,5 @@
 # MimeMap
 
-[![PHP Version Require](http://poser.pugx.org/fileeye/mimemap/require/php)](https://packagist.org/packages/fileeye/mimemap)
 [![Tests](https://github.com/FileEye/MimeMap/actions/workflows/php-unit.yml/badge.svg)](https://github.com/FileEye/MimeMap/actions/workflows/php-unit.yml)
 [![PHPStan level](https://img.shields.io/badge/PHPStan%20level-max-brightgreen.svg?style=flat)](https://github.com/FileEye/MimeMap/actions/workflows/code-quality.yml)
 [![Psalm coverage](https://shepherd.dev/github/FileEye/MimeMap/coverage.svg?)](https://shepherd.dev/github/FileEye/MimeMap)
@@ -60,6 +59,7 @@ $ composer require fileeye/mimemap
 
 ## Usage
 
+See latest documentation [here](https://fileeye.github.io/MimeMap/), automated with phpDocumentor.
 
 ### Basic
 
