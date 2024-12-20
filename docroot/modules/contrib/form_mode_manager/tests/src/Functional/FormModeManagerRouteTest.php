@@ -39,7 +39,7 @@ class FormModeManagerRouteTest extends FormModeManagerBase {
       ->grantPermission("edit own {$this->nodeTypeFmm1->id()} content")
       ->save();
 
-    // Add a node with custum form mode.
+    // Add a node with custom form mode.
     $this->drupalGet("node/add/{$this->nodeTypeFmm1->id()}/$node_form_mode_id");
     $this->assertSession()->statusCodeEquals(200);
 
@@ -47,13 +47,13 @@ class FormModeManagerRouteTest extends FormModeManagerBase {
     $this->drupalGet("node/add/{$this->nodeTypeFmm1->id()}");
     $this->assertSession()->statusCodeEquals(403);
 
-    // Add a node with custum form mode.
+    // Add a node with custom form mode.
     $this->node1 = $this->drupalCreateNode([
       'title' => 'Test node',
       'type' => $this->nodeTypeFmm1->id(),
     ]);
 
-    // Edit node  with custum form mode.
+    // Edit node  with custom form mode.
     $this->drupalGet("node/{$this->node1->id()}/edit/{$node_form_mode_id}");
     $this->assertSession()->statusCodeEquals(200);
 
@@ -96,7 +96,7 @@ class FormModeManagerRouteTest extends FormModeManagerBase {
     $this->drupalGet("node/add/{$this->nodeTypeFmm1->id()}/not-valid-fm");
     $this->assertSession()->statusCodeEquals(404);
 
-    // Test add with juste permission create xxx content.
+    // Test add with needed permissions create xxx content.
     Role::load($this->testUser->getRoles()[1])
       ->grantPermission("create {$this->nodeTypeFmm1->id()} content")
       ->grantPermission("use node.default form mode")

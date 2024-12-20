@@ -162,7 +162,7 @@ service like next part.
 You can Try Form mode manager with all features online.
 1. You just need to follow the desired version by click on the button 
 (Link already generated for you).
-2. Lauch sandox.
+2. Launch sandbox.
 3. Install online sandbox by following instructions.
 4. Enable 'Form mode manager examples' submodule on 'Extension page' 
 `admin/modules`

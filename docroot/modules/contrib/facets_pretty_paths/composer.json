@@ -13,11 +13,11 @@
     }
   ],
   "require": {
-    "drupal/facets": "^1 || ^2 || ^3",
+    "drupal/facets": "^2 || ^3",
     "drupal/pathauto": "^1"
   },
   "require-dev": {
-    "drupal/search_api": "^1.5"
+    "drupal/search_api": "^1.29"
   },
   "repositories": [
     {

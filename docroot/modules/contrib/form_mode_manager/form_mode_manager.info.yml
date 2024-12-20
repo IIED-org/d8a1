@@ -1,13 +1,13 @@
 name: Form Mode Manager
 description: Provide an API to use Form modes.
 type: module
-core_version_requirement: ^8.8 || ^9 || ^10
+core_version_requirement: ^10.2 || ^11.0
 package: Fields
 configure: form_mode_manager.admin_settings
 dependencies:
   - drupal:field
 
-# Information added by Drupal.org packaging script on 2024-03-06
-version: '3.0.0'
+# Information added by Drupal.org packaging script on 2024-11-29
+version: '3.1.0'
 project: 'form_mode_manager'
-datestamp: 1709749011
+datestamp: 1732915113

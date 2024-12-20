@@ -3,6 +3,7 @@
 namespace Drupal\form_mode_manager;
 
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
@@ -116,7 +117,7 @@ class ComplexEntityFormModes extends AbstractEntityFormModesFactory {
 
     // If we can't retrieve the entity from the route match get load,
     // it by their storage with correct route bundle key.
-    if (empty($entity)) {
+    if (!$entity instanceof EntityInterface) {
       $route_entity_type_info = $this->getEntityTypeFromRouteMatch($route_match);
       /** @var \Drupal\Core\Entity\EntityInterface $entity */
       $entity = $this->entityTypeManager->getStorage($route_entity_type_info['entity_type_id'])->create([

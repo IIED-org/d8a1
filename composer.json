@@ -57,7 +57,7 @@
     "drupal/leaflet_more_maps": "^2.1",
     "drupal/better_exposed_filters": "^6.0",
     "drupal/inline_entity_form": "^1.0@RC",
-    "drupal/form_mode_manager": "^3.0",
+    "drupal/form_mode_manager": "^3.1",
     "drupal/masquerade": "^2.0@beta",
     "drupal/hide_revision_field": "^2.1",
     "drupal/entity_browser": "^2.0",
@@ -67,7 +67,7 @@
     "drupal/entity_reference_facet_link": "^2.0",
     "drupal/menu_link_attributes": "^1.0",
     "drupal/readonlymode": "^1.1",
-    "drupal/facets_pretty_paths": "^1.0@beta",
+    "drupal/facets_pretty_paths": "^2.0",
     "drupal/redirect": "^1.2",
     "drupal/views_infinite_scroll": "^2.0",
     "league/oauth2-client": "^2.3",
@@ -91,7 +91,7 @@
     "drupal/pathauto": "^1.8",
     "drupal/content_moderation_notifications": "^3.2",
     "drupal/leaflet": "^10.2",
-    "drupal/block_class": "^2.0",
+    "drupal/block_class": "^3.0",
     "drupal/acquia_search": "^3.1",
     "drupal/core-project-message": "^10",
     "drupal/jquery_ui_accordion": "^2.0",
@@ -103,14 +103,16 @@
     "drupal/condition_query": "^1.0",
     "drupal/leaflet_mapbox": "^1.0@alpha",
     "drupal/leaflet_countries": "dev-3086578-leaflet-views-country",
-    "drupal/tfa": "^1.6",
+    "drupal/tfa": "^1.9",
     "drupal/real_aes": "^2.5",
     "drupal/backup_migrate": "^5.0",
     "drupal/backup_migrate_aws_s3": "^5.0",
     "drupal/key": "^1.19",
     "drupal/purge": "^3.6",
     "drupal/varnish_purge": "^2.2",
-    "drupal/stage_file_proxy": "^3.1"
+    "drupal/stage_file_proxy": "^3.1",
+    "drupal/bootstrap_sass": "^5.0.11",
+    "drupal/sophron": "^2.2"
   },
   "conflict": {
     "drupal/core": "7.*"
@@ -159,12 +161,6 @@
       },
       "drupal/account_modal": {
         "3285913":"https://www.drupal.org/files/issues/2022-07-19/account_modal.1.x-dev.rector.patch"
-      },
-      "drupal/form_mode_manager": {
-        "3297262": "https://git.drupalcode.org/project/form_mode_manager/-/merge_requests/8.diff"
-      },
-      "drupal/facets": {
-        "3336646":"https://www.drupal.org/files/issues/2023-08-16/3336646-function-is-deprecated.patch"
       },
       "drupal/leaflet_mapbox": {
         "3288279": "https://www.drupal.org/files/issues/2023-11-06/leaflet_mapbox_alpha1_d10.patch"
