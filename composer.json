@@ -96,7 +96,7 @@
     "drupal/core-project-message": "^10",
     "drupal/jquery_ui_accordion": "^2.0",
     "drupal/password_policy": "^4.0",
-    "drupal/google_tag": "^1.6",
+    "drupal/google_tag": "^1.8",
     "drupal/eu_cookie_compliance": "^1.24",
     "drupal/jquery_ui_slider": "^2.0",
     "mglaman/composer-drupal-lenient": "^1.0",
@@ -111,7 +111,7 @@
     "drupal/purge": "^3.6",
     "drupal/varnish_purge": "^2.2",
     "drupal/stage_file_proxy": "^3.1",
-    "drupal/bootstrap_sass": "^5.0.11",
+    "drupal/bootstrap_sass": "^5.0",
     "drupal/sophron": "^2.2"
   },
   "conflict": {
