@@ -24,6 +24,7 @@ module:
   chosen_field: 0
   chosen_lib: 0
   ckeditor5: 0
+  clamav: 0
   colorbox: 0
   comment: 0
   condition_query: 0
@@ -105,7 +106,9 @@ module:
   page_cache: 0
   password_policy_character_types: 0
   password_policy_characters: 0
+  password_policy_history: 0
   password_policy_length: 0
+  password_policy_username: 0
   path: 0
   path_alias: 0
   pdfpreview: 0
@@ -127,6 +130,7 @@ module:
   search_api: 0
   search_api_db: 0
   search_api_solr: 0
+  session_limit: 0
   shortcut: 0
   simplify: 0
   social_api: 0

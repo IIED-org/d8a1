@@ -10,6 +10,7 @@ id: pnp
 label: PNP
 weight: 0
 container_id: GTM-WXKHKVX
+hostname: null
 data_layer: dataLayer
 include_classes: false
 whitelist_classes: |-
