@@ -112,7 +112,9 @@
     "drupal/varnish_purge": "^2.2",
     "drupal/stage_file_proxy": "^3.1",
     "drupal/bootstrap_sass": "^5.0",
-    "drupal/sophron": "^2.2"
+    "drupal/sophron": "^2.2",
+    "drupal/session_limit": "^2.0",
+    "drupal/clamav": "^2.1"
   },
   "conflict": {
     "drupal/core": "7.*"
