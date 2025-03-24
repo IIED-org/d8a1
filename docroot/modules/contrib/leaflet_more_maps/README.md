@@ -21,10 +21,15 @@ For a quick smoke test enable the Leaflet Demo submodule that comes with
 Leaflet More Maps and visit the map showcase page to verify that your key
 or token works, at admin/config/system/leaflet-more-maps/demo.
 
-Apart from using any of the "off-the-shelf" maps, you can also assemble your
-own map from the available layers at the Leaflet More Maps configuration page:
-admin/config/system/leaflet-more-maps. A layer switcher will automatically appear
-in the upper right-hand corner of the map.
+Apart from using the "off-the-shelf" maps, you can also assemble your
+own collection of maps from the available layers at the Leaflet More Maps
+configuration page: admin/config/system/leaflet-more-maps.
+You can use custom maps in a widget field, if you have for example field
+(field_geofield) of type geofield. Go to manage display of your content type
+or entity and choose the Leaflet Map widget. You will find your custom maps in
+the widget settings, at the bottom of the "Leaflet Map Tiles Layer" dropdown.
+A layer switcher will automatically appear in the upper right-hand corner of
+the map.
 
 
 ### FOR PROGRAMMERS
@@ -42,7 +47,8 @@ Example:
   }
 ```
 
-You can add or alter the default list of maps used as layers by implementing `hook_leaflet_more_maps_list_alter()`.
+You can add or alter the default list of maps used as layers by implementing
+`hook_leaflet_more_maps_list_alter()`.
 See `leaflet_more_maps.api.php` for more info.
 
 #### References and licensing terms:
@@ -51,7 +57,8 @@ See `leaflet_more_maps.api.php` for more info.
 
 - https://www.openstreetmap.org/copyright
 - https://www.mapbox.com/legal/tos
-- https://maps.stamen.com/#watercolor/12/37.7706/-122.3782
+- https://developer.mapy.cz/en/terms-and-conditions/
+- https://stadiamaps.com/stamen
 - https://thunderforest.com
 - https://www.esri.com
 - https://www.google.com/intl/en_au/help/terms_maps.html

@@ -2,6 +2,6 @@ leaflet-more-maps:
     js:
       leaflet_more_maps.js: {}
     dependencies:
-      - leaflet/leaflet
+      - leaflet/leaflet-drupal
       - core/jquery
       - core/drupal

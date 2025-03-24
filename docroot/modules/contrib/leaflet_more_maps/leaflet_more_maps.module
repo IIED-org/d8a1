@@ -1,5 +1,6 @@
 <?php
-/*
+
+/**
  * @file
  * Leaflet More Maps adds over 20 map options to the Leaflet module.
  *
@@ -8,45 +9,42 @@
 
 use GuzzleHttp\Exception\RequestException;
 
-const LEAFLET_MORE_MAPS_NO_CUSTOM_MAPS = 3;
-
 /**
  * Implements hook_leaflet_map_info().
  *
  * All maps show at lat=31, long=-89, zoom=4
- *
- * @return array of map info (includes provider URL, attribution, map features)
  */
 function leaflet_more_maps_leaflet_map_info() {
-
   $default_settings = [
     'attributionControl' => TRUE,
-    'closePopupOnClick'  => TRUE,
-    'doubleClickZoom'    => TRUE,
-    'dragging'           => TRUE,
-    'fadeAnimation'      => TRUE,
-    'layerControl'       => FALSE,
-    'maxZoom'            => 18,
-    'minZoom'            => 0,
-    'scrollWheelZoom'    => TRUE,
-    'touchZoom'          => TRUE,
-    'trackResize'        => TRUE,
+    'closePopupOnClick' => TRUE,
+    'doubleClickZoom' => TRUE,
+    'dragging' => TRUE,
+    'fadeAnimation' => TRUE,
+    'layerControl' => FALSE,
+    'maxZoom' => 18,
+    'minZoom' => 0,
+    'scrollWheelZoom' => TRUE,
+    'touchZoom' => TRUE,
+    'trackResize' => TRUE,
     // Don't specify zoom, if you want to use Auto-box.
-    // 'zoom'            =>  2,
-    'zoomAnimation'      => TRUE,
-    'zoomControl'        => TRUE,
+    // 'zoom'            =>  2,.
+    'zoomAnimation' => TRUE,
+    'zoomControl' => TRUE,
   ];
   $map_info = [];
 
   _leaflet_more_maps_assemble_default_map_info($map_info, $default_settings);
 
-  $custom_maps = \Drupal::config('leaflet_more_maps.settings')->get('leaflet_more_maps_custom_maps') ?? [];
+  $custom_maps = \Drupal::config('leaflet_more_maps.settings')
+    ->get('leaflet_more_maps_custom_maps') ?? [];
 
   foreach ($custom_maps as $custom_map) {
     _leaflet_more_maps_assemble_custom_map_info(
       $custom_map['map-key'],
       $custom_map['layer-keys'],
-      $map_info, $default_settings,
+      $map_info,
+      $default_settings,
       $custom_map['reverse-order']
     );
   }
@@ -77,17 +75,19 @@ function leaflet_more_maps_leaflet_map_info_alter(array &$map_info) {
  *   Default settings to add to the map.
  */
 function _leaflet_more_maps_assemble_default_map_info(array &$map_info, array $default_settings = []) {
-  // Use headless protocol rather than logic based on global $is_https;
+  // Use headless protocol rather than logic based on global $is_https.
   $prot = '//';
 
   // As used by most.
-  $zxy = '{z}/{x}/{y}.png';
+  $zxy = '{z}/{x}/{y}{r}.png';
   // As used by Esri.
   $zyx = '{z}/{y}/{x}.png';
+  // As used by OpenStreetMap.de.
+  $simple_zxy = '{z}/{x}/{y}.png';
 
   $config_settings = Drupal::config('leaflet_more_maps.settings');
 
-  // Google and Yandex also use x, y and z, but require different URL query
+  // Google also uses x, y and z, but require different URL query
   // templates, see below.
   // Bing uses the quadtree system whereby x, y and z are encoded in a sequence
   // of digits in the range 0..3. See leaflet_more_maps.js for the conversion
@@ -135,7 +135,7 @@ function _leaflet_more_maps_assemble_default_map_info(array &$map_info, array $d
     // Zoom 0..8.
     'World Physical Map',
     // Zoom 0..10.
-    'Ocean BaseMap',
+    'Ocean/World Ocean Base',
     'World Topo Map',
     'World Street Map',
   ];
@@ -159,9 +159,12 @@ function _leaflet_more_maps_assemble_default_map_info(array &$map_info, array $d
         $settings['maxZoom'] = 8;
         break;
 
-      case 'Ocean BaseMap':
+      case 'Ocean/World Ocean Base':
         $label = 'Esri Ocean (zoom 0..10)';
         $settings['maxZoom'] = 10;
+        // Remove the / from the map ID otherwise,
+        // it will generate an incorrect HTML ID.
+        $code  = str_replace('/', '_', $code);
         break;
 
       default:
@@ -219,7 +222,8 @@ function _leaflet_more_maps_assemble_default_map_info(array &$map_info, array $d
         'options' => [
           'attribution' => $attr_google,
           // 'detectRetina' => TRUE,
-          'subdomains' => [0, 1, 2, 3]],
+          'subdomains' => [0, 1, 2, 3],
+        ],
       ],
     ],
   ];
@@ -269,7 +273,7 @@ function _leaflet_more_maps_assemble_default_map_info(array &$map_info, array $d
 
   $mapbox_access_token = $config_settings->get('mapbox_access_token');
   if (empty($mapbox_access_token)) {
-    // MapBox as used on leafletjs.com
+    // MapBox as used on leafletjs.com.
     $mapbox_access_token = 'pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw';
   }
   $attr_mapbox = 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>';
@@ -277,26 +281,30 @@ function _leaflet_more_maps_assemble_default_map_info(array &$map_info, array $d
   $mapbox_names = [
     'Dark',
     'Light',
-  //'Outdoors',
+    // 'Outdoors',
     'Satellite-Streets',
-    'Streets'
+    'Streets',
   ];
   foreach ($mapbox_names as $mapbox_name) {
     switch ($mapbox_name) {
       case 'Dark':
         $id = 'mapbox/dark-v10';
         break;
+
       case 'Light':
         $id = 'mapbox/light-v10';
         break;
+
       case 'Outdoors':
         $id = 'mapbox/outdoors-v11';
         break;
+
       case 'Satellite-Streets':
         $id = 'mapbox/satellite-streets-v11';
         break;
+
       default:
-        // Streets
+        // Streets.
         $id = 'mapbox/streets-v11';
     }
     $code = mb_strtolower($mapbox_name);
@@ -320,8 +328,74 @@ function _leaflet_more_maps_assemble_default_map_info(array &$map_info, array $d
     ];
   }
 
-  // Note: OpenStreetMap OSM Mapnik classic map is available via leaflet.module
+  $mapycz_api_key = $config_settings->get('mapycz_api_key');
+  $attr_mapycz = '&copy; <a href="https://api.mapy.cz/copyright">Seznam.cz a.s. and others</a><a href="https://www.mapy.cz/"><img src="https://api.mapy.cz/img/api/logo.svg" style="display:inline-block;margin-bottom:-3px;" height="15px" width="50px" alt="Logo Mapy.cz"></a>';
+  $url_template_mapycz = $prot . "api.mapy.cz/v1/maptiles/{id}/{tileSize}/{z}/{x}/{y}?apikey={apiKey}";
+  $mapycz_names = [
+    'Basic',
+    'Outdoor',
+    'Winter',
+    'Aerial',
+  ];
+  foreach ($mapycz_names as $mapycz_name) {
+    switch ($mapycz_name) {
+      case 'Basic':
+        $id = 'basic';
+        break;
+
+      case 'Outdoor':
+        $id = 'outdoor';
+        break;
+
+      case 'Winter':
+        $id = 'winter';
+        break;
+
+      case 'Aerial':
+        $id = 'aerial';
+        break;
+
+      default:
+        // Streets.
+        $id = 'basic';
+    }
+    $code = mb_strtolower($mapycz_name);
+    $label = t("Mapy.cz @name (zoom 0..19), requires access token", ['@name' => $mapycz_name]);
+    $map_info["mapycz-$code"] = [
+      'label' => $label,
+      'description' => $label,
+      'settings' => $default_settings,
+      'layers' => [
+        'layer' => [
+          'urlTemplate' => $url_template_mapycz,
+          'options' => [
+            'id' => $id,
+            'tileSize' => 256,
+            'zoomOffset' => 0,
+            'apiKey' => $mapycz_api_key,
+            'attribution' => $attr_mapycz,
+          ],
+        ],
+      ],
+    ];
+  }
+
+  // Note: OpenStreetMap OSM Mapnik classic map is available via leaflet.module.
   $attr_osm = 'Map data &copy; <a href="https://openstreetmap.org">OpenStreetMap</a> and contributors';
+
+  // OpenStreetMap.de.
+  $map_info['osm-de'] = [
+    'label' => 'OpenStreetMap.de (zoom 0..18)',
+    'description' => t('GDPR friendly OpenStreetMap, label in German and local language'),
+    'settings' => $default_settings,
+    'layers' => [
+      'layer' => [
+        'urlTemplate' => $prot . "tile.openstreetmap.de/$simple_zxy",
+        'options' => ['attribution' => $attr_osm],
+        'detectRetina' => TRUE,
+      ],
+    ],
+  ];
 
   // OSM Thunderforest.
   // Maps still display without API key, but appear with API KEY watermark.
@@ -383,7 +457,7 @@ function _leaflet_more_maps_assemble_default_map_info(array &$map_info, array $d
     'settings' => $default_settings,
     'layers' => [
       'layer' => [
-        'urlTemplate' => $prot . 'tile.thunderforest.com/transport-dark/'. $zxy . $thunderforest_api_key,
+        'urlTemplate' => $prot . 'tile.thunderforest.com/transport-dark/' . $zxy . $thunderforest_api_key,
         'options' => ['attribution' => $attr_thunderforest],
       ],
     ],
@@ -395,7 +469,7 @@ function _leaflet_more_maps_assemble_default_map_info(array &$map_info, array $d
     'settings' => $default_settings,
     'layers' => [
       'layer' => [
-        'urlTemplate' => $prot . 'tile.thunderforest.com/spinal-map/'. $zxy . $thunderforest_api_key,
+        'urlTemplate' => $prot . 'tile.thunderforest.com/spinal-map/' . $zxy . $thunderforest_api_key,
         'options' => ['attribution' => $attr_thunderforest],
       ],
     ],
@@ -407,7 +481,7 @@ function _leaflet_more_maps_assemble_default_map_info(array &$map_info, array $d
     'settings' => $default_settings,
     'layers' => [
       'layer' => [
-        'urlTemplate' => $prot . 'tile.thunderforest.com/pioneer/'. $zxy . $thunderforest_api_key,
+        'urlTemplate' => $prot . 'tile.thunderforest.com/pioneer/' . $zxy . $thunderforest_api_key,
         'options' => ['attribution' => $attr_thunderforest],
       ],
     ],
@@ -419,7 +493,7 @@ function _leaflet_more_maps_assemble_default_map_info(array &$map_info, array $d
     'settings' => $default_settings,
     'layers' => [
       'layer' => [
-        'urlTemplate' => $prot . 'tile.thunderforest.com/atlas/'. $zxy . $thunderforest_api_key,
+        'urlTemplate' => $prot . 'tile.thunderforest.com/atlas/' . $zxy . $thunderforest_api_key,
         'options' => ['attribution' => $attr_thunderforest],
       ],
     ],
@@ -431,46 +505,55 @@ function _leaflet_more_maps_assemble_default_map_info(array &$map_info, array $d
     'settings' => $default_settings,
     'layers' => [
       'layer' => [
-        'urlTemplate' => $prot . 'tile.thunderforest.com/neighbourhood/'. $zxy . $thunderforest_api_key,
+        'urlTemplate' => $prot . 'tile.thunderforest.com/neighbourhood/' . $zxy . $thunderforest_api_key,
         'options' => ['attribution' => $attr_thunderforest],
       ],
     ],
   ];
 
-  // Wikimedia
-  $attr_wiki= 'Wikimedia maps | ' . $attr_osm;
-  $map_info['wikimedia'] = [
-    'label' => 'Wikimedia (zoom 0..18)',
-    'description' => t('Wikimedia Maps'),
+  // OpenTopoMap.
+  $attr_opentopomap = 'Kartendaten: © OpenStreetMap-Mitwirkende, SRTM | Kartendarstellung: © OpenTopoMap (CC-BY-SA) | ' . $attr_osm;
+  $map_info['opentopomap'] = [
+    'label' => 'OpenTopoMap (zoom 0..18)',
+    'description' => t('OpenTopoMap'),
     'settings' => $default_settings,
     'layers' => [
       'layer' => [
-        'urlTemplate' => $prot . "maps.wikimedia.org/osm-intl/$zxy",
-         'options' => ['attribution' => $attr_wiki],
-        'detectRetina' => TRUE,
+        'urlTemplate' => $prot . "{s}.tile.opentopomap.org/$simple_zxy",
+        'options' => ['attribution' => $attr_opentopomap],
       ],
     ],
   ];
 
-  // Stamen https://stamen.com
-  $attr_stamen = 'Tiles by <a href="https://stamen.com">Stamen Design</a> under <a href="https://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. ' . $attr_osm;
+  // Stamen https://stamen.com.
+  $attr_stamen = '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a> <a href="https://stamen.com/">&copy; Stamen Design</a> &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a>. ' . $attr_osm;
   $stamen_names = [
-  //'Toner',
     'Terrain',
-    'Toner-Lite',
+    'Terrain-Background',
+    'Terrain-Labels',
+    'Terrain-Lines',
+    'Toner',
+    'Toner-Background',
+    'Toner-Hybrid',
     'Toner-Labels',
+    'Toner-Lines',
+    'Toner-Lite',
     'Watercolor',
   ];
+
   foreach ($stamen_names as $stamen_name) {
-    $code = mb_strtolower($stamen_name);
+    $code = str_replace("_", "-", mb_strtolower($stamen_name));
     $max_zoom = ($code == 'terrain' || $code == 'watercolor') ? 17 : 18;
     $label = t('Stamen @name (zoom 0..@zoom)',
       ['@name' => $stamen_name, '@zoom' => $max_zoom]);
-    $url_template = $prot . "stamen-tiles-{s}.a.ssl.fastly.net/$code/$zxy";
+    if ($code == 'watercolor') {
+      $zxy = '{z}/{x}/{y}.jpg';
+    }
+    $url_template = $prot . "tiles.stadiamaps.com/tiles/stamen_$code/$zxy";
     $map_info["stamen-$code"] = [
       'label' => $label,
       'description' => $label,
-      'settings' => ['maxZoom'=> $max_zoom] + $default_settings,
+      'settings' => ['maxZoom' => $max_zoom] + $default_settings,
       'layers' => [
         'layer' => [
           'urlTemplate' => $url_template,
@@ -483,9 +566,12 @@ function _leaflet_more_maps_assemble_default_map_info(array &$map_info, array $d
   // HERE maps.
   $attr_here = 'Data &copy; <a href="https://here.com">HERE</a> maps.';
   $here_api_key = trim($config_settings->get('here_api_key') ?? '');
-  $code = 'base'; // also 'traffic' and 'aerial'
-  $tile_size = 256; // or 512
-  $format = 'png8'; // or png or jpg (best for satellite)
+  // Also 'traffic' and 'aerial'.
+  $code = 'base';
+  // Or 512.
+  $tile_size = 256;
+  // Or png or jpg (best for satellite)
+  $format = 'png8';
   // Protocol must be HTTPS for HERE maps.
   $url_template_here = "https://{s}.$code.maps.ls.hereapi.com/maptile/2.1/maptile/newest/normal.day/{z}/{x}/{y}/$tile_size/$format?apiKey=$here_api_key";
   $label = t('HERE Base map (zoom 0..18), requires API key');
@@ -503,24 +589,6 @@ function _leaflet_more_maps_assemble_default_map_info(array &$map_info, array $d
       ],
     ],
   ];
-
-  /*
-  $attr_yandex = 'Map data &copy; <a href="https://maps.yandex.ru">Yandex.Maps</a>';
-  $map_info['yandex'] = [
-    'label' => 'Yandex Maps (zoom 0..7 in many areas)',
-    'description' => t('Yandex roadmap'),
-    'settings' => $default_settings,
-    'layers' => [
-      'layer' => [
-        'urlTemplate' => $prot . 'vec0{s}.maps.yandex.net/tiles?l=map&x={x}&y={y}&z={z}',
-        'options' => [
-          'attribution' => $attr_yandex,
-          'subdomains' => [0, 1, 2, 3],
-        ],
-      ],
-    ],
-  ];
-  */
 
   // Get Navionics token.
   $token = _leaflet_more_maps_get_navionics_navtoken();
@@ -558,37 +626,44 @@ function _leaflet_more_maps_assemble_default_map_info(array &$map_info, array $d
 
   // Add hook to change default list of maps.
   // Let other modules alter the default map info.
-  \Drupal::moduleHandler()->invokeAll('leaflet_more_maps_list_alter', array(&$map_info));
+  \Drupal::moduleHandler()
+    ->invokeAll('leaflet_more_maps_list_alter', [&$map_info]);
 }
 
 /**
  * Assemble custom map info based on selected layers.
  *
  * @param string $custom_map_key
+ *   Map key.
  * @param array $selected_layer_keys
+ *   Keys for selected layers to be included in this map.
  * @param array $map_info
+ *   Map info.
  * @param array $default_settings
- * @param false $reverse_order
+ *   Default settings array.
+ * @param bool $reverse_order
+ *   Reverse order.
  */
-function _leaflet_more_maps_assemble_custom_map_info(string $custom_map_key, array $selected_layer_keys, array &$map_info, array $default_settings =  [], $reverse_order = FALSE) {
+function _leaflet_more_maps_assemble_custom_map_info(string $custom_map_key, array $selected_layer_keys, array &$map_info, array $default_settings = [], $reverse_order = FALSE) {
   if (empty($custom_map_key) || empty($selected_layer_keys)) {
     return;
   }
   $map_info["~$custom_map_key"] = [
     'label' => $custom_map_key,
     'description' => t('Custom defined map with layer switcher'),
-    'layers' =>  [],
+    'layers' => [],
   ];
 
   $selected_layer_keys = array_filter($selected_layer_keys);
   $i = $reverse_order ? count($selected_layer_keys) : 1;
   foreach ($map_info as $map_key => $map) {
     foreach ($map['layers'] as $layer_key => $layer) {
+      $label = preg_replace('# \(.+\)#', '', $map['label']);
+      $label_key = "$label $layer_key";
       // Unique.
       $custom_layer_key = "$map_key $layer_key";
       if (in_array($custom_layer_key, $selected_layer_keys)) {
-        $layer_switcher_key = t('layer') . " #$i";
-        $map_info["~$custom_map_key"]['layers'][$layer_switcher_key] = $layer;
+        $map_info["~$custom_map_key"]['layers'][$label_key] = $layer;
         $i = $reverse_order ? $i - 1 : $i + 1;
       }
     }
@@ -601,12 +676,12 @@ function _leaflet_more_maps_assemble_custom_map_info(string $custom_map_key, arr
 }
 
 /**
- * Helper function to get Navionics token based on api_key and authorized domain.
+ * Helper function to get a token based on API key and authorized domain.
+ *
  * @return string
  *   Navionics token, if successful or empty string on error.
  */
 function _leaflet_more_maps_get_navionics_navtoken() {
-
   // Get Navionics configuration: API key and Authorized Domain.
   $config = Drupal::config('leaflet_more_maps.settings');
 
@@ -626,12 +701,12 @@ function _leaflet_more_maps_get_navionics_navtoken() {
   $client = \Drupal::httpClient();
   try {
     $request = $client->get($url, [
-        'curl' => [
-          CURLOPT_RETURNTRANSFER => TRUE,
-          CURLOPT_HEADER => 0,
-          CURLOPT_REFERER => $referer,
-        ],
-      ]
+      'curl' => [
+        CURLOPT_RETURNTRANSFER => TRUE,
+        CURLOPT_HEADER => 0,
+        CURLOPT_REFERER => $referer,
+      ],
+    ]
     );
     // Get the status code of request.
     $status = $request->getStatusCode();

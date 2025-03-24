@@ -9,14 +9,16 @@ use Drupal\leaflet\LeafletService;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Class LeafletDemoForm.
+ * Provides a demo form to showcase maps with location and zoom parameters.
  */
 class LeafletDemoForm extends FormBase {
 
   // Old Royal Observatory, Greenwich, near London, England.
   // It's right on the zero-meridian!
   const LEAFLET_DEMO_DEFAULT_LAT = 51.47774;
+
   const LEAFLET_DEMO_DEFAULT_LNG = -0.001164;
+
   const LEAFLET_DEMO_DEFAULT_ZOOM = 11;
 
   /**
@@ -85,7 +87,7 @@ class LeafletDemoForm extends FormBase {
       $latitude = $values['latitude'];
       $longitude = $values['longitude'];
     }
-    $zoom = isset($values['zoom']) ? $values['zoom'] : LeafletDemoForm::LEAFLET_DEMO_DEFAULT_ZOOM;
+    $zoom = $values['zoom'] ?? LeafletDemoForm::LEAFLET_DEMO_DEFAULT_ZOOM;
 
     $form['demo_map_parameters'] = [
       '#type' => 'details',
@@ -147,9 +149,10 @@ class LeafletDemoForm extends FormBase {
    *
    * @return array
    *   An array of maps as renderable arrays.
+   *
+   * @throws \Exception
    */
   protected function outputDemoMaps($latitude = LeafletDemoForm::LEAFLET_DEMO_DEFAULT_LAT, $longitude = LeafletDemoForm::LEAFLET_DEMO_DEFAULT_LNG, $zoom = LeafletDemoForm::LEAFLET_DEMO_DEFAULT_ZOOM) {
-
     if (!is_numeric($latitude) || !is_numeric($longitude) || !is_numeric($zoom)) {
       return [];
     }
@@ -164,20 +167,23 @@ class LeafletDemoForm extends FormBase {
     $demo_maps = [];
     $map_info = leaflet_map_get_info();
 
+    // Applies parameters to example maps and displays them below the demo form.
     foreach ($map_info as $map_id => $map) {
       $map['id'] = $feature['leaflet_id'] = str_replace(' ', '-', $map_id);
       $map['settings']['map_position'] = $center;
       $map['settings']['zoom'] = $zoom;
+      $map['settings']['zoomControlPosition'] = 'topleft';
 
       $render_object = $this->leafletService->leafletRenderMap($map, [$feature], '350px');
 
       $demo_maps[$map_id] = [
         '#type' => 'item',
-        '#title' => $map_info[$map_id]['label'],
+        '#title' => $map['label'],
         '#markup' => $this->renderer->render($render_object),
         '#attributes' => ['class' => ['leaflet-gallery-map']],
       ];
     }
+
     return $demo_maps;
   }
 

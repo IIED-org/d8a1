@@ -6,7 +6,10 @@
  */
 
 /**
- * Alters the default list of maps added in _leaflet_more_maps_assemble_default_map_info().
+ * The API file of leaflet_more_maps.
+ *
+ *  Alters the default list of maps added in _leaflet_more_maps
+ *  assemble_default_map_info().
  *
  * With this hook you can add or alter layers add by leaflet more maps module
  * to this page admin/config/system/leaflet-more-maps.
