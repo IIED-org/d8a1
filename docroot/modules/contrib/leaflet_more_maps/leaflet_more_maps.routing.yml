@@ -5,4 +5,3 @@ leaflet_more_maps.settings:
     _title: 'Leaflet More Maps'
   requirements:
     _permission: 'administer site configuration'
-

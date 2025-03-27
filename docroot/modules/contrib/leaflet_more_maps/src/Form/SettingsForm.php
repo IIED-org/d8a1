@@ -14,6 +14,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class SettingsForm extends ConfigFormBase {
 
   /**
+   * Default custom maps number.
+   */
+  const LEAFLET_MORE_MAPS_NO_CUSTOM_MAPS = 3;
+
+  /**
    * The module handler service.
    *
    * @var \Drupal\Core\Extension\ModuleHandlerInterface
@@ -31,7 +36,9 @@ class SettingsForm extends ConfigFormBase {
    * Class constructor.
    *
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
+   *   Module handler.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   *   The configuration factory.
    */
   public function __construct(ModuleHandlerInterface $moduleHandler, ConfigFactoryInterface $config_factory) {
     $this->moduleHandler = $moduleHandler;
@@ -112,6 +119,18 @@ class SettingsForm extends ConfigFormBase {
         ]),
     ];
 
+    $form['global_settings']['mapycz_api_key'] = [
+      '#type' => 'textfield',
+      '#size' => 83,
+      '#title' => $this->t('Mapy.cz API key'),
+      '#default_value' => $config->get('mapycz_api_key') ?? '',
+      '#description' => $this->t('If you use a <a href="@mapycz">Mapy.cz</a> map, please create an account, <a href="@api_key">generate an API key</a> and paste it above.',
+        [
+          '@mapycz' => 'https://www.mapy.cz',
+          '@api_key' => 'https://developer.mapy.cz/en/rest-api-mapy-cz/api-key/',
+        ]),
+    ];
+
     $form['global_settings']['navionics'] = [
       '#type'  => 'fieldset',
       '#title' => $this
@@ -138,6 +157,19 @@ class SettingsForm extends ConfigFormBase {
       '#default_value' => $config->get('navionics_authorized_domain') ?? '',
     ];
 
+    $form['global_settings']['stamen'] = [
+      '#type' => 'fieldset',
+      '#title' => $this
+        ->t('Stamen maps from Stadia'),
+    ];
+    $form['global_settings']['stamen']['help'] = [
+      '#type' => 'markup',
+      '#markup' => $this->t('Stamen maps from Stadia use Domain-based authentication, so you need to register an account and <a href="@stadia">add your local domain</a>. Add <em>*.ddev.site</em> for DDEV, <em>*.lndo.site</em> for Lando, and so on. Development from 127.0.0.1 or localhost will "just work".',
+        [
+          '@stadia' => 'https://docs.stadiamaps.com/authentication/#domain-based-authentication',
+        ]),
+    ];
+
     $map_info = [];
 
     _leaflet_more_maps_assemble_default_map_info($map_info);
@@ -152,7 +184,7 @@ class SettingsForm extends ConfigFormBase {
     $custom_map_layers = $config->get('leaflet_more_maps_custom_maps') ?? [];
 
     if (empty($custom_map_layers)) {
-      for ($i = 1; $i <= LEAFLET_MORE_MAPS_NO_CUSTOM_MAPS; $i++) {
+      for ($i = 1; $i <= self::LEAFLET_MORE_MAPS_NO_CUSTOM_MAPS; $i++) {
         $custom_map_layers[$i] = [
           'map-key' => '',
           'layer-keys' => [],
@@ -160,7 +192,7 @@ class SettingsForm extends ConfigFormBase {
         ];
       }
     }
-    for ($i = 1; $i <= LEAFLET_MORE_MAPS_NO_CUSTOM_MAPS; $i++) {
+    for ($i = 1; $i <= self::LEAFLET_MORE_MAPS_NO_CUSTOM_MAPS; $i++) {
       $form['map'][$i] = [
         '#type' => 'details',
         '#open' => $i <= 1,
@@ -211,6 +243,7 @@ class SettingsForm extends ConfigFormBase {
     $this->config('leaflet_more_maps.settings')
       ->set('thunderforest_api_key', $form_state->getValue('thunderforest_api_key'))
       ->set('mapbox_access_token', $form_state->getValue('mapbox_access_token'))
+      ->set('mapycz_api_key', $form_state->getValue('mapycz_api_key'))
       ->set('here_api_key', $form_state->getValue('here_api_key'))
       ->set('navionics_api_key', $form_state->getValue('navionics_api_key'))
       ->set('navionics_authorized_domain', $form_state->getValue('navionics_authorized_domain'))
