@@ -1,14 +1,10 @@
 uuid: cbfa5f47-30b8-4479-aeef-1f6cd1212a6f
 langcode: en
 status: true
-dependencies:
-  module:
-    - menu_ui
+dependencies: {  }
 third_party_settings:
   menu_ui:
-    available_menus:
-      - main
-    parent: 'main:'
+    available_menus: {  }
 name: 'Country header'
 type: country_header
 description: null

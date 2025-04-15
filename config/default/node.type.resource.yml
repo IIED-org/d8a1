@@ -1,14 +1,10 @@
 uuid: 3e969c62-a55f-435f-b184-241ce4460594
 langcode: en
 status: true
-dependencies:
-  module:
-    - menu_ui
+dependencies: {  }
 third_party_settings:
   menu_ui:
-    available_menus:
-      - main
-    parent: 'main:'
+    available_menus: {  }
 name: Resources
 type: resource
 description: 'Uploaded or linked files'
