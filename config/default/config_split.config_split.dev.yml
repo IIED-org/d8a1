@@ -11,10 +11,10 @@ no_patching: false
 storage: folder
 folder: ../config/splits/dev
 module:
-  views_ui: 0
   help: 0
   help_topics: 0
   stage_file_proxy: 0
+  views_ui: 0
 theme: {  }
 complete_list: {  }
 partial_list: {  }

@@ -57,6 +57,7 @@ module:
   field: 0
   field_group: 0
   field_layout: 0
+  field_ui: 0
   file: 0
   file_mdm: 0
   file_mdm_exif: 0
@@ -95,6 +96,7 @@ module:
   masquerade: 0
   media: 0
   memcache: 0
+  menu_ui: 0
   migrate: 0
   migrate_drupal: 0
   migrate_drupal_ui: 0
