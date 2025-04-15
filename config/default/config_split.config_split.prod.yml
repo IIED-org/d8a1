@@ -9,7 +9,7 @@ weight: 3
 stackable: false
 no_patching: false
 storage: folder
-folder: ../config/pd/splits/prod
+folder: ../config/splits/prod
 module: {  }
 theme: {  }
 complete_list:

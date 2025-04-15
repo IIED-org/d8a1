@@ -9,7 +9,7 @@ weight: 1
 stackable: false
 no_patching: false
 storage: folder
-folder: ../config/pd/splits/dev
+folder: ../config/splits/dev
 module:
   field_ui: 0
   menu_ui: 0

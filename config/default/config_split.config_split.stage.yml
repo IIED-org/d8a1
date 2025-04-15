@@ -9,7 +9,7 @@ weight: 2
 stackable: false
 no_patching: false
 storage: folder
-folder: ../config/pd/splits/stage
+folder: ../config/splits/stage
 module: {  }
 theme: {  }
 complete_list: {  }
