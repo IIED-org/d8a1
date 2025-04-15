@@ -1,0 +1,17 @@
+uuid: ed1597a8-8aa2-48a1-bac5-0450301337fd
+langcode: en
+status: true
+dependencies: {  }
+id: prod
+label: prod
+description: 'Production site config'
+weight: 3
+stackable: false
+no_patching: false
+storage: folder
+folder: ../config/pd/splits/prod
+module: {  }
+theme: {  }
+complete_list:
+  - password_policy.password_policy.password_expiry
+partial_list: {  }

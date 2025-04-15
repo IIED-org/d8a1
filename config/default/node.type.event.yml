@@ -1,13 +1,10 @@
 uuid: a1eb10dc-d2a0-484d-8008-01df98a1d19e
 langcode: en
 status: true
-dependencies:
-  module:
-    - menu_ui
+dependencies: {  }
 third_party_settings:
   menu_ui:
     available_menus: {  }
-    parent: ''
 name: Event
 type: event
 description: 'An upcoming or archived event'

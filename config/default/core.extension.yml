@@ -30,6 +30,7 @@ module:
   condition_query: 0
   conditional_fields: 0
   config: 0
+  config_split: 0
   contact: 0
   contact_block: 0
   content_moderation: 0
@@ -56,7 +57,6 @@ module:
   field: 0
   field_group: 0
   field_layout: 0
-  field_ui: 0
   file: 0
   file_mdm: 0
   file_mdm_exif: 0
@@ -69,7 +69,6 @@ module:
   geofield: 0
   geofield_map: 0
   google_tag: 0
-  help: 0
   history: 0
   honeypot: 0
   http_response_headers: 0
@@ -96,7 +95,6 @@ module:
   masquerade: 0
   media: 0
   memcache: 0
-  menu_ui: 0
   migrate: 0
   migrate_drupal: 0
   migrate_drupal_ui: 0
@@ -158,7 +156,6 @@ module:
   video_embed_media: 0
   views_entity_form_field: 0
   views_infinite_scroll: 0
-  views_ui: 0
   workflows: 0
   ds: 1
   hide_revision_field: 1
@@ -168,6 +165,7 @@ module:
   password_policy: 10
   views: 10
   paragraphs: 11
+  password_policy_extras: 20
   field_states_ui: 200
   standard: 1000
   readonlymode: 9999
