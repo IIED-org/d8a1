@@ -3499,21 +3499,21 @@
         },
         {
             "name": "drupal/colorbox",
-            "version": "2.0.1",
-            "version_normalized": "2.0.1.0",
+            "version": "2.1.4",
+            "version_normalized": "2.1.4.0",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/colorbox.git",
-                "reference": "2.0.1"
+                "reference": "2.1.4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/colorbox-2.0.1.zip",
-                "reference": "2.0.1",
-                "shasum": "ed5c40e3abc8f9d7ab6b1dc7f70958de266db404"
+                "url": "https://ftp.drupal.org/files/projects/colorbox-2.1.4.zip",
+                "reference": "2.1.4",
+                "shasum": "a06e2ed6ab9b41a448aaa6a621560e9706564c76"
             },
             "require": {
-                "drupal/core": "^8.8 || ^9 || ^10"
+                "drupal/core": "^10 || ^11"
             },
             "suggest": {
                 "jackmoore/colorbox": "The Colorbox library is required to use the drupal/colorbox module."
@@ -3521,8 +3521,8 @@
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "2.0.1",
-                    "datestamp": "1684418527",
+                    "version": "2.1.4",
+                    "datestamp": "1745856815",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -3530,7 +3530,7 @@
                 },
                 "drush": {
                     "services": {
-                        "drush.services.yml": "^9"
+                        "drush.services.yml": "^10 || ^11"
                     }
                 }
             },
@@ -3541,22 +3541,19 @@
             ],
             "authors": [
                 {
+                    "name": "Paul McKibben",
+                    "homepage": "https://www.drupal.org/u/paulmckibben",
+                    "role": "Maintainer"
+                },
+                {
                     "name": "Neslee Canil Pinto",
                     "homepage": "https://www.drupal.org/u/neslee-canil-pinto",
-                    "role": "Maintainer"
+                    "role": "Former Maintainer"
                 },
                 {
                     "name": "Fredrik Jonsson",
                     "homepage": "https://www.drupal.org/u/frjo",
-                    "role": "Maintainer"
-                },
-                {
-                    "name": "RenatoG",
-                    "homepage": "https://www.drupal.org/user/3326031"
-                },
-                {
-                    "name": "Unsupported Projects",
-                    "homepage": "https://www.drupal.org/user/291168"
+                    "role": "Former Maintainer"
                 }
             ],
             "description": "A light-weight, customizable lightbox plugin for jQuery.",

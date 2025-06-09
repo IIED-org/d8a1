@@ -18,18 +18,18 @@ use Drupal\image\Plugin\Field\FieldFormatter\ImageFormatterBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Plugin implementation of the 'colorbox' formatter.
+ * Plugin for responsive image formatter.
  *
  * @FieldFormatter(
- *   id = "colorbox",
+ *   id = "colorbox_responsive",
  *   module = "colorbox",
- *   label = @Translation("Colorbox"),
+ *   label = @Translation("Colorbox Responsive"),
  *   field_types = {
- *     "image"
- *   }
+ *     "image",
+ *   },
  * )
  */
-class ColorboxFormatter extends ImageFormatterBase implements ContainerFactoryPluginInterface {
+class ColorboxResponsiveFormatter extends ImageFormatterBase implements ContainerFactoryPluginInterface {
 
   /**
    * The current user.
@@ -39,6 +39,13 @@ class ColorboxFormatter extends ImageFormatterBase implements ContainerFactoryPl
   protected $currentUser;
 
   /**
+   * Storage of responsive image styles.
+   *
+   * @var \Drupal\Core\Entity\EntityStorageInterface
+   */
+  protected $responsiveImageStyleStorage;
+
+  /**
    * The image style entity storage.
    *
    * @var \Drupal\image\ImageStyleStorageInterface
@@ -46,7 +53,7 @@ class ColorboxFormatter extends ImageFormatterBase implements ContainerFactoryPl
   protected $imageStyleStorage;
 
   /**
-   * Element attachment allowing library to be attached to pages.
+   * Colorbox attachment object of the output.
    *
    * @var \Drupal\colorbox\ElementAttachmentInterface
    */
@@ -67,7 +74,7 @@ class ColorboxFormatter extends ImageFormatterBase implements ContainerFactoryPl
   private $libraryDiscovery;
 
   /**
-   * Constructs an ImageFormatter object.
+   * Constructs a ColorboxResponsiveFormatter object.
    *
    * @param string $plugin_id
    *   The plugin_id for the formatter.
@@ -85,6 +92,8 @@ class ColorboxFormatter extends ImageFormatterBase implements ContainerFactoryPl
    *   Any third party settings.
    * @param \Drupal\Core\Session\AccountInterface $current_user
    *   The current user.
+   * @param \Drupal\Core\Entity\EntityStorageInterface $responsive_image_style_storage
+   *   The responsive image style storage.
    * @param \Drupal\Core\Entity\EntityStorageInterface $image_style_storage
    *   The image style storage.
    * @param \Drupal\colorbox\ElementAttachmentInterface $attachment
@@ -103,6 +112,7 @@ class ColorboxFormatter extends ImageFormatterBase implements ContainerFactoryPl
     $view_mode,
     array $third_party_settings,
     AccountInterface $current_user,
+    EntityStorageInterface $responsive_image_style_storage,
     EntityStorageInterface $image_style_storage,
     ElementAttachmentInterface $attachment,
     ModuleHandlerInterface $moduleHandler,
@@ -110,6 +120,7 @@ class ColorboxFormatter extends ImageFormatterBase implements ContainerFactoryPl
   ) {
     parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $label, $view_mode, $third_party_settings);
     $this->currentUser = $current_user;
+    $this->responsiveImageStyleStorage = $responsive_image_style_storage;
     $this->imageStyleStorage = $image_style_storage;
     $this->attachment = $attachment;
     $this->moduleHandler = $moduleHandler;
@@ -129,6 +140,7 @@ class ColorboxFormatter extends ImageFormatterBase implements ContainerFactoryPl
       $configuration['view_mode'],
       $configuration['third_party_settings'],
       $container->get('current_user'),
+      $container->get('entity_type.manager')->getStorage('responsive_image_style'),
       $container->get('entity_type.manager')->getStorage('image_style'),
       $container->get('colorbox.attachment'),
       $container->get('module_handler'),
@@ -141,9 +153,9 @@ class ColorboxFormatter extends ImageFormatterBase implements ContainerFactoryPl
    */
   public static function defaultSettings() {
     return [
-      'colorbox_node_style' => '',
-      'colorbox_node_style_first' => '',
+      'colorbox_responsive_node_style' => '',
       'colorbox_image_style' => '',
+      'colorbox_responsive_image_style' => '',
       'colorbox_gallery' => 'post',
       'colorbox_gallery_custom' => '',
       'colorbox_caption' => 'auto',
@@ -156,31 +168,32 @@ class ColorboxFormatter extends ImageFormatterBase implements ContainerFactoryPl
    */
   public function settingsForm(array $form, FormStateInterface $form_state) {
     $image_styles = image_style_options(FALSE);
-    $image_styles_hide = $image_styles;
-    $image_styles_hide['hide'] = $this->t('Hide (do not display image)');
     $description_link = Link::fromTextAndUrl(
       $this->t('Configure Image Styles'),
       Url::fromRoute('entity.image_style.collection')
     );
+    $responsive_image_admin_link = Link::fromTextAndUrl(
+      $this->t('Configure Responsive Image Styles'),
+      Url::fromRoute('entity.responsive_image_style.collection')
+    );
+    $responsive_image_options = [];
+    $responsive_image_styles = $this->responsiveImageStyleStorage->loadMultiple();
+    if ($responsive_image_styles && !empty($responsive_image_styles)) {
+      foreach ($responsive_image_styles as $machine_name => $responsive_image_style) {
+        if ($responsive_image_style->hasImageStyleMappings()) {
+          $responsive_image_options[$machine_name] = $responsive_image_style->label();
+        }
+      }
+    }
 
-    $element['colorbox_node_style'] = [
-      '#title' => $this->t('Image style for content'),
+    $element['colorbox_responsive_node_style'] = [
+      '#title' => $this->t('Responsive image style for content'),
       '#type' => 'select',
-      '#default_value' => $this->getSetting('colorbox_node_style'),
-      '#empty_option' => $this->t('None (original image)'),
-      '#options' => $image_styles_hide,
-      '#description' => $description_link->toRenderable() + [
-        '#access' => $this->currentUser->hasPermission('administer image styles'),
-      ],
-    ];
-    $element['colorbox_node_style_first'] = [
-      '#title' => $this->t('Image style for first image in content'),
-      '#type' => 'select',
-      '#default_value' => $this->getSetting('colorbox_node_style_first'),
-      '#empty_option' => $this->t('No special style.'),
-      '#options' => $image_styles,
-      '#description' => $description_link->toRenderable() + [
-        '#access' => $this->currentUser->hasPermission('administer image styles'),
+      '#default_value' => $this->getSetting('colorbox_responsive_node_style'),
+      '#required' => TRUE,
+      '#options' => $responsive_image_options,
+      '#description' => $responsive_image_admin_link->toRenderable() + [
+        '#access' => $this->currentUser->hasPermission('administer responsive image styles'),
       ],
     ];
     $element['colorbox_image_style'] = [
@@ -191,6 +204,16 @@ class ColorboxFormatter extends ImageFormatterBase implements ContainerFactoryPl
       '#options' => $image_styles,
       '#description' => $description_link->toRenderable() + [
         '#access' => $this->currentUser->hasPermission('administer image styles'),
+      ],
+    ];
+    $element['colorbox_responsive_image_style'] = [
+      '#title' => $this->t('Responsive image style for Colorbox'),
+      '#type' => 'select',
+      '#default_value' => $this->getSetting('colorbox_responsive_image_style'),
+      '#required' => TRUE,
+      '#options' => $responsive_image_options,
+      '#description' => $responsive_image_admin_link->toRenderable() + [
+        '#access' => $this->currentUser->hasPermission('administer responsive image styles'),
       ],
     ];
 
@@ -320,31 +343,29 @@ class ColorboxFormatter extends ImageFormatterBase implements ContainerFactoryPl
    */
   public function settingsSummary() {
     $summary = [];
-
     $image_styles = image_style_options(FALSE);
     // Unset possible 'No defined styles' option.
     unset($image_styles['']);
-    // Styles could be lost because of enabled/disabled modules that defines
+    // Styles could be lost because of enabled/disabled modules that defines.
     // their styles in code.
-    if (isset($image_styles[$this->getSetting('colorbox_node_style')])) {
-      $summary[] = $this->t('Content image style: @style', ['@style' => $image_styles[$this->getSetting('colorbox_node_style')]]);
-    }
-    elseif ($this->getSetting('colorbox_node_style') == 'hide') {
-      $summary[] = $this->t('Content image style: Hide');
+    $responsive_image_styles = $this->responsiveImageStyleStorage->loadMultiple();
+
+    if (isset($responsive_image_styles[$this->getSetting('colorbox_responsive_node_style')])) {
+      $summary[] = $this->t('Responsive content image style: @style', ['@style' => $responsive_image_styles[$this->getSetting('colorbox_responsive_node_style')]->label()]);
     }
     else {
-      $summary[] = $this->t('Content image style: Original image');
-    }
-
-    if (isset($image_styles[$this->getSetting('colorbox_node_style_first')])) {
-      $summary[] = $this->t('Content image style of first image: @style', ['@style' => $image_styles[$this->getSetting('colorbox_node_style_first')]]);
+      $summary[] = $this->t('Responsive content image style: Original image');
     }
 
     if (isset($image_styles[$this->getSetting('colorbox_image_style')])) {
       $summary[] = $this->t('Colorbox image style: @style', ['@style' => $image_styles[$this->getSetting('colorbox_image_style')]]);
     }
+
+    if (isset($responsive_image_styles[$this->getSetting('colorbox_responsive_image_style')])) {
+      $summary[] = $this->t('Colorbox responsive image style: @style', ['@style' => $responsive_image_styles[$this->getSetting('colorbox_responsive_image_style')]->label()]);
+    }
     else {
-      $summary[] = $this->t('Colorbox image style: Original image');
+      $summary[] = $this->t('Colorbox responsive image style: Original image');
     }
 
     $gallery = [
@@ -389,29 +410,22 @@ class ColorboxFormatter extends ImageFormatterBase implements ContainerFactoryPl
     }
 
     // Collect cache tags to be added for each item in the field.
+    $responsive_image_style = $this->responsiveImageStyleStorage->load($this->getSetting('colorbox_responsive_node_style'));
+    $image_styles_to_load = [];
     $cache_tags = [];
-    if (!empty($settings['colorbox_node_style']) && $settings['colorbox_node_style'] != 'hide') {
-      $image_style = $this->imageStyleStorage->load($settings['colorbox_node_style']);
-      $cache_tags = $image_style->getCacheTags();
+    if ($responsive_image_style) {
+      $cache_tags = Cache::mergeTags($cache_tags, $responsive_image_style->getCacheTags());
+      $image_styles_to_load = $responsive_image_style->getImageStyleIds();
     }
-    $cache_tags_first = [];
-    if (!empty($settings['colorbox_node_style_first'])) {
-      $image_style_first = $this->imageStyleStorage->load($settings['colorbox_node_style_first']);
-      $cache_tags_first = $image_style_first->getCacheTags();
+
+    $image_styles = $this->imageStyleStorage->loadMultiple($image_styles_to_load);
+    foreach ($image_styles as $image_style) {
+      $cache_tags = Cache::mergeTags($cache_tags, $image_style->getCacheTags());
     }
 
     foreach ($files as $delta => $file) {
-      // Check if first image should have separate image style.
-      if ($delta == 0 && !empty($settings['colorbox_node_style_first'])) {
-        $settings['style_first'] = TRUE;
-        $settings['style_name'] = $settings['colorbox_node_style_first'];
-        $cache_tags = Cache::mergeTags($cache_tags_first, $file->getCacheTags());
-      }
-      else {
-        $settings['style_first'] = FALSE;
-        $settings['style_name'] = $settings['colorbox_node_style'];
-        $cache_tags = Cache::mergeTags($cache_tags, $file->getCacheTags());
-      }
+      $settings['style_name'] = $settings['colorbox_responsive_node_style'];
+      $cache_tags = Cache::mergeTags($cache_tags, $file->getCacheTags());
 
       // Extract field item attributes for the theme function, and unset them
       // from the $item so that the field template does not re-render them.
@@ -420,7 +434,7 @@ class ColorboxFormatter extends ImageFormatterBase implements ContainerFactoryPl
       unset($item->_attributes);
 
       $elements[$delta] = [
-        '#theme' => 'colorbox_formatter',
+        '#theme' => 'colorbox_responsive_formatter',
         '#item' => $item,
         '#item_attributes' => $item_attributes,
         '#entity' => $items->getEntity(),
@@ -437,7 +451,7 @@ class ColorboxFormatter extends ImageFormatterBase implements ContainerFactoryPl
 
       $dompurify = $this->libraryDiscovery->getLibraryByName('colorbox', 'dompurify');
       $dompurify_file = !empty($dompurify['js'][0]['data']) ?
-        DRUPAL_ROOT . '/' . $dompurify['js'][0]['data'] : NULL;
+      DRUPAL_ROOT . '/' . $dompurify['js'][0]['data'] : NULL;
       $dompurify_exists = !empty($dompurify) && !empty($dompurify_file) &&
         file_exists($dompurify_file);
       if ($dompurify_exists) {
@@ -454,50 +468,29 @@ class ColorboxFormatter extends ImageFormatterBase implements ContainerFactoryPl
   public function calculateDependencies() {
     $dependencies = parent::calculateDependencies();
     $style_ids = [];
-    $style_ids[] = $this->getSetting('colorbox_node_style');
-    if (!empty($this->getSetting('colorbox_node_style_first'))) {
-      $style_ids[] = $this->getSetting('colorbox_node_style_first');
-    }
+    $style_ids[] = $this->getSetting('colorbox_responsive_node_style');
+    $style_ids[] = $this->getSetting('colorbox_responsive_image_style');
     $style_ids[] = $this->getSetting('colorbox_image_style');
+    /** @var \Drupal\image\ImageStyleInterface $style */
     foreach ($style_ids as $style_id) {
-      /** @var \Drupal\image\ImageStyleInterface $style */
+      if ($style_id && $style = $this->responsiveImageStyleStorage->load($style_id)) {
+        // Add the responsive image style as dependency.
+        $dependencies[$style->getConfigDependencyKey()][] = $style->getConfigDependencyName();
+      }
       if ($style_id && $style = $this->imageStyleStorage->load($style_id)) {
-        // If this formatter uses a valid image style to display the image, add
-        // the image style configuration entity as dependency of this formatter.
+        // Add the responsive image style as dependency.
         $dependencies[$style->getConfigDependencyKey()][] = $style->getConfigDependencyName();
       }
     }
+
     return $dependencies;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function onDependencyRemoval(array $dependencies) {
-    $changed = parent::onDependencyRemoval($dependencies);
-    $style_ids = [];
-    $style_ids['colorbox_node_style'] = $this->getSetting('colorbox_node_style');
-    if (!empty($this->getSetting('colorbox_node_style_first'))) {
-      $style_ids['colorbox_node_style_first'] = $this->getSetting('colorbox_node_style_first');
-    }
-    $style_ids['colorbox_image_style'] = $this->getSetting('colorbox_image_style');
-    foreach ($style_ids as $name => $style_id) {
-      /** @var \Drupal\image\ImageStyleInterface $style */
-      if ($style_id && $style = $this->imageStyleStorage->load($style_id)) {
-        if (!empty($dependencies[$style->getConfigDependencyKey()][$style->getConfigDependencyName()])) {
-          $replacement_id = $this->imageStyleStorage->getReplacementId($style_id);
-          // If a valid replacement has been provided in the storage,
-          // replace the image style with the replacement and signal
-          // that the formatter plugin.
-          // Settings were updated.
-          if ($replacement_id && $this->imageStyleStorage->load($replacement_id)) {
-            $this->setSetting($name, $replacement_id);
-            $changed = TRUE;
-          }
-        }
-      }
-    }
-    return $changed;
+  public static function isApplicable(FieldDefinitionInterface $field_definition) {
+    return \Drupal::moduleHandler()->moduleExists('responsive_image');
   }
 
 }
