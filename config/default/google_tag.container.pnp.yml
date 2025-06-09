@@ -3,61 +3,57 @@ langcode: en
 status: true
 dependencies:
   module:
-    - condition_query
-    - node
-    - taxonomy
+    - system
+    - user
 id: pnp
 label: PNP
 weight: 0
-container_id: GTM-WXKHKVX
-hostname: null
-data_layer: dataLayer
-include_classes: false
-whitelist_classes: |-
-  google
-  nonGooglePixels
-  nonGoogleScripts
-  nonGoogleIframes
-blacklist_classes: |-
-  customScripts
-  customPixels
-include_environment: false
-environment_id: ''
-environment_token: ''
-path_toggle: 'exclude listed'
-path_list: |-
-  /admin*
-  /batch*
-  /node/add*
-  /node/*/edit
-  /node/*/delete
-  /node/*/layout
-  /taxonomy/term/*/edit
-  /taxonomy/term/*/layout
-  /user/*/edit*
-  /user/*/cancel*
-  /user/*/layout
-role_toggle: 'exclude listed'
-role_list: {  }
-status_toggle: 'exclude listed'
-status_list: |-
-  403
-  404
+tag_container_ids:
+  - GTM-WXKHKVX
+advanced_settings:
+  consent_mode: false
+  gtm:
+    GTM-WXKHKVX:
+      data_layer: dataLayer
+      include_classes: false
+      allowlist_classes: |-
+        google
+        nonGooglePixels
+        nonGoogleScripts
+        nonGoogleIframes
+      blocklist_classes: |-
+        customScripts
+        customPixels
+      include_environment: false
+      environment_id: ''
+      environment_token: ''
+dimensions_metrics: {  }
 conditions:
-  'entity_bundle:node':
-    id: 'entity_bundle:node'
-    negate: false
+  request_path:
+    id: request_path
+    negate: true
+    pages: "/admin*\r\n/batch*\r\n/node/add*\r\n/node/*/edit\r\n/node/*/delete\r\n/node/*/layout\r\n/taxonomy/term/*/edit\r\n/taxonomy/term/*/layout\r\n/user/*/edit*\r\n/user/*/cancel*\r\n/user/*/layout"
+  response_code:
+    id: response_code
+    negate: true
+    response_codes: |-
+      403
+      404
+  user_role:
+    id: user_role
+    negate: true
     context_mapping:
-      node: '@node.node_route_context:node'
-    bundles: {  }
-  'entity_bundle:taxonomy_term':
-    id: 'entity_bundle:taxonomy_term'
-    negate: false
-    context_mapping:
-      taxonomy_term: '@taxonomy_term.taxonomy_term_route_context:taxonomy_term'
-    bundles: {  }
-  request_param:
-    id: request_param
-    negate: false
-    request_param: ''
-    case_sensitive: false
+      user: '@user.current_user_context:current_user'
+    roles:
+      editor: editor
+      administrator: administrator
+events:
+  generate_lead:
+    value: ''
+    currency: ''
+  search: {  }
+  custom: {  }
+  login:
+    method: CMS
+  sign_up:
+    method: CMS

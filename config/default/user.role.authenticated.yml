@@ -7,9 +7,9 @@ dependencies:
   module:
     - comment
     - contact
-    - eu_cookie_compliance
     - file
     - filter
+    - klaro
     - media
     - system
 _core:
@@ -23,8 +23,8 @@ permissions:
   - 'access content'
   - 'access site-wide contact form'
   - 'delete own files'
-  - 'display eu cookie compliance popup'
   - 'post comments'
   - 'skip comment approval'
+  - 'use klaro'
   - 'use text format basic_html'
   - 'view media'

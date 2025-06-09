@@ -83,6 +83,7 @@ module:
   jquery_ui_slider: 0
   jquery_ui_touch_punch: 0
   key: 0
+  klaro: 0
   layout_discovery: 0
   leaflet: 0
   leaflet_countries: 0
@@ -171,7 +172,6 @@ module:
   field_states_ui: 200
   standard: 1000
   readonlymode: 9999
-  eu_cookie_compliance: 10000
 theme:
   bootstrap_barrio: 0
   pnp_bootstrap_sass: 0

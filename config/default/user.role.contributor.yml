@@ -17,7 +17,6 @@ dependencies:
   module:
     - content_moderation
     - entity_browser
-    - eu_cookie_compliance
     - file
     - filter
     - form_mode_manager
@@ -46,7 +45,6 @@ permissions:
   - 'create resource content'
   - 'create video media'
   - 'delete own files'
-  - 'display eu cookie compliance popup'
   - 'edit own initiative content'
   - 'rabbit hole bypass node'
   - 'use editorial transition create_new_draft'
