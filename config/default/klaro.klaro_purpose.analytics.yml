@@ -1,0 +1,10 @@
+uuid: 389e3886-939e-46ae-aee2-b654e2f6f749
+langcode: en
+status: true
+dependencies: {  }
+_core:
+  default_config_hash: DaAAmHlWMVahC2MmhRKQN8Lun9hBPT6LR6PCjkCEikI
+id: analytics
+label: Analytics
+description: 'Analytics and engagement monitoring'
+weight: 1

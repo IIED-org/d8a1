@@ -1,0 +1,29 @@
+uuid: a91b6edb-0cd4-470d-89bc-9004c109a70e
+langcode: en
+status: true
+dependencies: {  }
+_core:
+  default_config_hash: p1dtty8n0_QsIkVflvUTbHLiT0RpYW7huKeQOCTAgQE
+id: gtm
+label: 'Google Tag Manager'
+description: 'Manages and deploys analytics tags.'
+default: false
+purposes:
+  - analytics
+cookies: {  }
+required: false
+opt_out: false
+only_once: false
+contextual_consent_only: false
+contextual_consent_text: ''
+info_url: 'https://marketingplatform.google.com/intl/en_uk/about/tag-manager'
+privacy_policy_url: 'https://policies.google.com/privacy'
+javascripts:
+  - gtm.js
+  - gtag.js
+  - 'https://www.googletagmanager.com/ns.html'
+callback_code: ''
+wrapper_identifier: {  }
+attachments:
+  - gtm
+weight: 7

@@ -27,7 +27,6 @@ dependencies:
     - content_moderation
     - contextual
     - entity_browser
-    - eu_cookie_compliance
     - file
     - filter
     - form_mode_manager
@@ -83,7 +82,6 @@ permissions:
   - 'delete own event content'
   - 'delete own files'
   - 'delete own training content'
-  - 'display eu cookie compliance popup'
   - 'edit any article content'
   - 'edit any country_header content'
   - 'edit any event content'
