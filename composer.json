@@ -115,7 +115,8 @@
     "drupal/sophron": "^2.2",
     "drupal/session_limit": "^2.0",
     "drupal/clamav": "^2.1",
-    "drupal/password_policy_extras": "^4.0"
+    "drupal/password_policy_extras": "^4.0",
+    "drupal/klaro": "^3.0"
   },
   "conflict": {
     "drupal/core": "7.*"
