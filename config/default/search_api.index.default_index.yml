@@ -3,26 +3,26 @@ langcode: en
 status: false
 dependencies:
   config:
+    - core.entity_view_mode.node.search_index
     - field.storage.node.field_address
+    - field.storage.node.field_geofield
+    - field.storage.node.field_interventions
     - field.storage.node.field_resource_type
+    - field.storage.node.field_species_affected
+    - field.storage.node.field_tags
     - field.storage.paragraph.field_article_url
     - field.storage.paragraph.field_document_url
     - field.storage.paragraph.field_file_upload
-    - field.storage.node.field_geofield
-    - field.storage.node.field_interventions
-    - field.storage.node.field_species_affected
-    - field.storage.node.field_tags
     - field.storage.paragraph.field_video_url
     - search_api.server.default_server
-    - core.entity_view_mode.node.search_index
   module:
-    - node
-    - user
-    - paragraphs
-    - taxonomy
-    - synonyms
-    - search_api
     - media
+    - node
+    - paragraphs
+    - search_api_solr
+    - synonyms
+    - taxonomy
+    - user
 _core:
   default_config_hash: GLmLegZGHtMF6annRqgjizJAoiAip-IT-XOsDMCZfog
 id: default_index

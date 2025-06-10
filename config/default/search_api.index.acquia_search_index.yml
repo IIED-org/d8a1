@@ -6,24 +6,23 @@ dependencies:
     - field.storage.node.body
     - field.storage.node.field_address
     - field.storage.node.field_country
-    - field.storage.node.field_resource_type
-    - field.storage.paragraph.field_article_url
     - field.storage.node.field_document_type
-    - field.storage.paragraph.field_document_url
-    - field.storage.paragraph.field_file_upload
     - field.storage.node.field_geofield
     - field.storage.node.field_interventions
+    - field.storage.node.field_resource_type
     - field.storage.node.field_species_affected
     - field.storage.node.field_standalone_resource
+    - field.storage.paragraph.field_article_url
+    - field.storage.paragraph.field_document_url
+    - field.storage.paragraph.field_file_upload
     - field.storage.paragraph.field_video_url
     - search_api.server.default_solr_server
   module:
-    - search_api_solr
-    - node
-    - paragraphs
-    - search_api
     - block_content
     - media
+    - node
+    - paragraphs
+    - search_api_solr
     - taxonomy
 third_party_settings:
   search_api_solr:
