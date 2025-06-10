@@ -92,7 +92,7 @@ class PerContentTypeSettingsTest extends BrowserTestBase {
     $this->assertSession()->checkboxChecked('edit-simplify-admin');
 
     /* -------------------------------------------------------.
-     * 2/ Check the effect on content-type settingss.
+     * 2/ Check the effect on content-type settings.
      */
 
     // Open admin UI.
@@ -133,7 +133,7 @@ class PerContentTypeSettingsTest extends BrowserTestBase {
     $options = [
       'simplify_nodes[format]' => 'format',
     ];
-    $this->submitForm($options, 'Save content type');
+    $this->submitForm($options, 'Save');
 
     /* -------------------------------------------------------.
      * 3-bis/ Check if options are saved.

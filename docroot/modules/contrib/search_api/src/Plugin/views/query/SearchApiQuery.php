@@ -103,7 +103,7 @@ class SearchApiQuery extends QueryPluginBase {
    *
    * @var array
    */
-  public $orderby = [];
+  public $orderby = NULL;
 
   /**
    * The conjunction with which multiple filter groups are combined.
@@ -161,17 +161,17 @@ class SearchApiQuery extends QueryPluginBase {
    *
    * @param string $table
    *   The Views base table ID.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface|null $entity_type_manager
    *   (optional) The entity type manager to use.
    *
    * @return \Drupal\search_api\IndexInterface|null
    *   The requested search index, or NULL if it could not be found and loaded.
    */
-  public static function getIndexFromTable($table, EntityTypeManagerInterface $entity_type_manager = NULL) {
+  public static function getIndexFromTable($table, ?EntityTypeManagerInterface $entity_type_manager = NULL) {
     // @todo Instead use Views::viewsData() – injected, too – to load the base
     //   table definition and use the "index" (or maybe rename to
     //   "search_api_index") field from there.
-    if (substr($table, 0, 17) == 'search_api_index_') {
+    if (str_starts_with($table, 'search_api_index_')) {
       $index_id = substr($table, 17);
       if ($entity_type_manager) {
         return $entity_type_manager->getStorage('search_api_index')
@@ -200,7 +200,7 @@ class SearchApiQuery extends QueryPluginBase {
       try {
         $object = $row->_object ?: $row->_item->getOriginalObject();
       }
-      catch (SearchApiException $e) {
+      catch (SearchApiException) {
         return NULL;
       }
       $entity = $object->getValue();
@@ -267,7 +267,7 @@ class SearchApiQuery extends QueryPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
+  public function init(ViewExecutable $view, DisplayPluginBase $display, ?array &$options = NULL) {
     try {
       parent::init($view, $display, $options);
       $this->index = static::getIndexFromTable($view->storage->get('base_table'));
@@ -640,7 +640,7 @@ class SearchApiQuery extends QueryPluginBase {
     }
     catch (\Exception $e) {
       $this->abort($e->getMessage());
-      // Recursion to get the same error behaviour as above.
+      // Recursion to get the same error behavior as above.
       $this->execute($view);
     }
   }
@@ -705,7 +705,7 @@ class SearchApiQuery extends QueryPluginBase {
       }
     }
 
-    foreach ($results as $item_id => $result) {
+    foreach ($results as $result) {
       $values = [];
       $values['_item'] = $result;
       try {
@@ -718,7 +718,7 @@ class SearchApiQuery extends QueryPluginBase {
           }
         }
       }
-      catch (SearchApiException $e) {
+      catch (SearchApiException) {
         // Can't actually be thrown here, but catch for the static analyzer's
         // sake.
       }
@@ -741,7 +741,7 @@ class SearchApiQuery extends QueryPluginBase {
             $path .= '|' . $field_id;
           }
         }
-        catch (SearchApiException $e) {
+        catch (SearchApiException) {
           // If we're not able to retrieve the data definition at this point,
           // it doesn't really matter.
         }
@@ -876,7 +876,7 @@ class SearchApiQuery extends QueryPluginBase {
    *   the actual results yet if the query hasn't been executed yet.
    */
   public function getSearchApiResults() {
-    return $this->query ? $this->query->getResults() : NULL;
+    return $this->query?->getResults();
   }
 
   /**
@@ -951,7 +951,7 @@ class SearchApiQuery extends QueryPluginBase {
    *
    * @see \Drupal\search_api\Query\QueryInterface::setLanguages()
    */
-  public function setLanguages(array $languages = NULL) {
+  public function setLanguages(?array $languages = NULL) {
     if (!$this->shouldAbort()) {
       $this->query->setLanguages($languages);
     }
@@ -1030,7 +1030,7 @@ class SearchApiQuery extends QueryPluginBase {
    *
    * @see \Drupal\search_api\Query\QueryInterface::setFulltextFields()
    */
-  public function setFulltextFields(array $fields = NULL) {
+  public function setFulltextFields(?array $fields = NULL) {
     if (!$this->shouldAbort()) {
       $this->query->setFulltextFields($fields);
     }
@@ -1359,7 +1359,7 @@ class SearchApiQuery extends QueryPluginBase {
         }
       }
       else {
-        $variables['%server'] = $server->label();
+        $variables['%server'] = $server->label() ?? $server->id();
         $this->getLogger()->warning('Tried to sort results randomly on server %server which does not support random sorting.', $variables);
       }
     }

@@ -204,6 +204,11 @@ function simplify_form_block_content_type_edit_form_submit($form, FormStateInter
  * Overrides the node creation form to hide elements depending on settings.
  */
 function simplify_form_node_form_alter(&$form, FormStateInterface $form_state) {
+
+  if (!method_exists($form_state->getFormObject(), 'getEntity')) {
+    return;
+  }
+
   // @todo This must be handled in a #process handler.
   $node = $form_state->getFormObject()->getEntity();
   $node_type = $node->type->entity;
@@ -225,6 +230,7 @@ function simplify_form_node_form_alter(&$form, FormStateInterface $form_state) {
 function simplify_form_user_form_alter(&$form, FormStateInterface $form_state, $form_id) {
   // Get array of fields to hide.
   $fields = _simplify_get_config_value('simplify_users_global');
+
   // Hide fields.
   simplify_hide_fields($fields, $form);
 }
@@ -249,6 +255,11 @@ function simplify_form_user_register_form_alter(&$form, FormStateInterface $form
  * settings.
  */
 function simplify_form_comment_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+
+  if (!method_exists($form_state->getFormObject(), 'getEntity')) {
+    return;
+  }
+
   // @todo This must be handled in a #process handler.
   $comment = $form_state->getFormObject()->getEntity();
 
@@ -279,11 +290,45 @@ function simplify_form_taxonomy_term_form_alter(&$form, FormStateInterface $form
 }
 
 /**
+ * Implements hook_form_FORM_ID_alter() for menu_link_content_form().
+ */
+function simplify_form_menu_link_edit_alter(&$form, FormStateInterface $form_state) {
+  simplify_form_menu_link_content_form_alter($form, $form_state);
+}
+
+/**
+ * Implements hook_form_BASE_FORM_ID_alter() for menu_link_content_form().
+ *
+ * Overrides the menu link creation form to hide elements depending on settings.
+ */
+function simplify_form_menu_link_content_form_alter(&$form, FormStateInterface $form_state) {
+  $form['#after_build'][] = 'simplify_form_menu_link_content_form_after_build';
+}
+
+/**
+ * Helper to hide fields after executing theme hooks.
+ */
+function simplify_form_menu_link_content_form_after_build(array $form) {
+  // Get array of fields to hide.
+  $fields = _simplify_get_config_value('simplify_menu_links_global');
+
+  // Hide fields.
+  simplify_hide_fields($fields, $form);
+
+  return $form;
+}
+
+/**
  * Implements hook_form_FORM_ID_alter() for block_add_block_form().
  *
  * Overrides the "create new block" form ti be simplified.
  */
 function simplify_form_block_content_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+
+  if (!method_exists($form_state->getFormObject(), 'getEntity')) {
+    return;
+  }
+
   // @todo This must be handled in a #process handler.
   $block = $form_state->getFormObject()->getEntity();
   $block_type = $block->type->entity;
@@ -316,33 +361,32 @@ function simplify_form_block_form_alter(&$form, FormStateInterface $form_state, 
  * order to run the various hook_form_FORM_ID_alter() last.
  */
 function simplify_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  if (!method_exists($form_state->getFormObject(), 'getEntity')) {
+    return;
+  }
+
+  $entity = $form_state->getFormObject()->getEntity();
+  if (in_array('Drupal\eck\EckEntityInterface', class_implements($entity))) {
+    // Get array of fields to hide.
+    $fields = _simplify_get_config_value('simplify_eck_global');
+    // Hide fields.
+    simplify_hide_fields($fields, $form);
+  }
 }
 
 /**
- * Implements hook_field_widget_WIDGET_TYPE_form_alter().
+ * Implements hook_field_widget_complete_WIDGET_TYPE_form_alter().
  *
  * Because of #2937730 we want to visually-hidden the fields. The comment field
  * in form display actually add the 'comment_default' widget which needs to be
  * preprocessed to hide.
  */
-function simplify_field_widget_comment_default_form_alter(&$element, FormStateInterface $form_state, $context) {
-  $entity = $form_state->getFormObject()->getEntity();
-  $entity_type = $entity->getEntityTypeId();
-  $entity_bundle_type = NULL;
-  if ($entity instanceof ContentEntityBase) {
-    $type = $entity->type;
-    $entity_bundle_type = $type ? $type->entity : NULL;
-  }
+function simplify_field_widget_complete_comment_default_form_alter(&$element, FormStateInterface $form_state, $context) {
+  simplify_hide_widget('comment', $element, $form_state);
+}
 
-  // Get array of fields to hide.
-  $global_fields = _simplify_get_config_value("simplify_{$entity_type}s_global");
-  $type_fields = $entity_bundle_type ? _simplify_get_config_value('simplify_nodes', [], 'simplify.content_type.' . $entity_bundle_type->get('type')) : [];
-  $fields = array_merge($global_fields, $type_fields);
-
-  if (isset($fields['comment']) && $fields['comment']) {
-    $element['#attributes']['class'][] = 'visually-hidden';
-    $element['status']['#attributes']['class'][] = 'visually-hidden';
-  }
+function simplify_field_widget_complete_metatag_firehose_form_alter(&$element, FormStateInterface $form_state, $context) {
+  simplify_hide_widget('metatags', $element, $form_state);
 }
 
 /**
@@ -373,7 +417,7 @@ function simplify_module_implements_alter(&$implementations, $hook) {
  *   The category type of fields to build.
  *
  * @return array
- *   An array of cehckbox option fields.
+ *   An array of checkbox option fields.
  */
 function simplify_get_fields($type) {
   $fields = [];
@@ -405,9 +449,6 @@ function simplify_get_fields($type) {
       // Third-party modules:
       if (\Drupal::moduleHandler()->moduleExists('domain_access')) {
         $fields['domain'] = t('Domain access');
-      }
-      if (\Drupal::moduleHandler()->moduleExists('entity_translation') && entity_translation_enabled('node')) {
-        $fields['entity_translation'] = t('Entity translation');
       }
       if (\Drupal::moduleHandler()->moduleExists('metatag')) {
         $fields['metatags'] = t('Meta tags');
@@ -468,11 +509,17 @@ function simplify_get_fields($type) {
       $fields['format'] = t('Text format selection');
       break;
 
+    // ECK.
+    case 'eck':
+      $fields['format'] = t('Text format selection');
+      break;
+
     // Taxonomy.
     case 'taxonomy':
       // Drupal core:
       $fields['format'] = t('Text format selection');
       $fields['relations'] = t('Relations');
+      $fields['revision_information'] = t('Revision information');
       if (\Drupal::moduleHandler()->moduleExists('path')) {
         $fields['path'] = t('URL alias');
       }
@@ -492,6 +539,13 @@ function simplify_get_fields($type) {
       if (\Drupal::moduleHandler()->moduleExists('xmlsitemap')) {
         $fields['xmlsitemap'] = t('XML sitemap');
       }
+      break;
+
+    // Menu links.
+    case 'menu_links':
+      $fields['menu_parent'] = t('Parent link');
+      $fields['menu_link_description'] = t('Description');
+      $fields['menu_link_display_settings'] = t('Display settings');
       break;
 
     // Blocks.
@@ -522,14 +576,13 @@ function simplify_get_fields($type) {
  *   The form in which to simplify the given fields.
  */
 function simplify_hide_fields(array $fields, array &$form) {
-
   // Check if current user can view the hidden fields.
   $user_can_view_hidden = \Drupal::currentUser()->hasPermission('view hidden fields');
   // Check if even admin users must be simplified.
   $hide_to_admin = _simplify_get_config_value('simplify_admin', 0);
 
   // Depending on previous settings, simplify the $fields in the $form.
-  if (!empty($fields) && (!$user_can_view_hidden || (_is_user_admin() && $hide_to_admin))) {
+  if (!empty($fields) && (!$user_can_view_hidden || (_simplify_is_user_admin() && $hide_to_admin))) {
     foreach ($fields as $field) {
       simplify_hide_field($field, $form);
     }
@@ -577,13 +630,30 @@ function simplify_hide_field(string $field, array &$form) {
 
     // Path.
     case 'path':
-      $form['path']['#attributes']['class'][] = 'visually-hidden';
-      $form['path']['widget'][0]['#after_build'][] = 'simplify_hide_path_element';
+      $form['path']['#access'] = FALSE;
       break;
 
     // Revision.
     case 'revision_information':
-      $form['revision_information']['#access'] = FALSE;
+      $form['revision_information']['#attributes']['class'][] = 'visually-hidden';
+      break;
+
+    // Menu parent.
+    case 'menu_parent':
+      $form['menu_parent']['#wrapper_attributes']['class'][] = 'visually-hidden';
+      $form['menu_parent']['#group'] = '';
+      break;
+
+    // Menu description.
+    case 'menu_link_description':
+      $form['menu_link_description']['#wrapper_attributes']['class'][] = 'visually-hidden';
+      $form['menu_link_description']['#group'] = '';
+      break;
+
+    // Menu dsiplay settings.
+    case 'menu_link_display_settings':
+      $form['menu_link_display_settings']['#wrapper_attributes']['class'][] = 'visually-hidden';
+      $form['menu_link_display_settings']['#group'] = '';
       break;
 
     default:
@@ -594,11 +664,35 @@ function simplify_hide_field(string $field, array &$form) {
   \Drupal::moduleHandler()->alter('simplify_hide_field', $form, $field);
 }
 
+function simplify_hide_widget(string $name, array &$form, FormStateInterface $form_state) {
+
+  if (!method_exists($form_state->getFormObject(), 'getEntity')) {
+    return;
+  }
+
+  $entity = $form_state->getFormObject()->getEntity();
+  $entity_type = $entity->getEntityTypeId();
+  $entity_bundle_type = NULL;
+  if ($entity instanceof ContentEntityBase) {
+    $type = $entity->type;
+    $entity_bundle_type = $type ? $type->entity : NULL;
+  }
+
+  // Get array of fields to hide.
+  $global_fields = _simplify_get_config_value("simplify_{$entity_type}s_global");
+  $type_fields = $entity_bundle_type ? _simplify_get_config_value('simplify_nodes', [], 'simplify.content_type.' . $entity_bundle_type->get('type')) : [];
+  $fields = array_merge($global_fields, $type_fields);
+
+  if (in_array($name, $fields)) {
+    $form['widget'][0]['#attributes']['class'][] = 'visually-hidden';
+  }
+}
+
 /**
  * Recurse through the provided form and hide any text_format elements.
  *
  * @param array $form
- *   The form in which to interate to hide the text_format elements.
+ *   The form in which to iterate to hide the text_format elements.
  */
 function simplify_hide_text_format_elements(array &$form) {
   foreach (Element::children($form) as $key) {
@@ -627,20 +721,6 @@ function simplify_hide_text_format_element(array $element) {
   return $element;
 }
 
-/**
- * Hide a given path element.
- *
- * @param array $element
- *   The element to hide.
- *
- * @return array
- *   The hidden element.
- */
-function simplify_hide_path_element(array $element) {
-  $element['#attributes']['class'][] = 'visually-hidden';
-  return $element;
-}
-
 /* ---------------------------------------------------------------------------*\
  *                            HELPER METHODS                                  *
  * ---------------------------------------------------------------------------*/
@@ -654,7 +734,7 @@ function _simplify_disable_globally_hidden_checkboxes($element, &$form_state) {
 
   // Disable any globally hidden fields.
   foreach (Element::children($element) as $field) {
-    if (in_array($field, $global_fields) && $global_fields[$field]) {
+    if (in_array($field, $global_fields)) {
       $element[$field]['#checked'] = TRUE;
       $element[$field]['#attributes']['disabled'] = 'disabled';
     }
@@ -688,7 +768,7 @@ function _simplify_get_config_value($config_key, $default = [], $config_name = '
  * @return bool
  *   TRUE is super admin or user1, FALSE otherwise.
  */
-function _is_user_admin() {
+function _simplify_is_user_admin() {
   $user = \Drupal::currentUser();
   if ($user->id() == 1) {
     return TRUE;

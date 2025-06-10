@@ -74,12 +74,11 @@ class GlobalSettingsTest extends BrowserTestBase {
     $this->assertSession()->fieldNotExists('edit-simplify-blocks-global-format');
 
     /* -------------------------------------------------------.
-     * 2/ Check optionnal options are added if modules becomes available.
+     * 2/ Check optional options are added if modules becomes available.
      */
 
     $this->container->get('module_installer')->install([
       'node',
-      'book',
       'taxonomy',
       'block',
       'comment',
@@ -127,7 +126,6 @@ class GlobalSettingsTest extends BrowserTestBase {
     $this->assertSession()->checkboxNotChecked('edit-simplify-nodes-global-format');
     $this->assertSession()->checkboxChecked('edit-simplify-nodes-global-options');
     $this->assertSession()->checkboxNotChecked('edit-simplify-nodes-global-revision-information');
-    $this->assertSession()->checkboxNotChecked('edit-simplify-nodes-global-book');
     $this->assertSession()->checkboxChecked('edit-simplify-nodes-global-comment');
     $this->assertSession()->checkboxNotChecked('edit-simplify-nodes-global-menu');
     $this->assertSession()->checkboxNotChecked('edit-simplify-nodes-global-path');

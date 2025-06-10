@@ -1,0 +1,11 @@
+--- leaflet_mapbox.info.yml
++++ leaflet_mapbox.info.yml
+@@ -6,7 +6,7 @@ configure: leaflet_mapbox.settings
+ dependencies:
+   - leaflet
+ 
+-core_version_requirement: ^8.7.7 || ^9
++core_version_requirement: ^8.7.7 || ^9 || ^10
+ 
+ 
+ 

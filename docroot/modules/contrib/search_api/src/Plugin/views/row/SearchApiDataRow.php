@@ -40,7 +40,7 @@ class SearchApiDataRow extends DataEntityRow {
   /**
    * {@inheritdoc}
    */
-  public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
+  public function init(ViewExecutable $view, DisplayPluginBase $display, ?array &$options = NULL) {
     parent::init($view, $display, $options);
 
     $base_table = $view->storage->get('base_table');
@@ -64,7 +64,7 @@ class SearchApiDataRow extends DataEntityRow {
         try {
           $row->_object = $row->_item->getOriginalObject(FALSE);
         }
-        catch (SearchApiException $e) {
+        catch (SearchApiException) {
           // Can never happen for getOriginalObject() with $load = FALSE. Catch
           // for sake of static analysis.
         }
@@ -80,7 +80,7 @@ class SearchApiDataRow extends DataEntityRow {
     if (!($row->_object instanceof ComplexDataInterface)) {
       $context = [
         '%item_id' => $row->search_api_id,
-        '%view' => $this->view->storage->label(),
+        '%view' => $this->view->storage->label() ?? $this->view->storage->id(),
       ];
       $this->getLogger()->warning('Failed to load item %item_id in view %view.', $context);
       return NULL;

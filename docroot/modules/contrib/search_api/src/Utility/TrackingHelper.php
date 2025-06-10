@@ -6,6 +6,7 @@ namespace Drupal\search_api\Utility;
 
 use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
+use Drupal\Component\Utility\DeprecationHelper;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Cache\RefinableCacheableDependencyInterface;
@@ -98,13 +99,20 @@ class TrackingHelper implements TrackingHelperInterface {
       $indexes = $this->entityTypeManager->getStorage('search_api_index')
         ->loadMultiple();
     }
-    // @todo Remove $e once we depend on PHP 8.0+.
-    catch (InvalidPluginDefinitionException | PluginNotFoundException $e) {
+    catch (InvalidPluginDefinitionException | PluginNotFoundException) {
       // Can't really happen, but play it safe to appease static code analysis.
     }
 
     // Original entity, if available.
-    $original = $deleted ? NULL : ($entity->original ?? NULL);
+    $original = NULL;
+    if (!$deleted) {
+      $original = DeprecationHelper::backwardsCompatibleCall(
+        \Drupal::VERSION,
+        '11.2',
+        fn () => $entity->getOriginal(),
+        fn () => $entity->original ?? NULL,
+      );
+    }
     foreach ($indexes as $index) {
       // Do not track changes to referenced entities if the option has been
       // disabled.
@@ -177,7 +185,7 @@ class TrackingHelper implements TrackingHelperInterface {
       try {
         $datasource = $field->getDatasource();
       }
-      catch (SearchApiException $e) {
+      catch (SearchApiException) {
         continue;
       }
       if (!$datasource) {

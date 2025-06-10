@@ -19,7 +19,10 @@ namespace JsonMachine;
  */
 class Autoloading
 {
-    static public function autoloader($class)
+    /**
+     * @return void
+     */
+    static public function autoloader(string $class)
     {
         $prefix = 'JsonMachine\\';
         $baseDir = __DIR__.DIRECTORY_SEPARATOR;
@@ -36,6 +39,11 @@ class Autoloading
             require $file;
         }
     }
+}
+
+$files = json_decode(file_get_contents(__DIR__.'/../composer.json'), true)['autoload']['files'];
+foreach ($files as $file) {
+    require_once __DIR__.'/../'.$file;
 }
 
 // @codeCoverageIgnoreStart

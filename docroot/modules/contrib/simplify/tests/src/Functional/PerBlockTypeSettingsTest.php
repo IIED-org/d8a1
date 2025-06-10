@@ -2,8 +2,8 @@
 
 namespace Drupal\Tests\simplify\Functional;
 
-use Drupal\block_content\Entity\BlockContentType;
 use Drupal\Tests\BrowserTestBase;
+use Drupal\block_content\Entity\BlockContentType;
 
 /**
  * Test simplify per block-type settings.
@@ -83,7 +83,7 @@ class PerBlockTypeSettingsTest extends BrowserTestBase {
      */
 
     // Open admin UI.
-    $this->drupalGet('admin/structure/block/block-content/manage/testing_type');
+    $this->drupalGet('admin/structure/block-content/manage/testing_type');
 
     // Blocks.
     $this->assertSession()->checkboxChecked('edit-simplify-blocks-format');
@@ -106,14 +106,14 @@ class PerBlockTypeSettingsTest extends BrowserTestBase {
 
     // Nodes.
     $options = [
-      'simplify_blocks[revision_information]' => 'format',
+      'simplify_blocks[revision_information]' => TRUE,
     ];
     $this->submitForm($options, 'Save');
 
     /* -------------------------------------------------------.
      * 3-bis/ Check if options are saved.
      */
-    $this->drupalGet('/admin/structure/block/block-content/manage/testing_type');
+    $this->drupalGet('/admin/structure/block-content/manage/testing_type');
     $this->assertSession()->checkboxChecked('edit-simplify-blocks-revision-information');
 
     /* -------------------------------------------------------.
@@ -122,7 +122,7 @@ class PerBlockTypeSettingsTest extends BrowserTestBase {
     $this->drupalGet('block/add/testing_type');
 
     $this->assertSession()->elementContains('css', '.js-filter-wrapper.hidden', 'About text formats');
-    $this->assertSession()->responseNotContains('Revision information');
+    $this->assertSession()->elementContains('css', '.entity-content-form-revision-information.visually-hidden', 'Revision log message');
   }
 
   /**

@@ -5,8 +5,8 @@ dependencies:
   config:
     - search_api.server.search_server
   module:
+    - search_api_solr
     - taxonomy
-    - search_api
 id: species_index
 name: 'Species index'
 description: ''

@@ -3,8 +3,8 @@ langcode: en
 status: false
 dependencies:
   config:
-    - field.storage.node.field_address
     - field.storage.node.body
+    - field.storage.node.field_address
     - field.storage.node.field_initiative_introduction
     - field.storage.node.field_interventions
     - field.storage.node.field_lead_organisation
@@ -13,7 +13,7 @@ dependencies:
     - search_api.server.search_server
   module:
     - node
-    - search_api
+    - search_api_solr
 id: contry_index
 name: 'Country index'
 description: ''

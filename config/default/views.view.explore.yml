@@ -3671,7 +3671,7 @@ display:
           text_input_required_format: basic_html
           bef: {  }
       cache:
-        type: none
+        type: search_api_none
         options: {  }
       empty:
         area:
