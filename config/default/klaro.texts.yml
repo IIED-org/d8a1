@@ -12,7 +12,7 @@ consentNotice:
   title: 'Use of personal data and cookies'
   changeDescription: 'There were changes since your last visit, please update your consent.'
   description: "We use cookies and process personal data for the following purposes: {purposes}.\r\n"
-  learnMore: Customize
+  learnMore: Customise
 ok: Accept
 save: Save
 decline: Decline
@@ -35,4 +35,4 @@ contextualConsent:
   acceptAlways: Always
   acceptOnce: 'Yes (this time)'
   description: 'Load external content supplied by {title}?'
-poweredBy: 'Powered by Klaro!'
+poweredBy: "\_"
