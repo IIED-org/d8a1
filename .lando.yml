@@ -1,7 +1,7 @@
 name: d8a1
 recipe: drupal10
 config:
-  php: '8.2'
+  php: '8.3'
   webroot: docroot
 proxy:
   adminer:
