@@ -3022,17 +3022,17 @@
         },
         {
             "name": "drupal/bootstrap_sass",
-            "version": "5.0.11",
+            "version": "5.0.12",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/bootstrap_sass.git",
-                "reference": "5.0.11"
+                "reference": "5.0.12"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/bootstrap_sass-5.0.11.zip",
-                "reference": "5.0.11",
-                "shasum": "5762b5db6d9a194c0982e99bbde0ed8e90849554"
+                "url": "https://ftp.drupal.org/files/projects/bootstrap_sass-5.0.12.zip",
+                "reference": "5.0.12",
+                "shasum": "93b9875d2d29a20f5b77d183eff4a5f6a18728c0"
             },
             "require": {
                 "drupal/bootstrap_barrio": ">=5.1.3",
@@ -3041,8 +3041,8 @@
             "type": "drupal-theme",
             "extra": {
                 "drupal": {
-                    "version": "5.0.11",
-                    "datestamp": "1722796877",
+                    "version": "5.0.12",
+                    "datestamp": "1749521565",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -3055,12 +3055,12 @@
             ],
             "authors": [
                 {
-                    "name": "hatuhay",
-                    "homepage": "https://www.drupal.org/user/827704"
+                    "name": "cadence96",
+                    "homepage": "https://www.drupal.org/user/3520894"
                 },
                 {
-                    "name": "Ricardo.Castaneda",
-                    "homepage": "https://www.drupal.org/user/3520894"
+                    "name": "hatuhay",
+                    "homepage": "https://www.drupal.org/user/827704"
                 }
             ],
             "description": "SASS subtheme for Barrio Theme.",
