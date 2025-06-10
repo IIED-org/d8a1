@@ -82,6 +82,11 @@ interface ComponentAwareQueryInterface
     const COMPONENT_TERMS = 'terms';
 
     /**
+     * Query component term vector.
+     */
+    const COMPONENT_TERMVECTOR = 'termvector';
+
+    /**
      * Query component queryelevation.
      */
     const COMPONENT_QUERYELEVATION = 'queryelevation';
@@ -134,7 +139,7 @@ interface ComponentAwareQueryInterface
      *
      * @return object|null
      */
-    public function getComponent(string $key, $autoload = false, array $config = null);
+    public function getComponent(string $key, $autoload = false, ?array $config = null);
 
     /**
      * Set a component instance.

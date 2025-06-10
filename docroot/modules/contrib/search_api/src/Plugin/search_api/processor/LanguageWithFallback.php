@@ -104,7 +104,7 @@ class LanguageWithFallback extends ProcessorPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function getPropertyDefinitions(DatasourceInterface $datasource = NULL) {
+  public function getPropertyDefinitions(?DatasourceInterface $datasource = NULL) {
     $properties = [];
 
     if (!$datasource) {
@@ -131,7 +131,7 @@ class LanguageWithFallback extends ProcessorPluginBase {
     try {
       $entity = $item->getOriginalObject()->getValue();
     }
-    catch (SearchApiException $e) {
+    catch (SearchApiException) {
       return;
     }
     if (!($entity instanceof ContentEntityInterface)) {

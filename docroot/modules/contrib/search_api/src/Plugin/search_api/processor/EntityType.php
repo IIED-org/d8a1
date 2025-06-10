@@ -28,7 +28,7 @@ class EntityType extends ProcessorPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function getPropertyDefinitions(DatasourceInterface $datasource = NULL): array {
+  public function getPropertyDefinitions(?DatasourceInterface $datasource = NULL): array {
     $properties = [];
 
     if (!$datasource) {
@@ -51,7 +51,7 @@ class EntityType extends ProcessorPluginBase {
     try {
       $entity = $item->getOriginalObject()->getValue();
     }
-    catch (SearchApiException $e) {
+    catch (SearchApiException) {
       return;
     }
     if (!($entity instanceof EntityInterface)) {

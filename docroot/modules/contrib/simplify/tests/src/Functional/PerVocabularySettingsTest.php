@@ -2,8 +2,8 @@
 
 namespace Drupal\Tests\simplify\Functional;
 
-use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\Tests\BrowserTestBase;
+use Drupal\taxonomy\Entity\Vocabulary;
 
 /**
  * Test simplify per vocabulary settings.
@@ -72,6 +72,7 @@ class PerVocabularySettingsTest extends BrowserTestBase {
 
     $this->assertSession()->responseContains('About text formats');
     $this->assertSession()->responseContains('Relations');
+    $this->assertSession()->responseContains('Revision information');
     $this->assertSession()->responseContains('URL alias');
 
     /* -------------------------------------------------------.
@@ -92,6 +93,7 @@ class PerVocabularySettingsTest extends BrowserTestBase {
     // Check if everything is there and global options are considered.
     $this->assertSession()->checkboxChecked('edit-simplify-taxonomies-format');
     $this->assertSession()->checkboxNotChecked('edit-simplify-taxonomies-relations');
+    $this->assertSession()->checkboxNotChecked('edit-simplify-taxonomies-revision-information');
     $this->assertSession()->checkboxNotChecked('edit-simplify-taxonomies-path');
 
     // Check if everything is properly disabled if needed.
@@ -100,6 +102,9 @@ class PerVocabularySettingsTest extends BrowserTestBase {
 
     $text_format = $this->xpath('//input[@name="simplify_taxonomies[relations]" and @disabled="disabled"]');
     $this->assertTrue(count($text_format) === 0, 'Vocabulary relations option is not disabled.');
+
+    $text_format = $this->xpath('//input[@name="simplify_taxonomies[revision_information]" and @disabled="disabled"]');
+    $this->assertTrue(count($text_format) === 0, 'Vocabulary revision_information option is not disabled.');
 
     $text_format = $this->xpath('//input[@name="simplify_taxonomies[path]" and @disabled="disabled"]');
     $this->assertTrue(count($text_format) === 0, 'Vocabulary URL alias option is not disabled.');
@@ -123,7 +128,7 @@ class PerVocabularySettingsTest extends BrowserTestBase {
 
     $this->assertSession()->elementContains('css', '.js-filter-wrapper.hidden', 'About text formats');
     $this->assertSession()->elementContains('css', '.js-form-wrapper.visually-hidden', 'Relations');
-    $this->assertSession()->elementContains('css', '.field--name-path.visually-hidden', 'URL alias');
+    $this->assertSession()->elementNotExists('css', '.field--name-path');
   }
 
 }

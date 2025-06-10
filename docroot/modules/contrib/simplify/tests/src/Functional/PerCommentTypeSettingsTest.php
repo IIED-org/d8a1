@@ -2,8 +2,8 @@
 
 namespace Drupal\Tests\simplify\Functional;
 
-use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\Tests\BrowserTestBase;
+use Drupal\comment\Tests\CommentTestTrait;
 
 /**
  * Test simplify per comment-type settings.

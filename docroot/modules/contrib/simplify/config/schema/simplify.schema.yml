@@ -23,12 +23,24 @@ simplify.global:
       sequence:
         type: string
         label: 'Comment setting'
+    simplify_eck_global:
+      type: sequence
+      label: 'ECK settings'
+      sequence:
+        type: string
+        label: 'ECK item setting'
     simplify_taxonomies_global:
       type: sequence
       label: 'Taxonomies settings'
       sequence:
         type: string
         label: 'Taxonomy setting'
+    simplify_menu_links_global:
+      type: sequence
+      label: 'Menu links settings'
+      sequence:
+        type: string
+        label: 'Menu link setting'
     simplify_blocks_global:
       type: sequence
       label: 'Blocks settings'
@@ -47,41 +59,41 @@ simplify.content_type.*:
   label: 'Per content-type configurations for Simplify module.'
   mapping:
     simplify_nodes:
-        type: sequence
-        label: 'Nodes settings'
-        sequence:
-          type: string
-          label: 'Node setting'
+      type: sequence
+      label: 'Nodes settings'
+      sequence:
+        type: string
+        label: 'Node setting'
 
 simplify.vocabulary.*:
   type: config_object
   label: 'Per vocabulary configurations for Simplify module.'
   mapping:
     simplify_taxonomies:
-        type: sequence
-        label: 'Nodes settings'
-        sequence:
-          type: string
-          label: 'Node setting'
+      type: sequence
+      label: 'Nodes settings'
+      sequence:
+        type: string
+        label: 'Node setting'
 
 simplify.comment_type.*:
   type: config_object
   label: 'Per comment-type configurations for Simplify module.'
   mapping:
     simplify_comments:
-        type: sequence
-        label: 'Comments settings'
-        sequence:
-          type: string
-          label: 'Comment setting'
+      type: sequence
+      label: 'Comments settings'
+      sequence:
+        type: string
+        label: 'Comment setting'
 
 simplify.block_type.*:
   type: config_object
   label: 'Per block-type configurations for Simplify module.'
   mapping:
     simplify_blocks:
-        type: sequence
-        label: 'Blocks settings'
-        sequence:
-          type: string
-          label: 'Block setting'
+      type: sequence
+      label: 'Blocks settings'
+      sequence:
+        type: string
+        label: 'Block setting'

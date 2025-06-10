@@ -4,6 +4,7 @@ namespace Drupal\search_api;
 
 use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
@@ -108,6 +109,20 @@ class UnsavedIndexConfiguration implements IndexInterface, UnsavedConfigurationI
   /**
    * {@inheritdoc}
    */
+  public function getOriginal(): ?static {
+    return $this->entity->getOriginal();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setOriginal(?EntityInterface $original): static {
+    return $this->entity->setOriginal($original);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function hasChanges() {
     return (bool) $this->lock;
   }
@@ -134,10 +149,7 @@ class UnsavedIndexConfiguration implements IndexInterface, UnsavedConfigurationI
     try {
       return $this->getEntityTypeManager()->getStorage('user')->load($uid);
     }
-    catch (InvalidPluginDefinitionException $e) {
-      return NULL;
-    }
-    catch (PluginNotFoundException $e) {
+    catch (InvalidPluginDefinitionException | PluginNotFoundException) {
       return NULL;
     }
   }
@@ -146,7 +158,7 @@ class UnsavedIndexConfiguration implements IndexInterface, UnsavedConfigurationI
    * {@inheritdoc}
    */
   public function getLastUpdated() {
-    return $this->lock ? $this->lock->getUpdated() : NULL;
+    return $this->lock?->getUpdated();
   }
 
   /**
@@ -353,7 +365,7 @@ class UnsavedIndexConfiguration implements IndexInterface, UnsavedConfigurationI
   /**
    * {@inheritdoc}
    */
-  public function setServer(ServerInterface $server = NULL) {
+  public function setServer(?ServerInterface $server = NULL) {
     $this->entity->setServer($server);
     return $this;
   }
@@ -537,6 +549,13 @@ class UnsavedIndexConfiguration implements IndexInterface, UnsavedConfigurationI
   /**
    * {@inheritdoc}
    */
+  public function registerUnreliableItemIds(array $item_ids): void {
+    $this->entity->registerUnreliableItemIds($item_ids);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function indexItems($limit = -1, $datasource_id = NULL) {
     return $this->entity->indexItems($limit, $datasource_id);
   }
@@ -618,6 +637,13 @@ class UnsavedIndexConfiguration implements IndexInterface, UnsavedConfigurationI
    */
   public function isReindexing() {
     return $this->entity->isReindexing();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getLockId(): string {
+    return $this->entity->getLockId();
   }
 
   /**
@@ -855,7 +881,7 @@ class UnsavedIndexConfiguration implements IndexInterface, UnsavedConfigurationI
   /**
    * {@inheritdoc}
    */
-  public static function loadMultiple(array $ids = NULL) {
+  public static function loadMultiple(?array $ids = NULL) {
     return Index::loadMultiple($ids);
   }
 
@@ -1018,7 +1044,7 @@ class UnsavedIndexConfiguration implements IndexInterface, UnsavedConfigurationI
   /**
    * {@inheritdoc}
    */
-  public function access($operation, AccountInterface $account = NULL, $return_as_object = FALSE) {
+  public function access($operation, ?AccountInterface $account = NULL, $return_as_object = FALSE) {
     return $this->entity->access($operation, $account, $return_as_object);
   }
 

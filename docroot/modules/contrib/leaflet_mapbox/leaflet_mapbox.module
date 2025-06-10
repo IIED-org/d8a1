@@ -1,15 +1,11 @@
 <?php
-/**
- * @file
- * "Leaflet Mapbox" adds integration for Leaflet module and Mapbox tiles.
- */
 
 /**
  * Implements hook_leaflet_map_info().
  */
 function leaflet_mapbox_leaflet_map_info() {
   $config = \Drupal::config('leaflet_mapbox.settings');
-  $settings = array(
+  $settings = [
     'attributionControl' => TRUE,
     'closePopupOnClick'  => TRUE,
     'doubleClickZoom'    => TRUE,
@@ -24,7 +20,8 @@ function leaflet_mapbox_leaflet_map_info() {
     'zoom'               => $config->get('zoomlevel'),
     'zoomAnimation'      => TRUE,
     'zoomControl'        => TRUE,
-  );
+    'worldCopyJump'      => TRUE,
+  ];
 
   // Get access token.
   $token = $config->get('token');
@@ -35,7 +32,6 @@ function leaflet_mapbox_leaflet_map_info() {
   switch ($config->get('api_version')) {
     case '3':
       $code = $config->get('code');
-
       // Build urlTemplate.
       $url_template = "//{s}.tiles.mapbox.com/v4/$code/{z}/{x}/{y}.png?access_token=$token";
       break;
@@ -52,24 +48,24 @@ function leaflet_mapbox_leaflet_map_info() {
       }
 
       // Mapbox v4 tiles are 512px by 512px and offset by 1 zoom level.
-      $options += array(
+      $options += [
         'tileSize' => 512,
         'zoomOffset' => -1,
-      );
+      ];
       break;
   }
 
-  $map_info['leaflet-mapbox'] = array(
+  $map_info['leaflet-mapbox'] = [
     'label' => $config->get('label'),
     'description' => $config->get('description'),
     'settings' => $settings,
-    'layers' => array(
-      'earth' => array(
+    'layers' => [
+      'earth' => [
         'urlTemplate' => $url_template,
         'options' => $options,
-      ),
-    ),
-  );
+      ],
+    ],
+  ];
 
   return $map_info;
 }

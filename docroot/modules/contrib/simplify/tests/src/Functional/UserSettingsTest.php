@@ -80,13 +80,13 @@ class UserSettingsTest extends BrowserTestBase {
      * 2/ Check the effect on user settings.
      */
 
-    // @TODO Remove this when hook_form_user_register_alter() is taken in
+    // @todo Remove this when hook_form_user_register_alter() is taken in
     // in consideration in testing profile with no cache refresh.
     drupal_flush_all_caches();
 
     // A- On user edit page.
     $this->drupalGet($user_edit_page);
-//    $this->assertSession()->responseContains('Contact settings');
+    // $this->assertSession()->responseContains('Contact settings');
     $this->assertSession()->elementContains('css', '#edit-contact.visually-hidden', 'Contact settings');
     $this->assertSession()->elementContains('css', '#edit-timezone.visually-hidden', 'Locale settings');
     // B- On user register page.
