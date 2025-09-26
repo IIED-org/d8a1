@@ -36,7 +36,7 @@
     "drupal/geofield_map": "^3.0",
     "drupal/back_to_top": "^3.0",
     "drupal/address": "~1.0",
-    "drupal/contact_block": "^1.4",
+    "drupal/contact_block": "^2.0.3",
     "drupal/entity_usage": "^2.0@alpha",
     "drupal/pdfpreview": "^1.0@RC",
     "drupal/colorbox": "^2.0",

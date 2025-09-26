@@ -41,7 +41,20 @@ function hook_leaflet_map_view_geofield_value_alter(array &$geofield_value, arra
  * @param \Drupal\views\Plugin\views\ViewsPluginInterface $rowPlugin
  *   (optional) The row plugin used for rendering the feature.
  */
-function hook_leaflet_views_feature_alter(array &$feature, ResultRow $row, ViewsPluginInterface $rowPlugin = NULL): void {
+function hook_leaflet_views_feature_alter(array &$feature, ResultRow $row, ?ViewsPluginInterface $rowPlugin = NULL): void {
+}
+
+/**
+ * Adjust the array representing a leaflet single features.
+ *
+ * @param array $features
+ *   The leaflet single features definition.
+ * @param \Drupal\views\Plugin\views\ViewsPluginInterface $view_style
+ *   The Leaflet Map View Style.
+ */
+function hook_leaflet_views_features_alter(array &$features, ViewsPluginInterface &$view_style): void {
+  // Make custom alterations to $features, eventually using the $view_style
+  // context.
 }
 
 /**

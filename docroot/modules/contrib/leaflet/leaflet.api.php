@@ -2,12 +2,12 @@
 
 /**
  * @file
- * API documentation for Administration menu.
+ * API documentation for Leaflet module.
  */
 
-use Drupal\Core\Field\FieldItemListInterface;
-use Drupal\Core\Field\FieldItemInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Field\FieldItemInterface;
+use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\geofield\Plugin\Field\FieldWidget\GeofieldBaseWidget;
 
 /**
@@ -62,10 +62,10 @@ function hook_leaflet_map_info() {
       'description' => t('Leaflet default map.'),
       'settings' => leaflet_map_info_default_settings(),
       'layers' => [
-        'earth' => [
-          'urlTemplate' => '//{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+        'OpenStreetMap' => [
+          'urlTemplate' => 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
           'options' => [
-            'attribution' => 'OSM Mapnik',
+            'attribution' => '&copy; <a href="https://www.openstreetmap.org/copyright" rel="noopener noreferrer">OpenStreetMap</a> contributors',
           ],
         ],
       ],
@@ -96,31 +96,98 @@ function hook_leaflet_map_info() {
       'description' => t('Multilayers'),
       'settings' => leaflet_map_info_default_settings(),
       'layers' => [
+        'Stadia Alidade Smooth' => [
+          'urlTemplate' => 'https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png',
+          'options' => [
+            "maxZoom" => 20,
+            'attribution' => '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
+          ],
+        ],
         'Google Roads' => [
           'type' => 'google',
-          'urlTemplate' => '//mt{s}.googleapis.com/vt?x={x}&y={y}&z={z}',
+          'urlTemplate' => 'https://mt{s}.googleapis.com/vt?x={x}&y={y}&z={z}',
           'options' => [
-            'attribution' => 'Map data &copy; <a href="http://googlemaps.com">Google</a>',
+            'attribution' => 'Map data &copy; <a href="https://googlemaps.com">Google</a>',
             'detectRetina' => FALSE,
             'subdomains' => [0, 1, 2, 3],
           ],
         ],
-        'Hydda Base' => [
-          'urlTemplate' => '//{s}.tile.openstreetmap.se/hydda/base/{z}/{x}/{y}.png',
+        'OpenStreetMap' => [
+          'urlTemplate' => 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
           'options' => [
-            "minZoom" => 0,
-            "maxZoom" => 18,
-            "attribution" => "\"Tiles courtesy of <a href='http://openstreetmap.se/' target='_blank'>OpenStreetMap Sweden</a> &mdash; Map data &copy; <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a>",
+            "maxZoom" => 19,
+            "attribution" => "&copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors",
           ],
         ],
-        'Stamen_Terrain' => [
-          'urlTemplate' => '//stamen-tiles-{s}.a.ssl.fastly.net/terrain/{z}/{x}/{y}.{ext}',
+        'Stamen TonerLite' => [
+          'urlTemplate' => 'https://tiles.stadiamaps.com/tiles/stamen_toner_lite/{z}/{x}/{y}{r}.{ext}',
+          'options' => [
+            "subdomains" => "abcd",
+            "minZoom" => 0,
+            "maxZoom" => 20,
+            "ext" => "png",
+            "attribution" => "&copy; <a href='https://www.stadiamaps.com/'>Stadia Maps</a> &copy; <a href='https://www.stamen.com/'>Stamen Design</a> &copy; <a href='https://openmaptiles.org/'>OpenMapTiles</a> &copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors",
+          ],
+        ],
+        'OpenTopoMap' => [
+          'urlTemplate' => 'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',
           'options' => [
             "minZoom" => 0,
             "maxZoom" => 18,
-            "ext" => "png",
-            "subdomains" => "abcd",
-            "attribution" => "Map tiles by <a href='http://stamen.com'>Stamen Design</a>, <a href='http://creativecommons.org/licenses/by/3.0'>CC BY 3.0</a> &mdash; Map data &copy; <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a>",
+            "attribution" => 'Kartendaten: © <a href="https://openstreetmap.org/copyright">OpenStreetMap</a>-Mitwirkende, SRTM | Kartendarstellung: © <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)',
+          ],
+        ],
+        // A Vector Tile definition usable by MapLibre GL Leaflet & Js.
+        // @see https://docs.stadiamaps.com/tutorials/vector-tiles-with-leaflet/
+        'Stadia Alidade Smooth Dark Vector' => [
+          // Set vector type for rendering with Vector.
+          'type' => 'vector',
+          'urlTemplate' => 'https://tiles.stadiamaps.com/styles/alidade_smooth_dark.json',
+          'options' => [
+            'attribution' => '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
+            // Supports Pitch in degrees (optional).
+            'pitch' => '0',
+            // Supports Bearing in degrees (optional).
+            'bearing' => '0',
+          ],
+        ],
+        // A Map Tiler (Aquarelle style) integration example.
+        // @see https://cloud.maptiler.com/maps/aquarelle/
+        'Map Tiler Aquarelle' => [
+          'urlTemplate' => 'https://api.maptiler.com/maps/aquarelle/{z}/{x}/{y}.png?key=OIQHXCpngQEP6dfvC5nq',
+          'options' => [
+            "tileSize" => 512,
+            "zoomOffset" => -1,
+            "minZoom" => 0,
+            "maxZoom" => 22,
+            'attribution' => "\u003ca href=\"https://www.maptiler.com/copyright/\" target=\"_blank\"\u003e\u0026copy; MapTiler\u003c/a\u003e \u003ca href=\"https://www.openstreetmap.org/copyright\" target=\"_blank\"\u003e\u0026copy; OpenStreetMap contributors\u003c/a\u003e",
+            'crossOrigin' => TRUE,
+          ],
+        ],
+        // A Map Tiler (Backdrop style) integration example.
+        // @see https://cloud.maptiler.com/maps/backdrop/
+        'Map Tiler Backdrop' => [
+          'urlTemplate' => 'https://api.maptiler.com/maps/backdrop/{z}/{x}/{y}.png?key=OIQHXCpngQEP6dfvC5nq',
+          'options' => [
+            "tileSize" => 512,
+            "zoomOffset" => -1,
+            "minZoom" => 0,
+            "maxZoom" => 22,
+            'attribution' => "\u003ca href=\"https://www.maptiler.com/copyright/\" target=\"_blank\"\u003e\u0026copy; MapTiler\u003c/a\u003e \u003ca href=\"https://www.openstreetmap.org/copyright\" target=\"_blank\"\u003e\u0026copy; OpenStreetMap contributors\u003c/a\u003e",
+            'crossOrigin' => TRUE,
+          ],
+        ],
+        // An example Overlay definition, in addition to previous Base Layers.
+        // (@see @3050934: simultaneous multiple layers feature)
+        'OpenRailwayMap' => [
+          // Set layer type as 'overlay'.
+          'layer_type' => 'overlay',
+          // Possibly set it also initially hidden.
+          'layer_hidden' => TRUE,
+          'urlTemplate' => 'https://tiles.openrailwaymap.org/standard/{z}/{x}/{y}.png',
+          'options' => [
+            'maxZoom' => 19,
+            'attribution' => 'Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors | Map style: &copy; <a href="https://www.OpenRailwayMap.org">OpenRailwayMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)',
           ],
         ],
       ],
@@ -173,7 +240,7 @@ function hook_leaflet_default_widget_alter(array &$map_settings, GeofieldBaseWid
  * @param \Drupal\Core\Entity\ContentEntityInterface $entity
  *   The Content Entity base of the formatter.
  */
-function hook_leaflet_formatter_feature_alter(array $feature, FieldItemInterface $item, ContentEntityInterface $entity) {
+function hook_leaflet_formatter_feature_alter(array &$feature, FieldItemInterface $item, ContentEntityInterface $entity) {
   // Make custom alterations to $feature, eventually using the $items
   // context.
 }

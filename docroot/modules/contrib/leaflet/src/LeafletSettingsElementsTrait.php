@@ -2,10 +2,12 @@
 
 namespace Drupal\leaflet;
 
-use Drupal\Core\Form\FormStateInterface;
-use Drupal\views\Plugin\views\ViewsPluginInterface;
-use Drupal\Core\Url;
 use Drupal\Component\Serialization\Json;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\Url;
+use Drupal\leaflet\Plugin\Field\FieldWidget\LeafletDefaultWidget;
+use Drupal\views\Plugin\views\ViewsPluginInterface;
 
 /**
  * Class LeafletSettingsElementsTrait.
@@ -15,6 +17,17 @@ use Drupal\Component\Serialization\Json;
  * @package Drupal\leaflet
  */
 trait LeafletSettingsElementsTrait {
+
+  /**
+   * Get maps available for use with Leaflet.
+   */
+  protected static function getLeafletMaps() {
+    $options = [];
+    foreach (leaflet_map_get_info() as $key => $map) {
+      $options[$key] = $map['label'];
+    }
+    return $options;
+  }
 
   /**
    * Leaflet Controls Positions Options.
@@ -40,15 +53,33 @@ trait LeafletSettingsElementsTrait {
   ];
 
   /**
+   * Generate the Token Replacement Disclaimer.
+   *
+   * @return \Drupal\Core\StringTranslation\TranslatableMarkup
+   *   The translated markup.
+   */
+  protected function getTokenReplacementDisclaimer(): TranslatableMarkup {
+    return $this->moduleHandler->moduleExists('token') ? $this->t('Using <strong>Tokens or Replacement Patterns</strong> it is possible to dynamically define the Path geometries options, based on the entity properties or fields values.')
+      : $this->t('Using the @token_module_link it is possible to use <strong>Replacement Patterns</strong> and dynamically define the Path geometries options, based on the entity properties or fields values.', [
+        '@token_module_link' => $this->link->generate($this->t('Toke module'), Url::fromUri('https://www.drupal.org/project/token', [
+          'absolute' => TRUE,
+          'attributes' => ['target' => 'blank'],
+        ])),
+      ]);
+  }
+
+  /**
    * Get the Default Settings.
    *
    * @return array
    *   The default settings.
    */
   public static function getDefaultSettings() {
+    $base_layers = self::getLeafletMaps();
+
     return [
       'multiple_map' => FALSE,
-      'leaflet_map' => 'OSM Mapnik',
+      'leaflet_map' => $base_layers['OSM Mapnik'] ? 'OSM Mapnik' : array_shift($base_layers),
       'height' => 400,
       'height_unit' => 'px',
       'hide_empty_map' => FALSE,
@@ -77,12 +108,12 @@ trait LeafletSettingsElementsTrait {
           'lon' => 0,
         ],
         'zoomControlPosition' => 'topleft',
-        'zoom' => 12,
+        'zoom' => 5,
         'minZoom' => 1,
         'maxZoom' => 18,
         'zoomFiner' => 0,
       ],
-      'weight' => NULL,
+      'weight' => 0,
       'icon' => [
         'iconType' => 'marker',
         'iconUrl' => '',
@@ -127,6 +158,8 @@ trait LeafletSettingsElementsTrait {
       'geocoder' => [
         'control' => FALSE,
         'settings' => [
+          'set_marker' => FALSE,
+          'popup' => FALSE,
           'autocomplete' => [
             'placeholder' => 'Search Address',
             'title' => 'Search an Address on the Map',
@@ -137,7 +170,6 @@ trait LeafletSettingsElementsTrait {
           'min_terms' => 4,
           'delay' => 800,
           'zoom' => 16,
-          'popup' => FALSE,
           'options' => '',
         ],
       ],
@@ -338,18 +370,15 @@ trait LeafletSettingsElementsTrait {
     ];
 
     $element['zoom'] = [
-      '#title' => $this->t('Zoom'),
+      '#title' => $this->t('Initial Zoom'),
       '#type' => 'number',
       '#min' => 0,
       '#max' => 22,
+      '#description' => $this->t('The initial Zoom level for the Map in case of a Single Marker or when Forced (or when empty).<br><u>In case of multiple Markers/Features, the initial Zoom will automatically set so to extend the Map to the boundaries of all of them.</u><br>Admitted values usually range from 0 (the whole world) to 20 - 22, depending on the max zoom supported by the specific Map Tile in use.<br>As a reference consider Zoom 5 for a large country, 10 for a city, 15 for a road or a district.'),
       '#default_value' => $map_position_options['zoom'] ?? $this->getDefaultSettings()['map_position']['zoom'],
       '#required' => TRUE,
       '#element_validate' => [[get_class($this), 'zoomLevelValidate']],
     ];
-
-    if ($this instanceof ViewsPluginInterface) {
-      $element['zoom']['#description'] = $this->t('These setting will be applied (anyway) to a single Marker Map.');
-    }
 
     $element['minZoom'] = [
       '#title' => $this->t('Min. Zoom'),
@@ -373,10 +402,10 @@ trait LeafletSettingsElementsTrait {
     $element['zoomFiner'] = [
       '#title' => $this->t('Zoom Finer'),
       '#type' => 'number',
-      '#max' => 5,
-      '#min' => -5,
+      '#max' => 10,
+      '#min' => -10,
       '#step' => 1,
-      '#description' => $this->t('Value that might/will be added to default Fit Elements Bounds Zoom. (-5 / +5)'),
+      '#description' => $this->t('Use this selector (-10 | +10) to <u>zoom in or out on the Initial Zoom level, in case of multiple Markers/Features on the Map</u>.<br>Example: -2 will zoom out, adding padding around the markers, while 2 will zoom in, leaving out peripheral markers.<br>Note: This will still be constrained according with your Max & Min Zoom settings.'),
       '#default_value' => $map_position_options['zoomFiner'] ?? $this->getDefaultSettings()['map_position']['zoomFiner'],
       '#states' => [
         'invisible' => isset($force_checkbox_selector_widget) ? [
@@ -421,9 +450,9 @@ trait LeafletSettingsElementsTrait {
    */
   protected function generateIconFormElement(array $icon_options) {
     $default_settings = $this::getDefaultSettings();
-    $token_replacement_disclaimer = $this->t('<b>Note: </b> Using <strong>Replacement Patterns</strong> it is possible to dynamically define the Marker Icon output, with the composition of Marker Icon paths including entity properties or fields values.');
+    $icon_token_replacement_disclaimer = $this->t('<b>Note: </b> Using <strong>Replacement Patterns</strong> it is possible to dynamically define the Marker Icon output, with the composition of Marker Icon paths including entity properties or fields values.');
     $icon_url_description = $this->t('Can be an absolute or relative URL (as Drupal root folder relative paths <strong>without the leading slash</strong>) <br><b>If left empty the default Leaflet Marker will be used.</b><br>@token_replacement_disclaimer', [
-      '@token_replacement_disclaimer' => $token_replacement_disclaimer,
+      '@token_replacement_disclaimer' => $icon_token_replacement_disclaimer,
     ]);
 
     if (isset($this->fieldDefinition)) {
@@ -489,7 +518,7 @@ trait LeafletSettingsElementsTrait {
 
     $element['className'] = [
       '#title' => $this->t('Icon Class Name'),
-      '#description' => $this->t('A custom class name to assign to both icon and shadow images.<br>Supports <b>Replacement Patterns</b>'),
+      '#description' => $this->t('A custom class name to assign to both icon and shadow images.<br>Supports <b>Replacement Patterns</b>.'),
       '#type' => 'textfield',
       '#default_value' => $icon_options['className'] ?? $default_settings['icon']['className'],
       '#states' => [
@@ -503,7 +532,7 @@ trait LeafletSettingsElementsTrait {
       '#title' => $this->t('Html'),
       '#type' => 'textarea',
       '#description' => $this->t('Insert here the Html code that will be used as marker html markup. <b>If left empty the default Leaflet Marker will be used.</b><br>@token_replacement_disclaimer', [
-        '@token_replacement_disclaimer' => $token_replacement_disclaimer,
+        '@token_replacement_disclaimer' => $this->getTokenReplacementDisclaimer(),
       ]),
       '#default_value' => $icon_options['html'] ?? $default_settings['icon']['html'],
       '#rows' => 3,
@@ -533,7 +562,7 @@ trait LeafletSettingsElementsTrait {
       '#type' => 'textarea',
       '#rows' => 2,
       '#title' => $this->t('Circle Marker Options'),
-      '#description' => $this->t('An object literal of Circle Marker options, that comply with the @leaflet_circle_marker_object.<br>The syntax should respect the javascript object notation (json) format.<br>As suggested in the field placeholder, always use double quotes (") both for the indexes and the string values.<br><b>Note: </b> Use <strong>Replacement Patterns</strong> to input dynamic values.<br>Empty value will fallback to default Leaflet Circle Marker style.', [
+      '#description' => $this->t('An object literal of Circle Marker options, that comply with the @leaflet_circle_marker_object.<br>The syntax should respect the javascript object notation (json) format.<br>As suggested in the field placeholder, always use double quotes (") both for the indexes and the string values.<br><b>Note: </b> Use <strong>Replacement Patterns</strong> to input dynamic values.<br>Empty value will fall back to default Leaflet Circle Marker style.', [
         '@leaflet_circle_marker_object' => $this->link->generate('Leaflet Circle Marker object', Url::fromUri('https://leafletjs.com/reference.html#circlemarker', [
           'absolute' => TRUE,
           'attributes' => ['target' => 'blank'],
@@ -564,7 +593,7 @@ trait LeafletSettingsElementsTrait {
       $element['iconUrl']['#description'] = $icon_url_description;
       $element['shadowUrl']['#description'] = $icon_url_description;
 
-      // Setup the tokens for views fields.
+      // Set up the tokens for views fields.
       // Code is snatched from Drupal\views\Plugin\views\field\FieldPluginBase.
       $options = [];
       $optgroup_fields = (string) t('Fields');
@@ -607,7 +636,7 @@ trait LeafletSettingsElementsTrait {
     $element['iconSize'] = [
       '#title' => $this->t('Icon Size'),
       '#type' => 'fieldset',
-      '#description' => $this->t("Size of the icon image in pixels (if empty the natural icon image size will be used).<br>Both support <b>Replacement Patterns</b> and should end up into an Integer (positive value)<br>Both the values shouldn't be null to be valid"),
+      '#description' => $this->t("Size of the icon image in pixels (if empty the natural icon image size will be used).<br>Both support <b>Replacement Patterns</b> and should end up into an Integer (positive value)<br>If one value is null it will be derived from the populated one, according to the natural icon image size rate."),
     ];
 
     $element['iconSize']['x'] = [
@@ -648,7 +677,7 @@ trait LeafletSettingsElementsTrait {
     $element['shadowSize'] = [
       '#title' => $this->t('Shadow Size'),
       '#type' => 'fieldset',
-      '#description' => $this->t("Size of the shadow image in pixels (if empty the natural shadow image size will be used). <br>Both support <b>Replacement Patterns</b> and should end up into an Integer (positive value)"),
+      '#description' => $this->t("Size of the shadow image in pixels (if empty the natural shadow image size will be used). <br>Both support <b>Replacement Patterns</b> and should end up into an Integer (positive value)<br>If one value is null it will be derived from the populated one, according to the natural icon image size rate."),
     ];
 
     $element['shadowSize']['x'] = [
@@ -749,19 +778,12 @@ trait LeafletSettingsElementsTrait {
    */
   protected function setMapPathOptionsElement(array &$element, array $settings) {
 
-    $token_replacement_disclaimer = $this->moduleHandler->moduleExists('token') ? $this->t('<b>Note: </b> Using <strong>Replacement Patterns</strong> it is possible to dynamically define the Path geometries options, based on the entity properties or fields values.')
-      : $this->t('<b>Note: </b> Using the @token_module_link it is possible to use <strong>Replacement Patterns</strong> and dynamically define the Path geometries options, based on the entity properties or fields values.', [
-        '@token_module_link' => $this->link->generate($this->t('Toke module'), Url::fromUri('https://www.drupal.org/project/token', [
-          'absolute' => TRUE,
-          'attributes' => ['target' => 'blank'],
-        ])),
-      ]);
-    $path_description = $this->t('Set here options that will be applied to the rendering of Map Path Geometries (Lines & Polylines, Polygons, Multipolygons, etc.).<br>Refer to the @polygons_documentation.<br>Note: If empty the default Leaflet path style, or the one choosen and defined in leaflet.api/hook_leaflet_map_info, will be used.<br>@token_replacement_disclaimer', [
+    $path_description = $this->t('Set here options that will be applied to the rendering of Map Path Geometries (Lines & Polylines, Polygons, Multipolygons, etc.).<br>Refer to the @polygons_documentation.<br>Note: If empty the default Leaflet path style, or the one choosen and defined in leaflet.api/hook_leaflet_map_info, will be used.<br>@token_replacement_disclaimer<br>Single Token or Replacement containing the whole Json specification are supported.', [
       '@polygons_documentation' => $this->link->generate($this->t('Leaflet Path Documentation'), Url::fromUri('https://leafletjs.com/reference.html#path', [
         'absolute' => TRUE,
         'attributes' => ['target' => 'blank'],
       ])),
-      '@token_replacement_disclaimer' => $token_replacement_disclaimer,
+      '@token_replacement_disclaimer' => $this->getTokenReplacementDisclaimer(),
     ]);
 
     $element['path'] = [
@@ -852,22 +874,34 @@ trait LeafletSettingsElementsTrait {
       ];
     }
 
+    $tooltip_description = $this->t('Use this to insert a @leaflet_tooltip (Feature by Feature).', [
+      '@leaflet_tooltip' => $this->link->generate("Leaflet Tooltip", Url::fromUri("https://leafletjs.com/reference.html#tooltip", ['attributes' => ['target' => 'blank']])),
+    ]);
+
     if (isset($this->fieldDefinition)) {
       $element['leaflet_tooltip']['value'] = [
         '#type' => 'textarea',
         '#title' => $this->t('Tooltip Source'),
         '#rows' => 2,
         '#default_value' => $settings['leaflet_tooltip']['value'] ?? $default_settings['leaflet_tooltip']['value'],
-        '#description' => $this->t("Use this to insert a Leaflet JS Library Tooltip (Feature by Feature)."),
+        '#description' => $tooltip_description,
       ];
     }
     elseif (!empty($view_fields)) {
+
+      $tooltip_options = array_merge(['' => ' - None - '], $view_fields);
+      if ($this->entityType) {
+        $tooltip_options += [
+          '#rendered_view_fields' => $this->t('# Rendered View Fields (with field label, format, classes, etc)'),
+        ];
+      }
+
       $element['leaflet_tooltip']['value'] = [
         '#type' => 'select',
         '#title' => $this->t('Tooltip Source'),
-        '#options' => array_merge(['' => ' - None - '], $view_fields),
+        '#options' => $tooltip_options,
         '#default_value' => $settings['leaflet_tooltip']['value'] ?? $default_settings['leaflet_tooltip']['value'],
-        '#description' => $this->t("Use this to insert a Leaflet JS Library Tooltip (Feature by Feature)."),
+        '#description' => $tooltip_description,
       ];
     }
 
@@ -875,7 +909,7 @@ trait LeafletSettingsElementsTrait {
       '#type' => 'textarea',
       '#rows' => 3,
       '#title' => $this->t('Tooltip Options'),
-      '#description' => $this->t('An object literal of options, that comply with the Leaflet Tooltip object definition.<br>The syntax should respect the javascript object notation (json) format.<br>As suggested in the field placeholder, always use double quotes (") both for the indexes and the string values.'),
+      '#description' => $this->t('An object literal of options, that comply with the Leaflet Tooltip object definition.<br>The syntax should respect the javascript object notation (json) format.<br>As suggested in the field placeholder, always use double quotes (") both for the indexes and the string values.<br>Supports <b>Replacement Patterns</b><br>Single Token or Replacement containing the whole Json specification are supported.'),
       '#default_value' => $settings['leaflet_tooltip']['options'] ?? $default_settings['leaflet_tooltip']['options'],
       '#placeholder' => $default_settings['leaflet_tooltip']['options'],
       '#element_validate' => [[get_class($this), 'jsonValidate']],
@@ -897,7 +931,7 @@ trait LeafletSettingsElementsTrait {
    * @param array $view_mode_options
    *   The view modes options list.
    */
-  protected function setPopupElement(array &$element, array $settings, array $view_fields = [], string $entity_type = NULL, array $view_mode_options = []) {
+  protected function setPopupElement(array &$element, array $settings, array $view_fields = [], string $entity_type = '', array $view_mode_options = []) {
     $default_settings = $this::getDefaultSettings();
     $element['leaflet_popup'] = [
       '#type' => 'fieldset',
@@ -938,7 +972,7 @@ trait LeafletSettingsElementsTrait {
         '#type' => 'textarea',
         '#title' => $this->t('Popup Options'),
         '#rows' => 3,
-        '#description' => $this->t('An object literal of options, that comply with the Leaflet Popup object definition.<br>The syntax should respect the javascript object notation (json) format.<br>As suggested in the field placeholder, always use double quotes (") both for the indexes and the string values.<br><u>Note: if omitted, the "offset" option will be set on top of the feature icon size.</u>'),
+        '#description' => $this->t('An object literal of options, that comply with the Leaflet Popup object definition.<br>The syntax should respect the javascript object notation (json) format.<br>As suggested in the field placeholder, always use double quotes (") both for the indexes and the string values.<br><u>Note: if omitted, the "offset" option will be set on top of the feature icon size.</u><br>Supports <b>Replacement Patterns</b>.'),
         '#default_value' => $settings['leaflet_popup']['options'] ?? $default_settings['leaflet_popup']['options'],
         '#placeholder' => $default_settings['leaflet_popup']['options'],
         '#element_validate' => [[get_class($this), 'jsonValidate']],
@@ -949,7 +983,7 @@ trait LeafletSettingsElementsTrait {
         ],
       ];
     }
-    else {
+    elseif (!empty($view_fields)) {
       $leaflet_popup_selector = 'style_options[leaflet_popup][value]';
 
       $popup_options = array_merge(['' => ' - None - '], $view_fields);
@@ -998,7 +1032,7 @@ trait LeafletSettingsElementsTrait {
         '#type' => 'textarea',
         '#rows' => 3,
         '#title' => $this->t('Popup Options'),
-        '#description' => $this->t('An object literal of options, that comply with the Leaflet Popup object definition.<br>The syntax should respect the javascript object notation (json) format.<br>As suggested in the field placeholder, always use double quotes (") both for the indexes and the string values.<br><u>Note: if omitted, the "offset" option will be set on top of the feature icon size.</u>'),
+        '#description' => $this->t('An object literal of options, that comply with the Leaflet Popup object definition.<br>The syntax should respect the javascript object notation (json) format.<br>As suggested in the field placeholder, always use double quotes (") both for the indexes and the string values.<br><u>Note: if omitted, the "offset" option will be set on top of the feature icon size.</u><br>Supports <b>Replacement Patterns</b>.'),
         '#default_value' => $settings['leaflet_popup']['options'] ?? $default_settings['leaflet_popup']['options'],
         '#placeholder' => $default_settings['leaflet_popup']['options'],
         '#element_validate' => [[get_class($this), 'jsonValidate']],
@@ -1352,7 +1386,7 @@ trait LeafletSettingsElementsTrait {
       '#type' => 'textarea',
       '#rows' => 3,
       '#title' => $this->t('Values'),
-      '#description' => $this->t('Add additional key/value(s) that will be added in the "properties" index for each Leaflet Map "feature" (in the drupalSettings js object)<br>The syntax should respect the javascript object notation (json) format.<br>As suggested in the field placeholder, always use double quotes (") both for the indexes and the string values.<br>This is as advanced functionality, useful to dynamically alter Leaflet Map and each feature representation/behaviour on the basis of its properties.<br>Supports <b>Replacement Patterns</b>'),
+      '#description' => $this->t('Add additional key/value(s) that will be added in the "properties" index for each Leaflet Map "feature" (in the drupalSettings js object)<br>The syntax should respect the javascript object notation (json) format.<br>As suggested in the field placeholder, always use double quotes (") both for the indexes and the string values.<br>This is as advanced functionality, useful to dynamically alter Leaflet Map and each feature representation/behaviour on the basis of its properties.<br>Supports <b>Replacement Patterns</b>.'),
       '#default_value' => $settings['feature_properties']['values'] ?? $default_settings['feature_properties']['values'],
       '#placeholder' => '{"content_type":"{{ type }}"}',
       '#element_validate' => [[get_class($this), 'jsonValidate']],
@@ -1387,16 +1421,40 @@ trait LeafletSettingsElementsTrait {
       $element['geocoder']['access_warning'] = [
         '#type' => 'html_tag',
         '#tag' => 'div',
-        '#value' => $this->t('<strong>Note: </strong>This will show to users with permissions to <u>Access Geocoder Api Url Enpoints.</u>'),
-        '#attributes' => [
-          'style' => 'color: red;',
-        ],
+        '#value' => $this->t('<strong>Note: </strong>This shows up only to users with permissions to <u>Access Geocoder Api Url Enpoints.</u>'),
       ];
 
       $element['geocoder']['settings'] = [
         '#type' => 'fieldset',
-        '#title' => $this->t('Autocomplete'),
+        '#title' => $this->t('Settings'),
       ];
+
+      // Option to set a Marker on Geocode, only in case of Leaflet Widget.
+      if ($this instanceof LeafletDefaultWidget) {
+        $element['geocoder']['settings']['set_marker'] = [
+          '#title' => $this->t('<b>Place a Marker on Geocode</b>'),
+          '#type' => 'checkbox',
+          '#default_value' => $settings['geocoder']['settings']['set_marker'] ?? $default_settings['geocoder']['settings']['set_marker'],
+          '#description' => $this->t('Check this to place a Marker on the Map when Geocoding the Address.'),
+        ];
+      }
+
+      $element['geocoder']['settings']['popup'] = [
+        '#title' => $this->t('Open Leaflet Popup on Geocode Focus'),
+        '#type' => 'checkbox',
+        '#default_value' => $settings['geocoder']['settings']['popup'] ?? $default_settings['geocoder']['settings']['popup'],
+        '#description' => $this->t('Check this to open a Popup on the Map (with the found Address) upon the Geocode Focus.'),
+      ];
+
+      // In case of LeafletDefaultWidget, hide the Popup option, if set_marker'
+      // is checked.
+      if ($this instanceof LeafletDefaultWidget && method_exists($this->fieldDefinition, 'getName')) {
+        $element['geocoder']['settings']['popup']['#states'] = [
+          'invisible' => [
+            ':input[name="fields[' . $this->fieldDefinition->getName() . '][settings_edit_form][settings][geocoder][settings][set_marker]"]' => ['checked' => TRUE],
+          ],
+        ];
+      }
 
       $element['geocoder']['settings']['autocomplete'] = [
         '#type' => 'fieldset',
@@ -1446,14 +1504,18 @@ trait LeafletSettingsElementsTrait {
       $geocoder_provider = \Drupal::service('plugin.manager.geocoder.provider');
       $element['geocoder']['settings']['providers'] = $geocoder_provider->providersPluginsTableList($enabled_providers);
 
-      // Set a validation for the providers selection.
-      $element['geocoder']['settings']['providers']['#element_validate'] = [[get_class($this), 'validateGeocoderProviders']];
+      // Set a validation for the providers' selection.
+      $element['geocoder']['settings']['providers']['#element_validate'] = [
+        [
+          get_class($this), 'validateGeocoderProviders',
+        ],
+      ];
 
       $element['geocoder']['settings']['min_terms'] = [
         '#type' => 'number',
         '#default_value' => $settings['geocoder']['settings']['min_terms'] ?? $default_settings['geocoder']['settings']['min_terms'],
         '#title' => $this->t('The (minimum) number of terms for the Geocoder to start processing.'),
-        '#description' => $this->t('Valid values ​​for the widget are between 2 and 10. A too low value (<= 3) will affect the application Geocode Quota usage.<br>Try to increase this value if you are experiencing Quota usage matters.'),
+        '#description' => $this->t('Valid values for the widget are between 2 and 10. A too low value (<= 3) will affect the application Geocode Quota usage.<br>Try to increase this value if you are experiencing Quota usage matters.'),
         '#min' => 2,
         '#max' => 10,
         '#size' => 3,
@@ -1463,7 +1525,7 @@ trait LeafletSettingsElementsTrait {
         '#type' => 'number',
         '#default_value' => $settings['geocoder']['settings']['delay'] ?? $default_settings['geocoder']['settings']['delay'],
         '#title' => $this->t('The delay (in milliseconds) between pressing a key in the Address Input field and starting the Geocoder search.'),
-        '#description' => $this->t('Valid values ​​for the widget are multiples of 100, between 300 and 3000. A too low value (<= 300) will affect / increase the application Geocode Quota usage.<br>Try to increase this value if you are experiencing Quota usage matters.'),
+        '#description' => $this->t('Valid value for the widget are multiples of 100, between 300 and 3000. A too low value (<= 300) will affect / increase the application Geocode Quota usage.<br>Try to increase this value if you are experiencing Quota usage matters.'),
         '#min' => 300,
         '#max' => 3000,
         '#step' => 100,
@@ -1477,13 +1539,6 @@ trait LeafletSettingsElementsTrait {
         '#max' => 22,
         '#default_value' => $settings['geocoder']['settings']['zoom'] ?? $default_settings['geocoder']['settings']['zoom'],
         '#description' => $this->t('Zoom level to Focus on the Map upon the Geocoder Address selection.'),
-      ];
-
-      $element['geocoder']['settings']['popup'] = [
-        '#title' => $this->t('Open Popup on Geocode Focus'),
-        '#type' => 'checkbox',
-        '#default_value' => $settings['geocoder']['settings']['popup'] ?? $default_settings['geocoder']['settings']['popup'],
-        '#description' => $this->t('Check this to open a Popup on the Map (with the found Address) upon the Geocode Focus.'),
       ];
 
       $element['geocoder']['settings']['options'] = [
@@ -1533,19 +1588,147 @@ trait LeafletSettingsElementsTrait {
       '#title' => $this->t('Lazy Loading'),
     ];
 
+    $intersection_observer_compatibility_link = $this->link->generate('check IntersectionObserver Browser Compatibility', Url::fromUri('https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserver#browser_compatibility', ['attributes' => ['target' => 'blank']]));
+
     $element['map_lazy_load']['lazy_load'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Lazy load map'),
-      '#description' => $this->t("If checked, the map will be loaded when it enters the user's viewport. This can be useful to reduce unnecessary load time or API calls."),
+      '#description' => $this->t('If checked, the map will be loaded when it enters the user\'s viewport. This can be useful to reduce unnecessary load time or API calls.<br><u>Note:This will only work with not too old browsers, that support "Intersection Observer API"</u> (link: @intersection_observer_compatibility_link).', [
+        '@intersection_observer_compatibility_link' => $intersection_observer_compatibility_link,
+      ]),
       '#default_value' => !empty($settings['map_lazy_load']['lazy_load']) ? $settings['map_lazy_load']['lazy_load'] : 0,
       '#return_value' => 1,
     ];
   }
 
   /**
-   * Form element validation handler for a Map Zoom level.
+   * Set Map GeoJSON Overlays Element.
    *
-   * {@inheritdoc}
+   * @param array $element
+   *   The Form element to alter.
+   * @param array $settings
+   *   The Form Settings.
+   */
+  protected function setMapGeoJsonOverlays(array &$element, array $settings): void {
+
+    // At the moment this is only supported by Leaflet widget.
+    if (isset($this->fieldDefinition)) {
+      $fields_list = array_merge_recursive(
+        $this->entityFieldManager->getFieldMapByFieldType('string_long'),
+        $this->entityFieldManager->getFieldMapByFieldType('link'),
+        $this->entityFieldManager->getFieldMapByFieldType('json'),
+        $this->entityFieldManager->getFieldMapByFieldType('json_native'),
+        $this->entityFieldManager->getFieldMapByFieldType('json_native_binary'),
+      );
+
+      $string_fields_options = [];
+
+      // Filter out the not acceptable values from the options.
+      if (!empty($fields_list[$element['#entity_type']])) {
+        foreach ($fields_list[$element['#entity_type']] as $k => $field) {
+          if (in_array(
+              $element['#bundle'], $field['bundles']) &&
+            !in_array($k, [
+              'revision_log',
+              'behavior_settings',
+              'parent_id',
+              'parent_type',
+              'parent_field_name',
+            ])) {
+            $string_fields_options[$k] = $k;
+          }
+        }
+      }
+
+      $element['geojson_overlays'] = [
+        '#type' => 'fieldset',
+        '#title' => $this->t('Map (GeoJSON) Overlays'),
+        '#description' => $this->t('Use this section to select sources and add <a href="https://en.wikipedia.org/wiki/GeoJSON" target="blank">GeoJSON</a> content Overlays to the Leaflet widget map, that can act as useful drawing (snappable) references.<br>At the moment specific fields of the entity (being edited) can be chosen as sources of content of (or links to) the geojson overlays that should be added.<br><em><b>Hint:</b> Reload the widget after having populated those fields, to have the expected geojson overlays added to the Leaflet map ...</em><br><em><b>Note: </b>Mutliple/Different GeoJSON Sources are supported, but their content will be merged into a unique GeoJSON Overlay on the Leaflet Widget Map.</em>'),
+        '#description_display' => 'before',
+      ];
+
+      $element['geojson_overlays']['sources'] = [
+        '#type' => 'fieldset',
+        '#title' => $this->t('Sources'),
+        '#description_display' => 'before',
+      ];
+
+      $source_fields_selector = 'fields[' . $this->fieldDefinition->getName() . '][settings_edit_form][settings][geojson_overlays][sources][fields][]';
+      $supported_field_types_text = $this->t('Supported field types: "Text (plain, long)" field (string_long), "Link" field (link), "<a href="https://www.drupal.org/project/json_field" target="blank">Json</a>" field (json).');
+
+      if (!empty($string_fields_options)) {
+        $element['geojson_overlays']['sources']['fields'] = [
+          '#type' => 'select',
+          '#title' => $this->t('Fields'),
+          '#description' => $this->t('Choose the entity fields to retrieve GeoJSON content from.<br>@supported_field_types_text<br><em><b>Hint:</b> This works great with an internal Link pointing to a <a href="https://www.drupal.org/project/json_field" target="blank">Views GeoJSON module</a> endpoint/route ...</em>', [
+            '@supported_field_types_text' => $supported_field_types_text,
+          ]),
+          '#options' => $string_fields_options,
+          '#default_value' => $settings['geojson_overlays']['sources']['fields'] ?? [],
+          '#multiple' => TRUE,
+          '#size' => count($string_fields_options) + 1,
+        ];
+
+        $path_description = $this->t('Set here options that will be applied to the rendering of Map Overlay (Lines & Polylines, Polygons, Multipolygons, etc.).<br>Refer to the @polygons_documentation.<br>Note: If empty the default Leaflet path style, or the one choosen and defined in leaflet.api/hook_leaflet_map_info, will be used.<br>@token_replacement_disclaimer', [
+          '@polygons_documentation' => $this->link->generate($this->t('Leaflet Path Documentation'), Url::fromUri('https://leafletjs.com/reference.html#path', [
+            'absolute' => TRUE,
+            'attributes' => ['target' => 'blank'],
+          ])),
+          '@token_replacement_disclaimer' => $this->getTokenReplacementDisclaimer(),
+        ]);
+
+        $element['geojson_overlays']['path'] = [
+          '#type' => 'textarea',
+          '#title' => $this->t('Map Overlay Style'),
+          '#rows' => 3,
+          '#description' => $path_description,
+          '#default_value' => $settings['geojson_overlays']['path'],
+          '#placeholder' => $this::defaultSettings()['geojson_overlays']['path'],
+          '#element_validate' => [[get_class($this), 'jsonValidate']],
+          '#states' => [
+            'visible' => [
+              'select[name="' . $source_fields_selector . '"]' => ['!value' => []],
+            ],
+          ],
+        ];
+
+        $element['geojson_overlays']['zoom_to_geojson'] = [
+          '#type' => 'checkbox',
+          '#title' => $this->t('Zoom to GeoJSON'),
+          '#description' => $this->t('Check this option to initially Zoom the (new empty) Leaflet Map on the (GeoJSON) Overlays bounds.'),
+          '#default_value' => $settings['geojson_overlays']['zoom_to_geojson'] ?? 1,
+          '#return_value' => 1,
+          '#states' => [
+            'visible' => [
+              'select[name="' . $source_fields_selector . '"]' => ['!value' => []],
+            ],
+          ],
+        ];
+
+        $element['geojson_overlays']['snapping'] = [
+          '#type' => 'checkbox',
+          '#title' => $this->t('Snapping enabled'),
+          '#description' => $this->t('Check this option to be able to snap to (GeoJSON) Overlays markers/vertices, for precision drawing.'),
+          '#default_value' => $settings['geojson_overlays']['snapping'] ?? 1,
+          '#return_value' => 1,
+          '#states' => [
+            'visible' => [
+              'select[name="' . $source_fields_selector . '"]' => ['!value' => []],
+            ],
+          ],
+        ];
+
+      }
+      else {
+        $element['geojson_overlays']['sources']['fields']['no_fields_help']['#markup'] = $this->t('<p>No eligible fields were found for this Entity Type.<br>Please add any of the supported fields: @supported_field_types_text</p>', [
+          '@supported_field_types_text' => $supported_field_types_text,
+        ]);
+      }
+    }
+  }
+
+  /**
+   * Form element validation handler for a Map Zoom level.
    */
   public static function zoomLevelValidate($element, FormStateInterface &$form_state) {
     // Get to the actual values in a form tree.
@@ -1571,8 +1754,6 @@ trait LeafletSettingsElementsTrait {
 
   /**
    * Form element validation handler for the Map Max Zoom level.
-   *
-   * {@inheritdoc}
    */
   public static function maxZoomLevelValidate($element, FormStateInterface &$form_state) {
     // Get to the actual values in a form tree.
@@ -1592,16 +1773,25 @@ trait LeafletSettingsElementsTrait {
   /**
    * Form element json format validation handler.
    *
-   * {@inheritdoc}
+   * @param array $element
+   *   The Form Element.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The Form State.
    */
   public static function jsonValidate($element, FormStateInterface &$form_state) {
-    $element_values_array = Json::decode($element['#value']);
-    // Check the jsonValue.
-    if (!empty($element['#value']) && $element_values_array == NULL) {
-      $form_state->setError($element, t('The @field field is not valid Json Format.', ['@field' => $element['#title']]));
-    }
-    elseif (!empty($element['#value'])) {
-      $form_state->setValueForElement($element, Json::encode($element_values_array));
+    // Check Json validity only in case the element value is not wrapped by
+    // brackets (Views Replacement) or square brackets (Token).
+    if (preg_match('/^\{{.*\}}$/', $element['#value']) !== 1 &&
+      preg_match('/^\[.*\]$/', $element['#value']) !== 1
+    ) {
+      $element_values_array = Json::decode($element['#value']);
+      // Check the jsonValue.
+      if (!empty($element['#value']) && $element_values_array == NULL) {
+        $form_state->setError($element, t('The @field field is not valid Json Format.', ['@field' => $element['#title']]));
+      }
+      elseif (!empty($element['#value'])) {
+        $form_state->setValueForElement($element, Json::encode($element_values_array));
+      }
     }
   }
 
