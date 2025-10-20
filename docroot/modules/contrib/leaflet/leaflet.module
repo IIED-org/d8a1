@@ -5,6 +5,9 @@
  * Contains the leaflet.module file.
  */
 
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\Element;
+
 /**
  * Implements hook_theme().
  */
@@ -54,7 +57,7 @@ function leaflet_map_get_info($map = NULL) {
     return $map_info;
   }
   else {
-    return isset($map_info[$map]) ? $map_info[$map] : [];
+    return $map_info[$map] ?? [];
   }
 
 }
@@ -66,7 +69,7 @@ function leaflet_leaflet_map_info() {
   return [
     'OSM Mapnik' =>
       [
-        'label' => 'OSM Mapnik',
+        'label' => '- Default Leaflet - OSM Mapnik - ',
         'description' => t('Leaflet default map.'),
         'settings' => [
           'dragging' => TRUE,
@@ -80,15 +83,50 @@ function leaflet_leaflet_map_info() {
           'fadeAnimation' => TRUE,
           'zoomAnimation' => TRUE,
           'closePopupOnClick' => TRUE,
+          'worldCopyJump' => TRUE,
         ],
         'layers' => [
-          'earth' => [
-            'urlTemplate' => '//{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+          'OpenStreetMap' => [
+            'urlTemplate' => 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
             'options' => [
-              'attribution' => '&copy; <a href="https://www.openstreetmap.org/copyright" rel="noopener noreferrer" target="_blank">OpenStreetMap</a> contributors',
+              'maxZoom' => 19,
+              'attribution' => '&copy; <a href="https://www.openstreetmap.org/copyright" rel="noopener noreferrer">OpenStreetMap</a> contributors',
             ],
           ],
         ],
       ],
   ];
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function leaflet_form_alter(&$form, FormStateInterface $form_state) {
+  if (isset($form['#leaflet_widget_geojson_overlays']) &&
+    isset($form['#leaflet_widget_geojson_overlays']['widget_id']) &&
+    is_array($form['#leaflet_widget_geojson_overlays']['sources_fields'])
+  ) {
+    $ajax_array = [
+      'callback' => 'Drupal\leaflet\Plugin\Field\FieldWidget\LeafletDefaultWidget::updateLeafletWidgetGeoJsonOverlaysAjax',
+      'wrapper' => $form['#leaflet_widget_geojson_overlays']['widget_id'],
+      'event' => 'change',
+    ];
+    $source_field_text = t('<div><em>Note: This field is acting as source of Leaflet Widget Map GeoJSON Overlays.</em></div>');
+    foreach ($form['#leaflet_widget_geojson_overlays']['sources_fields'] as $form_field) {
+      if (is_string($form_field) && isset($form[$form_field])) {
+        foreach (Element::children($form[$form_field]['widget']) as &$widget_index) {
+          if ($widget_index !== 'add_more') {
+            if (isset($form[$form_field]['widget'][$widget_index]['value'])) {
+              $form[$form_field]['widget'][$widget_index]['value']['#ajax'] = $ajax_array;
+              $form[$form_field]['widget'][$widget_index]['value']['#description'] .= $source_field_text;
+            }
+            if (isset($form[$form_field]['widget'][$widget_index]['uri'])) {
+              $form[$form_field]['widget'][$widget_index]['uri']['#ajax'] = $ajax_array;
+              $form[$form_field]['widget'][$widget_index]['uri']['#description'] .= $source_field_text;
+            }
+          }
+        }
+      }
+    }
+  }
 }

@@ -4,6 +4,7 @@ Advanced Drupal integration with the Leaflet JS mapping library.
 
 > A Modern, Lightweight Open-Source JavaScript Library for Interactive Web Mapping.
 
+### [Drupal Community documentation (WIP)](https://www.drupal.org/docs/extending-drupal/contributed-modules/contributed-module-documentation/leaflet/)
 
 ## General Information
 
@@ -11,10 +12,9 @@ Advanced Drupal integration with the Leaflet JS mapping library.
 [Leaflet JS library](https://leafletjs.com).
 It is dependent on the Drupal [Geofield](https://www.drupal.org/project/geofield) Module.
 
-
 ## Requirements
 
-The Leaflet module requires the 
+The Leaflet module requires the
 [Geofield](https://www.drupal.org/project/geofield) module.
 
 
@@ -23,6 +23,8 @@ The Leaflet module requires the
 - Easy to use API for extended Leaflet Map definition & customisation;
 - Leaflet Default Widget, with advanced integration with [Leaflet-Geoman plugin](https://github.com/geoman-io/leaflet-geoman)
   for creating and editing Points and Geometries (Linestring, Polygon) Layers;
+- Integration of GeoJSON external & internal sources, acting as overlays on
+Leaflet Widget for interactive and precise drawing with snapping references;;
 - Leaflet Tooltips and Popups;
 - Leaflet Multi Maps Base Layers Control;
 - Leaflet Overlays Control via Drupal Views Grouping;
@@ -54,6 +56,8 @@ composer.json file is situated):
 dependency and GeoPHP library.
 - Enable the **Leaflet** module to be able to use
 **Leaflet Map Geofield Widget** and **Leaflet Map Geofield Formatter**;
+- Eventually integrate **internal / external GeoJSON Overlays** for precision
+drawing on Leaflet Map Widget;
 - Enable **Leaflet Views** (leaflet_views) submodule for **Leaflet Map Views
 integration**. You need to add at least one geofield to the Fields list,
 and select the Leaflet Map style in the Display Format;
@@ -96,6 +100,7 @@ The map height, expressed in css units.
 - ### Bind events on geojson (json) features
 
 @see: https://www.drupal.org/project/leaflet/issues/3186029
+@see: https://www.drupal.org/project/leaflet/issues/3485071
 
     $features[] = [
       'type' => 'json',
@@ -103,9 +108,13 @@ The map height, expressed in css units.
       'events' => [
         'click' => 'Drupal.manageGeojsonClick', // or whatever callback
       ],
+       'options' => [
+        'pointToLayer' => function(geoJsonPoint, latlng) {return L.marker(latlng);}, // or whatever callback
+        'onEachFeature' => function (geoJsonFeature) {return true}; // or whatever callback
+        'markersInheritOptions' => false,
+      ],
     ];
     $this->leaflet->leafletRenderMap($map_info, $features, $height),
-
 
 ## Authors/Credits
 
