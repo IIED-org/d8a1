@@ -2,14 +2,14 @@
 
 namespace Drupal\geofield_map\Form;
 
+use Drupal\Component\Utility\Environment;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Config\ConfigFactoryInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Core\Site\Settings;
+use Drupal\Core\StringTranslation\ByteSizeMarkup;
 use Drupal\Core\Url;
 use Drupal\Core\Utility\LinkGeneratorInterface;
-use Drupal\Core\Site\Settings;
-use Drupal\Component\Utility\Environment;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Implements the GeofieldMapSettingsForm controller.
@@ -20,32 +20,16 @@ class GeofieldMapSettingsForm extends ConfigFormBase {
 
   /**
    * The Link generator Service.
-   *
-   * @var \Drupal\Core\Utility\LinkGeneratorInterface
    */
-  protected $link;
-
-  /**
-   * GeofieldMapSettingsForm constructor.
-   *
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
-   *   The factory for configuration objects.
-   * @param \Drupal\Core\Utility\LinkGeneratorInterface $link_generator
-   *   The Link Generator service.
-   */
-  public function __construct(ConfigFactoryInterface $config_factory, LinkGeneratorInterface $link_generator) {
-    parent::__construct($config_factory);
-    $this->link = $link_generator;
-  }
+  protected LinkGeneratorInterface $link;
 
   /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('config.factory'),
-      $container->get('link_generator')
-    );
+    $instance = parent::create($container);
+    $instance->link = $container->get('link_generator');
+    return $instance;
   }
 
   /**
@@ -94,7 +78,7 @@ class GeofieldMapSettingsForm extends ConfigFormBase {
     ];
 
     $markers_location_description = $this->t("This location will reside under public or private directories and is where the files available for custom Marker Theming will be stored and searched by the Geofield Map Theming system.<br><u>Don't use any start / end trailing slash.</u><br>
-Hint: To accomplish configuration sync management among your different deploy environments, <u>you might force this for Git versioning with the following rules lines in your .gitignore file</u> (in case of Geofield Map default config values public:://geofieldmap_icons):<br>
+Hint: To accomplish configuration sync management among your different deployment environments, <u>you might force this for Git versioning with the following rules lines in your .gitignore file</u> (in case of Geofield Map default config values public:://geofieldmap_icons):<br>
 <br><code># Ignore Drupal\'s file directory<br>
 [path_to_drupal_root]/sites/*/files/*<br>
 # but allow versioning of geofieldmap_icons contents<br>
@@ -148,7 +132,9 @@ Hint: To accomplish configuration sync management among your different deploy en
       '#type' => 'textfield',
       '#title' => $this->t('Maximum file size'),
       '#default_value' => !empty($config->get('theming.markers_filesize')) ? $config->get('theming.markers_filesize') : '250 KB',
-      '#description' => $this->t('Enter a value like "512" (bytes), "80 KB" (kilobytes) or "50 MB" (megabytes) in order to restrict the allowed file size. If left empty the file sizes will be limited only by PHP\'s maximum post and file upload sizes (current limit <strong>%limit</strong>).', ['%limit' => format_size(Environment::getUploadMaxSize())]),
+      '#description' => $this->t('Enter a value like "512" (bytes), "80 KB" (kilobytes) or "50 MB" (megabytes) in order to restrict the allowed file size. If left empty the file sizes will be limited only by PHP\'s maximum post and file upload sizes (current limit <strong>%limit</strong>).', [
+        '%limit' => ByteSizeMarkup::create(Environment::getUploadMaxSize()),
+      ]),
       '#size' => 10,
       '#element_validate' => ['\Drupal\file\Plugin\Field\FieldType\FileItem::validateMaxFilesize'],
     ];
