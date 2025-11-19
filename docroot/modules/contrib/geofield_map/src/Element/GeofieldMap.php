@@ -31,7 +31,7 @@ class GeofieldMap extends GeofieldLatLon {
    */
   public static function latLonProcess(array &$element, FormStateInterface $form_state, array &$complete_form) {
 
-    /* @var \Drupal\Core\Config\ConfigFactoryInterface $config */
+    /** @var \Drupal\Core\Config\ConfigFactoryInterface $config */
     $config = \Drupal::configFactory();
     $geofield_map_settings = $config->get('geofield_map.settings');
     /** @var \Drupal\geofield_map\Services\GoogleMapsService $google_maps_service */
@@ -106,8 +106,8 @@ class GeofieldMap extends GeofieldLatLon {
     $element['map']['geofield_map'] = [
       '#theme' => 'geofield_map_widget',
       '#mapid' => $mapid,
-      '#width' => isset($element['#map_dimensions']['width']) ? $element['#map_dimensions']['width'] : '100%',
-      '#height' => isset($element['#map_dimensions']['height']) ? $element['#map_dimensions']['height'] : '450px',
+      '#width' => $element['#map_dimensions']['width'] ?? '100%',
+      '#height' => $element['#map_dimensions']['height'] ?? '450px',
     ];
 
     $element['map']['actions'] = [
@@ -221,7 +221,7 @@ class GeofieldMap extends GeofieldLatLon {
     }
 
     // The Entity Form.
-    /* @var \Drupal\Core\Entity\ContentEntityFormInterface $entity_form */
+    /** @var \Drupal\Core\Entity\ContentEntityFormInterface $entity_form */
     $entity_form = $form_state->getBuildInfo()['callback_object'];
     $entity_operation = method_exists($entity_form, 'getOperation') ? $entity_form->getOperation() : 'any';
 

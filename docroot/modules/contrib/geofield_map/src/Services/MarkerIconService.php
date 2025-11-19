@@ -346,7 +346,7 @@ class MarkerIconService {
     StreamWrapperManagerInterface $stream_wrapper_manager,
     RequestStack $request_stack,
     ExtensionPathResolver $extension_path_resolver,
-    LoggerChannelFactoryInterface $logger_factory
+    LoggerChannelFactoryInterface $logger_factory,
   ) {
     $this->config = $config_factory;
     $this->stringTranslation = $string_translation;
@@ -436,7 +436,7 @@ class MarkerIconService {
    * @return array
    *   The icon preview element.
    */
-  public function getIconFileManagedElement(int $fid = NULL, int $row_id = NULL): array {
+  public function getIconFileManagedElement(?int $fid = NULL, ?int $row_id = NULL): array {
 
     $upload_location = $this->markersLocationUri();
 
@@ -843,7 +843,7 @@ class MarkerIconService {
    * @return string
    *   The url path to the file id (image style).
    */
-  public function getFileSelectedUrl(string $file_uri = NULL): string {
+  public function getFileSelectedUrl(?string $file_uri = NULL): string {
     if (isset($file_uri)) {
       return $this->generateAbsoluteString($file_uri);
     }

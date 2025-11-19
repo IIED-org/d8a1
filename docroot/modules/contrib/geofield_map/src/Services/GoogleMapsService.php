@@ -7,7 +7,10 @@ use Drupal\Core\Language\LanguageManagerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
- * Class GoogleMapsService.
+ * Provides Google Maps API configuration and localization.
+ *
+ * This service handles the retrieval of the Google Maps API key from
+ * configuration and provides localized API URLs based on the request region.
  */
 class GoogleMapsService {
 
@@ -72,7 +75,7 @@ class GoogleMapsService {
   public function __construct(
     ConfigFactoryInterface $config_factory,
     LanguageManagerInterface $language_manager,
-    RequestStack $request_stack
+    RequestStack $request_stack,
   ) {
     $this->config = $config_factory;
     $this->languageManager = $language_manager;

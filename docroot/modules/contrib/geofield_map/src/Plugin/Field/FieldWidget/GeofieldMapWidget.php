@@ -23,6 +23,7 @@ use Drupal\geofield_map\LeafletTileLayerPluginManager;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\geofield_map\Services\GeocoderService;
+use Symfony\Component\Validator\ConstraintViolationListInterface;
 
 /**
  * Plugin implementation of the 'geofield_map' widget.
@@ -189,7 +190,7 @@ class GeofieldMapWidget extends GeofieldLatLonWidget implements ContainerFactory
     LeafletTileLayerPluginManager $leaflet_tile_manager,
     AccountInterface $current_user,
     ModuleHandlerInterface $module_handler,
-    GeocoderService $geofield_map_geocoder
+    GeocoderService $geofield_map_geocoder,
   ) {
     parent::__construct(
       $plugin_id,
@@ -236,6 +237,20 @@ class GeofieldMapWidget extends GeofieldLatLonWidget implements ContainerFactory
       $container->get('module_handler'),
       $container->get('geofield_map.geocoder')
     );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function flagErrors(FieldItemListInterface $items, ConstraintViolationListInterface $violations, array $form, FormStateInterface $form_state): void {
+    foreach ($violations as $violation) {
+      if ($violation->getMessageTemplate() == 'This value should not be null.') {
+        $form_state->setErrorByName($items->getName(), $this->t('No location has been set yet for required field "%field".', [
+          '%field' => $items->getFieldDefinition()->getLabel(),
+        ]));
+      }
+    }
+    parent::flagErrors($items, $violations, $form, $form_state);
   }
 
   /**
@@ -476,7 +491,7 @@ class GeofieldMapWidget extends GeofieldLatLonWidget implements ContainerFactory
       '#min' => $this->getSetting('zoom')['min'],
       '#max' => $this->getSetting('zoom')['max'],
       '#title' => $this->t('Start Zoom level'),
-      '#description' => $this->t('The initial Zoom level for an empty Geofield.'),
+      '#description' => $this->t('The initial Zoom level for an empty Geofield.<br>Admitted values usually range from 0 (the whole world) to 20 - 22, depending on the max zoom supported by the specific Map Tile in use.<br>As a reference consider Zoom 5 for a large country, 10 for a city, 15 for a road or a district, etc.'),
       '#default_value' => $this->getSetting('zoom')['start'],
       '#element_validate' => [[get_class($this), 'zoomLevelValidate']],
     ];
@@ -764,7 +779,7 @@ class GeofieldMapWidget extends GeofieldLatLonWidget implements ContainerFactory
    */
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
 
-    /* @var \Drupal\geofield\Plugin\Field\FieldType\GeofieldItem $geofield_item */
+    /** @var \Drupal\geofield\Plugin\Field\FieldType\GeofieldItem $geofield_item */
     $geofield_item = $items->getValue()[$delta];
     if (empty($geofield_item) || $geofield_item['geo_type'] == 'Point') {
 

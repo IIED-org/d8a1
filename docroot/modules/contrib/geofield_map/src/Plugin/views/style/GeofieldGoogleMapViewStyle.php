@@ -4,6 +4,7 @@ namespace Drupal\geofield_map\Plugin\views\style;
 
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Field\FieldTypePluginManagerInterface;
+use Drupal\Core\Logger\LoggerChannelTrait;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Render\RenderContext;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
@@ -42,7 +43,7 @@ use Drupal\core\Entity\FieldableEntityInterface;
 use Drupal\views\ResultRow;
 
 /**
- * Style plugin to render a View output as a Leaflet map.
+ * Style plugin to render a View output as a Google map.
  *
  * @ingroup views_style_plugins
  *
@@ -60,6 +61,7 @@ class GeofieldGoogleMapViewStyle extends DefaultStyle implements ContainerFactor
 
   use GeofieldMapFieldTrait;
   use GeofieldMapFormElementsValidationTrait;
+  use LoggerChannelTrait;
 
   /**
    * Empty Map Options.
@@ -224,7 +226,7 @@ class GeofieldGoogleMapViewStyle extends DefaultStyle implements ContainerFactor
    * @param \Drupal\Core\Utility\LinkGeneratorInterface $link_generator
    *   The Link Generator service.
    * @param \Drupal\geofield\GeoPHP\GeoPHPInterface $geophp_wrapper
-   *   The The geoPhpWrapper.
+   *   The geoPhpWrapper.
    * @param \Drupal\Core\Session\AccountInterface $current_user
    *   Current user service.
    * @param \Drupal\Core\Messenger\MessengerInterface $messenger
@@ -242,8 +244,8 @@ class GeofieldGoogleMapViewStyle extends DefaultStyle implements ContainerFactor
    */
   public function __construct(
     array $configuration,
-          $plugin_id,
-          $plugin_definition,
+    $plugin_id,
+    $plugin_definition,
     ConfigFactoryInterface $config_factory,
     EntityTypeManagerInterface $entity_manager,
     EntityFieldManagerInterface $entity_field_manager,
@@ -256,7 +258,7 @@ class GeofieldGoogleMapViewStyle extends DefaultStyle implements ContainerFactor
     ModuleHandlerInterface $module_handler,
     FieldTypePluginManagerInterface $field_type_manager,
     GoogleMapsService $google_maps_service,
-    MapThemerPluginManager $map_themer_manager
+    MapThemerPluginManager $map_themer_manager,
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->defaultSettings = self::getDefaultSettings();
@@ -303,7 +305,7 @@ class GeofieldGoogleMapViewStyle extends DefaultStyle implements ContainerFactor
   /**
    * {@inheritdoc}
    */
-  public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
+  public function init(ViewExecutable $view, DisplayPluginBase $display, ?array &$options = NULL) {
     parent::init($view, $display, $options);
 
     // We want to allow view editors to select which entity out of a
@@ -321,7 +323,7 @@ class GeofieldGoogleMapViewStyle extends DefaultStyle implements ContainerFactor
           $this->entityType = $this->entityInfo->id();
         }
         catch (\Exception $e) {
-          watchdog_exception('geofield_map', $e);
+          $this->getLogger('Geofield Map')->warning($e->getMessage());
         }
       }
     }
@@ -348,7 +350,7 @@ class GeofieldGoogleMapViewStyle extends DefaultStyle implements ContainerFactor
               $this->entityInfo = $this->entityManager->getDefinition($this->entityType);
             }
             catch (\Exception $e) {
-              watchdog_exception('geofield_map', $e);
+              $this->getLogger('Geofield Map')->warning($e->getMessage());
             }
           }
         }
@@ -485,7 +487,7 @@ class GeofieldGoogleMapViewStyle extends DefaultStyle implements ContainerFactor
           return $this->entityManager->getDefinition($table['table']['entity type']);
         }
         catch (\Exception $e) {
-          watchdog_exception('geofield_map', $e);
+          $this->getLogger('Geofield Map')->warning($e->getMessage());
         }
       }
     }
@@ -580,12 +582,12 @@ class GeofieldGoogleMapViewStyle extends DefaultStyle implements ContainerFactor
     $form['data_source'] = [
       '#type' => 'select',
       '#title' => $this->t('Data Source'),
-      '#description' => $this->t('Which field contains geodata?'),
+      '#description' => $this->t('Which Geofield(s) contains geodata you want to map?<br><b>Note: </b>Only Geofield type fields can be selected.'),
       '#options' => $fields_geo_data,
       '#default_value' => $this->options['data_source'],
       '#required' => TRUE,
       '#multiple' => TRUE,
-      '#size' => count($fields_geo_data),
+      '#size' => count($fields_geo_data) + 1,
     ];
 
     // Get the possible entity sources.
@@ -734,7 +736,7 @@ class GeofieldGoogleMapViewStyle extends DefaultStyle implements ContainerFactor
         '#type' => 'table',
         '#caption' => $this->t('Available Map Themers & Descriptions:'),
         '#attributes' => [
-          'class' => 'map-theming-options',
+          'class' => ['map-theming-options'],
         ],
       ],
     ];
@@ -747,7 +749,7 @@ class GeofieldGoogleMapViewStyle extends DefaultStyle implements ContainerFactor
             '#tag' => 'div',
             '#value' => $map_themers_options[$k],
           ],
-          'warning' => !$map_themers_definitions[$k]['markerIconSelection']['configSyncCompatibility'] ? $plugin_id_warning['deprecated'] : [],
+          'warning' => !$map_themer['markerIconSelection']['configSyncCompatibility'] ? $plugin_id_warning['deprecated'] : [],
         ],
         'td2' => [
           '#type' => 'container',
@@ -756,9 +758,9 @@ class GeofieldGoogleMapViewStyle extends DefaultStyle implements ContainerFactor
             '#tag' => 'div',
             '#value' => $map_themer['description'],
           ],
-          'warning' => !$map_themers_definitions[$k]['markerIconSelection']['configSyncCompatibility'] ? $plugin_id_warning['message'] : [],
+          'warning' => !$map_themer['markerIconSelection']['configSyncCompatibility'] ? $plugin_id_warning['message'] : [],
         ],
-        '#attributes' => !$map_themers_definitions[$k]['markerIconSelection']['configSyncCompatibility'] ? [
+        '#attributes' => !$map_themer['markerIconSelection']['configSyncCompatibility'] ? [
           'class' => ['deprecated'],
         ] : [],
       ];
@@ -787,7 +789,7 @@ class GeofieldGoogleMapViewStyle extends DefaultStyle implements ContainerFactor
   public static function optionsFormEntitySourceSubmit(array $form, FormStateInterface $form_state) {
     $parents = $form_state->getTriggeringElement()['#parents'];
     array_pop($parents);
-    array_push($parents, 'entity_source');
+    $parents[] = 'entity_source';
 
     // Set the data source selected in the form state and rebuild the form.
     $form_state->set('entity_source', $form_state->getValue($parents));
@@ -798,7 +800,7 @@ class GeofieldGoogleMapViewStyle extends DefaultStyle implements ContainerFactor
    * Ajax callback to reload the options form after data source change.
    *
    * This allows the entityType (which can be affected by which source
-   * is selected to alter the form.
+   * is selected) to alter the form.
    *
    * @param array $form
    *   The Form.
@@ -855,7 +857,7 @@ class GeofieldGoogleMapViewStyle extends DefaultStyle implements ContainerFactor
       'data' => [],
     ];
 
-    // Define the list of geofields set as source of Leaflet View geodata,
+    // Define the list of geofields set as source of Google Map View geodata,
     // with backword compatibility with the previous version (8.2.75) when only
     // one Geofield was possible as geodata source.
     $geofield_names = is_array($this->options['data_source']) ? $this->options['data_source'] : [$this->options['data_source']];
@@ -864,7 +866,7 @@ class GeofieldGoogleMapViewStyle extends DefaultStyle implements ContainerFactor
     // to the Geofield Map administrator.
     if (empty($geofield_names) && $this->currentUser->hasPermission('configure geofield_map')) {
       $element = [
-        '#markup' => '<div class="geofield-map-warning">' . $this->t("The Geofield field hasn't not been correctly set for this View. <br>Add at least one Geofield to the View and set it as Data Source in the Geofield Google Map View Display Settings.") . "</div>",
+        '#markup' => '<div class="geofield-map-warning">' . $this->t("The Geofield field hasn't been correctly set for this View. <br>Add at least one Geofield to the View and set it as Data Source in the Geofield Google Map View Display Settings.") . "</div>",
         '#attached' => [
           'library' => ['geofield_map/geofield_map_general'],
         ],
@@ -924,8 +926,8 @@ class GeofieldGoogleMapViewStyle extends DefaultStyle implements ContainerFactor
                     // In case of exception it means that $geofield_name field
                     // is not directly related to the $entity and might be the
                     // case of a geofield exposed through a relationship.
-                    // In this case it is too complicate to get the geofield
-                    // related entity, so apply a more general case of
+                    // In this case it is too much complicate to get the
+                    // geofield related entity, so apply a more general case of
                     // multiple/infinite geofield_cardinality.
                     // @see: https://www.drupal.org/project/leaflet/issues/3048089
                     $js_settings['map_settings']['geofield_cardinality'] = -1;
@@ -954,7 +956,7 @@ class GeofieldGoogleMapViewStyle extends DefaultStyle implements ContainerFactor
                         ->view($entity, $default_view_mode, $langcode);
                       $render_context = new RenderContext();
                       $description[] = $this->renderer->executeInRenderContext($render_context, function () use (&$build) {
-                        return $this->renderer->render($build, TRUE);
+                        return $this->renderer->renderInIsolation($build);
                       });
                       if (!$render_context->isEmpty()) {
                         $render_context->update($build_for_bubbleable_metadata);
@@ -990,7 +992,7 @@ class GeofieldGoogleMapViewStyle extends DefaultStyle implements ContainerFactor
                           ->getFieldStorageDefinition()
                           ->getCardinality();
                         foreach ($description_field_entity->getValue() as $value) {
-                          if ($description_field_cardinality == 1 || $this->options['map_marker_and_infowindow']['multivalue_split'] == FALSE) {
+                          if ($description_field_cardinality == 1 || !$this->options['map_marker_and_infowindow']['multivalue_split']) {
                             $description[] = $this->rendered_fields[$id][$description_field];
                             break;
                           }
@@ -1018,7 +1020,8 @@ class GeofieldGoogleMapViewStyle extends DefaultStyle implements ContainerFactor
 
                 // Define a Tooltip for the Feature.
                 $tooltip_field = $this->options['map_marker_and_infowindow']['tooltip_field'] ?? NULL;
-                $tooltip = isset($entity) && !empty($tooltip_field) ? trim(html_entity_decode(strip_tags($this->rendered_fields[$id][$tooltip_field]), ENT_QUOTES)) : NULL;
+                $tooltip = !empty($tooltip_field) && isset($this->rendered_fields[$id][$tooltip_field])
+                ? trim(html_entity_decode(strip_tags((string) $this->rendered_fields[$id][$tooltip_field]), ENT_QUOTES)) : NULL;
 
                 foreach ($features as $k => &$feature) {
                   // Generate GeoJsonData Feature.
@@ -1048,7 +1051,7 @@ class GeofieldGoogleMapViewStyle extends DefaultStyle implements ContainerFactor
                         }
                       }
                       catch (PluginException $e) {
-                        watchdog_exception('geofield_map', $e);
+                        $this->getLogger('Geofield Map')->warning($e->getMessage());
                       }
                     }
                     elseif ($this->options['map_marker_and_infowindow']['icon_image_mode'] == 'icon_file' && strlen($this->options['map_marker_and_infowindow']['icon_image_path']) > 0) {
@@ -1095,7 +1098,7 @@ class GeofieldGoogleMapViewStyle extends DefaultStyle implements ContainerFactor
       $element = geofield_map_googlemap_render($js_settings);
 
       // Add the Core Drupal Ajax library for Ajax Popups.
-      if (isset($js_settings['map_settings']['ajaxPoup']) && $js_settings['map_settings']['ajaxPoup'] == TRUE) {
+      if (isset($js_settings['map_settings']['ajaxPoup']) && $js_settings['map_settings']['ajaxPoup']) {
         $build_for_bubbleable_metadata['#attached']['library'][] = 'core/drupal.ajax';
       }
       BubbleableMetadata::createFromRenderArray($element)
