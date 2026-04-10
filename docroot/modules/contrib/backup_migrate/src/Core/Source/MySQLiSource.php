@@ -7,7 +7,6 @@ use Drupal\backup_migrate\Core\File\BackupFileReadableInterface;
 use Drupal\backup_migrate\Core\File\BackupFileWritableInterface;
 use Drupal\backup_migrate\Core\Plugin\PluginCallerTrait;
 use Drupal\backup_migrate\Core\Plugin\PluginCallerInterface;
-use PDO;
 use Drupal\backup_migrate\Drupal\File\DrupalTempFileAdapter;
 use Drupal\backup_migrate\Core\File\TempFileManager;
 
@@ -140,15 +139,15 @@ class MySQLiSource extends DatabaseSource implements PluginCallerInterface {
       $pdo_config = $this->confGet('pdo');
 
       $ssl_config = [
-        'key' => (!empty($pdo_config[PDO::MYSQL_ATTR_SSL_KEY])) ? $pdo_config[PDO::MYSQL_ATTR_SSL_KEY] : NULL,
-        'cert' => (!empty($pdo_config[PDO::MYSQL_ATTR_SSL_CERT])) ? $pdo_config[PDO::MYSQL_ATTR_SSL_CERT] : NULL,
-        'ca' => (!empty($pdo_config[PDO::MYSQL_ATTR_SSL_CA])) ? $pdo_config[PDO::MYSQL_ATTR_SSL_CA] : NULL,
-        'capath' => (!empty($pdo_config[PDO::MYSQL_ATTR_SSL_CAPATH])) ? $pdo_config[PDO::MYSQL_ATTR_SSL_CAPATH] : NULL,
-        'cypher' => (!empty($pdo_config[PDO::MYSQL_ATTR_SSL_CIPHER])) ? $pdo_config[PDO::MYSQL_ATTR_SSL_CIPHER] : NULL,
+        'key' => (!empty($pdo_config[\PDO::MYSQL_ATTR_SSL_KEY])) ? $pdo_config[\PDO::MYSQL_ATTR_SSL_KEY] : NULL,
+        'cert' => (!empty($pdo_config[\PDO::MYSQL_ATTR_SSL_CERT])) ? $pdo_config[\PDO::MYSQL_ATTR_SSL_CERT] : NULL,
+        'ca' => (!empty($pdo_config[\PDO::MYSQL_ATTR_SSL_CA])) ? $pdo_config[\PDO::MYSQL_ATTR_SSL_CA] : NULL,
+        'capath' => (!empty($pdo_config[\PDO::MYSQL_ATTR_SSL_CAPATH])) ? $pdo_config[\PDO::MYSQL_ATTR_SSL_CAPATH] : NULL,
+        'cypher' => (!empty($pdo_config[\PDO::MYSQL_ATTR_SSL_CIPHER])) ? $pdo_config[\PDO::MYSQL_ATTR_SSL_CIPHER] : NULL,
       ];
 
       if (defined('PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT')) {
-        $ssl_config['verify_server_cert'] = (isset($pdo_config[PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT])) ? $pdo_config[PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT] : TRUE;
+        $ssl_config['verify_server_cert'] = (isset($pdo_config[\PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT])) ? $pdo_config[\PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT] : TRUE;
       }
       else {
         $ssl_config['verify_server_cert'] = TRUE;
@@ -192,7 +191,7 @@ class MySQLiSource extends DatabaseSource implements PluginCallerInterface {
       }
 
       // Throw an error on fail.
-      if ($this->connection->connect_errno || !$this->connection->ping()) {
+      if ($this->connection->connect_errno) {
         throw new BackupMigrateException("Failed to connect to MySQL server.");
       }
       // Ensure, that the character set is utf8mb4.
@@ -453,7 +452,7 @@ FOOTER;
    */
   protected function query($query) {
     if ($conn = $this->_getConnection()) {
-      return $conn->query($query);
+      return $conn->query($query, MYSQLI_USE_RESULT);
     }
     else {
       throw new \Exception('Could not run any queries on the database as a connection could not be established');

@@ -2,6 +2,7 @@
 
 namespace Drupal\backup_migrate\Entity;
 
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Entity\EntityWithPluginCollectionInterface;
 use Drupal\Core\Plugin\DefaultSingleLazyPluginCollection;
@@ -44,9 +45,11 @@ abstract class WrapperEntityBase extends ConfigEntityBase implements EntityWithP
    * @throws \Drupal\backup_migrate\Core\Exception\BackupMigrateException
    */
   public function getObject() {
+    $object = NULL;
     if ($plugin = $this->getPlugin()) {
-      return $plugin->getObject();
+      $object = $plugin->getObject();
     }
+    return $object;
   }
 
   /**
@@ -109,11 +112,11 @@ abstract class WrapperEntityBase extends ConfigEntityBase implements EntityWithP
   /**
    * {@inheritdoc}
    */
-  public function access($operation, AccountInterface $account = NULL, $return_as_object = FALSE) {
+  public function access($operation, AccountInterface|null $account = NULL, $return_as_object = FALSE) {
     if ($operation == "update" || $operation == "delete") {
       $info = $this->getPluginDefinition();
       if (!empty($info['locked'])) {
-        return FALSE;
+        return AccessResult::forbidden();
       }
     }
 
