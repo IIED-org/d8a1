@@ -103,7 +103,7 @@
     "drupal/leaflet_countries": "dev-3086578-leaflet-views-country",
     "drupal/tfa": "^1.10",
     "drupal/real_aes": "^2.5",
-    "drupal/backup_migrate": "^5.0",
+    "drupal/backup_migrate": "^5.1",
     "drupal/backup_migrate_aws_s3": "^5.0",
     "drupal/key": "^1.19",
     "drupal/purge": "^3.6",
