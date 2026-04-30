@@ -116,7 +116,8 @@
     "drupal/password_policy_extras": "^4.0",
     "drupal/klaro": "^3.0",
     "drupal/search_api_solr": "^4.3.10",
-    "drupal/captcha": "^2.0"
+    "drupal/captcha": "^2.0",
+    "drupal/autologout": "^2.0"
   },
   "conflict": {
     "drupal/core": "7.*"
