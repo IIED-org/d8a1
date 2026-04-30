@@ -38,6 +38,7 @@ dependencies:
     - shortcut
     - system
     - taxonomy
+    - tfa
     - toolbar
 id: editor
 label: Editor
@@ -109,6 +110,7 @@ permissions:
   - 'revert organisation revisions'
   - 'revert page revisions'
   - 'revert resource revisions'
+  - 'setup own tfa'
   - 'skip CAPTCHA'
   - 'use editorial transition archive'
   - 'use editorial transition archived_draft'

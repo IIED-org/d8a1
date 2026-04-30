@@ -12,6 +12,7 @@ dependencies:
     - klaro
     - media
     - system
+    - tfa
 _core:
   default_config_hash: dJ0L2DNSj5q6XVZAGsuVDpJTh5UeYkIPwKrUOOpr8YI
 id: authenticated
@@ -24,6 +25,7 @@ permissions:
   - 'access site-wide contact form'
   - 'delete own files'
   - 'post comments'
+  - 'setup own tfa'
   - 'skip comment approval'
   - 'use klaro'
   - 'use text format basic_html'
