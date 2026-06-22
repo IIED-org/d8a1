@@ -137,7 +137,8 @@
           "mode": "replace",
           "path": "docroot/core/assets/scaffold/files/htaccess",
           "overwrite": false
-        }
+        },
+        "[web-root]/robots.txt": false
       }
     },
     "installer-paths": {
