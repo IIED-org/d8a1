@@ -227,7 +227,8 @@ class InstanceProfileProvider
                     $result['SecretAccessKey'],
                     $result['Token'],
                     strtotime($result['Expiration']),
-                    $result['AccountId'] ?? null
+                    $result['AccountId'] ?? null,
+                    CredentialSources::IMDS
                 );
             }
 
@@ -264,7 +265,7 @@ class InstanceProfileProvider
         $userAgent .= ' ' . \Aws\default_user_agent();
         $request = $request->withHeader('User-Agent', $userAgent);
         foreach ($headers as $key => $value) {
-            $request = $request->withHeader($key, $value);
+            $request = $request->withHeader($key, (string) $value);
         }
 
         return $fn($request, ['timeout' => $this->timeout])
