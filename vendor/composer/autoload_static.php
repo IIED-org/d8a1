@@ -30,6 +30,7 @@ class ComposerStaticInit102e3ef181e3919390ea5de6deb1dfeb
         '9c67151ae59aff4788964ce8eb2a0f43' => __DIR__ . '/..' . '/clue/stream-filter/src/functions_include.php',
         'b067bc7112e384b61c701452d53a14a8' => __DIR__ . '/..' . '/mtdowling/jmespath.php/src/JmesPath.php',
         '8a9dc1de0ca7e01f3e08231539562f61' => __DIR__ . '/..' . '/aws/aws-sdk-php/src/functions.php',
+        '47e1160838b5e5a10346ac4084b58c23' => __DIR__ . '/..' . '/laravel/prompts/src/helpers.php',
         '8cff32064859f4559445b89279f3199c' => __DIR__ . '/..' . '/php-http/message/src/filters.php',
         '801c31d8ed748cfa537fa45402288c95' => __DIR__ . '/..' . '/psy/psysh/src/functions.php',
     );
@@ -93,7 +94,6 @@ class ComposerStaticInit102e3ef181e3919390ea5de6deb1dfeb
             'Symfony\\Component\\Console\\' => 26,
             'Symfony\\Bridge\\PsrHttpMessage\\' => 30,
             'Solarium\\' => 9,
-            'SelfUpdate\\' => 11,
         ),
         'R' =>
         array (
@@ -125,6 +125,7 @@ class ComposerStaticInit102e3ef181e3919390ea5de6deb1dfeb
         array (
             'League\\OAuth2\\Client\\' => 21,
             'League\\Container\\' => 17,
+            'Laravel\\Prompts\\' => 16,
             'Laminas\\Stdlib\\' => 15,
         ),
         'J' =>
@@ -364,10 +365,6 @@ class ComposerStaticInit102e3ef181e3919390ea5de6deb1dfeb
         array (
             0 => __DIR__ . '/..' . '/solarium/solarium/src',
         ),
-        'SelfUpdate\\' =>
-        array (
-            0 => __DIR__ . '/..' . '/consolidation/self-update/src',
-        ),
         'Robo\\' =>
         array (
             0 => __DIR__ . '/..' . '/consolidation/robo/src',
@@ -434,6 +431,10 @@ class ComposerStaticInit102e3ef181e3919390ea5de6deb1dfeb
         'League\\Container\\' =>
         array (
             0 => __DIR__ . '/..' . '/league/container/src',
+        ),
+        'Laravel\\Prompts\\' =>
+        array (
+            0 => __DIR__ . '/..' . '/laravel/prompts/src',
         ),
         'Laminas\\Stdlib\\' =>
         array (
@@ -686,7 +687,6 @@ class ComposerStaticInit102e3ef181e3919390ea5de6deb1dfeb
         'DateRangeError' => __DIR__ . '/..' . '/symfony/polyfill-php83/Resources/stubs/DateRangeError.php',
         'Deprecated' => __DIR__ . '/..' . '/symfony/polyfill-php84/Resources/stubs/Deprecated.php',
         'Drupal' => __DIR__ . '/../..' . '/docroot/core/lib/Drupal.php',
-        'DrupalFinder\\DrupalFinder' => __DIR__ . '/..' . '/webflo/drupal-finder/src/DrupalFinder.php',
         'Drupal\\Component\\Datetime\\Time' => __DIR__ . '/../..' . '/docroot/core/lib/Drupal/Component/Datetime/Time.php',
         'Drupal\\Component\\DependencyInjection\\Container' => __DIR__ . '/../..' . '/docroot/core/lib/Drupal/Component/DependencyInjection/Container.php',
         'Drupal\\Component\\DependencyInjection\\PhpArrayContainer' => __DIR__ . '/../..' . '/docroot/core/lib/Drupal/Component/DependencyInjection/PhpArrayContainer.php',
