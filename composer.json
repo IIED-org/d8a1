@@ -48,7 +48,7 @@
     "drupal/acquia_connector": "^4.0",
     "drupal/facets": "^2.0",
     "drupal/video_embed_field": "^2.0",
-    "drupal/field_group": "^3.1",
+    "drupal/field_group": "^4.0",
     "drupal/conditional_fields": "^4.0",
     "drupal/chosen": "^4.0",
     "drupal/synonyms": "^2.1",
