@@ -39,7 +39,7 @@
     "drupal/contact_block": "^2.0.3",
     "drupal/entity_usage": "^2.0@alpha",
     "drupal/pdfpreview": "^1.0@RC",
-    "drupal/colorbox": "^2.0",
+    "drupal/colorbox": "2.1.5",
     "drupal/social_api": "^3.0",
     "drupal/social_auth_twitter": "^3.0",
     "drupal/social_auth_facebook": "^3.0",

@@ -3531,18 +3531,18 @@
         },
         {
             "name": "drupal/colorbox",
-            "version": "2.1.4",
-            "version_normalized": "2.1.4.0",
+            "version": "2.1.5",
+            "version_normalized": "2.1.5.0",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/colorbox.git",
-                "reference": "2.1.4"
+                "reference": "2.1.5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/colorbox-2.1.4.zip",
-                "reference": "2.1.4",
-                "shasum": "a06e2ed6ab9b41a448aaa6a621560e9706564c76"
+                "url": "https://ftp.drupal.org/files/projects/colorbox-2.1.5.zip",
+                "reference": "2.1.5",
+                "shasum": "4bcb1fd47f97687e7dd02be83f71c79426b5fe0b"
             },
             "require": {
                 "drupal/core": "^10 || ^11"
@@ -3553,8 +3553,8 @@
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "2.1.4",
-                    "datestamp": "1745856815",
+                    "version": "2.1.5",
+                    "datestamp": "1782926217",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
