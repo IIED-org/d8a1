@@ -3,12 +3,16 @@
 namespace Drupal\Tests\paragraphs\Functional\WidgetStable;
 
 use Drupal\contact\Entity\ContactForm;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests paragraphs with contact forms.
  *
  * @group paragraphs
  */
+#[RunTestsInSeparateProcesses]
+#[Group('paragraphs')]
 class ParagraphsContactTest extends ParagraphsTestBase {
 
   /**
@@ -33,7 +37,7 @@ class ParagraphsContactTest extends ParagraphsTestBase {
     $this->addParagraphsType('text');
 
     // Create a contact form.
-    $contact_form = ContactForm::create(['id' => 'test_contact_form']);
+    $contact_form = ContactForm::create(['id' => 'test_contact_form', 'label' => 'Test form']);
     $contact_form->save();
     // Add a paragraphs field to the contact form.
     $this->addParagraphsField($contact_form->id(), 'paragraphs', 'contact_message');

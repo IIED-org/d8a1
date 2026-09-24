@@ -5,12 +5,16 @@ namespace Drupal\Tests\paragraphs\Functional;
 use Drupal\Tests\paragraphs\Functional\WidgetStable\ParagraphsTestBase;
 use Drupal\paragraphs\Entity\Paragraph;
 use Drupal\node\Entity\Node;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests paragraphs stable widget buttons.
  *
  * @group paragraphs
  */
+#[RunTestsInSeparateProcesses]
+#[Group('paragraphs')]
 class ParagraphsWidgetButtonsTest extends ParagraphsTestBase {
 
   /**
@@ -489,8 +493,8 @@ class ParagraphsWidgetButtonsTest extends ParagraphsTestBase {
     $this->assertSession()->selectExists('paragraphs[add_more][add_more_select]');
 
     $edit = [
-      'settings[handler_settings][negate]' => 0,
-      'settings[handler_settings][target_bundles_drag_drop][text][enabled]' => 1,
+      'settings[handler_settings][negate]' => '0',
+      'settings[handler_settings][target_bundles_drag_drop][text][enabled]' => '1',
     ];
     $this->drupalGet('admin/structure/types/manage/paragraphed_test/fields/node.paragraphed_test.paragraphs');
     $this->submitForm($edit, 'Save settings');

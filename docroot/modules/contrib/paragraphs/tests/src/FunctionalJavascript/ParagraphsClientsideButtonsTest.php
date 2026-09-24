@@ -7,12 +7,16 @@ use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\Tests\field_ui\Traits\FieldUiTestTrait;
 use Drupal\Tests\paragraphs\Traits\ParagraphsCoreVersionUiTestTrait;
 use Drupal\Tests\paragraphs\Traits\ParagraphsLastEntityQueryTrait;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Test paragraphs user interface.
  *
  * @group paragraphs
  */
+#[RunTestsInSeparateProcesses]
+#[Group('paragraphs')]
 class ParagraphsClientsideButtonsTest extends WebDriverTestBase {
 
   use LoginAdminTrait;
@@ -88,32 +92,24 @@ class ParagraphsClientsideButtonsTest extends WebDriverTestBase {
     // Add a Paragraph type.
     $this->addParagraphsType('text');
     // Add a text field to the text_paragraph type.
-    $this->drupalGet('admin/structure/paragraphs_type/text/fields/add-field');
-    $page->selectFieldOption('new_storage_type', 'string');
-    $page->fillField('label', 'Text');
-    $this->assertSession()->waitForElementVisible('css', '#edit-name-machine-name-suffix .link');
-    $page->pressButton('Edit');
-    $page->fillField('field_name', 'text');
-    $page->pressButton('Save and continue');
+    $this->addFieldtoParagraphType('text', 'field_text', 'string');
+
     // Add a paragraphed test.
     $this->drupalGet('node/add/paragraphed_test');
     // Add 3 paragraphs.
     $page->pressButton('Add Paragraph');
-    $assert_session->assertWaitOnAjaxRequest();
     $dialog = $page->find('xpath', '//div[contains(@class, "ui-dialog")]');
     $dialog->pressButton('text');
     $assert_session->assertWaitOnAjaxRequest();
     $page->pressButton('Add Paragraph');
-    $assert_session->assertWaitOnAjaxRequest();
     $dialog = $page->find('xpath', '//div[contains(@class, "ui-dialog")]');
     $dialog->pressButton('text');
     $assert_session->assertWaitOnAjaxRequest();
     $page->pressButton('Add Paragraph');
-    $assert_session->assertWaitOnAjaxRequest();
     $dialog = $page->find('xpath', '//div[contains(@class, "ui-dialog")]');
     $dialog->pressButton('text');
     $assert_session->assertWaitOnAjaxRequest();
-    $session->wait(2000);
+    //$session->wait(2000);
     // Check that the add above button has the button--small class.
     $page->find('xpath', '//input[@class="paragraphs-dropdown-action paragraphs-dropdown-action--add-above button button--small js-form-submit form-submit"]');
     // At this point we should have 3 injected "Add above" buttons.
@@ -164,7 +160,6 @@ class ParagraphsClientsideButtonsTest extends WebDriverTestBase {
     $dropdown->click();
     $add_above_button = $assert_session->elementExists('css', 'input.paragraphs-dropdown-action--add-above', $second_original_row);
     $add_above_button->click();
-    $assert_session->assertWaitOnAjaxRequest();
     $dialog = $page->find('xpath', '//div[contains(@class, "ui-dialog")]');
     $dialog->pressButton('text');
     $assert_session->assertWaitOnAjaxRequest();
@@ -172,7 +167,6 @@ class ParagraphsClientsideButtonsTest extends WebDriverTestBase {
 
     // Add a new paragraph in order to test that the new paragraph is added at the bottom.
     $page->pressButton('Add Paragraph');
-    $assert_session->assertWaitOnAjaxRequest();
     $dialog = $page->find('xpath', '//div[contains(@class, "ui-dialog")]');
     $dialog->pressButton('text');
     $assert_session->assertWaitOnAjaxRequest();
@@ -254,7 +248,6 @@ class ParagraphsClientsideButtonsTest extends WebDriverTestBase {
     $dropdown->click();
     $add_above_button = $assert_session->elementExists('css', 'input.paragraphs-dropdown-action--add-above', $second_original_row);
     $add_above_button->click();
-    $assert_session->assertWaitOnAjaxRequest();
     $dialog = $page->find('xpath', '//div[contains(@class, "ui-dialog")]');
     $dialog->pressButton('rich_paragraph');
     $assert_session->assertWaitOnAjaxRequest();
@@ -263,7 +256,6 @@ class ParagraphsClientsideButtonsTest extends WebDriverTestBase {
 
     // Add a text nested paragraph.
     $add_paragraph_rich_row->click();
-    $assert_session->assertWaitOnAjaxRequest();
     $dialog = $page->find('xpath', '//div[contains(@class, "ui-dialog")]');
     $dialog->pressButton('text');
     $assert_session->assertWaitOnAjaxRequest();
@@ -286,7 +278,6 @@ class ParagraphsClientsideButtonsTest extends WebDriverTestBase {
     $field_storage->save();
     // Add the Paragraph back.
     $add_paragraph_rich_row->click();
-    $assert_session->assertWaitOnAjaxRequest();
     $dialog = $page->find('xpath', '//div[contains(@class, "ui-dialog")]');
     $dialog->pressButton('text');
     $assert_session->assertWaitOnAjaxRequest();
@@ -309,7 +300,6 @@ class ParagraphsClientsideButtonsTest extends WebDriverTestBase {
     $dropdown->click();
     $add_above_button = $assert_session->elementExists('css', 'input.paragraphs-dropdown-action--add-above', $first_nested_row);
     $add_above_button->click();
-    $assert_session->assertWaitOnAjaxRequest();
     $dialog = $page->find('xpath', '//div[contains(@class, "ui-dialog")]');
     $dialog->pressButton('text');
     $assert_session->assertWaitOnAjaxRequest();
@@ -333,7 +323,6 @@ class ParagraphsClientsideButtonsTest extends WebDriverTestBase {
     $dropdown->click();
     $add_above_button = $assert_session->elementExists('css', 'input.paragraphs-dropdown-action--add-above', $first_row);
     $add_above_button->click();
-    $assert_session->assertWaitOnAjaxRequest();
     $dialog = $page->find('xpath', '//div[contains(@class, "ui-dialog")]');
     $dialog->pressButton('text');
     $assert_session->assertWaitOnAjaxRequest();
@@ -353,7 +342,6 @@ class ParagraphsClientsideButtonsTest extends WebDriverTestBase {
     $dropdown->click();
     $add_above_button = $assert_session->elementExists('css', 'input.paragraphs-dropdown-action--add-above', $first_row);
     $add_above_button->click();
-    $assert_session->assertWaitOnAjaxRequest();
     $dialog = $page->find('xpath', '//div[contains(@class, "ui-dialog")]');
     $dialog->pressButton('text');
     $assert_session->assertWaitOnAjaxRequest();

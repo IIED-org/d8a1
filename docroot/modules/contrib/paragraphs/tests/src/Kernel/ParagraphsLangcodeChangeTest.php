@@ -7,14 +7,19 @@ use Drupal\Core\Form\FormState;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
+use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\language\Entity\ContentLanguageSettings;
 use Drupal\paragraphs_test\Form\TestEmbeddedEntityForm;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the langcode change mechanics of paragraphs.
  *
  * @group paragraphs
  */
+#[RunTestsInSeparateProcesses]
+#[Group('paragraphs')]
 class ParagraphsLangcodeChangeTest extends EntityKernelTestBase {
 
   /**
@@ -124,9 +129,7 @@ class ParagraphsLangcodeChangeTest extends EntityKernelTestBase {
     $this->formBuilder = $this->container->get('form_builder');
 
     // Activate Spanish language, so there are two languages activated.
-    $this->entityTypeManager->getStorage('configurable_language')->create([
-      'id' => 'es',
-    ])->save();
+    ConfigurableLanguage::createFromLangcode('es')->save();
 
     // Create a paragraph type.
     $this->entityTypeManager->getStorage('paragraphs_type')->create([
@@ -204,7 +207,7 @@ class ParagraphsLangcodeChangeTest extends EntityKernelTestBase {
 
     $this->formDisplay = EntityFormDisplay::load('node.' . $this->nodeType . '.default');
 
-    $this->createUser(['uid' => 1, 'name' => 'user1'])->save();
+    $this->createUser([], 'user1', TRUE)->save();
 
     $this->paragraph = $this->entityTypeManager->getStorage('paragraph')->create([
       'type' => $this->paragraphType,

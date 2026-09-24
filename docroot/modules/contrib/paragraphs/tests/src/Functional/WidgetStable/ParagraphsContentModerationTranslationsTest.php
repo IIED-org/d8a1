@@ -5,12 +5,16 @@ namespace Drupal\Tests\paragraphs\Functional\WidgetStable;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\paragraphs\Traits\ParagraphsCoreVersionUiTestTrait;
 use Drupal\Tests\paragraphs\Traits\ParagraphsLastEntityQueryTrait;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Test paragraphs and content moderation with translations.
  *
  * @group paragraphs
  */
+#[RunTestsInSeparateProcesses]
+#[Group('paragraphs')]
 class ParagraphsContentModerationTranslationsTest extends ParagraphsTestBase {
 
   use ParagraphsLastEntityQueryTrait, ParagraphsCoreVersionUiTestTrait;
@@ -96,7 +100,7 @@ class ParagraphsContentModerationTranslationsTest extends ParagraphsTestBase {
     // Add a text field to the text_paragraph type.
     static::fieldUIAddNewField('admin/structure/paragraphs_type/text', 'text', 'Text', 'text_long', [], []);
     // Add an untranslatable string field.
-    static::fieldUIAddNewField('admin/structure/paragraphs_type/text', 'untranslatable', 'Text', 'string', [], []);
+    static::fieldUIAddNewField('admin/structure/paragraphs_type/text', 'untranslatable', 'Untranslatable text', 'string', [], []);
 
     $this->addParagraphsField('container', 'field_paragraphs', 'paragraph');
 

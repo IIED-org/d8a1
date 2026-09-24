@@ -9,12 +9,16 @@ use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\field_ui\Traits\FieldUiTestTrait;
 use Drupal\user\RoleInterface;
 use Drupal\user\Entity\Role;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the access check of paragraphs.
  *
  * @group paragraphs
  */
+#[RunTestsInSeparateProcesses]
+#[Group('paragraphs')]
 class ParagraphsAccessTest extends ParagraphsTestBase {
 
   use FieldUiTestTrait;
@@ -104,10 +108,10 @@ class ParagraphsAccessTest extends ParagraphsTestBase {
 
     // Set field_images from demo to private file storage.
     $edit = array(
-      'settings[uri_scheme]' => 'private',
+      'field_storage[subform][settings][uri_scheme]' => 'private',
     );
-    $this->drupalGet('admin/structure/paragraphs_type/images/fields/paragraph.images.field_images_demo/storage');
-    $this->submitForm($edit, 'Save field settings');
+    $this->drupalGet('admin/structure/paragraphs_type/images/fields/paragraph.images.field_images_demo');
+    $this->submitForm($edit, 'Save settings');
 
     // Use the stable widget.
     $form_display = EntityFormDisplay::load('node.paragraphed_content_demo.default')
