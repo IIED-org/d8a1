@@ -36,20 +36,29 @@ class EventOnlyQueryAccessHandlerTest extends EntityKernelTestBase {
   /**
    * Tests cacheability with the event only query_access handler.
    *
-   * If there is no additional cacheablility provided to the conditions, there
-   * should be no render conrexts leaked.
+   * If there is no additional cacheability provided to the conditions, there
+   * should be no render contexts leaked.
    */
   public function testCacheableMetadataLeaks() {
     $renderer = $this->container->get('renderer');
     $render_context = new RenderContext();
 
     $node_type_storage = $this->entityTypeManager->getStorage('node_type');
-    $node_type_storage->create(['type' => 'foo', 'name' => $this->randomString()])->save();
+    $node_type_storage->create([
+      'type' => 'foo',
+      'name' => $this->randomString(),
+    ])->save();
 
     $node_storage = $this->entityTypeManager->getStorage('node');
-    $node_1 = $node_storage->create(['type' => 'foo', 'title' => $this->randomString()]);
+    $node_1 = $node_storage->create([
+      'type' => 'foo',
+      'title' => $this->randomString(),
+    ]);
     $node_1->save();
-    $node_2 = $node_storage->create(['type' => 'bar', 'title' => $this->randomString()]);
+    $node_2 = $node_storage->create([
+      'type' => 'bar',
+      'title' => $this->randomString(),
+    ]);
     $node_2->save();
 
     $renderer->executeInRenderContext($render_context, static function () use ($node_storage) {
@@ -59,7 +68,7 @@ class EventOnlyQueryAccessHandlerTest extends EntityKernelTestBase {
 
     $cacheability = new CacheableMetadata();
     $cacheability->addCacheContexts(['user.permissions']);
-    \Drupal::state()->set('event_only_query_acccess_cacheability', $cacheability);
+    \Drupal::state()->set('event_only_query_access_cacheability', $cacheability);
 
     $render_context = new RenderContext();
     $renderer->executeInRenderContext($render_context, static function () use ($node_storage) {
@@ -75,13 +84,25 @@ class EventOnlyQueryAccessHandlerTest extends EntityKernelTestBase {
    */
   public function testEventOnlyQueryAccessHandlerEventSubscriber() {
     $node_type_storage = $this->entityTypeManager->getStorage('node_type');
-    $node_type_storage->create(['type' => 'foo', 'name' => $this->randomString()])->save();
-    $node_type_storage->create(['type' => 'bar', 'name' => $this->randomString()])->save();
+    $node_type_storage->create([
+      'type' => 'foo',
+      'name' => $this->randomString(),
+    ])->save();
+    $node_type_storage->create([
+      'type' => 'bar',
+      'name' => $this->randomString(),
+    ])->save();
 
     $node_storage = $this->entityTypeManager->getStorage('node');
-    $node_1 = $node_storage->create(['type' => 'foo', 'title' => $this->randomString()]);
+    $node_1 = $node_storage->create([
+      'type' => 'foo',
+      'title' => $this->randomString(),
+    ]);
     $node_1->save();
-    $node_2 = $node_storage->create(['type' => 'bar', 'title' => $this->randomString()]);
+    $node_2 = $node_storage->create([
+      'type' => 'bar',
+      'title' => $this->randomString(),
+    ]);
     $node_2->save();
 
     $unfiltered = $node_storage->getQuery()->accessCheck(FALSE)->execute();

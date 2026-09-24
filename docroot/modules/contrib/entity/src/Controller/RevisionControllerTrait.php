@@ -15,13 +15,15 @@ trait RevisionControllerTrait {
    * Returns the entity type manager.
    *
    * @return \Drupal\Core\Entity\EntityTypeManagerInterface
+   *   The entity type manager.
    */
   abstract protected function entityTypeManager();
 
   /**
-   * Returns the langauge manager.
+   * Returns the language manager.
    *
    * @return \Drupal\Core\Language\LanguageManagerInterface
+   *   The language manager.
    */
   abstract public function languageManager();
 
@@ -92,6 +94,7 @@ trait RevisionControllerTrait {
    *   The entity.
    *
    * @return mixed[]
+   *   Array of revision IDs.
    */
   protected function revisionIds(ContentEntityInterface $entity) {
     $entity_type = $entity->getEntityType();

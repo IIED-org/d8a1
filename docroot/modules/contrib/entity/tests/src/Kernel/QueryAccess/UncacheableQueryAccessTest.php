@@ -28,13 +28,6 @@ class UncacheableQueryAccessTest extends EntityKernelTestBase {
   protected $entities;
 
   /**
-   * The entity_test_enhanced storage.
-   *
-   * @var \Drupal\Core\Entity\EntityStorageInterface
-   */
-  protected $storage;
-
-  /**
    * {@inheritdoc}
    */
   protected static $modules = [
@@ -93,7 +86,6 @@ class UncacheableQueryAccessTest extends EntityKernelTestBase {
     $third_entity->save();
 
     $this->entities = [$first_entity, $second_entity, $third_entity];
-    $this->storage = $this->entityTypeManager->getStorage('entity_test_enhanced_with_owner');
   }
 
   /**
@@ -101,10 +93,10 @@ class UncacheableQueryAccessTest extends EntityKernelTestBase {
    */
   public function testEntityQuery() {
     // Admin permission, full access.
-    $admin_user = $this->createUser([], ['administer entity_test_enhanced_with_owner']);
+    $admin_user = $this->createUser(['administer entity_test_enhanced_with_owner']);
     $this->container->get('current_user')->setAccount($admin_user);
 
-    $result = $this->storage->getQuery()->sort('id')->accessCheck(TRUE)->execute();
+    $result = $this->entityTypeManager->getStorage('entity_test_enhanced_with_owner')->getQuery()->sort('id')->accessCheck(TRUE)->execute();
     $this->assertEquals([
       $this->entities[0]->id(),
       $this->entities[1]->id(),
@@ -112,14 +104,14 @@ class UncacheableQueryAccessTest extends EntityKernelTestBase {
     ], array_values($result));
 
     // No view permissions, no access.
-    $user = $this->createUser([], ['access content']);
+    $user = $this->createUser(['access content']);
     $this->container->get('current_user')->setAccount($user);
 
-    $result = $this->storage->getQuery()->accessCheck(TRUE)->execute();
+    $result = $this->entityTypeManager->getStorage('entity_test_enhanced_with_owner')->getQuery()->accessCheck(TRUE)->execute();
     $this->assertEmpty($result);
 
     // View own (published-only).
-    $user = $this->createUser([], ['view own entity_test_enhanced_with_owner']);
+    $user = $this->createUser(['view own entity_test_enhanced_with_owner']);
     $this->container->get('current_user')->setAccount($user);
 
     $this->entities[0]->set('user_id', $user->id());
@@ -127,23 +119,23 @@ class UncacheableQueryAccessTest extends EntityKernelTestBase {
     $this->entities[1]->set('user_id', $user->id());
     $this->entities[1]->save();
 
-    $result = $this->storage->getQuery()->sort('id')->accessCheck(TRUE)->execute();
+    $result = $this->entityTypeManager->getStorage('entity_test_enhanced_with_owner')->getQuery()->sort('id')->accessCheck(TRUE)->execute();
     $this->assertEquals([
       $this->entities[1]->id(),
     ], array_values($result));
 
     // View any (published-only).
-    $user = $this->createUser([], ['view any entity_test_enhanced_with_owner']);
+    $user = $this->createUser(['view any entity_test_enhanced_with_owner']);
     $this->container->get('current_user')->setAccount($user);
 
-    $result = $this->storage->getQuery()->sort('id')->accessCheck(TRUE)->execute();
+    $result = $this->entityTypeManager->getStorage('entity_test_enhanced_with_owner')->getQuery()->sort('id')->accessCheck(TRUE)->execute();
     $this->assertEquals([
       $this->entities[1]->id(),
       $this->entities[2]->id(),
     ], array_values($result));
 
     // View own unpublished.
-    $user = $this->createUser([], ['view own unpublished entity_test_enhanced_with_owner']);
+    $user = $this->createUser(['view own unpublished entity_test_enhanced_with_owner']);
     $this->container->get('current_user')->setAccount($user);
 
     $this->entities[0]->set('user_id', $user->id());
@@ -151,13 +143,13 @@ class UncacheableQueryAccessTest extends EntityKernelTestBase {
     $this->entities[1]->set('user_id', $user->id());
     $this->entities[1]->save();
 
-    $result = $this->storage->getQuery()->sort('id')->accessCheck(TRUE)->execute();
+    $result = $this->entityTypeManager->getStorage('entity_test_enhanced_with_owner')->getQuery()->sort('id')->accessCheck(TRUE)->execute();
     $this->assertEquals([
       $this->entities[0]->id(),
     ], array_values($result));
 
     // View own unpublished + view any (published-only).
-    $user = $this->createUser([], [
+    $user = $this->createUser([
       'view own unpublished entity_test_enhanced_with_owner',
       'view any entity_test_enhanced_with_owner',
     ]);
@@ -166,7 +158,7 @@ class UncacheableQueryAccessTest extends EntityKernelTestBase {
     $this->entities[0]->set('user_id', $user->id());
     $this->entities[0]->save();
 
-    $result = $this->storage->getQuery()->sort('id')->accessCheck(TRUE)->execute();
+    $result = $this->entityTypeManager->getStorage('entity_test_enhanced_with_owner')->getQuery()->sort('id')->accessCheck(TRUE)->execute();
     $this->assertEquals([
       $this->entities[0]->id(),
       $this->entities[1]->id(),
@@ -174,7 +166,7 @@ class UncacheableQueryAccessTest extends EntityKernelTestBase {
     ], array_values($result));
 
     // View own $first_bundle + View any $second_bundle.
-    $user = $this->createUser([], [
+    $user = $this->createUser([
       'view own first entity_test_enhanced_with_owner',
       'view any second entity_test_enhanced_with_owner',
     ]);
@@ -183,7 +175,7 @@ class UncacheableQueryAccessTest extends EntityKernelTestBase {
     $this->entities[1]->set('user_id', $user->id());
     $this->entities[1]->save();
 
-    $result = $this->storage->getQuery()->sort('id')->accessCheck(TRUE)->execute();
+    $result = $this->entityTypeManager->getStorage('entity_test_enhanced_with_owner')->getQuery()->sort('id')->accessCheck(TRUE)->execute();
     $this->assertEquals([
       $this->entities[1]->id(),
       $this->entities[2]->id(),
@@ -195,10 +187,10 @@ class UncacheableQueryAccessTest extends EntityKernelTestBase {
    */
   public function testEntityQueryWithRevisions() {
     // Admin permission, full access.
-    $admin_user = $this->createUser([], ['administer entity_test_enhanced_with_owner']);
+    $admin_user = $this->createUser(['administer entity_test_enhanced_with_owner']);
     $this->container->get('current_user')->setAccount($admin_user);
 
-    $result = $this->storage->getQuery()
+    $result = $this->entityTypeManager->getStorage('entity_test_enhanced_with_owner')->getQuery()
       ->allRevisions()
       ->sort('id')
       ->accessCheck(TRUE)
@@ -213,14 +205,14 @@ class UncacheableQueryAccessTest extends EntityKernelTestBase {
     ], $result);
 
     // No view permissions, no access.
-    $user = $this->createUser([], ['access content']);
+    $user = $this->createUser(['access content']);
     $this->container->get('current_user')->setAccount($user);
 
-    $result = $this->storage->getQuery()->allRevisions()->accessCheck(TRUE)->execute();
+    $result = $this->entityTypeManager->getStorage('entity_test_enhanced_with_owner')->getQuery()->allRevisions()->accessCheck(TRUE)->execute();
     $this->assertEmpty($result);
 
     // View own (published-only).
-    $user = $this->createUser([], ['view own entity_test_enhanced_with_owner']);
+    $user = $this->createUser(['view own entity_test_enhanced_with_owner']);
     $this->container->get('current_user')->setAccount($user);
 
     // The user_id field is not revisionable, which means that updating it
@@ -230,7 +222,7 @@ class UncacheableQueryAccessTest extends EntityKernelTestBase {
     $this->entities[1]->set('user_id', $user->id());
     $this->entities[1]->save();
 
-    $result = $this->storage->getQuery()
+    $result = $this->entityTypeManager->getStorage('entity_test_enhanced_with_owner')->getQuery()
       ->allRevisions()
       ->sort('id')
       ->accessCheck(TRUE)
@@ -241,10 +233,10 @@ class UncacheableQueryAccessTest extends EntityKernelTestBase {
     ], $result);
 
     // View any (published-only).
-    $user = $this->createUser([], ['view any entity_test_enhanced_with_owner']);
+    $user = $this->createUser(['view any entity_test_enhanced_with_owner']);
     $this->container->get('current_user')->setAccount($user);
 
-    $result = $this->storage->getQuery()
+    $result = $this->entityTypeManager->getStorage('entity_test_enhanced_with_owner')->getQuery()
       ->allRevisions()
       ->sort('id')
       ->accessCheck(TRUE)
@@ -257,7 +249,7 @@ class UncacheableQueryAccessTest extends EntityKernelTestBase {
     ], $result);
 
     // View own unpublished.
-    $user = $this->createUser([], ['view own unpublished entity_test_enhanced_with_owner']);
+    $user = $this->createUser(['view own unpublished entity_test_enhanced_with_owner']);
     $this->container->get('current_user')->setAccount($user);
 
     $this->entities[0]->set('user_id', $user->id());
@@ -265,7 +257,7 @@ class UncacheableQueryAccessTest extends EntityKernelTestBase {
     $this->entities[1]->set('user_id', $user->id());
     $this->entities[1]->save();
 
-    $result = $this->storage->getQuery()
+    $result = $this->entityTypeManager->getStorage('entity_test_enhanced_with_owner')->getQuery()
       ->allRevisions()
       ->sort('id')
       ->accessCheck(TRUE)
@@ -276,7 +268,7 @@ class UncacheableQueryAccessTest extends EntityKernelTestBase {
     ], $result);
 
     // View own unpublished + view any (published-only).
-    $user = $this->createUser([], [
+    $user = $this->createUser([
       'view own unpublished entity_test_enhanced_with_owner',
       'view any entity_test_enhanced_with_owner',
     ]);
@@ -285,7 +277,7 @@ class UncacheableQueryAccessTest extends EntityKernelTestBase {
     $this->entities[0]->set('user_id', $user->id());
     $this->entities[0]->save();
 
-    $result = $this->storage->getQuery()
+    $result = $this->entityTypeManager->getStorage('entity_test_enhanced_with_owner')->getQuery()
       ->allRevisions()
       ->sort('id')
       ->accessCheck(TRUE)
@@ -299,7 +291,7 @@ class UncacheableQueryAccessTest extends EntityKernelTestBase {
     ], $result);
 
     // View own $first_bundle + View any $second_bundle.
-    $user = $this->createUser([], [
+    $user = $this->createUser([
       'view own first entity_test_enhanced_with_owner',
       'view any second entity_test_enhanced_with_owner',
     ]);
@@ -308,7 +300,7 @@ class UncacheableQueryAccessTest extends EntityKernelTestBase {
     $this->entities[1]->set('user_id', $user->id());
     $this->entities[1]->save();
 
-    $result = $this->storage->getQuery()
+    $result = $this->entityTypeManager->getStorage('entity_test_enhanced_with_owner')->getQuery()
       ->allRevisions()
       ->sort('id')
       ->accessCheck(TRUE)
@@ -325,7 +317,7 @@ class UncacheableQueryAccessTest extends EntityKernelTestBase {
    */
   public function testViews() {
     // Admin permission, full access.
-    $admin_user = $this->createUser([], ['administer entity_test_enhanced_with_owner']);
+    $admin_user = $this->createUser(['administer entity_test_enhanced_with_owner']);
     $this->container->get('current_user')->setAccount($admin_user);
 
     $view = Views::getView('entity_test_enhanced_with_owner');
@@ -337,7 +329,7 @@ class UncacheableQueryAccessTest extends EntityKernelTestBase {
     ], ['id' => 'id']);
 
     // No view permissions, no access.
-    $user = $this->createUser([], ['access content']);
+    $user = $this->createUser(['access content']);
     $this->container->get('current_user')->setAccount($user);
 
     $view = Views::getView('entity_test_enhanced_with_owner');
@@ -345,7 +337,7 @@ class UncacheableQueryAccessTest extends EntityKernelTestBase {
     $this->assertIdenticalResultset($view, []);
 
     // View own (published-only).
-    $user = $this->createUser([], ['view own entity_test_enhanced_with_owner']);
+    $user = $this->createUser(['view own entity_test_enhanced_with_owner']);
     $this->container->get('current_user')->setAccount($user);
 
     $this->entities[0]->set('user_id', $user->id());
@@ -360,7 +352,7 @@ class UncacheableQueryAccessTest extends EntityKernelTestBase {
     ], ['id' => 'id']);
 
     // View any (published-only).
-    $user = $this->createUser([], ['view any entity_test_enhanced_with_owner']);
+    $user = $this->createUser(['view any entity_test_enhanced_with_owner']);
     $this->container->get('current_user')->setAccount($user);
 
     $view = Views::getView('entity_test_enhanced_with_owner');
@@ -371,7 +363,7 @@ class UncacheableQueryAccessTest extends EntityKernelTestBase {
     ], ['id' => 'id']);
 
     // View own unpublished.
-    $user = $this->createUser([], ['view own unpublished entity_test_enhanced_with_owner']);
+    $user = $this->createUser(['view own unpublished entity_test_enhanced_with_owner']);
     $this->container->get('current_user')->setAccount($user);
 
     $this->entities[0]->set('user_id', $user->id());
@@ -386,7 +378,7 @@ class UncacheableQueryAccessTest extends EntityKernelTestBase {
     ], ['id' => 'id']);
 
     // View own unpublished + view any (published-only).
-    $user = $this->createUser([], [
+    $user = $this->createUser([
       'view own unpublished entity_test_enhanced_with_owner',
       'view any entity_test_enhanced_with_owner',
     ]);
@@ -404,7 +396,7 @@ class UncacheableQueryAccessTest extends EntityKernelTestBase {
     ], ['id' => 'id']);
 
     // View own $first_bundle + View any $second_bundle.
-    $user = $this->createUser([], [
+    $user = $this->createUser([
       'view own first entity_test_enhanced_with_owner',
       'view any second entity_test_enhanced_with_owner',
     ]);
@@ -426,7 +418,7 @@ class UncacheableQueryAccessTest extends EntityKernelTestBase {
    */
   public function testViewsWithRevisions() {
     // Admin permission, full access.
-    $admin_user = $this->createUser([], ['administer entity_test_enhanced_with_owner']);
+    $admin_user = $this->createUser(['administer entity_test_enhanced_with_owner']);
     $this->container->get('current_user')->setAccount($admin_user);
 
     $view = Views::getView('entity_test_enhanced_with_owner_revisions');
@@ -441,7 +433,7 @@ class UncacheableQueryAccessTest extends EntityKernelTestBase {
     ], ['vid' => 'vid']);
 
     // No view permissions, no access.
-    $user = $this->createUser([], ['access content']);
+    $user = $this->createUser(['access content']);
     $this->container->get('current_user')->setAccount($user);
 
     $view = Views::getView('entity_test_enhanced_with_owner_revisions');
@@ -449,7 +441,7 @@ class UncacheableQueryAccessTest extends EntityKernelTestBase {
     $this->assertIdenticalResultset($view, []);
 
     // View own (published-only).
-    $user = $this->createUser([], ['view own entity_test_enhanced_with_owner']);
+    $user = $this->createUser(['view own entity_test_enhanced_with_owner']);
     $this->container->get('current_user')->setAccount($user);
 
     $this->entities[0]->set('user_id', $user->id());
@@ -465,7 +457,7 @@ class UncacheableQueryAccessTest extends EntityKernelTestBase {
     ], ['vid' => 'vid']);
 
     // View any (published-only).
-    $user = $this->createUser([], ['view any entity_test_enhanced_with_owner']);
+    $user = $this->createUser(['view any entity_test_enhanced_with_owner']);
     $this->container->get('current_user')->setAccount($user);
 
     $view = Views::getView('entity_test_enhanced_with_owner_revisions');
@@ -478,7 +470,7 @@ class UncacheableQueryAccessTest extends EntityKernelTestBase {
     ], ['vid' => 'vid']);
 
     // View own unpublished.
-    $user = $this->createUser([], ['view own unpublished entity_test_enhanced_with_owner']);
+    $user = $this->createUser(['view own unpublished entity_test_enhanced_with_owner']);
     $this->container->get('current_user')->setAccount($user);
 
     $this->entities[0]->set('user_id', $user->id());
@@ -494,7 +486,7 @@ class UncacheableQueryAccessTest extends EntityKernelTestBase {
     ], ['vid' => 'vid']);
 
     // View own unpublished + view any (published-only).
-    $user = $this->createUser([], [
+    $user = $this->createUser([
       'view own unpublished entity_test_enhanced_with_owner',
       'view any entity_test_enhanced_with_owner',
     ]);
@@ -514,7 +506,7 @@ class UncacheableQueryAccessTest extends EntityKernelTestBase {
     ], ['vid' => 'vid']);
 
     // View own $first_bundle + View any $second_bundle.
-    $user = $this->createUser([], [
+    $user = $this->createUser([
       'view own first entity_test_enhanced_with_owner',
       'view any second entity_test_enhanced_with_owner',
     ]);

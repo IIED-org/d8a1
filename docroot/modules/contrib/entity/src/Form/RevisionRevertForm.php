@@ -3,6 +3,7 @@
 namespace Drupal\entity\Form;
 
 use Drupal\Core\Datetime\DateFormatterInterface;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\RevisionableInterface;
 use Drupal\Core\Form\ConfirmFormBase;
@@ -11,6 +12,9 @@ use Drupal\Core\Entity\RevisionLogInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * Form to confirm reverting an entity revision.
+ */
 class RevisionRevertForm extends ConfirmFormBase {
 
   /**
@@ -101,7 +105,7 @@ class RevisionRevertForm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, $_entity_revision = NULL, Request $request = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, EntityInterface|RevisionableInterface|RevisionLogInterface|NULL $_entity_revision = NULL, ?Request $request = NULL) {
     $this->revision = $_entity_revision;
     $form = parent::buildForm($form, $form_state);
 
@@ -134,7 +138,11 @@ class RevisionRevertForm extends ConfirmFormBase {
 
     $this->revision->save();
 
-    $this->logger('content')->notice('@type: reverted %title revision %revision.', ['@type' => $this->revision->bundle(), '%title' => $this->revision->label(), '%revision' => $this->revision->getRevisionId()]);
+    $this->logger('content')->notice('@type: reverted %title revision %revision.', [
+      '@type' => $this->revision->bundle(),
+      '%title' => $this->revision->label(),
+      '%revision' => $this->revision->getRevisionId(),
+    ]);
     $form_state->setRedirect(
       "entity.{$this->revision->getEntityTypeId()}.version_history",
       [$this->revision->getEntityTypeId() => $this->revision->id()]
@@ -164,6 +172,7 @@ class RevisionRevertForm extends ConfirmFormBase {
    *   The entity revision.
    *
    * @return string
+   *   The bundle label.
    */
   protected function getBundleLabel(RevisionableInterface $revision) {
     /** @var \Drupal\Core\Entity\EntityInterface|\Drupal\Core\Entity\RevisionableInterface $revision */
