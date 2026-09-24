@@ -2,12 +2,14 @@
 
 namespace Drupal\Tests\entity_browser\FunctionalJavascript;
 
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\entity_browser\Element\EntityBrowserElement;
 use Drupal\entity_browser\Entity\EntityBrowser;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
-use Drupal\entity_browser\Element\EntityBrowserElement;
 
 /**
  * Tests the config UI for adding and editing entity browsers.
@@ -16,6 +18,8 @@ use Drupal\entity_browser\Element\EntityBrowserElement;
  *
  * @package Drupal\Tests\entity_browser\FunctionalJavascript
  */
+#[Group('entity_browser')]
+#[RunTestsInSeparateProcesses]
 class FieldWidgetConfigTest extends WebDriverTestBase {
 
   /**
@@ -37,6 +41,10 @@ class FieldWidgetConfigTest extends WebDriverTestBase {
     'views',
     'token',
     'field_ui',
+    // Drupal 10 has a regression that widget settings form error messages are
+    // not visible without having this module enabled.
+    // @see https://www.drupal.org/project/drupal/issues/3407134
+    'inline_form_errors',
   ];
 
   /**
@@ -150,7 +158,7 @@ class FieldWidgetConfigTest extends WebDriverTestBase {
   }
 
   /**
-   * Tests 'selection_edit' validation on field widget form and warning message on content entity forms.
+   * Tests 'selection_edit' validation and warning on content entity forms.
    */
   public function testSelectionModeValidation() {
 

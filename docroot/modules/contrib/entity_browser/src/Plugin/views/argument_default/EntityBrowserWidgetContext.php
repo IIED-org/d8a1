@@ -3,18 +3,18 @@
 namespace Drupal\entity_browser\Plugin\views\argument_default;
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\views\Attribute\ViewsArgumentDefault;
 use Drupal\views\Plugin\views\argument_default\ArgumentDefaultPluginBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * The entity browser widget context argument default handler.
- *
- * @ViewsArgumentDefault(
- *   id = "entity_browser_widget_context",
- *   title = @Translation("Entity Browser Context")
- * )
  */
+#[ViewsArgumentDefault(
+  id: 'entity_browser_widget_context',
+  title: new TranslatableMarkup('Entity Browser Context'),
+)]
 class EntityBrowserWidgetContext extends ArgumentDefaultPluginBase {
 
   /**
@@ -27,21 +27,10 @@ class EntityBrowserWidgetContext extends ArgumentDefaultPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, KeyValueStoreExpirableInterface $selection_storage) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->selectionStorage = $selection_storage;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('entity_browser.selection_storage')
-    );
+    $instance = parent::create($container, $configuration, $plugin_id, $plugin_definition);
+    $instance->selectionStorage = $container->get('entity_browser.selection_storage');
+    return $instance;
   }
 
   /**
@@ -75,7 +64,7 @@ class EntityBrowserWidgetContext extends ArgumentDefaultPluginBase {
     $form['multiple'] = [
       '#type' => 'radios',
       '#title' => $this->t('Multiple values'),
-      '#description' => $this->t('Conjunction to use when handling multiple values. NOTE: for multiple values to work, at the bottom of this form expand the "More" fieldset and and check "Allow multiple values".'),
+      '#description' => $this->t('Conjunction to use when handling multiple values. NOTE: for multiple values to work, at the bottom of this form expand the "More" fieldset and check "Allow multiple values".'),
       '#default_value' => $this->options['multiple'],
       '#options' => [
         'or' => $this->t('OR'),

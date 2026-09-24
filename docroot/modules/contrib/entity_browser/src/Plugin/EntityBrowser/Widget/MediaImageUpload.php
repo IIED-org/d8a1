@@ -3,20 +3,21 @@
 namespace Drupal\entity_browser\Plugin\EntityBrowser\Widget;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
+use Drupal\entity_browser\Attribute\EntityBrowserWidget;
 use Drupal\entity_browser\Plugin\EntityBrowser\Widget\Upload as FileUpload;
 use Drupal\media\MediaInterface;
 
 /**
  * Uses upload to create media images.
- *
- * @EntityBrowserWidget(
- *   id = "media_image_upload",
- *   label = @Translation("Upload images as media items"),
- *   description = @Translation("Upload widget that will create media entities of the uploaded images."),
- *   auto_select = FALSE
- * )
  */
+#[EntityBrowserWidget(
+  id: 'media_image_upload',
+  label: new TranslatableMarkup('Upload images as media items'),
+  description: new TranslatableMarkup('Upload widget that will create media entities of the uploaded images.'),
+  auto_select: FALSE
+)]
 class MediaImageUpload extends FileUpload {
 
   /**
@@ -43,7 +44,7 @@ class MediaImageUpload extends FileUpload {
     }
 
     $form = parent::getForm($original_form, $form_state, $aditional_widget_parameters);
-    $form['upload']['#upload_validators']['file_validate_extensions'] = [$this->configuration['extensions']];
+    $form['upload']['#upload_validators']['FileExtension'] = ['extensions' => $this->configuration['extensions']];
 
     return $form;
   }
@@ -115,7 +116,7 @@ class MediaImageUpload extends FileUpload {
     if (empty($media_type_options)) {
       $url = Url::fromRoute('entity.media_type.add_form')->toString();
       $form['media_type'] = [
-        '#markup' => $this->t("You don't have media type of the Image type. You should <a href='!link'>create one</a>", ['!link' => $url]),
+        '#markup' => $this->t("You don't have media type of the Image type. You should <a href=':link'>create one</a>.", [':link' => $url]),
       ];
     }
     else {

@@ -6,29 +6,28 @@ use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
-use Drupal\entity_browser\WidgetBase;
+use Drupal\Core\Routing\RouteMatch;
+use Drupal\Core\Routing\RouteObjectInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
-use Drupal\entity_browser\WidgetValidationManager;
+use Drupal\entity_browser\Attribute\EntityBrowserWidget;
+use Drupal\entity_browser\WidgetBase;
 use Drupal\views\Entity\View as ViewEntity;
 use Drupal\views\Views;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\Core\Session\AccountInterface;
-use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Uses a view to provide entity listing in a browser's widget.
- *
- * @EntityBrowserWidget(
- *   id = "view",
- *   label = @Translation("View"),
- *   provider = "views",
- *   description = @Translation("Uses a view to provide entity listing in a browser's widget."),
- *   auto_select = TRUE
- * )
  */
-class View extends WidgetBase implements ContainerFactoryPluginInterface {
+#[EntityBrowserWidget(
+  id: 'view',
+  label: new TranslatableMarkup('View'),
+  description: new TranslatableMarkup("Uses a view to provide entity listing in a browser's widget."),
+  auto_select: TRUE,
+  provider: "views",
+)]
+class View extends WidgetBase {
 
   /**
    * The current user.
@@ -36,6 +35,41 @@ class View extends WidgetBase implements ContainerFactoryPluginInterface {
    * @var \Drupal\Core\Session\AccountInterface
    */
   protected $currentUser;
+
+  /**
+   * The renderer.
+   *
+   * @var \Drupal\Core\Render\RendererInterface
+   */
+  protected $renderer;
+
+  /**
+   * The request stack.
+   *
+   * @var \Symfony\Component\HttpFoundation\RequestStack
+   */
+  protected $requestStack;
+
+  /**
+   * The module handler service.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandler
+   */
+  protected $moduleHandler;
+
+  /**
+   * The route provider.
+   *
+   * @var \Drupal\Core\Routing\RouteProviderInterface
+   */
+  protected $routeProvider;
+
+  /**
+   * The paramconverter manager.
+   *
+   * @var \Drupal\Core\ParamConverter\ParamConverterManagerInterface
+   */
+  protected $paramConverterManager;
 
   /**
    * {@inheritdoc}
@@ -51,38 +85,14 @@ class View extends WidgetBase implements ContainerFactoryPluginInterface {
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('event_dispatcher'),
-      $container->get('entity_type.manager'),
-      $container->get('plugin.manager.entity_browser.widget_validation'),
-      $container->get('current_user')
-    );
-  }
-
-  /**
-   * Constructs a new View object.
-   *
-   * @param array $configuration
-   *   A configuration array containing information about the plugin instance.
-   * @param string $plugin_id
-   *   The plugin_id for the plugin instance.
-   * @param mixed $plugin_definition
-   *   The plugin implementation definition.
-   * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $event_dispatcher
-   *   Event dispatcher service.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
-   *   The entity type manager.
-   * @param \Drupal\entity_browser\WidgetValidationManager $validation_manager
-   *   The Widget Validation Manager service.
-   * @param \Drupal\Core\Session\AccountInterface $current_user
-   *   The current user.
-   */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EventDispatcherInterface $event_dispatcher, EntityTypeManagerInterface $entity_type_manager, WidgetValidationManager $validation_manager, AccountInterface $current_user) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition, $event_dispatcher, $entity_type_manager, $validation_manager);
-    $this->currentUser = $current_user;
+    $instance = parent::create($container, $configuration, $plugin_id, $plugin_definition);
+    $instance->currentUser = $container->get('current_user');
+    $instance->renderer = $container->get('renderer');
+    $instance->requestStack = $container->get('request_stack');
+    $instance->moduleHandler = $container->get('module_handler');
+    $instance->routeProvider = $container->get('router.route_provider');
+    $instance->paramConverterManager = $container->get('paramconverter_manager');
+    return $instance;
   }
 
   /**
@@ -90,7 +100,7 @@ class View extends WidgetBase implements ContainerFactoryPluginInterface {
    */
   public function getForm(array &$original_form, FormStateInterface $form_state, array $additional_widget_parameters) {
     $form = parent::getForm($original_form, $form_state, $additional_widget_parameters);
-    // TODO - do we need better error handling for view and view_display (in
+    // @todo do we need better error handling for view and view_display (in
     // case either of those is nonexistent or display not of correct type)?
     $form['#attached']['library'] = ['entity_browser/view'];
 
@@ -105,11 +115,14 @@ class View extends WidgetBase implements ContainerFactoryPluginInterface {
         $arguments = [];
         // Map configuration arguments with original path parts.
         foreach ($this->configuration['arguments'] as $argument) {
-          $arguments[] = isset($additional_widget_parameters['path_parts'][$argument]) ? $additional_widget_parameters['path_parts'][$argument] : '';
+          $arguments[] = $additional_widget_parameters['path_parts'][$argument] ?? '';
         }
         $view->setArguments(array_values($arguments));
       }
     }
+
+    $context = $this->getContext($form_state);
+    $this->moduleHandler->alter('entity_browser_view_executable', $view, $this->configuration, $context);
 
     $form['view'] = $view->executeDisplay($this->configuration['view_display']);
 
@@ -138,7 +151,7 @@ class View extends WidgetBase implements ContainerFactoryPluginInterface {
     }
 
     $form['view']['view'] = [
-      '#markup' => \Drupal::service('renderer')->render($form['view']['view']),
+      '#markup' => $this->renderer->render($form['view']['view']),
     ];
 
     return $form;
@@ -229,7 +242,7 @@ class View extends WidgetBase implements ContainerFactoryPluginInterface {
     foreach ($selected_rows as $row) {
       $item = explode(':', $row);
       if (count($item) == 2) {
-        list($type, $id) = $item;
+        [$type, $id] = $item;
         $storage = $this->entityTypeManager->getStorage($type);
         if ($entity = $storage->load($id)) {
           $entities[] = $entity;
@@ -257,7 +270,7 @@ class View extends WidgetBase implements ContainerFactoryPluginInterface {
     // Get only those enabled Views that have entity_browser displays.
     $displays = Views::getApplicableViews('entity_browser_display');
     foreach ($displays as $display) {
-      list($view_id, $display_id) = $display;
+      [$view_id, $display_id] = $display;
       $view = $this->entityTypeManager->getStorage('view')->load($view_id);
       $options[$view_id . '.' . $display_id] = $this->t('@view : @display', ['@view' => $view->label(), '@display' => $view->get('display')[$display_id]['display_title']]);
     }
@@ -282,7 +295,7 @@ class View extends WidgetBase implements ContainerFactoryPluginInterface {
     $this->configuration['submit_text'] = $values['submit_text'];
     $this->configuration['auto_select'] = $values['auto_select'];
     if (!empty($values['view'])) {
-      list($view_id, $display_id) = explode('.', $values['view']);
+      [$view_id, $display_id] = explode('.', $values['view']);
       $this->configuration['view'] = $view_id;
       $this->configuration['view_display'] = $display_id;
     }
@@ -313,6 +326,60 @@ class View extends WidgetBase implements ContainerFactoryPluginInterface {
 
     // Check if the current user has access to this view.
     return AccessResult::allowedIf($view->access($this->configuration['view_display']));
+  }
+
+  /**
+   * Create context data for hook_entity_browser_view_widget_view_alter().
+   *
+   * @param $form_state
+   *   The current form state.
+   *
+   * @return array
+   *   An array of helpful contextual data.
+   */
+  protected function getContext($form_state) {
+    $context = [];
+    $storage = $form_state->getStorage();
+    if (!empty($storage['entity_browser']['widget_context'])) {
+      $context = $storage['entity_browser']['widget_context'];
+    }
+    $current_request = $this->requestStack->getCurrentRequest();
+    $original_path = $current_request->query->get('original_path');
+
+    // If within the context of an entity embed dialog, we must get the original form
+    // from the REFERER.
+    if (!empty($original_path) && strpos($original_path, '/entity-embed/dialog') === 0) {
+      $headers = $current_request->server->getHeaders();
+      $referer = isset($headers['REFERER']) ? $headers['REFERER'] : '';
+      if (!empty($referer)) {
+        $request = Request::create($referer);
+        $original_path = $request->getPathInfo();
+      }
+    }
+
+    if (empty($original_path)) {
+      return $context;
+    }
+
+    $url = Url::fromUserInput($original_path);
+    $route = $route_match = NULL;
+    if ($url->isRouted()) {
+      $route_name = $url->getRouteName();
+      $route = $this->routeProvider->getRouteByName($route_name);
+      $parameters = $url->getRouteParameters();
+      $parameters[RouteObjectInterface::ROUTE_NAME] = $route_name;
+      $parameters[RouteObjectInterface::ROUTE_OBJECT] = $route;
+      $upcasted_parameters = $this->paramConverterManager->convert($parameters + $route->getDefaults());
+      $route_match = new RouteMatch($route_name, $route, $upcasted_parameters, $parameters);
+    }
+    $context += [
+      'original_route' => $route,
+      'original_route_match' => $route_match,
+      'original_path' => $original_path,
+      'original_path_url' => $url,
+      'current_user' => $this->currentUser,
+    ];
+    return $context;
   }
 
 }

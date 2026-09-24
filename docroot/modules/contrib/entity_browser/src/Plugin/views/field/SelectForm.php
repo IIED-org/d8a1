@@ -3,25 +3,23 @@
 namespace Drupal\entity_browser\Plugin\views\field;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\views\Attribute\ViewsField;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\views\Plugin\views\style\Table;
-use Drupal\views\ResultRow;
 use Drupal\views\Render\ViewsRenderPipelineMarkup;
+use Drupal\views\ResultRow;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
-use Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface;
 
 /**
  * Defines a bulk operation form element that works with entity browser.
- *
- * @ViewsField("entity_browser_select")
  */
+#[ViewsField("entity_browser_select")]
 class SelectForm extends FieldPluginBase {
 
   /**
    * The current request.
    *
-   * @var null|\Symfony\Component\HttpFoundation\Request
+   * @var \Symfony\Component\HttpFoundation\Request|null
    */
   protected $currentRequest;
 
@@ -33,36 +31,13 @@ class SelectForm extends FieldPluginBase {
   protected $selectionStorage;
 
   /**
-   * EntityBrowser constructor.
-   *
-   * @param array $configuration
-   *   The plugin configuration.
-   * @param string $plugin_id
-   *   The plugin id.
-   * @param mixed $plugin_definition
-   *   The plugin definition.
-   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
-   *   The request stack.
-   * @param \Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface $selection_storage
-   *   The selection storage.
-   */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, RequestStack $request_stack, KeyValueStoreExpirableInterface $selection_storage) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->currentRequest = $request_stack->getCurrentRequest();
-    $this->selectionStorage = $selection_storage;
-  }
-
-  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('request_stack'),
-      $container->get('entity_browser.selection_storage')
-    );
+    $instance = parent::create($container, $configuration, $plugin_id, $plugin_definition);
+    $instance->currentRequest = $container->get('request_stack')->getCurrentRequest();
+    $instance->selectionStorage = $container->get('entity_browser.selection_storage');
+    return $instance;
   }
 
   /**
@@ -151,7 +126,7 @@ class SelectForm extends FieldPluginBase {
 
         $render[$this->options['id']][$value] = [
           '#type' => 'checkbox',
-          '#title' => $this->t('Select this item'),
+          '#title' => trim($this->t('Select item @label', ['@label' => $row->_entity?->label() ?? ''])),
           '#title_display' => 'invisible',
           '#return_value' => $value,
           '#attributes' => ['name' => "entity_browser_select[$value]"],
