@@ -164,7 +164,7 @@ class ViewsQueryAlter implements ContainerInjectionInterface {
         $field = $condition->getField();
         $property_name = NULL;
         if (strpos($field, '.') !== FALSE) {
-          list($field, $property_name) = explode('.', $field);
+          [$field, $property_name] = explode('.', $field);
         }
         // Skip unknown fields.
         if (!isset($field_storage_definitions[$field])) {
@@ -202,6 +202,8 @@ class ViewsQueryAlter implements ContainerInjectionInterface {
               'left_field' => 'id',
             ];
             /** @var \Drupal\Views\Plugin\views\join\JoinPluginBase $join */
+            // @todo Use dependency injection in Entity API 2.x
+            // @phpstan-ignore staticMethod.deprecated
             $join = Views::pluginManager('join')->createInstance('standard', $configuration);
             $alias = $query->addRelationship($base_table['data_table'], $join, $data_table);
           }
@@ -233,7 +235,7 @@ class ViewsQueryAlter implements ContainerInjectionInterface {
   }
 
   /**
-   * Applies the cacheablity metadata to the current request.
+   * Applies the cacheability metadata to the current request.
    *
    * @param \Drupal\Core\Cache\CacheableMetadata $cacheable_metadata
    *   The cacheability metadata.

@@ -28,13 +28,6 @@ class QueryAccessTest extends EntityKernelTestBase {
   protected $entities;
 
   /**
-   * The entity_test_enhanced storage.
-   *
-   * @var \Drupal\Core\Entity\EntityStorageInterface
-   */
-  protected $storage;
-
-  /**
    * {@inheritdoc}
    */
   protected static $modules = [
@@ -93,7 +86,6 @@ class QueryAccessTest extends EntityKernelTestBase {
     $third_entity->save();
 
     $this->entities = [$first_entity, $second_entity, $third_entity];
-    $this->storage = $this->entityTypeManager->getStorage('entity_test_enhanced');
   }
 
   /**
@@ -101,10 +93,10 @@ class QueryAccessTest extends EntityKernelTestBase {
    */
   public function testEntityQuery() {
     // Admin permission, full access.
-    $admin_user = $this->createUser([], ['administer entity_test_enhanced']);
+    $admin_user = $this->createUser(['administer entity_test_enhanced']);
     $this->container->get('current_user')->setAccount($admin_user);
 
-    $result = $this->storage->getQuery()
+    $result = $this->entityTypeManager->getStorage('entity_test_enhanced')->getQuery()
       ->sort('id')
       ->accessCheck(TRUE)
       ->execute();
@@ -115,27 +107,27 @@ class QueryAccessTest extends EntityKernelTestBase {
     ], array_values($result));
 
     // No view permissions, no access.
-    $user = $this->createUser([], ['access content']);
+    $user = $this->createUser(['access content']);
     $this->container->get('current_user')->setAccount($user);
 
-    $result = $this->storage->getQuery()->accessCheck(TRUE)->execute();
+    $result = $this->entityTypeManager->getStorage('entity_test_enhanced')->getQuery()->accessCheck(TRUE)->execute();
     $this->assertEmpty($result);
 
     // View (published-only).
-    $user = $this->createUser([], ['view entity_test_enhanced']);
+    $user = $this->createUser(['view entity_test_enhanced']);
     $this->container->get('current_user')->setAccount($user);
 
-    $result = $this->storage->getQuery()->sort('id')->accessCheck(TRUE)->execute();
+    $result = $this->entityTypeManager->getStorage('entity_test_enhanced')->getQuery()->sort('id')->accessCheck(TRUE)->execute();
     $this->assertEquals([
       $this->entities[1]->id(),
       $this->entities[2]->id(),
     ], array_values($result));
 
     // View $bundle (published-only).
-    $user = $this->createUser([], ['view first entity_test_enhanced']);
+    $user = $this->createUser(['view first entity_test_enhanced']);
     $this->container->get('current_user')->setAccount($user);
 
-    $result = $this->storage->getQuery()->sort('id')->accessCheck(TRUE)->execute();
+    $result = $this->entityTypeManager->getStorage('entity_test_enhanced')->getQuery()->sort('id')->accessCheck(TRUE)->execute();
     $this->assertEquals([
       $this->entities[1]->id(),
     ], array_values($result));
@@ -146,10 +138,10 @@ class QueryAccessTest extends EntityKernelTestBase {
    */
   public function testEntityQueryWithRevisions() {
     // Admin permission, full access.
-    $admin_user = $this->createUser([], ['administer entity_test_enhanced']);
+    $admin_user = $this->createUser(['administer entity_test_enhanced']);
     $this->container->get('current_user')->setAccount($admin_user);
 
-    $result = $this->storage->getQuery()
+    $result = $this->entityTypeManager->getStorage('entity_test_enhanced')->getQuery()
       ->allRevisions()
       ->sort('id')
       ->accessCheck(TRUE)
@@ -164,17 +156,17 @@ class QueryAccessTest extends EntityKernelTestBase {
     ], $result);
 
     // No view permissions, no access.
-    $user = $this->createUser([], ['access content']);
+    $user = $this->createUser(['access content']);
     $this->container->get('current_user')->setAccount($user);
 
-    $result = $this->storage->getQuery()->accessCheck(TRUE)->execute();
+    $result = $this->entityTypeManager->getStorage('entity_test_enhanced')->getQuery()->accessCheck(TRUE)->execute();
     $this->assertEmpty($result);
 
     // View (published-only).
-    $user = $this->createUser([], ['view entity_test_enhanced']);
+    $user = $this->createUser(['view entity_test_enhanced']);
     $this->container->get('current_user')->setAccount($user);
 
-    $result = $this->storage->getQuery()
+    $result = $this->entityTypeManager->getStorage('entity_test_enhanced')->getQuery()
       ->allRevisions()
       ->sort('id')
       ->accessCheck(TRUE)
@@ -187,10 +179,10 @@ class QueryAccessTest extends EntityKernelTestBase {
     ], $result);
 
     // View $bundle (published-only).
-    $user = $this->createUser([], ['view first entity_test_enhanced']);
+    $user = $this->createUser(['view first entity_test_enhanced']);
     $this->container->get('current_user')->setAccount($user);
 
-    $result = $this->storage->getQuery()
+    $result = $this->entityTypeManager->getStorage('entity_test_enhanced')->getQuery()
       ->allRevisions()
       ->sort('id')
       ->accessCheck(TRUE)
@@ -206,7 +198,7 @@ class QueryAccessTest extends EntityKernelTestBase {
    */
   public function testViews() {
     // Admin permission, full access.
-    $admin_user = $this->createUser([], ['administer entity_test_enhanced']);
+    $admin_user = $this->createUser(['administer entity_test_enhanced']);
     $this->container->get('current_user')->setAccount($admin_user);
 
     $view = Views::getView('entity_test_enhanced');
@@ -218,7 +210,7 @@ class QueryAccessTest extends EntityKernelTestBase {
     ], ['id' => 'id']);
 
     // No view permissions, no access.
-    $user = $this->createUser([], ['access content']);
+    $user = $this->createUser(['access content']);
     $this->container->get('current_user')->setAccount($user);
 
     $view = Views::getView('entity_test_enhanced');
@@ -226,7 +218,7 @@ class QueryAccessTest extends EntityKernelTestBase {
     $this->assertIdenticalResultset($view, []);
 
     // View (published-only).
-    $user = $this->createUser([], ['view entity_test_enhanced']);
+    $user = $this->createUser(['view entity_test_enhanced']);
     $this->container->get('current_user')->setAccount($user);
 
     $view = Views::getView('entity_test_enhanced');
@@ -237,7 +229,7 @@ class QueryAccessTest extends EntityKernelTestBase {
     ], ['id' => 'id']);
 
     // View $bundle (published-only).
-    $user = $this->createUser([], ['view first entity_test_enhanced']);
+    $user = $this->createUser(['view first entity_test_enhanced']);
     $this->container->get('current_user')->setAccount($user);
 
     $view = Views::getView('entity_test_enhanced');
@@ -252,7 +244,7 @@ class QueryAccessTest extends EntityKernelTestBase {
    */
   public function testViewsWithRevisions() {
     // Admin permission, full access.
-    $admin_user = $this->createUser([], ['administer entity_test_enhanced']);
+    $admin_user = $this->createUser(['administer entity_test_enhanced']);
     $this->container->get('current_user')->setAccount($admin_user);
 
     $view = Views::getView('entity_test_enhanced_revisions');
@@ -267,7 +259,7 @@ class QueryAccessTest extends EntityKernelTestBase {
     ], ['vid' => 'vid']);
 
     // No view permissions, no access.
-    $user = $this->createUser([], ['access content']);
+    $user = $this->createUser(['access content']);
     $this->container->get('current_user')->setAccount($user);
 
     $view = Views::getView('entity_test_enhanced');
@@ -275,7 +267,7 @@ class QueryAccessTest extends EntityKernelTestBase {
     $this->assertIdenticalResultset($view, []);
 
     // View (published-only).
-    $user = $this->createUser([], ['view entity_test_enhanced']);
+    $user = $this->createUser(['view entity_test_enhanced']);
     $this->container->get('current_user')->setAccount($user);
 
     $view = Views::getView('entity_test_enhanced_revisions');
@@ -288,7 +280,7 @@ class QueryAccessTest extends EntityKernelTestBase {
     ], ['vid' => 'vid']);
 
     // View $bundle (published-only).
-    $user = $this->createUser([], ['view first entity_test_enhanced']);
+    $user = $this->createUser(['view first entity_test_enhanced']);
     $this->container->get('current_user')->setAccount($user);
 
     $view = Views::getView('entity_test_enhanced_revisions');
@@ -304,7 +296,7 @@ class QueryAccessTest extends EntityKernelTestBase {
    */
   public function testNoFiltering() {
     // EntityQuery.
-    $result = $this->storage->getQuery()->sort('id')->accessCheck(FALSE)->execute();
+    $result = $this->entityTypeManager->getStorage('entity_test_enhanced')->getQuery()->sort('id')->accessCheck(FALSE)->execute();
     $this->assertEquals([
       $this->entities[0]->id(),
       $this->entities[1]->id(),
@@ -345,20 +337,20 @@ class QueryAccessTest extends EntityKernelTestBase {
     // The field is case sensitive, so the third entity should be ignored.
     $this->entities[2]->set('assigned', 'MarKeTing');
     $this->entities[2]->save();
-    $user = $this->createUser([
+    $user = $this->createUser(['access content'], NULL, FALSE, [
       'mail' => 'user3@example.com',
-    ], ['access content']);
+    ]);
     $this->container->get('current_user')->setAccount($user);
 
     // EntityQuery.
-    $result = $this->storage->getQuery()->sort('id')->accessCheck(TRUE)->execute();
+    $result = $this->entityTypeManager->getStorage('entity_test_enhanced')->getQuery()->sort('id')->accessCheck(TRUE)->execute();
     $this->assertEquals([
       $this->entities[0]->id(),
       $this->entities[1]->id(),
     ], array_values($result));
 
     // EntityQuery with revisions.
-    $result = $this->storage->getQuery()
+    $result = $this->entityTypeManager->getStorage('entity_test_enhanced')->getQuery()
       ->allRevisions()
       ->sort('id')
       ->accessCheck(TRUE)
