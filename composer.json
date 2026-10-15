@@ -89,7 +89,7 @@
     "drupal/memcache": "^2.0",
     "drupal/pathauto": "^1.8",
     "drupal/content_moderation_notifications": "^3.9",
-    "drupal/leaflet": "^10.2",
+    "drupal/leaflet": "^10.4",
     "drupal/block_class": "^3.0",
     "drupal/acquia_search": "^3.1",
     "drupal/core-project-message": "^10",

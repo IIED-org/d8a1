@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c884e856fc86436a33c1957e7c931d1a",
+    "content-hash": "67d3994f69f949f8a8d11dac5cc46cbe",
     "packages": [
         {
             "name": "abraham/twitteroauth",
@@ -6609,27 +6609,27 @@
         },
         {
             "name": "drupal/leaflet",
-            "version": "10.3.9",
+            "version": "10.4.13",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/leaflet.git",
-                "reference": "10.3.9"
+                "reference": "10.4.13"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/leaflet-10.3.9.zip",
-                "reference": "10.3.9",
-                "shasum": "8f11b976a914d3cb66a8b11b349ddc4c9fdd9249"
+                "url": "https://ftp.drupal.org/files/projects/leaflet-10.4.13.zip",
+                "reference": "10.4.13",
+                "shasum": "077dd415f4ac2c594655a61983209df3ed61e36a"
             },
             "require": {
-                "drupal/core": "^9.3 || ^10 || ^11",
-                "drupal/geofield": "^1.31"
+                "drupal/core": "^10.3 || ^11",
+                "drupal/geofield": "^1.31 || ^10.3"
             },
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "10.3.9",
-                    "datestamp": "1756806923",
+                    "version": "10.4.13",
+                    "datestamp": "1791390446",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
