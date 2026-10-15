@@ -2,7 +2,10 @@
 
 namespace Drupal\Tests\entity_browser\FunctionalJavascript;
 
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use Drupal\Tests\ckeditor5\Traits\CKEditor5TestTrait;
 
 /**
  * Tests entity browser within entity embed.
@@ -11,7 +14,11 @@ use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
  *
  * @package Drupal\Tests\entity_browser\FunctionalJavascript
  */
+#[Group('entity_browser')]
+#[RunTestsInSeparateProcesses]
 class EntityEmbedTest extends WebDriverTestBase {
+
+  use CKEditor5TestTrait;
 
   /**
    * Modules to enable.
@@ -65,7 +72,8 @@ class EntityEmbedTest extends WebDriverTestBase {
     $this->createNode(['type' => 'article', 'title' => 'Darth']);
 
     $this->drupalGet('/node/add/test_entity_embed');
-    $this->assertSession()->waitForElement('css', 'a.cke_button__jet_shark_embed')->click();
+    $this->waitForEditor();
+    $this->pressEditorButton('Jet Shark Embed');
     $this->assertSession()->waitForId('views-exposed-form-widget-context-default-value-entity-browser-1');
 
     $this->getSession()->switchToIFrame('entity_browser_iframe_widget_context_default_value');
@@ -88,7 +96,8 @@ class EntityEmbedTest extends WebDriverTestBase {
 
     // Test the new bundle settings are affecting what is visible in the view.
     $this->drupalGet('/node/add/test_entity_embed');
-    $this->assertSession()->waitForElement('css', 'a.cke_button__jet_shark_embed')->click();
+    $this->waitForEditor();
+    $this->pressEditorButton('Jet Shark Embed');
     $this->assertSession()->waitForId('views-exposed-form-widget-context-default-value-entity-browser-1');
 
     $this->getSession()->switchToIFrame('entity_browser_iframe_widget_context_default_value');
@@ -112,7 +121,8 @@ class EntityEmbedTest extends WebDriverTestBase {
     $this->createNode(['type' => 'article', 'title' => 'Darth']);
 
     $this->drupalGet('/node/add/test_entity_embed');
-    $this->assertSession()->waitForElement('css', 'a.cke_button__bundle_filter_test')->click();
+    $this->waitForEditor();
+    $this->pressEditorButton('Bundle Filter Test Embed');
     $this->assertSession()->waitForId('views-exposed-form-bundle-filter-entity-browser-1');
 
     $this->getSession()->switchToIFrame('entity_browser_iframe_bundle_filter');
@@ -135,7 +145,8 @@ class EntityEmbedTest extends WebDriverTestBase {
 
     // Test the new bundle settings are affecting what is visible in the view.
     $this->drupalGet('/node/add/test_entity_embed');
-    $this->assertSession()->waitForElement('css', 'a.cke_button__bundle_filter_test')->click();
+    $this->waitForEditor();
+    $this->pressEditorButton('Bundle Filter Test Embed');
     $this->assertSession()->waitForId('views-exposed-form-bundle-filter-entity-browser-1');
 
     $this->getSession()->switchToIFrame('entity_browser_iframe_bundle_filter');
@@ -163,7 +174,8 @@ class EntityEmbedTest extends WebDriverTestBase {
     $this->createNode(['type' => 'article', 'title' => 'Darth']);
 
     $this->drupalGet('/node/add/test_entity_embed');
-    $this->assertSession()->waitForElement('css', 'a.cke_button__bundle_filter_test')->click();
+    $this->waitForEditor();
+    $this->pressEditorButton('Bundle Filter Test Embed');
     $this->assertSession()->waitForId('views-exposed-form-bundle-filter-entity-browser-1');
 
     $this->getSession()->switchToIFrame('entity_browser_iframe_bundle_filter');
@@ -214,7 +226,8 @@ class EntityEmbedTest extends WebDriverTestBase {
 
     // Test the new bundle settings are affecting what is visible in the view.
     $this->drupalGet('/node/add/test_entity_embed');
-    $this->assertSession()->waitForElement('css', 'a.cke_button__bundle_filter_test')->click();
+    $this->waitForEditor();
+    $this->pressEditorButton('Bundle Filter Test Embed');
     $this->assertSession()->waitForId('views-exposed-form-bundle-filter-entity-browser-1');
 
     $this->getSession()->switchToIFrame('entity_browser_iframe_bundle_filter');

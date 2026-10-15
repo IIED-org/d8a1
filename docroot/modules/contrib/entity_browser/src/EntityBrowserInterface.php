@@ -53,7 +53,7 @@ interface EntityBrowserInterface extends ConfigEntityInterface {
   /**
    * Sets the id of the widget selector plugin.
    *
-   * @param string $display
+   * @param string $widget_selector
    *   The id of the widget selector plugin.
    *
    * @return \Drupal\entity_browser\EntityBrowserInterface
@@ -64,7 +64,7 @@ interface EntityBrowserInterface extends ConfigEntityInterface {
   /**
    * Sets the id of the selection display plugin.
    *
-   * @param string $display
+   * @param string $selection_display
    *   The id of the selection display plugin.
    *
    * @return \Drupal\entity_browser\EntityBrowserInterface
@@ -129,7 +129,7 @@ interface EntityBrowserInterface extends ConfigEntityInterface {
   public function getFirstWidget();
 
   /**
-   * Adds paramterers that will be passed to the widget.
+   * Adds parameters that will be passed to the widget.
    *
    * @param array $parameters
    *   An array of parameters.
