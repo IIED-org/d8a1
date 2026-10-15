@@ -2,11 +2,16 @@
 
 namespace Drupal\Tests\paragraphs\Functional\WidgetStable;
 
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
+
 /**
  * Tests the translation of heavily nested / specialized setup.
  *
  * @group paragraphs
  */
+#[RunTestsInSeparateProcesses]
+#[Group('paragraphs')]
 class ParagraphsEntityTranslationWithNonTranslatableParagraphs extends ParagraphsTestBase {
 
   /**
@@ -48,7 +53,7 @@ class ParagraphsEntityTranslationWithNonTranslatableParagraphs extends Paragraph
       'language_configuration[content_translation]' => TRUE,
     );
     $this->drupalGet('admin/structure/types/manage/article');
-    $this->submitForm($edit, 'Save content type');
+    $this->submitForm($edit, 'Save');
     $this->drupalGet('admin/structure/types/manage/article');
 
     // Ensue the paragraphs field itself isn't translatable - this would be a

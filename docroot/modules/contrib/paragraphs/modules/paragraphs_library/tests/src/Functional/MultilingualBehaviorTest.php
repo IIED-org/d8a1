@@ -4,6 +4,8 @@ namespace Drupal\Tests\paragraphs_library\Functional;
 
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\paragraphs\Functional\WidgetStable\ParagraphsTestBase;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests paragraphs library multilingual functionality.
@@ -11,6 +13,8 @@ use Drupal\Tests\paragraphs\Functional\WidgetStable\ParagraphsTestBase;
  * @package Drupal\paragraphs_library\Tests
  * @group paragraphs_library
  */
+#[RunTestsInSeparateProcesses]
+#[Group('paragraphs_library')]
 class MultilingualBehaviorTest extends ParagraphsTestBase {
 
   /**
@@ -50,7 +54,7 @@ class MultilingualBehaviorTest extends ParagraphsTestBase {
       'language_configuration[content_translation]' => TRUE,
     ];
     $this->drupalGet('admin/structure/types/manage/paragraphed_test');
-    $this->submitForm($edit, 'Save content type');
+    $this->submitForm($edit, 'Save');
 
     $this->fieldUIAddNewField('admin/structure/paragraphs_type/test_content', 'paragraphs_text', 'Test content', 'text_long', [], []);
 
