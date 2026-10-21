@@ -2,38 +2,28 @@
 
 namespace Drupal\entity_browser\Plugin\Field\FieldWidget;
 
+use Drupal\Component\Utility\DeprecationHelper;
 use Drupal\Component\Utility\Bytes;
+use Drupal\Component\Utility\Crypt;
+use Drupal\Component\Utility\Environment;
 use Drupal\Component\Utility\SortArray;
-use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Field\Attribute\FieldWidget;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Messenger\MessengerInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
-use Drupal\entity_browser\FieldWidgetDisplayManager;
 use Drupal\image\Entity\ImageStyle;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\Core\Session\AccountInterface;
-use Drupal\Component\Utility\Environment;
-use Symfony\Component\Mime\MimeTypeGuesserInterface;
 
 /**
  * Entity browser file widget.
- *
- * @FieldWidget(
- *   id = "entity_browser_file",
- *   label = @Translation("Entity browser"),
- *   provider = "entity_browser",
- *   multiple_values = TRUE,
- *   field_types = {
- *     "file",
- *     "image"
- *   }
- * )
  */
+#[FieldWidget(
+  id: 'entity_browser_file',
+  label: new TranslatableMarkup('Entity browser'),
+  field_types: ['file', 'image'],
+  multiple_values: TRUE,
+)]
 class FileBrowserWidget extends EntityReferenceBrowserWidget {
 
   /**
@@ -58,13 +48,6 @@ class FileBrowserWidget extends EntityReferenceBrowserWidget {
   protected $configFactory;
 
   /**
-   * The display repository service.
-   *
-   * @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface
-   */
-  protected $displayRepository;
-
-  /**
    * The mime type guesser service.
    *
    * @var \Symfony\Component\Mime\MimeTypeGuesserInterface
@@ -72,63 +55,21 @@ class FileBrowserWidget extends EntityReferenceBrowserWidget {
   protected $mimeTypeGuesser;
 
   /**
-   * Constructs widget plugin.
+   * The image factory service.
    *
-   * @param string $plugin_id
-   *   The plugin_id for the plugin instance.
-   * @param mixed $plugin_definition
-   *   The plugin implementation definition.
-   * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
-   *   The definition of the field to which the widget is associated.
-   * @param array $settings
-   *   The widget settings.
-   * @param array $third_party_settings
-   *   Any third party settings.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
-   *   Entity type manager service.
-   * @param \Drupal\entity_browser\FieldWidgetDisplayManager $field_display_manager
-   *   Field widget display plugin manager.
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
-   *   The config factory.
-   * @param \Drupal\Core\Entity\EntityDisplayRepositoryInterface $display_repository
-   *   The entity display repository service.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
-   *   The module handler service.
-   * @param \Drupal\Core\Session\AccountInterface $current_user
-   *   The current user.
-   * @param \Drupal\Core\Messenger\MessengerInterface $messenger
-   *   The messenger.
-   * @param \Symfony\Component\Mime\MimeTypeGuesserInterface $mime_type_guesser
-   *   The mime type guesser service.
+   * @var \Drupal\Core\Image\ImageFactory
    */
-  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, array $third_party_settings, EntityTypeManagerInterface $entity_type_manager, FieldWidgetDisplayManager $field_display_manager, ConfigFactoryInterface $config_factory, EntityDisplayRepositoryInterface $display_repository, ModuleHandlerInterface $module_handler, AccountInterface $current_user, MimeTypeGuesserInterface $mime_type_guesser, MessengerInterface $messenger) {
-    parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $third_party_settings, $entity_type_manager, $field_display_manager, $module_handler, $current_user, $messenger);
-    $this->entityTypeManager = $entity_type_manager;
-    $this->fieldDisplayManager = $field_display_manager;
-    $this->configFactory = $config_factory;
-    $this->displayRepository = $display_repository;
-    $this->mimeTypeGuesser = $mime_type_guesser;
-  }
+  protected $imageFactory;
 
   /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $plugin_id,
-      $plugin_definition,
-      $configuration['field_definition'],
-      $configuration['settings'],
-      $configuration['third_party_settings'],
-      $container->get('entity_type.manager'),
-      $container->get('plugin.manager.entity_browser.field_widget_display'),
-      $container->get('config.factory'),
-      $container->get('entity_display.repository'),
-      $container->get('module_handler'),
-      $container->get('current_user'),
-      $container->get('file.mime_type.guesser'),
-      $container->get('messenger')
-    );
+    $instance = parent::create($container, $configuration, $plugin_id, $plugin_definition);
+    $instance->configFactory = $container->get('config.factory');
+    $instance->mimeTypeGuesser = $container->get('file.mime_type.guesser');
+    $instance->imageFactory = $container->get('image.factory');
+    return $instance;
   }
 
   /**
@@ -161,14 +102,14 @@ class FileBrowserWidget extends EntityReferenceBrowserWidget {
       '#title' => $this->t('File view mode'),
       '#type' => 'select',
       '#default_value' => $this->getSetting('view_mode'),
-      '#options' => $this->displayRepository->getViewModeOptions('file'),
+      '#options' => $this->entityDisplayRepository->getViewModeOptions('file'),
       '#access' => $has_file_entity,
     ];
 
     $element['preview_image_style'] = [
       '#title' => $this->t('Preview image style'),
       '#type' => 'select',
-      '#options' => image_style_options(FALSE),
+      '#options' => DeprecationHelper::backwardsCompatibleCall(\Drupal::VERSION, '11.4.0', fn() => \Drupal::service('Drupal\image\ImageDerivativeUtilities')->styleOptions(FALSE), fn() => image_style_options(FALSE)),
       '#default_value' => $this->getSetting('preview_image_style'),
       '#description' => $this->t('The preview image will be shown while editing the content. Only relevant if using the default file view mode.'),
       '#weight' => 15,
@@ -385,7 +326,7 @@ class FileBrowserWidget extends EntityReferenceBrowserWidget {
             'wrapper' => $details_id,
           ],
           '#submit' => [[get_class($this), 'removeItemSubmit']],
-          '#name' => $field_machine_name . '_replace_' . $entity_id . '_' . md5(json_encode($field_parents)),
+          '#name' => $field_machine_name . '_replace_' . $entity_id . '_' . Crypt::hashBase64(json_encode($field_parents)),
           '#limit_validation_errors' => [array_merge($field_parents, [$field_machine_name, 'target_id'])],
           '#attributes' => [
             'data-entity-id' => $entity->getEntityTypeId() . ':' . $entity->id(),
@@ -402,7 +343,7 @@ class FileBrowserWidget extends EntityReferenceBrowserWidget {
             'wrapper' => $details_id,
           ],
           '#submit' => [[get_class($this), 'removeItemSubmit']],
-          '#name' => $field_machine_name . '_remove_' . $entity_id . '_' . md5(json_encode($field_parents)),
+          '#name' => $field_machine_name . '_remove_' . $entity_id . '_' . Crypt::hashBase64(json_encode($field_parents)),
           '#limit_validation_errors' => [array_merge($field_parents, [$field_machine_name, 'target_id'])],
           '#attributes' => [
             'data-entity-id' => $entity->getEntityTypeId() . ':' . $entity->id(),
@@ -494,25 +435,30 @@ class FileBrowserWidget extends EntityReferenceBrowserWidget {
         $max_filesize = min($max_filesize, Bytes::toNumber($settings['max_filesize']));
       }
       // There is always a file size limit due to the PHP server limit.
-      $validators['file_validate_size'] = [$max_filesize];
+      $validators['FileSizeLimit'] = ['fileLimit' => $max_filesize];
     }
 
     // Images have expected defaults for file extensions.
     // See \Drupal\image\Plugin\Field\FieldWidget::formElement() for details.
     if ($this->fieldDefinition->getType() == 'image') {
-      // If not using custom extension validation, ensure this is an image.
-      $supported_extensions = ['png', 'gif', 'jpg', 'jpeg'];
-      $extensions = isset($settings['file_extensions']) ? $settings['file_extensions'] : implode(' ', $supported_extensions);
+      // Use the image factory to get supported extensions dynamically from the
+      // active image toolkit, instead of a hardcoded list. This ensures that
+      // additional formats like webp, avif, etc. are not silently stripped.
+      $supported_extensions = $this->imageFactory->getSupportedExtensions();
+      $extensions = $settings['file_extensions'] ?? implode(' ', $supported_extensions);
       $extensions = array_intersect(explode(' ', $extensions), $supported_extensions);
-      $validators['file_validate_extensions'] = [implode(' ', $extensions)];
+      $validators['FileExtension'] = ['extensions' => implode(' ', $extensions)];
 
       // Add resolution validation.
       if (!empty($settings['max_resolution']) || !empty($settings['min_resolution'])) {
-        $validators['entity_browser_file_validate_image_resolution'] = [$settings['max_resolution'], $settings['min_resolution']];
+        $validators['EntityBrowserImageDimensions'] = [
+          'maxDimensions' => $settings['max_resolution'],
+          'minDimensions' => $settings['min_resolution'],
+        ];
       }
     }
     elseif (!empty($settings['file_extensions'])) {
-      $validators['file_validate_extensions'] = [$settings['file_extensions']];
+      $validators['FileExtension'] = ['extensions' => $settings['file_extensions']];
     }
 
     return $validators;

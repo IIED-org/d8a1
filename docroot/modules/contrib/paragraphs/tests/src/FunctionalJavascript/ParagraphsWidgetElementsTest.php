@@ -4,12 +4,16 @@ namespace Drupal\Tests\paragraphs\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Test paragraphs widget elements.
  *
  * @group paragraphs
  */
+#[RunTestsInSeparateProcesses]
+#[Group('paragraphs')]
 class ParagraphsWidgetElementsTest extends WebDriverTestBase {
 
   use LoginAdminTrait;
@@ -54,14 +58,26 @@ class ParagraphsWidgetElementsTest extends WebDriverTestBase {
       'administer languages',
     ]);
     ConfigurableLanguage::createFromLangcode('sr')->save();
+
+    // Enable translation for node.
+    $this->drupalGet('admin/config/regional/content-language');
+    $this->assertSession()->fieldExists('entity_types[node]')->check();
+    $this->assertSession()->fieldExists('entity_types[paragraph]')->check();
+    // Open details for Content settings in Drupal 10.2.
+    $node_settings = $this->getSession()->getPage()->find('css', '#edit-settings-node summary');
+    if ($node_settings) {
+      $node_settings->click();
+    }
+    $paragraph_settings = $this->getSession()->getPage()->find('css', '#edit-settings-paragraph summary');
+    if ($paragraph_settings) {
+      $paragraph_settings->click();
+    }
+
     $edit = [
-      'entity_types[paragraph]' => TRUE,
-      'entity_types[node]' => TRUE,
       'settings[node][paragraphed_content_demo][translatable]' => TRUE,
       'settings[paragraph][text][translatable]' => TRUE,
       'settings[paragraph][text][settings][language][language_alterable]' => TRUE,
     ];
-    $this->drupalGet('admin/config/regional/content-language');
     $this->submitForm($edit, 'Save configuration');
     $settings = [
       'add_mode' => 'modal',

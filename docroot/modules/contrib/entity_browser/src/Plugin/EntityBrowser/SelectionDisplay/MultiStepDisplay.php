@@ -6,24 +6,22 @@ use Drupal\Core\Ajax\AfterCommand;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\InvokeCommand;
 use Drupal\Core\Ajax\ReplaceCommand;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\entity_browser\FieldWidgetDisplayManager;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\entity_browser\Attribute\EntityBrowserSelectionDisplay;
 use Drupal\entity_browser\SelectionDisplayBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Show current selection and delivers selected entities.
- *
- * @EntityBrowserSelectionDisplay(
- *   id = "multi_step_display",
- *   label = @Translation("Multi step selection display"),
- *   description = @Translation("Shows the current selection display, allowing to mix elements selected through different widgets in several steps."),
- *   acceptPreselection = TRUE,
- *   js_commands = TRUE
- * )
  */
+#[EntityBrowserSelectionDisplay(
+  id: 'multi_step_display',
+  label: new TranslatableMarkup('Multi step selection display'),
+  description: new TranslatableMarkup('Shows the current selection display, allowing to mix elements selected through different widgets in several steps.'),
+  acceptPreselection: TRUE,
+  js_commands: TRUE,
+)]
 class MultiStepDisplay extends SelectionDisplayBase {
 
   /**
@@ -34,38 +32,12 @@ class MultiStepDisplay extends SelectionDisplayBase {
   protected $fieldDisplayManager;
 
   /**
-   * Constructs widget plugin.
-   *
-   * @param array $configuration
-   *   A configuration array containing information about the plugin instance.
-   * @param string $plugin_id
-   *   The plugin_id for the plugin instance.
-   * @param mixed $plugin_definition
-   *   The plugin implementation definition.
-   * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $event_dispatcher
-   *   Event dispatcher service.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
-   *   The entity type manager service.
-   * @param \Drupal\entity_browser\FieldWidgetDisplayManager $field_display_manager
-   *   Field widget display plugin manager.
-   */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EventDispatcherInterface $event_dispatcher, EntityTypeManagerInterface $entity_type_manager, FieldWidgetDisplayManager $field_display_manager) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition, $event_dispatcher, $entity_type_manager);
-    $this->fieldDisplayManager = $field_display_manager;
-  }
-
-  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('event_dispatcher'),
-      $container->get('entity_type.manager'),
-      $container->get('plugin.manager.entity_browser.field_widget_display')
-    );
+    $instance = parent::create($container, $configuration, $plugin_id, $plugin_definition);
+    $instance->fieldDisplayManager = $container->get('plugin.manager.entity_browser.field_widget_display');
+    return $instance;
   }
 
   /**
@@ -93,6 +65,7 @@ class MultiStepDisplay extends SelectionDisplayBase {
 
     $selected_entities = $form_state->get(['entity_browser', 'selected_entities']);
 
+    $original_form['#attributes']['class'][] = 'entity-browser-form--multi-step-display';
     $form = [];
     $form['#attached']['library'][] = 'entity_browser/multi_step_display';
     $form['selected'] = [

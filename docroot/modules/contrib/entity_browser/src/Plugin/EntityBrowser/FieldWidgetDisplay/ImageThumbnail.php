@@ -4,23 +4,23 @@ namespace Drupal\entity_browser\Plugin\EntityBrowser\FieldWidgetDisplay;
 
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\entity_browser\Attribute\EntityBrowserFieldWidgetDisplay;
+use Drupal\entity_browser\FieldWidgetDisplayBase;
 use Drupal\file\FileInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\entity_browser\FieldWidgetDisplayBase;
 
 /**
  * Displays image thumbnail.
- *
- * @EntityBrowserFieldWidgetDisplay(
- *   id = "thumbnail",
- *   label = @Translation("Image thumbnail"),
- *   description = @Translation("Displays image files as thumbnails")
- * )
  */
+#[EntityBrowserFieldWidgetDisplay(
+  id: 'thumbnail',
+  label: new TranslatableMarkup('Image thumbnail'),
+  description: new TranslatableMarkup('Displays image files as thumbnails'),
+)]
 class ImageThumbnail extends FieldWidgetDisplayBase implements ContainerFactoryPluginInterface {
 
   /**
@@ -31,32 +31,12 @@ class ImageThumbnail extends FieldWidgetDisplayBase implements ContainerFactoryP
   protected $entityTypeManager;
 
   /**
-   * Constructs widget plugin.
-   *
-   * @param array $configuration
-   *   A configuration array containing information about the plugin instance.
-   * @param string $plugin_id
-   *   The plugin_id for the plugin instance.
-   * @param mixed $plugin_definition
-   *   The plugin implementation definition.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
-   *   Entity manager service.
-   */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->entityTypeManager = $entity_type_manager;
-  }
-
-  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('entity_type.manager')
-    );
+    $instance = new static($configuration, $plugin_id, $plugin_definition);
+    $instance->entityTypeManager = $container->get('entity_type.manager');
+    return $instance;
   }
 
   /**
@@ -71,8 +51,8 @@ class ImageThumbnail extends FieldWidgetDisplayBase implements ContainerFactoryP
         '@title' => $entity->label(),
       ];
       $restricted_access_label = $entity->access('view label')
-       ?  new FormattableMarkup('@label @id (@title)', $parameters)
-       :  new FormattableMarkup('@label @id', $parameters);
+       ? new FormattableMarkup('@label @id (@title)', $parameters)
+       : new FormattableMarkup('@label @id', $parameters);
       return ['#markup' => $restricted_access_label];
     }
 
