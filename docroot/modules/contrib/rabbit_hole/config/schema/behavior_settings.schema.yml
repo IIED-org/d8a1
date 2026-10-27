@@ -8,9 +8,11 @@ rabbit_hole.behavior_settings.*:
     entity_type_id:
       type: string
       label: 'Entity Type ID'
+      nullable: true
     entity_id:
-      type:  string
+      type: string
       label: 'Bundle'
+      nullable: true
     action:
       type: string
       label: 'Action'

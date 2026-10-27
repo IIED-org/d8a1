@@ -4,24 +4,26 @@ namespace Drupal\rabbit_hole\Plugin\RabbitHoleBehaviorPlugin;
 
 use Drupal\Component\Render\PlainTextOutput;
 use Drupal\Component\Utility\UrlHelper;
-use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Url;
-use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Drupal\Core\Link;
-use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\Cache\CacheableResponse;
 use Drupal\Core\Config\ImmutableConfig;
-use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\Core\Utility\Token;
+use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\Core\Link;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Routing\TrustedRedirectResponse;
-use Drupal\rabbit_hole\Plugin\RabbitHoleBehaviorPluginBase;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\Core\Url;
+use Drupal\Core\Utility\Token;
 use Drupal\rabbit_hole\Exception\InvalidRedirectResponseException;
+use Drupal\rabbit_hole\FormManglerService;
+use Drupal\rabbit_hole\Plugin\RabbitHoleBehaviorPluginBase;
 use Drupal\rabbit_hole\Plugin\RabbitHoleEntityPluginManager;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Redirects to another page.
@@ -49,14 +51,14 @@ class PageRedirect extends RabbitHoleBehaviorPluginBase implements ContainerFact
    *
    * @var string
    */
-  private $path;
+  protected $path;
 
   /**
    * The HTTP response code.
    *
    * @var string
    */
-  private $code;
+  protected $code;
 
   /**
    * The entity plugin manager.
@@ -89,14 +91,7 @@ class PageRedirect extends RabbitHoleBehaviorPluginBase implements ContainerFact
   /**
    * {@inheritdoc}
    */
-  public function __construct(
-    array $configuration,
-    $plugin_id,
-    $plugin_definition,
-    RabbitHoleEntityPluginManager $rhepm,
-    ModuleHandlerInterface $mhi,
-    Token $token) {
-
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, RabbitHoleEntityPluginManager $rhepm, ModuleHandlerInterface $mhi, Token $token) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->rhEntityPluginManager = $rhepm;
     $this->moduleHandler = $mhi;
@@ -121,7 +116,10 @@ class PageRedirect extends RabbitHoleBehaviorPluginBase implements ContainerFact
   /**
    * {@inheritdoc}
    */
-  public function performAction(EntityInterface $entity, Response $current_response = NULL) {
+  public function performAction(EntityInterface $entity, ?Response $current_response = NULL) {
+    // Start from a clean slate: the plugin instance may be reused and must not
+    // carry cacheability collected while acting on a different entity.
+    $this->cacheMetadata = new BubbleableMetadata();
     $target = $this->getActionTarget($entity);
     $response_code = $this->getActionResponseCode($entity);
 
@@ -145,25 +143,27 @@ class PageRedirect extends RabbitHoleBehaviorPluginBase implements ContainerFact
           // If a response already exists we don't need to do anything with it.
           return $current_response;
         }
-        // TODO: I don't think this is the correct way to handle a 304 response.
+        // @todo I don't think this is the correct way to handle a 304 response.
       case self::REDIRECT_NOT_MODIFIED:
         if ($current_response === NULL) {
-          $not_modified_response = new Response();
+          $not_modified_response = new CacheableResponse();
           $not_modified_response->setStatusCode(self::REDIRECT_NOT_MODIFIED);
           $not_modified_response->headers->set('Location', $target);
+          $not_modified_response->addCacheableDependency($this->cacheMetadata);
           return $not_modified_response;
         }
         else {
           // If a response already exists we don't need to do anything with it.
           return $current_response;
         }
-        // TODO: I have no idea if this is actually the correct way to handle a
+        // @todo I have no idea if this is actually the correct way to handle a
         // 305 response in Symfony/D8. Documentation on it seems a bit sparse.
       case self::REDIRECT_USE_PROXY:
         if ($current_response === NULL) {
-          $use_proxy_response = new Response();
+          $use_proxy_response = new CacheableResponse();
           $use_proxy_response->setStatusCode(self::REDIRECT_USE_PROXY);
           $use_proxy_response->headers->set('Location', $target);
+          $use_proxy_response->addCacheableDependency($this->cacheMetadata);
           return $use_proxy_response;
         }
         else {
@@ -185,6 +185,9 @@ class PageRedirect extends RabbitHoleBehaviorPluginBase implements ContainerFact
    *   Absolute destination URL or NULL if proper URL wasn't found.
    */
   public function getActionTarget(EntityInterface $entity) {
+    // The redirect is derived from this entity, so any response built from it
+    // has to be invalidated when the entity changes.
+    $this->cacheMetadata->addCacheableDependency($entity);
     $target = $entity->get('rh_redirect')->value;
     if (empty($target)) {
       $bundle_settings = $this->getBundleSettings($entity);
@@ -209,27 +212,103 @@ class PageRedirect extends RabbitHoleBehaviorPluginBase implements ContainerFact
     ], $this->cacheMetadata);
     $target = PlainTextOutput::renderFromHtml($target);
 
+    // Control characters are never valid in a URL, and would end up in a
+    // Location header if they were left in place.
+    $target = preg_replace('/[\x00-\x1F\x7F]/', '', $target);
+
     if (empty($target)) {
       return NULL;
     }
 
+    // External URLs are handed to the browser as they are, so anything that
+    // may not appear raw in a URL has to be encoded here.
+    if (UrlHelper::isExternal($target)) {
+      return $this->encodeExternalUrl($target);
+    }
+
     // If non-absolute URI, pass URL through Drupal's URL generator to
     // handle languages etc.
-    if (!UrlHelper::isExternal($target)) {
-      $scheme = parse_url($target, PHP_URL_SCHEME);
-      if ($scheme === NULL) {
-        $target = 'internal:' . $target;
-      }
+    $scheme = parse_url($target, PHP_URL_SCHEME);
+    // parse_url() returns NULL when a URL has no scheme, but FALSE when it is
+    // malformed - which is exactly what an unencoded path looks like to it.
+    // Both cases are local paths.
+    if ($scheme === NULL || $scheme === FALSE) {
+      // The URL generator encodes the path for us, so decode it first to keep
+      // an already encoded path from being encoded a second time. Only the
+      // path is decoded - doing the same to the query string would change its
+      // meaning.
+      [$path, $suffix] = $this->splitPath($target);
+      $target = 'internal:' . $this->decodePath($path) . $suffix;
+    }
 
-      try {
-        $target = Url::fromUri($target)->toString();
-      }
-      catch (\InvalidArgumentException $exception) {
-        return NULL;
-      }
+    try {
+      $target = Url::fromUri($target)->toString();
+    }
+    catch (\InvalidArgumentException $exception) {
+      return NULL;
     }
 
     return $target;
+  }
+
+  /**
+   * Splits a URL into its path and its query string and fragment.
+   *
+   * @param string $url
+   *   The URL to split.
+   *
+   * @return string[]
+   *   An array with the path as the first item, and the query string and
+   *   fragment, including their leading delimiters, as the second one.
+   */
+  protected function splitPath($url) {
+    $length = strcspn($url, '?#');
+    return [substr($url, 0, $length), substr($url, $length)];
+  }
+
+  /**
+   * Decodes every segment of a URL path.
+   *
+   * @param string $path
+   *   The path to decode.
+   *
+   * @return string
+   *   The decoded path.
+   */
+  protected function decodePath($path) {
+    return implode('/', array_map('rawurldecode', explode('/', $path)));
+  }
+
+  /**
+   * Encodes the characters that may not appear raw in an external URL.
+   *
+   * The scheme and the authority are left untouched, since an
+   * internationalized domain name has to be converted to punycode rather than
+   * being percent-encoded.
+   *
+   * @param string $url
+   *   The external URL to encode.
+   *
+   * @return string
+   *   The encoded URL.
+   */
+  protected function encodeExternalUrl($url) {
+    $position = strpos($url, '://');
+    if ($position === FALSE) {
+      // A scheme without an authority, such as mailto:, has nothing that can
+      // be encoded safely.
+      return $url;
+    }
+    $position += 3;
+    $position += strcspn($url, '/?#', $position);
+
+    return substr($url, 0, $position) . preg_replace_callback(
+      '/[^\x21-\x7E]|["<>\\\\^`{|}]/',
+      function (array $matches) {
+        return rawurlencode($matches[0]);
+      },
+      substr($url, $position)
+    );
   }
 
   /**
@@ -261,9 +340,9 @@ class PageRedirect extends RabbitHoleBehaviorPluginBase implements ContainerFact
     array &$form,
     FormStateInterface $form_state,
     $form_id,
-    EntityInterface $entity = NULL,
+    ?EntityInterface $entity = NULL,
     $entity_is_bundle = FALSE,
-    ImmutableConfig $bundle_settings = NULL
+    ?ImmutableConfig $bundle_settings = NULL,
   ) {
 
     $redirect = NULL;
@@ -276,15 +355,9 @@ class PageRedirect extends RabbitHoleBehaviorPluginBase implements ContainerFact
       $redirect_fallback_action = $bundle_settings->get('redirect_fallback_action');
     }
     elseif (isset($entity)) {
-      $redirect = isset($entity->rh_redirect->value)
-        ? $entity->rh_redirect->value
-        : self::RABBIT_HOLE_PAGE_REDIRECT_DEFAULT;
-      $redirect_code = isset($entity->rh_redirect_response->value)
-        ? $entity->rh_redirect_response->value
-        : self::RABBIT_HOLE_PAGE_REDIRECT_RESPONSE_DEFAULT;
-      $redirect_fallback_action = isset($entity->rh_redirect_fallback_action->value)
-        ? $entity->rh_redirect_fallback_action->value
-        : 'bundle_default';
+      $redirect = $entity->rh_redirect->value ?? self::RABBIT_HOLE_PAGE_REDIRECT_DEFAULT;
+      $redirect_code = $entity->rh_redirect_response->value ?? self::RABBIT_HOLE_PAGE_REDIRECT_RESPONSE_DEFAULT;
+      $redirect_fallback_action = $entity->rh_redirect_fallback_action->value ?? 'bundle_default';
     }
     else {
       $redirect = NULL;
@@ -384,7 +457,7 @@ class PageRedirect extends RabbitHoleBehaviorPluginBase implements ContainerFact
       $bundle_fallback = $bundle_settings->get('redirect_fallback_action');
       $fallback_options['bundle_default'] = $this->t('Global @bundle fallback (@setting)', [
         '@bundle' => $args['@bundle'],
-        '@setting' => $bundle_fallback,
+        '@setting' => $bundle_fallback ?? $args['@setting'],
       ]);
     }
 
@@ -413,15 +486,20 @@ class PageRedirect extends RabbitHoleBehaviorPluginBase implements ContainerFact
     $fields['rh_redirect'] = BaseFieldDefinition::create('string')
       ->setName('rh_redirect')
       ->setLabel($this->t('Rabbit Hole redirect path.'))
-      ->setDescription($this->t('The path to where the user should get redirected to.'));
+      ->setDescription($this->t('The path to where the user should get redirected to.'))
+      ->setTranslatable(TRUE);
     $fields['rh_redirect_response'] = BaseFieldDefinition::create('integer')
       ->setName('rh_redirect_response')
       ->setLabel($this->t('Rabbit Hole redirect response code'))
-      ->setDescription($this->t('Specifies the HTTP response code that should be used when perform a redirect.'));
+      ->setDescription($this->t('Specifies the HTTP response code that should be used when perform a redirect.'))
+      ->setDefaultValue(self::RABBIT_HOLE_PAGE_REDIRECT_RESPONSE_DEFAULT)
+      ->setTranslatable(TRUE);
     $fields['rh_redirect_fallback_action'] = BaseFieldDefinition::create('string')
       ->setName('rh_redirect_fallback_action')
       ->setLabel($this->t('Rabbit Hole redirect fallback action'))
-      ->setDescription($this->t('Specifies the action that should be used when the redirect path is invalid or empty.'));
+      ->setDescription($this->t('Specifies the action that should be used when the redirect path is invalid or empty.'))
+      ->setDefaultValue(FormManglerService::RABBIT_HOLE_USE_DEFAULT)
+      ->setTranslatable(TRUE);
   }
 
   /**

@@ -5,7 +5,11 @@
  * Install, update and uninstall functions for the Rabbit Hole module.
  */
 
+use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
 use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\Site\Settings;
+use Drupal\rabbit_hole\FormManglerService;
+use Drupal\rabbit_hole\Plugin\RabbitHoleBehaviorPlugin\PageRedirect;
 
 /**
  * Install redirect_fallback_action field.
@@ -43,4 +47,102 @@ function rabbit_hole_update_8101() {
       $config->set('redirect_fallback_action', 'access_denied')->save();
     }
   }
+}
+
+/**
+ * Populate empty Rabbit Hole values with their defaults.
+ */
+function rabbit_hole_update_8102(&$sandbox) {
+  $defaults = [
+    'rh_action' => FormManglerService::RABBIT_HOLE_USE_DEFAULT,
+    'rh_redirect_response' => PageRedirect::RABBIT_HOLE_PAGE_REDIRECT_RESPONSE_DEFAULT,
+    'rh_redirect_fallback_action' => FormManglerService::RABBIT_HOLE_USE_DEFAULT,
+  ];
+
+  $database = \Drupal::database();
+
+  // Collect every table/column combination holding a Rabbit Hole value. The
+  // values are updated directly in the database instead of by re-saving the
+  // entities, so that revisions and "changed" timestamps are left untouched.
+  if (!isset($sandbox['tables'])) {
+    $sandbox['tables'] = [];
+    $sandbox['progress'] = 0;
+    $sandbox['max'] = 0;
+
+    $entity_type_manager = \Drupal::entityTypeManager();
+    $entity_types = \Drupal::service('plugin.manager.rabbit_hole_entity_plugin')
+      ->loadSupportedEntityTypes();
+    foreach ($entity_types as $entity_type_id) {
+      if (!$entity_type_manager->hasDefinition($entity_type_id)) {
+        continue;
+      }
+
+      $storage = $entity_type_manager->getStorage($entity_type_id);
+      if (!$storage instanceof SqlContentEntityStorage) {
+        continue;
+      }
+
+      $table_mapping = $storage->getTableMapping();
+      $id_key = $storage->getEntityType()->getKey('id');
+      foreach ($defaults as $field_name => $default_value) {
+        $columns = $table_mapping->getColumnNames($field_name);
+        if (empty($columns['value'])) {
+          continue;
+        }
+
+        foreach ($table_mapping->getAllFieldTableNames($field_name) as $table) {
+          $count = $database->select($table, 't')
+            ->isNull($columns['value'])
+            ->countQuery()
+            ->execute()
+            ->fetchField();
+          if (empty($count)) {
+            continue;
+          }
+
+          $sandbox['tables'][] = [
+            'table' => $table,
+            'column' => $columns['value'],
+            'id_key' => $id_key,
+            'value' => $default_value,
+            'max' => $count,
+          ];
+          $sandbox['max'] += $count;
+        }
+      }
+    }
+  }
+
+  if (empty($sandbox['tables'])) {
+    $sandbox['#finished'] = 1;
+    return t('There are no empty Rabbit Hole values to be updated.');
+  }
+
+  $items_per_pass = Settings::get('entity_update_batch_size') ?: 500;
+  $table = reset($sandbox['tables']);
+
+  // Update whole rows at once, but limit the amount of rows per pass by
+  // selecting the entity IDs first.
+  $ids = $database->select($table['table'], 't')
+    ->fields('t', [$table['id_key']])
+    ->isNull($table['column'])
+    ->distinct()
+    ->range(0, $items_per_pass)
+    ->execute()
+    ->fetchCol();
+
+  if (empty($ids)) {
+    array_shift($sandbox['tables']);
+  }
+  else {
+    $sandbox['progress'] += $database->update($table['table'])
+      ->fields([$table['column'] => $table['value']])
+      ->isNull($table['column'])
+      ->condition($table['id_key'], $ids, 'IN')
+      ->execute();
+  }
+
+  $sandbox['#finished'] = empty($sandbox['tables'])
+    ? 1
+    : min(0.99, $sandbox['progress'] / max($sandbox['max'], 1));
 }

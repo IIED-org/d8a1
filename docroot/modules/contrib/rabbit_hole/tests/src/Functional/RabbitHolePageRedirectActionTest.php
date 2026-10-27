@@ -8,6 +8,7 @@ use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\file\Entity\File;
 use Drupal\media\Entity\Media;
 use Drupal\node\Entity\Node;
+use Drupal\node\Entity\NodeType;
 use Drupal\Tests\BrowserTestBase;
 
 /**
@@ -31,7 +32,7 @@ class RabbitHolePageRedirectActionTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['rh_node', 'user', 'media', 'token'];
+  protected static $modules = ['rh_node', 'user', 'media', 'token'];
 
   /**
    * The behavior settings manager.
@@ -45,6 +46,11 @@ class RabbitHolePageRedirectActionTest extends BrowserTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
+    // As of Drupal 11.4 the Standard profile no longer provides the "Article"
+    // content type, so create it when it is missing.
+    if (!NodeType::load('article')) {
+      $this->drupalCreateContentType(['type' => 'article', 'name' => 'Article']);
+    }
     $this->behaviorSettingsManager = $this->container->get('rabbit_hole.behavior_settings_manager');
     $this->behaviorSettingsManager->saveBehaviorSettings([
       'action' => 'display_page',
@@ -57,12 +63,15 @@ class RabbitHolePageRedirectActionTest extends BrowserTestBase {
    */
   public function testRedirectCodes() {
     $target_entity = $this->createTestNode('display_page');
-    $destination_path = $target_entity->toUrl()->toString();
+    // "rh_redirect" holds a Drupal internal path, which never includes the
+    // base path. A generated URL does include it, so on a subdirectory install
+    // it would be prepended a second time and produce a broken destination.
+    $destination_path = '/' . $target_entity->toUrl()->getInternalPath();
 
     $this->assertPageRedirect($destination_path, $destination_path, 301);
     $this->assertPageRedirect($destination_path, $destination_path, 302);
     $this->assertPageRedirect($destination_path, $destination_path, 303);
-    // TODO: Figure out what should happen on 304 code.
+    // @todo Figure out what should happen on 304 code.
     // $this->assertUrlRedirect(304);.
     $this->assertPageRedirect($destination_path, $destination_path, 305);
     $this->assertPageRedirect($destination_path, $destination_path, 307);
@@ -83,6 +92,63 @@ class RabbitHolePageRedirectActionTest extends BrowserTestBase {
     $this->assertPageRedirect('entity:node/' . $test_node->id(), $test_node->toUrl());
     $this->assertPageRedirect('base:robots.txt', '/robots.txt');
     $this->assertPageRedirect('route:system.401', '/system/401');
+  }
+
+  /**
+   * Test that redirect paths are encoded exactly once.
+   *
+   * @see https://www.drupal.org/project/rabbit_hole/issues/3219928
+   */
+  public function testRedirectPathEncoding() {
+    $node = $this->createTestNode('page_redirect');
+
+    // Local targets are returned by the URL generator, so they carry the base
+    // path of the site, which is not the root when Drupal is installed in a
+    // subdirectory.
+    $base = base_path();
+
+    // A path containing characters that have to be encoded is encoded, and a
+    // path that is already encoded is left as it is rather than being encoded
+    // a second time.
+    $this->assertSame($base . 'xyz/Parents%20Name', $this->getActionTarget($node, '/xyz/Parents Name'));
+    $this->assertSame($base . 'xyz/Parents%20Name', $this->getActionTarget($node, '/xyz/Parents%20Name'));
+    $this->assertSame($base . 'xyz/caf%C3%A9', $this->getActionTarget($node, '/xyz/café'));
+    $this->assertSame($base . 'xyz/caf%C3%A9', $this->getActionTarget($node, '/xyz/caf%C3%A9'));
+
+    // The query string and the fragment keep their own encoding.
+    $this->assertSame($base . 'xyz/a%20b?x=a%26b&y=2', $this->getActionTarget($node, '/xyz/a b?x=a%26b&y=2'));
+    $this->assertSame($base . 'xyz/a%20b#frag-1', $this->getActionTarget($node, '/xyz/a b#frag-1'));
+
+    // External URLs are encoded too, while their authority is left alone.
+    $this->assertSame('https://example.com/a%20b', $this->getActionTarget($node, 'https://example.com/a b'));
+    $this->assertSame('https://example.com/a%20b', $this->getActionTarget($node, 'https://example.com/a%20b'));
+    $this->assertSame('https://example.com/a?q=b%20c', $this->getActionTarget($node, 'https://example.com/a?q=b c'));
+    $this->assertSame('mailto:someone@example.com', $this->getActionTarget($node, 'mailto:someone@example.com'));
+
+    // Control characters are removed.
+    $this->assertSame($base . 'xyz/ab', $this->getActionTarget($node, "/xyz/a\nb"));
+  }
+
+  /**
+   * Returns the redirect target of an entity for the given redirect path.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity to get the redirect target of.
+   * @param string $redirect
+   *   The redirect path to set on the entity.
+   *
+   * @return string|null
+   *   The redirect target.
+   */
+  protected function getActionTarget($entity, $redirect) {
+    $entity->set('rh_redirect', $redirect);
+
+    /** @var \Drupal\rabbit_hole\Plugin\RabbitHoleBehaviorPlugin\PageRedirect $plugin */
+    $plugin = $this->container
+      ->get('plugin.manager.rabbit_hole_behavior_plugin')
+      ->createInstance('page_redirect', []);
+
+    return $plugin->getActionTarget($entity);
   }
 
   /**

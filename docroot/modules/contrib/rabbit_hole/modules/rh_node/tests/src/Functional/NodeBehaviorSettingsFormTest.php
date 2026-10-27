@@ -3,6 +3,7 @@
 namespace Drupal\Tests\rh_node\Functional;
 
 use Drupal\Core\Url;
+use Drupal\rabbit_hole\Plugin\RabbitHoleBehaviorPlugin\PageRedirect;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 use Drupal\Tests\node\Traits\NodeCreationTrait;
 use Drupal\Tests\rabbit_hole\Functional\RabbitHoleBehaviorSettingsFormTestBase;
@@ -37,7 +38,7 @@ class NodeBehaviorSettingsFormTest extends RabbitHoleBehaviorSettingsFormTestBas
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['rh_node', 'node'];
+  protected static $modules = ['rh_node', 'node'];
 
   /**
    * Test that Rabbit Hole settings are created with "Field UI" enabled.
@@ -53,6 +54,30 @@ class NodeBehaviorSettingsFormTest extends RabbitHoleBehaviorSettingsFormTestBas
   public function testBundleEditWithFieldUi() {
     \Drupal::service('module_installer')->install(['field_ui']);
     $this->testBundleFormFirstSave();
+  }
+
+  /**
+   * Test node creation by a user without the Rabbit Hole permission.
+   *
+   * @see https://www.drupal.org/project/rabbit_hole/issues/3517235
+   */
+  public function testEntityFormSaveWithoutAdministerPermission() {
+    $bundle_id = $this->createEntityBundle();
+    $this->drupalLogin($this->drupalCreateUser(['create ' . $bundle_id . ' content']));
+
+    $title = $this->randomMachineName();
+    $this->drupalGet(Url::fromRoute('node.add', ['node_type' => $bundle_id]));
+    $this->assertNoRabbitHoleSettings();
+    $this->submitForm(['title[0][value]' => $title], 'Save');
+
+    $nodes = \Drupal::entityTypeManager()
+      ->getStorage('node')
+      ->loadByProperties(['title' => $title]);
+    $node = reset($nodes);
+
+    $this->assertEquals(static::DEFAULT_ACTION, $node->get('rh_action')->value);
+    $this->assertEquals(PageRedirect::RABBIT_HOLE_PAGE_REDIRECT_RESPONSE_DEFAULT, $node->get('rh_redirect_response')->value);
+    $this->assertEquals(static::DEFAULT_ACTION, $node->get('rh_redirect_fallback_action')->value);
   }
 
   /**
@@ -78,7 +103,15 @@ class NodeBehaviorSettingsFormTest extends RabbitHoleBehaviorSettingsFormTestBas
     ];
     $this->drupalGet(Url::fromRoute('node.type_add'));
     $this->assertRabbitHoleSettings();
-    $button_label = \Drupal::moduleHandler()->moduleExists('field_ui') ? 'Save and manage fields' : 'Save content type';
+    // Remove after dropping support for Drupal 10.2 and lower.
+    if (version_compare(\Drupal::VERSION, '10.2', '<')) {
+      $button_label = 'Save content type';
+    }
+    else {
+      $button_label = 'Save';
+    }
+
+    $button_label = \Drupal::moduleHandler()->moduleExists('field_ui') ? 'Save and manage fields' : $button_label;
     $this->submitForm($edit, $button_label);
     $this->bundle = $this->loadBundle($edit['type']);
     return $edit['type'];

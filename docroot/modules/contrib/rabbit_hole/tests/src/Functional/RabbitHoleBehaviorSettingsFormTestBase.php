@@ -4,6 +4,7 @@ namespace Drupal\Tests\rabbit_hole\Functional;
 
 use Drupal\Core\Config\Entity\ConfigEntityBundleBase;
 use Drupal\rabbit_hole\Entity\BehaviorSettings;
+use Drupal\rabbit_hole\Plugin\RabbitHoleBehaviorPlugin\PageRedirect;
 use Drupal\Tests\BrowserTestBase;
 
 /**
@@ -22,7 +23,7 @@ abstract class RabbitHoleBehaviorSettingsFormTestBase extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['rabbit_hole'];
+  protected static $modules = ['rabbit_hole'];
 
   /**
    * Admin user.
@@ -30,6 +31,13 @@ abstract class RabbitHoleBehaviorSettingsFormTestBase extends BrowserTestBase {
    * @var \Drupal\user\UserInterface
    */
   protected $adminUser;
+
+  /**
+   * The entity type.
+   *
+   * @var string
+   */
+  protected $entityType;
 
   /**
    * The name of bundle entity type.
@@ -236,6 +244,25 @@ abstract class RabbitHoleBehaviorSettingsFormTestBase extends BrowserTestBase {
   }
 
   /**
+   * Test that new entities are created with default Rabbit Hole values.
+   *
+   * Entities created without touching the Rabbit Hole form elements, e.g. by
+   * users without the "rabbit hole administer *" permission or created
+   * programmatically, should still get the default values stored, so that they
+   * are not excluded from views filtering on those fields.
+   *
+   * @see https://www.drupal.org/project/rabbit_hole/issues/3517235
+   */
+  public function testDefaultEntityFieldValues() {
+    $this->createEntityBundle();
+    $entity = $this->loadEntity($this->createEntity());
+
+    $this->assertEquals(static::DEFAULT_ACTION, $entity->get('rh_action')->value);
+    $this->assertEquals(PageRedirect::RABBIT_HOLE_PAGE_REDIRECT_RESPONSE_DEFAULT, $entity->get('rh_redirect_response')->value);
+    $this->assertEquals(static::DEFAULT_ACTION, $entity->get('rh_redirect_fallback_action')->value);
+  }
+
+  /**
    * Test that when entity form is loaded it defaults the bundle configuration.
    */
   public function testDefaultEntitySettingsLoad() {
@@ -378,6 +405,17 @@ abstract class RabbitHoleBehaviorSettingsFormTestBase extends BrowserTestBase {
   protected function getEntityFormSubmit() {
     return 'edit-submit';
   }
+
+  /**
+   * Returns URL of the "Edit" entity page.
+   *
+   * @param string $id
+   *   Entity type id.
+   *
+   * @return \Drupal\Core\Url
+   *   URL object.
+   */
+  abstract protected function getEditEntityUrl($id);
 
   /**
    * Returns URL of the "Edit" entity bundle page.

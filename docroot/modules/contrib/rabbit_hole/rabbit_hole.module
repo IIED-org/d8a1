@@ -5,9 +5,14 @@
  * Contains rabbit_hole.module.
  */
 
-use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\EntityFormInterface;
+use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Field\FieldItemListInterface;
+use Drupal\Core\Form\ConfirmFormInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Session\AccountInterface;
 
 /**
  * Implements hook_help().
@@ -48,19 +53,44 @@ function rabbit_hole_form_alter(&$form, FormStateInterface $form_state, $form_id
     ->loadSupportedBundleEntityTypes();
   $affected_global_forms = \Drupal::service('plugin.manager.rabbit_hole_entity_plugin')
     ->loadSupportedGlobalForms();
-  if ($form_state->getFormObject() instanceof EntityFormInterface) {
-    $current_type = $form_state->getFormObject()->getEntity()->getEntityTypeId();
-    $current_operation = $form_state->getFormObject()->getOperation();
+  $form_object = $form_state->getFormObject();
+  if ($form_object instanceof EntityFormInterface) {
+    $entity = $form_object->getEntity();
+    if ($entity === NULL) {
+      return;
+    }
+
+    $current_type = $entity->getEntityTypeId();
+    $current_operation = $form_object->getOperation();
+
+    // Rabbit Hole settings can only be saved from a form that saves the entity
+    // or its bundle, which a confirmation form never does. Attaching the
+    // settings to one also replaces the confirm button's own submit handler
+    // and breaks the operation being confirmed - see the Trash module's purge
+    // and restore forms, where it additionally fatals while building a URL for
+    // the entity that was just deleted.
+    if ($form_object instanceof ConfirmFormInterface) {
+      return;
+    }
+
+    // Confirmation forms that don't implement ConfirmFormInterface, along with
+    // the operations that display an entity rather than edit it, are excluded
+    // by name.
     $disallowed_operations = [
-      'delete', 'cancel', 'reset', 'layout_builder', 'replicate',
+      'delete', 'cancel', 'reset', 'layout_builder', 'replicate', 'overview',
+      'purge', 'restore',
     ];
+    if (in_array($current_operation, $disallowed_operations, TRUE)) {
+      return;
+    }
+
     $administer_permitted = \Drupal::currentUser()->hasPermission('rabbit hole administer ' . $current_type);
 
-    $is_entity_form = in_array($current_type, $affected_types) && $administer_permitted && !in_array($current_operation, $disallowed_operations);
-    $is_bundle_form = in_array($current_type, $affected_bundle_types) && !in_array($current_operation, $disallowed_operations);
+    $is_entity_form = in_array($current_type, $affected_types, TRUE) && $administer_permitted;
+    $is_bundle_form = in_array($current_type, $affected_bundle_types, TRUE);
     if ($is_entity_form || $is_bundle_form) {
       \Drupal::service('rabbit_hole.form_mangler')->addRabbitHoleOptionsToEntityForm(
-        $form, $form_state->getFormObject()->getEntity(), $form_state, $form_id);
+        $form, $entity, $form_state, $form_id);
     }
   }
   elseif (array_key_exists($form_id, $affected_global_forms)) {
@@ -68,4 +98,32 @@ function rabbit_hole_form_alter(&$form, FormStateInterface $form_state, $form_id
        $form, $affected_global_forms[$form_id], $form_state, $form_id
     );
   }
+}
+
+/**
+ * Implements hook_entity_field_access().
+ *
+ * The Rabbit Hole fields decide whether an entity is displayed, hidden or
+ * redirected, so they are only offered on the entity form to users holding
+ * the "rabbit hole administer <entity type>" permission. Writers that honour
+ * field access but not the form - JSON:API, REST, bulk operations - would
+ * otherwise let anyone with edit access to the entity change them.
+ */
+function rabbit_hole_entity_field_access($operation, FieldDefinitionInterface $field_definition, AccountInterface $account, ?FieldItemListInterface $items = NULL) {
+  if ($operation !== 'edit') {
+    return AccessResult::neutral();
+  }
+
+  $entity_type_id = $field_definition->getTargetEntityTypeId();
+  $rabbit_hole_fields = &drupal_static(__FUNCTION__, []);
+  if (!isset($rabbit_hole_fields[$entity_type_id])) {
+    $rabbit_hole_fields[$entity_type_id] = \Drupal::service('rabbit_hole.entity_extender')
+      ->getRabbitHoleFields($entity_type_id);
+  }
+  if (!isset($rabbit_hole_fields[$entity_type_id][$field_definition->getName()])) {
+    return AccessResult::neutral();
+  }
+
+  return AccessResult::forbiddenIf(!$account->hasPermission('rabbit hole administer ' . $entity_type_id))
+    ->cachePerPermissions();
 }
