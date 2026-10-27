@@ -52,7 +52,7 @@ interface BehaviorInvokerInterface {
    * @throws \Drupal\Component\Plugin\Exception\PluginException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
-  public function processEntity(ContentEntityInterface $entity, Response $current_response = NULL);
+  public function processEntity(ContentEntityInterface $entity, ?Response $current_response = NULL);
 
   /**
    * Load a list of entity IDs supported by rabbit hole given available plugins.

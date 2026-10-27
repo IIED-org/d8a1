@@ -1,6 +1,6 @@
 id: default_bundle
-entity_type_id : null
-entity_id : null
+entity_type_id: null
+entity_id: null
 action: "display_page"
 # Allow
 allow_override: 1

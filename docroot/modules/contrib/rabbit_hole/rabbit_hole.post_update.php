@@ -26,7 +26,7 @@ function rabbit_hole_post_update_entity_type_id_and_entity_id_for_existing_behav
 
     // Try to find out the entity_id and entity_type_id.
     $entity_id = NULL;
-    $entity_type_id = NULL;
+    $entity_type_id = '';
     $id_parts = explode('_', $behavior_setting->id());
 
     // Handle settings without entity bundle.
@@ -53,6 +53,22 @@ function rabbit_hole_post_update_entity_type_id_and_entity_id_for_existing_behav
     else {
       $behavior_setting->set('entity_type_id', $entity_type_id);
       $behavior_setting->set('entity_id', $entity_id);
+      $behavior_setting->save();
+    }
+  }
+}
+
+/**
+ * Save the default behavior settings so they match the current schema.
+ */
+function rabbit_hole_post_update_save_default_behavior_settings() {
+  $storage = \Drupal::entityTypeManager()->getStorage('behavior_settings');
+  foreach (['default', 'default_bundle'] as $id) {
+    $behavior_setting = $storage->load($id);
+    if ($behavior_setting !== NULL) {
+      // Re-save through the entity so that entity_type_id and entity_id, the
+      // key order and the dependencies are written the same way as they are
+      // for every other behavior setting.
       $behavior_setting->save();
     }
   }

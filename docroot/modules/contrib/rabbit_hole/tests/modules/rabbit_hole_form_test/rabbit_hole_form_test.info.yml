@@ -1,0 +1,13 @@
+name: 'Rabbit Hole form test'
+type: module
+description: 'Provides entity forms used to test rabbit_hole_form_alter().'
+package: Testing
+hidden: true
+dependencies:
+  - rabbit_hole:rabbit_hole
+  - drupal:node
+
+# Information added by Drupal.org packaging script on 2026-10-21
+version: '8.x-1.3'
+project: 'rabbit_hole'
+datestamp: 1792604089

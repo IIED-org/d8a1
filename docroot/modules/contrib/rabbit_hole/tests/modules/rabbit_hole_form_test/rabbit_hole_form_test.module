@@ -1,0 +1,25 @@
+<?php
+
+/**
+ * @file
+ * Provides entity forms used to test rabbit_hole_form_alter().
+ */
+
+use Drupal\Core\Entity\ContentEntityForm;
+use Drupal\rabbit_hole_form_test\Form\TestConfirmForm;
+
+/**
+ * Implements hook_entity_type_alter().
+ */
+function rabbit_hole_form_test_entity_type_alter(array &$entity_types) {
+  if (!isset($entity_types['node'])) {
+    return;
+  }
+
+  // A confirmation form under an operation rabbit_hole knows nothing about,
+  // standing in for the Trash module's purge and restore forms.
+  $entity_types['node']->setFormClass('rabbit_hole_test_confirm', TestConfirmForm::class);
+
+  // A plain entity form under an operation that rabbit_hole excludes by name.
+  $entity_types['node']->setFormClass('purge', ContentEntityForm::class);
+}

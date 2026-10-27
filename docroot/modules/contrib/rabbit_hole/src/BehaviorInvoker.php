@@ -2,6 +2,7 @@
 
 namespace Drupal\rabbit_hole;
 
+use Drupal\Core\Cache\CacheableResponseInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Session\AccountProxyInterface;
@@ -74,14 +75,7 @@ class BehaviorInvoker implements BehaviorInvokerInterface {
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
    */
-  public function __construct(
-    BehaviorSettingsManager $rabbit_hole_behavior_settings_manager,
-    RabbitHoleBehaviorPluginManager $plugin_manager_rabbit_hole_behavior_plugin,
-    RabbitHoleEntityPluginManager $plugin_manager_rabbit_hole_entity_plugin,
-    EntityExtender $entity_extender,
-    AccountProxyInterface $current_user,
-    ModuleHandlerInterface $module_handler = NULL
-  ) {
+  public function __construct(BehaviorSettingsManager $rabbit_hole_behavior_settings_manager, RabbitHoleBehaviorPluginManager $plugin_manager_rabbit_hole_behavior_plugin, RabbitHoleEntityPluginManager $plugin_manager_rabbit_hole_entity_plugin, EntityExtender $entity_extender, AccountProxyInterface $current_user, ?ModuleHandlerInterface $module_handler = NULL) {
     $this->rhBehaviorSettingsManager = $rabbit_hole_behavior_settings_manager;
     $this->rhBehaviorPluginManager = $plugin_manager_rabbit_hole_behavior_plugin;
     $this->rhEntityPluginManager = $plugin_manager_rabbit_hole_entity_plugin;
@@ -89,6 +83,7 @@ class BehaviorInvoker implements BehaviorInvokerInterface {
     $this->currentUser = $current_user;
     if (!$module_handler) {
       @trigger_error('This module handler workaround is deprecated in rabbit_hole:8.x-1.0 version and will be removed in rabbit_hole:2.x-2.0. The module_handler service must be passed to ' . __NAMESPACE__ . '\BehaviorInvoker::__construct(). See https://www.drupal.org/project/rabbit_hole/issues/3232505', E_USER_DEPRECATED);
+      // @phpstan-ignore-next-line
       $module_handler = \Drupal::moduleHandler();
     }
     $this->moduleHandler = $module_handler;
@@ -101,12 +96,12 @@ class BehaviorInvoker implements BehaviorInvokerInterface {
     $request = $event->getRequest();
     // Don't process events with HTTP exceptions - those have either been thrown
     // by us or have nothing to do with rabbit hole.
-    if ($request->get('exception') != NULL) {
+    if ($request->attributes->get('exception') != NULL) {
       return FALSE;
     }
 
     // Get the route from the request.
-    if ($route = $request->get('_route')) {
+    if ($route = $request->attributes->get('_route')) {
       // Only continue if the request route is the an entity canonical.
       if (preg_match('/^entity\.(.+)\.canonical$/', $route)) {
         // We check for all of our known entity keys that work with rabbit hole
@@ -114,7 +109,7 @@ class BehaviorInvoker implements BehaviorInvokerInterface {
         // should also be the only one).
         $entity_keys = $this->getPossibleEntityTypeKeys();
         foreach ($entity_keys as $ekey) {
-          $entity = $request->get($ekey);
+          $entity = $request->attributes->get($ekey);
           if (isset($entity) && $entity instanceof ContentEntityInterface) {
             return $entity;
           }
@@ -128,7 +123,7 @@ class BehaviorInvoker implements BehaviorInvokerInterface {
   /**
    * {@inheritdoc}
    */
-  public function processEntity(ContentEntityInterface $entity, Response $current_response = NULL) {
+  public function processEntity(ContentEntityInterface $entity, ?Response $current_response = NULL) {
     $plugin = $this->getBehaviorPlugin($entity);
 
     if ($plugin === NULL) {
@@ -163,12 +158,43 @@ class BehaviorInvoker implements BehaviorInvokerInterface {
       // Alter the response before it is returned.
       $this->moduleHandler->alter('rabbit_hole_response', $response, $entity);
 
+      if ($response instanceof CacheableResponseInterface) {
+        $this->addInvokerCacheability($response, $entity);
+      }
+
       return $response;
     }
     // All other cases return NULL, meaning the response is unchanged.
     else {
       return NULL;
     }
+  }
+
+  /**
+   * Adds the cacheability of the behavior lookup itself to a response.
+   *
+   * Deciding which behavior applies depends on the bundle's Rabbit Hole
+   * settings, on the entity and on the "rabbit hole bypass" permission of the
+   * current user. Without this metadata a cached response would survive a
+   * settings change or be reused for a user who may bypass Rabbit Hole.
+   *
+   * @param \Drupal\Core\Cache\CacheableResponseInterface $response
+   *   The response to add the cacheability to.
+   * @param \Drupal\Core\Entity\ContentEntityInterface $entity
+   *   The entity the behavior was invoked on.
+   */
+  protected function addInvokerCacheability(CacheableResponseInterface $response, ContentEntityInterface $entity) {
+    $entity_type = $entity->getEntityType();
+    $bundle_entity_type = $entity_type->getBundleEntityType();
+    $config = $this->rhBehaviorSettingsManager->loadBehaviorSettingsAsConfig(
+      $bundle_entity_type ?: $entity_type->id(),
+      $bundle_entity_type ? $entity->bundle() : NULL
+    );
+
+    $response->getCacheableMetadata()
+      ->addCacheableDependency($config)
+      ->addCacheableDependency($entity)
+      ->addCacheContexts(['user.permissions']);
   }
 
   /**
