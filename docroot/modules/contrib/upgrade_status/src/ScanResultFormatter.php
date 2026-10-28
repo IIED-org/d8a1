@@ -9,7 +9,8 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\KeyValueStore\KeyValueFactoryInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
-use MathieuViossat\Util\ArrayToTextTable;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use dekor\ArrayToTextTable;
 
 /**
  * Format scan results for display or export.
@@ -62,7 +63,7 @@ class ScanResultFormatter {
     KeyValueFactoryInterface $key_value_factory,
     DateFormatterInterface $dateFormatter,
     TimeInterface $time,
-    ModuleHandlerInterface $module_handler
+    ModuleHandlerInterface $module_handler,
   ) {
     $this->scanResultStorage = $key_value_factory->get('upgrade_status_scan_results');
     $this->dateFormatter = $dateFormatter;
@@ -87,6 +88,7 @@ class ScanResultFormatter {
    *
    * @param \Drupal\Core\Extension\Extension $extension
    *   Drupal extension object.
+   *
    * @return null|array
    *   Scan results array or null if no scan results are saved.
    */
@@ -117,7 +119,7 @@ class ScanResultFormatter {
           '#markup' => $this->t(
             'No deprecation scanning data available. <a href="@url">Go to the Upgrade Status form</a>.',
             [
-              '@url' => Url::fromRoute('upgrade_status.report')->toString()
+              '@url' => Url::fromRoute('upgrade_status.report')->toString(),
             ]
           ),
         ],
@@ -140,13 +142,6 @@ class ScanResultFormatter {
         '#weight' => -10,
       ],
     ];
-    if (!empty($result['plans'])) {
-      $build['plans'] = [
-        '#type' => 'markup',
-        '#markup' => '<div class="list-description">' . $result['plans'] . '</div>',
-        '#weight' => 50,
-      ];
-    }
 
     // If this project had no known issues found, report that.
     if ($project_error_count === 0) {
@@ -171,7 +166,7 @@ class ScanResultFormatter {
           $short_path = 'web/' . $short_path;
         }
         // Allow paths and namespaces to wrap. Emphasize filename as it may
-        // show up in the middle of the info
+        // show up in the middle of the info.
         $short_path = str_replace('/', '/<wbr>', $short_path);
         if (strpos($short_path, 'in context of')) {
           $short_path = preg_replace('!/([^/]+)( \(in context of)!', '/<strong>\1</strong>\2', $short_path);
@@ -182,10 +177,10 @@ class ScanResultFormatter {
         }
 
         // @todo could be more accurate with reflection but not sure it is even possible as the reflected
-        //   code may not be in the runtime at this point (eg. functions in include files)
+        //   code may not be in the runtime at this point
+        //   (eg. functions in include files)
         //   see https://www.php.net/manual/en/reflectionfunctionabstract.getfilename.php
         //   see https://www.php.net/manual/en/reflectionclass.getfilename.php
-
         // Link to documentation for a function in this specific Drupal version.
         $api_version = preg_replace('!^(8\.\d+)\..+$!', '\1', \Drupal::VERSION) . '.x';
         $api_link = 'https://api.drupal.org/api/drupal/' . $api_version . '/search/';
@@ -208,7 +203,7 @@ class ScanResultFormatter {
             }
 
             if (count($path_parts)) {
-              $class_file .= '!' . join('!', $path_parts);
+              $class_file .= '!' . implode('!', $path_parts);
             }
 
             $class_file .= '!' . $class . '.php';
@@ -241,7 +236,7 @@ class ScanResultFormatter {
             '#markup' => $short_path,
             '#wrapper_attributes' => [
               'class' => ['status-info'],
-            ]
+            ],
           ],
           'line' => [
             '#type' => 'markup',
@@ -261,31 +256,31 @@ class ScanResultFormatter {
     $group_help = [
       'rector' => [
         $this->t('Fix now with automation'),
-        'rector-covered',
-        $this->t('Avoid some manual work by using <a href="@drupal-rector">drupal-rector to fix issues automatically</a> or <a href="@upgrade-rector">Upgrade Rector to generate patches</a>.', ['@drupal-rector' => 'https://www.drupal.org/project/rector', '@upgrade-rector' => 'https://www.drupal.org/project/upgrade_rector']),
+        'color-warning rector-covered',
+        $this->t('Avoid some manual work by using <a href="@drupal-rector">drupal-rector to fix issues automatically</a>.', ['@drupal-rector' => 'https://www.drupal.org/project/rector']),
       ],
       'now' => [
         $this->t('Fix now manually'),
-        'known-errors',
+        'color-error',
         $this->t('It does not seem like these are covered by automation yet. <a href="@drupal-rector">Contribute to drupal-rector to provide coverage</a>. Fix manually in the meantime.', ['@drupal-rector' => 'https://www.drupal.org/project/rector']),
       ],
       'uncategorized' => [
         $this->t('Check manually'),
-        'known-warnings',
+        'color-warning',
         $this->t('Errors without Drupal source version numbers including parse errors and use of APIs from dependencies.'),
       ],
       'later' => [
         $this->t('Fix later'),
-        'known-later',
+        'color-warning known-later',
         // Issues to fix later need different guidance based on whether they
         // were found in a contributed project or a custom project.
         !empty($extension->info['project']) ?
-          $this->t('Based on the Drupal deprecation version number of these, fixing them may make the contributed project incompatible with supported Drupal core versions.') :
-          $this->t('Based on the Drupal deprecation version number of these, fixing them will likely make them incompatible with your current Drupal version.')
+        $this->t('Based on the Drupal deprecation version number of these, fixing them may make the contributed project incompatible with supported Drupal core versions.') :
+        $this->t('Based on the Drupal deprecation version number of these, fixing them will likely make them incompatible with your current Drupal version.'),
       ],
       'ignore' => [
         $this->t('Ignore'),
-        'known-ignore',
+        'color-warning known-ignore',
         $this->t('Deprecated API use for APIs removed in future Drupal major versions is not required to fix yet.'),
       ],
     ];
@@ -295,19 +290,18 @@ class ScanResultFormatter {
         continue;
       }
       $build['groups'][$group_key] = [
+        '#prefix' => '<div class="upgrade-status-project-result-group">',
+        '#suffix' => '</div>',
         'title' => [
           '#type' => 'markup',
-          '#markup' => '<h3 class="upgrade-status-group">' . $group_info[0] . '</h3>',
+          '#markup' => '<h3>' . $group_info[0] . '</h3>',
         ],
         'description' => [
           '#type' => 'markup',
-          '#markup' => '<div class="upgrade-status-description">' . $group_info[2] . '</div>',
+          '#markup' => '<div class="description">' . $group_info[2] . '</div>',
         ],
         'errors' => [
           '#type' => 'table',
-          '#attributes' => [
-            'class' => ['upgrade-status-error-list'],
-          ],
           '#header' => [
             'filename' => $this->t('File name'),
             'line' => $this->t('Line'),
@@ -333,7 +327,7 @@ class ScanResultFormatter {
     }
     $build['summary'] = [
       '#type' => '#markup',
-      '#markup' => '<div class="list-description">' . join(' ', $summary) . '</div>',
+      '#markup' => '<div class="list-description">' . implode(' ', $summary) . '</div>',
       '#weight' => 5,
     ];
 
@@ -415,18 +409,10 @@ class ScanResultFormatter {
       '#title' => $label,
       'date' => [
         '#type' => 'markup',
-        '#markup' =>  wordwrap($this->t('Scanned on @date.', ['@date' => $this->dateFormatter->format($result['date'])]), 80, "\n", true),
+        '#markup' => wordwrap($this->t('Scanned on @date.', ['@date' => $this->dateFormatter->format($result['date'])]), 80, "\n", TRUE),
         '#weight' => -10,
       ],
     ];
-
-    if (!empty($result['plans'])) {
-      $build['plans'] = [
-        '#type' => 'markup',
-        '#markup' => wordwrap(strip_tags($result['plans']), 80, "\n", true),
-        '#weight' => 50,
-      ];
-    }
 
     // If this project had no known issues found, report that.
     if ($project_error_count === 0) {
@@ -474,13 +460,13 @@ class ScanResultFormatter {
 
         $message = str_replace("\n", ' ', $error['message']);
         $table[] = [
-          'status' => wordwrap($level_label, 8, "\n", true),
-          'line' => wordwrap($error['line'], 7, "\n", true),
-          'message' => wordwrap($message . "\n", 60, "\n", true)
+          'status' => wordwrap($level_label, 8, "\n", TRUE),
+          'line' => wordwrap($error['line'], 7, "\n", TRUE),
+          'message' => wordwrap($message . "\n", 60, "\n", TRUE),
         ];
       }
       $asciiRenderer = new ArrayToTextTable($table);
-      $tables .= $asciiRenderer->getTable() . "\n";
+      $tables .= $asciiRenderer->render() . "\n";
     }
     $build['data'] = $tables;
 
@@ -496,7 +482,7 @@ class ScanResultFormatter {
     }
     $build['summary'] = [
       '#type' => '#markup',
-      '#markup' => wordwrap(join(' ', $summary), 80, "\n", true),
+      '#markup' => wordwrap(implode(' ', $summary), 80, "\n", TRUE),
       '#weight' => 5,
     ];
 

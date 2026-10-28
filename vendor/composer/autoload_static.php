@@ -27,6 +27,7 @@ class ComposerStaticInit102e3ef181e3919390ea5de6deb1dfeb
         '2f69d3914119f042cca9e44442d5ce95' => __DIR__ . '/../..' . '/docroot/core/includes/bootstrap.inc',
         '38a4a83ee9437fa4c0c7a481bbf0d2a0' => __DIR__ . '/../..' . '/docroot/core/includes/guzzle_file_cookie_jar_shim.php',
         '23c18046f52bef3eea034657bafda50f' => __DIR__ . '/..' . '/symfony/polyfill-php81/bootstrap.php',
+        '9b38cf48e83f5d8f60375221cd213eee' => __DIR__ . '/..' . '/phpstan/phpstan/bootstrap.php',
         'ace6d88241f812b4accb2d847454aef6' => __DIR__ . '/..' . '/halaxa/json-machine/src/functions.php',
         '9d2b9fc6db0f153a0a149fefb182415e' => __DIR__ . '/..' . '/symfony/polyfill-php84/bootstrap.php',
         '9c67151ae59aff4788964ce8eb2a0f43' => __DIR__ . '/..' . '/clue/stream-filter/src/functions_include.php',
@@ -43,9 +44,17 @@ class ComposerStaticInit102e3ef181e3919390ea5de6deb1dfeb
             'phootwork\\lang\\' => 15,
             'phootwork\\collection\\' => 21,
         ),
+        'm' =>
+        array (
+            'mglaman\\PHPStanDrupal\\' => 22,
+        ),
         'l' =>
         array (
             'lsolesen\\pel\\' => 13,
+        ),
+        'd' =>
+        array (
+            'dekor\\' => 6,
         ),
         'c' =>
         array (
@@ -114,6 +123,7 @@ class ComposerStaticInit102e3ef181e3919390ea5de6deb1dfeb
             'PhpParser\\' => 10,
             'Peast\\' => 6,
             'ParagonIE\\ConstantTime\\' => 23,
+            'PHPStan\\' => 8,
         ),
         'O' =>
         array (
@@ -215,9 +225,17 @@ class ComposerStaticInit102e3ef181e3919390ea5de6deb1dfeb
         array (
             0 => __DIR__ . '/..' . '/phootwork/collection',
         ),
+        'mglaman\\PHPStanDrupal\\' =>
+        array (
+            0 => __DIR__ . '/..' . '/mglaman/phpstan-drupal/src',
+        ),
         'lsolesen\\pel\\' =>
         array (
             0 => __DIR__ . '/..' . '/fileeye/pel/src',
+        ),
+        'dekor\\' =>
+        array (
+            0 => __DIR__ . '/..' . '/dekor/php-array-table/src',
         ),
         'cweagans\\Composer\\' =>
         array (
@@ -419,6 +437,10 @@ class ComposerStaticInit102e3ef181e3919390ea5de6deb1dfeb
         'ParagonIE\\ConstantTime\\' =>
         array (
             0 => __DIR__ . '/..' . '/paragonie/constant_time_encoding/src',
+        ),
+        'PHPStan\\' =>
+        array (
+            0 => __DIR__ . '/..' . '/phpstan/phpstan-deprecation-rules/src',
         ),
         'Otp\\' =>
         array (

@@ -9,13 +9,13 @@ use Drupal\Core\Extension\Extension;
 use Drupal\Core\Theme\Registry;
 use PhpParser\Error;
 use PhpParser\Node;
-use PhpParser\NodeFinder;
-use PhpParser\ParserFactory;
 use PhpParser\Node\Expr\ArrayDimFetch;
-use PhpParser\Node\Expr\ArrayItem;
 use PhpParser\Node\Expr\Assign;
 use PhpParser\Node\Scalar\String_;
 use PhpParser\Node\Stmt\Function_;
+use PhpParser\NodeFinder;
+use PhpParser\ParserFactory;
+use PhpParser\PhpVersion;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -37,7 +37,7 @@ final class ThemeFunctionDeprecationAnalyzer {
   /**
    * Constructs a new theme function deprecation analyzer.
    *
-   * @param \Symfony\Component\DependencyInjection\ContainerInterface $this->container
+   * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
    *   The service container.
    */
   public function __construct(ContainerInterface $container) {
@@ -51,12 +51,13 @@ final class ThemeFunctionDeprecationAnalyzer {
    *   The extension to be analyzed.
    *
    * @return \Drupal\upgrade_status\DeprecationMessage[]
+   *   The deprecation message.
    */
   public function analyze(Extension $extension): array {
     $deprecation_messages = [];
     // Analyze hook_theme and hook_theme_registry_alter functions.
-    $deprecation_messages = array_merge($deprecation_messages, $this->analyzeFunction($extension->getName() . '_' . 'theme', $extension));
-    $deprecation_messages = array_merge($deprecation_messages, $this->analyzeFunction($extension->getName() . '_' . 'theme_registry_alter', $extension));
+    $deprecation_messages = array_merge($deprecation_messages, $this->analyzeFunction($extension->getName() . '_theme', $extension));
+    $deprecation_messages = array_merge($deprecation_messages, $this->analyzeFunction($extension->getName() . '_theme_registry_alter', $extension));
 
     // If a theme is being analyzed, theme function overrides need to be
     // analyzed.
@@ -74,8 +75,9 @@ final class ThemeFunctionDeprecationAnalyzer {
           $function = new \ReflectionFunction($extension->getName() . '_' . $machine_name);
           $file = $function->getFileName();
           $line = $function->getStartLine();
-          $deprecation_messages[$extension->getName() . '_' . $machine_name] = new DeprecationMessage(sprintf('The theme is overriding the "%s" theme function. Theme functions are deprecated. For more info, see https://www.drupal.org/node/2575445.', $machine_name), $file, $line);
-        } catch (\ReflectionException $e) {
+          $deprecation_messages[$extension->getName() . '_' . $machine_name] = new DeprecationMessage(sprintf('The theme is overriding the "%s" theme function. Theme functions are deprecated. For more info, see https://www.drupal.org/node/2575445.', $machine_name), $file, $line, 'ThemeFunctionDeprecationAnalyzer');
+        }
+        catch (\ReflectionException $e) {
           // This should never happen because drupal_find_theme_functions()
           // ensures that the function exists.
         }
@@ -92,29 +94,38 @@ final class ThemeFunctionDeprecationAnalyzer {
    * functions could be generated dynamically in a number of different ways.
    * However, this will be useful in most use cases.
    *
-   * @param $function
+   * @param string $function
    *   The function to be analyzed.
    * @param \Drupal\Core\Extension\Extension $extension
    *   The extension that is being tested.
    *
    * @return \Drupal\upgrade_status\DeprecationMessage[]
+   *   The deprecation message.
    */
   private function analyzeFunction(string $function, Extension $extension): array {
     $deprecation_messages = [];
 
     try {
       $function_reflection = new \ReflectionFunction($function);
-    } catch (\ReflectionException $e) {
+    }
+    catch (\ReflectionException $e) {
       // Not all extensions implement theme hooks.
       return [];
     }
 
-    $parser = (new ParserFactory())->create(ParserFactory::PREFER_PHP7);
+    $parser_factory = new ParserFactory();
+    if (method_exists($parser_factory, 'create')) {
+      $parser = $parser_factory->create(ParserFactory::PREFER_PHP7);
+    }
+    else {
+      $parser = $parser_factory->createForVersion(PhpVersion::fromString("7.4"));
+    }
     try {
       $ast = $parser->parse(file_get_contents($function_reflection->getFileName()));
-    } catch (Error $error) {
+    }
+    catch (Error $error) {
       // The function cannot be evaluated because of a syntax error.
-      $deprecation_messages[] = new DeprecationMessage(sprintf('Parse error while processing the %s hook implementation.', $theme_function), $function_reflection->getFileName(), $node->getStartLine());
+      $deprecation_messages[] = new DeprecationMessage(sprintf('Parse error while processing the %s hook implementation.', $function), $function_reflection->getFileName(), $function_reflection->getStartLine(), 'ThemeFunctionDeprecationAnalyzer');
     }
 
     if (!is_iterable($ast)) {
@@ -140,12 +151,12 @@ final class ThemeFunctionDeprecationAnalyzer {
     //   ];
     // }
     // @endcode
-    $theme_function_nodes = $finder->find([$function_node], function(Node $node) {
-      return ($node instanceof ArrayItem && $node->key instanceof String_ && $node->key->value === 'function');
+    $theme_function_nodes = $finder->find([$function_node], function (Node $node) {
+      return (isset($node->key) && $node->key instanceof String_ && $node->key->value === 'function');
     });
     foreach ($theme_function_nodes as $node) {
       $theme_function = $node->value instanceof String_ ? sprintf('"%s"', $node->value->value) : 'an unknown';
-      $deprecation_messages[] = new DeprecationMessage(sprintf('The %s is defining %s theme function. Theme functions are deprecated. For more info, see https://www.drupal.org/node/2575445.', $extension->getType(), $theme_function), $function_reflection->getFileName(), $node->getStartLine());
+      $deprecation_messages[] = new DeprecationMessage(sprintf('The %s is defining %s theme function. Theme functions are deprecated. For more info, see https://www.drupal.org/node/2575445.', $extension->getType(), $theme_function), $function_reflection->getFileName(), $node->getStartLine(), 'ThemeFunctionDeprecationAnalyzer');
     }
 
     // Find theme functions that are being added to an existing array using
@@ -155,12 +166,12 @@ final class ThemeFunctionDeprecationAnalyzer {
     //   $theme_registry['theme_hook']['function'] = 'another_theme_function';
     // }
     // @endcode
-    $theme_function_dim_nodes = $finder->find([$function_node], function(Node $node) {
+    $theme_function_dim_nodes = $finder->find([$function_node], function (Node $node) {
       return $node instanceof Assign && $node->var instanceof ArrayDimFetch && $node->var->dim instanceof String_ && $node->var->dim->value === 'function';
     });
     foreach ($theme_function_dim_nodes as $node) {
       $theme_function = $node->expr instanceof String_ ? sprintf('"%s"', $node->expr->value) : 'an unknown';
-      $deprecation_messages[] = new DeprecationMessage(sprintf('The %s is defining %s theme function. Theme functions are deprecated. For more info, see https://www.drupal.org/node/2575445.', $extension->getType(), $theme_function), $function_reflection->getFileName(), $node->getStartLine());
+      $deprecation_messages[] = new DeprecationMessage(sprintf('The %s is defining %s theme function. Theme functions are deprecated. For more info, see https://www.drupal.org/node/2575445.', $extension->getType(), $theme_function), $function_reflection->getFileName(), $node->getStartLine(), 'ThemeFunctionDeprecationAnalyzer');
     }
 
     return $deprecation_messages;

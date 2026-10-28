@@ -26,6 +26,7 @@ return array(
     '2f69d3914119f042cca9e44442d5ce95' => $baseDir . '/docroot/core/includes/bootstrap.inc',
     '38a4a83ee9437fa4c0c7a481bbf0d2a0' => $baseDir . '/docroot/core/includes/guzzle_file_cookie_jar_shim.php',
     '23c18046f52bef3eea034657bafda50f' => $vendorDir . '/symfony/polyfill-php81/bootstrap.php',
+    '9b38cf48e83f5d8f60375221cd213eee' => $vendorDir . '/phpstan/phpstan/bootstrap.php',
     'ace6d88241f812b4accb2d847454aef6' => $vendorDir . '/halaxa/json-machine/src/functions.php',
     '9d2b9fc6db0f153a0a149fefb182415e' => $vendorDir . '/symfony/polyfill-php84/bootstrap.php',
     '9c67151ae59aff4788964ce8eb2a0f43' => $vendorDir . '/clue/stream-filter/src/functions_include.php',
