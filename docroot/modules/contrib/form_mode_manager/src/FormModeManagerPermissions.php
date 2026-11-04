@@ -115,12 +115,21 @@ class FormModeManagerPermissions implements ContainerInjectionInterface {
       if ($form_mode_loaded instanceof EntityFormMode) {
         $placeholders = array_merge($entity_placeholder, [
           '%form_mode_label' => $form_mode_loaded->label(),
-          ':url' => $form_mode_loaded->toUrl()->toString(),
         ]);
+
+        // The form mode edit-form link template is provided by field_ui, so
+        // only link to it when that module is enabled.
+        if ($form_mode_loaded->hasLinkTemplate('edit-form')) {
+          $placeholders[':url'] = $form_mode_loaded->toUrl()->toString();
+          $title = $this->t('Use <a href=":url">%form_mode_label</a> form mode with <b>%type_id</b> entity', $placeholders);
+        }
+        else {
+          $title = $this->t('Use %form_mode_label form mode with <b>%type_id</b> entity', $placeholders);
+        }
 
         $perms_per_mode += [
           "use {$form_mode_loaded->id()} form mode" => [
-            'title' => $this->t('Use <a href=":url">%form_mode_label</a> form mode with <b>%type_id</b> entity', $placeholders),
+            'title' => $title,
             'description' => [
               '#prefix' => '<em>',
               '#markup' => $this->t('This permission control access of <b>%type_id</b> entity with %form_mode_label form mode.', $placeholders),

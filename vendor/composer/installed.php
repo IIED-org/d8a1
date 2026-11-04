@@ -3,7 +3,7 @@
         'name' => 'acquia/acquia-ra-composer',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '950f286c81cb64cd662127b68f3257caef5799c0',
+        'reference' => 'a841e31270a1861753d95cc12051203e1649c220',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -22,7 +22,7 @@
         'acquia/acquia-ra-composer' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '950f286c81cb64cd662127b68f3257caef5799c0',
+            'reference' => 'a841e31270a1861753d95cc12051203e1649c220',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

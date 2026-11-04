@@ -5498,7 +5498,9 @@
                         "message": "Covered by Drupal's security advisory policy"
                     }
                 },
-                "patches_applied": []
+                "patches_applied": {
+                    "Permissions page crashes when field_ui is not enabled - https://github.com/IIED-org/d8a1/issues/212": "patches/form_mode_manager-field-ui-optional.patch"
+                }
             },
             "installation-source": "dist",
             "notification-url": "https://packages.drupal.org/8/downloads",
