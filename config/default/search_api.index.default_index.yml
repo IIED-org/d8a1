@@ -20,7 +20,6 @@ dependencies:
     - node
     - paragraphs
     - search_api_solr
-    - synonyms
     - taxonomy
     - user
 _core:
@@ -199,14 +198,6 @@ field_settings:
     dependencies:
       module:
         - node
-  synonyms:
-    label: Synonyms
-    datasource_id: 'entity:taxonomy_term'
-    property_path: synonyms
-    type: string
-    dependencies:
-      module:
-        - synonyms
   target_revision_id:
     label: 'Paragraph revision ID'
     datasource_id: 'entity:node'
@@ -317,7 +308,6 @@ processor_settings:
       - name
       - parent_id
       - rendered_item
-      - synonyms
       - title
       - type
     title: true
@@ -337,7 +327,6 @@ processor_settings:
       - author
       - name
       - rendered_item
-      - synonyms
       - title
       - type
   language_with_fallback: {  }
@@ -409,7 +398,6 @@ processor_settings:
       - author
       - name
       - rendered_item
-      - synonyms
       - title
       - type
 tracker_settings:
