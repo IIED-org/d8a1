@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests\geofield\Functional;
 
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\entity_test\Entity\EntityTest;
@@ -14,6 +16,8 @@ use Drupal\Tests\field\Functional\FieldTestBase;
  *
  * @group geofield
  */
+#[Group('geofield')]
+#[RunTestsInSeparateProcesses]
 class GeofieldWidgetTest extends FieldTestBase {
 
   use StringTranslationTrait;
@@ -234,6 +238,7 @@ class GeofieldWidgetTest extends FieldTestBase {
 
     // Check basic data.
     $this->drupalGet('entity_test/manage/' . $entity->id() . '/edit');
+    $this->assertSession->statusCodeEquals(200);
     $this->assertSession->pageTextContains('geofield_field');
     $this->assertSession->pageTextContains('Top');
     $this->assertSession->pageTextContains('Right');

@@ -2,24 +2,28 @@
 
 namespace Drupal\geofield\Plugin\Field\FieldWidget;
 
+use Drupal\Core\Field\Attribute\FieldWidget;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Widget implementation of the 'geofield_default' widget.
- *
- * @FieldWidget(
- *   id = "geofield_default",
- *   label = @Translation("Geofield (WKT)"),
- *   field_types = {
- *     "geofield"
- *   }
- * )
  */
+#[FieldWidget(
+  id: 'geofield_default',
+  label: new TranslatableMarkup('Geofield (WKT)'),
+  field_types: [
+    'geofield',
+  ],
+)]
 class GeofieldDefaultWidget extends GeofieldBaseWidget {
 
   /**
    * {@inheritdoc}
+   *
+   * @return array
+   *   The default settings, keyed by setting name.
    */
   public static function defaultSettings() {
     return [
@@ -29,6 +33,9 @@ class GeofieldDefaultWidget extends GeofieldBaseWidget {
 
   /**
    * {@inheritdoc}
+   *
+   * @return array
+   *   The form elements for the settings.
    */
   public function settingsForm(array $form, FormStateInterface $form_state) {
     $elements = parent::settingsForm($form, $form_state);
@@ -45,6 +52,9 @@ class GeofieldDefaultWidget extends GeofieldBaseWidget {
 
   /**
    * {@inheritdoc}
+   *
+   * @return array
+   *   The lines of the settings summary.
    */
   public function settingsSummary() {
     return [
@@ -54,24 +64,31 @@ class GeofieldDefaultWidget extends GeofieldBaseWidget {
 
   /**
    * {@inheritdoc}
+   *
+   * @return array
+   *   The form element for the field item.
    */
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
+    /** @var \Drupal\geofield\Plugin\Field\FieldType\GeofieldItem $item */
+    $item = $items[$delta];
 
     $element += [
       '#type' => 'textarea',
-      '#default_value' => $items[$delta]->value ?: NULL,
+      '#default_value' => $item->value ?: NULL,
     ];
 
     if ($this->getSetting('geometry_validation')) {
       // Append notice to the field description in the widget:
-      $element['#description'] = $element['#description'] . '<br />' . $this->t('Geometry Validation enabled (valid WKT or Geojson format & values required)');
+      $geometry_validation_enabled = $this->t('Geometry Validation enabled (valid <a href="https://en.wikipedia.org/wiki/Well-known_text_representation_of_geometry" target="blank">WKT</a> or <a href="https://en.wikipedia.org/wiki/GeoJSON" target="blank">GeoJson</a> format & values required).');
+      $element['#description'] = !empty($element['#description']) ? $element['#description'] . '<br />' . $geometry_validation_enabled : $geometry_validation_enabled;
       $element['#element_validate'] = [
         [get_class($this), 'validateGeofieldGeometryText'],
       ];
     }
     else {
       // Append notice to the field description in the widget:
-      $element['#description'] = $element['#description'] . '<br />' . $this->t('Geometry Validation disabled (invalid WKT or Geojson format & values will be set as NULL)');
+      $geometry_validation_not_enabled = $this->t('Geometry Validation disabled (invalid WKT or Geojson format & values will be set as NULL.)');
+      $element['#description'] = !empty($element['#description']) ? $element['#description'] . '<br />' . $geometry_validation_not_enabled : $geometry_validation_not_enabled;
     }
 
     return ['value' => $element];
@@ -79,6 +96,9 @@ class GeofieldDefaultWidget extends GeofieldBaseWidget {
 
   /**
    * {@inheritdoc}
+   *
+   * @return array
+   *   The field values, in the form the field type stores.
    */
   public function massageFormValues(array $values, array $form, FormStateInterface $form_state) {
     foreach ($values as $delta => $value) {
