@@ -8,6 +8,7 @@ use Drupal\tfa\TfaLoginTrait;
 use Drupal\user\Controller\UserController;
 use Drupal\user\UserInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 /**
@@ -59,7 +60,7 @@ abstract class TfaUserControllerBase extends UserController {
    * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
    *   If $uid is for a blocked user or invalid user ID.
    */
-  protected function doResetPassLogin($uid, $timestamp, $hash, $request = NULL) {
+  protected function doResetPassLogin($uid, $timestamp, $hash, ?Request $request = NULL) {
     /** @var \Drupal\user\UserInterface $user */
     $user = $this->userStorage->load($uid);
     $this->setUser($user);

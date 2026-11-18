@@ -1,0 +1,5 @@
+services:
+  purge_autowire_test.consumer:
+    class: Drupal\purge_autowire_test\AutowiredConsumer
+    autowire: true
+    public: true

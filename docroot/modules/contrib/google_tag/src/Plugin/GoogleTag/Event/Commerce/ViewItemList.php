@@ -22,7 +22,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   context_definitions = {
  *      "item_list_id" = @ContextDefinition("string", required = FALSE),
  *      "item_list_name" = @ContextDefinition("string", required = FALSE),
- *      "items" = @ContextDefinition("entity:commerce_product_variation", multiple = TRUE, required = FALSE),
+ *      "items" = @ContextDefinition(
+ *        "entity:commerce_product_variation",
+ *        multiple = TRUE,
+ *        required = FALSE
+ *      ),
  *   }
  * )
  *
@@ -37,7 +41,7 @@ final class ViewItemList extends EventBase implements ContainerFactoryPluginInte
    *
    * @var \Drupal\commerce_store\CurrentStoreInterface
    */
-  private CurrentStoreInterface $currentStore;
+  protected CurrentStoreInterface $currentStore;
 
   /**
    * {@inheritDoc}
@@ -59,12 +63,16 @@ final class ViewItemList extends EventBase implements ContainerFactoryPluginInte
       'item_list_id' => $this->getContextValue('item_list_id'),
       'item_list_name' => $this->getContextValue('item_list_name'),
       'items' => array_map(function (ProductVariationInterface $item) use ($affiliation) {
-        return [
+        $item_data = [
           'item_name' => $item->label(),
           'item_id' => $item->getSku(),
           'affiliation' => $affiliation,
-          'price' => $this->formatPriceNumber($item->getPrice()),
         ];
+        $price = $item->getPrice();
+        if ($price !== NULL) {
+          $item_data['price'] = $this->formatPriceNumber($price);
+        }
+        return $item_data;
       }, $items),
     ];
   }

@@ -23,6 +23,19 @@ final class SearchApiSubscriber implements EventSubscriberInterface {
   private EventCollectorInterface $collector;
 
   /**
+   * Search terms already pushed as a search event, keyed by term.
+   *
+   * Views pages can render multiple displays that each execute a Search
+   * API query against the same keys (e.g. attachment/block displays on a
+   * combined search results page), each dispatching
+   * SearchApiEvents::PROCESSING_RESULTS separately. Without this guard a
+   * single user search would push one 'search' event per display.
+   *
+   * @var array<string, true>
+   */
+  private array $searchTerms = [];
+
+  /**
    * SearchApiSubscriber constructor.
    *
    * @param \Drupal\google_tag\EventCollectorInterface $collector
@@ -51,34 +64,41 @@ final class SearchApiSubscriber implements EventSubscriberInterface {
     $keys = $event->getResults()->getQuery()->getKeys();
 
     if ($keys !== NULL) {
-      if (is_array($keys)) {
-        // Ensure all elements of $keys are arrays.
-        $keys = array_map(function ($key) {
-          return is_array($key) ? $key : [$key];
-        }, $keys);
-        // Flatten the array.
-        $keys = array_reduce($keys, 'array_merge', []);
+      $search_term = implode(' ', $this->flattenKeys($keys));
+      if (isset($this->searchTerms[$search_term])) {
+        return;
       }
-      else {
-        // If $keys is not an array, convert it to an array.
-        $keys = [$keys];
-      }
-      // Convert all elements to strings.
-      $keys = array_map('strval', $keys);
-      // Filter out boolean operators.
-      $keys = array_filter($keys, function ($key) {
-        return !in_array($key, ['AND', 'OR', 'NOT']);
-      });
-      $keys = array_filter(
-          $keys,
-          [Element::class, 'child'],
-          ARRAY_FILTER_USE_KEY
-      );
+      $this->searchTerms[$search_term] = TRUE;
       $this->collector->addEvent('search', [
-        'search_term' => implode(' ', $keys),
+        'search_term' => $search_term,
       ]);
     }
+  }
 
+  /**
+   * Flattens parsed search keys into a list of search terms.
+   *
+   * Parsed keys can nest groups of keys to any depth. Properties such as
+   * "#conjunction" and "#negation" are skipped.
+   *
+   * @param mixed $keys
+   *   The search keys, as returned by QueryInterface::getKeys(), or a single
+   *   key or group of keys within them.
+   *
+   * @return string[]
+   *   The search terms.
+   */
+  private function flattenKeys(mixed $keys): array {
+    if (!is_array($keys)) {
+      return [(string) $keys];
+    }
+    $terms = [];
+    foreach ($keys as $key => $value) {
+      if (Element::child($key)) {
+        array_push($terms, ...$this->flattenKeys($value));
+      }
+    }
+    return $terms;
   }
 
 }

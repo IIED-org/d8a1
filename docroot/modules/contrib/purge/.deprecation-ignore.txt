@@ -1,0 +1,18 @@
+# This file contains patterns to be ignored while testing for use of
+# deprecated code. The GitLab CI templates append core's own file to it.
+# See https://www.drupal.org/node/3285162 for more details.
+
+# Symfony's DebugClassLoader asks every implementation of a core or PHP
+# interface to declare the native return types core may add later. purge's
+# services, plugin bases and forms are extended by downstream purger, queuer
+# and processor modules, so adding return types to them would break those
+# subclasses. Keep these silenced until a major release can add the types.
+%Method "[^"]+::[^"]+\(\)" might add "[^"]+" as a native return type declaration in the future\. Do the same in (?:implementation|child class) "Drupal\\(?:Tests\\)?purge(?:_[a-z_]+)?\\[^"]+" now to avoid errors or add an explicit @return annotation to suppress this message%
+
+# The same DebugClassLoader notice for Drush and its consolidation libraries,
+# which purge's Drush commands load. This is vendor code purge cannot change.
+%Method "[^"]+::[^"]+\(\)" might add "[^"]+" as a native return type declaration in the future\. Do the same in (?:implementation|child class) "(?:Consolidation|Drush)\\[^"]+" now to avoid errors or add an explicit @return annotation to suppress this message%
+
+# Drush 14 deprecates annotated command classes. Converting purge's commands to
+# Symfony Console commands is #3612620; that has to keep Drush 12 and 13 working.
+%^Since drush/drush 14\.0\.0: Convert to a Console command and build a DrushStyle instance\.%

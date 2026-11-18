@@ -4,12 +4,16 @@ namespace Drupal\Tests\purge\Kernel\TagsHeader;
 
 use Drupal\purge\Plugin\Purge\TagsHeader\PluginManager;
 use Drupal\Tests\purge\Kernel\KernelPluginManagerTestBase;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests \Drupal\purge\Plugin\Purge\TagsHeader\PluginManager.
  *
  * @group purge
  */
+#[Group('purge')]
+#[RunTestsInSeparateProcesses]
 class PluginManagerTest extends KernelPluginManagerTestBase {
 
   /**
@@ -33,6 +37,7 @@ class PluginManagerTest extends KernelPluginManagerTestBase {
     'id',
     'header_name',
     'dependent_purger_plugins',
+    'dependencies',
   ];
 
   /**
@@ -62,6 +67,9 @@ class PluginManagerTest extends KernelPluginManagerTestBase {
         $this->assertTrue(in_array($field, $this->annotationFields));
       }
       foreach ($this->annotationFields as $field) {
+        if ($field === 'dependencies') {
+          continue;
+        }
         $this->assertTrue(isset($md[$field]));
       }
     }

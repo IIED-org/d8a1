@@ -4,12 +4,16 @@ namespace Drupal\Tests\purge\Kernel\Queue;
 
 use Drupal\Core\DestructableInterface;
 use Drupal\Core\StreamWrapper\PublicStream;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests \Drupal\purge\Plugin\Purge\Queue\FileQueue.
  *
  * @group purge
  */
+#[Group('purge')]
+#[RunTestsInSeparateProcesses]
 class FileQueueTest extends PluginTestBase {
 
   /**
@@ -85,7 +89,7 @@ class FileQueueTest extends PluginTestBase {
     $this->assertTrue(file_exists($this->file));
     $this->setUpQueuePlugin();
     $claim = $this->queue->claimItem(1);
-    $this->assertTrue(is_object($claim));
+    $this->assertIsObject($claim);
     $this->assertEquals(1, $claim->item_id);
     $this->assertEquals('qwerty', $claim->data);
     $this->assertEquals(12345, $claim->created);

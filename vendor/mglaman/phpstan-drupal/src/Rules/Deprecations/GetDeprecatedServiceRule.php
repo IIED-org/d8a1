@@ -4,9 +4,12 @@ namespace mglaman\PHPStanDrupal\Rules\Deprecations;
 
 use mglaman\PHPStanDrupal\Drupal\DrupalServiceDefinition;
 use mglaman\PHPStanDrupal\Drupal\ServiceMap;
+use mglaman\PHPStanDrupal\Drupal\ServiceResultCacheValueExtension;
 use PhpParser\Node;
+use PHPStan\Analyser\DependencyTracker;
 use PHPStan\Analyser\Scope;
 use PHPStan\Rules\Rule;
+use PHPStan\Rules\RuleErrorBuilder;
 
 /**
  * @implements Rule<Node\Expr\MethodCall>
@@ -29,6 +32,9 @@ final class GetDeprecatedServiceRule implements Rule
         return Node\Expr\MethodCall::class;
     }
 
+    /**
+     * @param Scope&DependencyTracker $scope
+     */
     public function processNode(Node $node, Scope $scope): array
     {
         if (!$node->name instanceof Node\Identifier) {
@@ -55,9 +61,14 @@ final class GetDeprecatedServiceRule implements Rule
             return [];
         }
 
+        $scope->trackValueDependency(ServiceResultCacheValueExtension::class, $serviceName->value);
         $service = $this->serviceMap->getService($serviceName->value);
         if (($service instanceof DrupalServiceDefinition) && $service->isDeprecated()) {
-            return [$service->getDeprecatedDescription()];
+            return [
+                RuleErrorBuilder::message($service->getDeprecatedDescription())
+                    ->identifier('getDeprecatedService.deprecated')
+                    ->build(),
+            ];
         }
 
         return [];

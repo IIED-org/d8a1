@@ -2,20 +2,19 @@
 
 namespace Drupal\purge\Plugin\Purge\DiagnosticCheck;
 
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\purge\Attribute\PurgeDiagnosticCheck;
 use Drupal\purge\Plugin\Purge\Processor\ProcessorsServiceInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Processors.
- *
- * @PurgeDiagnosticCheck(
- *   id = "processorsavailable",
- *   title = @Translation("Processors"),
- *   description = @Translation("Checks if there is a processor that works the queue once items are in it."),
- *   dependent_queue_plugins = {},
- *   dependent_purger_plugins = {}
- * )
  */
+#[PurgeDiagnosticCheck(
+  id: 'processorsavailable',
+  title: new TranslatableMarkup('Processors'),
+  description: new TranslatableMarkup('Checks if there is a processor that works the queue once items are in it.'),
+)]
 class ProcessorsAvailableDiagnosticCheck extends DiagnosticCheckBase implements DiagnosticCheckInterface {
 
   /**

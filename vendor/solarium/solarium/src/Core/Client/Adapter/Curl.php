@@ -56,15 +56,13 @@ class Curl extends Configurable implements AdapterInterface, TimeoutAwareInterfa
         if (CURLE_OK !== curl_errno($handle)) {
             $errno = curl_errno($handle);
             $error = curl_error($handle);
-            curl_close($handle);
+
             throw new HttpException(sprintf('HTTP request failed, %s', $error), $errno);
         }
 
         $httpCode = curl_getinfo($handle, CURLINFO_RESPONSE_CODE);
         $headers = [];
         $headers[] = 'HTTP/1.1 '.$httpCode.' OK';
-
-        curl_close($handle);
 
         return new Response($httpResponse, $headers);
     }
@@ -190,7 +188,7 @@ class Curl extends Configurable implements AdapterInterface, TimeoutAwareInterfa
      *
      * @throws RuntimeException
      */
-    protected function init()
+    protected function init(): void
     {
         if (!\function_exists('curl_init')) {
             // @codeCoverageIgnoreStart

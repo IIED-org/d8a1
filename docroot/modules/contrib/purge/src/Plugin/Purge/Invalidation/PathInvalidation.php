@@ -2,21 +2,22 @@
 
 namespace Drupal\purge\Plugin\Purge\Invalidation;
 
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\purge\Attribute\PurgeInvalidation;
 use Drupal\purge\Plugin\Purge\Invalidation\Exception\InvalidExpressionException;
 
 /**
  * Describes path based invalidation, e.g. "news/article-1".
- *
- * @PurgeInvalidation(
- *   id = "path",
- *   label = @Translation("Path"),
- *   description = @Translation("Invalidates by path."),
- *   examples = {"news/article-1"},
- *   expression_required = TRUE,
- *   expression_can_be_empty = TRUE,
- *   expression_must_be_string = TRUE
- * )
  */
+#[PurgeInvalidation(
+  id: 'path',
+  label: new TranslatableMarkup('Path'),
+  description: new TranslatableMarkup('Invalidates by path.'),
+  examples: ['news/article-1'],
+  expression_required: TRUE,
+  expression_can_be_empty: TRUE,
+  expression_must_be_string: TRUE,
+)]
 class PathInvalidation extends InvalidationBase implements InvalidationInterface {
 
   /**

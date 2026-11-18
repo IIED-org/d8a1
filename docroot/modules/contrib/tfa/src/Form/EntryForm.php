@@ -169,7 +169,7 @@ class EntryForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, $uid = NULL, string $hash = '') {
+  public function buildForm(array $form, FormStateInterface $form_state, ?int $uid = NULL, string $hash = '') {
     $alternate_plugin = $this->getRequest()->get('plugin');
     $validation_plugin_definitions = $this->tfaValidationManager->getDefinitions();
     $user_settings = $this->userData->get('tfa', $uid, 'tfa_user_settings');

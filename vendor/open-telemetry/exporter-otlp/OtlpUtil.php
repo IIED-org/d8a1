@@ -1,0 +1,208 @@
+<?php
+
+declare(strict_types=1);
+
+namespace OpenTelemetry\Contrib\Otlp;
+
+use function array_column;
+use function array_filter;
+use function array_map;
+use const E_USER_DEPRECATED;
+use function explode;
+use OpenTelemetry\API\Signals;
+use OpenTelemetry\SDK\Common\Configuration\Configuration;
+use OpenTelemetry\SDK\Common\Configuration\Parser\MapParser;
+use OpenTelemetry\SDK\Common\Configuration\Variables;
+use OpenTelemetry\SDK\Resource\Detectors\Sdk;
+use OpenTelemetry\SemConv\ResourceAttributes;
+use function parse_url;
+use function rtrim;
+use function sprintf;
+use function strtolower;
+use function trigger_error;
+use UnexpectedValueException;
+
+class OtlpUtil
+{
+    /**
+     * gRPC per-signal methods
+     * @see protobuf *ServiceClient
+     */
+    private const METHODS = [
+        Signals::TRACE => '/opentelemetry.proto.collector.trace.v1.TraceService/Export',
+        Signals::METRICS => '/opentelemetry.proto.collector.metrics.v1.MetricsService/Export',
+        Signals::LOGS => '/opentelemetry.proto.collector.logs.v1.LogsService/Export',
+    ];
+    private const HEADER_VARS = [
+        Signals::TRACE => Variables::OTEL_EXPORTER_OTLP_TRACES_HEADERS,
+        Signals::METRICS => Variables::OTEL_EXPORTER_OTLP_METRICS_HEADERS,
+        Signals::LOGS => Variables::OTEL_EXPORTER_OTLP_LOGS_HEADERS,
+    ];
+
+    public static function method(string $signal): string
+    {
+        if (!array_key_exists($signal, self::METHODS)) {
+            throw new UnexpectedValueException('gRPC method not defined for signal: ' . $signal);
+        }
+
+        return self::METHODS[$signal];
+    }
+
+    /**
+     * @param 'trace'|'metrics'|'logs' $signal
+     * @param 'grpc'|'http/protobuf'|'http/json' $protocol
+     */
+    public static function path(string $signal, string $protocol): string
+    {
+        return match (explode('/', $protocol)[0]) { // @phpstan-ignore-line
+            'grpc' => self::method($signal),
+            'http' => match ($signal) {
+                Signals::TRACE => '/v1/traces',
+                Signals::METRICS => '/v1/metrics',
+                Signals::LOGS => '/v1/logs',
+            },
+        };
+    }
+
+    public static function getHeaders(string $signal): array
+    {
+        $headers = Configuration::has(self::HEADER_VARS[$signal]) ?
+            Configuration::getMap(self::HEADER_VARS[$signal]) :
+            Configuration::getMap(Variables::OTEL_EXPORTER_OTLP_HEADERS);
+
+        return self::mergeHeaders(array_map(rawurldecode(...), $headers), self::getUserAgentHeader());
+    }
+
+    /**
+     * @link https://github.com/open-telemetry/opentelemetry-specification/blob/v1.61.0/specification/protocol/exporter.md#user-agent
+     */
+    public static function getUserAgentHeader(): array
+    {
+        static $header;
+        if ($header === null) {
+            $resource = (new Sdk())->getResource();
+
+            $header = ['User-Agent' => sprintf(
+                'OTel-OTLP-Exporter-PHP/%s',
+                $resource->getAttributes()->get(ResourceAttributes::TELEMETRY_SDK_VERSION) ?: 'unknown'
+            )];
+        }
+
+        return $header;
+    }
+
+    /**
+     * Merges declarative configuration `headers` over `headers_list`, dropping null-valued entries.
+     *
+     * A null value means "ignore this entry" rather than "send an empty header"; passing one
+     * through reaches the PSR-7 request and throws `Header values must be RFC 7230 compatible
+     * strings`.
+     *
+     * @param list<array{name: non-empty-string, value: ?string}> $headers
+     * @return array<string, string>
+     *
+     * @internal
+     *
+     * @see https://github.com/open-telemetry/opentelemetry-configuration/blob/v1.0.0/schema/common.yaml
+     */
+    public static function headers(array $headers, ?string $headersList): array
+    {
+        return self::mergeHeaders(
+            array_filter(
+                array_column($headers, 'value', 'name'),
+                static fn (?string $value): bool => $value !== null,
+            ),
+            array_map(rawurldecode(...), MapParser::parse($headersList)),
+            self::getUserAgentHeader(),
+        );
+    }
+
+    /**
+     * Header names are case-insensitive, so an earlier set wins over any spelling of the same name.
+     *
+     * @param array<string, string> ...$sets
+     * @return array<string, string>
+     */
+    private static function mergeHeaders(array ...$sets): array
+    {
+        $merged = [];
+        $names = [];
+        foreach ($sets as $set) {
+            foreach ($set as $name => $value) {
+                $lower = strtolower((string) $name);
+                if (isset($names[$lower])) {
+                    continue;
+                }
+                $names[$lower] = true;
+                $merged[$name] = $value;
+            }
+        }
+
+        return $merged;
+    }
+
+    /**
+     * Prepends a scheme to a scheme-less endpoint, since transports infer TLS from it.
+     * An endpoint that carries its own scheme keeps it. A trailing slash is dropped, so that
+     * `http://host:4317/` is not mistaken for an endpoint with a path.
+     *
+     * @internal
+     */
+    public static function applyScheme(string $endpoint, ?bool $insecure): string
+    {
+        $endpoint = rtrim($endpoint, '/');
+        if (parse_url($endpoint, PHP_URL_SCHEME) !== null) {
+            return $endpoint;
+        }
+
+        return ($insecure ?? false)
+            ? 'http://' . $endpoint
+            : 'https://' . $endpoint;
+    }
+
+    /**
+     * @internal
+     *
+     * @todo In a future (breaking) change, reject gRPC endpoints containing path
+     */
+    public static function grpcEndpointContainsPath(string $endpoint): bool
+    {
+        if (parse_url($endpoint, PHP_URL_PATH) === null) {
+            return false;
+        }
+
+        trigger_error(sprintf('gRPC endpoint ("%s") contains a path, which is not supported. The path is currently interpreted as the gRPC service method, but this will become an error in a future version. The endpoint URL should contain only the scheme, host, and port.', $endpoint), E_USER_DEPRECATED);
+
+        return true;
+    }
+
+    /**
+     * @internal
+     */
+    public static function getStringVar(string $specific, string $general): ?string
+    {
+        if (Configuration::has($specific)) {
+            return Configuration::getString($specific);
+        }
+        if (Configuration::has($general)) {
+            return Configuration::getString($general);
+        }
+
+        return null;
+    }
+
+    /**
+     * @internal
+     */
+    public static function getBoolVar(string $specific, string $general): ?bool
+    {
+        if (Configuration::has($specific)) {
+            return Configuration::getBoolean($specific);
+        }
+        if (Configuration::has($general)) {
+            return Configuration::getBoolean($general);
+        }
+
+        return null;
+    }
+}

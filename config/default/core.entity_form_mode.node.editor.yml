@@ -6,6 +6,6 @@ dependencies:
     - node
 id: node.editor
 label: Editor
-description: ''
+description: null
 targetEntityType: node
 cache: true

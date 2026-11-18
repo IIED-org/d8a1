@@ -15,12 +15,15 @@ declare(strict_types=1);
 use Drupal\commerce_checkout\Plugin\Commerce\CheckoutFlow\CheckoutFlowInterface;
 use Drupal\commerce_product\Entity\ProductInterface;
 use Drupal\commerce_product\ProductVariationStorageInterface;
-use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Hook\Attribute\LegacyHook;
+use Drupal\Core\Hook\Attribute\LegacyModuleImplementsAlter;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
+use Drupal\google_tag\EventSubscriber\CommerceOrderSubscriber;
+use Drupal\google_tag\Hook\GoogleTagPageAttachments;
 use Drupal\search\SearchPageInterface;
 
 /**
@@ -39,6 +42,7 @@ function google_tag_theme() {
 /**
  * Implements hook_module_implements_alter().
  */
+#[LegacyModuleImplementsAlter]
 function google_tag_module_implements_alter(&$implementations, $hook) {
   if ($hook === 'page_attachments') {
     // Ensure this module's implementation of the `page_attachments` hook runs
@@ -75,7 +79,8 @@ function google_tag_page_top(array &$page) {
 
   foreach ($gtm_ids as $gtm_id) {
     $adv_settings = $config->getGtmSettings($gtm_id);
-    if ($gtm_id !== '') {
+    // The noscript fallback is included unless it has been turned off.
+    if ($gtm_id !== '' && ($adv_settings['include_noscript'] ?? TRUE)) {
       $query_params = [
         'id' => $gtm_id,
       ];
@@ -97,60 +102,9 @@ function google_tag_page_top(array &$page) {
 /**
  * Implements hook_page_attachments().
  */
+#[LegacyHook]
 function google_tag_page_attachments(array &$attachments) {
-  $definition = \Drupal::entityTypeManager()->getDefinition('google_tag_container');
-  $cacheable_metadata = CacheableMetadata::createFromRenderArray($attachments);
-  $cacheable_metadata->addCacheTags($definition->getListCacheTags());
-
-  /** @var \Drupal\google_tag\Entity\TagContainer|null $config */
-  $config = \Drupal::service('google_tag.tag_container_resolver')->resolve();
-
-  if ($config === NULL) {
-    $cacheable_metadata->applyTo($attachments);
-    return;
-  }
-  $cacheable_metadata->addCacheableDependency($config);
-  $cacheable_metadata->applyTo($attachments);
-
-  // @todo Put this data into their own respective methods?
-  // GTM JS embed.
-  if ($config->getGtmIds() !== []) {
-    $attachments['#attached']['library'][] = 'google_tag/gtm';
-    $gtm = [
-      'tagIds' => $config->getGtmIds(),
-    ];
-    $settings = $config->getGtmSettings();
-    $gtm['settings'] = $settings;
-    if (isset($settings['include_classes']) && $settings['include_classes'] === TRUE) {
-      $gtm['settings']['allowlist_classes'] = explode(PHP_EOL, $settings['allowlist_classes']);
-      $gtm['settings']['blocklist_classes'] = explode(PHP_EOL, $settings['blocklist_classes']);
-    }
-    $attachments['#attached']['drupalSettings']['gtm'] = $gtm;
-  }
-
-  // ^ returns the config which is active and the main tag ID.
-  // @todo if no config, only send events to datalayer.
-  $attachments['#attached']['library'][] = 'google_tag/gtag';
-  $attachments['#attached']['library'][] = 'google_tag/gtag.ajax';
-  $attachments['#attached']['drupalSettings']['gtag'] = [
-    'tagId' => $config->getDefaultTagId(),
-    'otherIds' => $config->getAdditionalIds(),
-    'consentMode' => $config->getConsentMode(),
-    'events' => [],
-    'additionalConfigInfo' => \Drupal::service('google_tag.dimensions_metrics_processor')->getValues($config),
-  ];
-
-  $collector = \Drupal::getContainer()->get('google_tag.event_collector');
-  foreach ($collector->getEvents() as $event) {
-    $attachments['#attached']['drupalSettings']['gtag']['events'][] = [
-      'name' => $event->getName(),
-      'data' => $event->getData(),
-    ];
-    if ($event instanceof CacheableDependencyInterface) {
-      $cacheable_metadata->addCacheableDependency($event);
-    }
-  }
-  $cacheable_metadata->applyTo($attachments);
+  \Drupal::service(GoogleTagPageAttachments::class)->pageAttachments($attachments);
 }
 
 /**
@@ -175,7 +129,7 @@ function google_tag_form_user_login_form_alter(&$form, FormStateInterface $form_
  * Adds login event to the collector.
  */
 function _google_tag_user_login_form_event(&$form, FormStateInterface $form_state) {
-  \Drupal::service('google_tag.event_collector')->addEvent('login');
+  \Drupal::service('google_tag.event_collector')->addDelayedEvent('login');
 }
 
 /**
@@ -189,7 +143,7 @@ function google_tag_form_user_register_form_alter(&$form, FormStateInterface $fo
  * Adds sign up event to the collector.
  */
 function _google_tag_user_register_form_event(&$form, FormStateInterface $form_state): void {
-  \Drupal::service('google_tag.event_collector')->addEvent('sign_up');
+  \Drupal::service('google_tag.event_collector')->addDelayedEvent('sign_up');
 }
 
 /**
@@ -211,15 +165,25 @@ function google_tag_form_commerce_checkout_flow_alter(&$form, FormStateInterface
 
   $collector = \Drupal::getContainer()->get('google_tag.event_collector');
   assert($collector !== NULL);
-  if ($form_object->getPreviousStepId($step_id) === NULL) {
+  // Only a page view of the first step begins checkout. POST requests rebuild
+  // the form for Ajax panes or validation errors, or redirect to the next
+  // step; firing again there would send duplicate begin_checkout events.
+  if ($form_object->getPreviousStepId($step_id) === NULL && \Drupal::request()->isMethodSafe()) {
     $collector->addEvent('commerce_begin_checkout', [
       'order' => $form_object->getOrder(),
     ]);
   }
-  if ($step_id === 'complete') {
+  // The purchase is sent once per order: the place transition flags the
+  // order, and the first render of the complete step consumes the flag.
+  $order = $form_object->getOrder();
+  if ($step_id === 'complete' && $order->getData(CommerceOrderSubscriber::PURCHASE_PENDING)) {
     $collector->addEvent('commerce_purchase', [
-      'order' => $form_object->getOrder(),
+      'order' => $order,
     ]);
+    $order->unsetData(CommerceOrderSubscriber::PURCHASE_PENDING);
+    $order->save();
+    // A cached copy of this page would replay the purchase on every refresh.
+    $form['#cache']['max-age'] = 0;
   }
 }
 

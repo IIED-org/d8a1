@@ -21,10 +21,7 @@ use Symfony\Component\Validator\Exception\UnexpectedValueException;
  */
 class CountValidator extends ConstraintValidator
 {
-    /**
-     * @return void
-     */
-    public function validate(mixed $value, Constraint $constraint)
+    public function validate(mixed $value, Constraint $constraint): void
     {
         if (!$constraint instanceof Count) {
             throw new UnexpectedTypeException($constraint, Count::class);
@@ -47,7 +44,7 @@ class CountValidator extends ConstraintValidator
                 ->setParameter('{{ count }}', $count)
                 ->setParameter('{{ limit }}', $constraint->max)
                 ->setInvalidValue($value)
-                ->setPlural((int) $constraint->max)
+                ->setPlural($constraint->max)
                 ->setCode($exactlyOptionEnabled ? Count::NOT_EQUAL_COUNT_ERROR : Count::TOO_MANY_ERROR)
                 ->addViolation();
 
@@ -61,7 +58,7 @@ class CountValidator extends ConstraintValidator
                 ->setParameter('{{ count }}', $count)
                 ->setParameter('{{ limit }}', $constraint->min)
                 ->setInvalidValue($value)
-                ->setPlural((int) $constraint->min)
+                ->setPlural($constraint->min)
                 ->setCode($exactlyOptionEnabled ? Count::NOT_EQUAL_COUNT_ERROR : Count::TOO_FEW_ERROR)
                 ->addViolation();
 
@@ -73,12 +70,12 @@ class CountValidator extends ConstraintValidator
                 ->getValidator()
                 ->inContext($this->context)
                 ->validate($count, [
-                    new DivisibleBy([
-                        'value' => $constraint->divisibleBy,
-                        'message' => $constraint->divisibleByMessage,
-                        'groups' => $constraint->groups,
-                        'payload' => $constraint->payload,
-                    ]),
+                    new DivisibleBy(
+                        value: $constraint->divisibleBy,
+                        message: $constraint->divisibleByMessage,
+                        groups: $constraint->groups,
+                        payload: $constraint->payload,
+                    ),
                 ], $this->context->getGroup());
         }
     }

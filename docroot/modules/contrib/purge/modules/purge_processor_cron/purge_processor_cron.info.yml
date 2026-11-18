@@ -4,9 +4,9 @@ description: 'Processes the queue every time cron runs, recommended for most con
 package: "Purge - processors"
 dependencies:
   - purge:purge
-core_version_requirement: '^9.5 || ^10 || ^11'
+core_version_requirement: ^10.3 || ^11 || ^12
 
-# Information added by Drupal.org packaging script on 2024-06-28
-version: '8.x-3.6'
+# Information added by Drupal.org packaging script on 2026-11-11
+version: '8.x-3.8'
 project: 'purge'
-datestamp: 1719557522
+datestamp: 1794365133

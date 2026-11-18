@@ -3,6 +3,8 @@
 namespace Drupal\Tests\google_tag\Kernel;
 
 use Drupal\google_tag\Entity\TagContainer;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
@@ -11,6 +13,8 @@ use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
  * @coversDefaultClass \Drupal\google_tag\TagContainerResolver
  * @group google_tag
  */
+#[Group('google_tag')]
+#[RunTestsInSeparateProcesses]
 final class TagContainerResolverTest extends GoogleTagTestCase {
 
   /**
@@ -74,6 +78,7 @@ final class TagContainerResolverTest extends GoogleTagTestCase {
     $config = TagContainer::create([
       'id' => 'foo',
       'weight' => 10,
+      'tag_container_ids' => ['G-XXXXXX'],
       'events' => [
         'route_name' => [],
       ],

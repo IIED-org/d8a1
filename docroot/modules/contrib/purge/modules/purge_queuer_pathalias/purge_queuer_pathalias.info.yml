@@ -1,0 +1,13 @@
+name: 'Path alias queuer'
+type: module
+description: 'Queues URL invalidations when path aliases are created, changed or deleted.'
+package: "Purge - queuers"
+dependencies:
+  - purge:purge
+  - drupal:path_alias
+core_version_requirement: ^10.3 || ^11 || ^12
+
+# Information added by Drupal.org packaging script on 2026-11-11
+version: '8.x-3.8'
+project: 'purge'
+datestamp: 1794365133

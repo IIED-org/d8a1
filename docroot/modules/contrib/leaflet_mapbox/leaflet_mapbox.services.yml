@@ -1,0 +1,4 @@
+services:
+  Drupal\leaflet_mapbox\Hook\LeafletMapboxHooks:
+    class: Drupal\leaflet_mapbox\Hook\LeafletMapboxHooks
+    autowire: true

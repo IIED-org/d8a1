@@ -1,11 +1,11 @@
 # Purge
 ##### _The modular external cache invalidation framework._
 
-The Purge module for Drupal 8 and Drupal 9 enables invalidation of content from
-external caches, reverse proxies and CDN platforms. The technology-agnostic
-plugin architecture allows for different server configurations and use
-cases. Last but not least, it enforces a separation of concerns and should be
-seen as a **middleware** solution.
+The Purge module enables invalidation of content from external caches, reverse
+proxies and CDN platforms. The technology-agnostic plugin architecture allows
+for different server configurations and use cases. Last but not least, it
+enforces a separation of concerns and should be seen as a **middleware**
+solution.
 
 ##### Drush commands
 The ``purge_drush`` module adds the following commands for Drush administration:
@@ -70,6 +70,20 @@ Purge ships with the **Core tags queuer**, which replicates everything Drupal
 core invalidated onto Purge's queue. So, when Drupal clears rendered items from
 its own page cache, Purge will add a _invalidation_ object to its queue so that
 it gets cleared remotely as well.
+
+Purge also ships with the **Path alias queuer**, which queues a ``url`` (or
+``path``) invalidation for the specific URL of a path alias whenever one gets
+created, changed or deleted. This solves the notorious problem of external
+caches holding on to a ``404`` response that was cached _before_ the page
+existed: a crawler or visitor requests a URL, the CDN caches its ``404``, and
+the alias only gets created afterwards. Drupal invalidates the
+``4xx-response`` Cache-Tag in that situation, but that tag is blacklisted by
+default in the Core tags queuer because invalidating it purges every error
+response site-wide on nearly every content change. The Path alias queuer is the
+recommended alternative to removing ``4xx-response`` from that blacklist: it
+purges exactly the one URL that changed. Since deleting an alias makes its URL
+respond with a ``404``, deletions are queued as well, so external caches don't
+keep serving a page that no longer exists.
 
 #### Queue
 Queueing is an inevitable and important part of Purge as it makes cache
@@ -149,6 +163,17 @@ anything else that affects runtime execution. These checks can block all purging
 but also raise warnings and other diagnostic information. End-users can rely on
 Drupal's status report page where these checks also bubble up.
 
+One of the built-in checks guards the queue size: it warns once the queue holds
+more than 30,000 items and blocks all purging once it exceeds 100,000 items, as
+queues this large usually indicate that nothing is processing the queue or that
+queueing outpaces processing. Sites that legitimately generate very large
+queues (many cache tags per save, huge multi-site groups, etc.) can disable the
+shutdown - but not the warning - by setting the ``purge.dangerous`` state flag:
+
+```
+drush state:set purge.dangerous 1
+```
+
 #### Processors
 With queuers adding ``tag`` invalidation objects to the queue, this still leaves
 the processing of it open. Since different use cases are possible, it is up to
@@ -157,16 +182,18 @@ you to configure a stable processing policy that's suitable for your use case.
 Possibilities:
 
 * **``cron``** claims items from the queue & purges during cron.
-* **``ajaxui``** AJAX-based progress bar working the queue after a piece of
-content has been updated.
 * **``lateruntime``** purges items from the queue on every request (**SLOW**).
+
+Additional processors are provided by contributed projects, for example the
+``purge_ajax_processor`` project (https://www.drupal.org/project/purge_ajax_processor)
+works the queue through AJAX requests fired from the browser after page loads.
 
 #### Tags Headers
 By default, no HTTP response headers with cache tags are added when you install
 just ``purge``. Since there is no RFC coverage for this relatively new way of
 cache invalidation, every module providing a **purger** is expected to define
 its own header and _most importantly_: unset that header too. This means that
-if your CDN supports it, its expected that the CDN doesn't render the tags
+if your CDN supports it, it's expected that the CDN doesn't render the tags
 header to end-users since you likely don't want to leak it. These plugins are
 very simple and relies basically only on annotation. If you need to support a
 reverse caching layer that isn't supported yet, the ``purge_purger_http``

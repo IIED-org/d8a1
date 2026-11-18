@@ -1,0 +1,9 @@
+invalidation_type: auto
+base_urls: {  }
+queue_insert: true
+queue_update: true
+queue_delete: true
+expand_undefined_langcode: true
+expand_langcodes: {  }
+skip_syncing: true
+max_per_request: 100

@@ -34,7 +34,7 @@ final class AddToWishlistEvent extends EventBase implements ContainerFactoryPlug
    *
    * @var \Drupal\commerce_store\CurrentStoreInterface
    */
-  private CurrentStoreInterface $currentStore;
+  protected CurrentStoreInterface $currentStore;
 
   /**
    * {@inheritDoc}
@@ -65,13 +65,16 @@ final class AddToWishlistEvent extends EventBase implements ContainerFactoryPlug
     elseif ($purchased_entity !== NULL) {
       $item_data['item_id'] = $purchased_entity->id();
     }
-    return [
-      'currency' => $purchased_entity->getPrice()->getCurrencyCode(),
-      'value' => $this->formatPriceNumber($purchased_entity->getPrice()),
-      'items' => [
-        $item_data,
-      ],
-    ];
+    $data = [];
+    // The purchasable entity can be missing or have no price. Leave the price
+    // out rather than report a value of zero.
+    $price = $purchased_entity?->getPrice();
+    if ($price !== NULL) {
+      $data['currency'] = $price->getCurrencyCode();
+      $data['value'] = $this->formatPriceNumber($price);
+    }
+    $data['items'] = [$item_data];
+    return $data;
   }
 
 }

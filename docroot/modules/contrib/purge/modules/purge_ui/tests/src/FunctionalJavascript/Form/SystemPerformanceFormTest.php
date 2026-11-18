@@ -4,12 +4,16 @@ namespace Drupal\Tests\purge_ui\FunctionalJavascript\Form;
 
 use Drupal\Core\Url;
 use Drupal\Tests\purge\FunctionalJavascript\BrowserTestBase;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests purge_ui_form_system_performance_settings_alter().
  *
  * @group purge
  */
+#[Group('purge')]
+#[RunTestsInSeparateProcesses]
 class SystemPerformanceFormTest extends BrowserTestBase {
 
   /**

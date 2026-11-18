@@ -10,7 +10,7 @@ use Drupal\google_tag\Plugin\GoogleTag\Event\EventBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Route name event plugn.
+ * Route name event plugin.
  *
  * @GoogleTagEvent(
  *   id= "route_name",
@@ -25,7 +25,7 @@ final class RouteNameEvent extends EventBase implements ContainerFactoryPluginIn
    *
    * @var \Drupal\Core\Routing\RouteMatchInterface
    */
-  private RouteMatchInterface $routeMatch;
+  protected RouteMatchInterface $routeMatch;
 
   /**
    * {@inheritDoc}

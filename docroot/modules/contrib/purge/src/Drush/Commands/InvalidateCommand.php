@@ -44,7 +44,7 @@ class InvalidateCommand extends DrushCommands {
   protected $purgeInvalidationFactory;
 
   /**
-   * Construct a Invalidatecommand object.
+   * Construct an InvalidateCommand object.
    *
    * @param \Drupal\purge\Plugin\Purge\Invalidation\InvalidationsServiceInterface $purge_invalidation_factory
    *   The purge invalidation factory service.
@@ -74,8 +74,14 @@ class InvalidateCommand extends DrushCommands {
   /**
    * Directly invalidate an item without going through the queue.
    *
+   * The invalidation types that can be used depend on the purgers that are
+   * configured on this site: every purger declares which types it supports.
+   * Run 'drush p:types' to list all known types and whether they are
+   * currently supported.
+   *
    * @param string $type
-   *   The type of invalidation to perform, e.g.: tag, path, url.
+   *   The type of invalidation to perform, e.g.: tag, path, url or any other
+   *   type listed as supported by 'drush p:types'.
    * @param string|null $expression
    *   The string expression of what needs to be invalidated.
    * @param array $options
@@ -85,6 +91,8 @@ class InvalidateCommand extends DrushCommands {
    *   Clears URLs tagged with "node:1" from external caching platforms.
    * @usage drush p:invalidate url http://www.drupal.org/
    *   Clears "http://www.drupal.org/" from external caching platforms.
+   * @usage drush p:invalidate wildcardurl http://www.drupal.org/node/*
+   *   Clears URLs by wildcard, when a purger supports the "wildcardurl" type.
    * @usage drush p:invalidate everything
    *   Clears everything on external caching platforms.
    *

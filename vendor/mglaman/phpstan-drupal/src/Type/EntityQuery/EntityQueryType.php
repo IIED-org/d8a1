@@ -27,7 +27,7 @@ class EntityQueryType extends ObjectType
     {
         // The constructor of ObjectType is under backward compatibility promise.
         // @see https://phpstan.org/developing-extensions/backward-compatibility-promise
-        // @phpstan-ignore-next-line
+        // @phpstan-ignore new.static
         $type = new static(
             $this->getClassName(),
             $this->getSubtractedType(),
@@ -40,7 +40,7 @@ class EntityQueryType extends ObjectType
 
     public function asCount(): self
     {
-        // @phpstan-ignore-next-line
+        // @phpstan-ignore new.static
         $type = new static(
             $this->getClassName(),
             $this->getSubtractedType(),
@@ -55,7 +55,7 @@ class EntityQueryType extends ObjectType
     {
         $parts = [
             $this->hasAccessCheck ? 'with-access-check' : 'without-access-check',
-            $this->isCount ? '' : 'count'
+            $this->isCount ? 'count' : ''
         ];
         return implode('-', $parts);
     }

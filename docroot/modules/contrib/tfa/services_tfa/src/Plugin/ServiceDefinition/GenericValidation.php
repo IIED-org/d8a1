@@ -2,7 +2,9 @@
 
 namespace Drupal\services_tfa\Plugin\ServiceDefinition;
 
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
+use Drupal\Core\Lock\LockBackendInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\services\ServiceDefinitionBase;
@@ -86,7 +88,7 @@ class GenericValidation extends ServiceDefinitionBase implements ContainerFactor
    * @param \Drupal\Core\Config\ConfigFactoryInterface|null $config_factory
    *   Config factory.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, UserDataInterface $user_data, TfaValidationPluginManager $tfa_validation_manager, $lock = NULL, $config_factory = NULL) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, UserDataInterface $user_data, TfaValidationPluginManager $tfa_validation_manager, ?LockBackendInterface $lock = NULL, ?ConfigFactoryInterface $config_factory = NULL) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->userData = $user_data;
     $this->tfaValidationManager = $tfa_validation_manager;

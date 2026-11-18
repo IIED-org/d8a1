@@ -182,6 +182,22 @@ class SimplifyAdminForm extends ConfigFormBase {
       ];
     }
 
+    // Media.
+    if ($this->moduleHandler->moduleExists('media')) {
+      $form['media'] = [
+        '#type' => 'details',
+        '#title' => $this->t('Media'),
+        '#description' => $this->t("These fields will be hidden from <em>all</em> media forms."),
+        '#open' => TRUE,
+      ];
+      $form['media']['simplify_media_global'] = [
+        '#type' => 'checkboxes',
+        '#title' => $this->t('Simplify the following options'),
+        '#options' => simplify_get_fields('media'),
+        '#default_value' => _simplify_get_config_value('simplify_media_global'),
+      ];
+    }
+
     // Remove empty values from saved variables.
     // (see: http://drupal.org/node/61760#comment-402631)
     $form['array_filter'] = [
@@ -213,6 +229,8 @@ class SimplifyAdminForm extends ConfigFormBase {
         $this->getFormValue($form_state, 'simplify_blocks_global'))))
       ->set('simplify_profiles_global', array_keys(array_filter(
         $this->getFormValue($form_state, 'simplify_profiles_global'))))
+      ->set('simplify_media_global', array_keys(array_filter(
+        $this->getFormValue($form_state, 'simplify_media_global'))))
       ->save();
 
     parent::submitForm($form, $form_state);

@@ -28,6 +28,7 @@ $database
  *   Config string.
  */
 function get_google_tag_settings_config(): string {
+  // cspell:ignore whitelist, blacklist
   $default_settings = "_core:
   default_config_hash: RcnOtpw-9uV9JCrp6vO2_Xk1O_YjLqUCczGUBadQXoc
 uri: 'public:/'

@@ -22,7 +22,7 @@ final class CommerceProductViewItemList extends AreaPluginBase {
    *
    * @var \Drupal\google_tag\EventCollectorInterface
    */
-  private EventCollectorInterface $eventCollector;
+  protected EventCollectorInterface $eventCollector;
 
   /**
    * {@inheritDoc}
@@ -44,7 +44,10 @@ final class CommerceProductViewItemList extends AreaPluginBase {
           $items[] = $result->_entity;
         }
         elseif ($result->_entity instanceof ProductInterface) {
-          $items[] = $result->_entity->getDefaultVariation();
+          $variation = $result->_entity->getDefaultVariation();
+          if ($variation) {
+            $items[] = $variation;
+          }
         }
       }
       $this->eventCollector->addEvent('commerce_view_item_list', [

@@ -3,10 +3,10 @@
 Various additions and enhancements to the Password Policy module.
 
 For a full description of the module, visit the
-[project page](https://www.drupal.org/project/webform_address_autocomplete).
+[project page](https://www.drupal.org/project/password_policy_extras).
 
 Submit bug reports and feature suggestions, or track changes in the
-[issue queue](https://www.drupal.org/project/issues/webform_address_autocomplete).
+[issue queue](https://git.drupalcode.org/project/password_policy_extras/-/work_items).
 
 ## Features
 

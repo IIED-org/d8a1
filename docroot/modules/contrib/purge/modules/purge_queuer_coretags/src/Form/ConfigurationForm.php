@@ -34,10 +34,10 @@ class ConfigurationForm extends QueuerConfigFormBase {
     $form['blacklist'] = [
       '#type' => 'fieldset',
       '#title' => $this->t('Tag blacklist'),
-      '#description' => $this->t('You can exclude tags that Drupal invalidated by listing them here, only change this <b>if you know what you are doing!</b> The strings are matched as prefixes, so for example <code>config:</code> will match tags as <code>config:core.extension</code> and <code>config:block_list</code>.'),
+      '#description' => $this->t('You can exclude tags that Drupal invalidated by listing them here, only change this <b>if you know what you are doing!</b> A tag is excluded when it <em>contains</em> one of these strings anywhere, so for example <code>config:</code> will match tags as <code>config:core.extension</code> and <code>config:block_list</code>, and <code>_list</code> will match <code>node_list</code> as well as <code>node_list:article</code>.'),
     ];
 
-    // Retrieve the existing blacklist and initiatlize the counter.
+    // Retrieve the existing blacklist and initialize the counter.
     $blacklist = $config->get('blacklist');
     if (is_null($form_state->get('blacklist_items_count'))) {
       if (empty($blacklist)) {
@@ -69,7 +69,7 @@ class ConfigurationForm extends QueuerConfigFormBase {
     $form['blacklist']['add'] = [
       '#type' => 'submit',
       '#name' => 'add',
-      '#value' => $this->t('Add prefix'),
+      '#value' => $this->t('Add string'),
       '#submit' => [[$this, 'addMoreSubmit']],
       '#ajax' => [
         'callback' => [$this, 'addMoreCallback'],

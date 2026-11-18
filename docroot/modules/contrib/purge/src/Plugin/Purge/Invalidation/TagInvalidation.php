@@ -2,21 +2,22 @@
 
 namespace Drupal\purge\Plugin\Purge\Invalidation;
 
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\purge\Attribute\PurgeInvalidation;
 use Drupal\purge\Plugin\Purge\Invalidation\Exception\InvalidExpressionException;
 
 /**
  * Describes invalidation by Drupal cache tag, e.g.: 'user:1', 'menu:footer'.
- *
- * @PurgeInvalidation(
- *   id = "tag",
- *   label = @Translation("Tag"),
- *   description = @Translation("Invalidates by Drupal cache tag."),
- *   examples = {"node:1", "menu:footer"},
- *   expression_required = TRUE,
- *   expression_can_be_empty = FALSE,
- *   expression_must_be_string = TRUE,
- * )
  */
+#[PurgeInvalidation(
+  id: 'tag',
+  label: new TranslatableMarkup('Tag'),
+  description: new TranslatableMarkup('Invalidates by Drupal cache tag.'),
+  examples: ['node:1', 'menu:footer'],
+  expression_required: TRUE,
+  expression_can_be_empty: FALSE,
+  expression_must_be_string: TRUE,
+)]
 class TagInvalidation extends InvalidationBase implements InvalidationInterface {
 
   /**
@@ -26,6 +27,12 @@ class TagInvalidation extends InvalidationBase implements InvalidationInterface 
     parent::validateExpression();
     if (strpos($this->expression, '*') !== FALSE) {
       throw new InvalidExpressionException('Tag invalidations cannot contain asterisks.');
+    }
+    // Tags are transported as space separated lists (see TagsHeaderBase) and
+    // matched verbatim by external caches, so whitespace can never be part of
+    // a tag. Core doesn't enforce this, so refuse such tags here.
+    if (preg_match('/\s/', $this->expression)) {
+      throw new InvalidExpressionException('Tag invalidations cannot contain whitespace.');
     }
   }
 

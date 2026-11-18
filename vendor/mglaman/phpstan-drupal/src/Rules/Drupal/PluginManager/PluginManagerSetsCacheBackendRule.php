@@ -5,17 +5,13 @@ namespace mglaman\PHPStanDrupal\Rules\Drupal\PluginManager;
 use PhpParser\Node;
 use PhpParser\Node\Stmt\ClassMethod;
 use PHPStan\Analyser\Scope;
-use PHPStan\ShouldNotHappenException;
-use PHPStan\Type\Type;
-use function array_map;
+use PHPStan\Rules\RuleErrorBuilder;
 use function count;
-use function sprintf;
-use function strpos;
 
 /**
  * @extends AbstractPluginManagerRule<ClassMethod>
  */
-class PluginManagerSetsCacheBackendRule extends AbstractPluginManagerRule
+final class PluginManagerSetsCacheBackendRule extends AbstractPluginManagerRule
 {
     public function getNodeType(): string
     {
@@ -25,7 +21,7 @@ class PluginManagerSetsCacheBackendRule extends AbstractPluginManagerRule
     public function processNode(Node $node, Scope $scope): array
     {
         if (!$scope->isInClass()) {
-            throw new ShouldNotHappenException();
+            return [];
         }
 
         if ($scope->isInTrait()) {
@@ -43,7 +39,6 @@ class PluginManagerSetsCacheBackendRule extends AbstractPluginManagerRule
         }
 
         $hasCacheBackendSet = false;
-        $misnamedCacheTagWarnings = [];
 
         foreach ($node->stmts ?? [] as $statement) {
             if ($statement instanceof Node\Stmt\Expression) {
@@ -58,40 +53,15 @@ class PluginManagerSetsCacheBackendRule extends AbstractPluginManagerRule
                     continue;
                 }
                 $hasCacheBackendSet = true;
-
-                $cacheKey = array_map(
-                    static fn (Type $type) => $type->getValue(),
-                    $scope->getType($setCacheBackendArgs[1]->value)->getConstantStrings()
-                );
-                if (count($cacheKey) === 0) {
-                    continue;
-                }
-
-                if (isset($setCacheBackendArgs[2])) {
-                    $cacheTagsType = $scope->getType($setCacheBackendArgs[2]->value);
-                    foreach ($cacheTagsType->getConstantArrays() as $constantArray) {
-                        foreach ($constantArray->getValueTypes() as $valueType) {
-                            foreach ($valueType->getConstantStrings() as $cacheTagConstantString) {
-                                foreach ($cacheKey as $cacheKeyValue) {
-                                    if (strpos($cacheTagConstantString->getValue(), $cacheKeyValue) === false) {
-                                        $misnamedCacheTagWarnings[] = $cacheTagConstantString->getValue();
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-
                 break;
             }
         }
 
         $errors = [];
         if (!$hasCacheBackendSet) {
-            $errors[] = 'Missing cache backend declaration for performance.';
-        }
-        foreach ($misnamedCacheTagWarnings as $cacheTagWarning) {
-            $errors[] = sprintf('%s cache tag might be unclear and does not contain the cache key in it.', $cacheTagWarning);
+            $errors[] = RuleErrorBuilder::message('Missing cache backend declaration for performance.')
+            ->identifier('pluginManagerSetsCacheBackend.missingCacheBackend')
+            ->build();
         }
 
         return $errors;

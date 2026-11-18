@@ -53,6 +53,12 @@ simplify.global:
       sequence:
         type: string
         label: 'Profile setting'
+    simplify_media_global:
+      type: sequence
+      label: 'Media items settings'
+      sequence:
+        type: string
+        label: 'Media item setting'
 
 simplify.content_type.*:
   type: config_object

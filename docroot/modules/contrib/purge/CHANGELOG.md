@@ -8,8 +8,18 @@ and this project adheres to
 ## [Unreleased]
 
 ### Added
+- **Path alias queuer:** new ``purge_queuer_pathalias`` submodule that queues a
+  ``url`` or ``path`` invalidation for the specific URL of a path alias when it
+  is created, changed or deleted. This surgically clears externally cached
+  ``404`` responses for URLs that didn't exist yet, without having to remove
+  the ``4xx-response`` Cache-Tag from the Core tags queuer blacklist. Aliases
+  get invalidated on every configured base URL, so multi-domain sites don't
+  end up purging just one of their domains.
 
 ### Changed
+- **#3127414:** The queue size diagnostic check now explains how to lift the
+  100,000 item safety shutdown via the ``purge.dangerous`` state flag, which
+  is also documented in the README and covered by a kernel test.
 
 ## [8.x-3.2] - 2021-10-04
 
