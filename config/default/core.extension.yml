@@ -1,7 +1,6 @@
 _core:
   default_config_hash: R4IF-ClDHXxblLcG0L7MgsLvfBIMAvi_skumNFQwkDc
 module:
-  action: 0
   address: 0
   addtoany: 0
   admin_toolbar: 0
@@ -146,8 +145,8 @@ module:
   tfa: 0
   token: 0
   toolbar: 0
-  tour: 0
   update: 0
+  upgrade_status: 0
   user: 0
   username_enumeration_prevention: 0
   varnish_purge_tags: 0
