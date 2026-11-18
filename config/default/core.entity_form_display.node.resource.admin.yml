@@ -31,7 +31,6 @@ dependencies:
     - layout_discovery
     - paragraphs
     - path
-    - synonyms
     - text
 third_party_settings:
   field_layout:
@@ -71,7 +70,8 @@ content:
     type: address_default
     weight: 15
     region: content
-    settings: {  }
+    settings:
+      wrapper_type: details
     third_party_settings: {  }
   field_authors:
     type: string_textfield
@@ -146,10 +146,14 @@ content:
       default_paragraph_type: _none
     third_party_settings: {  }
   field_species_affected:
-    type: synonyms_select
+    type: entity_reference_autocomplete
     weight: 12
     region: content
-    settings: {  }
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
     third_party_settings: {  }
   field_standalone_resource:
     type: boolean_checkbox

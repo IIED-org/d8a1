@@ -27,7 +27,6 @@ dependencies:
     - field_states_ui
     - layout_discovery
     - paragraphs
-    - synonyms
     - text
 third_party_settings:
   field_layout:
@@ -102,7 +101,7 @@ content:
     weight: 7
     region: content
     settings:
-      default_country: null
+      wrapper_type: details
     third_party_settings: {  }
   field_authors:
     type: string_textfield
@@ -164,10 +163,14 @@ content:
           list: ''
           add: Add
   field_species_affected:
-    type: synonyms_select
+    type: entity_reference_autocomplete
     weight: 8
     region: content
-    settings: {  }
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
     third_party_settings: {  }
   title:
     type: string_textfield

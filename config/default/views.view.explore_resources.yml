@@ -3666,7 +3666,9 @@ display:
           input_required: false
           text_input_required: 'Select any filter and click on Apply to see results'
           text_input_required_format: basic_html
-          bef: {  }
+          bef:
+            general:
+              autosubmit_textfield_minimum_length: 3
       cache:
         type: search_api_none
       empty: {  }
