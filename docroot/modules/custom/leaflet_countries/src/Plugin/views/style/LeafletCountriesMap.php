@@ -7,6 +7,7 @@ use Drupal\Core\Entity\Plugin\DataType\EntityAdapter;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Render\BubbleableMetadata;
+use Drupal\Core\Utility\Error;
 use Drupal\leaflet_countries\Countries;
 use Drupal\leaflet_views\Plugin\views\style\LeafletMap;
 use Drupal\views\ResultRow;
@@ -65,7 +66,7 @@ class LeafletCountriesMap extends LeafletMap implements ContainerFactoryPluginIn
             }
           }
           catch (\Exception $e) {
-            watchdog_exception("Leaflet Countries Map - Get Available data sources", $e);
+            Error::logException(\Drupal::logger('leaflet_countries'), $e, 'Leaflet Countries Map - Get Available data sources: %type: @message in %function (line %line of %file).');
           }
         }
       }
@@ -266,7 +267,7 @@ class LeafletCountriesMap extends LeafletMap implements ContainerFactoryPluginIn
 
       // Get the human readable labels for the entity view modes.
       $view_mode_options = [];
-      foreach ($this->entityDisplay->getViewModes($this->entityType) as $key => $view_mode) {
+      foreach ($this->entityDisplayRepository->getViewModes($this->entityType) as $key => $view_mode) {
         $view_mode_options[$key] = $view_mode['label'];
       }
       // The View Mode drop-down is visible conditional on "#rendered_entity"

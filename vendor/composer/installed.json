@@ -6051,38 +6051,6 @@
             "install-path": "../../docroot/modules/contrib/leaflet"
         },
         {
-            "name": "drupal/leaflet_countries",
-            "version": "dev-3086578-leaflet-views-country",
-            "version_normalized": "dev-3086578-leaflet-views-country",
-            "source": {
-                "type": "git",
-                "url": "https://git.drupalcode.org/issue/leaflet_countries-3086578.git",
-                "reference": "60b8913cdcd57a5745233565040203fd2ada1033"
-            },
-            "require": {
-                "drupal/core": "^8 || ^9 || ^10",
-                "drupal/leaflet": "^2.1 || ^10.2",
-                "drupal/leaflet_topojson": "^2.0@alpha",
-                "mledoze/countries": "^5.0"
-            },
-            "time": "2024-03-26T16:07:52+00:00",
-            "type": "drupal-module",
-            "installation-source": "source",
-            "license": [
-                "GPL-2.0+"
-            ],
-            "description": "Provides GeoJSON outlines for countries to be used in Leaflet maps",
-            "homepage": "https://www.drupal.org/project/leaflet_countries",
-            "keywords": [
-                "Drupal"
-            ],
-            "support": {
-                "issues": "http://drupal.org/project/issues/leaflet_countries",
-                "source": "http://cgit.drupalcode.org/leaflet_countries"
-            },
-            "install-path": "../../docroot/modules/contrib/leaflet_countries"
-        },
-        {
             "name": "drupal/leaflet_mapbox",
             "version": "2.0.1",
             "version_normalized": "2.0.1.0",

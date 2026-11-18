@@ -94,7 +94,7 @@ class LeafletCountryFormatter extends LeafletDefaultFormatter {
    *
    * This function is called from parent::view().
    */
-  public function viewElements(FieldItemListInterface $items, $langcode) {
+  public function viewElements(FieldItemListInterface $items, $langcode): array {
     $settings = $this->getSettings();
     $icon_url = $settings['icon']['iconUrl'];
 

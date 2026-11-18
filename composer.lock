@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "035c26b7438a9255987aa312ed714e10",
+    "content-hash": "855d07b2d52295f61eaecb5045847246",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -4362,7 +4362,7 @@
                 "shasum": "07d62c1572923f6ab47f3e4c36a65d0b3a498a26"
             },
             "require": {
-                "drupal/core": "^9.2 || ^10"
+                "drupal/core": "^8 || ^9 || ^10"
             },
             "require-dev": {
                 "drupal/address": "*",
@@ -5798,35 +5798,6 @@
                 "source": "https://git.drupalcode.org/project/leaflet",
                 "issues": "https://www.drupal.org/project/issues/leaflet"
             }
-        },
-        {
-            "name": "drupal/leaflet_countries",
-            "version": "dev-3086578-leaflet-views-country",
-            "source": {
-                "type": "git",
-                "url": "https://git.drupalcode.org/issue/leaflet_countries-3086578.git",
-                "reference": "60b8913cdcd57a5745233565040203fd2ada1033"
-            },
-            "require": {
-                "drupal/core": "^8 || ^9 || ^10",
-                "drupal/leaflet": "^2.1 || ^10.2",
-                "drupal/leaflet_topojson": "^2.0@alpha",
-                "mledoze/countries": "^5.0"
-            },
-            "type": "drupal-module",
-            "license": [
-                "GPL-2.0+"
-            ],
-            "description": "Provides GeoJSON outlines for countries to be used in Leaflet maps",
-            "homepage": "https://www.drupal.org/project/leaflet_countries",
-            "keywords": [
-                "Drupal"
-            ],
-            "support": {
-                "issues": "http://drupal.org/project/issues/leaflet_countries",
-                "source": "http://cgit.drupalcode.org/leaflet_countries"
-            },
-            "time": "2024-03-26T16:07:52+00:00"
         },
         {
             "name": "drupal/leaflet_mapbox",
@@ -14955,7 +14926,6 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
-        "drupal/leaflet_countries": 20,
         "drupal/pdfpreview": 5,
         "drupal/rabbit_hole": 10
     },
