@@ -4,12 +4,16 @@ namespace Drupal\Tests\purge_queuer_coretags\Functional;
 
 use Drupal\purge_queuer_coretags\Form\ConfigurationForm;
 use Drupal\Tests\purge_ui\FunctionalJavascript\Form\Config\QueuerConfigFormTestBase;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests \Drupal\purge_queuer_coretags\Form\ConfigurationForm.
  *
  * @group purge
  */
+#[Group('purge')]
+#[RunTestsInSeparateProcesses]
 class QueuerConfigFormTest extends QueuerConfigFormTestBase {
 
   /**
@@ -55,7 +59,7 @@ class QueuerConfigFormTest extends QueuerConfigFormTestBase {
     $this->assertSession()->responseContains('value="config:field.storage"');
     $this->assertSession()->responseContains('value="route_match"');
     $this->assertSession()->responseContains('value="routes"');
-    $this->assertSession()->buttonExists('Add prefix');
+    $this->assertSession()->buttonExists('Add string');
     $this->assertSession()->pageTextContains('if you know what you are doing');
   }
 

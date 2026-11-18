@@ -25,6 +25,9 @@ class CsvEncoder implements EncoderInterface, DecoderInterface
     public const FORMAT = 'csv';
     public const DELIMITER_KEY = 'csv_delimiter';
     public const ENCLOSURE_KEY = 'csv_enclosure';
+    /**
+     * @deprecated since Symfony 7.2, to be removed in 8.0
+     */
     public const ESCAPE_CHAR_KEY = 'csv_escape_char';
     public const KEY_SEPARATOR_KEY = 'csv_key_separator';
     public const HEADERS_KEY = 'csv_headers';
@@ -36,7 +39,7 @@ class CsvEncoder implements EncoderInterface, DecoderInterface
 
     private const UTF8_BOM = "\xEF\xBB\xBF";
 
-    private const FORMULAS_START_CHARACTERS = ['=', '-', '+', '@', "\t", "\r"];
+    private const FORMULAS_START_CHARACTERS = ['=', '-', '+', '@', "\t", "\r", "\n"];
 
     private array $defaultContext = [
         self::DELIMITER_KEY => ',',
@@ -53,6 +56,10 @@ class CsvEncoder implements EncoderInterface, DecoderInterface
 
     public function __construct(array $defaultContext = [])
     {
+        if (\array_key_exists(self::ESCAPE_CHAR_KEY, $defaultContext)) {
+            trigger_deprecation('symfony/serializer', '7.2', 'Setting the "csv_escape_char" option is deprecated. The option will be removed in 8.0.');
+        }
+
         $this->defaultContext = array_merge($this->defaultContext, $defaultContext);
     }
 
@@ -62,7 +69,7 @@ class CsvEncoder implements EncoderInterface, DecoderInterface
 
         if (!is_iterable($data)) {
             $data = [[$data]];
-        } elseif (empty($data)) {
+        } elseif (!$data) {
             $data = [[]];
         } else {
             if ($data instanceof \Traversable) {
@@ -94,7 +101,15 @@ class CsvEncoder implements EncoderInterface, DecoderInterface
         $endOfLine = $context[self::END_OF_LINE] ?? $this->defaultContext[self::END_OF_LINE];
 
         if (!($context[self::NO_HEADERS_KEY] ?? $this->defaultContext[self::NO_HEADERS_KEY])) {
-            fputcsv($handle, $headers, $delimiter, $enclosure, $escapeChar);
+            $headerRow = $headers;
+            if ($escapeFormulas) {
+                foreach ($headerRow as $i => $header) {
+                    if (\in_array(substr((string) $header, 0, 1), self::FORMULAS_START_CHARACTERS, true)) {
+                        $headerRow[$i] = "'".$header;
+                    }
+                }
+            }
+            fputcsv($handle, $headerRow, $delimiter, $enclosure, $escapeChar);
             if ("\n" !== $endOfLine && 0 === fseek($handle, -1, \SEEK_CUR)) {
                 fwrite($handle, $endOfLine);
             }
@@ -145,7 +160,7 @@ class CsvEncoder implements EncoderInterface, DecoderInterface
 
         [$delimiter, $enclosure, $escapeChar, $keySeparator, , , , $asCollection] = $this->getCsvOptions($context);
 
-        while (false !== ($cols = fgetcsv($handle, 0, $delimiter, $enclosure, $escapeChar))) {
+        foreach ($this->readRows($handle, $delimiter, $enclosure, $escapeChar) as $cols) {
             $nbCols = \count($cols);
 
             if (null === $headers) {
@@ -208,7 +223,7 @@ class CsvEncoder implements EncoderInterface, DecoderInterface
             return $result;
         }
 
-        if (empty($result) || isset($result[1])) {
+        if (!$result || isset($result[1])) {
             return $result;
         }
 
@@ -292,5 +307,29 @@ class CsvEncoder implements EncoderInterface, DecoderInterface
         }
 
         return $headers;
+    }
+
+    /**
+     * @param resource $handle
+     */
+    private function readRows($handle, string $delimiter, string $enclosure, string $escapeChar): \Generator
+    {
+        $emptyLines = 0;
+        while ([null] === $cols = fgetcsv($handle, 0, $delimiter, $enclosure, $escapeChar)) {
+            ++$emptyLines;
+        }
+
+        // fgetcsv() returns [null] for an empty line: it is a record with an empty value in a single-column document, and carries no data otherwise
+        $skipEmptyLines = false !== $cols && 1 < \count($cols);
+
+        if (!$skipEmptyLines) {
+            yield from array_fill(0, $emptyLines, [null]);
+        }
+
+        for (; false !== $cols; $cols = fgetcsv($handle, 0, $delimiter, $enclosure, $escapeChar)) {
+            if (!$skipEmptyLines || [null] !== $cols) {
+                yield $cols;
+            }
+        }
     }
 }

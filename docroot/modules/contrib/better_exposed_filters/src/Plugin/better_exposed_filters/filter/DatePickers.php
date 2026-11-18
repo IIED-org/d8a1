@@ -2,22 +2,27 @@
 
 namespace Drupal\better_exposed_filters\Plugin\better_exposed_filters\filter;
 
+use Drupal\better_exposed_filters\Attribute\FiltersWidget;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Logger\LoggerChannelTrait;
+use Drupal\Core\Logger\RfcLogLevel;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
- * JQuery UI date picker widget implementation.
- *
- * @BetterExposedFiltersFilterWidget(
- *   id = "bef_datepicker",
- *   label = @Translation("jQuery UI Date Picker"),
- * )
+ * Date picker widget implementation.
  */
+#[FiltersWidget(
+  id: 'bef_datepicker',
+  title: new TranslatableMarkup('Date Picker'),
+)]
 class DatePickers extends FilterWidgetBase {
+
+  use LoggerChannelTrait;
 
   /**
    * {@inheritdoc}
    */
-  public static function isApplicable($filter = NULL, array $filter_options = []) {
+  public static function isApplicable(mixed $filter = NULL, array $filter_options = []): bool {
     /** @var \Drupal\views\Plugin\views\filter\FilterPluginBase $filter */
     $is_applicable = FALSE;
 
@@ -29,9 +34,97 @@ class DatePickers extends FilterWidgetBase {
   }
 
   /**
+   * In case of date offsets as a default value, convert to dates.
+   *
+   * @param array $element
+   *   The form element to process.
+   * @param bool $is_double_date
+   *   Indicates this is a double input date.
+   * @param string $field_id
+   *   The element field id.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The form state.
+   */
+  protected function convertOffsets(array &$element, bool $is_double_date, string $field_id, FormStateInterface $form_state): void {
+    $options = $this->handler->options;
+
+    if ($options['value']['type'] !== 'offset') {
+      return;
+    }
+
+    $userInput = $form_state->getUserInput();
+
+    // Check if a Y-m-d date was submitted (not an offset string).
+    // If so, we need to change the filter type from 'offset' to 'date'
+    // so Views processes the value correctly.
+    //
+    // The shape of $userInput[$field_id] must match what the widget expects
+    // (array for double-date, string for single). URL-encoded bracket input
+    // (e.g. ?field%5Bmin%5D=…) on a single-date filter can flip that shape
+    // and blow up preg_match(); guard both branches.
+    $hasDateInput = FALSE;
+    if ($is_double_date && isset($userInput[$field_id]) && is_array($userInput[$field_id])) {
+      $min = $userInput[$field_id]['min'] ?? NULL;
+      $max = $userInput[$field_id]['max'] ?? NULL;
+      if ((is_string($min) && preg_match('/^\d{4}-\d{2}-\d{2}$/', $min))
+        || (is_string($max) && preg_match('/^\d{4}-\d{2}-\d{2}$/', $max))) {
+        $hasDateInput = TRUE;
+      }
+    }
+    elseif (!$is_double_date && isset($userInput[$field_id]) && is_string($userInput[$field_id])) {
+      if (preg_match('/^\d{4}-\d{2}-\d{2}$/', $userInput[$field_id])) {
+        $hasDateInput = TRUE;
+      }
+    }
+
+    // Change the filter type to 'date' when a Y-m-d date is submitted.
+    // This ensures Views processes the value as an absolute date, not as an
+    // offset from current time.
+    if ($hasDateInput) {
+      $this->handler->options['value']['type'] = 'date';
+      $this->handler->value['type'] = 'date';
+    }
+
+    try {
+      if ($is_double_date) {
+        $inputBundle = is_array($userInput[$field_id] ?? NULL) ? $userInput[$field_id] : [];
+        foreach (['min', 'max'] as $key) {
+          // Convert offset initial values to dates for display.
+          $raw = $inputBundle[$key] ?? NULL;
+          if (is_string($raw) && $raw !== '') {
+            $date = new \DateTime($raw);
+          }
+          else {
+            $date = new \DateTime($element[$key]['#default_value']);
+          }
+
+          // Set the default_value attribute for JavaScript to use for display.
+          $element[$key]['#attributes']['default_value'] = $date->format('Y-m-d');
+        }
+      }
+      else {
+        // Convert offset initial values to dates for display.
+        $raw = $userInput[$field_id] ?? NULL;
+        if (is_string($raw) && $raw !== '') {
+          $date = new \DateTime($raw);
+        }
+        else {
+          $date = new \DateTime($element['#default_value']);
+        }
+
+        // Set the default_value attribute for JavaScript to use for display.
+        $element['#attributes']['default_value'] = $date->format('Y-m-d');
+      }
+    }
+    catch (\Exception $e) {
+      $this->getLogger('better_exposed_filters')->log(RfcLogLevel::ERROR, $e->getMessage());
+    }
+  }
+
+  /**
    * {@inheritdoc}
    */
-  public function exposedFormAlter(array &$form, FormStateInterface $form_state) {
+  public function exposedFormAlter(array &$form, FormStateInterface $form_state): void {
     $field_id = $this->getExposedFilterFieldId();
 
     // Handle wrapper element added to exposed filters
@@ -46,159 +139,44 @@ class DatePickers extends FilterWidgetBase {
 
     parent::exposedFormAlter($form, $form_state);
 
-    // Attach the JS (@see /js/datepickers.js)
-    $form['#attached']['library'][] = 'better_exposed_filters/datepickers';
+    // Single Date API-based input element (operator not exposed).
+    $is_single_date = isset($element['#type']);
 
-    // Date picker settings.
-    $element['#attached']['drupalSettings']['better_exposed_filters']['datepicker'] = TRUE;
-    $element['#attached']['drupalSettings']['better_exposed_filters']['datepicker_options'] = [];
-    $drupal_settings = &$element['#attached']['drupalSettings']['better_exposed_filters']['datepicker_options'];
-
-    // Single Date API-based input element.
-    $is_single_date = isset($element['value']['#type'])
-      && 'date_text' == $element['value']['#type'];
     // Double Date-API-based input elements such as "in-between".
-    $is_double_date = isset($element['min']) && isset($element['max'])
-      && 'date_text' == $element['min']['#type']
-      && 'date_text' == $element['max']['#type'];
+    $is_double_date = isset($element['min']['#type']) && isset($element['max']['#type']);
 
-    if ($is_single_date || $is_double_date) {
-      if (isset($element['value'])) {
-        $format = $element['value']['#date_format'];
+    // When the operator is exposed, all sub-elements (value, min, max) exist
+    // simultaneously with #states controlling visibility. Handle the single
+    // value sub-element in addition to min/max.
+    $has_value_sub_element = isset($element['value']['#type']);
+
+    if ($is_single_date) {
+      $element['#type'] = 'date';
+      $element['#attributes']['class'][] = 'bef-datepicker';
+      $element['#attributes']['autocomplete'] = 'off';
+    }
+    elseif ($is_double_date || $has_value_sub_element) {
+      if ($has_value_sub_element) {
+        $element['value']['#type'] = 'date';
         $element['value']['#attributes']['class'][] = 'bef-datepicker';
         $element['value']['#attributes']['autocomplete'] = 'off';
+        if (empty($element['value']['#title'])) {
+          $element['value']['#title'] = 'Date';
+          $element['value']['#title_display'] = 'invisible';
+        }
       }
-      else {
-        // Both min and max share the same format.
-        $format = $element['min']['#date_format'];
+      if ($is_double_date) {
+        $element['min']['#type'] = 'date';
+        $element['max']['#type'] = 'date';
         $element['min']['#attributes']['class'][] = 'bef-datepicker';
         $element['max']['#attributes']['class'][] = 'bef-datepicker';
         $element['min']['#attributes']['autocomplete'] = 'off';
         $element['max']['#attributes']['autocomplete'] = 'off';
       }
-
-      // Convert Date API format to jQuery UI date format.
-      $mapping = $this->getjQueryUiDateFormatting();
-      $drupal_settings['dateformat'] = str_replace(array_keys($mapping), array_values($mapping), $format);
     }
-    else {
-      /*
-       * Standard Drupal date field.  Depending on the settings, the field
-       * can be at $element (single field) or
-       * $element[subfield] for two-value date fields or filters
-       * with exposed operators.
-       */
-      $fields = ['min', 'max', 'value'];
-      if (count(array_intersect($fields, array_keys($element)))) {
-        foreach ($fields as $field) {
-          if (isset($element[$field])) {
-            $element[$field]['#attributes']['class'][] = 'bef-datepicker';
-            $element[$field]['#attributes']['autocomplete'] = 'off';
-          }
-        }
-      }
-      else {
-        $element['#attributes']['class'][] = 'bef-datepicker';
-        $element['#attributes']['autocomplete'] = 'off';
-      }
-    }
-  }
 
-  /**
-   * Convert Date API formatting to jQuery formatDate formatting.
-   *
-   * @todo: To be honest, I'm not sure this is needed.  Can you set a
-   * Date API field to accept anything other than Y-m-d? Well, better
-   * safe than sorry...
-   *
-   * @see http://us3.php.net/manual/en/function.date.php
-   * @see http://docs.jquery.com/UI/Datepicker/formatDate
-   *
-   * @return array
-   *   PHP date format => jQuery formatDate format
-   *   (comments are for the PHP format, lines that are commented out do
-   *   not have a jQuery formatDate equivalent, but maybe someday they
-   *   will...)
-   */
-  private function getjQueryUiDateFormatting() {
-    return [
-      /* Day */
-      // Day of the month, 2 digits with leading zeros 01 to 31.
-      'd' => 'dd',
-      // A textual representation of a day, three letters  Mon through
-      // Sun.
-      'D' => 'D',
-      // Day of the month without leading zeros  1 to 31.
-      'j' => 'd',
-      // (lowercase 'L') A full textual representation of the day of the
-      // week Sunday through Saturday.
-      'l' => 'DD',
-      // ISO-8601 numeric representation of the day of the week (added
-      // in PHP 5.1.0) 1 (for Monday) through 7 (for Sunday).
-      // 'N' => ' ',
-      // English ordinal suffix for the day of the month, 2 characters
-      // st, nd, rd or th. Works well with j.
-      // 'S' => ' ',
-      // Numeric representation of the day of the week 0 (for Sunday)
-      // through 6 (for Saturday).
-      // 'w' => ' ',
-      // The day of the year (starting from 0) 0 through 365.
-      'z' => 'o',
-      /* Week */
-      // ISO-8601 week number of year, weeks starting on Monday (added
-      // in PHP 4.1.0) Example: 42 (the 42nd week in the year).
-      // 'W' => ' ',.
-      /* Month */
-      // A full textual representation of a month, such as January or
-      // March  January through December.
-      'F' => 'MM',
-      // Numeric representation of a month, with leading zeros 01
-      // through 12.
-      'm' => 'mm',
-      // A short textual representation of a month, three letters  Jan
-      // through Dec.
-      'M' => 'M',
-      // Numeric representation of a month, without leading zeros  1
-      // through 12.
-      'n' => 'm',
-      // Number of days in the given month 28 through 31.
-      // 't' => ' ',.
-      /* Year */
-      // Whether it's a leap year  1 if it is a leap year, 0 otherwise.
-      // 'L' => ' ',
-      // ISO-8601 year number. This has the same value as Y, except that
-      // if the ISO week number (W) belongs to the previous or next
-      // year, that year is used instead. (added in PHP 5.1.0).
-      // Examples: 1999 or 2003.
-      // 'o' => ' ',
-      // A full numeric representation of a year, 4 digits Examples:
-      // 1999 or 2003.
-      'Y' => 'yy',
-      // A two digit representation of a year  Examples: 99 or 03.
-      'y' => 'y',
-
-      /* Time */
-      // Lowercase Ante meridiem and Post meridiem am or pm.
-      // 'a' => ' ',
-      // Uppercase Ante meridiem and Post meridiem AM or PM.
-      // 'A' => ' ',
-      // Swatch Internet time  000 through 999.
-      // 'B' => ' ',
-      // 12-hour format of an hour without leading zeros 1 through 12.
-      // 'g' => ' ',
-      // 24-hour format of an hour without leading zeros 0 through 23.
-      // 'G' => ' ',
-      // 12-hour format of an hour with leading zeros  01 through 12.
-      // 'h' => ' ',
-      // 24-hour format of an hour with leading zeros  00 through 23.
-      // 'H' => ' ',
-      // Minutes with leading zeros  00 to 59.
-      // 'i' => ' ',
-      // Seconds, with leading zeros 00 through 59.
-      // 's' => ' ',
-      // Microseconds (added in PHP 5.2.2) Example: 654321.
-      // 'u' => ' ',.
-    ];
+    $this->convertOffsets($element, $is_double_date, $field_id, $form_state);
+    $form['#attached']['library'][] = 'better_exposed_filters/datepickers';
   }
 
 }

@@ -6,6 +6,7 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Condition\ConditionInterface;
 use Drupal\Core\Condition\ConditionPluginCollection;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
+use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityWithPluginCollectionInterface;
 use Drupal\Core\Messenger\MessengerTrait;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
@@ -31,7 +32,8 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
  *   entity_keys = {
  *     "id" = "id",
  *     "label" = "label",
- *     "status" = "status"
+ *     "status" = "status",
+ *     "weight" = "weight"
  *   },
  *   config_export = {
  *     "id",
@@ -170,7 +172,7 @@ class TagContainer extends ConfigEntityBase implements EntityWithPluginCollectio
   public function getGtmIds($length = NULL): array {
     $default_tag = array_slice(
       array_filter(
-        $this->tag_container_ids,
+        $this->getTrimmedTagIds(),
         static fn ($id) => is_string($id) && preg_match(self::GOOGLE_TAG_MANAGER_MATCH, $id)
       ),
       0,
@@ -185,15 +187,16 @@ class TagContainer extends ConfigEntityBase implements EntityWithPluginCollectio
    * @return array
    *   Gtm settings.
    */
-  public function getGtmSettings(string $gtmid = NULL): array {
+  public function getGtmSettings(?string $gtmid = NULL): array {
     // Choose first gtmID if none was supplied.
     $gtmid = $gtmid ?? $this->getGtmId();
 
-    $advanced_settings = $this->get('advanced_settings');
+    $advanced_settings = $this->getTrimmedAdvancedSettings();
     // Legacy advanced settings detected.
     return $advanced_settings['gtm'][$gtmid] ?? [
       'data_layer' => 'dataLayer',
       'include_environment' => FALSE,
+      'include_noscript' => TRUE,
     ];
   }
 
@@ -206,7 +209,7 @@ class TagContainer extends ConfigEntityBase implements EntityWithPluginCollectio
   public function getDefaultTagId(): string {
     $default_tag = array_slice(
       array_filter(
-        $this->tag_container_ids,
+        $this->getTrimmedTagIds(),
         static fn ($id) => is_string($id) && preg_match(self::GOOGLE_TAG_MANAGER_MATCH, $id) === 0),
       0,
       1
@@ -223,10 +226,56 @@ class TagContainer extends ConfigEntityBase implements EntityWithPluginCollectio
   public function getAdditionalIds(): array {
     return array_slice(
       array_filter(
-        $this->tag_container_ids,
+        $this->getTrimmedTagIds(),
         static fn($id) => is_string($id) && preg_match(self::GOOGLE_TAG_MANAGER_MATCH, $id) === 0),
       1
     );
+  }
+
+  /**
+   * Returns the tag IDs with surrounding whitespace removed.
+   *
+   * IDs set outside the container form, such as by a recipe input or a config
+   * import, may carry whitespace that would break the script URLs.
+   *
+   * @return array
+   *   The tag IDs.
+   */
+  private function getTrimmedTagIds(): array {
+    return array_map(
+      static fn ($id) => is_string($id) ? trim($id) : $id,
+      $this->tag_container_ids
+    );
+  }
+
+  /**
+   * Returns the advanced settings with the GTM settings keyed by trimmed ID.
+   *
+   * The GTM settings are keyed by tag ID, so they need the same trimming as
+   * the IDs or they would not be found for an ID stored with whitespace.
+   *
+   * @return array
+   *   The advanced settings.
+   */
+  private function getTrimmedAdvancedSettings(): array {
+    $advanced_settings = $this->advanced_settings ?? [];
+    if (!empty($advanced_settings['gtm']) && is_array($advanced_settings['gtm'])) {
+      $gtm = [];
+      foreach ($advanced_settings['gtm'] as $id => $settings) {
+        $gtm[trim((string) $id)] = $settings;
+      }
+      $advanced_settings['gtm'] = $gtm;
+    }
+    return $advanced_settings;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function preSave(EntityStorageInterface $storage) {
+    parent::preSave($storage);
+    $this->tag_container_ids = $this->getTrimmedTagIds();
+    $this->advanced_settings = $this->getTrimmedAdvancedSettings();
   }
 
   /**

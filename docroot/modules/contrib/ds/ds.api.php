@@ -1,8 +1,13 @@
 <?php
 
+/**
+ * @file
+ */
+
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Url;
 use Drupal\node\Entity\Node;
 
 /**
@@ -83,7 +88,7 @@ function hook_ds_layout_settings_alter(array $record, FormStateInterface $form_s
  *   - entity
  *   - entity_type
  *   - bundle
- *   - view_mode
+ *   - view_mode.
  * @param array $vars
  *   All variables available for render. You can use this to add css classes.
  */
@@ -195,6 +200,19 @@ function hook_ds_field_operations_alter(&$operations, $field) {
   if ($field['type'] == 'block') {
     unset($operations['edit']);
   }
+}
+
+/**
+ * Allow modules to alter the onclick url.
+ *
+ * @param \Drupal\Core\Url $url
+ */
+function hook_ds_onclick_url_alter(Url $url) {
+  $query = [
+    'filter' => 'test',
+  ];
+
+  $url->setOption('query', $query);
 }
 
 /**

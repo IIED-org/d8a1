@@ -4,13 +4,13 @@ namespace Drupal\video_embed_wysiwyg\Plugin\Filter;
 
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\filter\FilterProcessResult;
 use Drupal\filter\Plugin\FilterBase;
 use Drupal\video_embed_field\Plugin\Field\FieldFormatter\Video;
 use Drupal\video_embed_field\ProviderManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\Core\Render\RendererInterface;
 
 /**
  * The filter to turn tokens inserted into the WYSIWYG into videos.
@@ -19,7 +19,7 @@ use Drupal\Core\Render\RendererInterface;
  *   title = @Translation("Video Embed WYSIWYG"),
  *   id = "video_embed_wysiwyg",
  *   description = @Translation("Enables the use of video_embed_wysiwyg."),
- *   type = Drupal\filter\Plugin\FilterInterface::TYPE_MARKUP_LANGUAGE
+ *   type = Drupal\filter\Plugin\FilterInterface::TYPE_TRANSFORM_IRREVERSIBLE
  * )
  */
 class VideoEmbedWysiwyg extends FilterBase implements ContainerFactoryPluginInterface {
@@ -72,7 +72,7 @@ class VideoEmbedWysiwyg extends FilterBase implements ContainerFactoryPluginInte
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static($configuration, $plugin_id, $plugin_definition, $container->get('video_embed_field.provider_manager'), $container->get('renderer'), $container->get('current_user'));
+    return new self($configuration, $plugin_id, $plugin_definition, $container->get('video_embed_field.provider_manager'), $container->get('renderer'), $container->get('current_user'));
   }
 
   /**
@@ -88,7 +88,15 @@ class VideoEmbedWysiwyg extends FilterBase implements ContainerFactoryPluginInte
       }
 
       $autoplay = $this->currentUser->hasPermission('never autoplay videos') ? FALSE : $embed_data['settings']['autoplay'];
-      $embed_code = $provider->renderEmbedCode($embed_data['settings']['width'], $embed_data['settings']['height'], $autoplay);
+      $options = [
+        'width' => $embed_data['settings']['width'],
+        'height' => $embed_data['settings']['height'],
+        'autoplay' => $autoplay,
+        'title_format' => $embed_data['settings']['title_format'] ?? NULL,
+        'use_title_fallback' => $embed_data['settings']['title_fallback'] ?? TRUE,
+        'loading' => $embed_data['settings']['loading'] ?? Video::defaultSettings()['loading'],
+      ];
+      $embed_code = $provider->renderEmbed($options);
 
       $embed_code = [
         '#type' => 'container',
@@ -130,7 +138,7 @@ class VideoEmbedWysiwyg extends FilterBase implements ContainerFactoryPluginInte
    */
   protected function getValidMatches($text) {
     // Use a look ahead to match the capture groups in any order.
-    if (!preg_match_all('/(<p>)?(?<json>{(?=.*preview_thumbnail\b)(?=.*settings\b)(?=.*video_url\b)(?=.*settings_summary)(.*)})(<\/p>)?/', $text, $matches)) {
+    if (!preg_match_all('/(<p>)(?<json>{(?=.*preview_thumbnail\b)(?=.*settings\b)(?=.*video_url\b)(?=.*settings_summary)(.*)})(<\/p>)/U', $text, $matches)) {
       return [];
     }
     $valid_matches = [];

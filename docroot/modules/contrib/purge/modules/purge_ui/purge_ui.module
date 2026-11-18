@@ -3,22 +3,18 @@
 /**
  * @file
  * Administrative interface for Purge.
+ *
+ * Drupal 11.1 and later run the hooks in \Drupal\purge_ui\Hook instead; these
+ * wrappers only run on older core versions.
  */
 
-use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Hook\Attribute\LegacyHook;
+use Drupal\purge_ui\Hook\PurgeUiThemeHooks;
 
 /**
  * Implements hook_theme().
  */
+#[LegacyHook]
 function purge_ui_theme() {
-  return [
-    'purge_ui_dashboard' => [
-      'render element' => 'build',
-    ],
-    'purge_ui_diagnostics' => [
-      'variables' => [
-        'diagnostics' => [],
-      ],
-    ],
-  ];
+  return (new PurgeUiThemeHooks())->theme();
 }

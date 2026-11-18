@@ -2,24 +2,25 @@
 
 namespace Drupal\better_exposed_filters\Plugin\better_exposed_filters\filter;
 
+use Drupal\better_exposed_filters\Attribute\FiltersWidget;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
- * JQuery UI slider widget implementation.
- *
- * @BetterExposedFiltersFilterWidget(
- *   id = "bef_sliders",
- *   label = @Translation("jQuery UI Slider"),
- * )
+ * Sliders widget implementation.
  */
+#[FiltersWidget(
+  id: 'bef_sliders',
+  title: new TranslatableMarkup('Sliders'),
+)]
 class Sliders extends FilterWidgetBase {
 
   // Slider animation options.
-  const ANIMATE_NONE = 'none';
-  const ANIMATE_SLOW = 'slow';
-  const ANIMATE_NORMAL = 'normal';
-  const ANIMATE_FAST = 'fast';
+  const ANIMATE_NONE = 0;
+  const ANIMATE_SLOW = 600;
+  const ANIMATE_NORMAL = 400;
+  const ANIMATE_FAST = 200;
   const ANIMATE_CUSTOM = 'custom';
 
   // Slider orientation options.
@@ -29,7 +30,7 @@ class Sliders extends FilterWidgetBase {
   /**
    * {@inheritdoc}
    */
-  public function defaultConfiguration() {
+  public function defaultConfiguration(): array {
     return parent::defaultConfiguration() + [
       'min' => 0,
       'max' => 99999,
@@ -37,17 +38,21 @@ class Sliders extends FilterWidgetBase {
       'animate' => self::ANIMATE_NONE,
       'animate_ms' => 0,
       'orientation' => self::ORIENTATION_HORIZONTAL,
+      'enable_tooltips' => FALSE,
+      'tooltips_value_prefix' => '',
+      'tooltips_value_suffix' => '',
+      'placement_location' => 'end',
     ];
   }
 
   /**
    * {@inheritdoc}
    */
-  public static function isApplicable($filter = NULL, array $filter_options = []) {
+  public static function isApplicable(mixed $filter = NULL, array $filter_options = []): bool {
     /** @var \Drupal\views\Plugin\views\filter\FilterPluginBase $filter */
     $is_applicable = FALSE;
 
-    // The date filter handler extends the numeric filter handler so we have
+    // The date filter handler extends the numeric filter handler, so we have
     // to exclude it specifically.
     $is_numeric_filter = is_a($filter, 'Drupal\views\Plugin\views\filter\NumericFilter');
     $is_range_filter = is_a($filter, 'Drupal\range\Plugin\views\filter\Range');
@@ -62,7 +67,7 @@ class Sliders extends FilterWidgetBase {
   /**
    * {@inheritdoc}
    */
-  public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
+  public function buildConfigurationForm(array $form, FormStateInterface $form_state): array {
     /** @var \Drupal\views\Plugin\views\filter\FilterPluginBase $filter */
     $filter = $this->handler;
 
@@ -72,14 +77,14 @@ class Sliders extends FilterWidgetBase {
       '#type' => 'number',
       '#title' => $this->t('Range minimum'),
       '#default_value' => $this->configuration['min'],
-      '#description' => $this->t('The minimum allowed value for the jQuery range slider. It can be positive, negative, or zero and have up to 11 decimal places.'),
+      '#description' => $this->t('The minimum allowed value for the range slider. It can be positive, negative, or zero and have up to 11 decimal places.'),
     ];
 
     $form['max'] = [
       '#type' => 'number',
       '#title' => $this->t('Range maximum'),
       '#default_value' => $this->configuration['max'],
-      '#description' => $this->t('The maximum allowed value for the jQuery range slider. It can be positive, negative, or zero and have up to 11 decimal places.'),
+      '#description' => $this->t('The maximum allowed value for the range slider. It can be positive, negative, or zero and have up to 11 decimal places.'),
     ];
 
     $form['step'] = [
@@ -95,9 +100,9 @@ class Sliders extends FilterWidgetBase {
       '#title' => $this->t('Animation speed'),
       '#options' => [
         self::ANIMATE_NONE => $this->t('None'),
-        self::ANIMATE_SLOW => $this->t('Slow'),
-        self::ANIMATE_NORMAL => $this->t('Normal'),
-        self::ANIMATE_FAST => $this->t('Fast'),
+        self::ANIMATE_SLOW => $this->t('Slow (600 ms)'),
+        self::ANIMATE_NORMAL => $this->t('Normal (400 ms)'),
+        self::ANIMATE_FAST => $this->t('Fast (200 ms)'),
         self::ANIMATE_CUSTOM => $this->t('Custom'),
       ],
       '#default_value' => $this->configuration['animate'],
@@ -124,7 +129,47 @@ class Sliders extends FilterWidgetBase {
         self::ORIENTATION_VERTICAL => $this->t('Vertical'),
       ],
       '#default_value' => $this->configuration['orientation'],
-      '#description' => $this->t('The orientation of the jQuery range slider.'),
+      '#description' => $this->t('The orientation of the range slider.'),
+    ];
+
+    $form['enable_tooltips'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Enable tooltips'),
+      '#default_value' => $this->configuration['enable_tooltips'],
+    ];
+
+    $form['tooltips_value_prefix'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Tooltips value prefix'),
+      '#default_value' => $this->configuration['tooltips_value_prefix'],
+      '#states' => [
+        'visible' => [
+          ':input[name="exposed_form_options[bef][filter][' . $filter->field . '][configuration][enable_tooltips]"]' => ['checked' => TRUE],
+        ],
+      ],
+    ];
+
+    $form['tooltips_value_suffix'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Tooltips value suffix'),
+      '#default_value' => $this->configuration['tooltips_value_suffix'],
+      '#states' => [
+        'visible' => [
+          ':input[name="exposed_form_options[bef][filter][' . $filter->field . '][configuration][enable_tooltips]"]' => ['checked' => TRUE],
+        ],
+      ],
+    ];
+
+    $form['placement_location'] = [
+      '#type' => 'select',
+      '#title' => $this->t('Placement Location'),
+      '#options' => [
+        'start' => $this->t('Start'),
+        'middle' => $this->t('Middle'),
+        'end' => $this->t('End'),
+      ],
+      '#default_value' => $this->configuration['placement_location'],
+      '#description' => $this->t('The placement of the slider.'),
     ];
 
     return $form;
@@ -133,7 +178,7 @@ class Sliders extends FilterWidgetBase {
   /**
    * {@inheritdoc}
    */
-  public function validateConfigurationForm(array &$form, FormStateInterface $form_state) {
+  public function validateConfigurationForm(array &$form, FormStateInterface $form_state): void {
     parent::validateConfigurationForm($form, $form_state);
 
     // Max must be > min.
@@ -151,8 +196,8 @@ class Sliders extends FilterWidgetBase {
       $form_state->setError($form['step'], $this->t('The slider step option for %name cannot have more than 5 decimal places.'));
     }
 
-    // Very small step and a vary large range can go beyond the max value of
-    // an int in PHP. Thus we look for a decimal point when casting the result
+    // Very small step and a very large range can go beyond the max value of
+    // an int in PHP. Thus, we look for a decimal point when casting the result
     // to a string.
     if (strpos((string) ($max - $min) / $step, '.')) {
       $form_state->setError($form['step'], $this->t('The slider range must be evenly divisible by the step option.'));
@@ -162,25 +207,41 @@ class Sliders extends FilterWidgetBase {
   /**
    * {@inheritdoc}
    */
-  public function exposedFormAlter(array &$form, FormStateInterface $form_state) {
+  public function exposedFormAlter(array &$form, FormStateInterface $form_state): void {
     $field_id = $this->getExposedFilterFieldId();
 
     parent::exposedFormAlter($form, $form_state);
 
-    // Attach the JS (@see /js/sliders.js)
-    $form[$field_id]['#attached']['library'][] = 'better_exposed_filters/sliders';
+    $data_selector = Html::getId($field_id);
+    // Add the JS placeholder.
+    $form["{$field_id}_wrapper"]["{$field_id}_wrapper"]['slider_wrapper'] = [
+      '#type' => 'container',
+      '#weight' => 0,
+      '#attributes' => [
+        'class' => "$data_selector-slider-wrapper",
+      ],
+    ];
+    $form["{$field_id}_wrapper"][$field_id]['min']['#weight'] = -1;
+    $form["{$field_id}_wrapper"][$field_id]['max']['#weight'] = 1;
+
+    // Attach the JS (@see /js/sliders.js).
+    $form["{$field_id}_wrapper"][$field_id]['#attached']['library'][] = 'better_exposed_filters/sliders';
 
     // Set the slider settings.
-    $form[$field_id]['#attached']['drupalSettings']['better_exposed_filters']['slider'] = TRUE;
-    $form[$field_id]['#attached']['drupalSettings']['better_exposed_filters']['slider_options'][$field_id] = [
+    $form["{$field_id}_wrapper"][$field_id]['#attached']['drupalSettings']['better_exposed_filters']['slider'] = TRUE;
+    $form["{$field_id}_wrapper"][$field_id]['#attached']['drupalSettings']['better_exposed_filters']['slider_options'][$field_id] = [
       'min' => $this->configuration['min'],
       'max' => $this->configuration['max'],
       'step' => $this->configuration['step'],
       'animate' => ($this->configuration['animate'] === self::ANIMATE_CUSTOM) ? $this->configuration['animate_ms'] : $this->configuration['animate'],
       'orientation' => $this->configuration['orientation'],
+      'placement_location' => $this->configuration['placement_location'],
       'id' => Html::getUniqueId($field_id),
-      'dataSelector' => Html::getId($field_id),
+      'dataSelector' => $data_selector,
       'viewId' => $form['#id'],
+      'tooltips' => $this->configuration['enable_tooltips'],
+      'tooltips_value_prefix' => $this->configuration['tooltips_value_prefix'],
+      'tooltips_value_suffix' => $this->configuration['tooltips_value_suffix'],
     ];
   }
 

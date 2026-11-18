@@ -2,12 +2,12 @@
 
 namespace Drupal\Tests\entity_usage\FunctionalJavascript;
 
+use Drupal\Tests\entity_usage\Traits\EntityUsageLastEntityQueryTrait;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
-use Drupal\node\Entity\Node;
-use Drupal\Tests\entity_usage\Traits\EntityUsageLastEntityQueryTrait;
 use Drupal\file\Entity\File;
 use Drupal\media\Entity\Media;
+use Drupal\node\Entity\Node;
 
 /**
  * Basic functional tests for the usage tracking of embedded content.
@@ -29,7 +29,7 @@ class EmbeddedContentTest extends EntityUsageJavascriptTestBase {
   /**
    * Tests the Entity Embed parsing.
    */
-  public function testEntityEmbed() {
+  public function testEntityEmbed(): void {
     $session = $this->getSession();
     $page = $session->getPage();
     $assert_session = $this->assertSession();
@@ -43,7 +43,7 @@ class EmbeddedContentTest extends EntityUsageJavascriptTestBase {
     $page->pressButton('Save');
     $session->wait(500);
     $this->saveHtmlOutput();
-    $assert_session->pageTextContains('eu_test_ct Node 1 has been created.');
+    $assert_session->pageTextContains('Entity Usage test content Node 1 has been created.');
     $node1 = $this->getLastEntityOfType('node', TRUE);
 
     // Nobody is using this guy for now.
@@ -79,7 +79,7 @@ class EmbeddedContentTest extends EntityUsageJavascriptTestBase {
     $this->assertEquals($expected, $usage);
 
     // Create node 3 referencing N2 and N1 on the same field.
-    $embedded_text .= '<p>Foo bar</p>' . '<drupal-entity data-embed-button="node" data-entity-embed-display="entity_reference:entity_reference_label" data-entity-embed-display-settings="{&quot;link&quot;:1}" data-entity-type="node" data-entity-uuid="' . $node2->uuid() . '"></drupal-entity>';
+    $embedded_text .= '<p>Foo bar</p><drupal-entity data-embed-button="node" data-entity-embed-display="entity_reference:entity_reference_label" data-entity-embed-display-settings="{&quot;link&quot;:1}" data-entity-type="node" data-entity-uuid="' . $node2->uuid() . '"></drupal-entity>';
     $node3 = Node::create([
       'type' => 'eu_test_ct',
       'title' => 'Node 3',
@@ -115,7 +115,7 @@ class EmbeddedContentTest extends EntityUsageJavascriptTestBase {
   /**
    * Tests the Entity Embed plugin parsing does not error with malformed HTML.
    */
-  public function testEntityEmbedWithMalformedHtml() {
+  public function testEntityEmbedWithMalformedHtml(): void {
     $embedded_text = '<drupal-entity data-embed-button="node" data-entity-embed-display="entity_reference:entity_reference_label" data-entity-embed-display-settings="{&quot;link&quot;:1}" data-entity-type="" data-entity-uuid=""></drupal-entity>';
 
     $node = Node::create([
@@ -136,7 +136,7 @@ class EmbeddedContentTest extends EntityUsageJavascriptTestBase {
   /**
    * Tests the LinkIt parsing.
    */
-  public function testLinkIt() {
+  public function testLinkIt(): void {
     $session = $this->getSession();
     $page = $session->getPage();
     $assert_session = $this->assertSession();
@@ -150,7 +150,7 @@ class EmbeddedContentTest extends EntityUsageJavascriptTestBase {
     $page->pressButton('Save');
     $session->wait(500);
     $this->saveHtmlOutput();
-    $assert_session->pageTextContains('eu_test_ct Node 1 has been created.');
+    $assert_session->pageTextContains('Entity Usage test content Node 1 has been created.');
     $node1 = $this->getLastEntityOfType('node', TRUE);
 
     // Nobody is using this guy for now.
@@ -186,7 +186,7 @@ class EmbeddedContentTest extends EntityUsageJavascriptTestBase {
     $this->assertEquals($expected, $usage);
 
     // Create node 3 referencing N2 and N1 on the same field.
-    $embedded_text .= '<p>Foo bar</p>' . '<p>foo2 <a data-entity-substitution="canonical" data-entity-type="node" data-entity-uuid="' . $node2->uuid() . '">linked text 2</a> bar 2</p>';
+    $embedded_text .= '<p>Foo bar</p><p>foo2 <a data-entity-substitution="canonical" data-entity-type="node" data-entity-uuid="' . $node2->uuid() . '">linked text 2</a> bar 2</p>';
     $node3 = Node::create([
       'type' => 'eu_test_ct',
       'title' => 'Node 3',
@@ -238,7 +238,7 @@ class EmbeddedContentTest extends EntityUsageJavascriptTestBase {
   /**
    * Tests the LinkIt plugin parsing does not error with malformed HTML.
    */
-  public function testLinkItdWithMalformedHtml() {
+  public function testLinkItdWithMalformedHtml(): void {
     $embedded_text = '<p>foo <a data-entity-substitution="canonical" data-entity-type="" data-entity-uuid="">linked text</a> bar</p>';
 
     $node = Node::create([
@@ -259,7 +259,7 @@ class EmbeddedContentTest extends EntityUsageJavascriptTestBase {
   /**
    * Tests the HtmlLink parsing.
    */
-  public function testHtmlLink() {
+  public function testHtmlLink(): void {
     $session = $this->getSession();
     $page = $session->getPage();
     $assert_session = $this->assertSession();
@@ -273,7 +273,7 @@ class EmbeddedContentTest extends EntityUsageJavascriptTestBase {
     $page->pressButton('Save');
     $session->wait(500);
     $this->saveHtmlOutput();
-    $assert_session->pageTextContains('eu_test_ct Node 1 has been created.');
+    $assert_session->pageTextContains('Entity Usage test content Node 1 has been created.');
     $node1 = $this->getLastEntityOfType('node', TRUE);
 
     // Nobody is using this guy for now.
@@ -309,7 +309,7 @@ class EmbeddedContentTest extends EntityUsageJavascriptTestBase {
     $this->assertEquals($expected, $usage);
 
     // Create node 3 referencing N2 and N1 on the same field.
-    $embedded_text .= '<p>Foo bar</p>' . '<p>foo2 <a href="/node/' . $node2->id() . '">linked text 2</a> bar 2</p>';
+    $embedded_text .= '<p>Foo bar</p><p>foo2 <a href="/node/' . $node2->id() . '">linked text 2</a> bar 2</p>';
     $node3 = Node::create([
       'type' => 'eu_test_ct',
       'title' => 'Node 3',
@@ -358,11 +358,13 @@ class EmbeddedContentTest extends EntityUsageJavascriptTestBase {
 
     // Create node 5 referencing node 4 using an absolute URL.
     $embedded_text = '<p>foo <a href="' . $node4->toUrl()->setAbsolute(TRUE)->toString() . '">linked text</a> bar</p>';
-    // Whitelist the local hostname so we can test absolute URLs.
+    // Configure the local hostname so we can test absolute URLs.
     $current_request = \Drupal::request();
     $config = \Drupal::configFactory()->getEditable('entity_usage.settings');
     $config->set('site_domains', [$current_request->getHttpHost() . $current_request->getBasePath()]);
     $config->save();
+    // Changing site domains requires services to be reconstructed.
+    $this->rebuildAll();
     $node5 = Node::create([
       'type' => 'eu_test_ct',
       'title' => 'Node 5',
@@ -405,7 +407,7 @@ class EmbeddedContentTest extends EntityUsageJavascriptTestBase {
     ])->save();
 
     // Create node 6 referencing N5 twice, once on each field.
-    $embedded_text = '<p>Foo bar</p>' . '<p>foo2 <a href="/node/' . $node5->id() . '">linked text 5</a> bar</p>';
+    $embedded_text = '<p>Foo bar</p><p>foo2 <a href="/node/' . $node5->id() . '">linked text 5</a> bar</p>';
     $node6 = Node::create([
       'type' => 'eu_test_ct',
       'title' => 'Node 6',
@@ -428,7 +430,7 @@ class EmbeddedContentTest extends EntityUsageJavascriptTestBase {
     foreach ($usages['node'][$node5->id()] as $usage) {
       $this->assertEquals(1, $usage['count']);
       $this->assertEquals('html_link', $usage['method']);
-      $this->assertTrue(in_array($usage['field_name'], ['field_eu_test_rich_text', 'field_eu_test_normal_text']));
+      $this->assertContains($usage['field_name'], ['field_eu_test_rich_text', 'field_eu_test_normal_text']);
     }
 
     // Create node 7 referencing node 6 using an aliased URL.
@@ -472,7 +474,7 @@ class EmbeddedContentTest extends EntityUsageJavascriptTestBase {
   /**
    * Tests Media embed parsing.
    */
-  public function testMediaEmbed() {
+  public function testMediaEmbed(): void {
     // Create media content.
     $file = File::create([
       'uri' => 'public://example.png',
@@ -550,7 +552,7 @@ class EmbeddedContentTest extends EntityUsageJavascriptTestBase {
   /**
    * Tests the MediaEmbed plugin parsing does not error with malformed HTML.
    */
-  public function testMediaEmbeddWithMalformedHtml() {
+  public function testMediaEmbedWithMalformedHtml(): void {
     $embedded_text = '<drupal-media data-entity-type="media" data-entity-uuid=""></drupal-media>';
 
     $node = Node::create([

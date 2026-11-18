@@ -21,8 +21,6 @@ namespace Symfony\Component\HttpFoundation\Session\Storage\Handler;
  */
 class MemcachedSessionHandler extends AbstractSessionHandler
 {
-    private \Memcached $memcached;
-
     /**
      * Time to live in seconds.
      */
@@ -42,10 +40,10 @@ class MemcachedSessionHandler extends AbstractSessionHandler
      *
      * @throws \InvalidArgumentException When unsupported options are passed
      */
-    public function __construct(\Memcached $memcached, array $options = [])
-    {
-        $this->memcached = $memcached;
-
+    public function __construct(
+        private \Memcached $memcached,
+        array $options = [],
+    ) {
         if ($diff = array_diff(array_keys($options), ['prefix', 'expiretime', 'ttl'])) {
             throw new \InvalidArgumentException(\sprintf('The following options are not supported "%s".', implode(', ', $diff)));
         }
@@ -72,6 +70,11 @@ class MemcachedSessionHandler extends AbstractSessionHandler
 
     public function updateTimestamp(#[\SensitiveParameter] string $sessionId, string $data): bool
     {
+        // PHP 8.6 calls updateTimestamp() instead of write() for a session that is still empty
+        if ('' === $data || (\function_exists('igbinary_serialize') && igbinary_serialize([]) === $data)) {
+            return $this->destroy($sessionId);
+        }
+
         $this->memcached->touch($this->prefix.$sessionId, $this->getCompatibleTtl());
 
         return true;

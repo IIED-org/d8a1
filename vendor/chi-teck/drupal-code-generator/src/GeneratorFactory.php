@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace DrupalCodeGenerator;
 
@@ -12,8 +14,8 @@ use DrupalCodeGenerator\Command\BaseGenerator;
  */
 final class GeneratorFactory {
 
-  private const DIRECTORY = Application::ROOT . '/src/Command';
-  private const NAMESPACE = '\DrupalCodeGenerator\Command';
+  private const string DIRECTORY = Application::ROOT . '/src/Command';
+  private const string NAMESPACE = '\DrupalCodeGenerator\Command';
 
   /**
    * Constructs the object.

@@ -2,11 +2,14 @@
 
 namespace Drupal\better_exposed_filters\Plugin\better_exposed_filters\sort;
 
+use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\better_exposed_filters\BetterExposedFiltersHelper;
 use Drupal\better_exposed_filters\Plugin\BetterExposedFiltersWidgetBase;
 use Drupal\better_exposed_filters\Plugin\BetterExposedFiltersWidgetInterface;
-use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Base class for Better exposed pager widget plugins.
@@ -20,8 +23,7 @@ abstract class SortWidgetBase extends BetterExposedFiltersWidgetBase implements 
    *
    * @var array
    */
-  protected $sortElements = [
-    'sort_bef_combine',
+  protected array $sortElements = [
     'sort_by',
     'sort_order',
   ];
@@ -29,7 +31,28 @@ abstract class SortWidgetBase extends BetterExposedFiltersWidgetBase implements 
   /**
    * {@inheritdoc}
    */
-  public function defaultConfiguration() {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, Request $request, ConfigFactoryInterface $configFactory) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition, $request, $configFactory);
+    $this->sortElements[] = $this->getCombineSortKey();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition): static {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('request_stack')->getCurrentRequest(),
+      $container->get('config.factory'),
+    );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function defaultConfiguration(): array {
     return parent::defaultConfiguration() + [
       'advanced' => [
         'collapsible' => FALSE,
@@ -39,6 +62,7 @@ abstract class SortWidgetBase extends BetterExposedFiltersWidgetBase implements 
         'is_secondary' => FALSE,
         'reset' => FALSE,
         'reset_label' => '',
+        'no_reset' => FALSE,
       ],
     ];
   }
@@ -46,14 +70,14 @@ abstract class SortWidgetBase extends BetterExposedFiltersWidgetBase implements 
   /**
    * {@inheritdoc}
    */
-  public static function isApplicable($handler = NULL, array $options = []) {
+  public static function isApplicable(mixed $handler = NULL, array $options = []): bool {
     return TRUE;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
+  public function buildConfigurationForm(array $form, FormStateInterface $form_state): array {
     $form = [];
 
     $form['advanced'] = [
@@ -66,10 +90,23 @@ abstract class SortWidgetBase extends BetterExposedFiltersWidgetBase implements 
       '#type' => 'checkbox',
       '#title' => $this->t('Combine sort order with sort by'),
       '#default_value' => !empty($this->configuration['advanced']['combine']),
-      '#description' => $this->t('Combines the sort by options and order (ascending or decending) into a single list.  Use this to display "Option1 (ascending)", "Option1 (descending)", "Option2 (ascending)", "Option2 (descending)" in a single form element. Sort order should first be exposed by selecting <em>Allow people to choose the sort order</em>.'),
+      '#description' => $this->t('Combines the sort by options and order (ascending or descending) into a single list.  Use this to display "Option1 (ascending)", "Option1 (descending)", "Option2 (ascending)", "Option2 (descending)" in a single form element. Sort order should first be exposed by selecting <em>Allow people to choose the sort order</em>.'),
       '#states' => [
         'enabled' => [
           ':input[name="exposed_form_options[expose_sort_order]"]' => ['checked' => TRUE],
+        ],
+      ],
+    ];
+
+    $form['advanced']['combine_param'] = [
+      '#type' => 'textfield',
+      '#title' => t('Enter a query parameter to use for combined sorts'),
+      '#default_value' => $this->getCombineSortKey(),
+      '#description' => t('This will be the $_GET parameter used in query strings. Useful for preventing collisions between exposed filters when there are multiple instances of BEF on the page.'),
+      '#required' => TRUE,
+      '#states' => [
+        'visible' => [
+          ':input[name="exposed_form_options[bef][sort][configuration][advanced][combine]"]' => ['checked' => TRUE],
         ],
       ],
     ];
@@ -110,6 +147,17 @@ Title Desc|Z -> A</pre> Leave the replacement text blank to remove an option alt
           ':input[name="exposed_form_options[bef][sort][configuration][advanced][reset]"]' => ['checked' => TRUE],
         ],
       ],
+    ];
+
+    // Keep the exposed sort value when the form's reset button is clicked.
+    // This is distinct from the "Reset sort" option above, which adds a link
+    // that returns the sort to its default; here the exposed sort is simply
+    // left untouched by the global reset button.
+    $form['advanced']['no_reset'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Do not reset the exposed sort'),
+      '#default_value' => !empty($this->configuration['advanced']['no_reset']),
+      '#description' => $this->t('When the user clicks the reset button, the exposed sort keeps its current value instead of being cleared.'),
     ];
 
     $form['advanced']['collapsible'] = [
@@ -154,7 +202,7 @@ Title Desc|Z -> A</pre> Leave the replacement text blank to remove an option alt
   /**
    * {@inheritdoc}
    */
-  public function exposedFormAlter(array &$form, FormStateInterface $form_state) {
+  public function exposedFormAlter(array &$form, FormStateInterface $form_state): void {
     $is_collapsible = $this->configuration['advanced']['collapsible']
       && !empty($this->configuration['advanced']['collapsible_label']);
     $is_secondary = !empty($form['secondary']) && $this->configuration['advanced']['is_secondary'];
@@ -193,7 +241,7 @@ Title Desc|Z -> A</pre> Leave the replacement text blank to remove an option alt
         $options = [' ' => $this->configuration['advanced']['reset_label']] + $options;
       }
 
-      $form['sort_bef_combine'] = [
+      $form[$this->getCombineSortKey()] = [
         '#type' => 'select',
         '#options' => $options,
         '#default_value' => $selected,
@@ -206,7 +254,7 @@ Title Desc|Z -> A</pre> Leave the replacement text blank to remove an option alt
 
       // Pretend we're another exposed form widget.
       $form['#info']['sort-sort_bef_combine'] = [
-        'value' => 'sort_bef_combine',
+        'value' => $this->getCombineSortKey(),
       ];
 
       // Remove the existing sort_by and sort_order elements.
@@ -221,11 +269,15 @@ Title Desc|Z -> A</pre> Leave the replacement text blank to remove an option alt
     }
 
     // If selected, collect all sort-related form elements and put them in a
-    // details element.
+    // details' element.
     if ($is_collapsible) {
       $form['bef_sort_options'] = [
         '#type' => 'details',
         '#title' => $this->configuration['advanced']['collapsible_label'],
+        '#attributes' => [
+          'class' => ['form-item'],
+        ],
+
       ];
 
       if ($is_secondary) {
@@ -256,23 +308,33 @@ Title Desc|Z -> A</pre> Leave the replacement text blank to remove an option alt
   }
 
   /**
-   * Unpacks sort_by and sort_order from the sort_bef_combine element.
+   * Unpacks sort_by and sort_order from the combine_param element.
    *
    * @param array $form
    *   An associative array containing the structure of the form.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the form.
    */
-  public function sortCombineSubmitForm(array $form, FormStateInterface $form_state) {
+  public function sortCombineSubmitForm(array $form, FormStateInterface $form_state): void {
     $sort_by = $sort_order = '';
-    $combined = $form_state->getValue('sort_bef_combine');
-    if (!empty($combined)) {
+    $combined = $form_state->getValue($this->getCombineSortKey());
+    if (is_string($combined) && strlen($combined) > 0) {
       $parts = explode('_', $combined);
       $sort_order = trim(array_pop($parts));
       $sort_by = trim(implode('_', $parts));
     }
     $form_state->setValue('sort_by', $sort_by);
     $form_state->setValue('sort_order', $sort_order);
+  }
+
+  /**
+   * Returns the URL parameter that is used for the combine sort feature.
+   *
+   * @return string
+   *   'combine_param' ?? 'sort_bef_combine
+   */
+  public function getCombineSortKey(): string {
+    return $this->configuration['advanced']['combine_param'] ?? 'sort_bef_combine';
   }
 
 }

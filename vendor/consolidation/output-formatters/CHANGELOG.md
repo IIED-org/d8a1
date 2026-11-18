@@ -1,5 +1,20 @@
 # Change Log
 
+### 4.7.2 - 4 Nov 2026
+
+- PHP 8.6
+- Fix deprecation warning on PHP 8.1+ in tsvEscape
+
+### 4.7.1 - 28 Mar 2026
+
+- Allow Symfony 8 (#116)
+- Add Symfony major version matrix to CI (#117)
+
+### 4.7.0 - 14 Nov 2025
+
+- setInput now returns $this (#113)
+- PHP 8.5 support
+
 ### 4.6.0 - 18 Oct 2024
 
 - Add setTableDefaultFields method to FormatterOptions

@@ -50,10 +50,7 @@ class CompiledUrlMatcherDumper extends MatcherDumper
             EOF;
     }
 
-    /**
-     * @return void
-     */
-    public function addExpressionLanguageProvider(ExpressionFunctionProviderInterface $provider)
+    public function addExpressionLanguageProvider(ExpressionFunctionProviderInterface $provider): void
     {
         $this->expressionLanguageProviders[] = $provider;
     }
@@ -85,7 +82,7 @@ class CompiledUrlMatcherDumper extends MatcherDumper
 
         [$staticRoutes, $dynamicRoutes] = $this->groupStaticRoutes($routes);
 
-        $conditions = [null];
+        $conditions = ['' => null];
         $compiledRoutes[] = $this->compileStaticRoutes($staticRoutes, $conditions);
         $chunkLimit = \count($dynamicRoutes);
 
@@ -107,7 +104,7 @@ class CompiledUrlMatcherDumper extends MatcherDumper
         if ($forDump) {
             $compiledRoutes[2] = $compiledRoutes[4];
         }
-        unset($conditions[0]);
+        unset($conditions['']);
 
         if ($conditions) {
             foreach ($conditions as $expression => $condition) {
@@ -318,6 +315,17 @@ class CompiledUrlMatcherDumper extends MatcherDumper
                         $state->vars = [];
                         $hostRegex = '(?i:'.preg_replace_callback('#\?P<([^>]++)>#', $state->getVars, $rx[1]).')\.';
                         $state->hostVars = $state->vars;
+
+                        if ($state->hostVars) {
+                            // Group 1 captures the path so that host variables cannot match any part of it.
+                            // Group 1 is mapped to the first host variable, then the group of that variable overwrites it.
+                            // The first lookahead skips the capture when the host cannot match.
+                            // It is left out when requirements contain named groups, because a regexp can't define the same name twice.
+                            $hostCheck = preg_replace('#\?P<[^>]++>#', '?:', $rx[1]);
+                            $hostCheck = preg_match('#\(\?(?:<[^=!]|\')#', $hostCheck) ? '' : '(?=(?i:'.$hostCheck.')\.)';
+                            $hostRegex = $hostCheck.'(?=[^/]*+(.*+))'.$hostRegex.'(?=\1)';
+                            array_unshift($state->hostVars, $state->hostVars[0]);
+                        }
                     } else {
                         $hostRegex = '(?:(?:[^./]*+\.)++)';
                         $state->hostVars = [];
@@ -430,7 +438,7 @@ class CompiledUrlMatcherDumper extends MatcherDumper
             unset($defaults['_canonical_route']);
         }
 
-        if ($condition = $route->getCondition()) {
+        if ('' !== $condition = $route->getCondition()) {
             $condition = $this->getExpressionLanguage()->compile($condition, ['context', 'request', 'params']);
             $condition = $conditions[$condition] ??= (str_contains($condition, '$request') ? 1 : -1) * \count($conditions);
         } else {
@@ -473,11 +481,10 @@ class CompiledUrlMatcherDumper extends MatcherDumper
         if (null === $value) {
             return 'null';
         }
+        if (\is_object($value)) {
+            throw new \InvalidArgumentException(\sprintf('Symfony\Component\Routing\Route cannot contain objects, but "%s" given.', get_debug_type($value)));
+        }
         if (!\is_array($value)) {
-            if (\is_object($value)) {
-                throw new \InvalidArgumentException('Symfony\Component\Routing\Route cannot contain objects.');
-            }
-
             return str_replace("\n", '\'."\n".\'', var_export($value, true));
         }
         if (!$value) {

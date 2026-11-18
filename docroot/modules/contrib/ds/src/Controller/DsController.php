@@ -4,7 +4,6 @@ namespace Drupal\ds\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
-use Drupal\Core\Link;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
 use Drupal\field_ui\FieldUI;
@@ -55,7 +54,7 @@ class DsController extends ControllerBase {
         $bundles = \Drupal::service('entity_type.bundle.info')->getBundleInfo($entity_type);
         foreach ($bundles as $bundle_type => $bundle) {
           $row = [];
-          $operations = '';
+          $manage_display_url = NULL;
           $row[] = [
             'data' => [
               '#plain_text' => $bundle['label'],
@@ -67,22 +66,24 @@ class DsController extends ControllerBase {
             $route = FieldUI::getOverviewRouteInfo($entity_type, $bundle_type);
             if ($route) {
               try {
-                $operations = Link::fromTextAndUrl($this->t('Manage display'), Url::fromRoute("entity.entity_view_display.$entity_type.default", $route->getRouteParameters()))->toString();
+                $manage_display_url = Url::fromRoute("entity.entity_view_display.$entity_type.default", $route->getRouteParameters());
               }
-              catch (\Exception $ignored) { }
+              catch (\Exception $ignored) {
+              }
             }
           }
 
           // Add operation links.
-          if (!empty($operations)) {
-            // Simulate a drop button. Not using operations because we are
-            // catching exceptions from the route generation, sometimes they
-            // simply fatal.
-            // @see https://www.drupal.org/project/ds/issues/3036765
+          if (!empty($manage_display_url)) {
             $row[] = [
               'data' => [
-                '#type' => 'markup',
-                '#markup' => '<div class="dropbutton-wrapper dropbutton-single"><div class="dropbutton-widget"><ul class="dropbutton"><li class="manage-display dropbutton-action">' . $operations . '</li></ul></div></div>',
+                '#type' => 'operations',
+                '#links' => [
+                  'manage_display' => [
+                    'title' => $this->t('Manage display'),
+                    'url' => $manage_display_url,
+                  ],
+                ],
               ],
             ];
           }
@@ -97,7 +98,7 @@ class DsController extends ControllerBase {
           $header = [
             ['data' => $info->getLabel()],
             [
-              'data' => $field_ui_enabled ? $this->t('operations') : '',
+              'data' => $field_ui_enabled ? $this->t('Operations') : '',
               'class' => 'ds-display-list-options',
             ],
           ];
@@ -111,6 +112,7 @@ class DsController extends ControllerBase {
     }
 
     $build['#attached']['library'][] = 'ds/admin';
+    $build['#attached']['library'][] = 'core/drupal.dropbutton';
 
     return $build;
   }

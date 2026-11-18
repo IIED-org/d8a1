@@ -2,8 +2,8 @@
 
 namespace Drupal\address\Plugin\diff\Field;
 
-use Drupal\diff\Plugin\diff\Field\CoreFieldBuilder;
 use Drupal\Core\Field\FieldItemListInterface;
+use Drupal\diff\Plugin\diff\Field\CoreFieldBuilder;
 
 /**
  * Plugin to compare address for address fields.
@@ -21,12 +21,15 @@ class AddressFieldBuilder extends CoreFieldBuilder {
   /**
    * {@inheritdoc}
    */
-  public function build(FieldItemListInterface $field_items) {
+  public function build(FieldItemListInterface $field_items): array {
     $result = [];
 
     foreach ($field_items as $field_key => $field_item) {
       if (!$field_item->isEmpty()) {
-        $value = $field_item->view(['label' => 'hidden', 'type' => 'address_plain']);
+        $value = $field_item->view([
+          'label' => 'hidden',
+          'type' => 'address_plain',
+        ]);
         $rendered_value = $this->renderer->renderPlain($value);
         $result[$field_key][] = $rendered_value;
       }

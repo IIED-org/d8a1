@@ -1,14 +1,13 @@
 name: Leaflet Mapbox
 description: Provides Leaflet integration with Mapbox
 type: module
-package: Leaflet
+package: Geofield
+core_version_requirement: ^10.3 || ^11 || ^12
 configure: leaflet_mapbox.settings
 dependencies:
   - leaflet:leaflet
 
-core_version_requirement: ^10.3 || ^11
-
-# Information added by Drupal.org packaging script on 2025-05-05
-version: '2.0.1'
+# Information added by Drupal.org packaging script on 2026-07-21
+version: '2.0.2'
 project: 'leaflet_mapbox'
-datestamp: 1746428511
+datestamp: 1784672868

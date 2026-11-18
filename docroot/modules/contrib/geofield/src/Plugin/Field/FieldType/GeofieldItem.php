@@ -2,29 +2,51 @@
 
 namespace Drupal\geofield\Plugin\Field\FieldType;
 
-use Drupal\Core\Field\FieldDefinitionInterface;
-use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Field\FieldItemBase;
-use Drupal\Core\Field\FieldStorageDefinitionInterface;
-use Drupal\Core\TypedData\DataDefinition;
 use Drupal\Component\Plugin\Exception\PluginException;
 use Drupal\Component\Render\FormattableMarkup;
+use Drupal\Core\Field\Attribute\FieldType;
+use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Field\FieldItemBase;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\TypedData\DataDefinition;
 
 /**
  * Plugin implementation of the 'geofield' field type.
  *
- * @FieldType(
- *   id = "geofield",
- *   label = @Translation("Geofield"),
- *   description = @Translation("This field stores geospatial information."),
- *   default_widget = "geofield_latlon",
- *   default_formatter = "geofield_default"
- * )
+ * @property string|null $value
+ * @property string|null $geo_type
+ * @property float|null $lat
+ * @property float|null $lon
+ * @property float|null $left
+ * @property float|null $top
+ * @property float|null $right
+ * @property float|null $bottom
+ * @property string|null $geohash
+ * @property string|null $latlon
  */
+#[FieldType(
+  id: 'geofield',
+  label: new TranslatableMarkup('Geofield'),
+  description: new TranslatableMarkup('This field stores geospatial information.'),
+  default_widget: 'geofield_latlon',
+  default_formatter: 'geofield_default',
+)]
 class GeofieldItem extends FieldItemBase {
 
   /**
+   * The Geofield Geometry.
+   *
+   * @var \Geometry|null
+   */
+  protected ?\Geometry $geometry;
+
+  /**
    * {@inheritdoc}
+   *
+   * @return array
+   *   The default storage settings, keyed by setting name.
    */
   public static function defaultStorageSettings() {
     return [
@@ -34,6 +56,9 @@ class GeofieldItem extends FieldItemBase {
 
   /**
    * {@inheritdoc}
+   *
+   * @return array
+   *   The default field settings, keyed by setting name.
    */
   public static function defaultFieldSettings() {
     return [] + parent::defaultFieldSettings();
@@ -41,6 +66,9 @@ class GeofieldItem extends FieldItemBase {
 
   /**
    * {@inheritdoc}
+   *
+   * @return array
+   *   The schema of the field columns and indexes.
    */
   public static function schema(FieldStorageDefinitionInterface $field_definition) {
     /** @var \Drupal\geofield\Plugin\GeofieldBackendManager $backend_manager */
@@ -52,7 +80,7 @@ class GeofieldItem extends FieldItemBase {
       }
     }
     catch (PluginException $e) {
-      watchdog_exception("geofield_backend_manager", $e);
+      \Drupal::service('logger.factory')->get('geofield')->error($e->getMessage());
     }
     return [
       'columns' => [
@@ -120,6 +148,9 @@ class GeofieldItem extends FieldItemBase {
 
   /**
    * {@inheritdoc}
+   *
+   * @return array
+   *   The property definitions, keyed by property name.
    */
   public static function propertyDefinitions(FieldStorageDefinitionInterface $field_definition) {
     $properties['value'] = DataDefinition::create('string')
@@ -158,6 +189,9 @@ class GeofieldItem extends FieldItemBase {
 
   /**
    * {@inheritdoc}
+   *
+   * @return array
+   *   The form elements for the storage settings.
    */
   public function storageSettingsForm(array &$form, FormStateInterface $form_state, $has_data) {
     $settings = $this->getSettings();
@@ -188,6 +222,9 @@ class GeofieldItem extends FieldItemBase {
 
   /**
    * {@inheritdoc}
+   *
+   * @return bool
+   *   TRUE if the field item holds no value, FALSE otherwise.
    */
   public function isEmpty() {
     $value = $this->get('value')->getValue();
@@ -196,9 +233,8 @@ class GeofieldItem extends FieldItemBase {
       // Note: Geofield FieldType doesn't support Dependency Injection yet
       // (https://www.drupal.org/node/2053415).
       $geo_php_wrapper = \Drupal::service('geofield.geophp');
-      /** @var \Geometry|null $geometry */
-      $geometry = $geo_php_wrapper->load($value);
-      return $geometry instanceof \Geometry ? $geometry->isEmpty() : FALSE;
+      $this->geometry = $geo_php_wrapper->load($value);
+      return $this->geometry instanceof \Geometry ? $this->geometry->isEmpty() : TRUE;
     }
     return TRUE;
   }
@@ -220,30 +256,28 @@ class GeofieldItem extends FieldItemBase {
     // As passing null to parameter #2 ($data) of type string is deprecated in
     // fwrite() of geoPHP::detectFormat()
     // @see https://php.watch/versions/8.1/internal-func-non-nullable-null-deprecation
-    if ($this->value !== NULL) {
-      /** @var \Geometry $geom */
-      $geom = \Drupal::service('geofield.geophp')->load($this->value);
-    }
-
-    if (!empty($geom) && !$geom->isEmpty()) {
+    if (!$this->isEmpty()) {
       /** @var \Point $centroid */
-      $centroid = $geom->getCentroid();
-      $bounding = $geom->getBBox();
+      $centroid = $this->geometry->getCentroid();
+      $bounding = $this->geometry->getBBox();
 
-      $this->geo_type = $geom->geometryType();
+      $this->geo_type = $this->geometry->geometryType();
       $this->lon = $centroid->getX();
       $this->lat = $centroid->getY();
       $this->left = $bounding['minx'];
       $this->top = $bounding['maxy'];
       $this->right = $bounding['maxx'];
       $this->bottom = $bounding['miny'];
-      $this->geohash = substr($geom->out('geohash'), 0, GEOFIELD_GEOHASH_LENGTH);
+      $this->geohash = substr($this->geometry->out('geohash'), 0, GEOFIELD_GEOHASH_LENGTH);
       $this->latlon = $centroid->getY() . ',' . $centroid->getX();
     }
   }
 
   /**
    * {@inheritdoc}
+   *
+   * @return array
+   *   The sample value of the field item.
    */
   public static function generateSampleValue(FieldDefinitionInterface $field_definition) {
     return [

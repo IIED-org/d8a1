@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Drupal\Tests\google_tag\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Csp integration event test.
@@ -12,6 +14,8 @@ use Drupal\KernelTests\KernelTestBase;
  * @group google_tag
  * @requires module csp
  */
+#[Group('google_tag')]
+#[RunTestsInSeparateProcesses]
 final class CspIntegrationTest extends KernelTestBase {
 
   /**

@@ -1,10 +1,9 @@
 # Geofield
 
-Geofield is an advanced module for storing, managing and representing dynamic
-Geographic data in Drupal. It supports all geo-types (points, lines, polygons,
-multi types geometries, etc.), and integrates with various Js Mapping Libraries
-(Google Maps, Leaflet, etc.) and advanced Geocoding / Reverse Geocoding
-functionalities, via many other Drupal Geo Mapping modules.
+Provides a geo-location field for storing and managing geographic data, enabling
+the integration of maps, geocoding and location-based functionalities. It
+supports all geo-types (points, lines, polygons, multi types geometries), and
+integrates with various Js Mapping Libraries (Google Maps, Leaflet, etc.)
 
 For a full description of the module, visit the
 [project page](https://www.drupal.org/project/geofield).
@@ -26,10 +25,9 @@ it means simply running the following command from your project root:
 
 __$ composer require drupal/geofield__
 
-This process will also download the required <a href="https://github.com/phayes/geoPHP" title="GeoPHP library" target="_blank" rel="nofollow">GeoPHP library</a> dependency,
-that will be sited in the /vendor folder.
-For further information, see
-[Installing Drupal Modules](https://www.drupal.org/docs/extending-drupal/installing-drupal-modules).
+This process will also download the required [GeoPHP library](https://github.com/phayes/geoPHP)
+dependency, that will be sited in the /vendor folder. For further information,
+see [Installing Drupal Modules](https://www.drupal.org/docs/extending-drupal/installing-drupal-modules).
 
 
 ## Configuration
@@ -41,14 +39,15 @@ any entity type/bundle and then choose the preferred widget or formatter.
 ## Advanced Mapping and Geocoding with Geofield
 
 Geofield perfectly matches and extends itself with its dependent most adopted
-third party modules, such as::
+third party modules, such as:
 
 - [Geofield Map](https://www.drupal.org/project/geofield_map): an advanced,
-  complete and easy-to-use Geo Mapping solution that lets you manage the Geofield
-  with an interactive Map both in back-end and in the front-end;
+  complete and easy-to-use Geo Mapping solution that lets you manage the
+  Geofield with an interactive Map both in back-end and in the front-end;
 - [Leaflet](https://www.drupal.org/project/leaflet): Drupal advanced integration
-  with the Leaflet JS mapping library. Advanced features for creating and editing
-  Points and Geometries Layers (Linestring, Polygon) so as for managing Leaflet
+  with the Leaflet JS mapping library. Advanced features for creating and
+  editing Points and Geometries Layers (Linestring, Polygon) so as for managing
+  Leaflet.
   Views styles and Formatters;
 - [Geocoder](https://www.drupal.org/project/geocoder): most advanced, complete
   and easy to use solution to process Geocode and Reverse Geocode operations on
@@ -64,7 +63,7 @@ third party modules, such as::
 ### Geofield Schema
 
 Geofield fields contain nine columns of information about the geographic data
-that is stores. At its heart is the 'wkt' column where it stores the full
+that it stores. At its heart is the 'wkt' column where it stores the full
 geometry in the 'Well Known Text' (WKT) format. All other columns are metadata
 derived from the WKT column. Columns are as follows:
 ```
@@ -80,47 +79,56 @@ derived from the WKT column. Columns are as follows:
 ```
 
 
-### Save or Updated a Geofield programmatically
+### Save or Update a Geofield Programmatically
 
-To save or update programatically a Geofield (both single and multivalue) it is sufficient to pass the WKT values/geometries to the
+To save or update programmatically a Geofield (both single and multivalue) it is
+sufficient to pass the WKT values/geometries to the
+`Drupal\geofield\Plugin\Field\FieldType\GeofieldItem` `setValue` public method.
 
-{Drupal\geofield\Plugin\Field\FieldType\GeofieldItem} setValue public method
+For instance, in case of a node entity containing a geofield named
+"field_geofield", it is possible to update/set its multiple values in the
+following way:
 
-For instance in case of a node entity containing a geofield named "field_geofield",
-it is possible to update/set its multiple values in the following way:
+```php
+  // The location of the Empire State Building, in New York City (US)
+  $empire_location_lon_lat = [-73.985664, 40.748441];
 
-     // The location of the Empire State Building, in New York City (US)
-     $empire_location_lon_lat = [-73.985664, 40.748441];
+  // Generate the WKT version of the point geometry:
+  // 'POINT (-73.985664 41.748441)'
+  $empire_location_wkt = \Drupal::service('geofield.wkt_generator')->wktBuildPoint($empire_location_lon_lat);
 
-     // Generate the WKT version of the point geometry: 'POINT (-73.985664 41.748441)'
-     $empire_location_wkt = \Drupal::service('geofield.wkt_generator')->wktBuildPoint($empire_location_lon_lat);
+  // Generate the (first) geofield value in the proper format.
+  $geofield_point = [
+    'value' => $empire_location_wkt,
+  ];
 
-     // Generate the (first) geofield value in the proper format.
-     $geofield_point = [
-     'value' => $empire_location_wkt,
-     ];
+  // Generate the (second) geofield value in the proper format.
+  // The perimeter of Bryant Park, in New York City (US)
+  $geofield_polygon = [
+    'value' => "POLYGON((-73.98411932014324 40.754779803566606," .
+      "-73.98502054237224 40.75354445673964," .
+      "-73.98186626457073 40.75221155678824," .
+      "-73.98092212699748 40.75344692838096," .
+      "-73.98411932014324 40.754779803566606))",
+  ];
 
-     // Generate the (second) geofield value in the proper format.
-     // The permiter of Bryant Park, in New York City (US)
-     $geofield_polygon = [
-     'value' => 'POLYGON((-73.98411932014324 40.754779803566606,-73.98502054237224 40.75354445673964,-73.98186626457073 40.75221155678824,-73.98092212699748 40.75344692838096,-73.98411932014324 40.754779803566606))',
-     ];
+  // Get the wanted entity ($id of a node in this example) and set the
+  // 'field_geofield' with the geofield values/geometries
+  $entity =  \Drupal\node\Entity\Node::load($id);
+  $geofield = $entity->get('field_geofield');
+  $geofield->setValue([$geofield_point, $geofield_polygon]);
+  $entity->save();
+```
 
-      // Get the wanted entity ($id of a node in this example) and set the
-      // 'field_geofield' with the goefield values/geometries
-      $entity =  \Drupal\node\Entity\Node::load($id);
-      $geofield = $entity->get('field_geofield');
-      $geofield->setValue([$geofield_point, $geofield_polygon]);
-      $entity->save();
+---
 
+## Authors / Maintainers
 
-## Maintainers
-
-Drupal 8, 9,10:
-- Italo Mairo (itamair) - https://www.drupal.org/u/itamair
+From Drupal 8 to today:
+- **Italo Mairo** — [itamair](https://www.drupal.org/u/itamair) - main maintainer
 
 Drupal 7:
-- Brandon Bergren (bdragon) - https://www.drupal.org/u/bdragon
-- Brandon Morrison (Brandonian) - https://www.drupal.org/u/brandonian
-- Patrick Hayes (phayes) - https://www.drupal.org/u/phayes
-- Pablo López (plopesc) - https://www.drupal.org/u/plopesc
+- **Patrick Hayes** - [phayes](https://www.drupal.org/u/phayes) - original creator
+- **Juraj Nemec** - [poker10](https://www.drupal.org/u/poker10)
+
+And credits to the wider Drupal community.

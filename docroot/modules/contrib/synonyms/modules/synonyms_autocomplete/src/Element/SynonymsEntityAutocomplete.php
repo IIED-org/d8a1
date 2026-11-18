@@ -126,6 +126,13 @@ class SynonymsEntityAutocomplete extends Textfield {
         $value[] = ['target_id' => $entity_id];
       }
     }
+
+    // If the number of values passed in is not the same as the number of items
+    // identified, there was a validation problem.
+    if (count($tokens) !== count($value)) {
+      $form_state->setError($element, t('At least one of the items entered could not be found.'));
+    }
+
     $form_state->setValueForElement($element, $value);
   }
 

@@ -42,6 +42,7 @@ class SynonymsEntity extends Entity {
 
     if ($entity_type->hasKey('label') || $entity_type->id() == 'user') {
       $query = $this->entityTypeManager->getStorage($entity_type->id())->getQuery();
+      $query->accessCheck(TRUE);
 
       // User entity type does not declare its label, while it does have one.
       $label_column = $entity_type->id() == 'user' ? 'name' : $entity_type->getKey('label');

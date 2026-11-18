@@ -22,16 +22,13 @@ use Symfony\Component\Mime\Part\TextPart;
  */
 final class FormDataPart extends AbstractMultipartPart
 {
-    private array $fields = [];
-
     /**
      * @param array<string|array|TextPart> $fields
      */
-    public function __construct(array $fields = [])
-    {
+    public function __construct(
+        private array $fields = [],
+    ) {
         parent::__construct();
-
-        $this->fields = $fields;
 
         // HTTP does not support \r\n in header values
         $this->getHeaders()->setMaxLineLength(\PHP_INT_MAX);
@@ -45,6 +42,24 @@ final class FormDataPart extends AbstractMultipartPart
     public function getParts(): array
     {
         return $this->prepareFields($this->fields);
+    }
+
+    public function __serialize(): array
+    {
+        return parent::__serialize() + ['fields' => $this->fields];
+    }
+
+    public function __unserialize(array $data): void
+    {
+        foreach (['fields', "\0".self::class."\0fields"] as $key) {
+            if (\array_key_exists($key, $data)) {
+                $this->fields = $data[$key];
+                unset($data[$key]);
+                break;
+            }
+        }
+
+        parent::__unserialize($data);
     }
 
     private function prepareFields(array $fields): array

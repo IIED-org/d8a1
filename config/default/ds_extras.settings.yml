@@ -9,3 +9,4 @@ hidden_region: false
 region_to_block: false
 override_node_revision: true
 override_node_revision_view_mode: revision
+switch_field_prefix: node--view-mode-

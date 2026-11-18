@@ -5,7 +5,7 @@ description: 'Replaces Drupal core MIME type extension-based guesser with Sophro
 dependencies:
   - sophron:sophron
 
-# Information added by Drupal.org packaging script on 2024-12-17
-version: '2.2.0'
+# Information added by Drupal.org packaging script on 2026-06-13
+version: '2.2.2'
 project: 'sophron'
-datestamp: 1734432601
+datestamp: 1781376761

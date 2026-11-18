@@ -14,15 +14,12 @@ namespace Solarium\Component\Result\TermVector;
  */
 class Document implements \IteratorAggregate, \Countable, \ArrayAccess
 {
-    /**
-     * @var string|null
-     */
-    protected $uniqueKey;
+    protected ?string $uniqueKey;
 
     /**
      * @var Field[]
      */
-    protected $fields;
+    protected array $fields;
 
     /**
      * Constructor.
@@ -100,7 +97,6 @@ class Document implements \IteratorAggregate, \Countable, \ArrayAccess
         return \array_key_exists($offset, $this->fields);
     }
 
-    #[\ReturnTypeWillChange]
     /**
      * ArrayAccess implementation.
      *
@@ -108,6 +104,7 @@ class Document implements \IteratorAggregate, \Countable, \ArrayAccess
      *
      * @return mixed
      */
+    #[\ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         return $this->fields[$offset];

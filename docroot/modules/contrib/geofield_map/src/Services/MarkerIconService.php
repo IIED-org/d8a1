@@ -361,9 +361,8 @@ class MarkerIconService {
     $this->extensionPathResolver = $extension_path_resolver;
     $this->logger = $logger_factory->get('geofield_map');
     $this->fileUploadValidators = [
-      'file_validate_extensions' => !empty($this->geofieldMapSettings->get('theming.markers_extensions')) ? [$this->geofieldMapSettings->get('theming.markers_extensions')] : ['gif png jpg jpeg'],
-      'geofield_map_file_validate_is_image' => [],
-      'file_validate_size' => !empty($this->geofieldMapSettings->get('theming.markers_filesize')) ? [Bytes::toNumber($this->geofieldMapSettings->get('theming.markers_filesize'))] : [Bytes::toNumber('250 KB')],
+      'FileExtension' => !empty($this->geofieldMapSettings->get('theming.markers_extensions')) ? ['extensions' => $this->geofieldMapSettings->get('theming.markers_extensions')] : ['extensions' => 'gif png jpg jpeg'],
+      'FileSizeLimit' => !empty($this->geofieldMapSettings->get('theming.markers_filesize')) ? ['fileLimit' => Bytes::toNumber($this->geofieldMapSettings->get('theming.markers_filesize'))] : ['fileLimit' => Bytes::toNumber('250 KB')],
     ];
     $this->defaultIconElement = [
       '#theme' => 'image',

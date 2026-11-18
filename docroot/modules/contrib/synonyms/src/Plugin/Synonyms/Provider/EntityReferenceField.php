@@ -94,6 +94,7 @@ class EntityReferenceField extends AbstractProvider implements DependentPluginIn
     $field = $this->getFieldDefinition();
 
     $query = new FieldQuery($entity_type_definition, 'AND', $this->database, QueryBase::getNamespaces($this->entityTypeManager->getStorage($entity_type_definition->id())->getQuery()));
+    $query->accessCheck(TRUE);
 
     if ($entity_type_definition->hasKey('bundle')) {
       $query->condition($entity_type_definition->getKey('bundle'), $this->getPluginDefinition()['controlled_bundle']);

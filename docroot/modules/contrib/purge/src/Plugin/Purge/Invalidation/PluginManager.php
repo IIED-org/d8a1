@@ -5,6 +5,7 @@ namespace Drupal\purge\Plugin\Purge\Invalidation;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
+use Drupal\purge\Attribute\PurgeInvalidation;
 
 /**
  * The invalidation type plugin manager.
@@ -27,8 +28,10 @@ class PluginManager extends DefaultPluginManager {
       'Plugin/Purge/Invalidation',
       $namespaces,
       $module_handler,
-      'Drupal\purge\Plugin\Purge\Invalidation\InvalidationInterface',
-      'Drupal\purge\Annotation\PurgeInvalidation');
+      InvalidationInterface::class,
+      PurgeInvalidation::class,
+      'Drupal\purge\Annotation\PurgeInvalidation',
+    );
     $this->alterInfo('purge_invalidation');
     $this->setCacheBackend($cache_backend, 'purge_invalidation_plugins');
   }

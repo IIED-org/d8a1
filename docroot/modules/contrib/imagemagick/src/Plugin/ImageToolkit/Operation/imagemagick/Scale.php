@@ -61,6 +61,14 @@ class Scale extends Resize {
       throw new \InvalidArgumentException("At least one dimension ('width' or 'height') must be provided to the image 'scale' operation");
     }
 
+    // Cast width and height as integers.
+    if (isset($arguments['width'])) {
+      $arguments['width'] = (int) $arguments['width'];
+    }
+    if (isset($arguments['height'])) {
+      $arguments['height'] = (int) $arguments['height'];
+    }
+
     // Calculate one of the dimensions from the other target dimension,
     // ensuring the same aspect ratio as the source dimensions. If one of the
     // target dimensions is missing, that is the one that is calculated. If both

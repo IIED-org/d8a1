@@ -2,9 +2,12 @@
 
 namespace Drupal\social_auth_google;
 
-use Drupal\Core\Logger\LoggerChannelFactoryInterface;
-use Drupal\social_auth\AuthManager\OAuth2Manager;
 use Drupal\Core\Config\ConfigFactory;
+use Drupal\Core\Logger\LoggerChannelFactoryInterface;
+use Drupal\Core\Utility\Error;
+use Drupal\social_auth\AuthManager\OAuth2Manager;
+use Drupal\social_auth\User\SocialAuthUser;
+use Drupal\social_auth\User\SocialAuthUserInterface;
 use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -14,49 +17,51 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class GoogleAuthManager extends OAuth2Manager {
 
   /**
-   * Constructor.
-   *
-   * @param \Drupal\Core\Config\ConfigFactory $configFactory
-   *   Used for accessing configuration object factory.
-   * @param \Drupal\Core\Logger\LoggerChannelFactoryInterface $logger_factory
-   *   The logger factory.
-   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
-   *   Used to get the authorization code from the callback request.
+   * GoogleAuthManager constructor.
    */
-  public function __construct(ConfigFactory $configFactory,
-                              LoggerChannelFactoryInterface $logger_factory,
-                              RequestStack $request_stack) {
-
-    parent::__construct($configFactory->get('social_auth_google.settings'),
-                        $logger_factory,
-                        $request_stack->getCurrentRequest());
+  public function __construct(
+    ConfigFactory $configFactory,
+    LoggerChannelFactoryInterface $logger_factory,
+    RequestStack $request_stack,
+  ) {
+    parent::__construct(
+      $configFactory->get('social_auth_google.settings'),
+      $logger_factory,
+      $request_stack->getCurrentRequest(),
+    );
   }
 
   /**
    * {@inheritdoc}
    */
-  public function authenticate() {
-    try {
-      $this->setAccessToken($this->client->getAccessToken('authorization_code',
-        ['code' => $this->request->query->get('code')]));
-    }
-    catch (IdentityProviderException $e) {
-      $this->loggerFactory->get('social_auth_google')
-        ->error('There was an error during authentication. Exception: ' . $e->getMessage());
+  public function authenticate(): void {
+    if ($code = $this->request->query->get('code')) {
+      try {
+        $this->setAccessToken($this->client->getAccessToken('authorization_code', ['code' => $code]));
+      }
+      catch (\Throwable $e) {
+        $this->loggerFactory->get('social_auth_google')->error('There was an error during authentication. ' . Error::DEFAULT_ERROR_MESSAGE . ' @backtrace_string', Error::decodeException($e));
+      }
     }
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getUserInfo() {
-    $access_token = $this->getAccessToken();
-    if (!$this->user && $access_token != NULL) {
-      $this->user = $this->client->getResourceOwner($this->getAccessToken());
-    }
-    else {
-      $this->loggerFactory->get('social_auth_google')
-        ->error('There was an error fetching the access token for user.');
+  public function getUserInfo(): SocialAuthUserInterface {
+    if (!$this->user && $access_token = $this->getAccessToken()) {
+      /** @var \League\OAuth2\Client\Provider\GoogleUser $owner */
+      $owner = $this->client->getResourceOwner($access_token);
+      $this->user = new SocialAuthUser(
+        $owner->getName(),
+        $owner->getId(),
+        $this->getAccessToken(),
+        $owner->getEmail(),
+        $owner->getAvatar(),
+        $this->getExtraDetails()
+      );
+      $this->user->setFirstName($owner->getFirstName());
+      $this->user->setLastName($owner->getLastName());
     }
     return $this->user;
   }
@@ -64,7 +69,7 @@ class GoogleAuthManager extends OAuth2Manager {
   /**
    * {@inheritdoc}
    */
-  public function getAuthorizationUrl() {
+  public function getAuthorizationUrl(): string {
     $scopes = [
       'email',
       'profile',
@@ -84,7 +89,7 @@ class GoogleAuthManager extends OAuth2Manager {
   /**
    * {@inheritdoc}
    */
-  public function requestEndPoint($method, $path, $domain = NULL, array $options = []) {
+  public function requestEndPoint(string $method, string $path, ?string $domain = NULL, array $options = []): mixed {
     if (!$domain) {
       $domain = 'https://www.googleapis.com';
     }
@@ -107,7 +112,7 @@ class GoogleAuthManager extends OAuth2Manager {
   /**
    * {@inheritdoc}
    */
-  public function getState() {
+  public function getState(): string {
     return $this->client->getState();
   }
 

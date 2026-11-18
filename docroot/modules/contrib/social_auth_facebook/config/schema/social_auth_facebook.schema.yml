@@ -2,12 +2,12 @@ social_auth_facebook.settings:
   type: config_object
   label: 'Social Auth Facebook settings'
   mapping:
-    app_id:
+    client_id:
       type: string
-      label: 'Application ID'
-    app_secret:
+      label: 'Client Id'
+    client_secret:
       type: string
-      label: 'App Secret'
+      label: 'Client Secret'
     graph_version:
       type: string
       label: 'Facebook Graph API version'

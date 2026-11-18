@@ -30,8 +30,6 @@ class SocialAuthFacebookLoginBlockTest extends SocialAuthTestBase {
 
   /**
    * Test that the path is included in the login block.
-   *
-   * @throws \Behat\Mink\Exception\ResponseTextException
    */
   public function testLinkExistsInBlock() {
     $this->checkLinkToProviderExists();

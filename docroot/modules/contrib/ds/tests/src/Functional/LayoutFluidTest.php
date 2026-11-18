@@ -23,8 +23,8 @@ class LayoutFluidTest extends TestBase {
 
     $assert = [
       'regions' => [
-        'left' => '<td colspan="8">' . t('Left') . '</td>',
-        'right' => '<td colspan="8">' . t('Right') . '</td>',
+        'left' => '<td colspan="8">' . $this->t('Left') . '</td>',
+        'right' => '<td colspan="8">' . $this->t('Right') . '</td>',
       ],
     ];
 
@@ -78,7 +78,7 @@ class LayoutFluidTest extends TestBase {
     $this->assertSession()->responseContains('group-right');
     $this->assertSession()->responseContains('group-one-column');
 
-    // Remove the css
+    // Remove the css.
     $fields = [
       'disable_css' => TRUE,
     ];

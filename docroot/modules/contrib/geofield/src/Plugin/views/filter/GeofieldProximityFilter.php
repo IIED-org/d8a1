@@ -4,20 +4,23 @@ namespace Drupal\geofield\Plugin\views\filter;
 
 use Drupal\Core\Database\Query\Condition;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Logger\LoggerChannelTrait;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\geofield\Plugin\GeofieldProximitySourceManager;
-use Symfony\Component\HttpFoundation\RequestStack;
+use Drupal\views\Attribute\ViewsFilter;
 use Drupal\views\Plugin\views\filter\NumericFilter;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Field handler to filter Geofields by proximity.
  *
  * @ingroup views_filter_handlers
- *
- * @ViewsFilter("geofield_proximity_filter")
  */
+#[ViewsFilter('geofield_proximity_filter')]
 class GeofieldProximityFilter extends NumericFilter {
+
+  use LoggerChannelTrait;
 
   /**
    * The Renderer service property.
@@ -84,6 +87,9 @@ class GeofieldProximityFilter extends NumericFilter {
 
   /**
    * {@inheritdoc}
+   *
+   * @return array
+   *   The options of the handler, with their defaults.
    */
   protected function defineOptions() {
     $options = parent::defineOptions();
@@ -130,7 +136,7 @@ class GeofieldProximityFilter extends NumericFilter {
     $plugin_definition,
     RendererInterface $renderer,
     GeofieldProximitySourceManager $proximity_source_manager,
-    RequestStack $request_stack
+    RequestStack $request_stack,
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->renderer = $renderer;
@@ -145,6 +151,9 @@ class GeofieldProximityFilter extends NumericFilter {
 
   /**
    * {@inheritdoc}
+   *
+   * @return static
+   *   A new instance of the plugin.
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     return new static(
@@ -159,6 +168,9 @@ class GeofieldProximityFilter extends NumericFilter {
 
   /**
    * Provide Operators List.
+   *
+   * @return array
+   *   The filter operators, keyed by operator id.
    */
   public function operators() {
     $operators = [
@@ -247,7 +259,7 @@ class GeofieldProximityFilter extends NumericFilter {
       }
     }
     catch (\Exception $e) {
-      watchdog_exception('geofield', $e);
+      $this->getLogger('geofield')->error($e->getMessage());
     }
   }
 
@@ -314,7 +326,7 @@ class GeofieldProximityFilter extends NumericFilter {
       $this->sourcePlugin->buildOptionsForm($form['source_configuration'], $form_state, ['source_configuration']);
     }
     catch (\Exception $e) {
-      watchdog_exception('geofield', $e);
+      $this->getLogger('geofield')->error($e->getMessage());
     }
   }
 
@@ -327,7 +339,7 @@ class GeofieldProximityFilter extends NumericFilter {
       $this->sourcePlugin->validateOptionsForm($form['source_configuration'], $form_state, ['source_configuration']);
     }
     catch (\Exception $e) {
-      watchdog_exception('geofield', $e);
+      $this->getLogger('geofield')->error($e->getMessage());
       $form_state->setErrorByName($form['source'], $this->t("The Proximity Source couldn't be set due to: @error", [
         '@error' => $e,
       ]));
@@ -585,7 +597,7 @@ class GeofieldProximityFilter extends NumericFilter {
         }
       }
       catch (\Exception $e) {
-        watchdog_exception('geofield', $e);
+        $this->getLogger('geofield')->error($e->getMessage());
         $form_state->setErrorByName($form['value']['source_configuration'], $this->t("The Proximity Source couldn't be set due to: @error", [
           '@error' => $e,
         ]));
@@ -595,6 +607,9 @@ class GeofieldProximityFilter extends NumericFilter {
 
   /**
    * {@inheritdoc}
+   *
+   * @return bool
+   *   TRUE if the exposed input is accepted, FALSE otherwise.
    */
   public function acceptExposedInput($input) {
     if (empty($this->options['exposed'])) {
@@ -638,7 +653,7 @@ class GeofieldProximityFilter extends NumericFilter {
       ];
     }
     catch (\Exception $e) {
-      watchdog_exception('geofield', $e);
+      $this->getLogger('geofield')->error($e->getMessage());
       return NULL;
     }
   }

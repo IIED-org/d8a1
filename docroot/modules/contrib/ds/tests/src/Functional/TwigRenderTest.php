@@ -15,7 +15,7 @@ class TwigRenderTest extends TestBase {
   public function testFieldNameTargeting() {
     // Create a node.
     $settings = ['type' => 'article', 'promote' => 1];
-    /* @var \Drupal\node\NodeInterface $node */
+    /** @var \Drupal\node\NodeInterface $node */
     $node = $this->drupalCreateNode($settings);
 
     // Configure layout.
@@ -24,7 +24,7 @@ class TwigRenderTest extends TestBase {
     ];
     $layout_assert = [
       'regions' => [
-        'ds_content' => '<td colspan="8">' . t('Content') . '</td>',
+        'ds_content' => '<td colspan="8">' . $this->t('Content') . '</td>',
       ],
     ];
     $this->dsSelectLayout($layout, $layout_assert);

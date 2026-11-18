@@ -5,6 +5,7 @@ namespace Drupal\address\Plugin\Field\FieldType;
 use CommerceGuys\Addressing\AddressFormat\AddressField;
 use CommerceGuys\Addressing\AddressFormat\FieldOverride;
 use CommerceGuys\Addressing\AddressFormat\FieldOverrides;
+use CommerceGuys\Addressing\Subdivision\SubdivisionUpdater;
 use Drupal\address\AddressInterface;
 use Drupal\address\FieldHelper;
 use Drupal\address\LabelHelper;
@@ -21,10 +22,68 @@ use Drupal\Core\TypedData\DataDefinition;
  *   id = "address",
  *   label = @Translation("Address"),
  *   description = @Translation("An entity field containing a postal address"),
- *   category = @Translation("Address"),
+ *   category = "address",
  *   default_widget = "address_default",
  *   default_formatter = "address_default",
- *   list_class = "\Drupal\address\Plugin\Field\FieldType\AddressFieldItemList"
+ *   list_class = "\Drupal\address\Plugin\Field\FieldType\AddressFieldItemList",
+ *   column_groups = {
+ *     "langcode" = {
+ *       "label" = @Translation("Langcode"),
+ *       "translatable" = TRUE
+ *     },
+ *     "country_code" = {
+ *       "label" = @Translation("Country code"),
+ *       "translatable" = TRUE
+ *     },
+ *     "administrative_area" = {
+ *       "label" = @Translation("Administrative area"),
+ *       "translatable" = TRUE
+ *     },
+ *     "locality" = {
+ *       "label" = @Translation("Locality"),
+ *       "translatable" = TRUE
+ *     },
+ *     "dependent_locality" = {
+ *       "label" = @Translation("Dependent locality"),
+ *       "translatable" = TRUE
+ *     },
+ *     "postal_code" = {
+ *       "label" = @Translation("Postal code"),
+ *       "translatable" = TRUE
+ *     },
+ *     "sorting_code" = {
+ *       "label" = @Translation("Sorting code"),
+ *       "translatable" = TRUE
+ *     },
+ *     "address_line1" = {
+ *       "label" = @Translation("Address line 1"),
+ *       "translatable" = TRUE
+ *     },
+ *     "address_line2" = {
+ *       "label" = @Translation("Address line 2"),
+ *       "translatable" = TRUE
+ *     },
+ *     "address_line3" = {
+ *       "label" = @Translation("Address line 3"),
+ *       "translatable" = TRUE
+ *     },
+ *     "organization" = {
+ *       "label" = @Translation("Organization"),
+ *       "translatable" = TRUE
+ *     },
+ *     "given_name" = {
+ *       "label" = @Translation("Given name"),
+ *       "translatable" = TRUE
+ *     },
+ *     "additional_name" = {
+ *       "label" = @Translation("Additional name"),
+ *       "translatable" = TRUE
+ *     },
+ *     "family_name" = {
+ *       "label" = @Translation("Family name"),
+ *       "translatable" = TRUE
+ *     },
+ *   },
  * )
  */
 class AddressItem extends FieldItemBase implements AddressInterface {
@@ -73,6 +132,10 @@ class AddressItem extends FieldItemBase implements AddressInterface {
           'type' => 'varchar',
           'length' => 255,
         ],
+        'address_line3' => [
+          'type' => 'varchar',
+          'length' => 255,
+        ],
         'organization' => [
           'type' => 'varchar',
           'length' => 255,
@@ -114,7 +177,7 @@ class AddressItem extends FieldItemBase implements AddressInterface {
     $properties['locality'] = DataDefinition::create('string')
       ->setLabel(t('The locality (i.e. city)'));
     $properties['dependent_locality'] = DataDefinition::create('string')
-      ->setLabel(t('The dependent locality (i.e. neighbourhood)'));
+      ->setLabel(t('The dependent locality (i.e. neighborhood)'));
     $properties['postal_code'] = DataDefinition::create('string')
       ->setLabel(t('The postal code'));
     $properties['sorting_code'] = DataDefinition::create('string')
@@ -123,6 +186,8 @@ class AddressItem extends FieldItemBase implements AddressInterface {
       ->setLabel(t('The first line of the address block'));
     $properties['address_line2'] = DataDefinition::create('string')
       ->setLabel(t('The second line of the address block'));
+    $properties['address_line3'] = DataDefinition::create('string')
+      ->setLabel(t('The third line of the address block'));
     $properties['organization'] = DataDefinition::create('string')
       ->setLabel(t('The organization'));
     $properties['given_name'] = DataDefinition::create('string')
@@ -338,7 +403,21 @@ class AddressItem extends FieldItemBase implements AddressInterface {
   public function getConstraints() {
     $constraints = parent::getConstraints();
     $constraint_manager = $this->getTypedDataManager()->getValidationConstraintManager();
-    $field_overrides = new FieldOverrides($this->getFieldOverrides());
+    $field_overrides = $this->getFieldOverrides();
+    if ($country_code = $this->getCountryCode()) {
+      // A "Required" override only makes sense for fields that are part of
+      // the selected country's address format. Ignore it otherwise, since
+      // the field is hidden from the form and can never be filled in (e.g.
+      // administrative_area for Sweden).
+      $address_format = \Drupal::service('address.address_format_repository')->get($country_code);
+      $used_fields = $address_format->getUsedFields();
+      foreach ($field_overrides as $field => $override) {
+        if ($override === FieldOverride::REQUIRED && !in_array($field, $used_fields, TRUE)) {
+          unset($field_overrides[$field]);
+        }
+      }
+    }
+    $field_overrides = new FieldOverrides($field_overrides);
     $constraints[] = $constraint_manager->create('ComplexData', [
       'country_code' => [
         'Country' => [
@@ -358,6 +437,18 @@ class AddressItem extends FieldItemBase implements AddressInterface {
     if (isset($values['langcode']) && $values['langcode'] === '') {
       $values['langcode'] = NULL;
     }
+    // If a subdivision ID has changed, allow it to be remapped.
+    // Primarily covers the 8.x-1.x => 2.0.x updates, where subdivisions
+    // started being keyed by ISO code where available.
+    if (isset($values['country_code'])) {
+      if (isset($values['administrative_area'])) {
+        $values['administrative_area'] = SubdivisionUpdater::updateValue($values['country_code'], $values['administrative_area']);
+      }
+      // Andorra is the only country with remapped localities.
+      if ($values['country_code'] == 'AD' && isset($values['locality'])) {
+        $values['locality'] = SubdivisionUpdater::updateValue($values['country_code'], $values['locality']);
+      }
+    }
 
     parent::setValue($values, $notify);
   }
@@ -373,7 +464,7 @@ class AddressItem extends FieldItemBase implements AddressInterface {
   /**
    * {@inheritdoc}
    */
-  public function getLocale() {
+  public function getLocale(): string {
     $langcode = $this->langcode;
     if (!$langcode) {
       // If no langcode was stored, fallback to the field langcode.
@@ -438,6 +529,13 @@ class AddressItem extends FieldItemBase implements AddressInterface {
    */
   public function getAddressLine2(): string {
     return $this->address_line2 ?? '';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getAddressLine3(): string {
+    return $this->address_line3 ?? '';
   }
 
   /**

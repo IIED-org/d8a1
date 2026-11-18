@@ -21,21 +21,6 @@ use Drupal\Core\Form\FormStateInterface;
 function username_enumeration_prevention_form_user_pass_alter(&$form, FormStateInterface $form_state, $form_id) {
   // Add uep validation handler.
   $form['#validate'][] = 'username_enumeration_prevention_pass_validate';
-
-  // Override core submit actions.
-  $key_submit = array_search('::submitForm', $form['#submit']);
-  if ($key_submit !== FALSE) {
-    $form['#submit'][$key_submit] = 'username_enumeration_prevention_pass_submit';
-  }
-}
-
-/**
- * Implements hook_form_FORM_ID_alter().
- *
- * Ensures usernames are not exposed when spoofing a reset password URL.
- */
-function username_enumeration_prevention_form_user_pass_reset_alter(&$form, FormStateInterface $form_state, $form_id) {
-  $form['message'] = ['#markup' => t('<p>This is a one-time login.</p><p>Click on this button to log in to the site and change your password.</p>')];
 }
 
 /**
@@ -52,6 +37,7 @@ function username_enumeration_prevention_pass_validate($form, FormStateInterface
     $account = user_load_by_name($name);
   }
 
+  /** @var \Drupal\user\UserInterface $account */
   if ($account && $account->id() && $account->isActive()) {
     $form_state->setValueForElement(['#parents' => ['account']], $account);
   }
@@ -61,27 +47,13 @@ function username_enumeration_prevention_pass_validate($form, FormStateInterface
 
   $form_state->set('username_enumeration_prevention_blocked', !empty($form_state->getErrors()));
 
-  // Clear errors so they are not displayed to the end-user.
-  $form_state->clearErrors();
-}
-
-/**
- * Overrides the user_pass_submit() found in user.pages.inc.
- */
-function username_enumeration_prevention_pass_submit($form, FormStateInterface $form_state) {
-  $account = $form_state->getValue('account');
-  if (isset($account) && !$form_state->get('username_enumeration_prevention_blocked')) {
-    $langcode = \Drupal::languageManager()->getCurrentLanguage()->getId();
-
-    // Mail one time login URL and instructions using current language.
-    $mail = _user_mail_notify('password_reset', $account, $langcode);
-    if (!empty($mail)) {
-      \Drupal::logger('username_enumeration_prevention')->notice('Password reset instructions mailed to %name at %email.', [
-        '%name' => $account->getAccountName(),
-        '%email' => $account->getEmail(),
-      ]);
+  // Do not display errors with sensitive information to end-users.
+  $form_errors = $form_state->getErrors();
+  if (isset($form_errors['name']) && !empty($name)) {
+    $form_state->clearErrors();
+    unset($form_errors['name']);
+    foreach ($form_errors as $name => $error_message) {
+      $form_state->setErrorByName($name, $error_message);
     }
   }
-  \Drupal::messenger()->addMessage(t('If the username or email address exists and is active, further instructions have been sent to your email address.'));
-  $form_state->setRedirect('user.page');
 }

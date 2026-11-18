@@ -2,11 +2,16 @@
 
 namespace Drupal\Tests\purge_ui\FunctionalJavascript;
 
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
+
 /**
  * Tests \Drupal\purge_ui\Controller\DashboardController in no modules state.
  *
  * @group purge
  */
+#[Group('purge')]
+#[RunTestsInSeparateProcesses]
 class DashboardEmptyTest extends DashboardTestBase {
 
   /**

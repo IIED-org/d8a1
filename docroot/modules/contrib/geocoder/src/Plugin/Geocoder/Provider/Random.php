@@ -9,7 +9,7 @@ use Geocoder\Model\AddressCollection;
 use Geocoder\Model\AdminLevelCollection;
 
 /**
- * Class Random.
+ * A geocoder provider that resolves random addresses.
  *
  * @GeocoderProvider(
  *  id = "random",

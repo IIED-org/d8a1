@@ -2,9 +2,11 @@
 
 namespace Drupal\Tests\geofield\Kernel;
 
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
+use PHPUnit\Framework\Attributes\DataProvider;
+use Drupal\Core\TypedData\DataDefinition;
 use Drupal\geofield\Plugin\Validation\Constraint\GeoConstraint;
-use Drupal\geofield\Plugin\Validation\Constraint\GeoConstraintValidator;
-use Drupal\geofield\GeoPHP\GeoPHPWrapper;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
@@ -12,6 +14,8 @@ use Drupal\KernelTests\KernelTestBase;
  *
  * @group geofield
  */
+#[Group('geofield')]
+#[RunTestsInSeparateProcesses]
 class ConstraintsTest extends KernelTestBase {
 
   /**
@@ -29,34 +33,26 @@ class ConstraintsTest extends KernelTestBase {
    *
    * @dataProvider geoProvider
    */
+  #[DataProvider('geoProvider')]
   public function testGeoConstraint($coordinates, $expected_violation_count) {
     // Check message in constraint.
     $constraint = new GeoConstraint();
     $this->assertEquals('"@value" is not a valid geospatial content.', $constraint->message, 'Correct constraint message found.');
 
-    $execution_context = $this->createMock('\Drupal\Core\TypedData\Validation\ExecutionContext');
-
-    if ($expected_violation_count) {
-      $execution_context->expects($this->exactly($expected_violation_count))
-        ->method('addViolation')
-        ->with($constraint->message, ['@value' => $coordinates]);
+    // Validate through the typed data validator, which runs
+    // GeoConstraintValidator the way the installed Symfony version expects.
+    $definition = DataDefinition::create('string')->addConstraint('GeoType');
+    $violations = $this->container->get('typed_data_manager')->create($definition, $coordinates)->validate();
+    $this->assertCount($expected_violation_count, $violations);
+    foreach ($violations as $violation) {
+      $this->assertSame('"' . $coordinates . '" is not a valid geospatial content.', (string) $violation->getMessage());
     }
-    else {
-      $execution_context->expects($this->exactly($expected_violation_count))
-        ->method('addViolation');
-    }
-
-    $geophp_wrapper = new GeoPHPWrapper();
-    $validator = new GeoConstraintValidator($geophp_wrapper);
-    $validator->initialize($execution_context);
-
-    $validator->validate($coordinates, $constraint);
   }
 
   /**
    * Provides test data for testGeoConstraint().
    */
-  public function geoProvider() {
+  public static function geoProvider(): array {
     return [
       'valid POINT' => ['POINT (40 -3)', 0],
       'invalid POAINT' => ['POAINT (40 -3)', 1],

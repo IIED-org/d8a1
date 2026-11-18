@@ -9,24 +9,17 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Defines a contextual filter searching through all indexed taxonomy fields.
  *
- * Note: The plugin annotation below is not misspelled. Due to dependency
+ * Note: The plugin attribute below is commented out because, due to dependency
  * problems, the plugin is not defined here but in
- * search_api_views_plugins_argument_alter().
+ * SearchApiViewsHooks::argumentPluginsAlter().
  *
  * @ingroup views_argument_handlers
  *
- * ViewsArgument("search_api_all_terms")
+ * @see \Drupal\search_api\Hook\SearchApiViewsHooks::argumentPluginsAlter()
  *
- * @see search_api_views_plugins_argument_alter()
+ * #[ViewsArgument('search_api_all_terms')]
  */
 class SearchApiAllTerms extends SearchApiTerm {
-
-  /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface|null
-   */
-  protected $entityTypeManager;
 
   /**
    * {@inheritdoc}
@@ -46,20 +39,7 @@ class SearchApiAllTerms extends SearchApiTerm {
    *   The entity type manager.
    */
   public function getEntityTypeManager(): EntityTypeManagerInterface {
-    return $this->entityTypeManager ?: \Drupal::entityTypeManager();
-  }
-
-  /**
-   * Sets the entity type manager.
-   *
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
-   *   The new entity type manager.
-   *
-   * @return $this
-   */
-  public function setEntityTypeManager(EntityTypeManagerInterface $entity_type_manager): self {
-    $this->entityTypeManager = $entity_type_manager;
-    return $this;
+    return $this->entityTypeManager ?? \Drupal::entityTypeManager();
   }
 
   /**

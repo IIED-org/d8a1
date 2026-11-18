@@ -3,12 +3,16 @@
 namespace Drupal\Tests\purge_ui\FunctionalJavascript;
 
 use Drupal\Core\Url;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests \Drupal\purge_ui\Controller\DashboardController::buildLoggingSection().
  *
  * @group purge
  */
+#[Group('purge')]
+#[RunTestsInSeparateProcesses]
 class DashboardLoggingTest extends DashboardTestBase {
 
   /**

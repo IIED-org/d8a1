@@ -5,6 +5,7 @@ namespace Drupal\purge\Plugin\Purge\Processor;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
+use Drupal\purge\Attribute\PurgeProcessor;
 
 /**
  * The processors plugin manager.
@@ -27,8 +28,10 @@ class PluginManager extends DefaultPluginManager {
       'Plugin/Purge/Processor',
       $namespaces,
       $module_handler,
-      'Drupal\purge\Plugin\Purge\Processor\ProcessorInterface',
-      'Drupal\purge\Annotation\PurgeProcessor');
+      ProcessorInterface::class,
+      PurgeProcessor::class,
+      'Drupal\purge\Annotation\PurgeProcessor',
+    );
     $this->alterInfo('purge_processor');
     $this->setCacheBackend($cache_backend, 'purge_processor_plugins');
   }

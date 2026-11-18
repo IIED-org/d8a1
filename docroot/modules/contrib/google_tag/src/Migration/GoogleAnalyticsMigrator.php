@@ -39,7 +39,7 @@ class GoogleAnalyticsMigrator extends GoogleTagMigrateBase {
 
     $request_path_plugin = 'request_path';
     $request_negate = $visibility_path_mode === 0;
-    if ($request_paths !== '' && isset($condition_definitions[$request_path_plugin])) {
+    if (is_string($request_paths) && $request_paths !== '' && isset($condition_definitions[$request_path_plugin])) {
       $conditions[$request_path_plugin] = static::getRequestPathCondition($request_paths, $request_negate);
     }
 
@@ -48,7 +48,7 @@ class GoogleAnalyticsMigrator extends GoogleTagMigrateBase {
     $roles = $ga_settings->get('visibility.user_role_roles');
     $roles_plugin = 'user_role';
     $roles_negate = $visibility_user_role_mode === 1;
-    if ($roles !== [] && isset($condition_definitions[$roles_plugin])) {
+    if (is_array($roles) && $roles !== [] && isset($condition_definitions[$roles_plugin])) {
       $conditions[$roles_plugin] = static::getUserRoleCondition($roles, $roles_negate);
     }
 

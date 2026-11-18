@@ -73,7 +73,7 @@ trait GoogleTagManagerSettingsTrait {
       '#default_value' => $advanced_settings['environment_id'] ?? '',
       '#placeholder' => 'env-x',
       '#size' => 10,
-      '#maxlength' => 7,
+      '#maxlength' => 16,
       '#states' => $this->statesArray('advanced_settings[gtm][' . $gtmId . '][include_environment]'),
     ];
 
@@ -86,6 +86,13 @@ trait GoogleTagManagerSettingsTrait {
       '#size' => 20,
       '#maxlength' => 25,
       '#states' => $this->statesArray('advanced_settings[gtm][' . $gtmId . '][include_environment]'),
+    ];
+
+    $fieldset['include_noscript'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Include the noscript fallback'),
+      '#description' => $this->t('If checked, a noscript iframe is added to each page so that Google Tag Manager can track visitors who have JavaScript disabled. Uncheck this if a consent management tool must be able to block all tracking until consent is given.'),
+      '#default_value' => $advanced_settings['include_noscript'] ?? TRUE,
     ];
 
     return $fieldset;

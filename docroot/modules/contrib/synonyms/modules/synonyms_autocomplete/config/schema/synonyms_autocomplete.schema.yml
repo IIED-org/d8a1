@@ -1,3 +1,17 @@
+field.widget.settings.synonyms_autocomplete:
+  type: mapping
+  label: 'Synonyms-friendly autocomplete'
+  mapping:
+    suggestion_size:
+      type: integer
+      label: 'Suggestions Size'
+    suggest_only_unique:
+      type: boolean
+      label: 'Suggest only one entry per entity'
+    match:
+      type: string
+      label: 'Match operator'
+  
 synonyms_autocomplete.settings:
   type: config_entity
   label: 'Widget configuration'

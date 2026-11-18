@@ -18,7 +18,9 @@ use Drupal\Core\KeyValueStore\KeyValueStoreInterface;
 use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\Core\Plugin\PluginFormInterface;
 use Drupal\Core\Render\Element;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\TypedData\DataDefinition;
+use Drupal\search_api\Attribute\SearchApiBackend;
 use Drupal\search_api\Backend\BackendPluginBase;
 use Drupal\search_api\Contrib\AutocompleteBackendInterface;
 use Drupal\search_api\DataType\DataTypePluginManager;
@@ -70,13 +72,12 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
  * - search_api_db_autocomplete: An array containing the parameters of the
  *   getAutocompleteSuggestions() call, except "query". (Present for
  *   "search_api_db_autocomplete" queries.)
- *
- * @SearchApiBackend(
- *   id = "search_api_db",
- *   label = @Translation("Database"),
- *   description = @Translation("Indexes items in the database. Supports several advanced features, but should not be used for large sites.")
- * )
  */
+#[SearchApiBackend(
+  id: 'search_api_db',
+  label: new TranslatableMarkup('Database'),
+  description: new TranslatableMarkup('Indexes items in the database. Supports several advanced features, but should not be used for large sites.')
+)]
 class Database extends BackendPluginBase implements AutocompleteBackendInterface, PluginFormInterface {
 
   use PluginFormTrait;
@@ -603,6 +604,7 @@ class Database extends BackendPluginBase implements AutocompleteBackendInterface
       'label' => $this->t('Phrase indexing'),
       // Passing a variable expression to t() is fine here since those same
       // values are passed as literals in buildConfigurationForm() above.
+      // phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString
       'info' => $this->t(ucfirst($this->configuration['phrase'])),
     ];
 
@@ -928,7 +930,7 @@ class Database extends BackendPluginBase implements AutocompleteBackendInterface
     // We prevent this by adding an extra underscore (which is also the proposed
     // solution in the original core issue).
     //
-    // @todo: Remove when #2625664 lands in Core. See #2625722 for a patch that
+    // @todo Remove when #2625664 lands in Core. See #2625722 for a patch that
     // implements this.
     try {
       $this->database->schema()->addIndex($db['table'], '_' . $column, $index_spec, $table_spec);
@@ -1588,6 +1590,11 @@ class Database extends BackendPluginBase implements AutocompleteBackendInterface
       $transaction->rollBack();
       throw $e;
     }
+
+    // @todo Remove "if" once we depend on Drupal 11.3+.
+    if (method_exists($transaction, 'commitOrRelease')) {
+      $transaction->commitOrRelease();
+    }
   }
 
   /**
@@ -1942,7 +1949,7 @@ class Database extends BackendPluginBase implements AutocompleteBackendInterface
    */
   protected function createDbQuery(QueryInterface $query, array $fields) {
     $keys = &$query->getKeys();
-    $keys_set = (boolean) $keys;
+    $keys_set = (bool) $keys;
     $tokenizer_active = $query->getIndex()->isValidProcessor('tokenizer');
     $keys = $this->prepareKeys($keys, $tokenizer_active);
 
@@ -2285,7 +2292,7 @@ class Database extends BackendPluginBase implements AutocompleteBackendInterface
         $db_query->fields('t', ['item_id', 'word']);
       }
       elseif ($neg) {
-        $db_query->fields('t', ['item_id']);
+        $db_query->fields('t', ['item_id', 'word']);
       }
       elseif ($match_parts) {
         $db_query->fields('t', ['item_id']);
@@ -2381,8 +2388,15 @@ class Database extends BackendPluginBase implements AutocompleteBackendInterface
         if (!$db_query->getGroupBy()) {
           $db_query->groupBy('t.item_id');
         }
+        // We are inside: if ($conj == 'AND' && $subs > 1) { ... }
         if (!$match_parts) {
-          if ($mul_words) {
+          if ($subs > $word_count) {
+            // Avoiding counting in non-existing [t].[word].
+            $db_query->having('COUNT(*) >= ' . $var, [$var => $subs]);
+          }
+          elseif ($mul_words) {
+            // Plain multi-word, no nesting: preserve 'distinct words'
+            // semantics.
             $db_query->having('COUNT(DISTINCT [t].[word]) >= ' . $var, [$var => $subs]);
           }
           else {
@@ -2410,7 +2424,7 @@ class Database extends BackendPluginBase implements AutocompleteBackendInterface
         $db_query = $this->database->select($db_info['index_table'], 't');
         $db_query->addField('t', 'item_id', 'item_id');
         if (!$neg) {
-          $db_query->addExpression(':score', 'score', [':score' => self::SCORE_MULTIPLIER]);
+          $db_query->addExpression(self::SCORE_MULTIPLIER, 'score');
           $db_query->distinct();
         }
       }
@@ -2434,7 +2448,10 @@ class Database extends BackendPluginBase implements AutocompleteBackendInterface
         $condition->condition('t.item_id', $nested_query, 'NOT IN');
       }
       if (isset($old_query)) {
-        $condition->condition('t.item_id', $old_query, 'NOT IN');
+        // Ensure the IN subquery returns exactly one column.
+        $old_query = $this->database->select($old_query, 't')
+          ->fields('t', ['item_id']);
+        $condition->condition('t.item_id', $old_query, 'IN');
       }
     }
 
@@ -2516,11 +2533,11 @@ class Database extends BackendPluginBase implements AutocompleteBackendInterface
         // For NULL values, we can just use the single-values table, since we
         // only need to know if there's any value at all for that field.
         if ($value === NULL || empty($field_info['multi-valued'])) {
-          if (empty($tables[NULL])) {
+          if (empty($tables[''])) {
             $table = ['table' => $db_info['index_table']];
-            $tables[NULL] = $this->getTableAlias($table, $db_query);
+            $tables[''] = $this->getTableAlias($table, $db_query);
           }
-          $column = $tables[NULL] . '.' . $field_info['column'];
+          $column = $tables[''] . '.' . $field_info['column'];
           if ($value === NULL) {
             $method = $not_equals ? 'isNotNull' : 'isNull';
             $db_condition->$method($column);

@@ -212,13 +212,14 @@ class GeofieldMap extends GeofieldLatLon {
       }
     }
 
-    // Attach Geofield Map Libraries.
-    $element['#attached']['library'][] = 'geofield_map/geofield_map_general';
-    $element['#attached']['library'][] = 'geofield_map/geofield_map_widget';
-    // Conditionally use the Leaflet library from the D8 Module, if enabled.
+    // Conditionally use the Leaflet library from the Leaflet Module, if enabled
+    // or the one embedded in this module.
     if ($element['#map_library'] == 'leaflet') {
       $element['#attached']['library'][] = \Drupal::moduleHandler()->moduleExists('leaflet') ? 'leaflet/leaflet' : 'geofield_map/leaflet';
     }
+    // Attach Geofield Map Libraries.
+    $element['#attached']['library'][] = 'geofield_map/geofield_map_general';
+    $element['#attached']['library'][] = 'geofield_map/geofield_map_widget';
 
     // The Entity Form.
     /** @var \Drupal\Core\Entity\ContentEntityFormInterface $entity_form */

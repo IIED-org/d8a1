@@ -1,0 +1,14 @@
+name: 'Contact test views'
+type: module
+description: 'Provides default views for views contact tests.'
+package: Testing
+core_version_requirement: '>11.3'
+dependencies:
+  - drupal:contact
+  - drupal:views
+  - drupal:user
+
+# Information added by Drupal.org packaging script on 2026-01-24
+version: '1.0.0'
+project: 'contact'
+datestamp: 1769226330

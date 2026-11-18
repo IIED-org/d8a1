@@ -158,6 +158,7 @@ class ProviderService {
       $label_column = $entity_type->id() == 'user' ? 'name' : $entity_type->getKey('label');
 
       $query = $this->entityTypeManager->getStorage($entity_type->id())->getQuery();
+      $query->accessCheck(TRUE);
       $query->condition($label_column, $name);
       if ($entity_type->hasKey('bundle') && $bundle) {
         $query->condition($entity_type->getKey('bundle'), $bundle);
