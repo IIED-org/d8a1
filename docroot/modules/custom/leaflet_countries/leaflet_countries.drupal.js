@@ -103,8 +103,8 @@
         },
       });
     }
-    // If we have a tooltip, bind it.
-    if (feature.tooltip) {
+    // Leaflet binds {value, options} tooltips itself; only bind plain strings.
+    if (typeof feature.tooltip === 'string') {
       lFeature.bindTooltip(feature.tooltip);
     }
 

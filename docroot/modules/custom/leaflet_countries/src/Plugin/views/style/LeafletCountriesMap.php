@@ -481,7 +481,8 @@ class LeafletCountriesMap extends LeafletMap implements ContainerFactoryPluginIn
       if ($this->options['leaflet_country_map']['country_name_tooltip']) {
         // If we have a label, add it.
         // $newoutput['rows'][$cca3]['label'] = $country['name'];.
-        $newoutput['rows'][$cca3]['tooltip'] = $country['name'];
+        // Leaflet's feature_bind_tooltip() expects a {value, options} object.
+        $newoutput['rows'][$cca3]['tooltip'] = ['value' => $country['name']];
         // $newoutput['rows'][$cca3]['popup'] = $country['name'];
       }
     }
@@ -566,6 +567,15 @@ class LeafletCountriesMap extends LeafletMap implements ContainerFactoryPluginIn
       'lineOpacity' => $this->options['leaflet_country_map']['lineopacity'] ?? '1',
       'fillColor' => '#' . $this->options['leaflet_country_map']['fillcolor'] ?? '666666',
       'fillOpacity' => $this->options['leaflet_country_map']['fillopacity'] ?? '1',
+    ];
+    // Leaflet's set_feature_path_style() styles features from 'path', using
+    // Leaflet path option names. 'options' is kept for leaflet_countries.js.
+    $feature['path'] = [
+      'color' => $feature['options']['color'],
+      'weight' => $feature['options']['weight'],
+      'opacity' => $feature['options']['lineOpacity'],
+      'fillColor' => $feature['options']['fillColor'],
+      'fillOpacity' => $feature['options']['fillOpacity'],
     ];
 
     return $feature;
