@@ -153,6 +153,7 @@ class SearchService implements BehaviorInterface {
         $field = FieldStorageConfig::loadByName($host_entity_type, $field_name);
         if ($field && $field->getSetting('target_type') == $entity_type) {
           $query = $this->entityTypeManager->getStorage($host_entity_type)->getQuery();
+          $query->accessCheck(TRUE);
           $query->condition($field_name, $entity_ids, 'IN');
           $result = $query->execute();
 

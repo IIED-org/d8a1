@@ -2,9 +2,9 @@
 
 namespace Drupal\geofield\Plugin\GeofieldProximitySource;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\geofield\Plugin\GeofieldProximitySourceBase;
-use Drupal\Component\Render\FormattableMarkup;
 
 /**
  * Defines 'Geofield Manual Origin' plugin.
@@ -34,7 +34,7 @@ class ManualOriginDefault extends GeofieldProximitySourceBase {
   public function __construct(
     array $configuration,
     $plugin_id,
-    $plugin_definition
+    $plugin_definition,
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->origin['lat'] = isset($configuration['origin']) && is_numeric($configuration['origin']['lat']) ? $configuration['origin']['lat'] : '';

@@ -2,13 +2,13 @@
 
 namespace Drupal\username_enumeration_prevention;
 
-use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
-use Drupal\Core\Routing\RouteProviderInterface;
-use Drupal\Core\Routing\RouteMatch;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Routing\RouteMatch;
+use Drupal\Core\Routing\RouteProviderInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\KernelEvents;
@@ -112,7 +112,7 @@ class UserRouteEventSubscriber implements EventSubscriberInterface {
   /**
    * {@inheritdoc}
    */
-  public static function getSubscribedEvents() {
+  public static function getSubscribedEvents(): array {
     $events[KernelEvents::EXCEPTION] = 'onException';
     return $events;
   }

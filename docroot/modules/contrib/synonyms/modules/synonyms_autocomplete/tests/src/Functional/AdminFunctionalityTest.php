@@ -14,7 +14,7 @@ class AdminFunctionalityTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'synonyms',
     'synonyms_autocomplete',
   ];

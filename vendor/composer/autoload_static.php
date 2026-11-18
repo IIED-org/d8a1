@@ -172,6 +172,7 @@ class ComposerStaticInit102e3ef181e3919390ea5de6deb1dfeb
         array (
             'Drush\\' => 6,
             'Drupal\\sophron\\' => 15,
+            'Drupal\\rat\\' => 11,
             'Drupal\\facets_pretty_paths\\' => 27,
             'Drupal\\Core\\' => 12,
             'Drupal\\Composer\\Plugin\\Scaffold\\' => 32,
@@ -526,6 +527,10 @@ class ComposerStaticInit102e3ef181e3919390ea5de6deb1dfeb
         'Drupal\\sophron\\' =>
         array (
             0 => __DIR__ . '/../..' . '/docroot/modules/contrib/sophron/src',
+        ),
+        'Drupal\\rat\\' =>
+        array (
+            0 => __DIR__ . '/..' . '/drupal/rat/src',
         ),
         'Drupal\\facets_pretty_paths\\' =>
         array (

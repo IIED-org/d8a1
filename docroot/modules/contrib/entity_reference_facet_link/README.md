@@ -1,5 +1,4 @@
-Entity Reference Facet Link
-===========================
+# Entity Reference Facet Link
 Entity Reference Facet Link is a Drupal 8 module that provides a formatter
 plugin for entity reference fields, including taxonomy term reference fields.
 It will allow you to display those entity references as links to a faceted
@@ -16,31 +15,36 @@ default view page.  This may be bad for usability.  Instead, you may want that
 term to link back to the search page which is filtered by that facet.  This
 module will give you that ability.
 
-Installation and Setup
-----------------------
-Setup of Entity Reference Facet Links couldn't be simpler.  It is dependent on
-the Facets module and will not work with other facet provider modules, if any
-exist.  These instructions will assume that if you're interested in this module,
+## Requirements
+This module requires no modules outside of Drupal core.
+
+## Recommended modules
+This module won't do anything unless you're also using the
+[Facets](https://www.drupal.org/project/facets) module to create a faceted
+search page.
+
+## Installation
+Install as you would normally install a contributed Drupal module. For further
+information, see
+[Installing Drupal Modules](https://www.drupal.org/docs/extending-drupal/installing-drupal-modules).
+
+## Configuration
+These instructions will assume that if you're interested in this module,
 then you already have a search page with facets configured for it.  If not,
 there are online tutorials that will help you set one up.
 
-1. Install this module through the usual means, mainly with Composer.
-
-2. Go to the page where you want to configure the field's display, such as a
+1. Go to the page where you want to configure the field's display, such as a
 content entity's Manage display page or a view.
-
-3. For your faceted field, choose "Facet link" from the select list under
+1. For your faceted field, choose "Facet link" from the select list under
 Format.
-
-4. Edit the Format's settings.  Choose the facet you want to use from the select
+1. Edit the Format's settings.  Choose the facet you want to use from the select
 list.
-
-5. Save the settings.
+1. Save the settings.
 
 That's it!  The facet link plugin takes care of everything else for you.  You
 don't need to know anything about the facet other than its name.  The plugin
 will pull everything it needs to know about the selected facet's configuration
-automatically via the Drupal 8 APIs.
+automatically via the Drupal APIs.
 
 The format's settings form will narrow the list of of selectable facets down to
 ones that match the field you're configuring.  If you have multiple search pages
@@ -51,24 +55,24 @@ UI.
 
 FAQs
 ----
-* **Q:** Will this module work with other facet URL processors than the default,
+* **Q: Will this module work with other facet URL processors than the default,
   for instance
-  [Facets Pretty Paths](https://drupal.org/project/facets_pretty_paths)?
+  [Facets Pretty Paths](https://drupal.org/project/facets_pretty_paths)?**
 
   **A:** Yes!  The formatter will use the exact same URL processor to generate
   its links that your facet is using.  You can change the processor at any time
   and the field links will automatically update.
 
-* **Q:** Why didn't the field links update when I changed the path of my facet
-  source (e.g. view)?
+* **Q: Why didn't the field links update when I changed the path of my facet
+  source (e.g. view)?**
 
   **A:** There was no way that I could find to invalidate the field's display
   cache when the source was updated.  My plan is to bring this up with the
   Search API and Facets maintainers.  In the meantime, you'll have to clear your
   site cache manually if you update your source's path.
 
-* **Q:** Is this module a Drupal 8 port of
-  [Facet link formatter](https://drupal.org/project/facet_link_formatter)?
+* **Q: Is this module a Drupal 8 port of
+  [Facet link formatter](https://drupal.org/project/facet_link_formatter)?**
 
   **A:** No, I started developing this module before searching to see if someone
   else had done this before, *which you should never, ever do!*  So this was

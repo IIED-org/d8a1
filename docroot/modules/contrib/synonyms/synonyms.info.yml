@@ -2,10 +2,10 @@ name: Synonyms
 description: 'Provides synonyms feature for all entities.'
 package: Synonyms
 type: module
-core_version_requirement: ^9 || ^10
+core_version_requirement: ^9 || ^10 || ^11
 configure: synonyms.overview
 
-# Information added by Drupal.org packaging script on 2022-10-14
-version: '2.1.2'
+# Information added by Drupal.org packaging script on 2024-08-07
+version: '2.1.4'
 project: 'synonyms'
-datestamp: 1665785029
+datestamp: 1723069595
