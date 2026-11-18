@@ -4569,6 +4569,9 @@
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
                     }
+                },
+                "patches_applied": {
+                    "D11 compatibility for 3.0.0 until a 4.x release supports D10 and D11": "patches/field_states_ui-3.0.0-d11-compat.patch"
                 }
             },
             "installation-source": "dist",

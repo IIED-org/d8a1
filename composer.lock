@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "03ed7b1a37ba18350f5307ceed2348b1",
+    "content-hash": "035c26b7438a9255987aa312ed714e10",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -11161,7 +11161,8 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-07-28T10:04:39+00:00"
+            "time": "2026-07-28T10:04:39+00:00",
+            "published-time": "2026-07-28T10:04:54+00:00"
         },
         {
             "name": "phpstan/phpstan-deprecation-rules",
