@@ -3054,7 +3054,7 @@ display:
           exclude: true
           alter:
             alter_text: true
-            text: " <a class=\"d-block\" href=\"#collapse\" data-toggle=\"collapse\" data-target=\"#collapse-421-details\">Further detail</a>\r\n<div class=\"collapse mt-4\" id=\"collapse-421-details\">\r\n{{ field_4_2_1_details }} \r\n</div>"
+            text: " <a class=\"d-block\" href=\"#collapse\" data-bs-toggle=\"collapse\" data-bs-target=\"#collapse-421-details\">Further detail</a>\r\n<div class=\"collapse mt-4\" id=\"collapse-421-details\">\r\n{{ field_4_2_1_details }} \r\n</div>"
             make_link: false
             path: ''
             absolute: false
@@ -3302,7 +3302,7 @@ display:
           exclude: true
           alter:
             alter_text: true
-            text: " <a class=\"d-block\" href=\"#collapse\" data-toggle=\"collapse\" data-target=\"#collapse-431-details\">Further detail</a>\r\n<div class=\"collapse mt-4\" id=\"collapse-431-details\">\r\n{{ field_4_3_1_details }} \r\n</div>"
+            text: " <a class=\"d-block\" href=\"#collapse\" data-bs-toggle=\"collapse\" data-bs-target=\"#collapse-431-details\">Further detail</a>\r\n<div class=\"collapse mt-4\" id=\"collapse-431-details\">\r\n{{ field_4_3_1_details }} \r\n</div>"
             make_link: false
             path: ''
             absolute: false
@@ -5277,8 +5277,8 @@ display:
             options: '{"permanent":false,"direction":"center"}'
           leaflet_popup:
             value: nothing
-            options: '{"maxWidth":"300","minWidth":"50","autoPan":true}'
             view_mode: full
+            options: '{"maxWidth":"300","minWidth":"50","autoPan":true}'
           leaflet_map: leaflet-mapbox
           height: '358'
           height_unit: px
@@ -5332,16 +5332,19 @@ display:
             circle_marker_options: '{"radius":100,"color":"red","fillColor":"#f03","fillOpacity":0.5}'
           leaflet_markercluster:
             control: false
-            include_path: false
-            options: '{"spiderfyOnMaxZoom":true,"showCoverageOnHover":true,"removeOutsideVisibleBounds":false}'
             excluded: '0'
+            options: '{"spiderfyOnMaxZoom":true,"showCoverageOnHover":true,"removeOutsideVisibleBounds":false}'
+            include_path: false
           fullscreen:
             control: false
             options: '{"position":"topleft","pseudoFullscreen":false}'
           path: '{"color":"#3388ff","opacity":"1.0","stroke":true,"weight":3,"fill":"depends","fillColor":"*","fillOpacity":"0.2"}'
+          feature_properties:
+            values: ''
           geocoder:
             control: false
             settings:
+              popup: false
               autocomplete:
                 placeholder: 'Search Address'
                 title: 'Search an Address on the Map'
@@ -5360,12 +5363,9 @@ display:
               min_terms: 4
               delay: 800
               zoom: 16
-              popup: false
               options: ''
           map_lazy_load:
             lazy_load: true
-          feature_properties:
-            values: ''
       row:
         type: fields
         options:
@@ -5905,13 +5905,13 @@ display:
           click_sort_column: target_id
           type: colorbox
           settings:
-            colorbox_node_style: gallery_270x270_
-            colorbox_node_style_first: ''
             colorbox_image_style: max_1300x1300
             colorbox_gallery: post
             colorbox_gallery_custom: ''
             colorbox_caption: title
             colorbox_caption_custom: ''
+            colorbox_node_style: gallery_270x270_
+            colorbox_node_style_first: ''
           group_column: ''
           group_columns: {  }
           group_rows: true
@@ -6804,7 +6804,7 @@ display:
           exclude: true
           alter:
             alter_text: true
-            text: " <a class=\"d-block\" href=\"#collapse\" data-toggle=\"collapse\" data-target=\"#collapse-321-details\">Further detail</a>\r\n<div class=\"collapse mt-4\" id=\"collapse-321-details\">\r\n{{ field_3_2_1_details }} \r\n</div>"
+            text: " <a class=\"d-block\" href=\"#collapse\" data-bs-toggle=\"collapse\"=\"collapse\" data-bs-target=\"#collapse-321-details\">Further detail</a>\r\n<div class=\"collapse mt-4\" id=\"collapse-321-details\">\r\n{{ field_3_2_1_details }} \r\n</div>"
             make_link: false
             path: ''
             absolute: false
@@ -7451,7 +7451,7 @@ display:
           exclude: true
           alter:
             alter_text: true
-            text: " <a class=\"d-block\" href=\"#collapse\" data-toggle=\"collapse\" data-target=\"#collapse-322-details\">Further detail</a>\r\n<div class=\"collapse mt-4\" id=\"collapse-322-details\">\r\n{{ field_3_2_2_details }} \r\n</div>"
+            text: " <a class=\"d-block\" href=\"#collapse\" data-bs-toggle=\"collapse\" data-bs-target=\"#collapse-322-details\">Further detail</a>\r\n<div class=\"collapse mt-4\" id=\"collapse-322-details\">\r\n{{ field_3_2_2_details }} \r\n</div>"
             make_link: false
             path: ''
             absolute: false
@@ -7903,7 +7903,7 @@ display:
           exclude: true
           alter:
             alter_text: true
-            text: " <a class=\"d-block\" href=\"#collapse\" data-toggle=\"collapse\" data-target=\"#collapse-323-details\">Further detail</a>\r\n<div class=\"collapse mt-4\" id=\"collapse-323-details\">\r\n{{ field_3_2_3_details }} \r\n</div>"
+            text: " <a class=\"d-block\" href=\"#collapse\" data-bs-toggle=\"collapse\" data-bs-target=\"#collapse-323-details\">Further detail</a>\r\n<div class=\"collapse mt-4\" id=\"collapse-323-details\">\r\n{{ field_3_2_3_details }} \r\n</div>"
             make_link: false
             path: ''
             absolute: false
@@ -8225,7 +8225,7 @@ display:
           exclude: true
           alter:
             alter_text: true
-            text: " <a class=\"d-block\" href=\"#collapse\" data-toggle=\"collapse\" data-target=\"#collapse-324-details\">Further detail</a>\r\n<div class=\"collapse mt-4\" id=\"collapse-324-details\">\r\n{{ field_3_2_4_details }} \r\n</div>"
+            text: " <a class=\"d-block\" href=\"#collapse\" data-bs-toggle=\"collapse\" data-bs-target=\"#collapse-324-details\">Further detail</a>\r\n<div class=\"collapse mt-4\" id=\"collapse-324-details\">\r\n{{ field_3_2_4_details }} \r\n</div>"
             make_link: false
             path: ''
             absolute: false
@@ -8352,7 +8352,7 @@ display:
           exclude: true
           alter:
             alter_text: true
-            text: " <a class=\"d-block\" href=\"#collapse\" data-toggle=\"collapse\" data-target=\"#collapse-325-details\">Further detail</a>\r\n<div class=\"collapse mt-4\" id=\"collapse-325-details\">\r\n{{ field_3_2_5_details }} \r\n</div>"
+            text: " <a class=\"d-block\" href=\"#collapse\" data-bs-toggle=\"collapse\" data-bs-target=\"#collapse-325-details\">Further detail</a>\r\n<div class=\"collapse mt-4\" id=\"collapse-325-details\">\r\n{{ field_3_2_5_details }} \r\n</div>"
             make_link: false
             path: ''
             absolute: false
@@ -8479,7 +8479,7 @@ display:
           exclude: true
           alter:
             alter_text: true
-            text: " <a class=\"d-block\" href=\"#collapse\" data-toggle=\"collapse\" data-target=\"#collapse-326-details\">Further detail</a>\r\n<div class=\"collapse mt-4\" id=\"collapse-326-details\">\r\n{{ field_3_2_6_details }} \r\n</div>"
+            text: " <a class=\"d-block\" href=\"#collapse\" data-bs-toggle=\"collapse\" data-bs-target=\"#collapse-326-details\">Further detail</a>\r\n<div class=\"collapse mt-4\" id=\"collapse-326-details\">\r\n{{ field_3_2_6_details }} \r\n</div>"
             make_link: false
             path: ''
             absolute: false

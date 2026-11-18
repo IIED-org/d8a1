@@ -3,6 +3,7 @@
 namespace Drupal\purge_ui\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\purge\Plugin\Purge\Processor\ProcessorsServiceInterface;
 use Drupal\purge\Plugin\Purge\Purger\PurgersServiceInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -20,20 +21,33 @@ class PurgerFormController extends ControllerBase {
   protected $purgePurgers;
 
   /**
+   * The 'purge.processors' service.
+   *
+   * @var \Drupal\purge\Plugin\Purge\Processor\ProcessorsServiceInterface
+   */
+  protected $purgeProcessors;
+
+  /**
    * Construct the PurgerFormController.
    *
    * @param \Drupal\purge\Plugin\Purge\Purger\PurgersServiceInterface $purge_purgers
    *   The purge executive service, which wipes content from external caches.
+   * @param \Drupal\purge\Plugin\Purge\Processor\ProcessorsServiceInterface $purge_processors
+   *   The purge processors service.
    */
-  final public function __construct(PurgersServiceInterface $purge_purgers) {
+  final public function __construct(PurgersServiceInterface $purge_purgers, ProcessorsServiceInterface $purge_processors) {
     $this->purgePurgers = $purge_purgers;
+    $this->purgeProcessors = $purge_processors;
   }
 
   /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
-    return new static($container->get('purge.purgers'));
+    return new static(
+      $container->get('purge.purgers'),
+      $container->get('purge.processors')
+    );
   }
 
   /**
@@ -187,6 +201,28 @@ class PurgerFormController extends ControllerBase {
           ['id' => $id, 'direction' => $direction, 'definition' => $definition]
         );
       }
+    }
+    throw new NotFoundHttpException();
+  }
+
+  /**
+   * Render the purger invalidate form.
+   *
+   * @param string $id
+   *   Unique instance ID for the purger instance.
+   *
+   * @return array
+   *   The form render array.
+   */
+  public function invalidateForm($id) {
+    if (!$this->purgeProcessors->get('purge_ui_invalidate')) {
+      throw new NotFoundHttpException();
+    }
+    if ($definition = $this->getPurgerPluginDefinition($id)) {
+      return $this->formBuilder()->getForm(
+        '\Drupal\purge_ui\Form\PurgerInvalidateForm',
+        ['id' => $id, 'definition' => $definition]
+      );
     }
     throw new NotFoundHttpException();
   }

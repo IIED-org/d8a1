@@ -79,7 +79,7 @@ abstract class BlockBase extends DsFieldBase implements ContainerFactoryPluginIn
     $block_config = $this->blockConfig();
     $block->setConfiguration($block_config);
 
-    $add_wrappers = isset($this->getFieldConfiguration()['properties']['add_block_wrappers']) ? $this->getFieldConfiguration()['properties']['add_block_wrappers'] : FALSE;
+    $add_wrappers = isset($this->getFieldConfiguration()['properties']['add_block_wrappers']) && $this->getFieldConfiguration()['properties']['add_block_wrappers'];
 
     if ($block->access(\Drupal::currentUser())) {
       // Inject context values.
@@ -107,7 +107,6 @@ abstract class BlockBase extends DsFieldBase implements ContainerFactoryPluginIn
         // Otherwise just use the block build.
         $render_element = $block_build;
       }
-
 
       // Merge cache contexts, tags and max-age.
       if ($contexts = $block->getCacheContexts()) {
@@ -163,7 +162,7 @@ abstract class BlockBase extends DsFieldBase implements ContainerFactoryPluginIn
   protected function getBlock() {
     if (!$this->block) {
       // Create an instance of the block.
-      /* @var $block BlockPluginInterface */
+      /** @var BlockPluginInterface $block */
       $block_id = $this->blockPluginId();
       $block = $this->blockManager->createInstance($block_id);
 

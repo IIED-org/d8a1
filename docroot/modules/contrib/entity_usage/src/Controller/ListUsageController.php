@@ -4,17 +4,22 @@ namespace Drupal\entity_usage\Controller;
 
 use Drupal\block_content\BlockContentInterface;
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Access\AccessResultInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityPublishedInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\RevisionableInterface;
 use Drupal\Core\Language\LanguageInterface;
-use Drupal\Core\Link;
-use Drupal\entity_usage\EntityUsageInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Pager\PagerManagerInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\entity_usage\EntityUsageInterface;
+use Drupal\layout_builder\InlineBlockUsageInterface;
+use Drupal\paragraphs\ParagraphInterface;
+use Drupal\trash\TrashManagerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Controller for our pages.
@@ -25,6 +30,28 @@ class ListUsageController extends ControllerBase {
    * Number of items per page to use when nothing was configured.
    */
   const ITEMS_PER_PAGE_DEFAULT = 25;
+
+  /**
+   * The index for the default revision "group".
+   *
+   * @var int
+   */
+  protected const REVISION_DEFAULT = 0;
+
+  /**
+   * The index for the pending revision "group".
+   *
+   * @var int
+   */
+  protected const REVISION_PENDING = 1;
+
+  /**
+   * The index for the old revision "group".
+   *
+   * @var int
+   */
+  protected const REVISION_OLD = -1;
+
 
   /**
    * The entity field manager.
@@ -43,7 +70,7 @@ class ListUsageController extends ControllerBase {
   /**
    * All source rows for this target entity.
    *
-   * @var array
+   * @var mixed[]
    */
   protected $allRows;
 
@@ -69,6 +96,20 @@ class ListUsageController extends ControllerBase {
   protected $pagerManager;
 
   /**
+   * The inline block usage service.
+   *
+   * @var \Drupal\layout_builder\InlineBlockUsageInterface|null
+   */
+  protected $inlineBlockUsage;
+
+  /**
+   * The trash manager.
+   *
+   * @var \Drupal\trash\TrashManagerInterface|null
+   */
+  protected ?TrashManagerInterface $trashManager;
+
+  /**
    * ListUsageController constructor.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
@@ -78,17 +119,31 @@ class ListUsageController extends ControllerBase {
    * @param \Drupal\entity_usage\EntityUsageInterface $entity_usage
    *   The EntityUsage service.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
-   * The config factory service.
+   *   The config factory service.
    * @param \Drupal\Core\Pager\PagerManagerInterface $pager_manager
    *   The pager manager.
+   * @param \Drupal\layout_builder\InlineBlockUsageInterface|null $inline_block_usage
+   *   The inline block usage.
+   * @param \Drupal\trash\TrashManagerInterface|null $trash_manager
+   *   The trash manager.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, EntityFieldManagerInterface $entity_field_manager, EntityUsageInterface $entity_usage, ConfigFactoryInterface $config_factory, PagerManagerInterface $pager_manager) {
+  public function __construct(
+    EntityTypeManagerInterface $entity_type_manager,
+    EntityFieldManagerInterface $entity_field_manager,
+    EntityUsageInterface $entity_usage,
+    ConfigFactoryInterface $config_factory,
+    PagerManagerInterface $pager_manager,
+    ?InlineBlockUsageInterface $inline_block_usage,
+    ?TrashManagerInterface $trash_manager,
+  ) {
     $this->entityTypeManager = $entity_type_manager;
     $this->entityFieldManager = $entity_field_manager;
     $this->entityUsage = $entity_usage;
     $this->entityUsageConfig = $config_factory->get('entity_usage.settings');
     $this->itemsPerPage = $this->entityUsageConfig->get('usage_controller_items_per_page') ?: self::ITEMS_PER_PAGE_DEFAULT;
     $this->pagerManager = $pager_manager;
+    $this->inlineBlockUsage = $inline_block_usage;
+    $this->trashManager = $trash_manager;
   }
 
   /**
@@ -100,7 +155,9 @@ class ListUsageController extends ControllerBase {
       $container->get('entity_field.manager'),
       $container->get('entity_usage.usage'),
       $container->get('config.factory'),
-      $container->get('pager.manager')
+      $container->get('pager.manager'),
+      $container->get('inline_block.usage', ContainerInterface::NULL_ON_INVALID_REFERENCE),
+      $container->get('trash.manager', ContainerInterface::NULL_ON_INVALID_REFERENCE)
     );
   }
 
@@ -112,16 +169,19 @@ class ListUsageController extends ControllerBase {
    * @param int $entity_id
    *   The entity ID.
    *
-   * @return array
+   * @return mixed[]
    *   The page build to be rendered.
    *
    * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
    */
-  public function listUsagePage($entity_type, $entity_id) {
+  public function listUsagePage($entity_type, $entity_id): array {
     $all_rows = $this->getRows($entity_type, $entity_id);
     if (empty($all_rows)) {
       return [
-        '#markup' => $this->t('There are no recorded usages for entity of type: @type with id: @id', ['@type' => $entity_type, '@id' => $entity_id]),
+        '#markup' => $this->t(
+          'There are no recorded usages for entity of type: @type with id: @id',
+          ['@type' => $entity_type, '@id' => $entity_id]
+        ),
       ];
     }
 
@@ -142,7 +202,11 @@ class ListUsageController extends ControllerBase {
     // revision, we don't need the "Used in" column.
     $used_in_previous_revisions = FALSE;
     foreach ($page_rows as $row) {
-      if ($row[5] == $this->t('Translations or previous revisions')) {
+      $used_in = $row[5]['data'];
+      $only_default = fn(array $row) => count($row) === 1 &&
+        !empty($row[0]['#plain_text']) &&
+        $row[0]['#plain_text'] == $this->t('Default');
+      if (!$only_default($used_in)) {
         $used_in_previous_revisions = TRUE;
         break;
       }
@@ -175,17 +239,24 @@ class ListUsageController extends ControllerBase {
    * @param int|string $entity_id
    *   The ID of the target entity.
    *
-   * @return array
+   * @return mixed[]
    *   An indexed array of rows that should be displayed as sources for this
    *   target entity.
    */
-  protected function getRows($entity_type, $entity_id) {
+  protected function getRows($entity_type, $entity_id): array {
     if (!empty($this->allRows)) {
       return $this->allRows;
       // @todo Cache this based on the target entity, invalidating the cached
       // results every time records are added/removed to the same target entity.
     }
     $rows = [];
+
+    // Tell the Trash module not to hide entities that are trashed.
+    if (!is_null($this->trashManager)) {
+      $prev_trash_context = $this->trashManager->getTrashContext();
+      $this->trashManager->setTrashContext('ignore');
+    }
+
     $entity = $this->entityTypeManager->getStorage($entity_type)->load($entity_id);
     if (!$entity) {
       return $rows;
@@ -193,6 +264,13 @@ class ListUsageController extends ControllerBase {
     $entity_types = $this->entityTypeManager->getDefinitions();
     $languages = $this->languageManager()->getLanguages(LanguageInterface::STATE_ALL);
     $all_usages = $this->entityUsage->listSources($entity);
+
+    $revision_groups = [
+      static::REVISION_DEFAULT => $this->t("Default"),
+      static::REVISION_PENDING => $this->t("Pending revision(s) / Draft(s)"),
+      static::REVISION_OLD => $this->t("Old revision(s)"),
+    ];
+
     foreach ($all_usages as $source_type => $ids) {
       $type_storage = $this->entityTypeManager->getStorage($source_type);
       foreach ($ids as $source_id => $records) {
@@ -204,20 +282,47 @@ class ListUsageController extends ControllerBase {
           // If for some reason this record is broken, just skip it.
           continue;
         }
+
+        // Skip soft-deleted inline blocks. Layout Builder's cron hook will
+        // delete them, but until then we don't want them showing as a source.
+        if ($source_entity instanceof BlockContentInterface && !$source_entity->isReusable() && $this->inlineBlockUsage) {
+          $blockUsageData = $this->inlineBlockUsage->getUsage($source_entity->id());
+          if (!$blockUsageData || is_null($blockUsageData->layout_entity_id)) {
+            continue;
+          }
+        }
+
         $field_definitions = $this->entityFieldManager->getFieldDefinitions($source_type, $source_entity->bundle());
+        $default_langcode = $source_entity->language()->getId();
+        $used_in = [];
+        $revisions = [];
         if ($source_entity instanceof RevisionableInterface) {
           $default_revision_id = $source_entity->getRevisionId();
-          $default_langcode = $source_entity->language()->getId();
-          $used_in_default = FALSE;
-          $default_key = 0;
-          foreach ($records as $key => $record) {
-            if ($record['source_vid'] == $default_revision_id && $record['source_langcode'] == $default_langcode) {
-              $default_key = $key;
-              $used_in_default = TRUE;
-              break;
+          foreach (array_reverse($records) as $record) {
+            [
+              'source_vid' => $source_vid,
+              'source_langcode' => $source_langcode,
+              'field_name' => $field_name,
+            ] = $record;
+            // Track which languages are used in pending, default and old
+            // revisions.
+            $revision_group = (int) $source_vid <=> (int) $default_revision_id;
+            $revisions[$revision_group][$source_langcode] = $field_name;
+          }
+
+          foreach ($revision_groups as $index => $label) {
+            if (!empty($revisions[$index])) {
+              $used_in[] = $this->summarizeRevisionGroup($default_langcode, $label, $revisions[$index]);
             }
           }
-          $used_in_text = $used_in_default ? $this->t('Default') : $this->t('Translations or previous revisions');
+
+          if (count($used_in) > 1) {
+            $used_in = [
+              '#theme' => 'item_list',
+              '#items' => $used_in,
+              '#list_type' => 'ul',
+            ];
+          }
         }
         $link = $this->getSourceEntityLink($source_entity);
         // If the label is empty it means this usage shouldn't be shown
@@ -226,20 +331,93 @@ class ListUsageController extends ControllerBase {
           continue;
         }
         $published = $this->getSourceEntityStatus($source_entity);
-        $field_label = isset($field_definitions[$records[$default_key]['field_name']]) ? $field_definitions[$records[$default_key]['field_name']]->getLabel() : $this->t('Unknown');
+        $get_field_name = function (array $field_names) use ($default_langcode, $revision_groups) {
+          foreach (array_keys($revision_groups) as $group) {
+            if (isset($field_names[$group])) {
+              return $field_names[$group][$default_langcode] ?? reset($field_names[$group]);
+            }
+          }
+        };
+        $field_name = $get_field_name($revisions);
+        $field_label = isset($field_definitions[$field_name]) ? $field_definitions[$field_name]->getLabel() : $this->t('Unknown');
+        $type = $entity_types[$source_type]->getLabel();
+        if ($source_bundle_key = $source_entity->getEntityType()->getKey('bundle')) {
+          $bundle_field = $source_entity->{$source_bundle_key};
+          if ($bundle_field->getFieldDefinition()->getType() === 'entity_reference') {
+            $bundle_label = $bundle_field->entity->label();
+          }
+          else {
+            $bundle_label = $bundle_field->getString();
+          }
+          $type .= ': ' . $bundle_label;
+        }
         $rows[] = [
           $link,
-          $entity_types[$source_type]->getLabel(),
+          $type,
           $languages[$default_langcode]->getName(),
           $field_label,
           $published,
-          $used_in_text,
+          ['data' => $used_in],
         ];
       }
     }
 
+    // Restore previous trash context if we changed it.
+    if (isset($prev_trash_context)) {
+      $this->trashManager->setTrashContext($prev_trash_context);
+    }
+
     $this->allRows = $rows;
     return $this->allRows;
+  }
+
+  /**
+   * Returns a render array indicating a revision "type" and languages.
+   *
+   * For example it might return "Pending revision(s) / Draft(s): ES, NO.".
+   *
+   * @param string $default_langcode
+   *   The default language code for the referencing entity.
+   * @param \Drupal\Core\StringTranslation\TranslatableMarkup $revision_label
+   *   The translated revision type label eg 'Old revision(s)' or 'Default'.
+   * @param string[] $languages
+   *   An indexed array of language codes that reference the entity in the given
+   *   type.
+   *
+   * @return mixed[]
+   *   A render array summarizing the information passed in.
+   */
+  protected function summarizeRevisionGroup($default_langcode, $revision_label, array $languages): array {
+    $language_objects = $this->languageManager()->getLanguages(LanguageInterface::STATE_ALL);
+    if (count($languages) === 1 && !empty($languages[$default_langcode])) {
+      // If there's only one relevant revision and it's the entity's default
+      // language then just show the label.
+      return ['#plain_text' => $revision_label];
+    }
+    else {
+      // Otherwise show the languages enumerated, ensuring the default language
+      // comes first if present.
+      if (!empty($languages[$default_langcode])) {
+        $languages = [$default_langcode => TRUE] + $languages;
+      }
+      // Ignore not installed languages.
+      $languages = array_intersect_key($languages, $language_objects);
+      return [
+        '#type' => 'inline_template',
+        '#template' => '{{ label }}: {% for language in languages %}{{ language }}{{ loop.last ? "." : ", " }}{% endfor %}',
+        '#context' => [
+          'label' => $revision_label,
+          'languages' => array_map(fn ($code) => [
+            '#type' => 'inline_template',
+            '#template' => '<abbr title="{{ name|e("html_attr") }}">{{ code }}</abbr>',
+            '#context' => [
+              'code' => mb_strtoupper($code),
+              'name' => $language_objects[$code]->getName(),
+            ],
+          ], array_keys($languages)),
+        ],
+      ];
+    }
   }
 
   /**
@@ -254,10 +432,10 @@ class ListUsageController extends ControllerBase {
    * @param int|string $entity_id
    *   The ID of the target entity.
    *
-   * @return array
+   * @return mixed[]
    *   An indexed array of rows representing the records for a given page.
    */
-  protected function getPageRows($page, $num_per_page, $entity_type, $entity_id) {
+  protected function getPageRows($page, $num_per_page, $entity_type, $entity_id): array {
     $offset = $page * $num_per_page;
     return array_slice($this->getRows($entity_type, $entity_id), $offset, $num_per_page);
   }
@@ -270,10 +448,10 @@ class ListUsageController extends ControllerBase {
    * @param int $entity_id
    *   The entity id.
    *
-   * @return string
+   * @return \Drupal\Core\StringTranslation\TranslatableMarkup
    *   The title to be used on this page.
    */
-  public function getTitle($entity_type, $entity_id) {
+  public function getTitle($entity_type, $entity_id): TranslatableMarkup {
     $entity = $this->entityTypeManager->getStorage($entity_type)->load($entity_id);
     if ($entity) {
       return $this->t('Entity usage information for %entity_label', ['%entity_label' => $entity->label()]);
@@ -287,22 +465,29 @@ class ListUsageController extends ControllerBase {
    * @param \Drupal\Core\Entity\EntityInterface $source_entity
    *   The source entity.
    *
-   * @return string
+   * @return string|\Drupal\Core\StringTranslation\TranslatableMarkup
    *   The entity's status.
    */
-  protected function getSourceEntityStatus(EntityInterface $source_entity) {
+  protected function getSourceEntityStatus(EntityInterface $source_entity): string|TranslatableMarkup {
     // Treat paragraph entities in a special manner. Paragraph entities
     // should get their host (parent) entity's status.
     if ($source_entity->getEntityTypeId() == 'paragraph') {
-      /** @var \Drupal\paragraphs\ParagraphInterface $source_entity */
+      assert($source_entity instanceof ParagraphInterface);
       $parent = $source_entity->getParentEntity();
       if (!empty($parent)) {
         return $this->getSourceEntityStatus($parent);
       }
     }
+    // Do the same for inline content blocks.
+    elseif ($source_entity instanceof BlockContentInterface && !$source_entity->isReusable()) {
+      $parent = $this->getContentBlockParentEntity($source_entity);
+      if (!empty($parent)) {
+        return $this->getSourceEntityStatus($parent);
+      }
+    }
 
-    if (isset($source_entity->status)) {
-      $published = !empty($source_entity->status->value) ? $this->t('Published') : $this->t('Unpublished');
+    if ($source_entity instanceof EntityPublishedInterface) {
+      $published = $source_entity->isPublished() ? $this->t('Published') : $this->t('Unpublished');
     }
     else {
       $published = '';
@@ -330,10 +515,27 @@ class ListUsageController extends ControllerBase {
    *   to correctly build a link. Will return FALSE if this item should not be
    *   shown on the UI (for example when dealing with an orphan paragraph).
    */
-  protected function getSourceEntityLink(EntityInterface $source_entity, $text = NULL) {
-    // Note that $paragraph_entity->label() will return a string of type:
-    // "{parent label} > {parent field}", which is actually OK for us.
+  protected function getSourceEntityLink(EntityInterface $source_entity, $text = NULL): mixed {
+    // Treat block_content entities in a special manner. Block content
+    // relationships are stored as serialized data on the host entity. This
+    // makes it difficult to query parent data. Instead we look up relationship
+    // data which may exist in entity_usage tables. This requires site builders
+    // to set up entity usage on host-entity-type -> block_content manually.
+    // @todo this could be made more generic to support other entity types with
+    // difficult to handle parent -> child relationships.
+    if ($source_entity instanceof BlockContentInterface && !$source_entity->isReusable()) {
+      $parent = $this->getContentBlockParentEntity($source_entity);
+      if ($parent) {
+        return $this->getSourceEntityLink($parent);
+      }
+    }
+
+    $entity_in_trash = !is_null($this->trashManager) && trash_entity_is_deleted($source_entity);
+
     $entity_label = $source_entity->access('view label') ? $source_entity->label() : $this->t('- Restricted access -');
+    if ($entity_in_trash) {
+      $entity_label .= ' ' . $this->t('(in trash)');
+    }
 
     $rel = NULL;
     if ($source_entity->hasLinkTemplate('revision')) {
@@ -343,8 +545,8 @@ class ListUsageController extends ControllerBase {
       $rel = 'canonical';
     }
 
-    // Block content likely used in Layout Builder inline blocks.
-    if ($source_entity instanceof BlockContentInterface && !$source_entity->isReusable()) {
+    // Block content likely used in Layout Builder inline or reusable blocks.
+    if ($source_entity instanceof BlockContentInterface) {
       $rel = NULL;
     }
 
@@ -352,7 +554,12 @@ class ListUsageController extends ControllerBase {
     if ($rel) {
       // Prevent 404s by exposing the text unlinked if the user has no access
       // to view the entity.
-      return $source_entity->access('view') ? $source_entity->toLink($link_text, $rel) : $link_text;
+      $options = [];
+      if ($entity_in_trash) {
+        // Trashed entities need a query string parameter to allow viewing.
+        $options['query'] = ['in_trash' => TRUE];
+      }
+      return $source_entity->access('view') ? $source_entity->toLink($link_text, $rel, $options) : $link_text;
     }
 
     // Treat paragraph entities in a special manner. Normal paragraph entities
@@ -365,26 +572,27 @@ class ListUsageController extends ControllerBase {
         return $this->getSourceEntityLink($parent, $link_text);
       }
     }
-    // Treat block_content entities in a special manner. Block content
-    // relationships are stored as serialized data on the host entity. This
-    // makes it difficult to query parent data. Instead we look up relationship
-    // data which may exist in entity_usage tables. This requires site builders
-    // to set up entity usage on host-entity-type -> block_content manually.
-    // @todo this could be made more generic to support other entity types with
-    // difficult to handle parent -> child relationships.
-    elseif ($source_entity->getEntityTypeId() === 'block_content') {
-      $sources = $this->entityUsage->listSources($source_entity, FALSE);
-      $source = reset($sources);
-      if ($source !== FALSE) {
-        $parent = $this->entityTypeManager()->getStorage($source['source_type'])->load($source['source_id']);
-        if ($parent) {
-          return $this->getSourceEntityLink($parent);
-        }
-      }
-    }
 
     // As a fallback just return a non-linked label.
     return $link_text;
+  }
+
+  /**
+   * Figure out the "parent" entity of a content block.
+   *
+   * @param \Drupal\block_content\BlockContentInterface $block_content
+   *   The block entity we are interested in.
+   *
+   * @return \Drupal\Core\Entity\EntityInterface|null
+   *   The entity that has a tracked relationship pointing to this block.
+   */
+  private function getContentBlockParentEntity(BlockContentInterface $block_content): ?EntityInterface {
+    $sources = $this->entityUsage->listSources($block_content, FALSE);
+    $source = reset($sources);
+    if (!empty($source['source_type']) && !empty($source['source_id'])) {
+      return $this->entityTypeManager()->getStorage($source['source_type'])->load($source['source_id']);
+    }
+    return NULL;
   }
 
   /**
@@ -398,7 +606,7 @@ class ListUsageController extends ControllerBase {
    * @return \Drupal\Core\Access\AccessResultInterface
    *   The access result.
    */
-  public function checkAccess($entity_type, $entity_id) {
+  public function checkAccess($entity_type, $entity_id): AccessResultInterface {
     $entity = $this->entityTypeManager->getStorage($entity_type)->load($entity_id);
     if (!$entity || !$entity->access('view')) {
       return AccessResult::forbidden();

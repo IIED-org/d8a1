@@ -2,20 +2,19 @@
 
 namespace Drupal\purge\Plugin\Purge\DiagnosticCheck;
 
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\purge\Attribute\PurgeDiagnosticCheck;
 use Drupal\purge\Plugin\Purge\Purger\PurgersServiceInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Checks if there is purging capacity available.
- *
- * @PurgeDiagnosticCheck(
- *   id = "capacity",
- *   title = @Translation("Capacity"),
- *   description = @Translation("Checks if there is invalidation capacity available."),
- *   dependent_queue_plugins = {},
- *   dependent_purger_plugins = {}
- * )
  */
+#[PurgeDiagnosticCheck(
+  id: 'capacity',
+  title: new TranslatableMarkup('Capacity'),
+  description: new TranslatableMarkup('Checks if there is invalidation capacity available.'),
+)]
 class CapacityDiagnosticCheck extends DiagnosticCheckBase implements DiagnosticCheckInterface {
 
   /**

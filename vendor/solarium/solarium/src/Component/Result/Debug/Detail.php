@@ -16,29 +16,23 @@ class Detail implements \ArrayAccess
 {
     /**
      * Value.
-     *
-     * @var float
      */
-    protected $value;
+    protected float $value;
 
     /**
      * Match.
-     *
-     * @var bool
      */
-    protected $match;
+    protected bool $match;
 
     /**
      * Description.
-     *
-     * @var string
      */
-    protected $description;
+    protected string $description;
 
     /**
-     * @var \Solarium\Component\Result\Debug\Detail[]
+     * @var Detail[]
      */
-    protected $subDetails;
+    protected ?array $subDetails = null;
 
     /**
      * Constructor.
@@ -85,7 +79,7 @@ class Detail implements \ArrayAccess
     }
 
     /**
-     * @param \Solarium\Component\Result\Debug\Detail[]|array $subDetails
+     * @param Detail[]|array $subDetails
      *
      * @return self Provides fluent interface
      */
@@ -104,7 +98,7 @@ class Detail implements \ArrayAccess
     }
 
     /**
-     * @return \Solarium\Component\Result\Debug\Detail[]|null
+     * @return Detail[]|null
      */
     public function getSubDetails(): ?array
     {
@@ -123,7 +117,6 @@ class Detail implements \ArrayAccess
         return \in_array($offset, ['match', 'value', 'description']);
     }
 
-    #[\ReturnTypeWillChange]
     /**
      * ArrayAccess implementation.
      *
@@ -131,6 +124,7 @@ class Detail implements \ArrayAccess
      *
      * @return mixed
      */
+    #[\ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         return $this->{$offset};

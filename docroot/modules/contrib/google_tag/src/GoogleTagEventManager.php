@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace Drupal\google_tag;
 
+use Drupal\Component\Plugin\Attribute\AttributeInterface;
 use Drupal\Component\Plugin\Exception\PluginException;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
 use Drupal\Core\Utility\Token;
 use Drupal\google_tag\Annotation\GoogleTagEvent;
+use Drupal\google_tag\Attribute\GoogleTagEvent as GoogleTagEventAttribute;
 use Drupal\google_tag\Plugin\GoogleTag\Event\ConfigurableEventBase;
 use Drupal\google_tag\Plugin\GoogleTag\Event\GoogleTagEventInterface;
 
@@ -39,12 +41,17 @@ final class GoogleTagEventManager extends DefaultPluginManager {
    *   The token service.
    */
   public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler, Token $token) {
+    // Attribute discovery was added in Drupal 10.2. Older versions take the
+    // annotation class as the fifth argument.
+    $definition_classes = interface_exists(AttributeInterface::class)
+      ? [GoogleTagEventAttribute::class, GoogleTagEvent::class]
+      : [GoogleTagEvent::class];
     parent::__construct(
       'Plugin/GoogleTag/Event',
       $namespaces,
       $module_handler,
       GoogleTagEventInterface::class,
-      GoogleTagEvent::class,
+      ...$definition_classes,
     );
     $this->alterInfo('google_tag_event_info');
     $this->setCacheBackend($cache_backend, 'google_tag_event_plugins');

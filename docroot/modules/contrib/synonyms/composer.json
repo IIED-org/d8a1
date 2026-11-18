@@ -18,7 +18,7 @@
     {
       "name": "Duro Arezina",
       "homepage": "https://www.drupal.org/u/devad",
-      "role": "D8, D9 and D10 versions maintenance"
+      "role": "D8+ versions maintenance"
     },
     {
       "name": "See other contributors",
@@ -30,6 +30,6 @@
     "source": "https://git.drupalcode.org/project/synonyms"
   },
   "require": {
-    "drupal/core": "^9 || ^10"
+    "drupal/core": "^9 || ^10 || ^11"
   }
 }

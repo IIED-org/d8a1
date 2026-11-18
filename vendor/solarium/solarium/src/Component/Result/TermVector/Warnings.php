@@ -17,22 +17,22 @@ class Warnings implements \ArrayAccess
     /**
      * @var string[]|null
      */
-    protected $noTermVectors;
+    protected ?array $noTermVectors;
 
     /**
      * @var string[]|null
      */
-    protected $noPositions;
+    protected ?array $noPositions;
 
     /**
      * @var string[]|null
      */
-    protected $noOffsets;
+    protected ?array $noOffsets;
 
     /**
      * @var string[]|null
      */
-    protected $noPayloads;
+    protected ?array $noPayloads;
 
     /**
      * @param string[]|null $noTermVectors
@@ -100,7 +100,6 @@ class Warnings implements \ArrayAccess
         return \in_array($offset, ['noTermVectors', 'noPositions', 'noOffsets', 'noPayloads']);
     }
 
-    #[\ReturnTypeWillChange]
     /**
      * ArrayAccess implementation.
      *
@@ -108,6 +107,7 @@ class Warnings implements \ArrayAccess
      *
      * @return mixed
      */
+    #[\ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         return $this->{$offset};

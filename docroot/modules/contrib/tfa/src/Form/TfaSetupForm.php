@@ -160,7 +160,10 @@ class TfaSetupForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, User $user = NULL, $method = 'tfa_totp', $reset = 0) {
+  public function buildForm(array $form, FormStateInterface $form_state, ?User $user = NULL, $method = 'tfa_totp', $reset = 0) {
+    // Validate the requested method up front so an invalid value in the
+    // route (e.g. a crafted URL) 404s immediately, before any storage or
+    // step logic runs.
     $plugin = $this->findPlugin($method);
     $setup_plugin_id = $plugin['setupPluginId'];
     if (!$this->tfaSetup->hasDefinition($setup_plugin_id)) {
@@ -221,6 +224,15 @@ class TfaSetupForm extends FormBase {
 
       if (isset($storage['step_method'])) {
         $method = $storage['step_method'];
+      }
+
+      // Re-resolve the plugin for the current step: $method may have just
+      // changed to the next step in a multi-step full setup, so the value
+      // computed above (from the original route parameter) can be stale.
+      $plugin = $this->findPlugin($method);
+      $setup_plugin_id = $plugin['setupPluginId'];
+      if (!$this->tfaSetup->hasDefinition($setup_plugin_id)) {
+        throw new NotFoundHttpException("Plugin {$method} not found.");
       }
 
       // Record methods progressed.
@@ -419,8 +431,10 @@ class TfaSetupForm extends FormBase {
     $storage['steps_left'] = array_diff($storage['steps_left'], [$this_step]);
     if (!empty($storage['steps_left'])) {
       // Contextual reporting.
-      if ($output = $step_class->getSetupMessages()) {
-        $output = $skipped_step ? $output['skipped'] : $output['saved'];
+      $output = '';
+      $setup_messages = $step_class->getSetupMessages();
+      if (!empty($setup_messages)) {
+        $output = $skipped_step ? ($setup_messages['skipped'] ?? '') : ($setup_messages['saved'] ?? '');
       }
       $count = count($storage['steps_left']);
       $output .= ' ' . $this->formatPlural($count, 'One setup step remaining.', '@count TFA setup steps remain.', ['@count' => $count]);

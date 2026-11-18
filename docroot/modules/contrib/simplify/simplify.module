@@ -110,7 +110,13 @@ function simplify_form_comment_type_edit_form_submit($form, FormStateInterface $
 /**
  * Implements hook_form_FORM_ID_alter() for taxonomy_form_vocabulary().
  */
-function simplify_form_taxonomy_vocabulary_form_alter(&$form, FormStateInterface $form_state) {
+function simplify_form_taxonomy_vocabulary_form_alter(&$form, FormStateInterface $form_state, string $form_id) {
+  if ($form_id !== 'taxonomy_vocabulary_form') {
+    // Since the taxonomy vocabulary base_form_id equals the form_id of the edit
+    // form, this hook is also invoked for other taxonomy vocabulary forms.
+    return;
+  }
+
   $vocabulary = $form['vid'];
 
   // Taxonomy.
@@ -343,6 +349,19 @@ function simplify_form_block_content_form_alter(&$form, FormStateInterface $form
 }
 
 /**
+ * Implements hook_form_BASE_FORM_ID_alter() for media_form.
+ *
+ * Overrides the media creation form to hide elements depending on settings.
+ */
+function simplify_form_media_form_alter(&$form, FormStateInterface $form_state) {
+  // Get array of fields to hide.
+  $fields = _simplify_get_config_value('simplify_media_global');
+
+  // Hide fields.
+  simplify_hide_fields($fields, $form);
+}
+
+/**
  * Implements hook_form_FORM_ID_alter() for block_form().
  *
  * Overrides the block "configure" page.
@@ -366,11 +385,13 @@ function simplify_form_alter(&$form, FormStateInterface $form_state, $form_id) {
   }
 
   $entity = $form_state->getFormObject()->getEntity();
-  if (in_array('Drupal\eck\EckEntityInterface', class_implements($entity))) {
-    // Get array of fields to hide.
-    $fields = _simplify_get_config_value('simplify_eck_global');
-    // Hide fields.
-    simplify_hide_fields($fields, $form);
+  if (!is_null($entity)) {
+    if (in_array('Drupal\eck\EckEntityInterface', class_implements($entity))) {
+      // Get array of fields to hide.
+      $fields = _simplify_get_config_value('simplify_eck_global');
+      // Hide fields.
+      simplify_hide_fields($fields, $form);
+    }
   }
 }
 
@@ -385,6 +406,9 @@ function simplify_field_widget_complete_comment_default_form_alter(&$element, Fo
   simplify_hide_widget('comment', $element, $form_state);
 }
 
+/**
+ * Implements hook_field_widget_complete_metatag_firehose_form_alter().
+ */
 function simplify_field_widget_complete_metatag_firehose_form_alter(&$element, FormStateInterface $form_state, $context) {
   simplify_hide_widget('metatags', $element, $form_state);
 }
@@ -559,6 +583,17 @@ function simplify_get_fields($type) {
     case 'profiles':
       $fields['format'] = t('Text format selection');
       break;
+
+    case 'media':
+      $fields['name'] = t('Name');
+      $fields['format'] = t('Text format selection');
+      $fields['revision_information'] = t('Revision information');
+      $fields['author'] = t('Authoring information');
+      if (\Drupal::moduleHandler()->moduleExists('path')) {
+        $fields['path'] = t('URL alias');
+      }
+      break;
+
   }
 
   // Allow other modules to alter the array of fields that can be hidden.
@@ -636,6 +671,13 @@ function simplify_hide_field(string $field, array &$form) {
     // Revision.
     case 'revision_information':
       $form['revision_information']['#attributes']['class'][] = 'visually-hidden';
+      $form['revision_information']['#group'] = '';
+      break;
+
+    // Author.
+    case 'author':
+      $form['author']['#attributes']['class'][] = 'visually-hidden';
+      $form['author']['#group'] = '';
       break;
 
     // Menu parent.
@@ -664,6 +706,9 @@ function simplify_hide_field(string $field, array &$form) {
   \Drupal::moduleHandler()->alter('simplify_hide_field', $form, $field);
 }
 
+/**
+ * Make fields visually-hidden configured in settings.
+ */
 function simplify_hide_widget(string $name, array &$form, FormStateInterface $form_state) {
 
   if (!method_exists($form_state->getFormObject(), 'getEntity')) {

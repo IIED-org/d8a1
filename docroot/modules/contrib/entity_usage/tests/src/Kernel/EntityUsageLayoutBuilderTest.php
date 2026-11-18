@@ -2,10 +2,10 @@
 
 namespace Drupal\Tests\entity_usage\Kernel;
 
+use Drupal\KernelTests\KernelTestBase;
 use Drupal\block_content\Entity\BlockContent;
 use Drupal\block_content\Entity\BlockContentType;
 use Drupal\entity_test\Entity\EntityTest;
-use Drupal\KernelTests\KernelTestBase;
 use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
 use Drupal\layout_builder\Plugin\SectionStorage\OverridesSectionStorage;
 use Drupal\layout_builder\Section;
@@ -61,7 +61,7 @@ class EntityUsageLayoutBuilderTest extends KernelTestBase {
   /**
    * Tests blocks referenced by inline blocks in layouts are recorded.
    */
-  public function testLayoutBuilderInlineBlockUsage() {
+  public function testLayoutBuilderInlineBlockUsage(): void {
     $type = BlockContentType::create([
       'id' => 'foo',
       'label' => 'Foo',
@@ -132,6 +132,55 @@ class EntityUsageLayoutBuilderTest extends KernelTestBase {
       ],
     ];
     $this->assertEquals($expected, $usage);
+  }
+
+  /**
+   * Tests layout builder usage tracking non-default revisions.
+   */
+  public function testLayoutBuilderRevisionUsage(): void {
+    $type = BlockContentType::create([
+      'id' => 'basic',
+      'label' => 'Basic',
+    ]);
+    $type->save();
+    $block = BlockContent::create(['type' => $type->id()]);
+    $block->save();
+    $block_a_initial_revision = $block->getRevisionId();
+
+    // Create a new revision of the block.
+    $block->setNewRevision();
+    $block->save();
+
+    // Create a section using the initial revision of the block.
+    $sectionData = [
+      new Section('layout_onecol', [], [
+        'first-revision' => new SectionComponent('first-revision', 'content', [
+          'id' => 'inline_block:' . $type->id(),
+          'block_revision_id' => $block_a_initial_revision,
+        ]),
+      ]),
+    ];
+
+    $entity = EntityTest::create([OverridesSectionStorage::FIELD_NAME => $sectionData]);
+    $entity->save();
+
+    /** @var \Drupal\entity_usage\EntityUsageInterface $entityUsage */
+    $entityUsage = \Drupal::service('entity_usage.usage');
+
+    $usage = $entityUsage->listSources($block);
+    $this->assertEquals([
+      'entity_test' => [
+        $entity->id() => [
+          [
+            'source_langcode' => 'en',
+            'source_vid' => '0',
+            'method' => 'layout_builder',
+            'field_name' => 'layout_builder__layout',
+            'count' => '1',
+          ],
+        ],
+      ],
+    ], $usage);
   }
 
 }

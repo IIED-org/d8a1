@@ -18,13 +18,10 @@ use Symfony\Component\Cache\Marshaller\MarshallerInterface;
  */
 class MarshallingSessionHandler implements \SessionHandlerInterface, \SessionUpdateTimestampHandlerInterface
 {
-    private AbstractSessionHandler $handler;
-    private MarshallerInterface $marshaller;
-
-    public function __construct(AbstractSessionHandler $handler, MarshallerInterface $marshaller)
-    {
-        $this->handler = $handler;
-        $this->marshaller = $marshaller;
+    public function __construct(
+        private AbstractSessionHandler $handler,
+        private MarshallerInterface $marshaller,
+    ) {
     }
 
     public function __serialize(): array
@@ -81,6 +78,11 @@ class MarshallingSessionHandler implements \SessionHandlerInterface, \SessionUpd
 
     public function write(#[\SensitiveParameter] string $sessionId, string $data): bool
     {
+        // empty data must reach the inner handler unchanged so that it destroys the session
+        if ('' === $data || (\function_exists('igbinary_serialize') && igbinary_serialize([]) === $data)) {
+            return $this->handler->write($sessionId, $data);
+        }
+
         $failed = [];
         $marshalledData = $this->marshaller->marshall(['data' => $data], $failed);
 

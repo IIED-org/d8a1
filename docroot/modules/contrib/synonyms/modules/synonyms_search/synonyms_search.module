@@ -68,6 +68,7 @@ function synonyms_search_synonym_reindex(SynonymInterface $synonym) {
   if ($entity_type->id() == 'user' || $entity_type->hasKey('label')) {
     $bundle = $synonym->getProviderPluginInstance()->getPluginDefinition()['controlled_bundle'];
     $query = \Drupal::entityQuery($entity_type->id());
+    $query->accessCheck(TRUE);
 
     // User entity type does not declare its label, while it does have one.
     $label_column = $entity_type->id() == 'user' ? 'name' : $entity_type->getKey('label');

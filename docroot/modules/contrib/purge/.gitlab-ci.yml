@@ -52,6 +52,10 @@ variables:
   OPT_IN_TEST_NEXT_MINOR: 1
   OPT_IN_TEST_NEXT_MAJOR: 1
   OPT_IN_TEST_MAX_PHP: 1
+  # From core 11.5 the next-minor/next-major jobs fail on deprecations, and
+  # core only reads a project ignore file when told where it is. The templates
+  # append core's own patterns to this file before the tests run.
+  DRUPAL_DEPRECATION_FILTER_CONFIG: '{"projectIgnoreFile":"$CI_PROJECT_DIR/.deprecation-ignore.txt"}'
 
 ###################################################################################
 #
@@ -98,3 +102,9 @@ variables:
 #                          .,(((((((((((((((((((((((((.
 #
 ###################################################################################
+# The previous-major jobs default to $CORE_PREVIOUS_PHP_MIN (PHP 8.1), whose
+# Debian bullseye images no longer have working apt repositories. Run them on
+# PHP 8.3 instead; the phpstan and phpunit previous-major jobs inherit this.
+composer (previous major):
+  variables:
+    PHP_VERSION: '8.3'

@@ -476,30 +476,35 @@ class EntityFormField extends FieldPluginBase implements CacheableDependencyInte
     $form['#tree'] = TRUE;
     $form += ['#parents' => []];
 
+    // Hide the submit button if the user can't edit anything.
+    $can_edit_any = FALSE;
+
     // Only add the buttons if there are results.
     if (!empty($this->getView()->result)) {
       $form[$this->options['id']]['#tree'] = TRUE;
       $form[$this->options['id']]['#entity_form_field'] = TRUE;
       foreach ($this->getView()->result as $row_index => $row) {
+        $entity_id = $row->_entity->id();
         // Initialize this row and column.
-        $form[$this->options['id']][$row_index]['#parents'] = [$this->options['id'], $row_index];
+        $form[$this->options['id']][$row_index]['#parents'] = [$this->options['id'], $entity_id];
         $form[$this->options['id']][$row_index]['#tree'] = TRUE;
 
         // Make sure there's an entity for this row (relationships can be null).
         if ($this->getEntity($row)) {
           // Load field definition based on current entity bundle.
-          $entity = $this->getEntityTranslation($this->getEntity($row), $row);
+          $entity = $this->getEntityTranslationByRelationship($this->getEntity($row), $row);
           if ($entity->hasField($field_name) && $this->getBundleFieldDefinition($entity->bundle())->isDisplayConfigurable('form')) {
             $items = $entity->get($field_name)->filterEmptyItems();
-
+            $can_edit_row = ($entity->access('update') && $items->access('edit'));
+            $can_edit_any = $can_edit_any || $can_edit_row;
             // Add widget to form and add field overrides.
             $form[$this->options['id']][$row_index][$field_name] = $this->getPluginInstance()->form($items, $form[$this->options['id']][$row_index], $form_state);
-            $form[$this->options['id']][$row_index][$field_name]['#access'] = ($entity->access('update') && $items->access('edit'));
+            $form[$this->options['id']][$row_index][$field_name]['#access'] = $can_edit_row;
             $form[$this->options['id']][$row_index][$field_name]['#cache']['contexts'] = $entity->getCacheContexts();
             $form[$this->options['id']][$row_index][$field_name]['#cache']['tags'] = $entity->getCacheTags();
             $form[$this->options['id']][$row_index][$field_name]['#parents'] = [
               $this->options['id'],
-              $row_index,
+              $entity_id,
               $field_name,
             ];
 
@@ -515,6 +520,11 @@ class EntityFormField extends FieldPluginBase implements CacheableDependencyInte
           }
         }
       }
+    }
+
+    // Hide submit button if there's no results or can not edit.
+    if (empty($this->getView()->result) || (!$can_edit_any)) {
+      $form['actions']['submit']['#access'] = FALSE;
     }
   }
 
@@ -605,16 +615,21 @@ class EntityFormField extends FieldPluginBase implements CacheableDependencyInte
         $entity = $this->getEntity($row);
 
         if ($entity) {
-          $entity = $this->getEntityTranslation($entity, $row);
-          $original_entity = $this->getEntityTranslation($storage->loadUnchanged($entity->id()), $row);
+          $entity = $this->getEntityTranslationByRelationship($entity, $row);
+          $old = $storage->loadUnchanged($entity->id());
 
-          try {
-            if ($this->entityShouldBeSaved($entity, $original_entity)) {
-              $storage->save($entity);
-              $rows_saved[$row_index] = $entity->label();
+          if ($old) {
+            $original_entity = $this->getEntityTranslation($old, $row);
+
+            try {
+              if ($this->entityShouldBeSaved($entity, $original_entity)) {
+                $storage->save($entity);
+                $rows_saved[$row_index] = $entity->label();
+              }
             }
-          } catch (\Exception $exception) {
-            $rows_failed[$row_index] = $entity->label();
+            catch (\Exception $exception) {
+              $rows_failed[$row_index] = $entity->label();
+            }
           }
         }
       }
@@ -672,6 +687,16 @@ class EntityFormField extends FieldPluginBase implements CacheableDependencyInte
    */
   public function query() {
     // Do nothing.
+  }
+
+  /**
+   * Returns the entity repository.
+   *
+   * @return \Drupal\Core\Entity\EntityRepositoryInterface
+   *   The entity repository.
+   */
+  protected function getEntityRepository() {
+    return \Drupal::service('entity.repository');
   }
 
 }

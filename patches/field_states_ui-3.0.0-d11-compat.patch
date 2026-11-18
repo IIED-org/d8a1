@@ -1,0 +1,36 @@
+diff --git a/field_states_ui.info.yml b/field_states_ui.info.yml
+--- a/field_states_ui.info.yml
++++ b/field_states_ui.info.yml
+@@ -1,7 +1,7 @@
+ name: 'Field States UI'
+ type: module
+ description: 'Provides a user interface for using the States API on form fields.'
+-core_version_requirement: ^9.2 || ^10
++core_version_requirement: ^10 || ^11
+ package: fields
+ test_dependencies:
+   - address:address
+diff --git a/src/FieldStateBase.php b/src/FieldStateBase.php
+--- a/src/FieldStateBase.php
++++ b/src/FieldStateBase.php
+@@ -57,7 +57,7 @@
+   /**
+    * {@inheritdoc}
+    */
+-  public function applyState(array &$states, FormStateInterface $form_state, array $context, array $element, array $parents = NULL): bool {
++  public function applyState(array &$states, FormStateInterface $form_state, array $context, array $element, ?array $parents = NULL): bool {
+     if (empty($this->configuration['target']) || empty($this->configuration['comparison'])) {
+       return FALSE;
+     }
+diff --git a/src/FieldStateInterface.php b/src/FieldStateInterface.php
+--- a/src/FieldStateInterface.php
++++ b/src/FieldStateInterface.php
+@@ -47,7 +47,7 @@
+    * @return bool
+    *   TRUE on success. FALSE if unable to calculate the field state.
+    */
+-  public function applyState(array &$states, FormStateInterface $form_state, array $context, array $element, array $parents = NULL): bool;
++  public function applyState(array &$states, FormStateInterface $form_state, array $context, array $element, ?array $parents = NULL): bool;
+
+   /**
+    * Returns a render array summarizing the configuration of the image effect.

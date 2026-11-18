@@ -35,6 +35,7 @@ function get_google_tag_entity_config(string $entity_id): string {
   /** @var \Drupal\Component\Uuid\UuidInterface $uuid_generator */
   $uuid_generator = \Drupal::service('uuid');
   $uuid = $uuid_generator->generate();
+  // cspell:ignore whitelist, blacklist
   $entity_string = "uuid: $uuid
 langcode: en
 status: true

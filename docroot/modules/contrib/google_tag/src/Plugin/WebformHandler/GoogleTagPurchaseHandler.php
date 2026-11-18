@@ -28,7 +28,7 @@ final class GoogleTagPurchaseHandler extends WebformHandlerBase {
    *
    * @var \Drupal\google_tag\EventCollectorInterface
    */
-  private EventCollectorInterface $eventCollector;
+  protected EventCollectorInterface $eventCollector;
 
   /**
    * {@inheritDoc}
@@ -50,9 +50,11 @@ final class GoogleTagPurchaseHandler extends WebformHandlerBase {
   public function postSave(WebformSubmissionInterface $webform_submission, $update = TRUE) {
     $state = $webform_submission->getWebform()->getSetting('results_disabled') ? WebformSubmissionInterface::STATE_COMPLETED : $webform_submission->getState();
     if ($state === WebformSubmissionInterface::STATE_COMPLETED) {
+      // Webform redirects after a non-Ajax submission, so the event must be
+      // stored in the session to survive until the next page is rendered.
       // @todo this is where it feels kind of broken, because the handler would
       //   be configured in the webform and have the tokens.
-      $this->eventCollector->addEvent('webform_purchase', [
+      $this->eventCollector->addDelayedEvent('webform_purchase', [
         'submission' => $webform_submission,
       ]);
     }

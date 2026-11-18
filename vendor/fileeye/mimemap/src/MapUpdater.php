@@ -34,6 +34,8 @@ class MapUpdater
 
     /**
      * Returns the map object being updated.
+     *
+     * @return MimeMapInterface
      */
     public function getMap(): MimeMapInterface
     {
@@ -64,8 +66,8 @@ class MapUpdater
      * @return list<string>
      *   A list of error messages.
      *
-     * @throws \RuntimeException
-     *   If it was not possible to access the file.
+     * @throws SourceUpdateException
+     *   If it was not possible to access the source file.
      */
     public function loadMapFromApacheFile(string $source_file): array
     {
@@ -73,8 +75,7 @@ class MapUpdater
 
         $lines = @file($source_file);
         if ($lines == false) {
-            $errors[] = "Failed accessing {$source_file}";
-            return $errors;
+            throw new SourceUpdateException("Failed accessing {$source_file}");
         }
         $i = 1;
         foreach ($lines as $line) {
@@ -108,6 +109,9 @@ class MapUpdater
      *
      * @return list<string>
      *   A list of error messages.
+     *
+     * @throws SourceUpdateException
+     *   If it was not possible to access the source file.
      */
     public function loadMapFromFreedesktopFile(string $source_file): array
     {
@@ -115,8 +119,7 @@ class MapUpdater
 
         $contents = @file_get_contents($source_file);
         if ($contents == false) {
-            $errors[] = 'Failed loading file ' . $source_file;
-            return $errors;
+            throw new SourceUpdateException('Failed loading file ' . $source_file);
         }
 
         $xml = @simplexml_load_string($contents);
@@ -148,6 +151,7 @@ class MapUpdater
             }
             if (isset($node->acronym)) {
                 $acronym = (string) $node->acronym;
+                /** @var ?string $expandedAcronym */
                 $expandedAcronym = $node->{'expanded-acronym'} ?? null;
                 if (isset($expandedAcronym)) {
                     $acronym .= ': ' . $expandedAcronym;

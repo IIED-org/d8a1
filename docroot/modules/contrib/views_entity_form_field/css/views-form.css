@@ -6,7 +6,13 @@
 }
 
 .views-entity-form-field-field-description-hidden > .form-item > .description,
-.views-entity-form-field-field-description-hidden > fieldset.form-item > .fieldset-wrapper > .description,
-.views-entity-form-field-field-description-hidden > * > .form-item > .description {
+.views-entity-form-field-field-description-hidden
+  > fieldset.form-item
+  > .fieldset-wrapper
+  > .description,
+.views-entity-form-field-field-description-hidden
+  > *
+  > .form-item
+  > .description {
   display: none;
 }

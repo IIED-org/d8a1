@@ -10,7 +10,6 @@ use Drupal\Core\Form\SubformState;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Plugin\Context\ContextRepositoryInterface;
 use Drupal\Core\Plugin\PluginFormInterface;
-use Drupal\Core\Url;
 use Drupal\google_tag\Entity\TagContainer;
 use Drupal\google_tag\GoogleTagEventManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -99,9 +98,9 @@ class TagContainerForm extends EntityForm {
       '#type' => 'fieldset',
       '#title' => $this->t('Google Tag ID(s)'),
       '#prefix' => '<div id="' . $accounts_wrapper_id . '">',
-      '#description' => $this->t('This ID is unique to each site you want to track separately, and is in the form of UA-xxxxx-yy, G-xxxxxxxx, AW-xxxxxxxxx, or DC-xxxxxxxx. To get a Web Property ID, <a href=":analytics">register your site with Google Analytics</a>, or if you already have registered your site, go to your Google Analytics Settings page to see the ID next to every site profile. <a href=":webpropertyid">Find more information in the documentation</a>.', [
+      '#description' => $this->t('This ID is unique to each site you want to track separately, and is in the form of GTM-xxxxxxx, G-xxxxxxxx, GT-xxxxxxx, AW-xxxxxxxxx, DC-xxxxxxxx, or UA-xxxxx-yy. To get a Web Property ID, <a href=":analytics">register your site with Google Analytics</a>, or if you already have registered your site, go to your Google Analytics Settings page to see the ID next to every site profile. <a href=":webpropertyid">Find more information in the documentation</a>.<br /><br />Note: After adding a GTM ID, save the form or add another ID to configure its settings in the Advanced settings section at the bottom of the form.', [
         ':analytics' => 'https://marketingplatform.google.com/about/analytics/',
-        ':webpropertyid' => Url::fromUri('https://developers.google.com/analytics/resources/concepts/gaConceptsAccounts', ['fragment' => 'webProperty'])->toString(),
+        ':webpropertyid' => 'https://support.google.com/analytics/answer/9539598',
       ]),
       '#suffix' => '</div>',
     ];
@@ -123,7 +122,7 @@ class TagContainerForm extends EntityForm {
     if ($accounts === []) {
       $entity_accounts = $this->entity->get('tag_container_ids');
       foreach ($entity_accounts as $index => $account) {
-        $accounts[$index]['value'] = $account;
+        $accounts[$index]['value'] = trim((string) $account);
         $accounts[$index]['weight'] = $index;
       }
       // Default fallback.
@@ -131,26 +130,28 @@ class TagContainerForm extends EntityForm {
         $accounts[] = ['value' => '', 'weight' => 0];
       }
     }
+    // Tables render rows in array order, not by #weight, so keep a reordering
+    // across add and remove rebuilds. Keys are kept to match submitted input.
+    uasort($accounts, static fn (array $a, array $b) => (int) $a['weight'] <=> (int) $b['weight']);
 
     foreach ($accounts as $index => $account) {
       $form['accounts_wrapper']['accounts'][$index]['#attributes']['class'][] = 'draggable';
       $form['accounts_wrapper']['accounts'][$index]['#weight'] = $account['weight'];
       $form['accounts_wrapper']['accounts'][$index]['value'] = [
+        '#title' => $this->t('Google Tag ID'),
+        '#title_display' => 'invisible',
         '#default_value' => (string) ($account['value'] ?? ''),
         '#maxlength' => 20,
         '#required' => (count($accounts) === 1),
         '#size' => 20,
         '#type' => 'textfield',
         '#pattern' => TagContainer::GOOGLE_TAG_MATCH,
-        '#ajax' => [
-          'callback' => [self::class, 'storeGtagAccountsCallback'],
-          'disable-refocus' => TRUE,
-          'event' => 'change',
-          'wrapper' => 'advanced-settings-wrapper',
-        ],
-        '#attributes' => [
-          'data-disable-refocus' => 'true',
-        ],
+        // No #ajax here: Drupal disables an element while its Ajax request is
+        // in flight, so a change event fired by clicking "Add another ID" or
+        // "Save" straight after typing would leave this value out of the
+        // submission. The add and remove buttons rebuild the advanced
+        // settings instead.
+        // @see https://www.drupal.org/project/google_tag/issues/3482534
       ];
 
       $form['accounts_wrapper']['accounts'][$index]['weight'] = [
@@ -194,8 +195,8 @@ class TagContainerForm extends EntityForm {
         [self::class, 'addGtagCallback'],
       ],
       '#ajax' => [
-        'callback' => [self::class, 'ajaxRefreshAccounts'],
-        'wrapper' => $accounts_wrapper_id,
+        'callback' => [self::class, 'gtagFormCallback'],
+        'wrapper' => $form['#id'],
         'effect' => 'fade',
       ],
     ];
@@ -284,7 +285,7 @@ class TagContainerForm extends EntityForm {
         ],
         '#title' => $this->t('New parameter type'),
         '#title_display' => 'invisible',
-        '#empty_option' => t('- Select -'),
+        '#empty_option' => $this->t('- Select -'),
         '#empty_value' => '',
       ],
       'new_metric_dimension_submit' => [
@@ -314,9 +315,9 @@ class TagContainerForm extends EntityForm {
 
     $form['status'] = [
       '#type' => 'checkbox',
-      '#title' => 'Enabled',
+      '#title' => $this->t('Enabled'),
       '#default_value' => $this->entity->status(),
-      '#description' => 'Check this checkbox to enable Tag Container.',
+      '#description' => $this->t('Check this checkbox to enable Tag Container.'),
     ];
 
     return $form;
@@ -445,7 +446,7 @@ class TagContainerForm extends EntityForm {
   protected function getAdvancedSettings(array $form, FormStateInterface $form_state, array $accounts) {
     // Advanced Settings. These are specific settings per ID.
     $advanced_settings = [
-      '#type' => 'fieldset',
+      '#type' => 'details',
       '#title' => $this->t('Advanced settings'),
       '#description' => $this->t('The settings affecting the snippet contents for this container.'),
       '#attributes' => ['class' => ['google-tag']],
@@ -453,6 +454,17 @@ class TagContainerForm extends EntityForm {
       '#suffix' => '</div>',
       '#open' => FALSE,
       '#tree' => TRUE,
+    ];
+    // The label is optional, so it lives here rather than at the top of the
+    // form. Its value stays at the top level, outside advanced_settings.
+    $advanced_settings['label'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Label'),
+      '#default_value' => $this->entity->get('label'),
+      '#maxlength' => 255,
+      '#description' => $this->t('A name to identify this container in the container list. If left empty, the first Google Tag ID is used.'),
+      '#parents' => ['label'],
+      '#weight' => -10,
     ];
     // Allow disabling of consent options when using non Ads tags.
     $advanced_settings['consent_mode'] = [
@@ -484,11 +496,51 @@ class TagContainerForm extends EntityForm {
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
     $this->validateGtmFormValues($form, $form_state);
+    $this->validateAccounts($form, $form_state);
     $this->validateConditionsForm($form, $form_state);
 
     $this->buildEntity($form, $form_state);
 
     $this->validateEventsForm($form, $form_state);
+  }
+
+  /**
+   * Requires at least one Google Tag ID when the container is saved.
+   *
+   * @param array $form
+   *   An associative array containing the structure of the form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
+   */
+  protected function validateAccounts(array $form, FormStateInterface $form_state): void {
+    // The add and remove buttons may run with every ID still blank.
+    $triggering_element = $form_state->getTriggeringElement();
+    if (!in_array('::submitForm', $triggering_element['#submit'] ?? [], TRUE)) {
+      return;
+    }
+    if ($this->getSubmittedAccountIds($form_state) === []) {
+      $first = array_key_first($form_state->getValue('accounts') ?? []) ?? 0;
+      $form_state->setErrorByName("accounts][$first][value", $this->t('Enter at least one Google Tag ID.'));
+    }
+  }
+
+  /**
+   * Gets the submitted Google Tag IDs, in weight order, without blank rows.
+   *
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
+   *
+   * @return string[]
+   *   The Google Tag IDs.
+   */
+  protected function getSubmittedAccountIds(FormStateInterface $form_state): array {
+    $accounts = array_filter(
+      $form_state->getValue('accounts') ?? [],
+      static fn ($account) => is_array($account) && trim((string) ($account['value'] ?? '')) !== ''
+    );
+    // Sort rather than key by weight, so that rows sharing a weight are kept.
+    uasort($accounts, static fn (array $a, array $b) => (int) ($a['weight'] ?? 0) <=> (int) ($b['weight'] ?? 0));
+    return array_values(array_map(static fn (array $account) => trim((string) $account['value']), $accounts));
   }
 
   /**
@@ -570,26 +622,21 @@ class TagContainerForm extends EntityForm {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     parent::submitForm($form, $form_state);
 
-    $default_id = '';
     // No need to fetch again from entity,
     // ids should already be available in form state values now.
-    $tag_container_ids = [];
-    foreach ($form_state->getValue('accounts') as $account) {
-      if (!$default_id) {
-        $default_id = $account['value'];
-      }
-      $tag_container_ids[$account['weight']] = $account['value'];
-    }
-    // Need to save tags without weights otherwise it doesn't show up on UI.
-    $this->entity->set('tag_container_ids', array_values($tag_container_ids));
+    $tag_container_ids = $this->getSubmittedAccountIds($form_state);
+    $default_id = $tag_container_ids[0] ?? '';
+    $this->entity->set('tag_container_ids', $tag_container_ids);
 
     if ($this->entity->id() === NULL) {
-      // Set the ID and Label based on the first Google Tag.
+      // Set the ID based on the first Google Tag.
       $config_id = uniqid($default_id . '.', TRUE);
       $this->entity->setOriginalId($config_id);
       $this->entity->set('id', $config_id);
-      $this->entity->set('label', $default_id);
     }
+    // Fall back to the first Google Tag for the label when none was given.
+    $label = trim((string) $form_state->getValue('label'));
+    $this->entity->set('label', $label === '' ? $default_id : $label);
 
     $this->submitConditionsForm($form, $form_state);
     $this->submitEventsForm($form, $form_state);

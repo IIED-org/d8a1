@@ -12,6 +12,7 @@
 namespace Symfony\Component\Serializer\Normalizer;
 
 use Symfony\Component\PropertyAccess\Exception\InvalidArgumentException as PropertyAccessInvalidArgumentException;
+use Symfony\Component\PropertyAccess\Exception\InvalidTypeException;
 use Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
@@ -31,10 +32,8 @@ use Symfony\Component\Serializer\NameConverter\NameConverterInterface;
  * Converts between objects and arrays using the PropertyAccess component.
  *
  * @author Kévin Dunglas <dunglas@gmail.com>
- *
- * @final since Symfony 6.3
  */
-class ObjectNormalizer extends AbstractObjectNormalizer
+final class ObjectNormalizer extends AbstractObjectNormalizer
 {
     use AccessorCollisionResolverTrait;
 
@@ -42,7 +41,7 @@ class ObjectNormalizer extends AbstractObjectNormalizer
     private static $isReadableCache = [];
     private static $isWritableCache = [];
 
-    protected $propertyAccessor;
+    protected PropertyAccessorInterface $propertyAccessor;
     protected $propertyInfoExtractor;
     private $writeInfoExtractor;
 
@@ -65,17 +64,7 @@ class ObjectNormalizer extends AbstractObjectNormalizer
 
     public function getSupportedTypes(?string $format): array
     {
-        return ['object' => __CLASS__ === static::class || $this->hasCacheableSupportsMethod()];
-    }
-
-    /**
-     * @deprecated since Symfony 6.3, use "getSupportedTypes()" instead
-     */
-    public function hasCacheableSupportsMethod(): bool
-    {
-        trigger_deprecation('symfony/serializer', '6.3', 'The "%s()" method is deprecated, implement "%s::getSupportedTypes()" instead.', __METHOD__, get_debug_type($this));
-
-        return __CLASS__ === static::class;
+        return ['object' => true];
     }
 
     protected function extractAttributes(object $object, ?string $format = null, array $context = []): array
@@ -129,21 +118,18 @@ class ObjectNormalizer extends AbstractObjectNormalizer
             : $this->propertyAccessor->getValue($object, $attribute);
     }
 
-    /**
-     * @return void
-     */
-    protected function setAttributeValue(object $object, string $attribute, mixed $value, ?string $format = null, array $context = [])
+    protected function setAttributeValue(object $object, string $attribute, mixed $value, ?string $format = null, array $context = []): void
     {
         try {
             $this->propertyAccessor->setValue($object, $attribute, $value);
         } catch (NoSuchPropertyException) {
             // Properties not found are ignored
         } catch (PropertyAccessInvalidArgumentException $e) {
-            throw NotNormalizableValueException::createForUnexpectedDataType(\sprintf('Failed to denormalize attribute "%s" value for class "%s": %s', $attribute, $object::class, $e->getMessage()), $value, ['unknown'], $context['deserialization_path'] ?? null, false, $e->getCode(), $e);
+            throw NotNormalizableValueException::createForUnexpectedDataType(\sprintf('Failed to denormalize attribute "%s" value for class "%s": %s', $attribute, $object::class, $e->getMessage()), $value, $e instanceof InvalidTypeException ? [$e->expectedType] : ['unknown'], $context['deserialization_path'] ?? null, false, $e->getCode(), $e);
         }
     }
 
-    protected function isAllowedAttribute($classOrObject, string $attribute, ?string $format = null, array $context = [])
+    protected function isAllowedAttribute($classOrObject, string $attribute, ?string $format = null, array $context = []): bool
     {
         if (!parent::isAllowedAttribute($classOrObject, $attribute, $format, $context)) {
             return false;
@@ -157,19 +143,33 @@ class ObjectNormalizer extends AbstractObjectNormalizer
 
         if ($context['_read_attributes'] ?? true) {
             $context = array_intersect_key($context, ['enable_getter_setter_extraction' => true, 'enable_magic_methods_extraction' => true]);
-            $cacheKey = $class.$attribute.hash('xxh128', serialize($context));
+            $cacheKey = $class.'::'.$attribute.hash('xxh128', serialize($context));
 
-            return self::$isReadableCache[$cacheKey] ??= $this->propertyInfoExtractor->isReadable($class, $attribute, $context) || $this->hasAttributeAccessorMethod($class, $attribute) || (\is_object($classOrObject) && $this->propertyAccessor->isReadable($classOrObject, $attribute));
+            return self::$isReadableCache[$cacheKey] ??= $this->isPropertyPath($attribute) || $this->propertyInfoExtractor->isReadable($class, $attribute, $context) || $this->hasAttributeAccessorMethod($class, $attribute) || (\is_object($classOrObject) && $this->propertyAccessor->isReadable($classOrObject, $attribute));
+        }
+
+        if ($ignoredAttributes = $context[self::IGNORED_ATTRIBUTES] ?? $this->defaultContext[self::IGNORED_ATTRIBUTES]) {
+            $foldedAttribute = strtolower(str_replace(['_', ' '], '', $attribute));
+            foreach ($ignoredAttributes as $ignoredAttribute) {
+                if ($foldedAttribute === strtolower(str_replace(['_', ' '], '', $ignoredAttribute)) && $this->isWrittenByMethod($class, $attribute, $context)) {
+                    return false;
+                }
+            }
+        }
+
+        if ($this->isPropertyPath($attribute)) {
+            // a property path is writable only when the class metadata declares it as an attribute
+            return $this->classMetadataFactory && isset($this->classMetadataFactory->getMetadataFor($class)->getAttributesMetadata()[$attribute]);
         }
 
         $context = array_intersect_key($context, ['enable_getter_setter_extraction' => true, 'enable_magic_methods_extraction' => true, 'enable_constructor_extraction' => true, 'enable_adder_remover_extraction' => true]);
-        $cacheKey = $class.$attribute.hash('xxh128', serialize($context));
+        $cacheKey = $class.'::'.$attribute.hash('xxh128', serialize($context));
 
         if (isset(self::$isWritableCache[$cacheKey])) {
             return self::$isWritableCache[$cacheKey];
         }
 
-        if (str_contains($attribute, '.') || str_contains($attribute, '[') || $this->propertyInfoExtractor->isWritable($class, $attribute, $context)) {
+        if ($this->propertyInfoExtractor->isWritable($class, $attribute, $context)) {
             return self::$isWritableCache[$cacheKey] = true;
         }
 
@@ -193,5 +193,21 @@ class ObjectNormalizer extends AbstractObjectNormalizer
             && !$method->getAttributes(Ignore::class)
             && !$method->getNumberOfRequiredParameters()
             && !\in_array((string) $method->getReturnType(), ['void', 'never'], true);
+    }
+
+    private function isWrittenByMethod(string $class, string $attribute, array $context): bool
+    {
+        $writeInfo = $this->writeInfoExtractor->getWriteInfo($class, $attribute, ['enable_constructor_extraction' => false] + $context);
+
+        return match ($writeInfo?->getType()) {
+            PropertyWriteInfo::TYPE_METHOD => method_exists($class, $writeInfo->getName()),
+            PropertyWriteInfo::TYPE_ADDER_AND_REMOVER => true,
+            default => false,
+        };
+    }
+
+    private function isPropertyPath(string $attribute): bool
+    {
+        return str_contains($attribute, '.') || str_contains($attribute, '[');
     }
 }

@@ -1,0 +1,12 @@
+name: 'Purge tests support (unloadable purger)'
+type: module
+description: 'Provides a purger that requests a missing service, like a purger whose module is being uninstalled.'
+package: Testing
+hidden: true
+dependencies:
+  - purge:purge
+
+# Information added by Drupal.org packaging script on 2026-11-11
+version: '8.x-3.8'
+project: 'purge'
+datestamp: 1794365133

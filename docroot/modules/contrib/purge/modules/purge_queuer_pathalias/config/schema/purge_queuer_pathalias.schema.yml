@@ -1,0 +1,43 @@
+# Schema for the configuration files of the Path alias queuer module.
+purge_queuer_pathalias.settings:
+  type: config_object
+  label: 'Path alias queuer settings.'
+  mapping:
+    invalidation_type:
+      label: 'The invalidation type to queue with: auto, url or path.'
+      type: string
+      translatable: false
+    base_urls:
+      label: 'The base URLs that aliases are invalidated on.'
+      type: sequence
+      translatable: false
+      sequence:
+        type: string
+        label: 'Absolute base URL, for example https://www.example.com.'
+        translatable: false
+    queue_insert:
+      label: 'Whether created aliases are queued.'
+      type: boolean
+    queue_update:
+      label: 'Whether changed aliases are queued.'
+      type: boolean
+    queue_delete:
+      label: 'Whether deleted aliases are queued.'
+      type: boolean
+    expand_undefined_langcode:
+      label: 'Whether language neutral aliases are queued for every language.'
+      type: boolean
+    expand_langcodes:
+      label: 'The languages that language neutral aliases are expanded into.'
+      type: sequence
+      translatable: false
+      sequence:
+        type: string
+        label: 'Langcode, for example nl.'
+        translatable: false
+    skip_syncing:
+      label: 'Whether aliases created by migrations and imports are skipped.'
+      type: boolean
+    max_per_request:
+      label: 'The maximum number of invalidations queued per request.'
+      type: integer

@@ -45,7 +45,8 @@ google_tag.container.*:
             label: 'Type'
             constraints:
               NotNull: []
-              AllowedValues: ['dimension', 'metric']
+              AllowedValues:
+                choices: ['dimension', 'metric']
           name:
             type: string
             label: 'Name'
@@ -145,6 +146,9 @@ google_tag.advanced_settings.gtm:
       environment_token:
         type: string
         label: 'Environment token'
+      include_noscript:
+        type: boolean
+        label: 'Include the noscript fallback'
 
 condition.plugin.response_code:
   type: condition.plugin

@@ -32,7 +32,7 @@ class FileMetadataCaching extends FormElementBase {
         while (empty($disallowed_paths[count($disallowed_paths) - 1])) {
           array_pop($disallowed_paths);
         }
-        $input['disallowed_paths'] = $disallowed_paths ?: [];
+        $input['disallowed_paths'] = $disallowed_paths;
       }
       else {
         $input['disallowed_paths'] = [];
@@ -45,14 +45,14 @@ class FileMetadataCaching extends FormElementBase {
   /**
    * Processes a 'file_mdm_caching' form element.
    *
-   * @param array $element
+   * @param array<mixed> $element
    *   The form element to process.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the form.
-   * @param array $complete_form
+   * @param array<mixed> $complete_form
    *   The complete form structure.
    *
-   * @return array
+   * @return array<mixed>
    *   The processed element.
    */
   public static function processCaching(array &$element, FormStateInterface $form_state, array &$complete_form): array {
@@ -96,11 +96,11 @@ class FileMetadataCaching extends FormElementBase {
   /**
    * Form element validation handler.
    *
-   * @param array $element
+   * @param array<mixed> $element
    *   The form element to process.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the form.
-   * @param array $complete_form
+   * @param array<mixed> $complete_form
    *   The complete form structure.
    */
   public static function validateCaching(array &$element, FormStateInterface $form_state, array &$complete_form): void {

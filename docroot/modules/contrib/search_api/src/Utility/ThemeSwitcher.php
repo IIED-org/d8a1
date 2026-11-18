@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\search_api\Utility;
 
+use Drupal\Component\Utility\DeprecationHelper;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Theme\ActiveTheme;
 use Drupal\Core\Theme\MissingThemeDependencyException;
@@ -15,46 +16,11 @@ use Drupal\Core\Theme\ThemeManagerInterface;
  */
 class ThemeSwitcher implements ThemeSwitcherInterface {
 
-  /**
-   * The theme manager service.
-   *
-   * @var \Drupal\Core\Theme\ThemeManagerInterface
-   */
-  protected $themeManager;
-
-  /**
-   * The theme initializer service.
-   *
-   * @var \Drupal\Core\Theme\ThemeInitializationInterface
-   */
-  protected $themeInitializer;
-
-  /**
-   * The config factory service.
-   *
-   * @var \Drupal\Core\Config\ConfigFactoryInterface
-   */
-  protected $configFactory;
-
-  /**
-   * Constructs a new class instance.
-   *
-   * @param \Drupal\Core\Theme\ThemeManagerInterface $themeManager
-   *   The theme manager service.
-   * @param \Drupal\Core\Theme\ThemeInitializationInterface $themeInitializer
-   *   The theme initializer service.
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
-   *   The config factory service.
-   */
   public function __construct(
-    ThemeManagerInterface $themeManager,
-    ThemeInitializationInterface $themeInitializer,
-    ConfigFactoryInterface $configFactory
-  ) {
-    $this->themeManager = $themeManager;
-    $this->themeInitializer = $themeInitializer;
-    $this->configFactory = $configFactory;
-  }
+    protected ThemeManagerInterface $themeManager,
+    protected ThemeInitializationInterface $themeInitializer,
+    protected ConfigFactoryInterface $configFactory,
+  ) {}
 
   /**
    * {@inheritdoc}
@@ -81,9 +47,17 @@ class ThemeSwitcher implements ThemeSwitcherInterface {
     }
 
     $this->themeManager->setActiveTheme($defaultTheme);
+
     // Ensure that statically cached default variables are reset correctly,
     // especially the directory variable.
-    drupal_static_reset('template_preprocess');
+    // Not needed after deprecation of template_preprocess() in Drupal 11.2.
+    DeprecationHelper::backwardsCompatibleCall(
+      \Drupal::VERSION,
+      '11.2.0',
+      fn () => 0,
+      fn () => drupal_static_reset('template_preprocess'),
+    );
+
     // Return the previously active theme, for switching back.
     return $activeTheme;
   }
@@ -92,12 +66,19 @@ class ThemeSwitcher implements ThemeSwitcherInterface {
    * {@inheritdoc}
    */
   public function switchBack(?ActiveTheme $previousTheme): void {
-    if ($previousTheme === NULL
-        || $previousTheme === $this->themeManager->getActiveTheme()) {
+    if (
+      $previousTheme === NULL
+      || $previousTheme === $this->themeManager->getActiveTheme()
+    ) {
       return;
     }
     $this->themeManager->setActiveTheme($previousTheme);
-    drupal_static_reset('template_preprocess');
+    DeprecationHelper::backwardsCompatibleCall(
+      \Drupal::VERSION,
+      '11.2.0',
+      fn () => 0,
+      fn () => drupal_static_reset('template_preprocess'),
+    );
   }
 
 }

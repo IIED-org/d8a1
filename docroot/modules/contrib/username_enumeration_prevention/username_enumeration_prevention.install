@@ -8,6 +8,8 @@
  */
 
 use Drupal\Core\Url;
+use Drupal\user\Entity\Role;
+use Drupal\user\RoleInterface;
 
 /**
  * Implements hook_requirements().
@@ -15,7 +17,13 @@ use Drupal\Core\Url;
 function username_enumeration_prevention_requirements($phase) {
   $requirements = [];
   if ($phase === 'runtime') {
-    $username_enumeration_prevention_roles = user_roles(FALSE, 'access user profiles');
+    // user_roles is deprecated in drupal:10.2.0 and is removed from
+    // drupal:11.0.0 and have to use \Drupal\user\Entity\Role::loadMultiple()
+    $roles = Role::loadMultiple();
+    // user_roles(FALSE, 'access user profiles'); is replaced with suggestion
+    // mentioned in https://www.drupal.org/node/3349759
+    $username_enumeration_prevention_roles = array_filter($roles, fn(RoleInterface $role) => $role->hasPermission('access user profiles'));
+
     if (isset($username_enumeration_prevention_roles['anonymous'])) {
       $value = t('WARNING! Anonymous users have permission to access user profiles.');
       $severity = REQUIREMENT_WARNING;

@@ -22,10 +22,8 @@ use Symfony\Component\Serializer\Exception\NotNormalizableValueException;
  * Denormalizes a data URI to a {@see \SplFileObject} object.
  *
  * @author Kévin Dunglas <dunglas@gmail.com>
- *
- * @final since Symfony 6.3
  */
-class DataUriNormalizer implements NormalizerInterface, DenormalizerInterface, CacheableSupportsMethodInterface
+final class DataUriNormalizer implements NormalizerInterface, DenormalizerInterface
 {
     private const SUPPORTED_TYPES = [
         \SplFileInfo::class => true,
@@ -46,42 +44,33 @@ class DataUriNormalizer implements NormalizerInterface, DenormalizerInterface, C
 
     public function getSupportedTypes(?string $format): array
     {
-        $isCacheable = __CLASS__ === static::class || $this->hasCacheableSupportsMethod();
-
-        return [
-            \SplFileInfo::class => $isCacheable,
-            \SplFileObject::class => $isCacheable,
-            File::class => $isCacheable,
-        ];
+        return self::SUPPORTED_TYPES;
     }
 
-    public function normalize(mixed $object, ?string $format = null, array $context = []): string
+    public function normalize(mixed $data, ?string $format = null, array $context = []): string
     {
-        if (!$object instanceof \SplFileInfo) {
+        if (!$data instanceof \SplFileInfo) {
             throw new InvalidArgumentException('The object must be an instance of "\SplFileInfo".');
         }
 
-        $mimeType = $this->getMimeType($object);
-        $splFileObject = $this->extractSplFileObject($object);
+        $mimeType = $this->getMimeType($data);
+        $splFileObject = $this->extractSplFileObject($data);
 
-        $data = '';
+        $splFileData = '';
 
         $splFileObject->rewind();
         while (!$splFileObject->eof()) {
-            $data .= $splFileObject->fgets();
+            $splFileData .= $splFileObject->fgets();
         }
 
         if ('text' === explode('/', $mimeType, 2)[0]) {
-            return \sprintf('data:%s,%s', $mimeType, rawurlencode($data));
+            return \sprintf('data:%s,%s', $mimeType, rawurlencode($splFileData));
         }
 
-        return \sprintf('data:%s;base64,%s', $mimeType, base64_encode($data));
+        return \sprintf('data:%s;base64,%s', $mimeType, base64_encode($splFileData));
     }
 
-    /**
-     * @param array $context
-     */
-    public function supportsNormalization(mixed $data, ?string $format = null /* , array $context = [] */): bool
+    public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
     {
         return $data instanceof \SplFileInfo;
     }
@@ -96,15 +85,32 @@ class DataUriNormalizer implements NormalizerInterface, DenormalizerInterface, C
      */
     public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): \SplFileInfo
     {
-        if (null === $data || !preg_match('/^data:([a-z0-9][a-z0-9\!\#\$\&\-\^\_\+\.]{0,126}\/[a-z0-9][a-z0-9\!\#\$\&\-\^\_\+\.]{0,126}(;[a-z0-9\-]+\=[a-z0-9\-]+)?)?(;base64)?,[a-z0-9\!\$\&\\\'\,\(\)\*\+\,\;\=\-\.\_\~\:\@\/\?\%\s]*\s*$/i', $data)) {
+        if ($data instanceof \SplFileInfo && $data instanceof $type) {
+            return $data;
+        }
+
+        if (!isset(self::SUPPORTED_TYPES[$type]) && is_a($type, \SplFileInfo::class, true)) {
+            throw NotNormalizableValueException::createForUnexpectedDataType(\sprintf('Data expected to be an instance of "%s" ("%s" given).', $type, get_debug_type($data)), $data, [$type], $context['deserialization_path'] ?? null, true);
+        }
+
+        if (!\is_string($data) || !preg_match('/^data:([a-z0-9][a-z0-9\!\#\$\&\-\^\_\+\.]{0,126}\/[a-z0-9][a-z0-9\!\#\$\&\-\^\_\+\.]{0,126}(;[a-z0-9\-]+\=[a-z0-9\-]+)?)?(;base64)?,[a-z0-9\!\$\&\\\'\,\(\)\*\+\;\=\-\.\_\~\:\@\/\?\%\s]*\s*$/i', $data)) {
             throw NotNormalizableValueException::createForUnexpectedDataType('The provided "data:" URI is not valid.', $data, ['string'], $context['deserialization_path'] ?? null, true);
         }
+
+        // PHP opens a "data:" URI as a local path when its scheme is not lowercase
+        $data = 'data:'.substr($data, 5);
 
         try {
             switch ($type) {
                 case File::class:
                     if (!class_exists(File::class)) {
                         throw new InvalidArgumentException(\sprintf('Cannot denormalize to a "%s" without the HttpFoundation component installed. Try running "composer require symfony/http-foundation".', File::class));
+                    }
+
+                    // \SplFileInfo trims trailing slashes, but they are part of the data
+                    if (str_ends_with($data, '/') && false !== $content = @file_get_contents($data)) {
+                        $mediaType = preg_replace('/;base64$/i', '', substr($data, 0, strpos($data, ',')));
+                        $data = $mediaType.','.rawurlencode($content);
                     }
 
                     return new File($data, false);
@@ -120,22 +126,9 @@ class DataUriNormalizer implements NormalizerInterface, DenormalizerInterface, C
         throw new InvalidArgumentException(\sprintf('The class parameter "%s" is not supported. It must be one of "SplFileInfo", "SplFileObject" or "Symfony\Component\HttpFoundation\File\File".', $type));
     }
 
-    /**
-     * @param array $context
-     */
-    public function supportsDenormalization(mixed $data, string $type, ?string $format = null /* , array $context = [] */): bool
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
     {
-        return isset(self::SUPPORTED_TYPES[$type]);
-    }
-
-    /**
-     * @deprecated since Symfony 6.3, use "getSupportedTypes()" instead
-     */
-    public function hasCacheableSupportsMethod(): bool
-    {
-        trigger_deprecation('symfony/serializer', '6.3', 'The "%s()" method is deprecated, implement "%s::getSupportedTypes()" instead.', __METHOD__, get_debug_type($this));
-
-        return __CLASS__ === static::class;
+        return isset(self::SUPPORTED_TYPES[$type]) || is_a($type, \SplFileInfo::class, true);
     }
 
     /**
@@ -143,11 +136,19 @@ class DataUriNormalizer implements NormalizerInterface, DenormalizerInterface, C
      */
     private function getMimeType(\SplFileInfo $object): string
     {
-        if ($object instanceof File) {
-            return $object->getMimeType();
-        }
+        try {
+            if ($object instanceof File) {
+                return $object->getMimeType();
+            }
 
-        return $this->mimeTypeGuesser?->guessMimeType($object->getPathname()) ?: 'application/octet-stream';
+            return $this->mimeTypeGuesser?->guessMimeType($object->getPathname()) ?: 'application/octet-stream';
+        } catch (\LogicException $e) {
+            if (!preg_match('{^data:(?://)?([^,]*?)(?:;base64)?,}', $object->getPathname(), $m)) {
+                throw $e;
+            }
+
+            return $m[1] ?: 'text/plain';
+        }
     }
 
     /**

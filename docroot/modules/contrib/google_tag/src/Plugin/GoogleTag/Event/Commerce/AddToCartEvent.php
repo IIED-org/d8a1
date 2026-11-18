@@ -33,32 +33,39 @@ final class AddToCartEvent extends EventBase {
     // @todo leverage config for token replacement.
     $order_item = $this->getContextValue('item');
     assert($order_item instanceof OrderItemInterface);
-    $unit_price = $order_item->getUnitPrice();
-    assert($unit_price !== NULL);
-    $adjusted_price = $order_item->getAdjustedUnitPrice();
-    assert($adjusted_price !== NULL);
+    $purchased_entity = $order_item->getPurchasedEntity();
+    $unit_price = $this->getOrderItemUnitPrice($order_item);
+    // An item that is not priced yet has no adjustments either.
+    $adjusted_price = $order_item->getUnitPrice() === NULL ? $unit_price : $order_item->getAdjustedUnitPrice();
 
     $item_data = [
       'item_name' => $order_item->label(),
-      'affiliation' => $order_item->getOrder()->getStore()->label(),
-      'discount' => $unit_price->subtract($adjusted_price)->getNumber(),
-      'price' => $this->formatPriceNumber($unit_price),
-      'quantity' => (int) $order_item->getQuantity(),
+      'affiliation' => $order_item->getOrder()?->getStore()?->label(),
     ];
-    $purchased_entity = $order_item->getPurchasedEntity();
+    // Delayed events reload the order from storage when they are rendered, and
+    // the cart may have been deleted by then.
+    if ($item_data['affiliation'] === NULL) {
+      unset($item_data['affiliation']);
+    }
+    if ($unit_price !== NULL) {
+      $item_data['discount'] = $unit_price->subtract($adjusted_price)->getNumber();
+      $item_data['price'] = $this->formatPriceNumber($unit_price);
+    }
+    $item_data['quantity'] = (int) $order_item->getQuantity();
     if ($purchased_entity instanceof ProductVariationInterface) {
       $item_data['item_id'] = $purchased_entity->getSku();
     }
     elseif ($purchased_entity !== NULL) {
       $item_data['item_id'] = $purchased_entity->id();
     }
-    return [
-      'currency' => $unit_price->getCurrencyCode(),
-      'value' => $this->formatPriceNumber($adjusted_price),
-      'items' => [
-        $item_data,
-      ],
-    ];
+
+    $data = [];
+    if ($unit_price !== NULL) {
+      $data['currency'] = $unit_price->getCurrencyCode();
+      $data['value'] = $this->formatPriceNumber($adjusted_price);
+    }
+    $data['items'] = [$item_data];
+    return $data;
   }
 
 }

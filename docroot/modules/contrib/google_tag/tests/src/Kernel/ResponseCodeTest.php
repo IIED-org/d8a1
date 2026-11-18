@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests\google_tag\Kernel;
 
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -11,6 +13,8 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @group google_tag
  */
+#[Group('google_tag')]
+#[RunTestsInSeparateProcesses]
 class ResponseCodeTest extends GoogleTagTestCase {
 
   /**

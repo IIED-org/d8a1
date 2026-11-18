@@ -47,7 +47,7 @@ interface FieldStateInterface extends PluginInspectionInterface, ConfigurableInt
    * @return bool
    *   TRUE on success. FALSE if unable to calculate the field state.
    */
-  public function applyState(array &$states, FormStateInterface $form_state, array $context, array $element, array $parents = NULL): bool;
+  public function applyState(array &$states, FormStateInterface $form_state, array $context, array $element, ?array $parents = NULL): bool;
 
   /**
    * Returns a render array summarizing the configuration of the image effect.

@@ -23,7 +23,7 @@ class GoogleTagController extends HtmlEntityFormController implements ContainerI
    *
    * @var \Drupal\Core\Entity\EntityInterface
    */
-  private EntityInterface $googleTagEntity;
+  protected EntityInterface $googleTagEntity;
 
   /**
    * The configuration factory.
@@ -123,8 +123,7 @@ class GoogleTagController extends HtmlEntityFormController implements ContainerI
   public function addContainerAccess(AccountInterface $account) {
     // Check permissions and combine that with any custom access checking
     // needed. Pass forward parameters from the route and/or request as needed.
-    // @phpstan-ignore-next-line
-    $use_collection = \Drupal::config('google_tag.settings')->get('use_collection');
+    $use_collection = $this->configFactory->get('google_tag.settings')->get('use_collection');
     if (!$use_collection) {
       return AccessResult::forbidden();
     }
@@ -146,8 +145,7 @@ class GoogleTagController extends HtmlEntityFormController implements ContainerI
   public function containerListingAccess(AccountInterface $account) {
     // Check permissions and combine that with any custom access checking
     // needed. Pass forward parameters from the route and/or request as needed.
-    // @phpstan-ignore-next-line
-    $use_collection = \Drupal::config('google_tag.settings')->get('use_collection');
+    $use_collection = $this->configFactory->get('google_tag.settings')->get('use_collection');
     if (!$use_collection) {
       return AccessResult::forbidden();
     }

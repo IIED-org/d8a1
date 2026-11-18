@@ -28,11 +28,16 @@ class ResponseHeaderListBuilder extends ConfigEntityListBuilder {
    * {@inheritdoc}
    */
   public function buildRow(EntityInterface $entity) {
+    $is_restricted = empty($entity->get('visibility'));
     $row['label'] = $entity->label();
     $row['description'] = Markup::create('<em class="http-response-headers-description">' . $entity->get('description') . '</em>');
     $row['name'] = $entity->get('name');
     $row['value'] = ($value = $entity->get('value')) ? mb_strimwidth($value, 0, 50, '...') : ' - ';
-    $row['conditions'] = Markup::create('<span class="marker">' . (empty($entity->get('visibility')) ? $this->t('Sitewide') : $this->t('Restricted')) . '</span>');
+    $row['conditions'] = Markup::create('<span class="views-field"><span class="marker marker--'
+      . ($is_restricted ? 'site-wide' : 'restricted')  . '">'
+      . ($is_restricted
+        ? $this->t('Sitewide')
+        : $this->t('Restricted')) . '</span></span>');
     $row['status'] = Markup::create('<span class="views-field">' . ($entity->get('status')
         ? '<span class="marker marker--published">' . $this->t('Active') . '</span>'
         : '<span class="marker">' . $this->t('Disabled') . '</span>') . '</span>');
@@ -45,6 +50,7 @@ class ResponseHeaderListBuilder extends ConfigEntityListBuilder {
   public function render() {
     $build = parent::render();
     if (!empty($build['table']['#rows'])) {
+      $build['#attached']['library'][] = 'http_response_headers/http_response_headers.admin';
       $build['table']['#attributes']['class'][] = 'http-response-headers-list';
     }
     return $build;

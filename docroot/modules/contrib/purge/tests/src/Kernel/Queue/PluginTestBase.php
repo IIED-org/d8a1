@@ -93,7 +93,7 @@ abstract class PluginTestBase extends KernelPluginManagerTestBase {
       $this->assertTrue($id !== FALSE);
       $this->assertEquals($i, $this->queue->numberOfItems());
     }
-    $this->assertTrue(is_object($this->queue->claimItem(1)));
+    $this->assertIsObject($this->queue->claimItem(1));
     $this->assertTrue(is_int($this->queue->numberOfItems()));
     $this->assertEquals(5, $this->queue->numberOfItems());
     $this->assertNull($this->queue->deleteQueue());
@@ -134,7 +134,7 @@ abstract class PluginTestBase extends KernelPluginManagerTestBase {
     $claim->data = [4, 5, 6];
     $this->assertFalse($this->queue->claimItem(3600));
     $this->assertTrue($this->queue->releaseItem($claim));
-    $this->assertTrue(is_object($claim = $this->queue->claimItem(3600)));
+    $this->assertIsObject($claim = $this->queue->claimItem(3600));
     $this->assertSame($claim->data, [4, 5, 6]);
     $this->queue->releaseItem($claim);
     $this->assertSame(
@@ -164,13 +164,13 @@ abstract class PluginTestBase extends KernelPluginManagerTestBase {
     $this->assertFalse($this->queue->claimItem());
     $this->queue->createItem($this->randomString());
     $this->assertEquals(1, $this->queue->numberOfItems());
-    $this->assertTrue(is_object($this->queue->claimItem(5)));
+    $this->assertIsObject($this->queue->claimItem(5));
     $this->assertFalse($this->queue->claimItem());
     sleep(6);
-    $this->assertTrue(is_object($this->queue->claimItem(2)));
+    $this->assertIsObject($this->queue->claimItem(2));
     $this->assertFalse($this->queue->claimItem(1));
     sleep(3);
-    $this->assertTrue(is_object($this->queue->claimItem(2)));
+    $this->assertIsObject($this->queue->claimItem(2));
     $this->queue->deleteQueue();
 
     // Test claimItemMultiple which should work in the same way.

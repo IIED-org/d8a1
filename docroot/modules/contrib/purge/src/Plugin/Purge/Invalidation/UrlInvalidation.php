@@ -3,21 +3,22 @@
 namespace Drupal\purge\Plugin\Purge\Invalidation;
 
 use Drupal\Component\Utility\UrlHelper;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
+use Drupal\purge\Attribute\PurgeInvalidation;
 use Drupal\purge\Plugin\Purge\Invalidation\Exception\InvalidExpressionException;
 
 /**
  * Describes URL based invalidation, e.g. "http://site.com/node/1".
- *
- * @PurgeInvalidation(
- *   id = "url",
- *   label = @Translation("Url"),
- *   description = @Translation("Invalidates by URL."),
- *   examples = {"http://site.com/node/1"},
- *   expression_required = TRUE,
- *   expression_can_be_empty = FALSE
- * )
  */
+#[PurgeInvalidation(
+  id: 'url',
+  label: new TranslatableMarkup('Url'),
+  description: new TranslatableMarkup('Invalidates by URL.'),
+  examples: ['http://site.com/node/1'],
+  expression_required: TRUE,
+  expression_can_be_empty: FALSE,
+)]
 class UrlInvalidation extends InvalidationBase implements InvalidationInterface {
 
   /**

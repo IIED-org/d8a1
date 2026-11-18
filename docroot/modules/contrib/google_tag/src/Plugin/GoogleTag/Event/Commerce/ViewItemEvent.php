@@ -36,7 +36,7 @@ final class ViewItemEvent extends EventBase implements ContainerFactoryPluginInt
    *
    * @var \Drupal\commerce_store\CurrentStoreInterface
    */
-  private CurrentStoreInterface $currentStore;
+  protected CurrentStoreInterface $currentStore;
 
   /**
    * {@inheritDoc}
@@ -60,13 +60,16 @@ final class ViewItemEvent extends EventBase implements ContainerFactoryPluginInt
       'item_id' => $item->getSku(),
       'affiliation' => $this->currentStore->getStore()->label(),
     ];
-    return [
-      'currency' => $item->getPrice()->getCurrencyCode(),
-      'value' => $this->formatPriceNumber($item->getPrice()),
-      'items' => [
-        $item_data,
-      ],
-    ];
+    $data = [];
+    // Commerce allows variations without a price, such as "call for price"
+    // products. Leave the price out rather than report a value of zero.
+    $price = $item->getPrice();
+    if ($price !== NULL) {
+      $data['currency'] = $price->getCurrencyCode();
+      $data['value'] = $this->formatPriceNumber($price);
+    }
+    $data['items'] = [$item_data];
+    return $data;
   }
 
 }

@@ -1,0 +1,10 @@
+name: Leaflet countries
+type: module
+description: Provides GeoJSON outlines for countries to be used in Leaflet maps.
+core_version_requirement: ^10 || ^11
+package: Custom
+dependencies:
+  - drupal:field
+  - leaflet:leaflet
+  - leaflet:leaflet_views
+  - leaflet_topojson:leaflet_topojson

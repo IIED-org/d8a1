@@ -2,7 +2,10 @@
 
 namespace Drupal\Tests\google_tag\Kernel\Migrate;
 
+use Drupal\google_tag\Hook\GoogleTagRequirements;
 use Drupal\Tests\google_tag\Kernel\GoogleTagTestCase;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests hook google_tag_requirements for updating the module.
@@ -10,6 +13,8 @@ use Drupal\Tests\google_tag\Kernel\GoogleTagTestCase;
  * @group google_tag
  * @requires module google_analytics
  */
+#[Group('google_tag')]
+#[RunTestsInSeparateProcesses]
 class GoogleTagRequirementsTest extends GoogleTagTestCase {
 
   /**
@@ -27,6 +32,8 @@ class GoogleTagRequirementsTest extends GoogleTagTestCase {
    */
   protected function setUp(): void {
     parent::setUp();
+    // Defines REQUIREMENT_ERROR before Drupal 11.2, as update.php does.
+    require_once $this->root . '/core/includes/install.inc';
     $this->loadFixture('google_analytics_migrate.php');
     $this->loadFixture('container_migrate.php');
   }
@@ -39,8 +46,22 @@ class GoogleTagRequirementsTest extends GoogleTagTestCase {
    * @throws \Exception
    */
   public function testGoogleTagRequirements(): void {
+    $hooks = $this->container->get('class_resolver')->getInstanceFromDefinition(GoogleTagRequirements::class);
+    $this->assertRequirements($hooks->updateRequirements());
+
+    // Drupal 11.2 and earlier still call the procedural hook.
     $this->container->get('module_handler')->loadInclude('google_tag', 'install');
-    $requirements = google_tag_requirements('update');
+    $this->assertRequirements(google_tag_requirements('update'));
+    self::assertSame([], google_tag_requirements('runtime'));
+  }
+
+  /**
+   * Asserts the update requirement that blocks an ambiguous upgrade.
+   *
+   * @param array $requirements
+   *   The requirements returned by the hook.
+   */
+  private function assertRequirements(array $requirements): void {
     self::assertArrayHasKey('google_tag', $requirements);
     $google_tag_requirements = $requirements['google_tag'];
     self::assertEquals(
@@ -48,7 +69,7 @@ class GoogleTagRequirementsTest extends GoogleTagTestCase {
       $google_tag_requirements['description']
     );
     self::assertEquals('Google Tag', $google_tag_requirements['title']);
-    self::assertEquals(REQUIREMENT_ERROR, $google_tag_requirements['severity']);
+    self::assertSame(GoogleTagRequirements::errorSeverity(), $google_tag_requirements['severity']);
     self::assertEquals(
       'Google Tag 2.x is incompatible with Google Analytics while upgrading from 1.x.',
       $google_tag_requirements['value']

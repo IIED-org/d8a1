@@ -1,15 +1,18 @@
 <?php
 
-namespace Drupal\Tests\purge_ui\FunctionalJavascript;
+namespace Drupal\Tests\purge_ui\FunctionalJavascript\Form;
 
 use Drupal\purge_ui\Form\PurgerMoveForm;
-use Drupal\Tests\purge_ui\FunctionalJavascript\Form\AjaxFormTestBase;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests \Drupal\purge_ui\Form\PurgerMoveForm.
  *
  * @group purge
  */
+#[Group('purge')]
+#[RunTestsInSeparateProcesses]
 class PurgerMoveFormUpTest extends AjaxFormTestBase {
 
   /**

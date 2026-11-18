@@ -3,12 +3,13 @@
 namespace Drupal\Tests\ds\Functional;
 
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\Tests\BrowserTestBase;
-use Drupal\Tests\field\Traits\EntityReferenceTestTrait;
+use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
 use Drupal\Tests\field_ui\Traits\FieldUiTestTrait;
-use \Drupal\Tests\taxonomy\Traits\TaxonomyTestTrait;
+use Drupal\Tests\taxonomy\Traits\TaxonomyTestTrait;
 
 /**
  * Base test for Display Suite.
@@ -18,18 +19,19 @@ use \Drupal\Tests\taxonomy\Traits\TaxonomyTestTrait;
 abstract class TestBase extends BrowserTestBase {
 
   use DsTestTrait;
-  use EntityReferenceTestTrait;
+  use EntityReferenceFieldCreationTrait;
   use FieldUiTestTrait;
   use TaxonomyTestTrait;
+  use StringTranslationTrait;
 
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'starterkit_theme';
 
   /**
    * Modules to install.
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'node',
     'user',
     'field_ui',
@@ -40,6 +42,7 @@ abstract class TestBase extends BrowserTestBase {
     'ds_test',
     'ds_switch_view_mode',
     'layout_discovery',
+    'field_group',
   ];
 
   /**
@@ -163,8 +166,8 @@ abstract class TestBase extends BrowserTestBase {
 
     /** @var \Drupal\Core\Entity\Display\EntityFormDisplayInterface $display */
     $display = \Drupal::entityTypeManager()
-        ->getStorage('entity_form_display')
-         ->load('node.article.default');
+      ->getStorage('entity_form_display')
+      ->load('node.article.default');
 
     $display->setComponent('field_' . $this->vocabulary->id())->save();
   }
@@ -177,7 +180,7 @@ abstract class TestBase extends BrowserTestBase {
    * @param $second
    *   Second element to compare
    * @param string $message
-   *   The message
+   *   The message.
    */
   protected function assertTrimEqual($first, $second, $message = '') {
     $first = (string) $first;

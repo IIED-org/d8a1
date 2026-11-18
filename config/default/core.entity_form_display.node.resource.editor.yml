@@ -101,7 +101,7 @@ content:
     weight: 7
     region: content
     settings:
-      default_country: null
+      wrapper_type: details
     third_party_settings: {  }
   field_authors:
     type: string_textfield

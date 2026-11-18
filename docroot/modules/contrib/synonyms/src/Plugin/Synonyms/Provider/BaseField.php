@@ -94,6 +94,7 @@ class BaseField extends AbstractProvider {
     $entity_keys = $entity_type_definition->getKeys();
 
     $query = $this->database->select($entity_type_definition->getDataTable(), 'base');
+    $query->accessCheck(TRUE);
     $query->addField('base', $entity_keys['id'], 'entity_id');
     $query->addField('base', $this->getPluginDefinition()['field'], 'synonym');
 

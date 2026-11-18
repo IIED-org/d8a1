@@ -11,16 +11,22 @@ class Type implements TypeInterface
 {
     /**
      * Short format [e.g. image/jpeg] for strings.
+     *
+     * @phpstan-var int
      */
     const SHORT_TEXT = 0;
 
     /**
      * Full format [e.g. image/jpeg; p="1"] for strings.
+     *
+     * @phpstan-var int
      */
     const FULL_TEXT = 1;
 
     /**
      * Full format with comments [e.g. image/jpeg; p="1" (comment)] for strings.
+     *
+     * @phpstan-var int
      */
     const FULL_TEXT_WITH_COMMENTS = 2;
 
@@ -60,6 +66,8 @@ class Type implements TypeInterface
 
     /**
      * The MIME types map.
+     *
+     * @var MimeMapInterface
      */
     protected readonly MimeMapInterface $map;
 

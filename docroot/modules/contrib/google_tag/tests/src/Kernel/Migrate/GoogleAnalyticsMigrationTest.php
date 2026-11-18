@@ -3,6 +3,8 @@
 namespace Drupal\Tests\google_tag\Kernel\Migrate;
 
 use Drupal\Tests\google_tag\Kernel\GoogleTagTestCase;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests hook install for migrating google analytics configuration to 2.x.
@@ -10,6 +12,8 @@ use Drupal\Tests\google_tag\Kernel\GoogleTagTestCase;
  * @group google_tag
  * @requires module google_analytics
  */
+#[Group('google_tag')]
+#[RunTestsInSeparateProcesses]
 class GoogleAnalyticsMigrationTest extends GoogleTagTestCase {
 
   /**

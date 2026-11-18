@@ -2,15 +2,18 @@
 
 namespace Drupal\ds\Plugin\DsFieldTemplate;
 
+use Drupal\Core\Language\LanguageInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\ds\Attribute\DsFieldTemplate;
+
 /**
  * Plugin for the expert field template.
- *
- * @DsFieldTemplate(
- *   id = "expert",
- *   title = @Translation("Expert"),
- *   theme = "ds_field_expert",
- * )
  */
+#[DsFieldTemplate(
+  id: 'expert',
+  title: new TranslatableMarkup('Expert'),
+  theme: 'ds_field_expert'
+)]
 class Expert extends DsFieldTemplateBase {
 
   /**
@@ -18,6 +21,8 @@ class Expert extends DsFieldTemplateBase {
    */
   public function alterForm(&$form) {
     $config = $this->getConfiguration();
+
+    $use_textareaa_for_prefix_suffix = \Drupal::config('ds.settings')->get('ft_expert_prefix_suffix_textarea');
 
     // Add label.
     $form['lb'] = [
@@ -33,7 +38,7 @@ class Expert extends DsFieldTemplateBase {
       '#title' => $this->t('Prefix'),
       '#size' => '100',
       '#description' => $this->t('You can enter any html in here.'),
-      '#default_value' => isset($config['prefix']) ? $config['prefix'] : '',
+      '#default_value' => $config['prefix'] ?? '',
       '#prefix' => '<div class="field-prefix">',
       '#suffix' => '</div>',
     ];
@@ -145,7 +150,7 @@ class Expert extends DsFieldTemplateBase {
       '#title' => $this->t('Suffix'),
       '#size' => '100',
       '#description' => $this->t('You can enter any html in here.'),
-      '#default_value' => isset($config['suffix']) ? $config['suffix'] : '',
+      '#default_value' => $config['suffix'] ?? '',
       '#prefix' => '<div class="field-suffix">',
       '#suffix' => '</div>',
     ];
@@ -168,6 +173,14 @@ class Expert extends DsFieldTemplateBase {
         '#dialog' => TRUE,
       ];
     }
+
+    if ($use_textareaa_for_prefix_suffix) {
+      foreach (['prefix', 'suffix'] as $key) {
+        $form[$key]['#type'] = 'textarea';
+        $form[$key]['#rows'] = 2;
+        unset($form['prefix']['#size']);
+      }
+    }
   }
 
   /**
@@ -176,7 +189,7 @@ class Expert extends DsFieldTemplateBase {
   public function defaultConfiguration() {
     $config = [];
     $config['lb'] = '';
-    $config['lb-col'] = \Drupal::config('ds.settings')->get('ft-show-colon');
+    $config['lb-col'] = \Drupal::config('ds.settings')->get('ft_show_colon');
 
     $wrappers = [
       'lb' => ['title' => $this->t('Label')],
@@ -226,22 +239,21 @@ class Expert extends DsFieldTemplateBase {
         $field_settings[$wrapper_key . '-cl'] = !(empty($values[$wrapper_key . '-cl'])) ? $values[$wrapper_key . '-cl'] : '';
         // Default Classes.
         if (in_array($wrapper_key, ['ow', 'lb'])) {
-          $field_settings[$wrapper_key . '-def-cl'] = !(empty($values[$wrapper_key . '-def-cl'])) ? TRUE : FALSE;
+          $field_settings[$wrapper_key . '-def-cl'] = !(empty($values[$wrapper_key . '-def-cl']));
         }
         // Attributes.
         $field_settings[$wrapper_key . '-at'] = !(empty($values[$wrapper_key . '-at'])) ? $values[$wrapper_key . '-at'] : '';
         // Default attributes.
-        $field_settings[$wrapper_key . '-def-at'] = !(empty($values[$wrapper_key . '-def-at'])) ? TRUE : FALSE;
-        // Token replacement.
-        /* @var \Drupal\Core\Entity\EntityInterface $entity */
+        $field_settings[$wrapper_key . '-def-at'] = !(empty($values[$wrapper_key . '-def-at']));
+
+        // Token replacement for the wrappers.
+        /** @var \Drupal\Core\Entity\EntityInterface $entity */
         if ($entity = $this->getEntity()) {
           // Tokens.
           $apply_to = [
-            'prefix',
             $wrapper_key . '-el',
             $wrapper_key . '-cl',
             $wrapper_key . '-at',
-            'suffix',
           ];
 
           foreach ($apply_to as $identifier) {
@@ -249,10 +261,38 @@ class Expert extends DsFieldTemplateBase {
               $field_settings[$identifier] = \Drupal::token()->replace(
                 $field_settings[$identifier],
                 [$entity->getEntityTypeId() => $entity],
-                ['clear' => TRUE]
+                [
+                  'clear' => TRUE,
+                  'langcode' => \Drupal::languageManager()
+                    ->getCurrentLanguage(LanguageInterface::TYPE_CONTENT)
+                    ->getId(),
+                ]
               );
             }
           }
+        }
+      }
+    }
+
+    // Token replacement for the prefix and suffix.
+    /** @var \Drupal\Core\Entity\EntityInterface $entity */
+    if ($entity = $this->getEntity()) {
+      $apply_to = [
+        'prefix',
+        'suffix',
+      ];
+      foreach ($apply_to as $identifier) {
+        if (!empty($field_settings[$identifier])) {
+          $field_settings[$identifier] = \Drupal::token()->replace(
+            $field_settings[$identifier],
+            [$entity->getEntityTypeId() => $entity],
+            [
+              'clear' => TRUE,
+              'langcode' => \Drupal::languageManager()
+                ->getCurrentLanguage(LanguageInterface::TYPE_CONTENT)
+                ->getId(),
+            ]
+          );
         }
       }
     }

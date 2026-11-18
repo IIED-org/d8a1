@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace DrupalCodeGenerator\Command\Yml;
 
@@ -87,7 +89,7 @@ final class Migration extends BaseGenerator implements ContainerInjectionInterfa
       $vars['fields'] = \array_keys($field_map[$entity_type] ?? []);
     }
 
-    $assets->addFile('migration/{plugin_id}.yml', 'migration.twig');
+    $assets->addFile('migrations/{plugin_id}.yml', 'migration.twig');
   }
 
 }

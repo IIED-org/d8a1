@@ -1,0 +1,5 @@
+purge_ui.dashboard:
+  title: 'Purge'
+  route_name: purge_ui.dashboard
+  menu_name: admin
+  parent: system.performance_settings

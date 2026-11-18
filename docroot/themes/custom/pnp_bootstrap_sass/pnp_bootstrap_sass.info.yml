@@ -1,9 +1,7 @@
 name: People not poaching
 type: theme
 description: 'PNP theme based on bootstrap_barrio and pnp_bootstrap_sass'
-# version: VERSION
-# core: 8.x
-core_version_requirement: ^8 || ^9 || ^10
+core_version_requirement: ^10 || ^11
 base theme: bootstrap_barrio
 
 libraries:

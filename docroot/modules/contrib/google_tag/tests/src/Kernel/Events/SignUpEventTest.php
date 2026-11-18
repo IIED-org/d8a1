@@ -7,6 +7,9 @@ namespace Drupal\Tests\google_tag\Kernel\Events;
 use Drupal\Core\Url;
 use Drupal\google_tag\Entity\TagContainer;
 use Drupal\Tests\google_tag\Kernel\GoogleTagTestCase;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
+use PHPUnit\Framework\Attributes\TestWith;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -14,6 +17,8 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @group google_tag
  */
+#[Group('google_tag')]
+#[RunTestsInSeparateProcesses]
 final class SignUpEventTest extends GoogleTagTestCase {
 
   /**
@@ -22,11 +27,14 @@ final class SignUpEventTest extends GoogleTagTestCase {
    * @testWith ["[site:url]"]
    *           [null]
    */
+  #[TestWith(['[site:url]'])]
+  #[TestWith([NULL])]
   public function testEvent(?string $method): void {
     $config = $method !== NULL ? ['method' => $method] : [];
     TagContainer::create([
       'id' => 'foo',
       'weight' => 10,
+      'tag_container_ids' => ['G-XXXXXX'],
       'events' => ['sign_up' => $config],
     ])->save();
 
@@ -51,6 +59,9 @@ final class SignUpEventTest extends GoogleTagTestCase {
 
     $response = $this->doRequest($request);
     self::assertEquals(303, $response->getStatusCode());
+    // The redirect is followed in a new PHP request in the real world, so drop
+    // the collector's in-memory events; only events kept in the session count.
+    $this->container->set('google_tag.event_collector', NULL);
     $request = Request::create($response->headers->get('Location'));
     $this->doRequest($request);
 

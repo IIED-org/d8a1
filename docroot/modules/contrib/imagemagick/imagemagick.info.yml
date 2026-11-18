@@ -8,7 +8,7 @@ dependencies:
   - file_mdm:file_mdm
   - sophron:sophron
 
-# Information added by Drupal.org packaging script on 2024-06-22
-version: '4.0.1'
+# Information added by Drupal.org packaging script on 2024-08-28
+version: '4.0.2'
 project: 'imagemagick'
-datestamp: 1719035674
+datestamp: 1724827813

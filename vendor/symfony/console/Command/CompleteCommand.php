@@ -11,6 +11,7 @@
 
 namespace Symfony\Component\Console\Command;
 
+use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Completion\CompletionInput;
 use Symfony\Component\Console\Completion\CompletionSuggestions;
@@ -20,6 +21,7 @@ use Symfony\Component\Console\Completion\Output\FishCompletionOutput;
 use Symfony\Component\Console\Completion\Output\ZshCompletionOutput;
 use Symfony\Component\Console\Exception\CommandNotFoundException;
 use Symfony\Component\Console\Exception\ExceptionInterface;
+use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -34,18 +36,8 @@ final class CompleteCommand extends Command
 {
     public const COMPLETION_API_VERSION = '1';
 
-    /**
-     * @deprecated since Symfony 6.1
-     */
-    protected static $defaultName = '|_complete';
-
-    /**
-     * @deprecated since Symfony 6.1
-     */
-    protected static $defaultDescription = 'Internal command to provide shell completion suggestions';
-
     private array $completionOutputs;
-
+    private ?InputDefinition $fullDefinition = null;
     private bool $isDebug = false;
 
     /**
@@ -61,6 +53,53 @@ final class CompleteCommand extends Command
         ];
 
         parent::__construct();
+    }
+
+    public function setApplication(?Application $application): void
+    {
+        $this->fullDefinition = null;
+
+        parent::setApplication($application);
+    }
+
+    public function setDefinition(array|InputDefinition $definition): static
+    {
+        $this->fullDefinition = null;
+
+        return parent::setDefinition($definition);
+    }
+
+    /**
+     * @internal
+     */
+    public function mergeApplicationDefinition(bool $mergeArgs = true): void
+    {
+        if (!$application = $this->getApplication()) {
+            return;
+        }
+
+        $definition = $this->getNativeDefinition();
+        $this->fullDefinition = new InputDefinition();
+        $this->fullDefinition->setOptions($definition->getOptions());
+
+        foreach ($application->getDefinition()->getOptions() as $option) {
+            // the completion scripts rely on the options of this command, they win over the conflicting application ones
+            if ($definition->hasOption($option->getName()) || array_filter(explode('|', $option->getShortcut() ?? ''), $definition->hasShortcut(...))) {
+                continue;
+            }
+
+            $this->fullDefinition->addOption($option);
+        }
+
+        if ($mergeArgs) {
+            $this->fullDefinition->setArguments($application->getDefinition()->getArguments());
+        }
+        $this->fullDefinition->addArguments($definition->getArguments());
+    }
+
+    public function getDefinition(): InputDefinition
+    {
+        return $this->fullDefinition ?? parent::getDefinition();
     }
 
     protected function configure(): void
@@ -109,17 +148,16 @@ final class CompleteCommand extends Command
                 '',
                 '<comment>'.date('Y-m-d H:i:s').'</>',
                 '<info>Input:</> <comment>("|" indicates the cursor position)</>',
-                '  '.(string) $completionInput,
+                '  '.$completionInput,
                 '<info>Command:</>',
-                '  '.(string) implode(' ', $_SERVER['argv']),
+                '  '.implode(' ', $_SERVER['argv']),
                 '<info>Messages:</>',
             ]);
 
-            if ($command = $this->findCommand($completionInput, $output)) {
+            if ($command = $this->findCommand($completionInput)) {
                 $command->mergeApplicationDefinition();
                 $completionInput->bind($command->getDefinition());
             }
-
             if (null === $command) {
                 $this->log('  No command found, completing using the Application class.');
 
@@ -202,7 +240,7 @@ final class CompleteCommand extends Command
         return $completionInput;
     }
 
-    private function findCommand(CompletionInput $completionInput, OutputInterface $output): ?Command
+    private function findCommand(CompletionInput $completionInput): ?Command
     {
         try {
             $inputName = $completionInput->getFirstArgument();

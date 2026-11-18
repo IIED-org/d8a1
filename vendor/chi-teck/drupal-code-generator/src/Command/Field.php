@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace DrupalCodeGenerator\Command;
 
@@ -21,7 +23,7 @@ final class Field extends BaseGenerator {
   /**
    * Field sub-types.
    */
-  private const SUB_TYPES = [
+  private const array SUB_TYPES = [
     'boolean' => [
       'label' => 'Boolean',
       'list' => FALSE,
@@ -107,7 +109,7 @@ final class Field extends BaseGenerator {
   /**
    * Date types.
    */
-  private const DATE_TYPES = [
+  private const array DATE_TYPES = [
     'date' => 'Date only',
     'datetime' => 'Date and time',
   ];
