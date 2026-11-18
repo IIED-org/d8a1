@@ -92,7 +92,6 @@ dependencies:
     - field_states_ui
     - image
     - layout_discovery
-    - synonyms
     - text
 third_party_settings:
   field_layout:
@@ -1457,10 +1456,14 @@ content:
       display_label: true
     third_party_settings: {  }
   field_species_affected:
-    type: synonyms_select
+    type: entity_reference_autocomplete
     weight: 23
     region: content
-    settings: {  }
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
     third_party_settings: {  }
   field_stewardship_incentives:
     type: boolean_checkbox

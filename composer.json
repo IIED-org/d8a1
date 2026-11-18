@@ -78,7 +78,7 @@
     "league/oauth2-google": "^3.0",
     "drupal/simplify": "^2.2",
     "drupal/rabbit_hole": "^1.0@beta",
-    "drupal/honeypot": "^2.0",
+    "drupal/honeypot": "~2.1.4",
     "mledoze/countries": "^5.0",
     "drupal/geolocation": "^3.0",
     "drupal/views_field_view": "^1.0@beta",
