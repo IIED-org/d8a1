@@ -196,7 +196,6 @@ class ComposerStaticInit102e3ef181e3919390ea5de6deb1dfeb
             'Consolidation\\AnnotatedCommand\\' => 31,
             'Composer\\Semver\\' => 16,
             'Composer\\Installers\\' => 20,
-            'Composer\\CaBundle\\' => 18,
             'ComposerDrupalLenient\\' => 22,
             'CommerceGuys\\Addressing\\' => 24,
             'Clue\\StreamFilter\\' => 18,
@@ -204,7 +203,6 @@ class ComposerStaticInit102e3ef181e3919390ea5de6deb1dfeb
         'A' =>
         array (
             'Asm89\\Stack\\' => 12,
-            'Abraham\\TwitterOAuth\\' => 21,
         ),
     );
 
@@ -612,10 +610,6 @@ class ComposerStaticInit102e3ef181e3919390ea5de6deb1dfeb
         array (
             0 => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers',
         ),
-        'Composer\\CaBundle\\' =>
-        array (
-            0 => __DIR__ . '/..' . '/composer/ca-bundle/src',
-        ),
         'ComposerDrupalLenient\\' =>
         array (
             0 => __DIR__ . '/..' . '/mglaman/composer-drupal-lenient/src',
@@ -631,10 +625,6 @@ class ComposerStaticInit102e3ef181e3919390ea5de6deb1dfeb
         'Asm89\\Stack\\' =>
         array (
             0 => __DIR__ . '/..' . '/asm89/stack-cors/src',
-        ),
-        'Abraham\\TwitterOAuth\\' =>
-        array (
-            0 => __DIR__ . '/..' . '/abraham/twitteroauth/src',
         ),
     );
 

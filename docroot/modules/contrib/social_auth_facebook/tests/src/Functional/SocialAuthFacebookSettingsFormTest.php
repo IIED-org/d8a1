@@ -41,9 +41,6 @@ class SocialAuthFacebookSettingsFormTest extends SocialAuthTestBase {
 
   /**
    * Test if permissions are set correctly for settings page.
-   *
-   * @throws \Behat\Mink\Exception\ElementNotFoundException
-   * @throws \Behat\Mink\Exception\ExpectationException
    */
   public function testPermissionForSettingsPage() {
     $this->checkPermissionForSettingsPage();
@@ -54,8 +51,8 @@ class SocialAuthFacebookSettingsFormTest extends SocialAuthTestBase {
    */
   public function testSettingsFormSubmission() {
     $this->edit = [
-      'app_id' => $this->randomString(10),
-      'app_secret' => $this->randomString(10),
+      'client_id' => $this->randomString(10),
+      'client_secret' => $this->randomString(10),
       'graph_version' => '2.10',
     ];
 
