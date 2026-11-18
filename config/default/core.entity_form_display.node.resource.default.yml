@@ -27,7 +27,6 @@ dependencies:
     - geofield
     - layout_discovery
     - paragraphs
-    - synonyms
     - text
 third_party_settings:
   field_layout:
@@ -214,10 +213,14 @@ content:
           list: ''
           add: Add
   field_species_affected:
-    type: synonyms_select
+    type: entity_reference_autocomplete
     weight: 12
     region: content
-    settings: {  }
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
     third_party_settings: {  }
   field_standalone_resource:
     type: boolean_checkbox
