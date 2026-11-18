@@ -3054,7 +3054,7 @@ display:
           exclude: true
           alter:
             alter_text: true
-            text: " <a class=\"d-block\" href=\"#collapse\" data-bs-toggle=\"collapse\" data-bs-target=\"#collapse-421-details\">Further detail</a>\r\n<div class=\"collapse mt-4\" id=\"collapse-421-details\">\r\n{{ field_4_2_1_details }} \r\n</div>"
+            text: " <a class=\"d-block\" href=\"#collapse\" data-toggle=\"collapse\" data-target=\"#collapse-421-details\">Further detail</a>\r\n<div class=\"collapse mt-4\" id=\"collapse-421-details\">\r\n{{ field_4_2_1_details }} \r\n</div>"
             make_link: false
             path: ''
             absolute: false
@@ -3302,7 +3302,7 @@ display:
           exclude: true
           alter:
             alter_text: true
-            text: " <a class=\"d-block\" href=\"#collapse\" data-bs-toggle=\"collapse\" data-bs-target=\"#collapse-431-details\">Further detail</a>\r\n<div class=\"collapse mt-4\" id=\"collapse-431-details\">\r\n{{ field_4_3_1_details }} \r\n</div>"
+            text: " <a class=\"d-block\" href=\"#collapse\" data-toggle=\"collapse\" data-target=\"#collapse-431-details\">Further detail</a>\r\n<div class=\"collapse mt-4\" id=\"collapse-431-details\">\r\n{{ field_4_3_1_details }} \r\n</div>"
             make_link: false
             path: ''
             absolute: false
@@ -6804,7 +6804,7 @@ display:
           exclude: true
           alter:
             alter_text: true
-            text: " <a class=\"d-block\" href=\"#collapse\" data-bs-toggle=\"collapse\"=\"collapse\" data-bs-target=\"#collapse-321-details\">Further detail</a>\r\n<div class=\"collapse mt-4\" id=\"collapse-321-details\">\r\n{{ field_3_2_1_details }} \r\n</div>"
+            text: " <a class=\"d-block\" href=\"#collapse\" data-toggle=\"collapse\" data-target=\"#collapse-321-details\">Further detail</a>\r\n<div class=\"collapse mt-4\" id=\"collapse-321-details\">\r\n{{ field_3_2_1_details }} \r\n</div>"
             make_link: false
             path: ''
             absolute: false
@@ -7451,7 +7451,7 @@ display:
           exclude: true
           alter:
             alter_text: true
-            text: " <a class=\"d-block\" href=\"#collapse\" data-bs-toggle=\"collapse\" data-bs-target=\"#collapse-322-details\">Further detail</a>\r\n<div class=\"collapse mt-4\" id=\"collapse-322-details\">\r\n{{ field_3_2_2_details }} \r\n</div>"
+            text: " <a class=\"d-block\" href=\"#collapse\" data-toggle=\"collapse\" data-target=\"#collapse-322-details\">Further detail</a>\r\n<div class=\"collapse mt-4\" id=\"collapse-322-details\">\r\n{{ field_3_2_2_details }} \r\n</div>"
             make_link: false
             path: ''
             absolute: false
@@ -7903,7 +7903,7 @@ display:
           exclude: true
           alter:
             alter_text: true
-            text: " <a class=\"d-block\" href=\"#collapse\" data-bs-toggle=\"collapse\" data-bs-target=\"#collapse-323-details\">Further detail</a>\r\n<div class=\"collapse mt-4\" id=\"collapse-323-details\">\r\n{{ field_3_2_3_details }} \r\n</div>"
+            text: " <a class=\"d-block\" href=\"#collapse\" data-toggle=\"collapse\" data-target=\"#collapse-323-details\">Further detail</a>\r\n<div class=\"collapse mt-4\" id=\"collapse-323-details\">\r\n{{ field_3_2_3_details }} \r\n</div>"
             make_link: false
             path: ''
             absolute: false
@@ -8225,7 +8225,7 @@ display:
           exclude: true
           alter:
             alter_text: true
-            text: " <a class=\"d-block\" href=\"#collapse\" data-bs-toggle=\"collapse\" data-bs-target=\"#collapse-324-details\">Further detail</a>\r\n<div class=\"collapse mt-4\" id=\"collapse-324-details\">\r\n{{ field_3_2_4_details }} \r\n</div>"
+            text: " <a class=\"d-block\" href=\"#collapse\" data-toggle=\"collapse\" data-target=\"#collapse-324-details\">Further detail</a>\r\n<div class=\"collapse mt-4\" id=\"collapse-324-details\">\r\n{{ field_3_2_4_details }} \r\n</div>"
             make_link: false
             path: ''
             absolute: false
@@ -8352,7 +8352,7 @@ display:
           exclude: true
           alter:
             alter_text: true
-            text: " <a class=\"d-block\" href=\"#collapse\" data-bs-toggle=\"collapse\" data-bs-target=\"#collapse-325-details\">Further detail</a>\r\n<div class=\"collapse mt-4\" id=\"collapse-325-details\">\r\n{{ field_3_2_5_details }} \r\n</div>"
+            text: " <a class=\"d-block\" href=\"#collapse\" data-toggle=\"collapse\" data-target=\"#collapse-325-details\">Further detail</a>\r\n<div class=\"collapse mt-4\" id=\"collapse-325-details\">\r\n{{ field_3_2_5_details }} \r\n</div>"
             make_link: false
             path: ''
             absolute: false
@@ -8479,7 +8479,7 @@ display:
           exclude: true
           alter:
             alter_text: true
-            text: " <a class=\"d-block\" href=\"#collapse\" data-bs-toggle=\"collapse\" data-bs-target=\"#collapse-326-details\">Further detail</a>\r\n<div class=\"collapse mt-4\" id=\"collapse-326-details\">\r\n{{ field_3_2_6_details }} \r\n</div>"
+            text: " <a class=\"d-block\" href=\"#collapse\" data-toggle=\"collapse\" data-target=\"#collapse-326-details\">Further detail</a>\r\n<div class=\"collapse mt-4\" id=\"collapse-326-details\">\r\n{{ field_3_2_6_details }} \r\n</div>"
             make_link: false
             path: ''
             absolute: false
