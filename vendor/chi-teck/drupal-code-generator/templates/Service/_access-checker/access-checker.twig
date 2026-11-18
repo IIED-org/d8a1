@@ -1,18 +1,16 @@
 {% import '@lib/di.twig' as di %}
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Drupal\{{ machine_name }}\Access;
 
-{% apply sort_namespaces %}
+{% sort %}
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Routing\Access\AccessInterface;
 use Symfony\Component\Routing\Route;
   {% if services %}
 {{ di.use(services) }}
   {% endif %}
-{% endapply %}
+{% endsort %}
 
 /**
  * Checks if passed parameter matches the route configuration.

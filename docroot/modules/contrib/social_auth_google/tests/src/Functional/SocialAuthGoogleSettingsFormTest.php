@@ -7,7 +7,9 @@ use Drupal\Tests\social_auth\Functional\SocialAuthTestBase;
 /**
  * Test Social Auth Google settings form.
  *
- * @group social_auth_google
+ * @group social_auth
+ *
+ * @ingroup social_auth_google
  */
 class SocialAuthGoogleSettingsFormTest extends SocialAuthTestBase {
 
@@ -39,6 +41,9 @@ class SocialAuthGoogleSettingsFormTest extends SocialAuthTestBase {
 
   /**
    * Test if permissions are set correctly for settings page.
+   *
+   * @throws \Behat\Mink\Exception\ElementNotFoundException
+   * @throws \Behat\Mink\Exception\ExpectationException
    */
   public function testPermissionForSettingsPage() {
     $this->checkPermissionForSettingsPage();

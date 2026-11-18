@@ -54,8 +54,7 @@ class PurgeDiagnosticCheck extends Plugin {
    *
    * When your diagnostic check is specific for a certain purger plugin(s) you
    * can bind it to these plugins. This check will then only get loaded when
-   * any of these specified purgers are in active use. When the check reports
-   * SEVERITY_ERROR, only the purgers it is bound to stop invalidating.
+   * any of these specified purgers are in active use.
    *
    * @var array
    *

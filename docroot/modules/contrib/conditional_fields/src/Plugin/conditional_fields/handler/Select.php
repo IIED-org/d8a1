@@ -33,7 +33,12 @@ class Select extends ConditionalFieldsHandlerBase {
         return $this->widgetCase($field, $options);
 
       case ConditionalFieldsInterface::CONDITIONAL_FIELDS_DEPENDENCY_VALUES_AND:
-        $state[$options['state']][$options['selector']]['value'] = $values_array;
+        if (isset($state[$options['state']][$options['selector']]['value'])) {
+          $state[$options['state']][$options['selector']]['value'] = (array) $state[$options['state']][$options['selector']]['value'];
+        }
+        else {
+          $state[$options['state']][$options['selector']]['value'] = $values_array;
+        }
         break;
 
       case ConditionalFieldsInterface::CONDITIONAL_FIELDS_DEPENDENCY_VALUES_XOR:

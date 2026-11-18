@@ -1,8 +1,28 @@
 <?php
 
-declare(strict_types=1);
-
-namespace lsolesen\pel;
+/*
+ * PEL: PHP Exif Library.
+ * A library with support for reading and
+ * writing all Exif headers in JPEG and TIFF images using PHP.
+ *
+ * Copyright (C) 2004, 2006 Martin Geisler.
+ * Copyright (C) 2017 Johannes Weberhofer.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program in the file COPYING; if not, write to the
+ * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
+ * Boston, MA 02110-1301 USA
+ */
 
 /**
  * Classes for dealing with JPEG markers.
@@ -11,173 +31,182 @@ namespace lsolesen\pel;
  * a JPEG marker. All the methods defined are static, and they all
  * operate on one argument which should be one of the class constants.
  * They will all be denoted by PelJpegMarker in the documentation.
+ *
+ * @author Martin Geisler <mgeisler@users.sourceforge.net>
+ * @author Johannes Weberhofer <jweberhofer@weberhofer.at>
+ * @license http://www.gnu.org/licenses/gpl.html GNU General Public
+ *          License (GPL)
+ * @package PEL
  */
+namespace lsolesen\pel;
+
 class PelJpegMarker
 {
+
     /**
      * Encoding (baseline)
      */
-    public const SOF0 = 0xC0;
+    const SOF0 = 0xC0;
 
     /**
      * Encoding (extended sequential)
      */
-    public const SOF1 = 0xC1;
+    const SOF1 = 0xC1;
 
     /**
      * Encoding (progressive)
      */
-    public const SOF2 = 0xC2;
+    const SOF2 = 0xC2;
 
     /**
      * Encoding (lossless)
      */
-    public const SOF3 = 0xC3;
+    const SOF3 = 0xC3;
 
     /**
      * Define Huffman table
      */
-    public const DHT = 0xC4;
+    const DHT = 0xC4;
 
     /**
      * Encoding (differential sequential)
      */
-    public const SOF5 = 0xC5;
+    const SOF5 = 0xC5;
 
     /**
      * Encoding (differential progressive)
      */
-    public const SOF6 = 0xC6;
+    const SOF6 = 0xC6;
 
     /**
      * Encoding (differential lossless)
      */
-    public const SOF7 = 0xC7;
+    const SOF7 = 0xC7;
 
     /**
      * Extension
      */
-    public const JPG = 0xC8;
+    const JPG = 0xC8;
 
     /**
      * Encoding (extended sequential, arithmetic)
      */
-    public const SOF9 = 0xC9;
+    const SOF9 = 0xC9;
 
     /**
      * Encoding (progressive, arithmetic)
      */
-    public const SOF10 = 0xCA;
+    const SOF10 = 0xCA;
 
     /**
      * Encoding (lossless, arithmetic)
      */
-    public const SOF11 = 0xCB;
+    const SOF11 = 0xCB;
 
     /**
      * Define arithmetic coding conditioning
      */
-    public const DAC = 0xCC;
+    const DAC = 0xCC;
 
     /**
      * Encoding (differential sequential, arithmetic)
      */
-    public const SOF13 = 0xCD;
+    const SOF13 = 0xCD;
 
     /**
      * Encoding (differential progressive, arithmetic)
      */
-    public const SOF14 = 0xCE;
+    const SOF14 = 0xCE;
 
     /**
      * Encoding (differential lossless, arithmetic)
      */
-    public const SOF15 = 0xCF;
+    const SOF15 = 0xCF;
 
     /**
      * Restart 0
      */
-    public const RST0 = 0xD0;
+    const RST0 = 0xD0;
 
     /**
      * Restart 1
      */
-    public const RST1 = 0xD1;
+    const RST1 = 0xD1;
 
     /**
      * Restart 2
      */
-    public const RST2 = 0xD2;
+    const RST2 = 0xD2;
 
     /**
      * Restart 3
      */
-    public const RST3 = 0xD3;
+    const RST3 = 0xD3;
 
     /**
      * Restart 4
      */
-    public const RST4 = 0xD4;
+    const RST4 = 0xD4;
 
     /**
      * Restart 5
      */
-    public const RST5 = 0xD5;
+    const RST5 = 0xD5;
 
     /**
      * Restart 6
      */
-    public const RST6 = 0xD6;
+    const RST6 = 0xD6;
 
     /**
      * Restart 7
      */
-    public const RST7 = 0xD7;
+    const RST7 = 0xD7;
 
     /**
      * Start of image
      */
-    public const SOI = 0xD8;
+    const SOI = 0xD8;
 
     /**
      * End of image
      */
-    public const EOI = 0xD9;
+    const EOI = 0xD9;
 
     /**
      * Start of scan
      */
-    public const SOS = 0xDA;
+    const SOS = 0xDA;
 
     /**
      * Define quantization table
      */
-    public const DQT = 0xDB;
+    const DQT = 0xDB;
 
     /**
      * Define number of lines
      */
-    public const DNL = 0xDC;
+    const DNL = 0xDC;
 
     /**
      * Define restart interval
      */
-    public const DRI = 0xDD;
+    const DRI = 0xDD;
 
     /**
      * Define hierarchical progression
      */
-    public const DHP = 0xDE;
+    const DHP = 0xDE;
 
     /**
      * Expand reference component
      */
-    public const EXP = 0xDF;
+    const EXP = 0xDF;
 
     /**
      * Application segment 0
      */
-    public const APP0 = 0xE0;
+    const APP0 = 0xE0;
 
     /**
      * Application segment 1
@@ -186,159 +215,157 @@ class PelJpegMarker
      * stored in this section and a call to {@link PelJpeg::getExif()}
      * will return a {@link PelExif} object representing it.
      */
-    public const APP1 = 0xE1;
+    const APP1 = 0xE1;
 
     /**
      * Application segment 2
      */
-    public const APP2 = 0xE2;
+    const APP2 = 0xE2;
 
     /**
      * Application segment 3
      */
-    public const APP3 = 0xE3;
+    const APP3 = 0xE3;
 
     /**
      * Application segment 4
      */
-    public const APP4 = 0xE4;
+    const APP4 = 0xE4;
 
     /**
      * Application segment 5
      */
-    public const APP5 = 0xE5;
+    const APP5 = 0xE5;
 
     /**
      * Application segment 6
      */
-    public const APP6 = 0xE6;
+    const APP6 = 0xE6;
 
     /**
      * Application segment 7
      */
-    public const APP7 = 0xE7;
+    const APP7 = 0xE7;
 
     /**
      * Application segment 8
      */
-    public const APP8 = 0xE8;
+    const APP8 = 0xE8;
 
     /**
      * Application segment 9
      */
-    public const APP9 = 0xE9;
+    const APP9 = 0xE9;
 
     /**
      * Application segment 10
      */
-    public const APP10 = 0xEA;
+    const APP10 = 0xEA;
 
     /**
      * Application segment 11
      */
-    public const APP11 = 0xEB;
+    const APP11 = 0xEB;
 
     /**
      * Application segment 12
      */
-    public const APP12 = 0xEC;
+    const APP12 = 0xEC;
 
     /**
      * Application segment 13
      */
-    public const APP13 = 0xED;
+    const APP13 = 0xED;
 
     /**
      * Application segment 14
      */
-    public const APP14 = 0xEE;
+    const APP14 = 0xEE;
 
     /**
      * Application segment 15
      */
-    public const APP15 = 0xEF;
+    const APP15 = 0xEF;
 
     /**
      * Extension 0
      */
-    public const JPG0 = 0xF0;
+    const JPG0 = 0xF0;
 
     /**
      * Extension 1
      */
-    public const JPG1 = 0xF1;
+    const JPG1 = 0xF1;
 
     /**
      * Extension 2
      */
-    public const JPG2 = 0xF2;
+    const JPG2 = 0xF2;
 
     /**
      * Extension 3
      */
-    public const JPG3 = 0xF3;
+    const JPG3 = 0xF3;
 
     /**
      * Extension 4
      */
-    public const JPG4 = 0xF4;
+    const JPG4 = 0xF4;
 
     /**
      * Extension 5
      */
-    public const JPG5 = 0xF5;
+    const JPG5 = 0xF5;
 
     /**
      * Extension 6
      */
-    public const JPG6 = 0xF6;
+    const JPG6 = 0xF6;
 
     /**
      * Extension 7
      */
-    public const JPG7 = 0xF7;
+    const JPG7 = 0xF7;
 
     /**
      * Extension 8
      */
-    public const JPG8 = 0xF8;
+    const JPG8 = 0xF8;
 
     /**
      * Extension 9
      */
-    public const JPG9 = 0xF9;
+    const JPG9 = 0xF9;
 
     /**
      * Extension 10
      */
-    public const JPG10 = 0xFA;
+    const JPG10 = 0xFA;
 
     /**
      * Extension 11
      */
-    public const JPG11 = 0xFB;
+    const JPG11 = 0xFB;
 
     /**
      * Extension 12
      */
-    public const JPG12 = 0xFC;
+    const JPG12 = 0xFC;
 
     /**
      * Extension 13
      */
-    public const JPG13 = 0xFD;
+    const JPG13 = 0xFD;
 
     /**
      * Comment
      */
-    public const COM = 0xFE;
+    const COM = 0xFE;
 
     /**
      * Values for marker's short names
-     *
-     * @var array<int, string>
      */
-    protected static array $jpegMarkerShort = [
+    protected static $jpegMarkerShort = [
         self::SOF0 => 'SOF0',
         self::SOF1 => 'SOF1',
         self::SOF2 => 'SOF2',
@@ -401,15 +428,13 @@ class PelJpegMarker
         self::JPG10 => 'JPG10',
         self::JPG11 => 'JPG11',
         self::JPG12 => 'JPG12',
-        self::JPG13 => 'JPG13',
+        self::JPG13 => 'JPG13'
     ];
 
     /**
      * Values for marker's descriptions names.
-     *
-     * @var array<int|string, string>
      */
-    protected static array $jpegMarkerDescriptions = [
+    protected static $jpegMarkerDescriptions = [
         self::SOF0 => 'Encoding (baseline)',
         self::SOF1 => 'Encoding (extended sequential)',
         self::SOF2 => 'Encoding (progressive)',
@@ -444,56 +469,62 @@ class PelJpegMarker
      * Check if a byte is a valid JPEG marker.
      * If the byte is recognized true is returned, otherwise false will be returned.
      *
-     * @param int $marker
+     * @param integer $marker
      *            the marker as defined in {@link PelJpegMarker}
+     * @return boolean
      */
-    public static function isValid(int $marker): bool
+    public static function isValid($marker)
     {
-        return $marker >= self::SOF0 && $marker <= self::COM;
+        return ($marker >= self::SOF0 && $marker <= self::COM);
     }
 
     /**
      * Turn a JPEG marker into bytes.
      * This will be a string with just a single byte since all JPEG markers are simply single bytes.
      *
-     * @param int $marker
+     * @param integer $marker
      *            the marker as defined in {@link PelJpegMarker}
+     * @return string
      */
-    public static function getBytes(int $marker): string
+    public static function getBytes($marker)
     {
-        return chr($marker & 0xFF);
+        return chr($marker);
     }
 
     /**
      * Return the short name for a marker, e.g., 'SOI' for the Start
      * of Image marker.
      *
-     * @param int $marker
+     * @param integer $marker
      *            the marker as defined in {@link PelJpegMarker}
+     * @return string
      */
-    public static function getName(int $marker): string
+    public static function getName($marker)
     {
         if (array_key_exists($marker, self::$jpegMarkerShort)) {
             return self::$jpegMarkerShort[$marker];
+        } else {
+            return Pel::fmt('Unknown marker: 0x%02X', $marker);
         }
-        return Pel::fmt('Unknown marker: 0x%02X', $marker);
     }
 
     /**
      * Returns a description of a JPEG marker.
      *
-     * @param int $marker
+     * @param integer $marker
      *            the marker as defined in {@link PelJpegMarker}
+     * @return string
      */
-    public static function getDescription(int $marker): string
+    public static function getDescription($marker)
     {
         if (array_key_exists($marker, self::$jpegMarkerShort)) {
             if (array_key_exists($marker, self::$jpegMarkerDescriptions)) {
                 return self::$jpegMarkerDescriptions[$marker];
-            }
-            $splitted = preg_split("/(\d+)/", self::$jpegMarkerShort[$marker], - 1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
-            if ($splitted !== false && count($splitted) === 2 && array_key_exists($splitted[0], self::$jpegMarkerDescriptions)) {
-                return Pel::fmt(self::$jpegMarkerDescriptions[$splitted[0]], $splitted[1]);
+            } else {
+                $splitted = preg_split("/(\d+)/", self::$jpegMarkerShort[$marker], - 1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
+                if ((count($splitted) == 2) && array_key_exists($splitted[0], self::$jpegMarkerDescriptions)) {
+                    return Pel::fmt(self::$jpegMarkerDescriptions[$splitted[0]], $splitted[1]);
+                }
             }
         }
         return Pel::fmt('Unknown marker: 0x%02X', $marker);

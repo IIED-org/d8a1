@@ -3,7 +3,7 @@
 /*
  * This file is part of Psy Shell.
  *
- * (c) 2012-2026 Justin Hileman
+ * (c) 2012-2023 Justin Hileman
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -25,11 +25,15 @@ use Psy\Readline\Hoa\Ustring as HoaUstring;
  */
 class Userland implements Readline
 {
-    private HoaReadline $hoaReadline;
-    private ?string $lastPrompt = null;
-    private HoaConsoleTput $tput;
-    private HoaConsoleInput $input;
-    private HoaConsoleOutput $output;
+    /** @var HoaReadline */
+    private $hoaReadline;
+
+    /** @var string|null */
+    private $lastPrompt;
+
+    private $tput;
+    private $input;
+    private $output;
 
     public static function isSupported(): bool
     {
@@ -134,7 +138,7 @@ class Userland implements Readline
      *
      * @return string
      */
-    public function readline(?string $prompt = null)
+    public function readline(string $prompt = null)
     {
         $this->lastPrompt = $prompt;
 

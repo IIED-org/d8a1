@@ -5,7 +5,7 @@ namespace Drupal\asset_injector\Form;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
- * Config entity form for css assets.
+ * Class AssetInjectorCsssForm.
  *
  * @package Drupal\asset_injector\Form
  */

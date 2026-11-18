@@ -3,14 +3,12 @@
 namespace Drupal\Tests\search_api\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests whether Search API's local tasks work correctly.
  *
  * @group search_api
  */
-#[RunTestsInSeparateProcesses]
 class LocalTasksTest extends KernelTestBase {
 
   /**
@@ -89,9 +87,9 @@ class LocalTasksTest extends KernelTestBase {
   /**
    * Asserts integration for local tasks.
    *
-   * @param string $route_name
+   * @param $route_name
    *   Route name to base task building on.
-   * @param array<int, list<string>> $expected_tasks
+   * @param $expected_tasks
    *   A list of tasks groups by level expected at the given route.
    */
   protected function assertLocalTasks(string $route_name, array $expected_tasks): void {

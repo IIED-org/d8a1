@@ -3,12 +3,12 @@
 namespace Drupal\geofield\Element;
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Render\Attribute\FormElement;
 
 /**
  * Provides a Geofield bounds form element.
+ *
+ * @FormElement("geofield_bounds")
  */
-#[FormElement('geofield_bounds')]
 class GeofieldBounds extends GeofieldElementBase {
 
   /**
@@ -37,9 +37,6 @@ class GeofieldBounds extends GeofieldElementBase {
 
   /**
    * {@inheritdoc}
-   *
-   * @return array
-   *   The default properties of the element.
    */
   public function getInfo() {
     $class = get_class($this);

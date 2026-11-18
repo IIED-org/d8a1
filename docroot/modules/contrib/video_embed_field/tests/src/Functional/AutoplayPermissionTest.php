@@ -1,7 +1,6 @@
 <?php
 
 namespace Drupal\Tests\video_embed_field\Functional;
-
 use Drupal\Tests\BrowserTestBase;
 
 /**
@@ -18,9 +17,6 @@ class AutoplayPermissionTest extends BrowserTestBase {
    */
   protected $defaultTheme = 'stark';
 
-  /**
-   * {@inheritdoc}
-   */
   protected static $modules = [
     'video_embed_field',
     'node',
@@ -31,7 +27,7 @@ class AutoplayPermissionTest extends BrowserTestBase {
    */
   public function testAutoplay() {
     $this->setupEntityDisplays();
-    $node = $this->createVideoNode('https://vimeo.com/399842404');
+    $node = $this->createVideoNode('https://vimeo.com/80896303');
     $this->setDisplayComponentSettings('video_embed_field_video', [
       'autoplay' => TRUE,
     ]);

@@ -4,16 +4,12 @@ declare(strict_types=1);
 
 namespace Drupal\Core\Recipe;
 
-use Drupal\Core\Config\Action\ConfigActionException;
-use Drupal\Core\Config\ConfigManagerInterface;
 use Drupal\Core\Config\FileStorage;
 use Drupal\Core\Config\InstallStorage;
 use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\DefaultContent\Existing;
 use Drupal\Core\DefaultContent\Importer;
 use Drupal\Core\DefaultContent\Finder;
-use Drupal\Core\Site\Settings;
-use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -32,33 +28,14 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 final class RecipeRunner {
 
   /**
-   * Whether a recipe is currently being applied.
-   */
-  protected static bool $isApplying = FALSE;
-
-  /**
-   * Determines whether a recipe is currently being applied.
-   *
-   * @return bool
-   *   TRUE if a recipe is currently being applied, FALSE if not.
-   */
-  public static function isApplying(): bool {
-    return static::$isApplying;
-  }
-
-  /**
    * @param \Drupal\Core\Recipe\Recipe $recipe
    *   The recipe to apply.
    */
   public static function processRecipe(Recipe $recipe): void {
-    $set_is_applying = static::tryToSetIsApplying();
     static::processRecipes($recipe->recipes);
     static::processInstall($recipe->install, $recipe->config->getConfigStorage());
     static::processConfiguration($recipe);
     static::processContent($recipe->content);
-    if ($set_is_applying) {
-      static::$isApplying = FALSE;
-    }
     static::triggerEvent($recipe);
   }
 
@@ -99,10 +76,8 @@ final class RecipeRunner {
    *   configuration.
    */
   protected static function processInstall(InstallConfigurator $install, StorageInterface $recipeConfigStorage): void {
-    if (!empty($install->modules)) {
-      foreach (array_chunk($install->modules, Settings::get('core.multi_module_install_batch_size', 20)) as $modules_chunk) {
-        static::installModules($modules_chunk, $recipeConfigStorage);
-      }
+    foreach ($install->modules as $name) {
+      static::installModule($name, $recipeConfigStorage);
     }
 
     // Themes can depend on modules so have to be installed after modules.
@@ -118,14 +93,11 @@ final class RecipeRunner {
    *   The recipe being applied.
    */
   protected static function processConfiguration(Recipe $recipe): void {
-    /** @var \Drupal\Core\Config\ConfigManagerInterface $config_manager */
-    $config_manager = \Drupal::service(ConfigManagerInterface::class);
-
     $config_installer = new RecipeConfigInstaller(
       \Drupal::service('config.factory'),
       \Drupal::service('config.storage'),
       \Drupal::service('config.typed'),
-      $config_manager,
+      \Drupal::service('config.manager'),
       \Drupal::service('event_dispatcher'),
       NULL,
       \Drupal::service('extension.path.resolver'));
@@ -146,13 +118,6 @@ final class RecipeRunner {
       /** @var \Drupal\Core\Config\Action\ConfigActionManager $config_action_manager */
       $config_action_manager = \Drupal::service('plugin.manager.config_action');
       foreach ($config->config['actions'] as $config_name => $actions) {
-        // If this config name contains an input value, it must begin with the
-        // config prefix of a known entity type.
-        if (str_contains($config_name, '${') && empty($config_manager->getEntityTypeIdByName($config_name))) {
-          throw new ConfigActionException("The entity type for the config name '$config_name' could not be identified.");
-        }
-        $config_name = str_replace($keys, $replace, $config_name);
-
         foreach ($actions as $action_id => $data) {
           $config_action_manager->applyAction($action_id, $config_name, static::replaceInputValues($data, $replace));
         }
@@ -199,8 +164,7 @@ final class RecipeRunner {
    * @param \Drupal\Core\Recipe\Recipe $recipe
    *   The recipe to convert to batch operations.
    * @param string[] $recipes
-   *   The paths of the recipes that have already been converted to batch
-   *   operations.
+   *   The paths of the recipes that have already been converted to batch operations.
    * @param string[] $modules
    *   The modules that will already be installed due to previous recipes in the
    *   batch.
@@ -253,20 +217,12 @@ final class RecipeRunner {
    *   pass to the callable.
    */
   protected static function toBatchOperationsInstall(Recipe $recipe, array &$modules, array &$themes): array {
-    $new_modules = [];
     foreach ($recipe->install->modules as $name) {
       if (in_array($name, $modules, TRUE)) {
         continue;
       }
-      $new_modules[] = $name;
       $modules[] = $name;
-    }
-
-    $steps = [];
-    if (!empty($new_modules)) {
-      foreach (array_chunk($new_modules, Settings::get('core.multi_module_install_batch_size', 20)) as $modules_chunk) {
-        $steps[] = [[RecipeRunner::class, 'installModules'], [$modules_chunk, $recipe]];
-      }
+      $steps[] = [[RecipeRunner::class, 'installModule'], [$name, $recipe]];
     }
     foreach ($recipe->install->themes as $name) {
       if (in_array($name, $themes, TRUE)) {
@@ -275,7 +231,7 @@ final class RecipeRunner {
       $themes[] = $name;
       $steps[] = [[RecipeRunner::class, 'installTheme'], [$name, $recipe]];
     }
-    return $steps;
+    return $steps ?? [];
   }
 
   /**
@@ -287,75 +243,26 @@ final class RecipeRunner {
    *   The recipe or recipe's config storage.
    * @param array<mixed>|null $context
    *   The batch context if called by a batch.
-   *
-   * @deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use
-   *   \Drupal\Core\Recipe\RecipeRunner::installModules() instead.
-   *
-   * @see https://www.drupal.org/node/3579527
    */
   public static function installModule(string $module, StorageInterface|Recipe $recipeConfigStorage, ?array &$context = NULL): void {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use \Drupal\Core\Recipe\RecipeRunner::installModules() instead. See https://www.drupal.org/node/3579527', E_USER_DEPRECATED);
-    static::installModules([$module], $recipeConfigStorage, $context);
-  }
-
-  /**
-   * Installs modules for a recipe.
-   *
-   * @param string[] $modules
-   *   The names of the modules to install. It is up to the caller to ensure
-   *   that the number of modules to install conforms to the
-   *   'core.multi_module_install_batch_size' setting.
-   * @param \Drupal\Core\Config\StorageInterface|\Drupal\Core\Recipe\Recipe $recipeConfigStorage
-   *   The recipe or recipe's config storage.
-   * @param array<mixed>|null $context
-   *   The batch context if called by a batch.
-   */
-  public static function installModules(array $modules, StorageInterface|Recipe $recipeConfigStorage, ?array &$context = NULL): void {
-    if (empty($modules)) {
-      throw new \InvalidArgumentException('No modules provided.');
-    }
-    $set_is_applying = static::tryToSetIsApplying();
     if ($recipeConfigStorage instanceof Recipe) {
       $recipeConfigStorage = $recipeConfigStorage->config->getConfigStorage();
     }
-    // Disable configuration entity install but use the config directories from
-    // the modules.
+    // Disable configuration entity install but use the config directory from
+    // the module.
     \Drupal::service('config.installer')->setSyncing(TRUE);
-
-    // Allow the recipe to override simple configuration from the modules.
+    $default_install_path = \Drupal::service('extension.list.module')->get($module)->getPath() . '/' . InstallStorage::CONFIG_INSTALL_DIRECTORY;
+    // Allow the recipe to override simple configuration from the module.
     $storage = new RecipeOverrideConfigStorage(
       $recipeConfigStorage,
-      // Allow the ConfigInstaller to read all the config directories of the
-      // modules being installed.
-      RecipeMultipleModulesConfigStorage::createFromModuleList(
-        $modules,
-        \Drupal::service('extension.list.module'),
-      )
+      new FileStorage($default_install_path, StorageInterface::DEFAULT_COLLECTION)
     );
-
     \Drupal::service('config.installer')->setSourceStorage($storage);
 
-    \Drupal::service('module_installer')->install($modules);
+    \Drupal::service('module_installer')->install([$module]);
     \Drupal::service('config.installer')->setSyncing(FALSE);
-
-    $module_list = \Drupal::service('extension.list.module');
-    $module_names = array_map($module_list->getName(...), $modules);
-    $context['message'] = new PluralTranslatableMarkup(
-      count($modules),
-      'Installed %modules module.',
-      'Installed @count modules: %modules.',
-      ['%modules' => implode(', ', $module_names)],
-    );
-
-    if (isset($context['results']['module'])) {
-      $context['results']['module'] = array_merge($context['results']['module'], $modules);
-    }
-    else {
-      $context['results']['module'] = $modules;
-    }
-    if ($set_is_applying) {
-      static::$isApplying = FALSE;
-    }
+    $context['message'] = t('Installed %module module.', ['%module' => \Drupal::service('extension.list.module')->getName($module)]);
+    $context['results']['module'][] = $module;
   }
 
   /**
@@ -369,7 +276,6 @@ final class RecipeRunner {
    *   The batch context if called by a batch.
    */
   public static function installTheme(string $theme, StorageInterface|Recipe $recipeConfigStorage, ?array &$context = NULL): void {
-    $set_is_applying = static::tryToSetIsApplying();
     if ($recipeConfigStorage instanceof Recipe) {
       $recipeConfigStorage = $recipeConfigStorage->config->getConfigStorage();
     }
@@ -387,9 +293,6 @@ final class RecipeRunner {
     \Drupal::service('config.installer')->setSyncing(FALSE);
     $context['message'] = t('Installed %theme theme.', ['%theme' => \Drupal::service('extension.list.theme')->getName($theme)]);
     $context['results']['theme'][] = $theme;
-    if ($set_is_applying) {
-      static::$isApplying = FALSE;
-    }
   }
 
   /**
@@ -401,13 +304,9 @@ final class RecipeRunner {
    *   The batch context if called by a batch.
    */
   public static function installConfig(Recipe $recipe, ?array &$context = NULL): void {
-    $set_is_applying = static::tryToSetIsApplying();
     static::processConfiguration($recipe);
     $context['message'] = t('Installed configuration for %recipe recipe.', ['%recipe' => $recipe->name]);
     $context['results']['config'][] = $recipe->name;
-    if ($set_is_applying) {
-      static::$isApplying = FALSE;
-    }
   }
 
   /**
@@ -419,27 +318,9 @@ final class RecipeRunner {
    *   The batch context if called by a batch.
    */
   public static function installContent(Recipe $recipe, ?array &$context = NULL): void {
-    $set_is_applying = static::tryToSetIsApplying();
     static::processContent($recipe->content);
     $context['message'] = t('Created content for %recipe recipe.', ['%recipe' => $recipe->name]);
     $context['results']['content'][] = $recipe->name;
-    if ($set_is_applying) {
-      static::$isApplying = FALSE;
-    }
-  }
-
-  /**
-   * Tries to set the isApplying flag to TRUE.
-   *
-   * @return bool
-   *   TRUE if this call set the flag, FALSE if it was already set.
-   */
-  private static function tryToSetIsApplying(): bool {
-    if (!static::$isApplying) {
-      static::$isApplying = TRUE;
-      return TRUE;
-    }
-    return FALSE;
   }
 
   /**

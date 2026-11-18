@@ -5,9 +5,6 @@ declare(strict_types=1);
 namespace Drupal\Tests\google_tag\Kernel;
 
 use Drupal\google_tag\Entity\TagContainer;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 
 /**
@@ -15,8 +12,6 @@ use Symfony\Component\Validator\ConstraintViolationInterface;
  *
  * @group google_tag
  */
-#[Group('google_tag')]
-#[RunTestsInSeparateProcesses]
 final class MetricsAndDimensionsTest extends GoogleTagTestCase {
 
   /**
@@ -70,7 +65,6 @@ final class MetricsAndDimensionsTest extends GoogleTagTestCase {
    *
    * @dataProvider dimensionMetricsData
    */
-  #[DataProvider('dimensionMetricsData')]
   public function testValidation(array $dimensions_metrics, array $expected_violations): void {
     $config = TagContainer::create([
       'id' => 'foo',
@@ -100,7 +94,7 @@ final class MetricsAndDimensionsTest extends GoogleTagTestCase {
    */
   public static function dimensionMetricsData() {
     // Symfony 4 and 5 allowed empty strings for the Length constraint. This was
-    // removed in Symfony 6. The `allowEmptyString` flag was not configurable
+    // removed in Symfony 6. The `allowEmptyString` flag was not configureable
     // in Drupal.
     $drupal10 = version_compare(\Drupal::VERSION, '10.0', '>=');
 

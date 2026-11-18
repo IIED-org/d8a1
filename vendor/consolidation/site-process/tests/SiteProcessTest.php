@@ -214,12 +214,6 @@ class SiteProcessTest extends TestCase
         if ($useTty && Escape::isWindows($os)) {
           $this->markTestSkipped('Windows doesn\'t have /dev/tty support');
         }
-        // Symfony Process won't let us use setTty when there isn't an actual tty.
-        // Symfony Process 6 used to be more forgiving, but it now objects just
-        // as Symfony Process 7 always has.
-        if ($useTty && getenv('CI')) {
-          $this->markTestSkipped('CI doesn\'t provide /dev/tty support');
-        }
         $processManager = ProcessManager::createDefault();
         $siteAlias = new SiteAlias($siteAliasData, '@alias.dev');
         $siteProcess = $processManager->siteProcess($siteAlias, $args, $options, $optionsPassedAsArgs);

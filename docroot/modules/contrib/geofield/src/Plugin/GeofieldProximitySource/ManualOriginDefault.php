@@ -2,24 +2,23 @@
 
 namespace Drupal\geofield\Plugin\GeofieldProximitySource;
 
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Drupal\geofield\Attribute\GeofieldProximitySource;
 use Drupal\geofield\Plugin\GeofieldProximitySourceBase;
+use Drupal\Component\Render\FormattableMarkup;
 
 /**
  * Defines 'Geofield Manual Origin' plugin.
  *
  * @package Drupal\geofield\Plugin
+ *
+ * @GeofieldProximitySource(
+ *   id = "geofield_manual_origin",
+ *   label = @Translation("Manual Origin (Default)"),
+ *   description = @Translation("Allow the Manual input of Origin as couple of Latitude and Longitude in decimal degrees."),
+ *   exposedDescription = @Translation("Manual input of Distance and Origin (as couple of Latitude and Longitude in decimal degrees.)"),
+ *   context = {},
+ * )
  */
-#[GeofieldProximitySource(
-  id: 'geofield_manual_origin',
-  label: new TranslatableMarkup('Manual Origin (Default)'),
-  description: new TranslatableMarkup('Allow the Manual input of Origin as couple of Latitude and Longitude in decimal degrees.'),
-  exposedDescription: new TranslatableMarkup('Manual input of Distance and Origin (as couple of Latitude and Longitude in decimal degrees.)'),
-  context: [],
-)]
 class ManualOriginDefault extends GeofieldProximitySourceBase {
 
   /**
@@ -35,7 +34,7 @@ class ManualOriginDefault extends GeofieldProximitySourceBase {
   public function __construct(
     array $configuration,
     $plugin_id,
-    $plugin_definition,
+    $plugin_definition
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->origin['lat'] = isset($configuration['origin']) && is_numeric($configuration['origin']['lat']) ? $configuration['origin']['lat'] : '';
@@ -47,19 +46,8 @@ class ManualOriginDefault extends GeofieldProximitySourceBase {
    */
   public function buildOptionsForm(array &$form, FormStateInterface $form_state, array $options_parents, $is_exposed = FALSE) {
 
-    $user_input = $form_state->getUserInput();
-    $origin = $this->origin;
-
-    if ($is_exposed && isset($user_input["field_geofield_proximity"]["source_configuration"]["origin"])) {
-      $origin = $user_input["field_geofield_proximity"]["source_configuration"]["origin"];
-    }
-
-    $lat = $origin['lat'];
-    $lon = $origin['lon'];
-
-    $form['#attributes'] = [
-      'class' => ['proximity-origin'],
-    ];
+    $lat = $this->configuration['origin']['lat'] ?? $this->origin['lat'];
+    $lon = $this->configuration['origin']['lon'] ?? $this->origin['lon'];
 
     $form["origin"] = [
       '#title' => $this->t('Origin Coordinates'),
@@ -68,9 +56,6 @@ class ManualOriginDefault extends GeofieldProximitySourceBase {
       '#default_value' => [
         'lat' => $lat,
         'lon' => $lon,
-      ],
-      '#attributes' => [
-        'class' => ['proximity-origin-input'],
       ],
     ];
 
@@ -112,20 +97,20 @@ class ManualOriginDefault extends GeofieldProximitySourceBase {
           "#type" => 'html_tag',
           "#tag" => 'div',
           '#value' => $this->t('from Latitude: @lat and Longitude: @lon.', [
-            '@lat' => new FormattableMarkup('<span class="geofield-lat geofield-lat-summary"> @lat</span>', [
-              '@lat' => !empty($lat) ? $lat : $this->t('undefined'),
+            '@lat' => new FormattableMarkup('<span class="geofield-lat"> @lat</span>', [
+              '@lat' => $lat,
             ]),
-            '@lon' => new FormattableMarkup('<span class="geofield-lon geofield-lon-summary"> @lon</span>', [
-              '@lon' => !empty($lon) ? $lon : $this->t('undefined'),
+            '@lon' => new FormattableMarkup('<span class="geofield-lon"> @lon</span>', [
+              '@lon' => $lon,
             ]),
           ]),
           '#attributes' => [
             'class' => ['proximity-origin-summary'],
           ],
         ];
-        $form['origin_summary']['#attached']['library'][] = 'geofield/proximity_origin_summary_update';
       }
     }
+
   }
 
 }

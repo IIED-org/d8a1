@@ -14,7 +14,7 @@ class FieldTemplateLayoutBuilderTest extends TestBase {
    *
    * @var array
    */
-  protected static $modules = [
+  public static $modules = [
     'node',
     'user',
     'field_ui',
@@ -37,12 +37,12 @@ class FieldTemplateLayoutBuilderTest extends TestBase {
     // Enable field templates.
     \Drupal::configFactory()->getEditable('ds.settings')
       ->set('field_template', TRUE)
-      ->set('ft_layout_builder', TRUE)
+      ->set('ft-layout-builder', TRUE)
       ->save();
 
     $this->drupalPlaceBlock('local_tasks_block');
 
-    // Create a nodes to test field_block templates on.
+    // Create a nodes to test field_block templates on
     $this->createContentType([
       'type' => 'bundle_with_section_field',
       'name' => 'Bundle with section field',

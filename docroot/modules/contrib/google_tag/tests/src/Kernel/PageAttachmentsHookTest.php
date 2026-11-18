@@ -6,16 +6,12 @@ namespace Drupal\Tests\google_tag\Kernel;
 
 use Drupal\Core\Url;
 use Drupal\google_tag\Entity\TagContainer;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests page attachment hooks.
  *
  * @group google_tag
  */
-#[Group('google_tag')]
-#[RunTestsInSeparateProcesses]
 final class PageAttachmentsHookTest extends GoogleTagTestCase {
 
   /**
@@ -97,41 +93,6 @@ final class PageAttachmentsHookTest extends GoogleTagTestCase {
   }
 
   /**
-   * Tests that a GTM-only container still sends events to the data layer.
-   */
-  public function testGtmOnlyAttachments(): void {
-    TagContainer::create([
-      'id' => 'foo',
-      'tag_container_ids' => ['GTM-XXXXXX'],
-      'events' => [
-        'route_name' => [],
-      ],
-    ])->save();
-
-    $page = [];
-    $this->container
-      ->get('main_content_renderer.html')
-      ->invokePageAttachmentHooks($page);
-    self::assertContains('google_tag/gtm', $page['#attached']['library']);
-    self::assertContains('google_tag/gtag', $page['#attached']['library']);
-    self::assertNotContains('google_tag/gtag.ajax', $page['#attached']['library']);
-    self::assertEquals([
-      'tagId' => '',
-      'otherIds' => [],
-      'events' => [
-        [
-          'name' => 'route_name',
-          'data' => [
-            'route_name' => '<none>',
-          ],
-        ],
-      ],
-      'additionalConfigInfo' => [],
-      'consentMode' => FALSE,
-    ], $page['#attached']['drupalSettings']['gtag']);
-  }
-
-  /**
    * Tests hook_page_top for google_tag attachments.
    */
   public function testPageTopAttachments(): void {
@@ -169,61 +130,6 @@ final class PageAttachmentsHookTest extends GoogleTagTestCase {
       ],
     ], $page['page_top']
     );
-  }
-
-  /**
-   * Tests that the noscript fallback can be turned off per GTM ID.
-   */
-  public function testPageTopNoscriptDisabled(): void {
-    $entity = TagContainer::create([
-      'id' => 'foo',
-      'tag_container_ids' => [
-        'GTM-XXXXXX',
-        'GTM-YYYYYY',
-      ],
-      'advanced_settings' => [
-        'gtm' => [
-          'GTM-XXXXXX' => [
-            'data_layer' => 'dataLayer',
-            'include_noscript' => FALSE,
-          ],
-        ],
-      ],
-    ]);
-    $entity->save();
-
-    // GTM-YYYYYY has no stored settings, so it keeps the fallback.
-    $page = [];
-    $this->container
-      ->get('main_content_renderer.html')->buildPageTopAndBottom($page);
-    self::assertEquals([
-      [
-        '#theme' => 'google_tag_gtm_iframe',
-        '#url' => Url::fromUri('https://www.googletagmanager.com/ns.html', ['query' => ['id' => 'GTM-YYYYYY']]),
-      ],
-    ], $page['page_top']['google_tag_gtm_iframe']);
-    self::assertContains('config:google_tag.container.foo', $page['page_top']['#cache']['tags']);
-
-    $entity->set('advanced_settings', [
-      'gtm' => [
-        'GTM-XXXXXX' => ['include_noscript' => FALSE],
-        'GTM-YYYYYY' => ['include_noscript' => FALSE],
-      ],
-    ])->save();
-    $this->container->set('google_tag.tag_container_resolver', NULL);
-
-    $page = [];
-    $this->container
-      ->get('main_content_renderer.html')->buildPageTopAndBottom($page);
-    self::assertArrayNotHasKey('google_tag_gtm_iframe', $page['page_top']);
-    self::assertContains('config:google_tag.container.foo', $page['page_top']['#cache']['tags']);
-
-    // The GTM script is still attached.
-    $page = [];
-    $this->container
-      ->get('main_content_renderer.html')
-      ->invokePageAttachmentHooks($page);
-    self::assertContains('google_tag/gtm', $page['#attached']['library']);
   }
 
   /**
@@ -272,83 +178,6 @@ final class PageAttachmentsHookTest extends GoogleTagTestCase {
       ],
     ],
     $page['#attached']['drupalSettings']['gtm']);
-  }
-
-  /**
-   * Tests that empty class lines are not sent as allowed or blocked classes.
-   *
-   * An allowlist holding only an empty string allows no tag types at all.
-   *
-   * @see https://www.drupal.org/project/google_tag/issues/3343483
-   */
-  public function testGtmEmptyClassLists(): void {
-    TagContainer::create([
-      'id' => 'foo',
-      'tag_container_ids' => ['GTM-XXXXXX'],
-      'advanced_settings' => [
-        'gtm' => [
-          'GTM-XXXXXX' => [
-            'include_classes' => TRUE,
-            'allowlist_classes' => '',
-            'blocklist_classes' => "\r\nnonGoogleScripts\r\n\r\n customPixels \n",
-          ],
-        ],
-      ],
-    ])->save();
-    $page = [];
-    $this->container
-      ->get('main_content_renderer.html')
-      ->invokePageAttachmentHooks($page);
-    $settings = $page['#attached']['drupalSettings']['gtm']['settings'];
-    self::assertSame([], $settings['allowlist_classes']);
-    self::assertSame(['nonGoogleScripts', 'customPixels'], $settings['blocklist_classes']);
-  }
-
-  /**
-   * Tests that surrounding whitespace is removed from tag IDs on save.
-   */
-  public function testTagIdWhitespaceTrimmedOnSave(): void {
-    TagContainer::create([
-      'id' => 'foo',
-      'tag_container_ids' => [' GTM-XXXXXX', "G-XXXXXX \n", "\tAW-XXXXXX"],
-    ])->save();
-    self::assertSame(
-      ['GTM-XXXXXX', 'G-XXXXXX', 'AW-XXXXXX'],
-      $this->config('google_tag.container.foo')->get('tag_container_ids')
-    );
-  }
-
-  /**
-   * Tests that stored tag IDs with whitespace still render valid URLs.
-   *
-   * Recipe inputs and config imports can store IDs the form would reject,
-   * such as an ID pasted with a leading space.
-   */
-  public function testTagIdWhitespaceInStoredConfig(): void {
-    TagContainer::create([
-      'id' => 'foo',
-    ])->save();
-    // Write the IDs past the entity, as a config import would.
-    $this->config('google_tag.container.foo')
-      ->set('tag_container_ids', [' GTM-XXXXXX', 'GTM-YYYYYY ', ' G-XXXXXX', ' AW-XXXXXX '])
-      ->save();
-    $this->container->get('entity_type.manager')
-      ->getStorage('google_tag_container')
-      ->resetCache();
-
-    $page = [];
-    $renderer = $this->container->get('main_content_renderer.html');
-    $renderer->invokePageAttachmentHooks($page);
-    self::assertSame(['GTM-XXXXXX', 'GTM-YYYYYY'], $page['#attached']['drupalSettings']['gtm']['tagIds']);
-    self::assertSame('G-XXXXXX', $page['#attached']['drupalSettings']['gtag']['tagId']);
-    self::assertSame(['AW-XXXXXX'], $page['#attached']['drupalSettings']['gtag']['otherIds']);
-
-    $page = [];
-    $renderer->buildPageTopAndBottom($page);
-    self::assertEquals(
-      Url::fromUri('https://www.googletagmanager.com/ns.html', ['query' => ['id' => 'GTM-XXXXXX']]),
-      $page['page_top']['google_tag_gtm_iframe'][0]['#url']
-    );
   }
 
 }

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\redirect_404\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
@@ -40,7 +38,7 @@ class Fix404RedirectCronJobTest extends KernelTestBase {
   /**
    * Tests adding and deleting rows from redirect_404 table.
    */
-  public function testRedirect404CronJob() {
+  function testRedirect404CronJob() {
     // Set the limit to 3 just for the test.
     \Drupal::configFactory()
       ->getEditable('redirect_404.settings')
@@ -80,7 +78,7 @@ class Fix404RedirectCronJobTest extends KernelTestBase {
   /**
    * Tests adding rows and deleting one row from redirect_404 table.
    */
-  public function testRedirect404CronJobKeepAllButOne() {
+  function testRedirect404CronJobKeepAllButOne() {
     // Set the limit to 5 just for the test.
     \Drupal::configFactory()
       ->getEditable('redirect_404.settings')
@@ -120,7 +118,7 @@ class Fix404RedirectCronJobTest extends KernelTestBase {
   /**
    * Tests resetting the daily counts in the redirect_404 table.
    */
-  public function testRedirect404CronJobDailyCountReset() {
+  function testRedirect404CronJobDailyCountReset() {
     // Check that there are 2 rows with daily count value bigger than 0.
     $result = \Drupal::database()->query("SELECT COUNT(*) FROM {redirect_404} WHERE daily_count > 0")
       ->fetchField();
@@ -223,5 +221,4 @@ class Fix404RedirectCronJobTest extends KernelTestBase {
       $this->assertEquals($path, $result);
     }
   }
-
 }

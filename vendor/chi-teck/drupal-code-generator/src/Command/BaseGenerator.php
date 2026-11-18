@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace DrupalCodeGenerator\Command;
 
@@ -288,7 +286,7 @@ abstract class BaseGenerator extends Command implements LabelInterface, IOAwareI
       type: module
       description: '@todo Add description.'
       package: '@todo Add package'
-      core_version_requirement: ^10 || ^11
+      core_version_requirement: ^10
 
       TWIG;
     $assets->addFile('{machine_name}.info.yml')

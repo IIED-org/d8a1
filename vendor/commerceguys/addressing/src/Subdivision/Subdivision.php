@@ -13,30 +13,82 @@ use Doctrine\Common\Collections\Collection;
  */
 class Subdivision
 {
-    protected ?Subdivision $parent;
+    /**
+     * The parent.
+     *
+     * @var Subdivision|null
+     */
+    protected $parent;
 
-    protected string $countryCode;
+    /**
+     * The country code.
+     *
+     * @var string
+     */
+    protected $countryCode;
 
-    protected string $id;
+    /**
+     * The subdivision code.
+     *
+     * @var string
+     */
+    protected $code;
 
-    protected string $code;
+    /**
+     * The local subdivision code.
+     *
+     * @var string|null
+     */
+    protected $localCode;
 
-    protected ?string $localCode = null;
+    /**
+     * The subdivision name.
+     *
+     * @var string
+     */
+    protected $name;
 
-    protected string $name;
+    /**
+     * The local subdivision name.
+     *
+     * @var string|null
+     */
+    protected $localName;
 
-    protected ?string $localName = null;
+    /**
+     * The subdivision iso code.
+     *
+     * @var string|null
+     */
+    protected $isoCode;
 
-    protected ?string $postalCodePattern = null;
+    /**
+     * The postal code pattern.
+     *
+     * @var string|null
+     */
+    protected $postalCodePattern;
+
+    /**
+     * The postal code pattern type.
+     *
+     * @var string
+     */
+    protected $postalCodePatternType;
 
     /**
      * The children.
      *
      * @param Subdivision[]
      */
-    protected Collection $children;
+    protected $children;
 
-    protected ?string $locale = null;
+    /**
+     * The locale.
+     *
+     * @var string|null
+     */
+    protected $locale;
 
     /**
      * Creates a new Subdivision instance.
@@ -47,24 +99,36 @@ class Subdivision
     {
         // Validate the presence of required properties.
         $requiredProperties = [
-            'country_code', 'id', 'code', 'name',
+            'country_code', 'code', 'name',
         ];
         foreach ($requiredProperties as $requiredProperty) {
             if (empty($definition[$requiredProperty])) {
                 throw new \InvalidArgumentException(sprintf('Missing required property %s.', $requiredProperty));
             }
         }
+        // Add defaults for properties that are allowed to be empty.
+        $definition += [
+            'parent' => null,
+            'locale' => null,
+            'local_code' => null,
+            'local_name' => null,
+            'iso_code' => null,
+            'postal_code_pattern' => null,
+            'postal_code_pattern_type' => PatternType::getDefault(),
+            'children' => new ArrayCollection(),
+        ];
 
-        $this->parent = $definition['parent'] ?? null;
+        $this->parent = $definition['parent'];
         $this->countryCode = $definition['country_code'];
-        $this->id = $definition['id'];
-        $this->locale = $definition['locale'] ?? null;
+        $this->locale = $definition['locale'];
         $this->code = $definition['code'];
-        $this->localCode = $definition['local_code'] ?? null;
+        $this->localCode = $definition['local_code'];
         $this->name = $definition['name'];
-        $this->localName = $definition['local_name'] ?? null;
-        $this->postalCodePattern = $definition['postal_code_pattern'] ?? null;
-        $this->children = $definition['children'] ?? new ArrayCollection();
+        $this->localName = $definition['local_name'];
+        $this->isoCode = $definition['iso_code'];
+        $this->postalCodePattern = $definition['postal_code_pattern'];
+        $this->postalCodePatternType = $definition['postal_code_pattern_type'];
+        $this->children = $definition['children'];
     }
 
     /**
@@ -91,20 +155,6 @@ class Subdivision
     }
 
     /**
-     * Gets the subdivision id.
-     *
-     * This is an ISO code when available (e.g. "CA" for the US state of California),
-     * in which case it consists of up to 3 alphanumeric characters.
-     * Otherwise it matches the subdivision name and could be of any length.
-     *
-     * @return string The subdivision id.
-     */
-    public function getId(): string
-    {
-        return $this->id;
-    }
-
-    /**
      * Gets the subdivision locale.
      *
      * Used for selecting local subdivision codes/names. Only defined if the
@@ -124,7 +174,10 @@ class Subdivision
      * Could be an abbreviation, such as "CA" for California, or a full string
      * such as "Grand Cayman".
      *
+     * This is the value that is stored on the address object.
      * Guaranteed to be in latin script.
+     *
+     * @return string The subdivision code.
      */
     public function getCode(): string
     {
@@ -171,10 +224,25 @@ class Subdivision
     }
 
     /**
+     * Gets the subdivision ISO 3166-2 code.
+     *
+     * Only defined for administrative areas. Examples: 'US-CA', 'JP-01'.
+     *
+     * @return string|null The subdivision ISO 3166-2 code.
+     */
+    public function getIsoCode(): ?string
+    {
+        return $this->isoCode;
+    }
+
+    /**
      * Gets the postal code pattern.
      *
      * This is a regular expression pattern used to validate postal codes.
-     * Used instead of the address-format-level pattern when defined.
+     *
+     * @return string|null The postal code pattern.
+     *
+     * @deprecated since commerceguys/addressing 1.1.0.
      */
     public function getPostalCodePattern(): ?string
     {
@@ -182,9 +250,21 @@ class Subdivision
     }
 
     /**
+     * Gets the postal code pattern type.
+     *
+     * @return string|null The postal code pattern type.
+     *
+     * @deprecated since commerceguys/addressing 1.1.0.
+     */
+    public function getPostalCodePatternType(): ?string
+    {
+        return $this->postalCodePatternType;
+    }
+
+    /**
      * Gets the subdivision children.
      *
-     * @return Collection The subdivision children.
+     * @return ArrayCollection|LazySubdivisionCollection The subdivision children.
      */
     public function getChildren(): Collection
     {
@@ -193,6 +273,8 @@ class Subdivision
 
     /**
      * Checks whether the subdivision has children.
+     *
+     * @return bool TRUE if the subdivision has children, FALSE otherwise.
      */
     public function hasChildren(): bool
     {

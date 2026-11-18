@@ -116,11 +116,9 @@ interface PurgersServiceInterface extends ServiceInterface, ModifiableServiceInt
    * @throws \Drupal\purge\Plugin\Purge\Purger\Exception\DiagnosticsException
    *   Thrown by ::invalidate after a diagnostic of type SEVERITY_ERROR has
    *   been detected, which is established after calling
-   *   DiagnosticsServiceInterface::filterErrors. Errors by definition force
-   *   all cache invalidation to be prevented, until the user resolved the
-   *   issue. Checks bound to specific purger plugins are the exception: as
-   *   long as unblocked purgers remain, invalidation continues for those and
-   *   objects are marked FAILED for the blocked purgers instead.
+   *   DiagnosticsServiceInterface::::isSystemOnFire. Errors by definition
+   *   force all cache invalidation to be prevented, until the user resolved
+   *   the issue.
    *
    * @throws \Drupal\purge\Plugin\Purge\Purger\Exception\CapacityException
    *   Thrown when the capacity tracker's global resource limit returns zero or

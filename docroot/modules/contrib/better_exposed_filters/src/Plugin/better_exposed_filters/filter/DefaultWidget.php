@@ -2,22 +2,20 @@
 
 namespace Drupal\better_exposed_filters\Plugin\better_exposed_filters\filter;
 
-use Drupal\better_exposed_filters\Attribute\FiltersWidget;
-use Drupal\Core\StringTranslation\TranslatableMarkup;
-
 /**
  * Default widget implementation.
+ *
+ * @BetterExposedFiltersFilterWidget(
+ *   id = "default",
+ *   label = @Translation("Default"),
+ * )
  */
-#[FiltersWidget(
-  id: 'default',
-  title: new TranslatableMarkup('Default'),
-)]
 class DefaultWidget extends FilterWidgetBase {
 
   /**
    * {@inheritdoc}
    */
-  public static function isApplicable(mixed $filter = NULL, array $filter_options = []): bool {
+  public static function isApplicable($filter = NULL, array $filter_options = []) {
     return TRUE;
   }
 

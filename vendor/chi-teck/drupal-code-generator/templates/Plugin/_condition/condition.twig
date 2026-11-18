@@ -1,13 +1,9 @@
 {% import '@lib/di.twig' as di %}
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Drupal\{{ machine_name }}\Plugin\Condition;
 
-{% apply sort_namespaces %}
-use Drupal\Core\Condition\Attribute\Condition;
-use Drupal\Core\StringTranslation\TranslatableMarkup;
+{% sort %}
 use Drupal\Core\Condition\ConditionPluginBase;
 use Drupal\Core\Form\FormStateInterface;
   {% if services %}
@@ -15,15 +11,16 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
   {% endif %}
-{% endapply %}
+{% endsort %}
 
 /**
  * Provides a '{{ plugin_label }}' condition.
+ *
+ * @Condition(
+ *   id = "{{ plugin_id }}",
+ *   label = @Translation("{{ plugin_label }}"),
+ * )
  */
-#[Condition(
-  id: '{{ plugin_id }}',
-  label: new TranslatableMarkup('{{ plugin_label }}'),
-)]
 final class {{ class }} extends ConditionPluginBase {% if services %}implements ContainerFactoryPluginInterface {% endif %}{
 
 {% if services %}

@@ -7,16 +7,12 @@ namespace Drupal\Tests\google_tag\Kernel\Form;
 use Drupal\Core\Url;
 use Drupal\Tests\google_tag\Kernel\GoogleTagTestCase;
 use Drupal\Tests\user\Traits\UserCreationTrait;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @coversDefaultClass \Drupal\google_tag\Form\SettingsForm
  * @group google_tag
  */
-#[Group('google_tag')]
-#[RunTestsInSeparateProcesses]
 final class SettingsFormTest extends GoogleTagTestCase {
 
   use UserCreationTrait;

@@ -8,7 +8,7 @@ use Drupal\backup_migrate\Core\Plugin\FileProcessorTrait;
 use Drupal\backup_migrate\Core\Plugin\PluginBase;
 
 /**
- * Provides the database source class.
+ *
  *
  * @package Drupal\backup_migrate\Core\Source
  */
@@ -19,10 +19,8 @@ abstract class DatabaseSource extends PluginBase implements DatabaseSourceInterf
    * Get a definition for user-configurable settings.
    *
    * @param array $params
-   *   The message parameters.
    *
    * @return array
-   *   A render or configuration array.
    */
   public function configSchema(array $params = []) {
     $schema = [];
@@ -60,7 +58,6 @@ abstract class DatabaseSource extends PluginBase implements DatabaseSourceInterf
    * Get the default values for the plugin.
    *
    * @return \Drupal\backup_migrate\Core\Config\Config
-   *   The return value.
    */
   public function configDefaults() {
     return new Config([
@@ -87,7 +84,6 @@ abstract class DatabaseSource extends PluginBase implements DatabaseSourceInterf
    * Each entry must have at least a 'name' key containing the table name.
    *
    * @return array
-   *   A render or configuration array.
    */
   public function getTables() {
     try {
@@ -103,7 +99,6 @@ abstract class DatabaseSource extends PluginBase implements DatabaseSourceInterf
    * Get the list of tables from this db.
    *
    * @return array
-   *   A render or configuration array.
    */
   protected function getRawTableNames() {
     $out = [];
@@ -117,7 +112,6 @@ abstract class DatabaseSource extends PluginBase implements DatabaseSourceInterf
    * Internal overridable function to actually generate table info.
    *
    * @return array
-   *   A render or configuration array.
    */
   abstract protected function getRawTables();
 

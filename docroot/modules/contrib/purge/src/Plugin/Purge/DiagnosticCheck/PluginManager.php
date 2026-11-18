@@ -5,7 +5,6 @@ namespace Drupal\purge\Plugin\Purge\DiagnosticCheck;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
-use Drupal\purge\Attribute\PurgeDiagnosticCheck;
 
 /**
  * The diagnostic checks plugin manager.
@@ -28,10 +27,8 @@ class PluginManager extends DefaultPluginManager {
       'Plugin/Purge/DiagnosticCheck',
       $namespaces,
       $module_handler,
-      DiagnosticCheckInterface::class,
-      PurgeDiagnosticCheck::class,
-      'Drupal\purge\Annotation\PurgeDiagnosticCheck',
-    );
+      'Drupal\purge\Plugin\Purge\DiagnosticCheck\DiagnosticCheckInterface',
+      'Drupal\purge\Annotation\PurgeDiagnosticCheck');
     $this->alterInfo('purge_diagnostic');
     $this->setCacheBackend($cache_backend, 'purge_diagnosticcheck_plugins');
   }

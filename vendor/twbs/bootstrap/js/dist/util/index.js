@@ -1,6 +1,6 @@
 /*!
-  * Bootstrap index.js v5.3.9 (https://getbootstrap.com/)
-  * Copyright 2011-2026 The Bootstrap Authors (https://github.com/twbs/bootstrap/graphs/contributors)
+  * Bootstrap index.js v5.3.2 (https://getbootstrap.com/)
+  * Copyright 2011-2023 The Bootstrap Authors (https://github.com/twbs/bootstrap/graphs/contributors)
   * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
   */
 (function (global, factory) {
@@ -21,11 +21,9 @@
   const TRANSITION_END = 'transitionend';
 
   /**
-   * Properly escapes ID selectors to handle special characters in IDs
-   * (e.g. forward slashes, periods) so that they work with `document.querySelector`.
-   *
-   * @param {string} selector the selector to escape
-   * @returns {string} the escaped selector
+   * Properly escape IDs selectors to handle weird IDs
+   * @param {string} selector
+   * @returns {string}
    */
   const parseSelector = selector => {
     if (selector && window.CSS && window.CSS.escape) {
@@ -103,7 +101,7 @@
       return false;
     }
     const elementIsVisible = getComputedStyle(element).getPropertyValue('visibility') === 'visible';
-    // Handle `details` element as its content may falsely appear visible when it is closed
+    // Handle `details` element as its content may falsie appear visible when it is closed
     const closedDetails = element.closest('details:not([open])');
     if (!closedDetails) {
       return elementIsVisible;
@@ -154,16 +152,17 @@
   const noop = () => {};
 
   /**
-   * Trick to restart an element's animation by forcing a reflow.
+   * Trick to restart an element's animation
    *
-   * @param {HTMLElement} element the element whose animation should be restarted
-   * @returns {void}
+   * @param {HTMLElement} element
+   * @return void
    *
-   * @see https://www.harrytheo.com/blog/2021/02/restart-a-css-animation-with-javascript/#restarting-a-css-animation
+   * @see https://www.charistheo.io/blog/2021/02/restart-a-css-animation-with-javascript/#restarting-a-css-animation
    */
   const reflow = element => {
     element.offsetHeight; // eslint-disable-line no-unused-expressions
   };
+
   const getjQuery = () => {
     if (window.jQuery && !document.body.hasAttribute('data-bs-no-jquery')) {
       return window.jQuery;
@@ -204,7 +203,7 @@
     });
   };
   const execute = (possibleCallback, args = [], defaultValue = possibleCallback) => {
-    return typeof possibleCallback === 'function' ? possibleCallback.call(...args) : defaultValue;
+    return typeof possibleCallback === 'function' ? possibleCallback(...args) : defaultValue;
   };
   const executeAfterTransition = (callback, transitionElement, waitForTransition = true) => {
     if (!waitForTransition) {
@@ -235,11 +234,11 @@
   /**
    * Return the previous/next element of a list.
    *
-   * @param {Element[]} list the list of elements to traverse
-   * @param {Element} activeElement the currently active element
-   * @param {boolean} shouldGetNext whether to return the next element (`true`) or the previous one (`false`)
-   * @param {boolean} isCycleAllowed whether to cycle back to the opposite end of the list when reaching the boundary
-   * @returns {Element} the appropriate previous/next element from the list
+   * @param {array} list    The list of elements
+   * @param activeElement   The active element
+   * @param shouldGetNext   Choose to get next or previous element
+   * @param isCycleAllowed
+   * @return {Element|elem} The proper element
    */
   const getNextActiveElement = (list, activeElement, shouldGetNext, isCycleAllowed) => {
     const listLength = list.length;

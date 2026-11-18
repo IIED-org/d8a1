@@ -34,13 +34,6 @@ class Block extends CoreBlock {
   protected $request;
 
   /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
@@ -50,7 +43,6 @@ class Block extends CoreBlock {
     $instance = parent::create($container, $configuration, $plugin_id, $plugin_definition);
     $instance->filterManager = $container->get('plugin.manager.views.filter');
     $instance->request = $container->get('request_stack')->getCurrentRequest();
-    $instance->entityTypeManager = $container->get('entity_type.manager');
 
     return $instance;
   }
@@ -313,15 +305,16 @@ class Block extends CoreBlock {
             if ($form_field_present && $block_config_present) {
 
               if ($form_field_type == 'select') {
-                // Single-value selects get default value set to 'All'
-                // in buildExposedForm(), so set their defaults manually.
+                // Single-value select elements get their default value set to
+                // 'All' in buildExposedForm(), when that option is added, so set
+                // thir defaults manually.
                 $form['exposed'][$filter_key][$id]['#default_value'] = $block_configuration['exposed'][$filter_key]['value'] ?? NULL;
               }
 
-              elseif ($form_field_type == 'entity_autocomplete' && $filter_plugin_id == 'taxonomy_index_tid') {
+              else if ($form_field_type =='entity_autocomplete' && $filter_plugin_id == 'taxonomy_index_tid') {
                 // Entity reference autocomplete fields need their values
                 // converted back to a string for the textfield input.
-                $terms = $this->entityTypeManager->getStorage('taxonomy_term')->loadMultiple($block_configuration['exposed'][$filter_key]['value']);
+                $terms = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->loadMultiple($block_configuration['exposed'][$filter_key]['value']);
                 $form['exposed'][$filter_key][$id]['#default_value'] = EntityAutocomplete::getEntityLabels($terms);
               }
             }
@@ -974,3 +967,4 @@ class Block extends CoreBlock {
   }
 
 }
+

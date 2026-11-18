@@ -2,8 +2,6 @@
 
 namespace Drupal\Tests\geofield\Unit;
 
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\DataProvider;
 use Drupal\geofield\DmsConverter;
 use Drupal\geofield\DmsPoint;
 use Drupal\Tests\UnitTestCase;
@@ -12,7 +10,6 @@ use Drupal\Tests\UnitTestCase;
  * @coversDefaultClass \Drupal\geofield\DmsConverter
  * @group geofield
  */
-#[Group('geofield')]
 class DmsConverterTest extends UnitTestCase {
 
   /**
@@ -21,7 +18,6 @@ class DmsConverterTest extends UnitTestCase {
    *
    * @dataProvider dataProvider
    */
-  #[DataProvider('dataProvider')]
   public function testConverter(DmsPoint $dms, $decimal) {
     $result = DmsConverter::dmsToDecimal($dms);
     $this->assertEquals($decimal, $result);
@@ -36,7 +32,7 @@ class DmsConverterTest extends UnitTestCase {
    * @return array
    *   A list of equivalent DMS/Decimal coordinates.
    */
-  public static function dataProvider(): array {
+  public function dataProvider() {
     return [
       'Simple' => [
         new DmsPoint([

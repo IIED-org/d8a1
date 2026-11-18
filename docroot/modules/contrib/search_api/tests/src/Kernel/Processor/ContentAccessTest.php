@@ -6,18 +6,15 @@ use Drupal\comment\CommentInterface;
 use Drupal\comment\Entity\Comment;
 use Drupal\comment\Entity\CommentType;
 use Drupal\comment\Tests\CommentTestTrait;
-use Drupal\Component\Utility\DeprecationHelper;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Session\AnonymousUserSession;
 use Drupal\Core\TypedData\DataDefinitionInterface;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
-use Drupal\node\NodeGrantsHelper;
 use Drupal\node\NodeInterface;
 use Drupal\Tests\search_api\Kernel\ResultsTrait;
 use Drupal\user\Entity\Role;
 use Drupal\user\Entity\User;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the "Content access" processor.
@@ -26,18 +23,10 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  *
  * @see \Drupal\search_api\Plugin\search_api\processor\ContentAccess
  */
-#[RunTestsInSeparateProcesses]
 class ContentAccessTest extends ProcessorTestBase {
 
   use CommentTestTrait;
   use ResultsTrait;
-
-  /**
-   * {@inheritdoc}
-   */
-  protected static $modules = [
-    'filter',
-  ];
 
   /**
    * The nodes created for testing.
@@ -147,11 +136,8 @@ class ContentAccessTest extends ProcessorTestBase {
    * Tests searching when content is accessible to all.
    */
   public function testQueryAccessAll() {
-    // @todo Use Role::grantPermissions() once we depend on Drupal 11.5.
-    Role::load(Role::ANONYMOUS_ID)
-      ->grantPermission('access content')
-      ->grantPermission('access comments')
-      ->save();
+    $permissions = ['access content', 'access comments'];
+    user_role_grant_permissions('anonymous', $permissions);
     $this->index->reindex();
     $this->indexItems();
     $this->assertEquals(5, $this->index->getTrackerInstance()->getIndexedItemsCount(), '5 items indexed, as expected.');
@@ -173,7 +159,7 @@ class ContentAccessTest extends ProcessorTestBase {
    * Tests searching when only comments are accessible.
    */
   public function testQueryAccessComments() {
-    Role::load(Role::ANONYMOUS_ID)->grantPermission('access comments')->save();
+    user_role_grant_permissions('anonymous', ['access comments']);
     $this->index->reindex();
     $this->indexItems();
     $this->assertEquals(5, $this->index->getTrackerInstance()->getIndexedItemsCount(), '5 items indexed, as expected.');
@@ -295,7 +281,7 @@ class ContentAccessTest extends ProcessorTestBase {
 
     // After granting the "view any unpublished content", the same query should
     // return all three nodes.
-    Role::load('role')->grantPermission('view any unpublished content')->save();
+    user_role_grant_permissions('role', ['view any unpublished content']);
     $result = $query->getOriginalQuery()->execute();
     $this->assertEquals(3, $result->getResultCount());
   }
@@ -315,11 +301,7 @@ class ContentAccessTest extends ProcessorTestBase {
       $grants_storage->write($node, $grants);
     }
 
-    // @todo Use Role::grantPermissions() once we depend on Drupal 11.5.
-    Role::load(Role::ANONYMOUS_ID)
-      ->grantPermission('access content')
-      ->grantPermission('access comments')
-      ->save();
+    user_role_grant_permissions('anonymous', ['access content', 'access comments']);
     $items = [];
     foreach ($this->comments as $comment) {
       $items[] = [
@@ -343,13 +325,7 @@ class ContentAccessTest extends ProcessorTestBase {
     }
 
     // Verify that the anonymous user has exactly that grant.
-    $account = new AnonymousUserSession();
-    $grants = DeprecationHelper::backwardsCompatibleCall(
-      \Drupal::VERSION,
-      '11.4.0',
-      fn () => \Drupal::service(NodeGrantsHelper::class)->nodeAccessGrants('view', $account),
-      fn () => node_access_grants('view', $account),
-    );
+    $grants = node_access_grants('view', new AnonymousUserSession());
     $this->assertEquals(['all' => [0]], $grants);
   }
 
@@ -448,11 +424,8 @@ class ContentAccessTest extends ProcessorTestBase {
    */
   protected function createUser(array $permissions) {
     $role = Role::create(['id' => 'role', 'label' => 'Role test']);
-    // @todo Use Role::grantPermissions() once we depend on Drupal 11.5.
-    foreach ($permissions as $permission) {
-      $role->grantPermission($permission);
-    }
     $role->save();
+    user_role_grant_permissions($role->id(), $permissions);
 
     $values = [
       'uid' => 2,

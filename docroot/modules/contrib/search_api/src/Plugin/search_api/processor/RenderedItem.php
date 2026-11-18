@@ -9,10 +9,8 @@ use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Session\AccountSwitcherInterface;
 use Drupal\Core\Session\UserSession;
-use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
 use Drupal\Core\Utility\Error;
-use Drupal\search_api\Attribute\SearchApiProcessor;
 use Drupal\search_api\Datasource\DatasourceInterface;
 use Drupal\search_api\Item\ItemInterface;
 use Drupal\search_api\LoggerTrait;
@@ -27,17 +25,18 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Adds an additional field containing the rendered item.
  *
  * @see \Drupal\search_api\Plugin\search_api\processor\Property\RenderedItemProperty
+ *
+ * @SearchApiProcessor(
+ *   id = "rendered_item",
+ *   label = @Translation("Rendered item"),
+ *   description = @Translation("Adds an additional field containing the rendered item as it would look when viewed."),
+ *   stages = {
+ *     "add_properties" = 0,
+ *   },
+ *   locked = true,
+ *   hidden = true,
+ * )
  */
-#[SearchApiProcessor(
-  id: 'rendered_item',
-  label: new TranslatableMarkup('Rendered item'),
-  description: new TranslatableMarkup('Adds an additional field containing the rendered item as it would look when viewed.'),
-  stages: [
-    'add_properties' => 0,
-  ],
-  locked: TRUE,
-  hidden: TRUE,
-)]
 class RenderedItem extends ProcessorPluginBase {
 
   use LoggerTrait;
@@ -171,7 +170,7 @@ class RenderedItem extends ProcessorPluginBase {
    *
    * @return $this
    */
-  public function setPostRequestIndexing(PostRequestIndexingInterface $post_request_indexing): static {
+  public function setPostRequestIndexing(PostRequestIndexingInterface $post_request_indexing,): static {
     $this->postRequestIndexing = $post_request_indexing;
     return $this;
   }
@@ -203,7 +202,7 @@ class RenderedItem extends ProcessorPluginBase {
    */
   public function addFieldValues(ItemInterface $item) {
     // Switch to the default theme in case the admin theme (or any other theme)
-    // is active.
+    // is enabled.
     $previous_theme = $this->getThemeSwitcher()->switchToDefault();
 
     // Fields for which some view mode config is missing.
@@ -225,10 +224,7 @@ class RenderedItem extends ProcessorPluginBase {
       // Change the current user to our dummy implementation to ensure we are
       // using the configured roles.
       $this->getAccountSwitcher()
-        ->switchTo(new UserSession([
-          'roles' => array_values($roles),
-          'search_api_processor' => 'rendered_item',
-        ]));
+        ->switchTo(new UserSession(['roles' => array_values($roles)]));
 
       $datasource_id = $item->getDatasourceId();
       $datasource = $item->getDatasource();

@@ -10,15 +10,14 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Routing\RouteProviderInterface;
 use Drupal\Core\Url;
 use Drush\Attributes as CLI;
-use Drush\Commands\AutowireTrait;
+use Drush\Commands\core\DocsCommands;
 use Drush\Commands\DrushCommands;
 use Drush\Drupal\DrupalUtil;
 use Drush\Utils\StringUtils;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 final class DrupalCommands extends DrushCommands
 {
-    use AutowireTrait;
-
     const CRON = 'core:cron';
     const REQUIREMENTS = 'core:requirements';
     const ROUTE = 'core:route';
@@ -38,24 +37,30 @@ final class DrupalCommands extends DrushCommands
         return $this->routeProvider;
     }
 
-    public function __construct(
-        protected CronInterface $cron,
-        protected ModuleHandlerInterface $moduleHandler,
-        protected RouteProviderInterface $routeProvider
-    ) {
-        parent::__construct();
+    public function __construct(protected CronInterface $cron, protected ModuleHandlerInterface $moduleHandler, protected RouteProviderInterface $routeProvider)
+    {
+    }
+
+    public static function create(ContainerInterface $container): self
+    {
+        $commandHandler = new static(
+            $container->get('cron'),
+            $container->get('module_handler'),
+            $container->get('router.route_provider')
+        );
+
+        return $commandHandler;
     }
 
     /**
      * Run all cron hooks in all active modules for specified site.
-     *
-     * Consider using `drush maint:status && drush core:cron` to avoid cache poisoning during maintenance mode.
      */
     #[CLI\Command(name: self::CRON, aliases: ['cron', 'core-cron'])]
+    #[CLI\Usage(name: 'drush maint:status && drush core:cron', description: 'Run cron unless maintenance mode is enabled')]
     #[CLI\Topics(topics: [DocsCommands::CRON])]
-    public function cron(): bool
+    public function cron(): void
     {
-        return $this->getCron()->run();
+        $this->getCron()->run();
     }
 
     /**
@@ -87,18 +92,15 @@ final class DrupalCommands extends DrushCommands
 
         drupal_load_updates();
 
-        $requirements = $this->moduleHandler->invokeAll('requirements', ['runtime']);
-        $runtime_requirements = $this->moduleHandler->invokeAll('runtime_requirements');
-        $requirements = array_merge($requirements, $runtime_requirements);
-        $this->moduleHandler->alter('requirements', $requirements);
-        $this->moduleHandler->alter('runtime_requirements', $requirements);
+        $requirements = $this->getModuleHandler()->invokeAll('requirements', ['runtime']);
+        $this->getModuleHandler()->alter('requirements', $requirements);
         // If a module uses "$requirements[] = " instead of
         // "$requirements['label'] = ", then build a label from
         // the title.
         foreach ($requirements as $key => $info) {
             if (is_numeric($key)) {
                 unset($requirements[$key]);
-                $new_key = strtolower(str_replace(' ', '_', (string) $info['title']));
+                $new_key = strtolower(str_replace(' ', '_', $info['title']));
                 $requirements[$new_key] = $info;
             }
         }
@@ -110,24 +112,19 @@ final class DrupalCommands extends DrushCommands
 
         $min_severity = $options['severity'];
         foreach ($requirements as $key => $info) {
-            // Adjust once Drupal 11.1- is unsupported.
             $severity = array_key_exists('severity', $info) ? $info['severity'] : -1;
-            if (is_object($severity)) {
-                $severity = $severity->value;
-            }
-
             $rows[$key] = [
-                'title' => $this->styleRow((string) $info['title'], $options['format'], $severity),
-                'value' => $this->styleRow(DrupalUtil::drushRender($info['value'] ?? ''), $options['format'], $severity),
-                'description' => $this->styleRow(DrupalUtil::drushRender($info['description'] ?? ''), $options['format'], $severity),
+                'title' => self::styleRow((string) $info['title'], $options['format'], $severity),
+                'value' => self::styleRow(DrupalUtil::drushRender($info['value'] ?? ''), $options['format'], $severity),
+                'description' => self::styleRow(DrupalUtil::drushRender($info['description'] ?? ''), $options['format'], $severity),
                 'sid' => $severity,
-                'severity' => $this->styleRow(@$severities[$severity], $options['format'], $severity)
+                'severity' => self::styleRow(@$severities[$severity], $options['format'], $severity)
             ];
             if ($severity < $min_severity) {
                 unset($rows[$key]);
             }
         }
-        return new RowsOfFields($rows ?? []);
+        return new RowsOfFields($rows);
     }
 
     /**
@@ -180,7 +177,7 @@ final class DrupalCommands extends DrushCommands
         return $items;
     }
 
-    private function styleRow($content, $format, $severity): ?string
+    private static function styleRow($content, $format, $severity): ?string
     {
         if (
             !in_array($format, [

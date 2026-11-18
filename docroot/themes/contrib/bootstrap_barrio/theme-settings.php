@@ -6,8 +6,7 @@
  *
  * Provides theme settings for Bootstrap Barrio-based themes.
  */
-use Drupal\Component\Utility\DeprecationHelper;
-use Drupal\Core\Extension\ThemeSettingsProvider;
+
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Drupal\Core\Link;
@@ -20,8 +19,8 @@ function bootstrap_barrio_form_system_theme_settings_alter(&$form, FormStateInte
 
   $color_config = [
     'colors' => [
-      'bootstrap_barrio_base_primary_color' => 'Primary color',
-      'bootstrap_barrio_base_secondary_color' => 'Secondary color',
+      'bootstrap_barrio_base_primary_color' => 'Primary base color',
+      'bootstrap_barrio_base_secondary_color' => 'Secondary base color',
     ],
     'schemes' => [
       'default' => [
@@ -103,7 +102,7 @@ function bootstrap_barrio_form_system_theme_settings_alter(&$form, FormStateInte
     $form['bootstrap_barrio_library'] = [
       '#type' => 'select',
       '#title' => t('Load library'),
-      '#default_value' => DeprecationHelper::backwardsCompatibleCall(\Drupal::VERSION, '11.3.0', fn() => \Drupal::service(ThemeSettingsProvider::class)->getSetting('bootstrap_barrio_library'), fn() => theme_get_setting('bootstrap_barrio_library')),
+      '#default_value' => theme_get_setting('bootstrap_barrio_library'),
       '#options' => [
         'cdn' => t('CDN'),
         'development' => t('Local non-minimized (development)'),
@@ -118,7 +117,7 @@ function bootstrap_barrio_form_system_theme_settings_alter(&$form, FormStateInte
     $form['bootstrap_barrio_source'] = [
       '#type' => 'select',
       '#title' => t('Load library'),
-      '#default_value' => DeprecationHelper::backwardsCompatibleCall(\Drupal::VERSION, '11.3.0', fn() => \Drupal::service(ThemeSettingsProvider::class)->getSetting('bootstrap_barrio_source'), fn() => theme_get_setting('bootstrap_barrio_source')),
+      '#default_value' => theme_get_setting('bootstrap_barrio_source'),
       '#options' => [
         'bootstrap_barrio/bootstrap' => t('Local'),
         'bootstrap_barrio/bootstrap_cdn' => t('CDN'),
@@ -172,7 +171,7 @@ function bootstrap_barrio_form_system_theme_settings_alter(&$form, FormStateInte
   $form['colors']['scheme']['bootstrap_barrio_enable_color'] = [
     '#type' => 'checkbox',
     '#title' => t('Enable color Scheme'),
-    '#default_value' => DeprecationHelper::backwardsCompatibleCall(\Drupal::VERSION, '11.3.0', fn() => \Drupal::service(ThemeSettingsProvider::class)->getSetting('bootstrap_barrio_enable_color'), fn() => theme_get_setting('bootstrap_barrio_enable_color')),
+    '#default_value' => theme_get_setting('bootstrap_barrio_enable_color'),
     '#ajax' => [
       'callback' => 'colorCallback',
       'wrapper' => 'color_container',
@@ -190,7 +189,7 @@ function bootstrap_barrio_form_system_theme_settings_alter(&$form, FormStateInte
     ],
   ];
 
-  if ($form_state->getValue('bootstrap_barrio_enable_color', DeprecationHelper::backwardsCompatibleCall(\Drupal::VERSION, '11.3.0', fn() => \Drupal::service(ThemeSettingsProvider::class)->getSetting('bootstrap_barrio_enable_color'), fn() => theme_get_setting('bootstrap_barrio_enable_color')))) {
+  if ($form_state->getValue('bootstrap_barrio_enable_color', theme_get_setting('bootstrap_barrio_enable_color'))) {
     $form['colors']['scheme']['color_container']['bootstrap_barrio_color_scheme'] = [
       '#type' => 'select',
       '#title' => t('Barrio Color Scheme'),
@@ -218,7 +217,7 @@ function bootstrap_barrio_form_system_theme_settings_alter(&$form, FormStateInte
         '#size' => 10,
         '#title' => t($title),
         '#description' => t('Enter color in full hexadecimal format (#abc123).') . '<br/>' . t('Derivatives will be formed from this color.'),
-        '#default_value' => DeprecationHelper::backwardsCompatibleCall(\Drupal::VERSION, '11.3.0', fn() => \Drupal::service(ThemeSettingsProvider::class)->getSetting($key), fn() => theme_get_setting($key)),
+        '#default_value' => theme_get_setting($key),
         '#attributes' => [
           'pattern' => '^#[a-fA-F0-9]{6}',
         ],
@@ -229,8 +228,8 @@ function bootstrap_barrio_form_system_theme_settings_alter(&$form, FormStateInte
     }
     $form['colors']['scheme']['color_container']['bootstrap_barrio_body_color'] = [
       '#type' => 'select',
-      '#title' => t('Body text color'),
-      '#default_value' => DeprecationHelper::backwardsCompatibleCall(\Drupal::VERSION, '11.3.0', fn() => \Drupal::service(ThemeSettingsProvider::class)->getSetting('bootstrap_barrio_body_color'), fn() => theme_get_setting('bootstrap_barrio_body_color')) ?? 'gray-800',
+      '#title' => t('Body color'),
+      '#default_value' => theme_get_setting('bootstrap_barrio_body_color') ?? 'gray-800',
       '#options' => [
         'gray-800' => t('Dark gray'),
         'black' => t('Black'),
@@ -238,8 +237,8 @@ function bootstrap_barrio_form_system_theme_settings_alter(&$form, FormStateInte
     ];
     $form['colors']['scheme']['color_container']['bootstrap_barrio_body_bg_color'] = [
       '#type' => 'select',
-      '#title' => t('Body background color'),
-      '#default_value' => DeprecationHelper::backwardsCompatibleCall(\Drupal::VERSION, '11.3.0', fn() => \Drupal::service(ThemeSettingsProvider::class)->getSetting('bootstrap_barrio_body_bg_color'), fn() => theme_get_setting('bootstrap_barrio_body_bg_color')) ?? 'white',
+      '#title' => t('Body Background Color'),
+      '#default_value' => theme_get_setting('bootstrap_barrio_body_bg_color') ?? 'white',
       '#options' => [
         'white' => t('White'),
         'gray-200' => t('Light gray'),
@@ -248,9 +247,9 @@ function bootstrap_barrio_form_system_theme_settings_alter(&$form, FormStateInte
     $form['colors']['scheme']['color_container']['bootstrap_barrio_h1_color'] = [
       '#type' => 'select',
       '#title' => t('H1 color'),
-      '#default_value' => DeprecationHelper::backwardsCompatibleCall(\Drupal::VERSION, '11.3.0', fn() => \Drupal::service(ThemeSettingsProvider::class)->getSetting('bootstrap_barrio_h1_color'), fn() => theme_get_setting('bootstrap_barrio_h1_color')) ?? 'base',
+      '#default_value' => theme_get_setting('bootstrap_barrio_h1_color') ?? 'base',
       '#options' => [
-        'base' => t('Body text color'),
+        'base' => t('Base color'),
         'primary' => t('Primary color'),
         'secondary' => t('Secondary color'),
       ],
@@ -258,9 +257,9 @@ function bootstrap_barrio_form_system_theme_settings_alter(&$form, FormStateInte
     $form['colors']['scheme']['color_container']['bootstrap_barrio_h2_color'] = [
       '#type' => 'select',
       '#title' => t('H2 color'),
-      '#default_value' => DeprecationHelper::backwardsCompatibleCall(\Drupal::VERSION, '11.3.0', fn() => \Drupal::service(ThemeSettingsProvider::class)->getSetting('bootstrap_barrio_h2_color'), fn() => theme_get_setting('bootstrap_barrio_h2_color')) ?? 'base',
+      '#default_value' => theme_get_setting('bootstrap_barrio_h2_color') ?? 'base',
       '#options' => [
-        'base' => t('Body text color'),
+        'base' => t('Base color'),
         'primary' => t('Primary color'),
         'secondary' => t('Secondary color'),
       ],
@@ -268,9 +267,9 @@ function bootstrap_barrio_form_system_theme_settings_alter(&$form, FormStateInte
     $form['colors']['scheme']['color_container']['bootstrap_barrio_h3_color'] = [
       '#type' => 'select',
       '#title' => t('H3 color'),
-      '#default_value' => DeprecationHelper::backwardsCompatibleCall(\Drupal::VERSION, '11.3.0', fn() => \Drupal::service(ThemeSettingsProvider::class)->getSetting('bootstrap_barrio_h3_color'), fn() => theme_get_setting('bootstrap_barrio_h3_color')) ?? 'base',
+      '#default_value' => theme_get_setting('bootstrap_barrio_h3_color') ?? 'base',
       '#options' => [
-        'base' => t('Body text color'),
+        'base' => t('Base color'),
         'primary' => t('Primary color'),
         'secondary' => t('Secondary color'),
       ],
@@ -287,7 +286,7 @@ function bootstrap_barrio_form_system_theme_settings_alter(&$form, FormStateInte
   $form['colors']['alerts']['bootstrap_barrio_system_messages'] = [
     '#type' => 'select',
     '#title' => t('System messages color scheme'),
-    '#default_value' => DeprecationHelper::backwardsCompatibleCall(\Drupal::VERSION, '11.3.0', fn() => \Drupal::service(ThemeSettingsProvider::class)->getSetting('bootstrap_barrio_system_messages'), fn() => theme_get_setting('bootstrap_barrio_system_messages')),
+    '#default_value' => theme_get_setting('bootstrap_barrio_system_messages'),
     '#empty_option' => t('Default'),
     '#options' => [
       'messages_white' => t('White'),
@@ -308,7 +307,7 @@ function bootstrap_barrio_form_system_theme_settings_alter(&$form, FormStateInte
   $form['colors']['tables']['bootstrap_barrio_table_style'] = [
     '#type' => 'select',
     '#title' => t('Table cell style'),
-    '#default_value' => DeprecationHelper::backwardsCompatibleCall(\Drupal::VERSION, '11.3.0', fn() => \Drupal::service(ThemeSettingsProvider::class)->getSetting('bootstrap_barrio_table_style'), fn() => theme_get_setting('bootstrap_barrio_table_style')),
+    '#default_value' => theme_get_setting('bootstrap_barrio_table_style'),
     '#empty_option' => t('Default'),
     '#options' => [
       'table-striped' => t('Striped'),
@@ -319,12 +318,12 @@ function bootstrap_barrio_form_system_theme_settings_alter(&$form, FormStateInte
   $form['colors']['tables']['bootstrap_barrio_table_hover'] = [
     '#type' => 'checkbox',
     '#title' => t('Hover effect over table cells'),
-    '#default_value' => DeprecationHelper::backwardsCompatibleCall(\Drupal::VERSION, '11.3.0', fn() => \Drupal::service(ThemeSettingsProvider::class)->getSetting('bootstrap_barrio_table_hover'), fn() => theme_get_setting('bootstrap_barrio_table_hover')),
+    '#default_value' => theme_get_setting('bootstrap_barrio_table_hover'),
   ];
   $form['colors']['tables']['bootstrap_barrio_table_head'] = [
     '#type' => 'select',
     '#title' => t('Table header color scheme'),
-    '#default_value' => DeprecationHelper::backwardsCompatibleCall(\Drupal::VERSION, '11.3.0', fn() => \Drupal::service(ThemeSettingsProvider::class)->getSetting('bootstrap_barrio_table_head'), fn() => theme_get_setting('bootstrap_barrio_table_head')),
+    '#default_value' => theme_get_setting('bootstrap_barrio_table_head'),
     '#empty_option' => t('Default'),
     '#options' => [
       'thead-light' => t('Light'),
@@ -349,8 +348,8 @@ function bootstrap_barrio_form_system_theme_settings_alter(&$form, FormStateInte
   $form['layout']['container']['bootstrap_barrio_container'] = [
     '#type' => 'select',
     '#title' => t('Container'),
-    '#default_value' => DeprecationHelper::backwardsCompatibleCall(\Drupal::VERSION, '11.3.0', fn() => \Drupal::service(ThemeSettingsProvider::class)->getSetting('bootstrap_barrio_container'), fn() => theme_get_setting('bootstrap_barrio_container')) ??
-      (DeprecationHelper::backwardsCompatibleCall(\Drupal::VERSION, '11.3.0', fn() => \Drupal::service(ThemeSettingsProvider::class)->getSetting('bootstrap_barrio_fluid_container'), fn() => theme_get_setting('bootstrap_barrio_fluid_container')) ? 'container-fluid' : 'container'),
+    '#default_value' => theme_get_setting('bootstrap_barrio_container') ??
+      (theme_get_setting('bootstrap_barrio_fluid_container') ? 'container-fluid' : 'container'),
     '#options' => [
       'container' => t('Container'),
       'container-md' => t('Container Medium'),
@@ -374,7 +373,7 @@ function bootstrap_barrio_form_system_theme_settings_alter(&$form, FormStateInte
 */
   // List of regions.
   $theme = \Drupal::theme()->getActiveTheme()->getName();
-  $region_list = DeprecationHelper::backwardsCompatibleCall(\Drupal::VERSION, '11.4.0', fn() => \Drupal::service('theme_handler')->getTheme($theme)->listAllRegions(), fn() => system_region_list($theme));
+  $region_list = system_region_list($theme);
 
   // Only for initial setup if not defined on install.
   $nowrap = [
@@ -395,14 +394,14 @@ function bootstrap_barrio_form_system_theme_settings_alter(&$form, FormStateInte
     '#collapsed' => TRUE,
   ];
   foreach ($region_list as $name => $description) {
-    if (DeprecationHelper::backwardsCompatibleCall(\Drupal::VERSION, '11.3.0', fn() => \Drupal::service(ThemeSettingsProvider::class)->getSetting('bootstrap_barrio_region_clean_' . $name), fn() => theme_get_setting('bootstrap_barrio_region_clean_' . $name)) !== NULL) {
-      $region_clean = DeprecationHelper::backwardsCompatibleCall(\Drupal::VERSION, '11.3.0', fn() => \Drupal::service(ThemeSettingsProvider::class)->getSetting('bootstrap_barrio_region_clean_' . $name), fn() => theme_get_setting('bootstrap_barrio_region_clean_' . $name));
+    if (theme_get_setting('bootstrap_barrio_region_clean_' . $name) !== NULL) {
+      $region_clean = theme_get_setting('bootstrap_barrio_region_clean_' . $name);
     }
     else {
       $region_clean = in_array($name, $nowrap);
     }
-    if (DeprecationHelper::backwardsCompatibleCall(\Drupal::VERSION, '11.3.0', fn() => \Drupal::service(ThemeSettingsProvider::class)->getSetting('bootstrap_barrio_region_class_' . $name), fn() => theme_get_setting('bootstrap_barrio_region_class_' . $name)) !== NULL) {
-      $region_class = DeprecationHelper::backwardsCompatibleCall(\Drupal::VERSION, '11.3.0', fn() => \Drupal::service(ThemeSettingsProvider::class)->getSetting('bootstrap_barrio_region_class_' . $name), fn() => theme_get_setting('bootstrap_barrio_region_class_' . $name));
+    if (theme_get_setting('bootstrap_barrio_region_class_' . $name) !== NULL) {
+      $region_class = theme_get_setting('bootstrap_barrio_region_class_' . $name);
     }
     else {
       $region_class = $region_clean ? NULL : 'row';
@@ -422,14 +421,14 @@ function bootstrap_barrio_form_system_theme_settings_alter(&$form, FormStateInte
     $form['layout']['region'][$name]['bootstrap_barrio_region_width_' . $name] = [
       '#type' => 'checkbox',
       '#title' => t('Full width wrapper for @description region', ['@description' => $description]),
-      '#default_value' => DeprecationHelper::backwardsCompatibleCall(\Drupal::VERSION, '11.3.0', fn() => \Drupal::service(ThemeSettingsProvider::class)->getSetting('bootstrap_barrio_region_width_' . $name), fn() => theme_get_setting('bootstrap_barrio_region_width_' . $name)),
+      '#default_value' => theme_get_setting('bootstrap_barrio_region_width_' . $name),
     ];
     $form['layout']['region'][$name]['bootstrap_barrio_region_class_' . $name] = [
       '#type' => 'textfield',
       '#title' => t('Classes for @description region', ['@description' => $description]),
       '#default_value' => $region_class,
       '#size' => 40,
-      '#maxlength' => 255,
+      '#maxlength' => 40,
     ];
   }
 
@@ -443,7 +442,7 @@ function bootstrap_barrio_form_system_theme_settings_alter(&$form, FormStateInte
   $form['layout']['sidebar_position']['bootstrap_barrio_sidebar_position'] = [
     '#type' => 'select',
     '#title' => t('Sidebars position'),
-    '#default_value' => DeprecationHelper::backwardsCompatibleCall(\Drupal::VERSION, '11.3.0', fn() => \Drupal::service(ThemeSettingsProvider::class)->getSetting('bootstrap_barrio_sidebar_position'), fn() => theme_get_setting('bootstrap_barrio_sidebar_position')),
+    '#default_value' => theme_get_setting('bootstrap_barrio_sidebar_position'),
     '#options' => [
       'left' => t('Left'),
       'both' => t('Both sides'),
@@ -453,7 +452,7 @@ function bootstrap_barrio_form_system_theme_settings_alter(&$form, FormStateInte
   $form['layout']['sidebar_position']['bootstrap_barrio_content_offset'] = [
     '#type' => 'select',
     '#title' => t('Content offset'),
-    '#default_value' => DeprecationHelper::backwardsCompatibleCall(\Drupal::VERSION, '11.3.0', fn() => \Drupal::service(ThemeSettingsProvider::class)->getSetting('bootstrap_barrio_content_offset'), fn() => theme_get_setting('bootstrap_barrio_content_offset')),
+    '#default_value' => theme_get_setting('bootstrap_barrio_content_offset'),
     '#options' => [
       0 => t('None'),
       1 => t('1 cols'),
@@ -471,12 +470,12 @@ function bootstrap_barrio_form_system_theme_settings_alter(&$form, FormStateInte
   $form['layout']['sidebar_first']['bootstrap_barrio_sidebar_collapse'] = [
     '#type' => 'checkbox',
     '#title' => t('Sidebar collapse'),
-    '#default_value' => DeprecationHelper::backwardsCompatibleCall(\Drupal::VERSION, '11.3.0', fn() => \Drupal::service(ThemeSettingsProvider::class)->getSetting('bootstrap_barrio_sidebar_collapse'), fn() => theme_get_setting('bootstrap_barrio_sidebar_collapse')),
+    '#default_value' => theme_get_setting('bootstrap_barrio_sidebar_collapse'),
   ];
   $form['layout']['sidebar_first']['bootstrap_barrio_sidebar_first_width'] = [
     '#type' => 'select',
     '#title' => t('Sidebar first width'),
-    '#default_value' => DeprecationHelper::backwardsCompatibleCall(\Drupal::VERSION, '11.3.0', fn() => \Drupal::service(ThemeSettingsProvider::class)->getSetting('bootstrap_barrio_sidebar_first_width'), fn() => theme_get_setting('bootstrap_barrio_sidebar_first_width')),
+    '#default_value' => theme_get_setting('bootstrap_barrio_sidebar_first_width'),
     '#options' => [
       2 => t('2 cols'),
       3 => t('3 cols'),
@@ -486,7 +485,7 @@ function bootstrap_barrio_form_system_theme_settings_alter(&$form, FormStateInte
   $form['layout']['sidebar_first']['bootstrap_barrio_sidebar_first_offset'] = [
     '#type' => 'select',
     '#title' => t('Sidebar first offset'),
-    '#default_value' => DeprecationHelper::backwardsCompatibleCall(\Drupal::VERSION, '11.3.0', fn() => \Drupal::service(ThemeSettingsProvider::class)->getSetting('bootstrap_barrio_sidebar_first_offset'), fn() => theme_get_setting('bootstrap_barrio_sidebar_first_offset')),
+    '#default_value' => theme_get_setting('bootstrap_barrio_sidebar_first_offset'),
     '#options' => [
       0 => t('None'),
       1 => t('1 cols'),
@@ -504,7 +503,7 @@ function bootstrap_barrio_form_system_theme_settings_alter(&$form, FormStateInte
   $form['layout']['sidebar_second']['bootstrap_barrio_sidebar_second_width'] = [
     '#type' => 'select',
     '#title' => t('Sidebar second width'),
-    '#default_value' => DeprecationHelper::backwardsCompatibleCall(\Drupal::VERSION, '11.3.0', fn() => \Drupal::service(ThemeSettingsProvider::class)->getSetting('bootstrap_barrio_sidebar_second_width'), fn() => theme_get_setting('bootstrap_barrio_sidebar_second_width')),
+    '#default_value' => theme_get_setting('bootstrap_barrio_sidebar_second_width'),
     '#options' => [
       2 => t('2 cols'),
       3 => t('3 cols'),
@@ -514,7 +513,7 @@ function bootstrap_barrio_form_system_theme_settings_alter(&$form, FormStateInte
   $form['layout']['sidebar_second']['bootstrap_barrio_sidebar_second_offset'] = [
     '#type' => 'select',
     '#title' => t('Sidebar second offset'),
-    '#default_value' => DeprecationHelper::backwardsCompatibleCall(\Drupal::VERSION, '11.3.0', fn() => \Drupal::service(ThemeSettingsProvider::class)->getSetting('bootstrap_barrio_sidebar_second_offset'), fn() => theme_get_setting('bootstrap_barrio_sidebar_second_offset')),
+    '#default_value' => theme_get_setting('bootstrap_barrio_sidebar_second_offset'),
     '#options' => [
       0 => t('None'),
       1 => t('1 cols'),
@@ -539,7 +538,7 @@ function bootstrap_barrio_form_system_theme_settings_alter(&$form, FormStateInte
   $form['components']['node']['bootstrap_barrio_hide_node_label'] = [
     '#type' => 'checkbox',
     '#title' => t('Hide node label'),
-    '#default_value' => DeprecationHelper::backwardsCompatibleCall(\Drupal::VERSION, '11.3.0', fn() => \Drupal::service(ThemeSettingsProvider::class)->getSetting('bootstrap_barrio_hide_node_label'), fn() => theme_get_setting('bootstrap_barrio_hide_node_label')),
+    '#default_value' => theme_get_setting('bootstrap_barrio_hide_node_label'),
     '#description' => t('Hide node label for all display. Usefull when using f.e. Layout Builder and you want full control of your output'),
   ];
 
@@ -555,7 +554,7 @@ function bootstrap_barrio_form_system_theme_settings_alter(&$form, FormStateInte
     '#title' => t('Breadcrumb Divider'),
     '#size' => 60,
     '#maxlength' => 256,
-    '#default_value' => DeprecationHelper::backwardsCompatibleCall(\Drupal::VERSION, '11.3.0', fn() => \Drupal::service(ThemeSettingsProvider::class)->getSetting('bootstrap_barrio_breadcrumb_divider'), fn() => theme_get_setting('bootstrap_barrio_breadcrumb_divider')),
+    '#default_value' => theme_get_setting('bootstrap_barrio_breadcrumb_divider'),
     '#description' => t('Change the default breadcrumb divider. See @bootstrap_breadcrumb_link.', [
       '@bootstrap_breadcrumb_link' => Link::fromTextAndUrl('breadcrumb in the Bootstrap 5.x documentation', Url::fromUri('https://getbootstrap.com/docs/5.2/components/breadcrumb/', ['absolute' => TRUE, 'fragment' => 'outline-buttons']))->toString(),
     ]),
@@ -571,13 +570,13 @@ function bootstrap_barrio_form_system_theme_settings_alter(&$form, FormStateInte
   $form['components']['buttons']['bootstrap_barrio_button'] = [
     '#type' => 'checkbox',
     '#title' => t('Convert input submit to button element'),
-    '#default_value' => DeprecationHelper::backwardsCompatibleCall(\Drupal::VERSION, '11.3.0', fn() => \Drupal::service(ThemeSettingsProvider::class)->getSetting('bootstrap_barrio_button'), fn() => theme_get_setting('bootstrap_barrio_button')),
+    '#default_value' => theme_get_setting('bootstrap_barrio_button'),
     '#description' => t('There is a known issue where Ajax exposed filters do not if this setting is enabled.'),
   ];
   $form['components']['buttons']['bootstrap_barrio_button_type'] = [
     '#type' => 'select',
     '#title' => t('Default button type'),
-    '#default_value' => DeprecationHelper::backwardsCompatibleCall(\Drupal::VERSION, '11.3.0', fn() => \Drupal::service(ThemeSettingsProvider::class)->getSetting('bootstrap_barrio_button_type'), fn() => theme_get_setting('bootstrap_barrio_button_type')),
+    '#default_value' => theme_get_setting('bootstrap_barrio_button_type'),
     '#options' => [
       'primary' => t('Primary'),
       'secondary' => t('Secondary'),
@@ -586,7 +585,7 @@ function bootstrap_barrio_form_system_theme_settings_alter(&$form, FormStateInte
   $form['components']['buttons']['bootstrap_barrio_button_size'] = [
     '#type' => 'select',
     '#title' => t('Default button size'),
-    '#default_value' => DeprecationHelper::backwardsCompatibleCall(\Drupal::VERSION, '11.3.0', fn() => \Drupal::service(ThemeSettingsProvider::class)->getSetting('bootstrap_barrio_button_size'), fn() => theme_get_setting('bootstrap_barrio_button_size')),
+    '#default_value' => theme_get_setting('bootstrap_barrio_button_size'),
     '#empty_option' => t('Normal'),
     '#options' => [
       'btn-sm' => t('Small'),
@@ -596,7 +595,7 @@ function bootstrap_barrio_form_system_theme_settings_alter(&$form, FormStateInte
   $form['components']['buttons']['bootstrap_barrio_button_outline'] = [
     '#type' => 'checkbox',
     '#title' => t('Button with outline format'),
-    '#default_value' => DeprecationHelper::backwardsCompatibleCall(\Drupal::VERSION, '11.3.0', fn() => \Drupal::service(ThemeSettingsProvider::class)->getSetting('bootstrap_barrio_button_outline'), fn() => theme_get_setting('bootstrap_barrio_button_outline')),
+    '#default_value' => theme_get_setting('bootstrap_barrio_button_outline'),
     '#description' => t('Use <code>.btn-default-outline</code> class. See @bootstrap_outline_buttons_link.', [
       '@bootstrap_outline_buttons_link' => Link::fromTextAndUrl('Outline buttons in the Bootstrap 4 documentation', Url::fromUri('https://getbootstrap.com/docs/5.2/components/buttons/', ['absolute' => TRUE, 'fragment' => 'outline-buttons']))->toString(),
     ]),
@@ -612,7 +611,7 @@ function bootstrap_barrio_form_system_theme_settings_alter(&$form, FormStateInte
   $form['components']['images']['bootstrap_barrio_image_fluid'] = [
     '#type' => 'checkbox',
     '#title' => t('Apply img-fluid style to all content images'),
-    '#default_value' => DeprecationHelper::backwardsCompatibleCall(\Drupal::VERSION, '11.3.0', fn() => \Drupal::service(ThemeSettingsProvider::class)->getSetting('bootstrap_barrio_image_fluid'), fn() => theme_get_setting('bootstrap_barrio_image_fluid')),
+    '#default_value' => theme_get_setting('bootstrap_barrio_image_fluid'),
     '#description' => t('Adds a img-fluid style to all ".content img" elements'),
   ];
 
@@ -627,13 +626,13 @@ function bootstrap_barrio_form_system_theme_settings_alter(&$form, FormStateInte
     '#type' => 'checkbox',
     '#title' => t('Navbar width container'),
     '#description' => t('Check if navbar width will be inside container or fluid width.'),
-    '#default_value' => DeprecationHelper::backwardsCompatibleCall(\Drupal::VERSION, '11.3.0', fn() => \Drupal::service(ThemeSettingsProvider::class)->getSetting('bootstrap_barrio_navbar_container'), fn() => theme_get_setting('bootstrap_barrio_navbar_container')),
+    '#default_value' => theme_get_setting('bootstrap_barrio_navbar_container'),
   ];
   $form['components']['navbar']['bootstrap_barrio_navbar_toggle'] = [
     '#type' => 'select',
     '#title' => t('Navbar toggle size'),
     '#description' => t('Select size for navbar to collapse.'),
-    '#default_value' => DeprecationHelper::backwardsCompatibleCall(\Drupal::VERSION, '11.3.0', fn() => \Drupal::service(ThemeSettingsProvider::class)->getSetting('bootstrap_barrio_navbar_toggle'), fn() => theme_get_setting('bootstrap_barrio_navbar_toggle')),
+    '#default_value' => theme_get_setting('bootstrap_barrio_navbar_toggle'),
     '#options' => [
       'navbar-toggleable-xl' => t('Extra Large'),
       'navbar-toggleable-lg' => t('Large'),
@@ -647,13 +646,13 @@ function bootstrap_barrio_form_system_theme_settings_alter(&$form, FormStateInte
     '#type' => 'checkbox',
     '#title' => t('Navbar top is navbar'),
     '#description' => t('Check if navbar top .navbar class should be added.'),
-    '#default_value' => DeprecationHelper::backwardsCompatibleCall(\Drupal::VERSION, '11.3.0', fn() => \Drupal::service(ThemeSettingsProvider::class)->getSetting('bootstrap_barrio_navbar_top_navbar'), fn() => theme_get_setting('bootstrap_barrio_navbar_top_navbar')),
+    '#default_value' => theme_get_setting('bootstrap_barrio_navbar_top_navbar'),
   ];
   $form['components']['navbar']['bootstrap_barrio_navbar_top_position'] = [
     '#type' => 'select',
     '#title' => t('Navbar top position'),
     '#description' => t('Select your navbar top position.'),
-    '#default_value' => DeprecationHelper::backwardsCompatibleCall(\Drupal::VERSION, '11.3.0', fn() => \Drupal::service(ThemeSettingsProvider::class)->getSetting('bootstrap_barrio_navbar_top_position'), fn() => theme_get_setting('bootstrap_barrio_navbar_top_position')),
+    '#default_value' => theme_get_setting('bootstrap_barrio_navbar_top_position'),
     '#options' => [
       'fixed-top' => t('Fixed top'),
       'fixed-bottom' => t('Fixed bottom'),
@@ -664,7 +663,7 @@ function bootstrap_barrio_form_system_theme_settings_alter(&$form, FormStateInte
   $form['components']['navbar']['bootstrap_barrio_navbar_top_color'] = [
     '#type' => 'select',
     '#title' => t('Navbar top link color'),
-    '#default_value' => DeprecationHelper::backwardsCompatibleCall(\Drupal::VERSION, '11.3.0', fn() => \Drupal::service(ThemeSettingsProvider::class)->getSetting('bootstrap_barrio_navbar_top_color'), fn() => theme_get_setting('bootstrap_barrio_navbar_top_color')),
+    '#default_value' => theme_get_setting('bootstrap_barrio_navbar_top_color'),
     '#options' => [
       'navbar-light' => t('Light'),
       'navbar-dark' => t('Dark'),
@@ -674,7 +673,7 @@ function bootstrap_barrio_form_system_theme_settings_alter(&$form, FormStateInte
   $form['components']['navbar']['bootstrap_barrio_navbar_top_background'] = [
     '#type' => 'select',
     '#title' => t('Navbar top background color'),
-    '#default_value' => DeprecationHelper::backwardsCompatibleCall(\Drupal::VERSION, '11.3.0', fn() => \Drupal::service(ThemeSettingsProvider::class)->getSetting('bootstrap_barrio_navbar_top_background'), fn() => theme_get_setting('bootstrap_barrio_navbar_top_background')),
+    '#default_value' => theme_get_setting('bootstrap_barrio_navbar_top_background'),
     '#options' => [
       'bg-primary' => t('Primary'),
       'bg-light' => t('Light'),
@@ -685,7 +684,7 @@ function bootstrap_barrio_form_system_theme_settings_alter(&$form, FormStateInte
   $form['components']['navbar']['bootstrap_barrio_navbar_position'] = [
     '#type' => 'select',
     '#title' => t('Navbar position'),
-    '#default_value' => DeprecationHelper::backwardsCompatibleCall(\Drupal::VERSION, '11.3.0', fn() => \Drupal::service(ThemeSettingsProvider::class)->getSetting('bootstrap_barrio_navbar_position'), fn() => theme_get_setting('bootstrap_barrio_navbar_position')),
+    '#default_value' => theme_get_setting('bootstrap_barrio_navbar_position'),
     '#options' => [
       'fixed-top' => t('Fixed top'),
       'fixed-bottom' => t('Fixed bottom'),
@@ -696,7 +695,7 @@ function bootstrap_barrio_form_system_theme_settings_alter(&$form, FormStateInte
   $form['components']['navbar']['bootstrap_barrio_navbar_color'] = [
     '#type' => 'select',
     '#title' => t('Navbar link color'),
-    '#default_value' => DeprecationHelper::backwardsCompatibleCall(\Drupal::VERSION, '11.3.0', fn() => \Drupal::service(ThemeSettingsProvider::class)->getSetting('bootstrap_barrio_navbar_color'), fn() => theme_get_setting('bootstrap_barrio_navbar_color')),
+    '#default_value' => theme_get_setting('bootstrap_barrio_navbar_color'),
     '#options' => [
       'navbar-light' => t('Light'),
       'navbar-dark' => t('Dark'),
@@ -706,7 +705,7 @@ function bootstrap_barrio_form_system_theme_settings_alter(&$form, FormStateInte
   $form['components']['navbar']['bootstrap_barrio_navbar_background'] = [
     '#type' => 'select',
     '#title' => t('Navbar background color'),
-    '#default_value' => DeprecationHelper::backwardsCompatibleCall(\Drupal::VERSION, '11.3.0', fn() => \Drupal::service(ThemeSettingsProvider::class)->getSetting('bootstrap_barrio_navbar_background'), fn() => theme_get_setting('bootstrap_barrio_navbar_background')),
+    '#default_value' => theme_get_setting('bootstrap_barrio_navbar_background'),
     '#options' => [
       'bg-primary' => t('Primary'),
       'bg-light' => t('Light'),
@@ -718,14 +717,14 @@ function bootstrap_barrio_form_system_theme_settings_alter(&$form, FormStateInte
   $form['components']['navbar']['bootstrap_barrio_navbar_top_class'] = [
     '#type' => 'textfield',
     '#title' => t('Custom classes for Navbar Top'),
-    '#default_value' => DeprecationHelper::backwardsCompatibleCall(\Drupal::VERSION, '11.3.0', fn() => \Drupal::service(ThemeSettingsProvider::class)->getSetting('bootstrap_barrio_navbar_top_class'), fn() => theme_get_setting('bootstrap_barrio_navbar_top_class')),
+    '#default_value' => theme_get_setting('bootstrap_barrio_navbar_top_class'),
     '#size' => 40,
     '#maxlength' => 40,
   ];
   $form['components']['navbar']['bootstrap_barrio_navbar_class'] = [
     '#type' => 'textfield',
     '#title' => t('Custom classes for Navbar'),
-    '#default_value' => DeprecationHelper::backwardsCompatibleCall(\Drupal::VERSION, '11.3.0', fn() => \Drupal::service(ThemeSettingsProvider::class)->getSetting('bootstrap_barrio_navbar_class'), fn() => theme_get_setting('bootstrap_barrio_navbar_class')),
+    '#default_value' => theme_get_setting('bootstrap_barrio_navbar_class'),
     '#size' => 40,
     '#maxlength' => 40,
   ];
@@ -741,7 +740,7 @@ function bootstrap_barrio_form_system_theme_settings_alter(&$form, FormStateInte
   $form['components']['navbar_behaviour']['bootstrap_barrio_navbar_offcanvas'] = [
     '#type' => 'select',
     '#title' => t('Default/Bootstrap Offcanvas Collapse'),
-    '#default_value' => DeprecationHelper::backwardsCompatibleCall(\Drupal::VERSION, '11.3.0', fn() => \Drupal::service(ThemeSettingsProvider::class)->getSetting('bootstrap_barrio_navbar_offcanvas'), fn() => theme_get_setting('bootstrap_barrio_navbar_offcanvas')),
+    '#default_value' => theme_get_setting('bootstrap_barrio_navbar_offcanvas'),
     '#options' => [
       'offcanvas-collapse' => t('Offcanvas'),
     ],
@@ -751,14 +750,14 @@ function bootstrap_barrio_form_system_theme_settings_alter(&$form, FormStateInte
   $form['components']['navbar_behaviour']['bootstrap_barrio_navbar_flyout'] = [
     '#type' => 'checkbox',
     '#title' => t('Flyout style main menu'),
-    '#default_value' => DeprecationHelper::backwardsCompatibleCall(\Drupal::VERSION, '11.3.0', fn() => \Drupal::service(ThemeSettingsProvider::class)->getSetting('bootstrap_barrio_navbar_flyout'), fn() => theme_get_setting('bootstrap_barrio_navbar_flyout')),
+    '#default_value' => theme_get_setting('bootstrap_barrio_navbar_flyout'),
   ];
 
   $form['components']['navbar_behaviour']['bootstrap_barrio_navbar_slide'] = [
     '#type' => 'checkbox',
     '#title' => t('Sliding navbar'),
     '#description' => t('Collapsed navbar will slide left to right'),
-    '#default_value' => DeprecationHelper::backwardsCompatibleCall(\Drupal::VERSION, '11.3.0', fn() => \Drupal::service(ThemeSettingsProvider::class)->getSetting('bootstrap_barrio_navbar_slide'), fn() => theme_get_setting('bootstrap_barrio_navbar_slide')),
+    '#default_value' => theme_get_setting('bootstrap_barrio_navbar_slide'),
     '#description' => t('DO NOT USE IN NEW SITES. Removed in favor of Bootstrap Offcanvas.'),
   ];
 
@@ -773,7 +772,7 @@ function bootstrap_barrio_form_system_theme_settings_alter(&$form, FormStateInte
   $form['components']['tabs']['bootstrap_barrio_tabs_style'] = [
     '#type' => 'select',
     '#title' => t('Tabs style'),
-    '#default_value' => DeprecationHelper::backwardsCompatibleCall(\Drupal::VERSION, '11.3.0', fn() => \Drupal::service(ThemeSettingsProvider::class)->getSetting('bootstrap_barrio_tabs_style'), fn() => theme_get_setting('bootstrap_barrio_tabs_style')),
+    '#default_value' => theme_get_setting('bootstrap_barrio_tabs_style'),
     '#options' => [
       'full' => t('Full width blocks'),
       'pills' => t('Pills'),
@@ -791,7 +790,7 @@ function bootstrap_barrio_form_system_theme_settings_alter(&$form, FormStateInte
   $form['components']['alerts']['bootstrap_barrio_messages_widget'] = [
     '#type' => 'select',
     '#title' => t('Messages widget'),
-    '#default_value' => DeprecationHelper::backwardsCompatibleCall(\Drupal::VERSION, '11.3.0', fn() => \Drupal::service(ThemeSettingsProvider::class)->getSetting('bootstrap_barrio_messages_widget'), fn() => theme_get_setting('bootstrap_barrio_messages_widget')),
+    '#default_value' => theme_get_setting('bootstrap_barrio_messages_widget'),
     '#options' => [
       'default' => t('Alerts classic'),
       'alerts' => t('Alerts bottom'),
@@ -801,19 +800,7 @@ function bootstrap_barrio_form_system_theme_settings_alter(&$form, FormStateInte
   $form['components']['alerts']['bootstrap_barrio_messages_widget_toast_delay'] = [
     '#type' => 'number',
     '#title' => t('Toast delay'),
-    '#default_value' => DeprecationHelper::backwardsCompatibleCall(\Drupal::VERSION, '11.3.0', fn() => \Drupal::service(ThemeSettingsProvider::class)->getSetting('bootstrap_barrio_messages_widget_toast_delay'), fn() => theme_get_setting('bootstrap_barrio_messages_widget_toast_delay')) ?? 10000,
-    '#description' => t('How long to keep the toast open in milliseconds.'),
-    '#states' => [
-      'visible' => [
-        ':input[name="bootstrap_barrio_messages_widget"]' => ['value' => 'toasts'],
-      ],
-    ],
-  ];
-
-  $form['components']['alerts']['bootstrap_barrio_messages_widget_toast_delay'] = [
-    '#type' => 'number',
-    '#title' => t('Toast delay'),
-    '#default_value' => DeprecationHelper::backwardsCompatibleCall(\Drupal::VERSION, '11.3.0', fn() => \Drupal::service(ThemeSettingsProvider::class)->getSetting('bootstrap_barrio_messages_widget_toast_delay'), fn() => theme_get_setting('bootstrap_barrio_messages_widget_toast_delay')),
+    '#default_value' => theme_get_setting('bootstrap_barrio_messages_widget_toast_delay') ?? 10000,
     '#description' => t('How long to keep the toast open in milliseconds.'),
     '#states' => [
       'visible' => [
@@ -832,12 +819,12 @@ function bootstrap_barrio_form_system_theme_settings_alter(&$form, FormStateInte
   $form['components']['form']['bootstrap_barrio_float_label'] = [
     '#type' => 'checkbox',
     '#title' => t('Float Labels'),
-    '#default_value' => DeprecationHelper::backwardsCompatibleCall(\Drupal::VERSION, '11.3.0', fn() => \Drupal::service(ThemeSettingsProvider::class)->getSetting('bootstrap_barrio_float_label'), fn() => theme_get_setting('bootstrap_barrio_float_label')),
+    '#default_value' => theme_get_setting('bootstrap_barrio_float_label'),
   ];
   $form['components']['form']['bootstrap_barrio_checkbox'] = [
     '#type' => 'select',
     '#title' => t('Checkbox & Radio Style'),
-    '#default_value' => DeprecationHelper::backwardsCompatibleCall(\Drupal::VERSION, '11.3.0', fn() => \Drupal::service(ThemeSettingsProvider::class)->getSetting('bootstrap_barrio_checkbox'), fn() => theme_get_setting('bootstrap_barrio_checkbox')),
+    '#default_value' => theme_get_setting('bootstrap_barrio_checkbox'),
     '#empty_option' => t('Default'),
     '#options' => [
       'switch' => t('Switch'),
@@ -860,7 +847,7 @@ function bootstrap_barrio_form_system_theme_settings_alter(&$form, FormStateInte
   $form['affix']['navbar_top']['bootstrap_barrio_navbar_top_affix'] = [
     '#type' => 'checkbox',
     '#title' => t('Affix navbar top'),
-    '#default_value' => DeprecationHelper::backwardsCompatibleCall(\Drupal::VERSION, '11.3.0', fn() => \Drupal::service(ThemeSettingsProvider::class)->getSetting('bootstrap_barrio_navbar_top_affix'), fn() => theme_get_setting('bootstrap_barrio_navbar_top_affix')),
+    '#default_value' => theme_get_setting('bootstrap_barrio_navbar_top_affix'),
   ];
   /*
   $form['affix']['navbar_top']['bootstrap_barrio_navbar_top_affix_top'] = [
@@ -901,7 +888,7 @@ function bootstrap_barrio_form_system_theme_settings_alter(&$form, FormStateInte
   $form['affix']['navbar']['bootstrap_barrio_navbar_affix'] = [
     '#type' => 'checkbox',
     '#title' => t('Affix navbar'),
-    '#default_value' => DeprecationHelper::backwardsCompatibleCall(\Drupal::VERSION, '11.3.0', fn() => \Drupal::service(ThemeSettingsProvider::class)->getSetting('bootstrap_barrio_navbar_affix'), fn() => theme_get_setting('bootstrap_barrio_navbar_affix')),
+    '#default_value' => theme_get_setting('bootstrap_barrio_navbar_affix'),
   ];
   /*
   $form['affix']['navbar']['bootstrap_barrio_navbar_affix_top'] = [
@@ -940,7 +927,7 @@ function bootstrap_barrio_form_system_theme_settings_alter(&$form, FormStateInte
   $form['affix']['sidebar_first']['bootstrap_barrio_sidebar_first_affix'] = [
     '#type' => 'checkbox',
     '#title' => t('Affix sidebar first'),
-    '#default_value' => DeprecationHelper::backwardsCompatibleCall(\Drupal::VERSION, '11.3.0', fn() => \Drupal::service(ThemeSettingsProvider::class)->getSetting('bootstrap_barrio_sidebar_first_affix'), fn() => theme_get_setting('bootstrap_barrio_sidebar_first_affix')),
+    '#default_value' => theme_get_setting('bootstrap_barrio_sidebar_first_affix'),
   ];
   /*
   $form['affix']['sidebar_first'][
@@ -982,7 +969,7 @@ function bootstrap_barrio_form_system_theme_settings_alter(&$form, FormStateInte
   $form['affix']['sidebar_second']['bootstrap_barrio_sidebar_second_affix'] = [
     '#type' => 'checkbox',
     '#title' => t('Affix sidebar second'),
-    '#default_value' => DeprecationHelper::backwardsCompatibleCall(\Drupal::VERSION, '11.3.0', fn() => \Drupal::service(ThemeSettingsProvider::class)->getSetting('bootstrap_barrio_sidebar_second_affix'), fn() => theme_get_setting('bootstrap_barrio_sidebar_second_affix')),
+    '#default_value' => theme_get_setting('bootstrap_barrio_sidebar_second_affix'),
   ];
   /*
   $form['affix']['sidebar_second'][
@@ -1026,7 +1013,7 @@ function bootstrap_barrio_form_system_theme_settings_alter(&$form, FormStateInte
     '#type' => 'textfield',
     '#title' => t('Scrollspy element ID'),
     '#description' => t('Specify a valid jQuery ID for the element containing a .nav that will behave with scrollspy.'),
-    '#default_value' => DeprecationHelper::backwardsCompatibleCall(\Drupal::VERSION, '11.3.0', fn() => \Drupal::service(ThemeSettingsProvider::class)->getSetting('bootstrap_barrio_scroll_spy'), fn() => theme_get_setting('bootstrap_barrio_scroll_spy')),
+    '#default_value' => theme_get_setting('bootstrap_barrio_scroll_spy'),
     '#size' => 40,
     '#maxlength' => 40,
   ];
@@ -1046,7 +1033,7 @@ function bootstrap_barrio_form_system_theme_settings_alter(&$form, FormStateInte
   $form['fonts']['fonts']['bootstrap_barrio_google_fonts'] = [
     '#type' => 'select',
     '#title' => t('Google Fonts combination'),
-    '#default_value' => DeprecationHelper::backwardsCompatibleCall(\Drupal::VERSION, '11.3.0', fn() => \Drupal::service(ThemeSettingsProvider::class)->getSetting('bootstrap_barrio_google_fonts'), fn() => theme_get_setting('bootstrap_barrio_google_fonts')),
+    '#default_value' => theme_get_setting('bootstrap_barrio_google_fonts'),
     '#empty_option' => t('None'),
     '#options' => [
       'roboto' => t('Roboto Condensed, Roboto'),
@@ -1074,7 +1061,7 @@ function bootstrap_barrio_form_system_theme_settings_alter(&$form, FormStateInte
   $form['fonts']['bootstrap_icons']['bootstrap_barrio_bootstrap_icons'] = [
     '#type' => 'checkbox',
     '#title' => t('Use Bootstrap icons'),
-    '#default_value' => DeprecationHelper::backwardsCompatibleCall(\Drupal::VERSION, '11.3.0', fn() => \Drupal::service(ThemeSettingsProvider::class)->getSetting('bootstrap_barrio_bootstrap_icons'), fn() => theme_get_setting('bootstrap_barrio_bootstrap_icons')),
+    '#default_value' => theme_get_setting('bootstrap_barrio_bootstrap_icons'),
   ];
   $form['fonts']['icons'] = [
     '#type' => 'details',
@@ -1085,7 +1072,7 @@ function bootstrap_barrio_form_system_theme_settings_alter(&$form, FormStateInte
   $form['fonts']['icons']['bootstrap_barrio_icons'] = [
     '#type' => 'select',
     '#title' => t('Icon set'),
-    '#default_value' => DeprecationHelper::backwardsCompatibleCall(\Drupal::VERSION, '11.3.0', fn() => \Drupal::service(ThemeSettingsProvider::class)->getSetting('bootstrap_barrio_icons'), fn() => theme_get_setting('bootstrap_barrio_icons')),
+    '#default_value' => theme_get_setting('bootstrap_barrio_icons'),
     '#empty_option' => t('None'),
     '#options' => [
       'material_design_icons' => t('Material Design Icons'),

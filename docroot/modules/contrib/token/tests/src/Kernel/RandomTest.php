@@ -7,7 +7,7 @@ namespace Drupal\Tests\token\Kernel;
  *
  * @group token
  */
-class RandomTest extends TokenKernelTestBase {
+class RandomTest extends KernelTestBase {
 
   function testRandomTokens() {
     $tokens = [

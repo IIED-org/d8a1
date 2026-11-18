@@ -29,39 +29,27 @@ class Exif extends FileMetadataPluginBase {
 
   /**
    * The MIME type guessing service.
-   *
-   * @todo add readonly
    */
-  protected MimeTypeGuesserInterface $mimeTypeGuesser;
+  protected readonly MimeTypeGuesserInterface $mimeTypeGuesser;
 
   /**
    * The EXIF tag mapping service.
-   *
-   * @todo add readonly
    */
-  protected ExifTagMapperInterface $tagMapper;
+  protected readonly ExifTagMapperInterface $tagMapper;
 
   /**
    * The PEL file object being processed.
    */
   protected PelJpeg|PelTiff|false $pelFile;
 
-  /**
-   * @param array<mixed> $configuration
-   *   The plugin configuration.
-   * @param string $plugin_id
-   *   The plugin id.
-   * @param array<mixed> $plugin_definition
-   *   The plugin definition.
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition): static {
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     $instance = parent::create($container, $configuration, $plugin_id, $plugin_definition);
     $instance->mimeTypeGuesser = $container->get('file.mime_type.guesser');
     $instance->tagMapper = $container->get(ExifTagMapperInterface::class);
     return $instance;
   }
 
-  public function getSupportedKeys(?array $options = NULL): array {
+  public function getSupportedKeys(array $options = NULL): array {
     return $this->tagMapper->getSupportedKeys($options);
   }
 

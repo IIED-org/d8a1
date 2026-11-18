@@ -1,9 +1,5 @@
 # Changelog
 
-### 2.0.3 - 2025/Nov/14
-
-- PHP 8.5 support
-
 ### 2.0.2 - 2021/Dec/29
 
 - Support logical operations with more than two operands

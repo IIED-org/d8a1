@@ -11,70 +11,24 @@ use Drupal\views\ResultRow;
 abstract class RendererBase extends EntityTranslationRendererBase {
 
   /**
-   * Returns the language code associated with the given row.
-   *
-   * @param \Drupal\views\ResultRow $row
-   *   The result row.
-   * @param string $relationship
-   *   The relationship to be used.
-   *
-   * @return string
-   */
-  public function getLangcodeByRelationship(ResultRow $row, string $relationship): string {
-    // This method needs to be overridden if the relationship is needed in the
-    // implementation of getLangcode().
-    return $this->getLangcode($row);
-  }
-
-  /**
    * {@inheritdoc}
    */
   public function preRender(array $result) {
-    $this->preRenderByRelationship($result, 'none');
-  }
-
-  /**
-   * Runs before each entity is rendered if a relationship is needed.
-   *
-   * @param \Drupal\views\ResultRow[] $result
-   *   The full array of results from the query.
-   * @param string $relationship
-   *   The relationship to be used.
-   */
-  public function preRenderByRelationship(array $result, string $relationship): void {
-    parent::preRenderByRelationship($result, $relationship);
-    $this->dsPreRender($result, $relationship);
+    parent::preRender($result);
+    $this->dsPreRender($result);
   }
 
   /**
    * {@inheritdoc}
    */
   public function render(ResultRow $row) {
-    return $this->renderByRelationship($row, 'none');
-  }
-
-  /**
-   * Renders entity data.
-   *
-   * @param \Drupal\views\ResultRow $row
-   *   A single row of the query result.
-   * @param string $relationship
-   *   The relationship to be used.
-   *
-   * @return array
-   *   A renderable array for the entity data contained in the result row.
-   */
-  public function renderByRelationship(ResultRow $row, string $relationship): array {
-    if ($entity = $this->getEntity($row, $relationship)) {
-      $entity_id = $entity->id();
-      $langcode = $this->getLangcodeByRelationship($row, $relationship);
-      if (isset($this->build[$entity_id][$langcode])) {
-        $build = $this->build[$entity_id][$langcode];
-        $this->alterBuild($build, $row);
-        return $build;
-      }
+    $entity_id = $row->_entity->id();
+    $langcode = $this->getLangcode($row);
+    if (isset($this->build[$entity_id][$langcode])) {
+      $build = $this->build[$entity_id][$langcode];
+      $this->alterBuild($build, $row);
+      return $build;
     }
-
     return [];
   }
 
@@ -87,7 +41,7 @@ abstract class RendererBase extends EntityTranslationRendererBase {
   protected function alterBuild(&$build, $row) {
     // Add row index. Remember that in case you want to use this, you will
     // have to remove the cache for this build.
-    $build['#row_index'] = $row->index ?? NULL;
+    $build['#row_index'] = isset($row->index) ? $row->index : NULL;
 
     // Delta fields.
     $delta_fields = $this->view->rowPlugin->options['delta_fieldset']['delta_fields'];
@@ -105,15 +59,13 @@ abstract class RendererBase extends EntityTranslationRendererBase {
    * Pre renders all the Display Suite rows.
    *
    * @param array $result
-   * @param $relationship
    * @param bool $translation
    */
-  protected function dsPreRender(array $result, $relationship, bool $translation = FALSE) {
+  protected function dsPreRender(array $result, $translation = FALSE) {
     if ($result) {
 
       // Get the view builder to render this entity.
-      $view_builder = \Drupal::entityTypeManager()
-        ->getViewBuilder($this->entityType->id());
+      $view_builder = \Drupal::entityTypeManager()->getViewBuilder($this->entityType->id());
 
       $i = 0;
       $grouping = [];
@@ -121,12 +73,10 @@ abstract class RendererBase extends EntityTranslationRendererBase {
 
       foreach ($result as $row) {
         $group_value_content = '';
-        $entity = $this->getEntity($row, $relationship);
-        if (!$entity) {
-          continue;
-        }
+        $entity = $row->_entity;
         $entity->view = $this->view;
 
+        /* @var $entity \Drupal\Core\Entity\EntityInterface */
         $entity_id = $entity->id();
         $langcode = $this->getLangcode($row);
 
@@ -149,7 +99,7 @@ abstract class RendererBase extends EntityTranslationRendererBase {
             $view_mode = $this->view->rowPlugin->options['view_mode'];
           }
           else {
-            $view_mode = $this->view->rowPlugin->options['alternating_fieldset']['item_' . $i] ?? $this->view->rowPlugin->options['view_mode'];
+            $view_mode = isset($this->view->rowPlugin->options['alternating_fieldset']['item_' . $i]) ? $this->view->rowPlugin->options['alternating_fieldset']['item_' . $i] : $this->view->rowPlugin->options['view_mode'];
           }
           $i++;
         }
@@ -203,7 +153,7 @@ abstract class RendererBase extends EntityTranslationRendererBase {
 
           // New way of creating the alias.
           if (strpos($group_field, '|') !== FALSE) {
-            [, $ffield] = explode('|', $group_field);
+            list(, $ffield) = explode('|', $group_field);
             if (isset($this->view->sort[$ffield]->realField)) {
               $group_field = $this->view->sort[$ffield]->tableAlias . '_' . $this->view->sort[$ffield]->realField;
             }
@@ -215,7 +165,7 @@ abstract class RendererBase extends EntityTranslationRendererBase {
             $group_field = mb_substr($group_field, 0, 60);
           }
 
-          $raw_group_value = $row->{$group_field} ?? '';
+          $raw_group_value = isset($row->{$group_field}) ? $row->{$group_field} : '';
           $group_value = $raw_group_value;
 
           // Special function to format the heading value.

@@ -2,8 +2,7 @@
 
 namespace Drupal\Tests\captcha\Kernel\Migrate\d7;
 
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
+use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
 use Drupal\captcha\Constants\CaptchaConstants;
 
 /**
@@ -11,9 +10,7 @@ use Drupal\captcha\Constants\CaptchaConstants;
  *
  * @group captcha
  */
-#[Group('captcha')]
-#[RunTestsInSeparateProcesses]
-class MigrateCaptchaSimpleConfigurationTest extends CaptchaMigrateDrupal7TestBase {
+class MigrateCaptchaSimpleConfigurationTest extends MigrateDrupal7TestBase {
 
   /**
    * {@inheritdoc}
@@ -47,7 +44,7 @@ class MigrateCaptchaSimpleConfigurationTest extends CaptchaMigrateDrupal7TestBas
     parent::setUp();
     $this->loadFixture(implode(DIRECTORY_SEPARATOR, [
       DRUPAL_ROOT,
-      $this->container->get('extension.list.module')->getPath('captcha'),
+      \Drupal::service('extension.list.module')->getPath('captcha'),
       'tests',
       'fixtures',
       'drupal7.php',
@@ -66,7 +63,7 @@ class MigrateCaptchaSimpleConfigurationTest extends CaptchaMigrateDrupal7TestBas
     // Test Config.
     $this->expectedConfig['captcha.settings'] = version_compare(\Drupal::VERSION, '10.3.0', '>=') ? ['langcode' => 'en'] + $this->expectedConfig['captcha.settings'] : $this->expectedConfig['captcha.settings'];
     foreach ($this->expectedConfig as $config_id => $values) {
-      $actual = $this->config($config_id)->get();
+      $actual = \Drupal::config($config_id)->get();
       $this->assertSame($values, $actual);
     }
   }

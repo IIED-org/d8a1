@@ -5,7 +5,7 @@ namespace Drupal\key\Form;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
- * Form for adding a key entity.
+ * Class KeyAddForm.
  *
  * @package Drupal\key\Form
  */

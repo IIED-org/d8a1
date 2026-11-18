@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\inline_entity_form\FunctionalJavascript;
 
 /**
@@ -68,7 +66,7 @@ class ComplexWidgetRevisionsTest extends InlineEntityFormTestBase {
   /**
    * Data provider for ::testRevisionsAtDepth.
    */
-  public static function revisionsAtDepthDataProvider(): array {
+  public function revisionsAtDepthDataProvider(): array {
     return [
       [FALSE],
       [TRUE],
@@ -81,8 +79,11 @@ class ComplexWidgetRevisionsTest extends InlineEntityFormTestBase {
    * @dataProvider revisionsAtDepthDataProvider
    */
   public function testRevisionsAtDepth(bool $inner_widget_adds_revisions) {
-    $page = $this->getSession()->getPage();
-    $assert_session = $this->assertSession();
+    $level_2_display_config = $this->entityFormDisplayStorage->load('node.err_level_2.default');
+    $component = $level_2_display_config->getComponent('field_level_3_items');
+    $component['settings']['revision'] = $inner_widget_adds_revisions;
+    $level_2_display_config->setComponent('field_level_3_items', $component);
+    $level_2_display_config->save();
 
     // Get the xpath selectors for the input fields in this test.
     $top_title_field_xpath = $this->getXpathForNthInputByLabelText('Title', 1);
@@ -95,32 +96,29 @@ class ComplexWidgetRevisionsTest extends InlineEntityFormTestBase {
     $first_edit_button_xpath = $this->getXpathForButtonWithValue('Edit', 1);
     $first_update_button_xpath = $this->getXpathForButtonWithValue('Update node', 1);
 
-    $level_2_display_config = $this->entityFormDisplayStorage->load('node.err_level_2.default');
-    $component = $level_2_display_config->getComponent('field_level_3_items');
-    $component['settings']['revision'] = $inner_widget_adds_revisions;
-    $level_2_display_config->setComponent('field_level_3_items', $component);
-    $level_2_display_config->save();
-
     $this->drupalGet($this->formContentAddUrl);
+    $page = $this->getSession()->getPage();
+    $assert_session = $this->assertSession();
 
     // Open up level 2 and 3 IEF forms.
     $assert_session->elementExists('xpath', $first_add_new_node_button_xpath)->press();
-    $this->assertNotEmpty($assert_session->waitForElement('xpath', $nested_title_field_xpath));
+    $assert_session->waitForElementRemoved('xpath', $first_add_new_node_button_xpath);
     $assert_session->elementExists('xpath', $first_add_new_node_button_xpath)->press();
-    $this->assertNotEmpty($assert_session->waitForElement('xpath', $double_nested_title_field_xpath));
 
     // Fill in and save level 3 IEF form.
+    $this->assertNotEmpty($assert_session->waitForElement('xpath', $double_nested_title_field_xpath));
     $assert_session->elementExists('xpath', $double_nested_title_field_xpath)->setValue('Level 3');
     $assert_session->elementExists('xpath', $first_create_node_button_xpath)->press();
-    $this->assertNotEmpty($assert_session->waitForElementRemoved('xpath', $double_nested_title_field_xpath));
+    $this->assertNotEmpty($assert_session->waitForElement('xpath', $first_edit_button_xpath));
 
     // Fill in and save level 2 IEF form.
     $assert_session->elementExists('xpath', $nested_title_field_xpath)->setValue('Level 2');
     $assert_session->elementExists('xpath', $first_create_node_button_xpath)->press();
-    $this->assertNotEmpty($assert_session->waitForElementRemoved('xpath', $nested_title_field_xpath));
+    $this->assertNotEmpty($assert_session->waitForElement('xpath', $first_edit_button_xpath));
 
     // Save the top level entity.
     $assert_session->elementExists('xpath', $top_title_field_xpath)->setValue('Level 1');
+    $assert_session->waitForElementRemoved('xpath', $first_edit_button_xpath);
     $page->pressButton('Save');
 
     // Re-edit the created node to test for revisions.
@@ -129,22 +127,23 @@ class ComplexWidgetRevisionsTest extends InlineEntityFormTestBase {
 
     // Open up level 2 and 3 IEF forms.
     $assert_session->elementExists('xpath', $first_edit_button_xpath)->press();
-    $this->assertNotEmpty($assert_session->waitForElement('xpath', $nested_title_field_xpath));
+    $assert_session->waitForElementRemoved('xpath', $first_edit_button_xpath);
     $assert_session->elementExists('xpath', $first_edit_button_xpath)->press();
-    $this->assertNotEmpty($assert_session->waitForElement('xpath', $double_nested_title_field_xpath));
 
     // Change level 3 IEF node title.
+    $this->assertNotEmpty($assert_session->waitForElement('xpath', $double_nested_title_field_xpath));
     $assert_session->elementExists('xpath', $double_nested_title_field_xpath)->setValue('Level 3.1');
     $assert_session->elementExists('xpath', $first_update_button_xpath)->press();
-    $this->assertNotEmpty($assert_session->waitForElementRemoved('xpath', $double_nested_title_field_xpath));
+    $this->assertNotEmpty($assert_session->waitForElement('xpath', $first_edit_button_xpath));
 
     // Change level 2 IEF node title.
     $assert_session->elementExists('xpath', $nested_title_field_xpath)->setValue('Level 2.1');
     $assert_session->elementExists('xpath', $first_update_button_xpath)->press();
-    $this->assertNotEmpty($assert_session->waitForElementRemoved('xpath', $nested_title_field_xpath));
+    $this->assertNotEmpty($assert_session->waitForElement('xpath', $first_edit_button_xpath));
 
     // Save the top level entity.
     $assert_session->elementExists('xpath', $top_title_field_xpath)->setValue('Level 1.1');
+    $assert_session->waitForElementRemoved('xpath', $first_edit_button_xpath);
     $page->pressButton('Save');
 
     // Assert that the entities are correctly saved.
@@ -165,22 +164,23 @@ class ComplexWidgetRevisionsTest extends InlineEntityFormTestBase {
 
     // Open up level 2 and 3 IEF forms.
     $assert_session->elementExists('xpath', $first_edit_button_xpath)->press();
-    $this->assertNotEmpty($assert_session->waitForElement('xpath', $nested_title_field_xpath));
+    $assert_session->waitForElementRemoved('xpath', $first_edit_button_xpath);
     $assert_session->elementExists('xpath', $first_edit_button_xpath)->press();
-    $this->assertNotEmpty($assert_session->waitForElement('xpath', $double_nested_title_field_xpath));
 
-    // Fill in and save level 3 IEF form.
+    // Change level 3 IEF node title.
+    $this->assertNotEmpty($assert_session->waitForElement('xpath', $double_nested_title_field_xpath));
     $assert_session->elementExists('xpath', $double_nested_title_field_xpath)->setValue('Level 3.2');
     $assert_session->elementExists('xpath', $first_update_button_xpath)->press();
-    $this->assertNotEmpty($assert_session->waitForElementRemoved('xpath', $double_nested_title_field_xpath));
+    $this->assertNotEmpty($assert_session->waitForElement('xpath', $first_edit_button_xpath));
 
     // Change level 2 IEF node title.
     $assert_session->elementExists('xpath', $nested_title_field_xpath)->setValue('Level 2.2');
     $assert_session->elementExists('xpath', $first_update_button_xpath)->press();
-    $this->assertNotEmpty($assert_session->waitForElementRemoved('xpath', $nested_title_field_xpath));
+    $this->assertNotEmpty($assert_session->waitForElement('xpath', $first_edit_button_xpath));
 
     // Save the top level entity.
     $assert_session->elementExists('xpath', $top_title_field_xpath)->setValue('Level 1.2');
+    $assert_session->waitForElementRemoved('xpath', $first_edit_button_xpath);
     $page->pressButton('Save');
 
     // Assert that the entities are correctly saved.
@@ -233,12 +233,14 @@ class ComplexWidgetRevisionsTest extends InlineEntityFormTestBase {
 
     // Open up test entity with no bundle IEF form.
     $assert_session->elementExists('xpath', $first_add_new_no_bundle_node_button)->press();
-    $this->assertNotEmpty($assert_session->waitForElement('xpath', $name_field_xpath));
+    $assert_session->waitForElementRemoved('xpath', $first_add_new_no_bundle_node_button);
+    $this->assertNotEmpty($assert_session->waitForElement('xpath', $first_no_bundle_create_node_button));
 
     // Save level 2 test entity without bundle IEF form.
     $assert_session->elementExists('xpath', $name_field_xpath)->setValue('Level 2 entity without bundle');
     $assert_session->elementExists('xpath', $first_no_bundle_create_node_button)->press();
-    $this->assertNotEmpty($assert_session->waitForElementRemoved('xpath', $name_field_xpath));
+    $assert_session->waitForElementRemoved('xpath', $first_add_new_no_bundle_node_button);
+    $this->assertNotEmpty($assert_session->waitForElement('xpath', $first_no_bundle_node_edit_button));
 
     // Save the top level entity.
     $assert_session->elementExists('xpath', $title_field_xpath)->setValue('Level 1');
@@ -261,12 +263,12 @@ class ComplexWidgetRevisionsTest extends InlineEntityFormTestBase {
 
     // Open up test entity with no bundle IEF form for editing.
     $assert_session->elementExists('xpath', $first_no_bundle_node_edit_button)->press();
-    $this->assertNotEmpty($assert_session->waitForElement('xpath', $name_field_xpath));
+    $this->assertNotEmpty($assert_session->waitForElement('xpath', $first_no_bundle_update_node_button));
 
     // Change test entity with no bundle title.
     $assert_session->elementExists('xpath', $name_field_xpath)->setValue('Level 2.1 entity without bundle');
     $assert_session->elementExists('xpath', $first_no_bundle_update_node_button)->press();
-    $this->assertNotEmpty($assert_session->waitForElementRemoved('xpath', $name_field_xpath));
+    $this->assertNotEmpty($assert_session->waitForElement('xpath', $first_no_bundle_node_edit_button));
 
     // Save the top level entity.
     $page->fillField('title[0][value]', 'Level 1.1');

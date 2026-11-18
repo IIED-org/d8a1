@@ -6,22 +6,22 @@ namespace Drush\Commands\core;
 
 use Consolidation\AnnotatedCommand\CommandData;
 use Consolidation\AnnotatedCommand\Hooks\HookManager;
-use Consolidation\SiteAlias\HostPath;
-use Consolidation\SiteAlias\SiteAliasManagerInterface;
+use Consolidation\SiteProcess\ProcessBase;
 use Consolidation\SiteProcess\Util\Escape;
 use Drush\Attributes as CLI;
-use Drush\Backend\BackendPathEvaluator;
-use Drush\Boot\DrupalBootLevels;
-use Drush\Commands\AutowireTrait;
 use Drush\Commands\DrushCommands;
-use Drush\Config\ConfigLocator;
+use Drush\Drush;
 use Drush\Exceptions\UserAbortException;
+use Consolidation\SiteAlias\HostPath;
+use Consolidation\SiteAlias\SiteAliasManagerAwareInterface;
+use Consolidation\SiteAlias\SiteAliasManagerAwareTrait;
+use Drush\Backend\BackendPathEvaluator;
+use Drush\Config\ConfigLocator;
 use Symfony\Component\Console\Event\ConsoleCommandEvent;
 
-#[CLI\Bootstrap(DrupalBootLevels::NONE)]
-final class RsyncCommands extends DrushCommands
+final class RsyncCommands extends DrushCommands implements SiteAliasManagerAwareInterface
 {
-    use AutowireTrait;
+    use SiteAliasManagerAwareTrait;
 
     /**
      * These are arguments after the aliases and paths have been evaluated.
@@ -32,12 +32,11 @@ final class RsyncCommands extends DrushCommands
     public $sourceEvaluatedPath;
     /** @var HostPath */
     public $targetEvaluatedPath;
-    protected BackendPathEvaluator $pathEvaluator;
+    /** @var BackendPathEvaluator */
+    protected $pathEvaluator;
 
-    public function __construct(
-        private readonly SiteAliasManagerInterface $siteAliasManager
-    ) {
-        parent::__construct();
+    public function __construct()
+    {
         // TODO: once the BackendInvoke service exists, inject it here
         // and use it to get the path evaluator
         $this->pathEvaluator = new BackendPathEvaluator();
@@ -56,7 +55,6 @@ final class RsyncCommands extends DrushCommands
     #[CLI\OptionsetSsh]
     #[CLI\Usage(name: 'drush rsync @dev @stage', description: 'Rsync Drupal root from Drush alias dev to the alias stage.')]
     #[CLI\Usage(name: 'drush rsync ./ @stage:%files/img', description: 'Rsync all files in the current directory to the <info>img</info>directory in the file storage folder on the Drush alias stage.')]
-    #[CLI\Usage(name: 'drush rsync @live:%private @stage:%private', description: 'Rsync private files from live to stage.')]
     #[CLI\Usage(name: 'drush rsync @dev @stage -- --exclude=*.sql --delete', description: 'Rsync Drupal root from the Drush alias dev to the alias stage, excluding all .sql files and delete all files on the destination that are no longer on the source.')]
     #[CLI\Usage(name: 'drush rsync @dev @stage --ssh-options="-o StrictHostKeyChecking=no" -- --delete', description: 'Customize how rsync connects with remote host via SSH. rsync options like --delete are placed after a --.')]
     #[CLI\Topics(topics: [DocsCommands::ALIASES])]
@@ -130,8 +128,10 @@ final class RsyncCommands extends DrushCommands
         // context, that already has the options et. al. from the
         // site-selection alias ('drush @site rsync ...'), @self.
         $aliasConfigContext = $this->getConfig()->getContext(ConfigLocator::ALIAS_CONTEXT);
+        $manager = $this->siteAliasManager();
+
         $aliasName = $input->getArgument($parameterName);
-        $evaluatedPath = HostPath::create($this->siteAliasManager, $aliasName);
+        $evaluatedPath = HostPath::create($manager, $aliasName);
         $this->pathEvaluator->evaluate($evaluatedPath);
 
         $aliasRecord = $evaluatedPath->getSiteAlias();
@@ -140,7 +140,6 @@ final class RsyncCommands extends DrushCommands
         // options into the alias config context so that we pick up
         // things like ssh-options.
         if ($aliasRecord->isRemote()) {
-            assert($aliasConfigContext instanceof \Consolidation\Config\Config);
             $aliasConfigContext->combine($aliasRecord->export());
         }
 

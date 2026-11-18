@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\redirect\Functional;
 
 use Drupal\Core\Language\Language;
@@ -30,6 +28,7 @@ class GlobalRedirectTest extends BrowserTestBase {
     'node',
     'redirect',
     'taxonomy',
+    'forum',
     'views',
     'language',
     'content_translation',
@@ -49,6 +48,11 @@ class GlobalRedirectTest extends BrowserTestBase {
    * @var \Drupal\Core\Config\Config
    */
   protected $config;
+
+  /**
+   * @var \Drupal\Core\Entity\ContentEntityInterface
+   */
+  protected $forumTerm;
 
   /**
    * @var \Drupal\Core\Entity\ContentEntityInterface
@@ -120,6 +124,15 @@ class GlobalRedirectTest extends BrowserTestBase {
     // Create an alias for the create story path - this is used in the
     // "redirect with permissions testing" test.
     $this->createPathAlias('/admin/config/system/site-information', '/site-info');
+
+    // Create a taxonomy term for the forum.
+    $term = Term::create([
+      'name' => 'Test Forum Term',
+      'vid' => 'forums',
+      'langcode' => Language::LANGCODE_NOT_SPECIFIED,
+    ]);
+    $term->save();
+    $this->forumTerm = $term;
 
     // Create another taxonomy vocabulary with a term.
     $vocab = Vocabulary::create([
@@ -195,9 +208,9 @@ class GlobalRedirectTest extends BrowserTestBase {
     $this->assertNoRedirect('admin/config/system/site-information', 403);
 
     $this->config->set('access_check', FALSE)->save();
-    // @todo Here it seems that the access check runs prior to our redirecting
+    // @todo - here it seems that the access check runs prior to our redirecting
     //   check why so and enable the test.
-    //   $this->assertRedirect('admin/config/system/site-information', 'site-info');
+    //$this->assertRedirect('admin/config/system/site-information', 'site-info');
 
     // Test original query string is preserved with alias normalization.
     $this->assertRedirect('Test-node?&foo&.bar=baz', 'test-node?&foo&.bar=baz');
@@ -251,7 +264,7 @@ class GlobalRedirectTest extends BrowserTestBase {
       'language_configuration[content_translation]' => TRUE,
     ];
     $this->drupalGet('admin/structure/types/manage/page');
-    $this->submitForm($edit, 'Save');
+    $this->submitForm($edit, 'Save content type');
     $this->assertSession()->responseContains('The content type <em class="placeholder">Page</em> has been updated.');
 
     $spanish_node = $this->drupalCreateNode([
@@ -308,7 +321,7 @@ class GlobalRedirectTest extends BrowserTestBase {
 
     $assert_session = $this->assertSession();
     $assert_session->statusCodeEquals($status_code);
-    $assert_session->responseHeaderDoesNotExist('Location');
+    $assert_session->responseHeaderEquals('Location', NULL);
     $assert_session->responseNotContains('http-equiv="refresh');
     $assert_session->addressEquals($path);
 

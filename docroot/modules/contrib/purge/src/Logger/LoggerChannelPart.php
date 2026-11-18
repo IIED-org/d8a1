@@ -19,13 +19,6 @@ else {
 }
 
 if (FALSE) {
-
-  /**
-   * Placeholder class for static analysis and IDE autocomplete.
-   *
-   * The actual class is resolved via class_alias above based on the
-   * installed version of drupal/core-psr-log / Psr\Log.
-   */
   class LoggerChannelPart extends LoggerChannelPartBase {
   }
 }

@@ -2,16 +2,11 @@
 
 namespace Drupal\Tests\purge\Kernel\Invalidation;
 
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
-
 /**
  * Tests \Drupal\purge\Plugin\Purge\Invalidation\TagInvalidation.
  *
  * @group purge
  */
-#[Group('purge')]
-#[RunTestsInSeparateProcesses]
 class TagInvalidationTest extends PluginTestBase {
 
   /**
@@ -42,10 +37,6 @@ class TagInvalidationTest extends PluginTestBase {
     '',
     ['node', '1'],
     'wildtag:*',
-    'tag with space',
-    'trailing:space ',
-    "tag\twith:tab",
-    "tag\nwith:newline",
   ];
 
 }

@@ -16,7 +16,7 @@ class CloneTest extends TestBase {
    *
    * @var array
    */
-  protected static $modules = [
+  public static $modules = [
     'node',
     'user',
     'comment',

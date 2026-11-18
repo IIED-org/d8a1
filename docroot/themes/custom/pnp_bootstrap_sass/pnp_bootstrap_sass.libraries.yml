@@ -1,7 +1,8 @@
 global-styling:
   version: VERSION
   js: 
-    js/bootstrap.bundle.min.js: {}
+    js/popper.min.js: {}
+    js/bootstrap.min.js: {}
     js/global.js: {}
   css:
     component:

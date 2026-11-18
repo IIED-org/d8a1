@@ -23,7 +23,7 @@ use Symfony\Component\Cache\Adapter\AbstractAdapter;
  */
 class SessionHandlerFactory
 {
-    public static function createHandler(#[\SensitiveParameter] object|string $connection, #[\SensitiveParameter] array $options = []): AbstractSessionHandler
+    public static function createHandler(object|string $connection, array $options = []): AbstractSessionHandler
     {
         if ($query = \is_string($connection) ? parse_url($connection) : false) {
             parse_str($query['query'] ?? '', $query);
@@ -57,8 +57,6 @@ class SessionHandlerFactory
 
             case str_starts_with($connection, 'redis:'):
             case str_starts_with($connection, 'rediss:'):
-            case str_starts_with($connection, 'valkey:'):
-            case str_starts_with($connection, 'valkeys:'):
             case str_starts_with($connection, 'memcached:'):
                 if (!class_exists(AbstractAdapter::class)) {
                     throw new \InvalidArgumentException('Unsupported Redis or Memcached DSN. Try running "composer require symfony/cache".');
@@ -74,11 +72,15 @@ class SessionHandlerFactory
                     throw new \InvalidArgumentException('Unsupported PDO OCI DSN. Try running "composer require doctrine/dbal".');
                 }
                 $connection[3] = '-';
-                $params = (new DsnParser())->parse($connection);
+                $params = class_exists(DsnParser::class) ? (new DsnParser())->parse($connection) : ['url' => $connection];
                 $config = new Configuration();
-                $config->setSchemaManagerFactory(new DefaultSchemaManagerFactory());
+                if (class_exists(DefaultSchemaManagerFactory::class)) {
+                    $config->setSchemaManagerFactory(new DefaultSchemaManagerFactory());
+                }
 
-                $connection = DriverManager::getConnection($params, $config)->getNativeConnection();
+                $connection = DriverManager::getConnection($params, $config);
+                // The condition should be removed once support for DBAL <3.3 is dropped
+                $connection = method_exists($connection, 'getNativeConnection') ? $connection->getNativeConnection() : $connection->getWrappedConnection();
                 // no break;
 
             case str_starts_with($connection, 'mssql://'):
@@ -93,6 +95,6 @@ class SessionHandlerFactory
                 return new PdoSessionHandler($connection, $options);
         }
 
-        throw new \InvalidArgumentException('No session handler supports the given DSN.');
+        throw new \InvalidArgumentException(\sprintf('Unsupported Connection: "%s".', $connection));
     }
 }

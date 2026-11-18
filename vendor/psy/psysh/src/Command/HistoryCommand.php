@@ -3,7 +3,7 @@
 /*
  * This file is part of Psy Shell.
  *
- * (c) 2012-2026 Justin Hileman
+ * (c) 2012-2023 Justin Hileman
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -11,13 +11,9 @@
 
 namespace Psy\Command;
 
-use Psy\ConfigPaths;
-use Psy\Exception\RuntimeException;
 use Psy\Input\FilterOptions;
-use Psy\Output\ShellOutputAdapter;
-use Psy\Readline\InteractiveReadlineInterface;
+use Psy\Output\ShellOutput;
 use Psy\Readline\Readline;
-use Psy\Readline\ReadlineAware;
 use Symfony\Component\Console\Formatter\OutputFormatter;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -28,10 +24,10 @@ use Symfony\Component\Console\Output\OutputInterface;
  *
  * Shows, searches and replays readline history. Not too shabby.
  */
-class HistoryCommand extends Command implements ReadlineAware
+class HistoryCommand extends Command
 {
-    private FilterOptions $filter;
-    private Readline $readline;
+    private $filter;
+    private $readline;
 
     /**
      * {@inheritdoc}
@@ -56,7 +52,7 @@ class HistoryCommand extends Command implements ReadlineAware
     /**
      * {@inheritdoc}
      */
-    protected function configure(): void
+    protected function configure()
     {
         list($grep, $insensitive, $invert) = FilterOptions::getOptions();
 
@@ -67,7 +63,6 @@ class HistoryCommand extends Command implements ReadlineAware
                 new InputOption('show', 's', InputOption::VALUE_REQUIRED, 'Show the given range of lines.'),
                 new InputOption('head', 'H', InputOption::VALUE_REQUIRED, 'Display the first N items.'),
                 new InputOption('tail', 'T', InputOption::VALUE_REQUIRED, 'Display the last N items.'),
-                new InputOption('session', '', InputOption::VALUE_NONE, 'Only show history from this REPL session.'),
 
                 $grep,
                 $insensitive,
@@ -89,7 +84,6 @@ e.g.
 <return>>>> history --show 0..10 --replay</return>
 <return>>>> history --clear</return>
 <return>>>> history --tail 1000 --save somefile.txt</return>
-<return>>>> history --session</return>
 HELP
             );
     }
@@ -99,28 +93,16 @@ HELP
      *
      * @return int 0 if everything went fine, or an exit code
      */
-    protected function execute(InputInterface $input, OutputInterface $output): int
+    protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->validateOnlyOne($input, ['show', 'head', 'tail']);
         $this->validateOnlyOne($input, ['save', 'replay', 'clear']);
 
-        if ($input->getOption('clear')) {
-            $this->validateClearIsUnrestricted($input);
-
-            $this->clearHistory();
-            $output->writeln('<info>History cleared.</info>');
-
-            return 0;
-        }
-
-        // For --show, slice first (uses original line numbers), then filter
-        $show = $input->getOption('show');
-
-        // For --head/--tail, filter first, then slice (uses result count)
-        $head = $input->getOption('head');
-        $tail = $input->getOption('tail');
-
-        $history = $this->getHistorySlice($show, $input->getOption('session'));
+        $history = $this->getHistorySlice(
+            $input->getOption('show'),
+            $input->getOption('head'),
+            $input->getOption('tail')
+        );
         $highlighted = false;
 
         $this->filter->bind($input);
@@ -138,36 +120,32 @@ HELP
                     }
                 } else {
                     unset($history[$i]);
-                    unset($highlighted[$i]);
                 }
             }
         }
 
-        $history = $this->applyHeadOrTail($history, $head, $tail);
-        if ($highlighted) {
-            $highlighted = $this->applyHeadOrTail($highlighted, $head, $tail);
-        }
-
         if ($save = $input->getOption('save')) {
-            $output->writeln(\sprintf('Saving history in %s...', ConfigPaths::prettyPath($save)));
+            $output->writeln(\sprintf('Saving history in %s...', $save));
             \file_put_contents($save, \implode(\PHP_EOL, $history).\PHP_EOL);
             $output->writeln('<info>History saved.</info>');
         } elseif ($input->getOption('replay')) {
-            if (!($input->getOption('show') || $input->getOption('head') || $input->getOption('tail') || $input->getOption('session'))) {
-                throw new \InvalidArgumentException('You must limit history via --head, --tail, --show or --session before replaying');
+            if (!($input->getOption('show') || $input->getOption('head') || $input->getOption('tail'))) {
+                throw new \InvalidArgumentException('You must limit history via --head, --tail or --show before replaying');
             }
 
             $count = \count($history);
             $output->writeln(\sprintf('Replaying %d line%s of history', $count, ($count !== 1) ? 's' : ''));
-
-            $this->getShell()->addInput($history);
+            $this->getApplication()->addInput($history);
+        } elseif ($input->getOption('clear')) {
+            $this->clearHistory();
+            $output->writeln('<info>History cleared.</info>');
         } else {
-            $type = $input->getOption('no-numbers') ? 0 : ShellOutputAdapter::NUMBER_LINES;
+            $type = $input->getOption('no-numbers') ? 0 : ShellOutput::NUMBER_LINES;
             if (!$highlighted) {
                 $type = $type | OutputInterface::OUTPUT_RAW;
             }
 
-            $this->shellOutput($output)->page($highlighted ?: $history, $type);
+            $output->page($highlighted ?: $history, $type);
         }
 
         return 0;
@@ -178,12 +156,12 @@ HELP
      *
      * @param string $range
      *
-     * @return int[] [ start, end ]
+     * @return array [ start, end ]
      */
     private function extractRange(string $range): array
     {
         if (\preg_match('/^\d+$/', $range)) {
-            return [(int) $range, (int) $range + 1];
+            return [$range, $range + 1];
         }
 
         $matches = [];
@@ -198,60 +176,43 @@ HELP
     }
 
     /**
-     * Retrieve a slice of the readline history by range.
+     * Retrieve a slice of the readline history.
      *
-     * @param string|null $show Range specification (e.g., "5..10")
+     * @param string|null $show
+     * @param string|null $head
+     * @param string|null $tail
      *
      * @return array A slice of history
      */
-    private function getHistorySlice(?string $show, bool $session): array
+    private function getHistorySlice($show, $head, $tail): array
     {
-        if ($session) {
-            if (!($this->readline instanceof InteractiveReadlineInterface)) {
-                throw new RuntimeException('The --session option is only available with interactive readline.');
-            }
-
-            $history = $this->readline->listSessionHistory();
-        } else {
-            $history = $this->readline->listHistory();
-        }
+        $history = $this->readline->listHistory();
 
         // don't show the current `history` invocation
         \array_pop($history);
 
-        if ($show === null) {
-            return $history;
-        }
-
-        list($start, $end) = $this->extractRange($show);
-        $length = $end - $start;
-
-        return \array_slice($history, $start, $length, true);
-    }
-
-    /**
-     * Apply --head or --tail to a history array.
-     */
-    private function applyHeadOrTail(array $history, ?string $head, ?string $tail): array
-    {
-        if ($head) {
+        if ($show) {
+            list($start, $end) = $this->extractRange($show);
+            $length = $end - $start;
+        } elseif ($head) {
             if (!\preg_match('/^\d+$/', $head)) {
                 throw new \InvalidArgumentException('Please specify an integer argument for --head');
             }
 
-            return \array_slice($history, 0, (int) $head, true);
+            $start = 0;
+            $length = (int) $head;
         } elseif ($tail) {
             if (!\preg_match('/^\d+$/', $tail)) {
                 throw new \InvalidArgumentException('Please specify an integer argument for --tail');
             }
 
-            $start = \count($history) - (int) $tail;
+            $start = \count($history) - $tail;
             $length = (int) $tail + 1;
-
-            return \array_slice($history, $start, $length, true);
+        } else {
+            return $history;
         }
 
-        return $history;
+        return \array_slice($history, $start, $length, true);
     }
 
     /**
@@ -271,15 +232,6 @@ HELP
 
         if ($count > 1) {
             throw new \InvalidArgumentException('Please specify only one of --'.\implode(', --', $options));
-        }
-    }
-
-    private function validateClearIsUnrestricted(InputInterface $input): void
-    {
-        foreach (['show', 'head', 'tail', 'session', 'grep', 'insensitive', 'invert'] as $opt) {
-            if ($input->getOption($opt)) {
-                throw new RuntimeException('The --clear option cannot be combined with history filters or range options.');
-            }
         }
     }
 

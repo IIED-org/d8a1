@@ -8,13 +8,33 @@ use Drupal\search_api\Event\MappingFieldTypesEvent;
 use Drupal\search_api\Event\SearchApiEvents;
 use Drupal\search_api\IndexInterface;
 use Drupal\search_api\SearchApiException;
-use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Provides helper methods for dealing with Search API data types.
  */
 class DataTypeHelper implements DataTypeHelperInterface {
+
+  /**
+   * The module handler.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   */
+  protected $moduleHandler;
+
+  /**
+   * The data type plugin manager.
+   *
+   * @var \Drupal\search_api\DataType\DataTypePluginManager
+   */
+  protected $dataTypeManager;
+
+  /**
+   * The event dispatcher.
+   *
+   * @var \Symfony\Contracts\EventDispatcher\EventDispatcherInterface
+   */
+  protected $eventDispatcher;
 
   /**
    * Cache for the field type mapping.
@@ -34,12 +54,21 @@ class DataTypeHelper implements DataTypeHelperInterface {
    */
   protected $dataTypeFallbackMapping = [];
 
-  public function __construct(
-    protected ModuleHandlerInterface $moduleHandler,
-    protected EventDispatcherInterface $eventDispatcher,
-    #[Autowire(service: 'plugin.manager.search_api.data_type')]
-    protected DataTypePluginManager $dataTypeManager,
-  ) {}
+  /**
+   * Constructs a DataTypeHelper object.
+   *
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
+   *   The module handler.
+   * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $eventDispatcher
+   *   The event dispatcher.
+   * @param \Drupal\search_api\DataType\DataTypePluginManager $dataTypeManager
+   *   The data type plugin manager.
+   */
+  public function __construct(ModuleHandlerInterface $moduleHandler, EventDispatcherInterface $eventDispatcher, DataTypePluginManager $dataTypeManager) {
+    $this->moduleHandler = $moduleHandler;
+    $this->eventDispatcher = $eventDispatcher;
+    $this->dataTypeManager = $dataTypeManager;
+  }
 
   /**
    * {@inheritdoc}
@@ -96,7 +125,7 @@ class DataTypeHelper implements DataTypeHelperInterface {
           'boolean',
         ],
         // Types we know about but want/have to ignore.
-        '' => [
+        NULL => [
           'language',
         ],
       ];
@@ -127,7 +156,7 @@ class DataTypeHelper implements DataTypeHelperInterface {
    */
   public function getDataTypeFallbackMapping(IndexInterface $index) {
     // Check the cache first.
-    $indexId = (string) $index->id();
+    $indexId = $index->id();
     if (empty($this->dataTypeFallbackMapping[$indexId])) {
       $server = NULL;
       try {

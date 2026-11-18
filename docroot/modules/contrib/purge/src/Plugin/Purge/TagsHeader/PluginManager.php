@@ -5,7 +5,6 @@ namespace Drupal\purge\Plugin\Purge\TagsHeader;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
-use Drupal\purge\Attribute\PurgeTagsHeader;
 
 /**
  * The tagsheader plugin manager.
@@ -28,10 +27,8 @@ class PluginManager extends DefaultPluginManager {
       'Plugin/Purge/TagsHeader',
       $namespaces,
       $module_handler,
-      TagsHeaderInterface::class,
-      PurgeTagsHeader::class,
-      'Drupal\purge\Annotation\PurgeTagsHeader',
-    );
+      'Drupal\purge\Plugin\Purge\TagsHeader\TagsHeaderInterface',
+      'Drupal\purge\Annotation\PurgeTagsHeader');
     $this->alterInfo('purge_tagsheader');
     $this->setCacheBackend($cache_backend, 'purge_tagsheader_plugins');
   }

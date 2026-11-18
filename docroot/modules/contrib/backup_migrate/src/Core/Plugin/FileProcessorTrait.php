@@ -12,9 +12,7 @@ use Drupal\backup_migrate\Core\File\TempFileManagerInterface;
 trait FileProcessorTrait {
 
   /**
-   * Stores the value.
-   *
-   * @var \Drupal\backup_migrate\Core\File\TempFileManagerInterface The tempfilemanager
+   * @var \Drupal\backup_migrate\Core\File\TempFileManagerInterface
    */
   protected $tempfilemanager;
 
@@ -22,10 +20,8 @@ trait FileProcessorTrait {
    * Inject the temp file manager.
    *
    * @param \Drupal\backup_migrate\Core\File\TempFileManagerInterface $tempfilemanager
-   *   The tempfilemanager.
    *
    * @return mixed
-   *   The return value.
    */
   public function setTempFileManager(TempFileManagerInterface $tempfilemanager) {
     $this->tempfilemanager = $tempfilemanager;
@@ -35,7 +31,6 @@ trait FileProcessorTrait {
    * Get the temp file manager.
    *
    * @return \Drupal\backup_migrate\Core\File\TempFileManagerInterface
-   *   The requested integer.
    */
   public function getTempFileManager() {
     return $this->tempfilemanager;
@@ -51,7 +46,7 @@ trait FileProcessorTrait {
    *    'ext' is the file extension we are testing.
    *
    * @return string
-   *   *   The mime type of the file (or the passed in mime type if unknown)
+   *   The mime type of the file (or the passed in mime type if unknown)
    */
   public function alterMime($filemime, array $params) {
     // Check all of the provided file types for the given extension.

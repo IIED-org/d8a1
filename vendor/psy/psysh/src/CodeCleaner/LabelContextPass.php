@@ -3,7 +3,7 @@
 /*
  * This file is part of Psy Shell.
  *
- * (c) 2012-2026 Justin Hileman
+ * (c) 2012-2023 Justin Hileman
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -31,9 +31,13 @@ use Psy\Exception\FatalErrorException;
  */
 class LabelContextPass extends CodeCleanerPass
 {
-    private int $functionDepth = 0;
-    private array $labelDeclarations = [];
-    private array $labelGotos = [];
+    /** @var int */
+    private $functionDepth;
+
+    /** @var array */
+    private $labelDeclarations;
+    /** @var array */
+    private $labelGotos;
 
     /**
      * @param array $nodes
@@ -45,8 +49,6 @@ class LabelContextPass extends CodeCleanerPass
         $this->functionDepth = 0;
         $this->labelDeclarations = [];
         $this->labelGotos = [];
-
-        return null;
     }
 
     /**
@@ -57,21 +59,19 @@ class LabelContextPass extends CodeCleanerPass
         if ($node instanceof FunctionLike) {
             $this->functionDepth++;
 
-            return null;
+            return;
         }
 
         // node is inside function context
         if ($this->functionDepth !== 0) {
-            return null;
+            return;
         }
 
         if ($node instanceof Goto_) {
-            $this->labelGotos[\strtolower($node->name)] = $node->getStartLine();
+            $this->labelGotos[\strtolower($node->name)] = $node->getLine();
         } elseif ($node instanceof Label) {
-            $this->labelDeclarations[\strtolower($node->name)] = $node->getStartLine();
+            $this->labelDeclarations[\strtolower($node->name)] = $node->getLine();
         }
-
-        return null;
     }
 
     /**
@@ -84,8 +84,6 @@ class LabelContextPass extends CodeCleanerPass
         if ($node instanceof FunctionLike) {
             $this->functionDepth--;
         }
-
-        return null;
     }
 
     /**
@@ -99,7 +97,5 @@ class LabelContextPass extends CodeCleanerPass
                 throw new FatalErrorException($msg, 0, \E_ERROR, null, $line);
             }
         }
-
-        return null;
     }
 }

@@ -25,7 +25,10 @@ class RemoveBuildParametersPass implements CompilerPassInterface
     ) {
     }
 
-    public function process(ContainerBuilder $container): void
+    /**
+     * @return void
+     */
+    public function process(ContainerBuilder $container)
     {
         $parameterBag = $container->getParameterBag();
         $this->removedParameters = [];

@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace DrupalCodeGenerator\Helper\Drupal;
 
@@ -149,20 +147,18 @@ final class HookInfo extends Helper {
 
     $file_description = self::getFileDescription(self::getFileType($hook_name));
     return <<< TWIG
-      <?php
+        <?php declare(strict_types = 1);
 
-      declare(strict_types=1);
+        /**
+         * @file
+         * $file_description
+         */
 
-      /**
-       * @file
-       * $file_description
-       */
-
-      /**
-       * Implements hook_$hook_name().
-       */
-      $hook_template
-      TWIG;
+        /**
+         * Implements hook_$hook_name().
+         */
+        $hook_template
+        TWIG;
   }
 
   /**

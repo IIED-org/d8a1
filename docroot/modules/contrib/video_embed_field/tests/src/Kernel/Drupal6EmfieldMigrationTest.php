@@ -14,9 +14,7 @@ class Drupal6EmfieldMigrationTest extends MigrateDrupal6TestBase {
   use EntityLoadTrait;
 
   /**
-   * {@inheritdoc}
-   *
-   * phpcs:disable DrupalPractice.Objects.StrictSchemaDisabled.StrictConfigSchema
+   * @var bool
    */
   protected $strictConfigSchema = FALSE;
 

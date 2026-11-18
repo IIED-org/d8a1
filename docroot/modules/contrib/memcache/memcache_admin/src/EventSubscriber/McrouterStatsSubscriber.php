@@ -6,6 +6,7 @@ use Drupal\Core\Messenger\MessengerTrait;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\memcache_admin\Event\MemcacheStatsEvent;
 use Drupal\memcache_admin\Stats\McrouterStatsObject;
+use Drupal\memcache_admin\Stats\MemcacheStatsObject;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -19,11 +20,10 @@ class McrouterStatsSubscriber implements EventSubscriberInterface {
   /**
    * {@inheritdoc}
    */
-  public static function getSubscribedEvents(): array {
-    $events = [];
+  public static function getSubscribedEvents() {
     $events[MemcacheStatsEvent::BUILD_MEMCACHE_STATS][] = [
       'onPopulateStats',
-      100,
+      100
     ];
     return $events;
   }
@@ -55,7 +55,7 @@ class McrouterStatsSubscriber implements EventSubscriberInterface {
     }
     $servers = array_keys($raw_stats[$bin]);
     foreach ($servers as $server) {
-      if ($server == 'total') {
+      if ($server =='total') {
         continue;
       }
       // McRouter reports num_servers use that for detecting stats.
@@ -65,5 +65,4 @@ class McrouterStatsSubscriber implements EventSubscriberInterface {
       }
     }
   }
-
 }

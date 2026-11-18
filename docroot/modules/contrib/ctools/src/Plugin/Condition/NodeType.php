@@ -5,15 +5,16 @@ namespace Drupal\ctools\Plugin\Condition;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
- * Entity Bundle Constraints.
+ * Entity Bundle Constraints
  *
  * Adds constraints to the core NodeType condition.
  *
- * @deprecated in ctools:8.x-3.10 and is removed from ctools:4.1.0.
+ * @deprecated in ctools:8.x-1.10.
  *   Use \Drupal\ctools\Plugin\Condition\EntityBundle instead.
  *
  * @see https://www.drupal.org/node/2983299
  */
+//@phpstan-ignore-next-line
 class NodeType extends EntityBundle {
 
   /**

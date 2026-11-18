@@ -10,34 +10,34 @@ interface SocialAuthUserInterface {
   /**
    * Gets the user's first name.
    *
-   * @return string|null
+   * @return string
    *   The user's first name.
    */
-  public function getFirstName(): ?string;
+  public function getFirstName();
 
   /**
    * Sets the user's first name.
    *
-   * @param string|null $first_name
+   * @param string $first_name
    *   The user's first name.
    */
-  public function setFirstName(?string $first_name): void;
+  public function setFirstName($first_name);
 
   /**
    * Gets the user's last name.
    *
-   * @return string|null
+   * @return string
    *   The user's last name.
    */
-  public function getLastName(): ?string;
+  public function getLastName();
 
   /**
    * Sets the user's last name.
    *
-   * @param string|null $last_name
+   * @param string $last_name
    *   The user's last name.
    */
-  public function setLastName(?string $last_name): void;
+  public function setLastName($last_name);
 
   /**
    * Gets the user's name.
@@ -45,7 +45,7 @@ interface SocialAuthUserInterface {
    * @return string
    *   The user's name.
    */
-  public function getName(): string;
+  public function getName();
 
   /**
    * Sets the user's name.
@@ -53,23 +53,23 @@ interface SocialAuthUserInterface {
    * @param string $name
    *   The user's name.
    */
-  public function setName(string $name): void;
+  public function setName($name);
 
   /**
    * Gets the user's email.
    *
-   * @return string|null
+   * @return string
    *   The user's email.
    */
-  public function getEmail(): ?string;
+  public function getEmail();
 
   /**
    * Sets the user's email.
    *
-   * @param string|null $email
+   * @param string $email
    *   The user's email.
    */
-  public function setEmail(?string $email): void;
+  public function setEmail($email);
 
   /**
    * Gets the user's id in provider.
@@ -77,7 +77,7 @@ interface SocialAuthUserInterface {
    * @return string
    *   The user's id in provider.
    */
-  public function getProviderId(): string;
+  public function getProviderId();
 
   /**
    * Sets the user's id in provider.
@@ -85,7 +85,7 @@ interface SocialAuthUserInterface {
    * @param string $provider_id
    *   The user's id in provider.
    */
-  public function setProviderId(string $provider_id);
+  public function setProviderId($provider_id);
 
   /**
    * Gets the user's token.
@@ -93,7 +93,7 @@ interface SocialAuthUserInterface {
    * @return string
    *   The user's token.
    */
-  public function getToken(): string;
+  public function getToken();
 
   /**
    * Sets the user's token.
@@ -101,39 +101,39 @@ interface SocialAuthUserInterface {
    * @param string $token
    *   The user's token.
    */
-  public function setToken(string $token): void;
+  public function setToken($token);
 
   /**
    * Gets the user's picture URL.
    *
-   * @return string|null
+   * @return string
    *   The user's picture URL.
    */
-  public function getPictureUrl(): ?string;
+  public function getPictureUrl();
 
   /**
    * Sets the user's picture URL.
    *
-   * @param string|null $picture_url
+   * @param string $picture_url
    *   The user's picture URL.
    */
-  public function setPictureUrl(?string $picture_url): void;
+  public function setPictureUrl($picture_url);
 
   /**
    * Gets the user's picture ID.
    *
-   * @return mixed
+   * @return string|int|null
    *   The user's picture ID.
    */
-  public function getPicture(): mixed;
+  public function getPicture();
 
   /**
    * Sets the user's picture ID.
    *
-   * @param mixed $file_id
+   * @param string|int|null $file_id
    *   The user's picture ID.
    */
-  public function setPicture(mixed $file_id);
+  public function setPicture($file_id);
 
   /**
    * Set the user's additional data.
@@ -141,7 +141,7 @@ interface SocialAuthUserInterface {
    * @return array|null
    *   The user's additional data.
    */
-  public function getAdditionalData(): ?array;
+  public function getAdditionalData();
 
   /**
    * Sets the user's additional data.
@@ -149,7 +149,7 @@ interface SocialAuthUserInterface {
    * @param array|null $additional_data
    *   The user's additional data.
    */
-  public function setAdditionalData(?array $additional_data);
+  public function setAdditionalData($additional_data);
 
   /**
    * Adds a new key-value pair in customData.
@@ -159,10 +159,10 @@ interface SocialAuthUserInterface {
    * @param mixed $value
    *   The value associated to the key.
    *
-   * @return static
+   * @return \Drupal\social_auth\User\SocialAuthUser
    *   The User instance.
    */
-  public function addData(string $key, mixed $value): static;
+  public function addData($key, $value);
 
   /**
    * Gets a value from customData.
@@ -170,9 +170,9 @@ interface SocialAuthUserInterface {
    * @param string $key
    *   The key identifying the data.
    *
-   * @return mixed
+   * @return mixed|null
    *   The custom data or null if not found.
    */
-  public function getData(string $key): mixed;
+  public function getData($key);
 
 }

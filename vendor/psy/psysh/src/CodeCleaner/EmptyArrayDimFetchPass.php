@@ -3,7 +3,7 @@
 /*
  * This file is part of Psy Shell.
  *
- * (c) 2012-2026 Justin Hileman
+ * (c) 2012-2023 Justin Hileman
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -25,7 +25,7 @@ class EmptyArrayDimFetchPass extends CodeCleanerPass
 {
     const EXCEPTION_MESSAGE = 'Cannot use [] for reading';
 
-    private array $theseOnesAreFine = [];
+    private $theseOnesAreFine = [];
 
     /**
      * @return Node[]|null Array of nodes
@@ -33,8 +33,6 @@ class EmptyArrayDimFetchPass extends CodeCleanerPass
     public function beforeTraverse(array $nodes)
     {
         $this->theseOnesAreFine = [];
-
-        return null;
     }
 
     /**
@@ -61,10 +59,8 @@ class EmptyArrayDimFetchPass extends CodeCleanerPass
 
         if ($node instanceof ArrayDimFetch && $node->dim === null) {
             if (!\in_array($node, $this->theseOnesAreFine)) {
-                throw new FatalErrorException(self::EXCEPTION_MESSAGE, $node->getStartLine());
+                throw new FatalErrorException(self::EXCEPTION_MESSAGE, $node->getLine());
             }
         }
-
-        return null;
     }
 }

@@ -3,18 +3,17 @@
 namespace Drupal\entity_usage_test\Plugin\Block;
 
 use Drupal\Component\Utility\NestedArray;
-use Drupal\Core\Block\Attribute\Block;
 use Drupal\Core\Block\BlockBase;
-use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Provides a block with dependencies.
+ *
+ * @Block(
+ *   id = "entity_usage_test_dependencies",
+ *   admin_label = @Translation("Block with dependencies"),
+ *   category = @Translation("Entity Usage Test"),
+ * )
  */
-#[Block(
-  id: 'entity_usage_test_dependencies',
-  admin_label: new TranslatableMarkup('Block with dependencies'),
-  category: new TranslatableMarkup('Entity Usage Test')
-)]
 class DependenciesBlock extends BlockBase {
 
   /**
@@ -43,5 +42,4 @@ class DependenciesBlock extends BlockBase {
     }
     return $dependencies;
   }
-
 }

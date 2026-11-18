@@ -272,7 +272,7 @@ interface FieldInterface extends \Traversable {
   /**
    * Retrieves the value of this field.
    *
-   * @return mixed[]
+   * @return array
    *   A numeric array of zero or more values for this field, with indices
    *   starting with 0.
    */
@@ -281,7 +281,7 @@ interface FieldInterface extends \Traversable {
   /**
    * Sets the values of this field.
    *
-   * @param mixed[] $values
+   * @param array $values
    *   The values of the field. These already have to have been processed by the
    *   data type plugin corresponding to this field's type.
    *

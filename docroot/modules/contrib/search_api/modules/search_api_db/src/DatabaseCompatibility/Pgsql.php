@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Drupal\search_api_db\DatabaseCompatibility;
 
@@ -12,7 +12,6 @@ use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\Utility\Error;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
-use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 /**
  * Represents a PostgreSQL database.
@@ -36,9 +35,8 @@ class Pgsql extends CaseSensitiveDatabase {
    */
   public function __construct(
     Connection $database,
-    #[Autowire(service: 'transliteration')]
     TransliterationInterface $transliterator,
-    LoggerChannelFactoryInterface $logger_factory,
+    LoggerChannelFactoryInterface $logger_factory
   ) {
     parent::__construct($database, $transliterator);
 

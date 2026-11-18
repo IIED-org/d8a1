@@ -23,7 +23,7 @@ interface OAuth2ManagerInterface {
    * @return $this
    *   The current object.
    */
-  public function setClient(mixed $client): static;
+  public function setClient($client);
 
   /**
    * Gets the service client object.
@@ -31,7 +31,7 @@ interface OAuth2ManagerInterface {
    * @return mixed
    *   The service client object.
    */
-  public function getClient(): mixed;
+  public function getClient();
 
   /**
    * Gets the access token after authentication.
@@ -39,7 +39,7 @@ interface OAuth2ManagerInterface {
    * @return \League\OAuth2\Client\Token\AccessToken|mixed
    *   The access token.
    */
-  public function getAccessToken(): mixed;
+  public function getAccessToken();
 
   /**
    * Sets the access token.
@@ -50,7 +50,7 @@ interface OAuth2ManagerInterface {
    * @return $this
    *   The current object.
    */
-  public function setAccessToken(mixed $access_token): static;
+  public function setAccessToken($access_token);
 
   /**
    * Returns the authorization URL where user will be redirected.
@@ -58,7 +58,7 @@ interface OAuth2ManagerInterface {
    * @return string|mixed
    *   Absolute authorization URL.
    */
-  public function getAuthorizationUrl(): mixed;
+  public function getAuthorizationUrl();
 
   /**
    * Returns OAuth2 state.
@@ -66,7 +66,7 @@ interface OAuth2ManagerInterface {
    * @return string
    *   The OAuth2 state.
    */
-  public function getState(): string;
+  public function getState();
 
   /**
    * Gets data about the user.
@@ -74,6 +74,6 @@ interface OAuth2ManagerInterface {
    * @return \League\OAuth2\Client\Provider\GenericResourceOwner|array|mixed
    *   User info returned by provider.
    */
-  public function getUserInfo(): mixed;
+  public function getUserInfo();
 
 }

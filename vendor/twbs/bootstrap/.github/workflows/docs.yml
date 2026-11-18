@@ -3,12 +3,13 @@ name: Docs
 on:
   push:
     branches:
-      - v5-dev
+      - main
   pull_request:
   workflow_dispatch:
 
 env:
   FORCE_COLOR: 2
+  NODE: 18
 
 permissions:
   contents: read
@@ -19,14 +20,14 @@ jobs:
 
     steps:
       - name: Clone repository
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        uses: actions/checkout@v4
         with:
           persist-credentials: false
 
       - name: Set up Node.js
-        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        uses: actions/setup-node@v3
         with:
-          node-version-file: ".nvmrc"
+          node-version: "${{ env.NODE }}"
           cache: npm
 
       - run: java -version
@@ -39,3 +40,11 @@ jobs:
 
       - name: Validate HTML
         run: npm run docs-vnu
+
+      - name: Run linkinator
+        uses: JustinBeckwith/linkinator-action@v1
+        with:
+          paths: _site
+          recurse: true
+          verbosity: error
+          skip: "^(?!http://localhost)"

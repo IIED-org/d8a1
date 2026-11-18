@@ -39,9 +39,6 @@ class CaptchaImageRefreshController extends ControllerBase {
 
   /**
    * {@inheritdoc}
-   *
-   * @return static
-   *   The created instance.
    */
   public static function create(ContainerInterface $container) {
     return new static(

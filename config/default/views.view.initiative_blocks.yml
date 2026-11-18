@@ -5277,8 +5277,8 @@ display:
             options: '{"permanent":false,"direction":"center"}'
           leaflet_popup:
             value: nothing
-            view_mode: full
             options: '{"maxWidth":"300","minWidth":"50","autoPan":true}'
+            view_mode: full
           leaflet_map: leaflet-mapbox
           height: '358'
           height_unit: px
@@ -5332,19 +5332,16 @@ display:
             circle_marker_options: '{"radius":100,"color":"red","fillColor":"#f03","fillOpacity":0.5}'
           leaflet_markercluster:
             control: false
-            excluded: '0'
-            options: '{"spiderfyOnMaxZoom":true,"showCoverageOnHover":true,"removeOutsideVisibleBounds":false}'
             include_path: false
+            options: '{"spiderfyOnMaxZoom":true,"showCoverageOnHover":true,"removeOutsideVisibleBounds":false}'
+            excluded: '0'
           fullscreen:
             control: false
             options: '{"position":"topleft","pseudoFullscreen":false}'
           path: '{"color":"#3388ff","opacity":"1.0","stroke":true,"weight":3,"fill":"depends","fillColor":"*","fillOpacity":"0.2"}'
-          feature_properties:
-            values: ''
           geocoder:
             control: false
             settings:
-              popup: false
               autocomplete:
                 placeholder: 'Search Address'
                 title: 'Search an Address on the Map'
@@ -5363,9 +5360,12 @@ display:
               min_terms: 4
               delay: 800
               zoom: 16
+              popup: false
               options: ''
           map_lazy_load:
             lazy_load: true
+          feature_properties:
+            values: ''
       row:
         type: fields
         options:
@@ -5905,13 +5905,13 @@ display:
           click_sort_column: target_id
           type: colorbox
           settings:
+            colorbox_node_style: gallery_270x270_
+            colorbox_node_style_first: ''
             colorbox_image_style: max_1300x1300
             colorbox_gallery: post
             colorbox_gallery_custom: ''
             colorbox_caption: title
             colorbox_caption_custom: ''
-            colorbox_node_style: gallery_270x270_
-            colorbox_node_style_first: ''
           group_column: ''
           group_columns: {  }
           group_rows: true

@@ -2,18 +2,19 @@
 
 /**
  * @file
- * Enhances the token API in core: adds a browsable UI, missing tokens, etc.
+ * Enhances the token API in core: adds a browseable UI, missing tokens, etc.
  */
 
 use Drupal\Component\Render\PlainTextOutput;
 use Drupal\Core\Block\BlockPluginInterface;
-use Drupal\Core\Entity\EntityTypeInterface;
-use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Menu\MenuLinkInterface;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\TypedData\TranslatableInterface;
 use Drupal\menu_link_content\Entity\MenuLinkContent;
 use Drupal\menu_link_content\MenuLinkContentInterface;
 use Drupal\node\Entity\Node;
@@ -214,12 +215,10 @@ function token_entity_type_alter(array &$entity_types) {
  * @return mixed
  *   The value of $info['tokens'][$type][$name]['module'] from token info, or
  *   NULL if the value does not exist.
- *
- * @deprecated in token:8.x-1.x and is removed from token:2.0.0. Use the
- *   token.module_provider service instead.
  */
 function _token_module($type, $name) {
-  return \Drupal::service('token.module_provider')->getTokenModule($type, $name);
+  $token_info = \Drupal::token()->getTokenInfo($type, $name);
+  return isset($token_info['module']) ? $token_info['module'] : NULL;
 }
 
 /**
@@ -334,7 +333,7 @@ function token_form_action_form_alter(&$form, $form_state) {
 /**
  * Implements hook_form_FORM_ID_alter().
  *
- * Alters the user email fields to add token context validation and
+ * Alters the user e-mail fields to add token context validation and
  * adds the token tree for a better token UI and selection.
  */
 function token_form_user_admin_settings_alter(&$form, FormStateInterface $form_state) {
@@ -360,7 +359,7 @@ function token_form_user_admin_settings_alter(&$form, FormStateInterface $form_s
       case 'email_activated':
       case 'email_blocked':
       case 'email_canceled':
-        // These fieldsets have their email elements inside a 'settings'
+        // These fieldsets have their e-mail elements inside a 'settings'
         // sub-element, so switch to that element instead.
         $element = &$form[$key]['settings'];
         break;
@@ -446,7 +445,7 @@ function token_render_array_value($value, array $options = []) {
 }
 
 /**
- * Copy of drupal_render_cache_set() that does not care about request method.
+ * Coyp of drupal_render_cache_set() that does not care about request method.
  */
 function token_render_cache_set(&$markup, $elements) {
   // This should only run of drupal_render_cache_set() did not.
@@ -461,7 +460,7 @@ function token_render_cache_set(&$markup, $elements) {
 }
 
 /**
- * Loads menu link titles for all parents of a menu link plugin ID.
+ * Loads menu link titles for all purents of a menu link plugin ID.
  *
  * @param string $plugin_id
  *   The menu link plugin ID.
@@ -673,14 +672,14 @@ function token_node_menu_link_submit($entity_type, NodeInterface $node, &$form, 
 
     // Don't create a menu link if the node is not being saved.
     $triggering_element = $form_state->getTriggeringElement();
-    if (!$triggering_element || !isset($triggering_element['#submit']) || !in_array('::save', $triggering_element['#submit'])) {
+    if (!$triggering_element || !in_array('::save', $triggering_element['#submit'])) {
       return;
     }
 
     $values = $form_state->getValue('menu');
     if (!empty($values['enabled']) && trim($values['title'])) {
       if (!empty($values['menu_parent'])) {
-        [$menu_name, $parent] = explode(':', $values['menu_parent'], 2);
+        list($menu_name, $parent) = explode(':', $values['menu_parent'], 2);
         $values['menu_name'] = $menu_name;
         $values['parent'] = $parent;
       }

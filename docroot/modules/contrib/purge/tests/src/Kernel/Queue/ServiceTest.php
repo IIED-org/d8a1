@@ -3,18 +3,13 @@
 namespace Drupal\Tests\purge\Kernel\Queue;
 
 use Drupal\purge\Plugin\Purge\Invalidation\InvalidationInterface;
-use Drupal\purge\Plugin\Purge\Queue\ProxyItemInterface;
 use Drupal\Tests\purge\Kernel\KernelServiceTestBase;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests \Drupal\purge\Plugin\Purge\Queue\QueueService.
  *
  * @group purge
  */
-#[Group('purge')]
-#[RunTestsInSeparateProcesses]
 class ServiceTest extends KernelServiceTestBase {
 
   /**
@@ -54,7 +49,7 @@ class ServiceTest extends KernelServiceTestBase {
    * Tests \Drupal\purge\Plugin\Purge\Queue\QueueService::getPlugins.
    */
   public function testGetPlugins(): void {
-    $this->assertIsArray($this->service->getPlugins());
+    $this->assertTrue(is_array($this->service->getPlugins()));
     $this->assertTrue(isset($this->service->getPlugins()['file']));
     $this->assertTrue(isset($this->service->getPlugins()['memory']));
     $this->assertTrue(isset($this->service->getPlugins()['database']));
@@ -95,7 +90,7 @@ class ServiceTest extends KernelServiceTestBase {
     $i = $this->getInvalidations(1);
     $this->assertNull($this->service->add($this->queuer, [$i]));
     $claims = $this->service->claim(100, 10);
-    $this->assertIsArray($claims);
+    $this->assertTrue(is_array($claims));
     $this->assertEquals(1, count($claims));
     $this->assertInstanceOf(InvalidationInterface::class, $claims[0]);
     $this->assertTrue($claims[0]->getId() === $i->getId());
@@ -188,45 +183,6 @@ class ServiceTest extends KernelServiceTestBase {
   }
 
   /**
-   * Tests that ::claim() drops queued items which no longer validate.
-   *
-   * Validation rules can become stricter over time (e.g. tags with spaces),
-   * leaving items in persistent queues that can't be instantiated anymore.
-   */
-  public function testClaimDeletesInvalidItems(): void {
-    $this->service->setPluginsEnabled(['database']);
-    $this->service->add($this->queuer, $this->getInvalidations(2));
-    $this->service->commit();
-    $this->assertSame(2, $this->service->numberOfItems());
-    // Insert a raw item directly into the database queue, bypassing the
-    // invalidation factory so that the expression never got validated.
-    $this->container->get('database')
-      ->insert('purge_queue')
-      ->fields([
-        'data' => serialize([
-          ProxyItemInterface::DATA_INDEX_TYPE => 'tag',
-          ProxyItemInterface::DATA_INDEX_STATES => [],
-          ProxyItemInterface::DATA_INDEX_EXPRESSION => 'tag with space',
-          ProxyItemInterface::DATA_INDEX_PROPERTIES => [],
-        ]),
-        'created' => time(),
-      ])
-      ->execute();
-    $this->assertSame(3, $this->service->numberOfItems());
-    // Browsing skips the item, claiming deletes it.
-    $this->assertCount(2, $this->service->selectPage());
-    $claims = $this->service->claim(10, 10);
-    $this->assertCount(2, $claims);
-    $this->assertSame([0, 1], array_keys($claims));
-    foreach ($claims as $claim) {
-      $this->assertInstanceOf(InvalidationInterface::class, $claim);
-      $this->assertSame('everything', $claim->getType());
-    }
-    $this->service->release($claims);
-    $this->assertSame(2, $this->service->numberOfItems());
-  }
-
-  /**
    * Tests \Drupal\purge\Plugin\Purge\Queue\QueueService::delete.
    */
   public function testDelete(): void {
@@ -255,7 +211,7 @@ class ServiceTest extends KernelServiceTestBase {
     $this->service->handleResults($claims);
     sleep(3);
 
-    // Claim for 2s, mark all as not-successful and assert releases.
+    // Claim for 2s, mark all as not-successfull and assert releases.
     $claims = $this->service->claim(10, 2);
     $this->assertTrue(4 === count($claims));
     foreach ($claims as $claim) {

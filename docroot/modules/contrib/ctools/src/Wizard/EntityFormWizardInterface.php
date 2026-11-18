@@ -11,7 +11,6 @@ interface EntityFormWizardInterface extends FormWizardInterface {
    * The fieldset #title for your label & machine name elements.
    *
    * @return string
-   *   The fieldset #title for your label and machine name elements.
    */
   public function getWizardLabel();
 
@@ -19,7 +18,6 @@ interface EntityFormWizardInterface extends FormWizardInterface {
    * The form element #title for your unique identifier label.
    *
    * @return string
-   *   The form element #title for your unique identifier label.
    */
   public function getMachineLabel();
 
@@ -27,7 +25,6 @@ interface EntityFormWizardInterface extends FormWizardInterface {
    * The machine name of the entity type.
    *
    * @return string
-   *   The machine name of the entity type.
    */
   public function getEntityType();
 

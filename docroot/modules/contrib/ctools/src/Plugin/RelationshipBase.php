@@ -10,5 +10,4 @@ use Drupal\Core\Plugin\PluginBase;
  */
 abstract class RelationshipBase extends PluginBase implements RelationshipInterface {
   use ContextAwarePluginTrait;
-
 }

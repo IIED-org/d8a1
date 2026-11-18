@@ -2,27 +2,26 @@
 
 namespace Drupal\geofield\Plugin\Field\FieldFormatter;
 
-use Drupal\Component\Utility\Html;
-use Drupal\Core\Field\Attribute\FieldFormatter;
 use Drupal\Core\Field\FieldDefinitionInterface;
-use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FormatterBase;
-use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Drupal\geofield\GeoPHP\GeoPHPInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\geofield\GeoPHP\GeoPHPInterface;
+use Drupal\Component\Utility\Html;
+use Drupal\Core\Field\FieldItemListInterface;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Plugin implementation of the 'geofield_default' formatter.
+ *
+ * @FieldFormatter(
+ *   id = "geofield_default",
+ *   label = @Translation("Raw Output"),
+ *   field_types = {
+ *     "geofield"
+ *   }
+ * )
  */
-#[FieldFormatter(
-  id: 'geofield_default',
-  label: new TranslatableMarkup('Raw Output'),
-  field_types: [
-    'geofield',
-  ],
-)]
 class GeofieldDefaultFormatter extends FormatterBase implements ContainerFactoryPluginInterface {
 
   /**
@@ -67,7 +66,7 @@ class GeofieldDefaultFormatter extends FormatterBase implements ContainerFactory
     $label,
     $view_mode,
     array $third_party_settings,
-    GeoPHPInterface $geophp_wrapper,
+    GeoPHPInterface $geophp_wrapper
   ) {
     parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $label, $view_mode, $third_party_settings);
     $this->geoPhpWrapper = $geophp_wrapper;
@@ -76,9 +75,6 @@ class GeofieldDefaultFormatter extends FormatterBase implements ContainerFactory
 
   /**
    * {@inheritdoc}
-   *
-   * @return static
-   *   A new instance of the plugin.
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     return new static(
@@ -95,9 +91,6 @@ class GeofieldDefaultFormatter extends FormatterBase implements ContainerFactory
 
   /**
    * {@inheritdoc}
-   *
-   * @return array
-   *   The default settings, keyed by setting name.
    */
   public static function defaultSettings() {
     return [
@@ -118,9 +111,6 @@ class GeofieldDefaultFormatter extends FormatterBase implements ContainerFactory
 
   /**
    * {@inheritdoc}
-   *
-   * @return array
-   *   The form elements for the settings.
    */
   public function settingsForm(array $form, FormStateInterface $form_state) {
     $elements = parent::settingsForm($form, $form_state);
@@ -136,7 +126,7 @@ class GeofieldDefaultFormatter extends FormatterBase implements ContainerFactory
 
     $elements['output_escape'] = [
       '#title' => $this->t('Escape output (recommended)'),
-      '#description' => $this->t('The text is escaped by converting special characters to HTML entities.<br>In some circumstances (i.e. part of Json output) this might not be the wanted/preferred behavior.'),
+      '#description' => $this->t('The text is escaped by converting special characters to HTML entities.<br>In some circumstances (i.e. part of Json output) this might not be the wanted/preferred behaviour.'),
       '#type' => 'checkbox',
       '#default_value' => $this->getSetting('output_escape'),
     ];
@@ -146,9 +136,6 @@ class GeofieldDefaultFormatter extends FormatterBase implements ContainerFactory
 
   /**
    * {@inheritdoc}
-   *
-   * @return array
-   *   The lines of the settings summary.
    */
   public function settingsSummary() {
     $summary = [];
@@ -158,14 +145,11 @@ class GeofieldDefaultFormatter extends FormatterBase implements ContainerFactory
 
   /**
    * {@inheritdoc}
-   *
-   * @return array
-   *   A render array for each field item, keyed by delta.
    */
   public function viewElements(FieldItemListInterface $items, $langcode) {
     $elements = [];
     foreach ($items as $delta => $item) {
-      $geom = $this->geoPhpWrapper->load($item->get('value')->getValue());
+      $geom = $this->geoPhpWrapper->load($item->value);
       $output = $geom ? $geom->out($this->getOutputFormat()) : '';
       if ($this->getSetting('output_escape')) {
         $output = Html::escape($output);

@@ -5,7 +5,7 @@ namespace Drupal\memcache\Invalidator;
 use Drupal\memcache\Driver\MemcacheDriverFactory;
 
 /**
- * Defines the memcache timestamp invalidator.
+ * Class MemcacheTimestampInvalidator.
  */
 class MemcacheTimestampInvalidator extends TimestampInvalidatorBase {
 

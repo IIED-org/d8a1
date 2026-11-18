@@ -648,7 +648,6 @@ display:
         type: full
         options:
           offset: 0
-          pagination_heading_level: h4
           items_per_page: 100
           total_pages: null
           id: 0
@@ -666,6 +665,7 @@ display:
             offset: false
             offset_label: Offset
           quantity: 9
+          pagination_heading_level: h4
       exposed_form:
         type: bef
         options:
@@ -679,11 +679,7 @@ display:
           input_required: false
           text_input_required: 'Select any filter and click on Apply to see results'
           text_input_required_format: basic_html
-          bef:
-            general:
-              auto_submit_sort_only: false
-              autosubmit_breakpoint: ''
-              autosubmit_textfield_minimum_length: 3
+          bef: {  }
       access:
         type: role
         options:
@@ -741,6 +737,10 @@ display:
             multiple: false
             remember_roles:
               authenticated: authenticated
+              anonymous: '0'
+              contributor: '0'
+              editor: '0'
+              administrator: '0'
             placeholder: ''
           is_grouped: false
           group_info:
@@ -787,6 +787,10 @@ display:
             multiple: false
             remember_roles:
               authenticated: authenticated
+              anonymous: '0'
+              contributor: '0'
+              editor: '0'
+              administrator: '0'
             reduce: true
           is_grouped: false
           group_info:
@@ -828,6 +832,10 @@ display:
             multiple: false
             remember_roles:
               authenticated: authenticated
+              anonymous: '0'
+              contributor: '0'
+              editor: '0'
+              administrator: '0'
           is_grouped: false
           group_info:
             label: ''
@@ -974,7 +982,6 @@ display:
           empty_table: false
           caption: ''
           description: ''
-          class: ''
       row:
         type: fields
       query:

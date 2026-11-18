@@ -5,12 +5,11 @@ declare(strict_types=1);
 namespace Drush\Attributes;
 
 use Attribute;
-use Consolidation\AnnotatedCommand\CommandData;
-use Consolidation\AnnotatedCommand\CommandError;
-use Drush\Utils\StringUtils;
+use Consolidation\AnnotatedCommand\Parser\CommandInfo;
+use Drush\Commands\ValidatorsCommands;
 
-#[Attribute(Attribute::TARGET_METHOD | Attribute::TARGET_CLASS)]
-class ValidateEntityLoad extends ValidatorBase implements ValidatorInterface
+#[Attribute(Attribute::TARGET_METHOD)]
+class ValidateEntityLoad
 {
     /**
      * @param $entityType
@@ -24,13 +23,9 @@ class ValidateEntityLoad extends ValidatorBase implements ValidatorInterface
     ) {
     }
 
-    public function validate(CommandData $commandData)
+    public static function handle(\ReflectionAttribute $attribute, CommandInfo $commandInfo)
     {
-        $names = StringUtils::csvToArray($commandData->input()->getArgument($this->argumentName));
-        $loaded = \Drupal::entityTypeManager()->getStorage($this->entityType)->loadMultiple($names);
-        if ($missing = array_diff($names, array_keys($loaded))) {
-            $msg = dt('Unable to load the !type: !str', ['!type' => $this->entityType, '!str' => implode(', ', $missing)]);
-            return new CommandError($msg);
-        }
+        $args = $attribute->getArguments();
+        $commandInfo->addAnnotation(ValidatorsCommands::VALIDATE_ENTITY_LOAD, "{$args['entityType']} {$args['argumentName']}");
     }
 }

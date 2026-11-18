@@ -2,20 +2,15 @@
 
 namespace Drupal\Tests\purge\Kernel\DiagnosticCheck;
 
-use Drupal\Core\Extension\Requirement\RequirementSeverity;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\purge\Plugin\Purge\DiagnosticCheck\DiagnosticCheckInterface;
 use Drupal\Tests\purge\Kernel\KernelServiceTestBase;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests DiagnosticsService.
  *
  * @group purge
  */
-#[Group('purge')]
-#[RunTestsInSeparateProcesses]
 class ServiceTest extends KernelServiceTestBase {
 
   /**
@@ -66,12 +61,14 @@ class ServiceTest extends KernelServiceTestBase {
   ];
 
   /**
-   * The requirements severities.
+   * The hook_requirements() severities from install.inc.
    *
-   * RequirementSeverity enum cases on Drupal 11.2+, the legacy install.inc
-   * integer constants on older cores.
+   * @var int[]
    *
-   * @var int[]|\Drupal\Core\Extension\Requirement\RequirementSeverity[]
+   * @see REQUIREMENT_INFO
+   * @see REQUIREMENT_OK
+   * @see REQUIREMENT_WARNING
+   * @see REQUIREMENT_ERROR
    */
   protected $requirementSeverities = [];
 
@@ -84,23 +81,15 @@ class ServiceTest extends KernelServiceTestBase {
   }
 
   /**
-   * Initialize $this->requirementSeverities.
+   * Include install.inc and initialize $this->requirementSeverities.
    */
   protected function initializeRequirementSeverities(): void {
     if (empty($this->requirementSeverities)) {
-      if (class_exists(RequirementSeverity::class)) {
-        $this->requirementSeverities[] = RequirementSeverity::Info;
-        $this->requirementSeverities[] = RequirementSeverity::OK;
-        $this->requirementSeverities[] = RequirementSeverity::Warning;
-        $this->requirementSeverities[] = RequirementSeverity::Error;
-      }
-      else {
-        include_once DRUPAL_ROOT . '/core/includes/install.inc';
-        $this->requirementSeverities[] = REQUIREMENT_INFO;
-        $this->requirementSeverities[] = REQUIREMENT_OK;
-        $this->requirementSeverities[] = REQUIREMENT_WARNING;
-        $this->requirementSeverities[] = REQUIREMENT_ERROR;
-      }
+      include_once DRUPAL_ROOT . '/core/includes/install.inc';
+      $this->requirementSeverities[] = REQUIREMENT_INFO;
+      $this->requirementSeverities[] = REQUIREMENT_OK;
+      $this->requirementSeverities[] = REQUIREMENT_WARNING;
+      $this->requirementSeverities[] = REQUIREMENT_ERROR;
     }
   }
 
@@ -227,7 +216,6 @@ class ServiceTest extends KernelServiceTestBase {
     $possibilities = [
       'alwayswarning',
       'capacity',
-      'maxage',
       'queuersavailable',
       'memoryqueuewarning',
     ];
@@ -242,7 +230,7 @@ class ServiceTest extends KernelServiceTestBase {
     $this->initializeRequirementSeverities();
     $this->initializeService();
     $list = $this->service->toMessageList($this->service);
-    $this->assertIsArray($list);
+    $this->assertTrue(is_array($list));
     $this->assertEquals(4, count($list));
     $this->assertTrue(isset($list['info']));
     $this->assertTrue(isset($list['ok']));
@@ -254,7 +242,7 @@ class ServiceTest extends KernelServiceTestBase {
     $this->assertEquals(2, count($list['error']));
     foreach ($list as $type => $msgs) {
       $this->assertTrue(in_array($type, ['info', 'ok', 'warning', 'error']));
-      $this->assertIsArray($msgs);
+      $this->assertTrue(is_array($msgs));
       foreach ($msgs as $msg) {
         $this->assertTrue(is_string($msg) && strlen($msg));
       }
@@ -279,7 +267,7 @@ class ServiceTest extends KernelServiceTestBase {
       $this->assertTrue((is_string($requirement['description']) || $requirement['description'] instanceof TranslatableMarkup));
       $this->assertFalse(empty($requirement['description']));
       $this->assertTrue(in_array($requirement['severity_status'], $this->severityStatuses));
-      $this->assertTrue(in_array($requirement['severity'], $this->requirementSeverities, TRUE));
+      $this->assertTrue(in_array($requirement['severity'], $this->requirementSeverities));
     }
     // Test that the $prefix_title parameter works as expected.
     foreach ($this->service->toRequirementsArray($this->service, TRUE) as $requirement) {

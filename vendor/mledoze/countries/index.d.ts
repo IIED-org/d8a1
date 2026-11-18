@@ -33,8 +33,6 @@ export interface Country {
   cioc: string
   independent: boolean
   status: string
-  unMember: boolean
-  unRegionalGroup: "African Group" | "Asia and the Pacific Group" | "Eastern European Group" | "Latin American and Caribbean Group" | "Western European and Others Group" | ""
   currencies: { [currencyCode: string]: Currency }
   idd: IntlDirectDialingCode
   capital: string[]

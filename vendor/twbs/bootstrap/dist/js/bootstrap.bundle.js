@@ -1,6 +1,6 @@
 /*!
-  * Bootstrap v5.3.9 (https://getbootstrap.com/)
-  * Copyright 2011-2026 The Bootstrap Authors (https://github.com/twbs/bootstrap/graphs/contributors)
+  * Bootstrap v5.3.2 (https://getbootstrap.com/)
+  * Copyright 2011-2023 The Bootstrap Authors (https://github.com/twbs/bootstrap/graphs/contributors)
   * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
   */
 (function (global, factory) {
@@ -69,11 +69,9 @@
   const TRANSITION_END = 'transitionend';
 
   /**
-   * Properly escapes ID selectors to handle special characters in IDs
-   * (e.g. forward slashes, periods) so that they work with `document.querySelector`.
-   *
-   * @param {string} selector the selector to escape
-   * @returns {string} the escaped selector
+   * Properly escape IDs selectors to handle weird IDs
+   * @param {string} selector
+   * @returns {string}
    */
   const parseSelector = selector => {
     if (selector && window.CSS && window.CSS.escape) {
@@ -151,7 +149,7 @@
       return false;
     }
     const elementIsVisible = getComputedStyle(element).getPropertyValue('visibility') === 'visible';
-    // Handle `details` element as its content may falsely appear visible when it is closed
+    // Handle `details` element as its content may falsie appear visible when it is closed
     const closedDetails = element.closest('details:not([open])');
     if (!closedDetails) {
       return elementIsVisible;
@@ -202,16 +200,17 @@
   const noop = () => {};
 
   /**
-   * Trick to restart an element's animation by forcing a reflow.
+   * Trick to restart an element's animation
    *
-   * @param {HTMLElement} element the element whose animation should be restarted
-   * @returns {void}
+   * @param {HTMLElement} element
+   * @return void
    *
-   * @see https://www.harrytheo.com/blog/2021/02/restart-a-css-animation-with-javascript/#restarting-a-css-animation
+   * @see https://www.charistheo.io/blog/2021/02/restart-a-css-animation-with-javascript/#restarting-a-css-animation
    */
   const reflow = element => {
     element.offsetHeight; // eslint-disable-line no-unused-expressions
   };
+
   const getjQuery = () => {
     if (window.jQuery && !document.body.hasAttribute('data-bs-no-jquery')) {
       return window.jQuery;
@@ -252,7 +251,7 @@
     });
   };
   const execute = (possibleCallback, args = [], defaultValue = possibleCallback) => {
-    return typeof possibleCallback === 'function' ? possibleCallback.call(...args) : defaultValue;
+    return typeof possibleCallback === 'function' ? possibleCallback(...args) : defaultValue;
   };
   const executeAfterTransition = (callback, transitionElement, waitForTransition = true) => {
     if (!waitForTransition) {
@@ -283,11 +282,11 @@
   /**
    * Return the previous/next element of a list.
    *
-   * @param {Element[]} list the list of elements to traverse
-   * @param {Element} activeElement the currently active element
-   * @param {boolean} shouldGetNext whether to return the next element (`true`) or the previous one (`false`)
-   * @param {boolean} isCycleAllowed whether to cycle back to the opposite end of the list when reaching the boundary
-   * @returns {Element} the appropriate previous/next element from the list
+   * @param {array} list    The list of elements
+   * @param activeElement   The active element
+   * @param shouldGetNext   Choose to get next or previous element
+   * @param isCycleAllowed
+   * @return {Element|elem} The proper element
    */
   const getNextActiveElement = (list, activeElement, shouldGetNext, isCycleAllowed) => {
     const listLength = list.length;
@@ -574,7 +573,7 @@
       const bsKeys = Object.keys(element.dataset).filter(key => key.startsWith('bs') && !key.startsWith('bsConfig'));
       for (const key of bsKeys) {
         let pureKey = key.replace(/^bs/, '');
-        pureKey = pureKey.charAt(0).toLowerCase() + pureKey.slice(1);
+        pureKey = pureKey.charAt(0).toLowerCase() + pureKey.slice(1, pureKey.length);
         attributes[pureKey] = normalizeData(element.dataset[key]);
       }
       return attributes;
@@ -649,7 +648,7 @@
    * Constants
    */
 
-  const VERSION = '5.3.9';
+  const VERSION = '5.3.2';
 
   /**
    * Class definition
@@ -675,8 +674,6 @@
         this[propertyName] = null;
       }
     }
-
-    // Private
     _queueCallback(callback, element, isAnimated = true) {
       executeAfterTransition(callback, element, isAnimated);
     }
@@ -732,9 +729,9 @@
       if (hrefAttribute.includes('#') && !hrefAttribute.startsWith('#')) {
         hrefAttribute = `#${hrefAttribute.split('#')[1]}`;
       }
-      selector = hrefAttribute && hrefAttribute !== '#' ? hrefAttribute.trim() : null;
+      selector = hrefAttribute && hrefAttribute !== '#' ? parseSelector(hrefAttribute.trim()) : null;
     }
-    return selector ? selector.split(',').map(sel => parseSelector(sel)).join(',') : null;
+    return selector;
   };
   const SelectorEngine = {
     find(selector, element = document.documentElement) {
@@ -1007,7 +1004,6 @@
         return;
       }
       this._config = this._getConfig(config);
-      this._startX = 0;
       this._deltaX = 0;
       this._supportPointerEvents = Boolean(window.PointerEvent);
       this._initEvents();
@@ -1031,24 +1027,23 @@
 
     // Private
     _start(event) {
-      this._deltaX = 0;
       if (!this._supportPointerEvents) {
-        this._startX = event.touches[0].clientX;
+        this._deltaX = event.touches[0].clientX;
         return;
       }
       if (this._eventIsPointerPenTouch(event)) {
-        this._startX = event.clientX;
+        this._deltaX = event.clientX;
       }
     }
     _end(event) {
       if (this._eventIsPointerPenTouch(event)) {
-        this._deltaX = event.clientX - this._startX;
+        this._deltaX = event.clientX - this._deltaX;
       }
       this._handleSwipe();
       execute(this._config.endCallback);
     }
     _move(event) {
-      this._deltaX = event.touches && event.touches.length > 1 ? 0 : event.touches[0].clientX - this._startX;
+      this._deltaX = event.touches && event.touches.length > 1 ? 0 : event.touches[0].clientX - this._deltaX;
     }
     _handleSwipe() {
       const absDeltaX = Math.abs(this._deltaX);
@@ -1305,10 +1300,8 @@
         return;
       }
       const activeIndicator = SelectorEngine.findOne(SELECTOR_ACTIVE, this._indicatorsElement);
-      if (activeIndicator) {
-        activeIndicator.classList.remove(CLASS_NAME_ACTIVE$2);
-        activeIndicator.removeAttribute('aria-current');
-      }
+      activeIndicator.classList.remove(CLASS_NAME_ACTIVE$2);
+      activeIndicator.removeAttribute('aria-current');
       const newActiveIndicator = SelectorEngine.findOne(`[data-bs-slide-to="${index}"]`, this._indicatorsElement);
       if (newActiveIndicator) {
         newActiveIndicator.classList.add(CLASS_NAME_ACTIVE$2);
@@ -1612,11 +1605,11 @@
       this._element.style[dimension] = '';
       this._queueCallback(complete, this._element, true);
     }
-
-    // Private
     _isShown(element = this._element) {
       return element.classList.contains(CLASS_NAME_SHOW$7);
     }
+
+    // Private
     _configAfterMerge(config) {
       config.toggle = Boolean(config.toggle); // Coerce string values
       config.parent = getElement(config.parent);
@@ -2674,6 +2667,7 @@
     var popperOffsets = computeOffsets({
       reference: referenceClientRect,
       element: popperRect,
+      strategy: 'absolute',
       placement: placement
     });
     var popperClientRect = rectToClientRect(Object.assign({}, popperRect, popperOffsets));
@@ -3001,6 +2995,7 @@
     state.modifiersData[name] = computeOffsets({
       reference: state.rects.reference,
       element: state.rects.popper,
+      strategy: 'absolute',
       placement: state.placement
     });
   } // eslint-disable-next-line import/no-unused-modules
@@ -3475,6 +3470,12 @@
       return instance;
     };
   }
+  var createPopper$2 = /*#__PURE__*/popperGenerator(); // eslint-disable-next-line import/no-unused-modules
+
+  var defaultModifiers$1 = [eventListeners, popperOffsets$1, computeStyles$1, applyStyles$1];
+  var createPopper$1 = /*#__PURE__*/popperGenerator({
+    defaultModifiers: defaultModifiers$1
+  }); // eslint-disable-next-line import/no-unused-modules
 
   var defaultModifiers = [eventListeners, popperOffsets$1, computeStyles$1, applyStyles$1, offset$1, flip$1, preventOverflow$1, arrow$1, hide$1];
   var createPopper = /*#__PURE__*/popperGenerator({
@@ -3497,6 +3498,8 @@
     clippingParents,
     computeStyles: computeStyles$1,
     createPopper,
+    createPopperBase: createPopper$2,
+    createPopperLite: createPopper$1,
     detectOverflow,
     end,
     eventListeners,
@@ -3699,7 +3702,7 @@
     }
     _createPopper() {
       if (typeof Popper === 'undefined') {
-        throw new TypeError('Bootstrap\'s dropdowns require Popper (https://github.com/floating-ui/popper-docs/blob/main/docs/v2/index.md)');
+        throw new TypeError('Bootstrap\'s dropdowns require Popper (https://popper.js.org)');
       }
       let referenceElement = this._element;
       if (this._config.reference === 'parent') {
@@ -3778,7 +3781,7 @@
       }
       return {
         ...defaultBsPopperConfig,
-        ...execute(this._config.popperConfig, [undefined, defaultBsPopperConfig])
+        ...execute(this._config.popperConfig, [defaultBsPopperConfig])
       };
     }
     _selectMenuItem({
@@ -3913,6 +3916,7 @@
     // if false, we use the backdrop helper without adding any element to the dom
     rootElement: 'body' // give the choice to place backdrop under different elements
   };
+
   const DefaultType$8 = {
     className: 'string',
     clickCallback: '(function|null)',
@@ -4037,6 +4041,7 @@
     autofocus: true,
     trapElement: null // The element to trap focus inside of
   };
+
   const DefaultType$7 = {
     autofocus: 'boolean',
     trapElement: 'element'
@@ -4763,10 +4768,7 @@
     br: [],
     col: [],
     code: [],
-    dd: [],
     div: [],
-    dl: [],
-    dt: [],
     em: [],
     hr: [],
     h1: [],
@@ -4800,6 +4802,7 @@
    *
    * Shout-out to Angular https://github.com/angular/angular/blob/15.2.8/packages/core/src/sanitization/url_sanitizer.ts#L38
    */
+  // eslint-disable-next-line unicorn/better-regex
   const SAFE_URL_PATTERN = /^(?!javascript:)(?:[a-z0-9+.-]+:|[^&:/?#]*(?:[/?#]|$))/i;
   const allowedAttribute = (attribute, allowedAttributeList) => {
     const attributeName = attribute.nodeName.toLowerCase();
@@ -4964,7 +4967,7 @@
       return this._config.sanitize ? sanitizeHtml(arg, this._config.allowList, this._config.sanitizeFn) : arg;
     }
     _resolvePossibleFunction(arg) {
-      return execute(arg, [undefined, this]);
+      return execute(arg, [this]);
     }
     _putElementInTemplate(element, templateElement) {
       if (this._config.html) {
@@ -5063,7 +5066,7 @@
   class Tooltip extends BaseComponent {
     constructor(element, config) {
       if (typeof Popper === 'undefined') {
-        throw new TypeError('Bootstrap\'s tooltips require Popper (https://github.com/floating-ui/popper-docs/blob/main/docs/v2/index.md)');
+        throw new TypeError('Bootstrap\'s tooltips require Popper (https://popper.js.org)');
       }
       super(element, config);
 
@@ -5109,6 +5112,7 @@
       if (!this._isEnabled) {
         return;
       }
+      this._activeTrigger.click = !this._activeTrigger.click;
       if (this._isShown()) {
         this._leave();
         return;
@@ -5296,7 +5300,7 @@
       return offset;
     }
     _resolvePossibleFunction(arg) {
-      return execute(arg, [this._element, this._element]);
+      return execute(arg, [this._element]);
     }
     _getPopperConfig(attachment) {
       const defaultBsPopperConfig = {
@@ -5334,7 +5338,7 @@
       };
       return {
         ...defaultBsPopperConfig,
-        ...execute(this._config.popperConfig, [undefined, defaultBsPopperConfig])
+        ...execute(this._config.popperConfig, [defaultBsPopperConfig])
       };
     }
     _setListeners() {
@@ -5343,7 +5347,6 @@
         if (trigger === 'click') {
           EventHandler.on(this._element, this.constructor.eventName(EVENT_CLICK$1), this._config.selector, event => {
             const context = this._initializeOnDelegatedTarget(event);
-            context._activeTrigger[TRIGGER_CLICK] = !(context._isShown() && context._activeTrigger[TRIGGER_CLICK]);
             context.toggle();
           });
         } else if (trigger !== TRIGGER_MANUAL) {
@@ -5411,16 +5414,6 @@
     }
     _getConfig(config) {
       const dataAttributes = Manipulator.getDataAttributes(this._element);
-
-      // Read text attributes without coercing their values.
-      const title = this._element.getAttribute('data-bs-title');
-      const content = this._element.getAttribute('data-bs-content');
-      if (title !== null) {
-        dataAttributes.title = title;
-      }
-      if (content !== null) {
-        dataAttributes.content = content;
-      }
       for (const dataAttribute of Object.keys(dataAttributes)) {
         if (DISALLOWED_ATTRIBUTES.has(dataAttribute)) {
           delete dataAttributes[dataAttribute];
@@ -5696,7 +5689,7 @@
       // unregister any previous listeners
       EventHandler.off(this._config.target, EVENT_CLICK);
       EventHandler.on(this._config.target, EVENT_CLICK, SELECTOR_TARGET_LINKS, event => {
-        const observableSection = this._observableSections.get(event.delegateTarget.hash);
+        const observableSection = this._observableSections.get(event.target.hash);
         if (observableSection) {
           event.preventDefault();
           const root = this._rootElement || window;
@@ -6219,6 +6212,7 @@
     }
 
     // Private
+
     _maybeScheduleHide() {
       if (!this._config.autohide) {
         return;

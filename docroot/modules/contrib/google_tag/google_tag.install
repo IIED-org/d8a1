@@ -5,8 +5,6 @@
  * Provides google_tag install, update, and uninstall functions.
  */
 
-use Drupal\Core\Hook\Attribute\LegacyRequirementsHook;
-use Drupal\google_tag\Hook\GoogleTagRequirements;
 use Drupal\google_tag\Migration\GoogleAnalyticsMigrator;
 use Drupal\google_tag\Migration\GoogleTagUpgradeManager;
 
@@ -74,10 +72,31 @@ function google_tag_install() {
 /**
  * Implements hook_requirements().
  */
-#[LegacyRequirementsHook]
 function google_tag_requirements($phase) {
-  if ($phase !== 'update') {
-    return [];
+  $requirements = [];
+  $incompatible = FALSE;
+
+  if ($phase === 'update') {
+    $entities = \Drupal::entityTypeManager()->getStorage('google_tag_container')->loadMultiple();
+    if (\Drupal::moduleHandler()->moduleExists('google_analytics')) {
+      $ga_settings = \Drupal::config('google_analytics.settings');
+      $accounts = $ga_settings->get('account');
+      $metrics_dimensions = $ga_settings->get('custom.parameters');
+      if ($entities && $accounts !== '' && $metrics_dimensions !== []) {
+        $incompatible = TRUE;
+      }
+    }
+    if ($incompatible) {
+      // @todo provide a drush command usage example here.
+      // Where users can choose between google_tag 1.x
+      // and google_analytics for migration.
+      $requirements['google_tag'] = [
+        'title' => t('Google Tag'),
+        'description' => t('In order to use Google Tag 2.x, you must decide the upgrade path between Google Tag 1.x and Google Analytics.'),
+        'severity' => REQUIREMENT_ERROR,
+        'value' => 'Google Tag 2.x is incompatible with Google Analytics while upgrading from 1.x.',
+      ];
+    }
   }
-  return \Drupal::classResolver(GoogleTagRequirements::class)->updateRequirements();
+  return $requirements;
 }

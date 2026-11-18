@@ -58,7 +58,7 @@ class AssetInjectorCss extends AssetInjectorBase {
   public $media = '';
 
   /**
-   * Preprocess CSS before adding.
+   * Preprocess css before adding.
    *
    * @var bool
    */

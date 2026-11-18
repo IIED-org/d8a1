@@ -3,49 +3,34 @@
 namespace Drupal\social_api\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
-use Drupal\Core\Extension\ExtensionPathResolver;
-use Drupal\social_api\Plugin\NetworkManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\social_api\Plugin\NetworkManager;
 
 /**
  * Renders integrations of social api.
  */
 class SocialApiController extends ControllerBase {
-
-  /**
-   * Extension path resolver.
-   *
-   * @var \Drupal\Core\Extension\ExtensionPathResolver
-   */
-  protected ExtensionPathResolver $extensionPathResolver;
-
   /**
    * The network manager.
    *
    * @var \Drupal\social_api\Plugin\NetworkManager
    */
-  private NetworkManager $networkManager;
+  private $networkManager;
 
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container): static {
-    return new static(
-      $container->get('extension.path.resolver'),
-      $container->get('plugin.network.manager')
-    );
+  public static function create(ContainerInterface $container) {
+    return new static($container->get('plugin.network.manager'));
   }
 
   /**
    * SocialApiController constructor.
    *
-   * @param \Drupal\Core\Extension\ExtensionPathResolver $extensionPathResolver
-   *   Extension path resolver.
    * @param \Drupal\social_api\Plugin\NetworkManager $networkManager
    *   The network manager.
    */
-  public function __construct(ExtensionPathResolver $extensionPathResolver, NetworkManager $networkManager) {
-    $this->extensionPathResolver = $extensionPathResolver;
+  public function __construct(NetworkManager $networkManager) {
     $this->networkManager = $networkManager;
   }
 
@@ -58,7 +43,7 @@ class SocialApiController extends ControllerBase {
    * @return array
    *   Render array listing the integrations.
    */
-  public function integrations(string $type): array {
+  public function integrations($type) {
     $networks = $this->networkManager->getDefinitions();
     $header = [
       $this->t('Module'),

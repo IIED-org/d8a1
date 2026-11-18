@@ -57,7 +57,7 @@ abstract class FieldStateBase extends PluginBase implements FieldStateInterface,
   /**
    * {@inheritdoc}
    */
-  public function applyState(array &$states, FormStateInterface $form_state, array $context, array $element, ?array $parents = NULL): bool {
+  public function applyState(array &$states, FormStateInterface $form_state, array $context, array $element, array $parents = NULL): bool {
     if (empty($this->configuration['target']) || empty($this->configuration['comparison'])) {
       return FALSE;
     }

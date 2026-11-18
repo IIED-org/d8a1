@@ -2,15 +2,13 @@
 
 namespace Drupal\geofield\Plugin\views\argument;
 
-use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Logger\LoggerChannelTrait;
-use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\Core\Render\Markup;
-use Drupal\geofield\Plugin\GeofieldProximitySourceManager;
 use Drupal\geofield\WktGenerator;
-use Drupal\views\Attribute\ViewsArgument;
 use Drupal\views\Plugin\views\argument\Formula;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\geofield\Plugin\GeofieldProximitySourceManager;
+use Drupal\Core\Render\Markup;
 
 /**
  * Argument handler for geofield proximity.
@@ -19,11 +17,10 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * "40.73,-73.93<=5mi" (defaults to km).
  *
  * @ingroup views_argument_handlers
+ *
+ * @ViewsArgument("geofield_proximity_argument")
  */
-#[ViewsArgument('geofield_proximity_argument')]
 class GeofieldProximityArgument extends Formula implements ContainerFactoryPluginInterface {
-
-  use LoggerChannelTrait;
 
   /**
    * The WktGenerator object.
@@ -83,7 +80,7 @@ class GeofieldProximityArgument extends Formula implements ContainerFactoryPlugi
         'value' => 'GEOFIELD_FEET',
       ],
       'nmi' => [
-        'label' => $this->T('Nautical Miles'),
+        'label' => $this->T('Nautical MIles'),
         'value' => 'GEOFIELD_NAUTICAL_MILES',
       ],
     ];
@@ -94,7 +91,7 @@ class GeofieldProximityArgument extends Formula implements ContainerFactoryPlugi
    * Get the markup list of the Unites.
    *
    * @return string
-   *   The markup list of the Unites.
+   *   The the markup list of the Unites.
    */
   protected function unitsListMarkup() {
     $markup = '';
@@ -123,7 +120,7 @@ class GeofieldProximityArgument extends Formula implements ContainerFactoryPlugi
     $plugin_id,
     $plugin_definition,
     WktGenerator $wkt_generator,
-    GeofieldProximitySourceManager $proximity_source_manager,
+    GeofieldProximitySourceManager $proximity_source_manager
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->wktGenerator = $wkt_generator;
@@ -133,9 +130,6 @@ class GeofieldProximityArgument extends Formula implements ContainerFactoryPlugi
 
   /**
    * {@inheritdoc}
-   *
-   * @return static
-   *   A new instance of the plugin.
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     return new static(
@@ -187,7 +181,7 @@ class GeofieldProximityArgument extends Formula implements ContainerFactoryPlugi
       }
     }
     catch (\Exception $e) {
-      $this->getLogger('geofield')->error($e->getMessage());
+      watchdog_exception('geofield', $e);
     }
 
   }

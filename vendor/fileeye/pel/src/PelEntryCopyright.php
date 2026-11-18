@@ -1,8 +1,27 @@
 <?php
 
-declare(strict_types=1);
-
-namespace lsolesen\pel;
+/**
+ * PEL: PHP Exif Library.
+ * A library with support for reading and
+ * writing all Exif headers in JPEG and TIFF images using PHP.
+ *
+ * Copyright (C) 2004, 2005, 2006, 2007 Martin Geisler.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program in the file COPYING; if not, write to the
+ * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
+ * Boston, MA 02110-1301 USA
+ */
 
 /**
  * Class for holding copyright information.
@@ -26,18 +45,28 @@ namespace lsolesen\pel;
  * second argument to specify the editor copyright. If there is only
  * an editor copyright, then let the first argument be the empty
  * string.
+ *
+ * @author Martin Geisler <mgeisler@users.sourceforge.net>
+ * @package PEL
  */
+namespace lsolesen\pel;
+
 class PelEntryCopyright extends PelEntryAscii
 {
+
     /**
      * The photographer copyright.
+     *
+     * @var string
      */
-    private string $photographer;
+    private $photographer;
 
     /**
      * The editor copyright.
+     *
+     * @var string
      */
-    private string $editor;
+    private $editor;
 
     /**
      * Make a new entry for holding copyright information.
@@ -49,7 +78,7 @@ class PelEntryCopyright extends PelEntryAscii
      *            the editor copyright. Use the empty string if
      *            there is no editor copyright.
      */
-    public function __construct(string $photographer = '', string $editor = '')
+    public function __construct($photographer = '', $editor = '')
     {
         parent::__construct(PelTag::COPYRIGHT);
         $this->setValue($photographer, $editor);
@@ -63,16 +92,16 @@ class PelEntryCopyright extends PelEntryAscii
      * @param string $editor the editor copyright. Use the empty string if
      *            there is no editor copyright.
      */
-    public function setValue(mixed $photographer = '', string $editor = ''): void
+    public function setValue($photographer = '', $editor = '')
     {
         $this->photographer = $photographer;
         $this->editor = $editor;
 
-        if ($photographer === '' && $editor !== '') {
+        if ($photographer == '' && $editor != '') {
             $photographer = ' ';
         }
 
-        if ($editor === '') {
+        if ($editor == '') {
             parent::setValue($photographer);
         } else {
             parent::setValue($photographer . chr(0x00) . $editor);
@@ -80,21 +109,22 @@ class PelEntryCopyright extends PelEntryAscii
     }
 
     /**
-     * Retrieve the copyright information.
+     * Retrive the copyright information.
      *
      * The strings returned will be the same as the one used previously
-     * with either {@link __construct the constructor} or with {@link setValue}.
+     * with either {@link __construct the constructor} or with {@link
+     * setValue}.
      *
-     * @return array<int, string> an array with two strings, the photographer and
+     * @return array an array with two strings, the photographer and
      *         editor copyrights. The two fields will be returned in that
      *         order, so that the first array index will be the photographer
      *         copyright, and the second will be the editor copyright.
      */
-    public function getValueArray(): array
+    public function getValue()
     {
         return [
             $this->photographer,
-            $this->editor,
+            $this->editor
         ];
     }
 
@@ -105,15 +135,14 @@ class PelEntryCopyright extends PelEntryAscii
      * with a '-' in between if both copyright fields are present,
      * otherwise only one of them will be returned.
      *
-     * @param bool $brief
+     * @param boolean $brief
      *            if false, then the strings '(Photographer)' and
      *            '(Editor)' will be appended to the photographer and editor
      *            copyright fields (if present), otherwise the fields will be
      *            returned as is.
-     *
      * @return string the copyright information in a string.
      */
-    public function getText(bool $brief = false): string
+    public function getText($brief = false)
     {
         if ($brief) {
             $p = '';
@@ -123,15 +152,15 @@ class PelEntryCopyright extends PelEntryAscii
             $e = ' ' . Pel::tra('(Editor)');
         }
 
-        if ($this->photographer !== '' && $this->editor !== '') {
+        if ($this->photographer != '' && $this->editor != '') {
             return $this->photographer . $p . ' - ' . $this->editor . $e;
         }
 
-        if ($this->photographer !== '') {
+        if ($this->photographer != '') {
             return $this->photographer . $p;
         }
 
-        if ($this->editor !== '') {
+        if ($this->editor != '') {
             return $this->editor . $e;
         }
 

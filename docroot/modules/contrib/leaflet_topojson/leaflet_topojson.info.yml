@@ -1,12 +1,13 @@
 name: Leaflet TopoJSON
 type: module
 description: Extends the Leaflet module to provide TopoJSON functionality
-core_version_requirement: ^8 || ^9 || ^10 || ^11
+core: 8.x
+core_version_requirement: ^8 || ^9 || ^10
 package: Leaflet
 dependencies:
   - leaflet:leaflet
 
-# Information added by Drupal.org packaging script on 2026-07-29
-version: '2.0.0-beta1'
+# Information added by Drupal.org packaging script on 2024-03-14
+version: '2.0.0-alpha2'
 project: 'leaflet_topojson'
-datestamp: 1785328101
+datestamp: 1710419096

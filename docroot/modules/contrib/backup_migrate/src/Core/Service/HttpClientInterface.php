@@ -14,39 +14,30 @@ interface HttpClientInterface {
   /**
    * Get the body of the given resource.
    *
-   * @param string $url
-   *   The URL.
+   * @param $url
    *
    * @return mixed
-   *   The return value.
    */
   public function get($url);
 
   /**
    * Post the given data (as a string or an array) to the given URL.
    *
-   * @param string $url
-   *   The URL.
-   * @param array $data
-   *   The data.
+   * @param $url
+   * @param $data
    *
    * @return mixed
-   *   The return value.
    */
   public function post($url, $data);
 
   /**
    * Post a file along with other data (as an array).
    *
-   * @param string $url
-   *   The URL.
+   * @param $url
    * @param \Drupal\backup_migrate\Core\File\ReadableStreamBackupFile $file
-   *   The backup file.
-   * @param array $data
-   *   The data.
+   * @param $data
    *
    * @return mixed
-   *   The return value.
    */
   public function postFile($url, ReadableStreamBackupFile $file, $data);
 

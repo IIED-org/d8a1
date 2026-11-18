@@ -7,7 +7,6 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\DestructableInterface;
 use Drupal\purge\Logger\LoggerServiceInterface;
 use Drupal\purge\ModifiableServiceBaseTrait;
-use Drupal\purge\Plugin\Purge\Invalidation\Exception\InvalidExpressionException;
 use Drupal\purge\Plugin\Purge\Invalidation\InvalidationInterface;
 use Drupal\purge\Plugin\Purge\Invalidation\InvalidationsServiceInterface;
 use Drupal\purge\Plugin\Purge\Purger\PurgersServiceInterface;
@@ -174,21 +173,7 @@ class QueueService extends ServiceBase implements QueueServiceInterface, Destruc
 
       // See if the inv. object is still buffered locally, else instantiate it.
       if (!($inv = $this->buffer->getByProperty('item_id', $item->item_id))) {
-        try {
-          $inv = $this->purgeInvalidationFactory->getFromQueueData($item->data);
-        }
-        catch (InvalidExpressionException $e) {
-          // Items queued before stricter validation was introduced can no
-          // longer be instantiated. Purgers could never process them anyway,
-          // so drop them rather than leaving them to block the queue forever.
-          $this->logger->error("Deleted item @id from the queue: @reason", [
-            '@id' => $item->item_id,
-            '@reason' => $e->getMessage(),
-          ]);
-          $this->queue->deleteItem($item);
-          unset($items[$i]);
-          continue;
-        }
+        $inv = $this->purgeInvalidationFactory->getFromQueueData($item->data);
       }
 
       // Ensure it is buffered, has the right state and properties, then add it.
@@ -197,7 +182,6 @@ class QueueService extends ServiceBase implements QueueServiceInterface, Destruc
       $this->buffer->setProperty($inv, 'created', $item->created);
       $items[$i] = $inv;
     }
-    $items = array_values($items);
 
     $output = implode(', ', $items);
     $this->logger->debug("claimed @no items: @output", ['@no' => count($items), '@output' => $output]);
@@ -507,7 +491,6 @@ class QueueService extends ServiceBase implements QueueServiceInterface, Destruc
     }
     $this->buffer->deleteEverything();
     // phpcs:ignore DrupalPractice.Objects.GlobalDrupal.GlobalDrupal -- We're already injecting, this is needed for tests to work.
-    // @phpstan-ignore globalDrupalDependencyInjection.useDependencyInjection
     $this->configFactory = \Drupal::configFactory();
     $this->queue = NULL;
   }
@@ -520,14 +503,8 @@ class QueueService extends ServiceBase implements QueueServiceInterface, Destruc
     $this->commit();
     $immutables = [];
     foreach ($this->queue->selectPage($page) as $item) {
-      try {
-        $immutables[] = $this->purgeInvalidationFactory
-          ->getImmutableFromQueueData($item->data);
-      }
-      catch (InvalidExpressionException $e) {
-        // Skip items that no longer validate, ::claim() cleans them up.
-        continue;
-      }
+      $immutables[] = $this->purgeInvalidationFactory
+        ->getImmutableFromQueueData($item->data);
     }
     return $immutables;
   }

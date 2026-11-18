@@ -1,0 +1,25 @@
+{
+    "name": "drupal/backup_migrate_aws_s3",
+    "description": "Provides AWS S3 destination for Backup & Migrate module.",
+    "type": "drupal-module",
+    "license": "GPL-2.0+",
+    "homepage": "https://drupal.org/project/backup_migrate_aws_s3",
+    "minimum-stability": "dev",
+    "authors": [
+        {
+            "name": "George Anderson (geoanders)",
+            "homepage": "https://www.drupal.org/u/geoanders",
+            "role": "Maintainer"
+        },
+        {
+            "name": "Snehal Gaikwad",
+            "homepage": "https://www.drupal.org/u/snehalgaikwad"
+        }
+    ],
+    "require": {
+        "drupal/core": "^8.8 || ^9 || ^10",
+        "drupal/backup_migrate": "^5.0",
+        "drupal/key": "^1.15",
+        "aws/aws-sdk-php": "^3.2"
+    }
+}

@@ -47,12 +47,3 @@ services:
     arguments: [ '@google_tag.event_collector' ]
     tags:
       - { name: 'event_subscriber' }
-  Drupal\google_tag\Hook\GoogleTagPageAttachments:
-    class: Drupal\google_tag\Hook\GoogleTagPageAttachments
-    arguments: ['@entity_type.manager', '@google_tag.tag_container_resolver', '@google_tag.dimensions_metrics_processor', '@google_tag.event_collector']
-
-  google_tag.delayed_event_request_policy:
-    class: Drupal\google_tag\Cache\DelayedEventRequestPolicy
-    arguments: ['@session']
-    tags:
-      - { name: dynamic_page_cache_request_policy, priority: 100 }

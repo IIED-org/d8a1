@@ -6,16 +6,12 @@ use Drupal\purge\Plugin\Purge\Invalidation\InvalidationInterface;
 use Drupal\purge\Plugin\Purge\Queue\TxBuffer;
 use Drupal\purge\Plugin\Purge\Queue\TxBufferInterface;
 use Drupal\Tests\purge\Kernel\KernelTestBase;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests \Drupal\purge\Plugin\Purge\Queue\TxBuffer.
  *
  * @group purge
  */
-#[Group('purge')]
-#[RunTestsInSeparateProcesses]
 class TxBufferTest extends KernelTestBase {
 
   /**
@@ -159,7 +155,7 @@ class TxBufferTest extends KernelTestBase {
     $this->purgeQueueTxbuffer->setProperty($i, 'prop', 5.5);
     $this->assertEquals(5.5, $this->purgeQueueTxbuffer->getProperty($i, 'prop'));
     $this->purgeQueueTxbuffer->setProperty($i, 'prop', [1]);
-    $this->assertIsArray($this->purgeQueueTxbuffer->getProperty($i, 'prop'));
+    $this->assertTrue(is_array($this->purgeQueueTxbuffer->getProperty($i, 'prop')));
     $this->assertTrue(current($this->purgeQueueTxbuffer->getProperty($i, 'prop')) === 1);
     $this->purgeQueueTxbuffer->delete($i);
     $this->assertNull($this->purgeQueueTxbuffer->getProperty($i, 'prop'));
@@ -211,7 +207,7 @@ class TxBufferTest extends KernelTestBase {
   public function testRewind(): void {
     $objects = $this->getInvalidations(5);
     $this->assertNull($this->purgeQueueTxbuffer->key());
-    $this->purgeQueueTxbuffer->rewind();
+    $this->assertFalse($this->purgeQueueTxbuffer->rewind());
     $this->assertNull($this->purgeQueueTxbuffer->key());
     $this->purgeQueueTxbuffer->set($objects, TxBufferInterface::CLAIMED);
     $this->assertEquals($objects[0]->getId(), $this->purgeQueueTxbuffer->key());

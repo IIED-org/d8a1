@@ -34,6 +34,6 @@
     }
   },
   "require": {
-    "drupal/core": "^10.1 || ^11"
+    "drupal/core": "^8 || ^9 || ^10"
   }
 }

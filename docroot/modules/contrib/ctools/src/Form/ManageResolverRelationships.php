@@ -22,7 +22,6 @@ abstract class ManageResolverRelationships extends FormBase {
    *
    * @var string
    */
-  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
   protected $machine_name;
 
   /**
@@ -30,7 +29,6 @@ abstract class ManageResolverRelationships extends FormBase {
    *
    * @var array
    */
-  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
   protected $property_types = [];
 
   /**
@@ -136,9 +134,9 @@ abstract class ManageResolverRelationships extends FormBase {
    */
   public function addRelationship(array &$form, FormStateInterface $form_state) {
     $relationship = $form_state->getValue('relationships');
-    $cached_values = $form_state->getTemporaryValue('wizard');
-    $content = $this->formBuilder->getForm($this->getContextClass($cached_values), $relationship, $this->getTempstoreId(), $this->machine_name);
+    $content = $this->formBuilder->getForm($this->getContextClass(), $relationship, $this->getTempstoreId(), $this->machine_name);
     $content['#attached']['library'][] = 'core/drupal.dialog.ajax';
+    $cached_values = $form_state->getTemporaryValue('wizard');
     [, $route_parameters] = $this->getRelationshipOperationsRouteInfo($cached_values, $this->machine_name, $relationship);
     $route_name = $this->getAddRoute($cached_values);
     $route_options = [
@@ -154,7 +152,7 @@ abstract class ManageResolverRelationships extends FormBase {
   }
 
   /**
-   * Get the accessible relationships.
+   * Get the accesssible relationships.
    *
    * @param mixed $cached_values
    *   The arbitrary value from temporary storage.
@@ -183,9 +181,9 @@ abstract class ManageResolverRelationships extends FormBase {
         '#links' => $this->getOperations($cached_values, $row, $route_name, $route_parameters),
       ];
       $contexts[$row] = [
-        0 => $row,
-        1 => $context->getContextDefinition()->getLabel(),
-        2 => $context->getContextDefinition()->getDataType(),
+        $row,
+        $context->getContextDefinition()->getLabel(),
+        $context->getContextDefinition()->getDataType(),
         'operations' => [
           'data' => $build,
         ],

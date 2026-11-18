@@ -16,14 +16,13 @@ class RelationshipManagerTest extends RelationshipsTestBase {
    */
   public function testRelationshipConstraints() {
     $definitions = $this->relationshipManager->getDefinitions();
-    // The Bundle constraint must be stored in whichever format the running
-    // core reads back: Drupal 11.4+ expects ['bundle' => [...]] while Drupal 10
-    // expects the bare list. Assert via getBundles() rather than against a
-    // literal constraint array so this holds on both.
-    $context_definition = $definitions['typed_data_relationship:entity:node:body']['context_definitions']['base'];
-    $this->assertSame(['Bundle'], array_keys($context_definition->getConstraints()));
-    $bundles = $context_definition->getDataDefinition()->getBundles();
-    $this->assertSame(['page', 'foo'], array_values($bundles));
+    $expected = [
+      'Bundle' => [
+        0 => "page",
+        1 => "foo",
+      ],
+    ];
+    $this->assertSame($expected, $definitions['typed_data_relationship:entity:node:body']['context_definitions']['base']->getConstraints());
 
     // Check that typed data primitive labels are formatted properly.
     $this->assertSame('Body from Page and Foo', (string) $definitions['typed_data_relationship:entity:node:body']['label']);

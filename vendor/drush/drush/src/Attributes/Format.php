@@ -7,10 +7,9 @@ namespace Drush\Attributes;
 use Attribute;
 use Consolidation\AnnotatedCommand\Parser\CommandInfo;
 use Consolidation\OutputFormatters\Options\FormatterOptions;
-use JetBrains\PhpStorm\Deprecated;
+use Drush\Boot\Kernels;
 use JetBrains\PhpStorm\ExpectedValues;
 
-#[Deprecated('Use #[TableFormat] instead.')]
 #[Attribute(Attribute::TARGET_METHOD)]
 class Format
 {

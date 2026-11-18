@@ -16,7 +16,7 @@ class ProviderManagerTest extends UnitTestCase {
    *
    * @var array
    */
-  protected static $mockProviders = [
+  protected $mockProviders = [
     'provider_a' => [
       'id' => 'provider_a',
       'title' => 'Provider A',
@@ -59,11 +59,11 @@ class ProviderManagerTest extends UnitTestCase {
    * @return array
    *   An array of test cases.
    */
-  public static function optionsWithExpectedProviders() {
+  public function optionsWithExpectedProviders() {
     return [
       'Empty input: all providers' => [
         [],
-        static::$mockProviders,
+        $this->mockProviders,
       ],
       'Empty checkbox input: all providers' => [
         [
@@ -71,7 +71,7 @@ class ProviderManagerTest extends UnitTestCase {
           'provider_b' => '0',
           'provider_c' => '0',
         ],
-        static::$mockProviders,
+        $this->mockProviders,
       ],
       'Some providers' => [
         [
@@ -80,8 +80,8 @@ class ProviderManagerTest extends UnitTestCase {
           'provider_c' => 'provider_c',
         ],
         [
-          'provider_b' => static::$mockProviders['provider_b'],
-          'provider_c' => static::$mockProviders['provider_c'],
+          'provider_b' => $this->mockProviders['provider_b'],
+          'provider_c' => $this->mockProviders['provider_c'],
         ],
       ],
       'One provider' => [
@@ -91,7 +91,7 @@ class ProviderManagerTest extends UnitTestCase {
           'provider_c' => '0',
         ],
         [
-          'provider_a' => static::$mockProviders['provider_a'],
+          'provider_a' => $this->mockProviders['provider_a'],
         ],
       ],
     ];
@@ -101,7 +101,7 @@ class ProviderManagerTest extends UnitTestCase {
    * Get a mock provider manager.
    */
   protected function getManagerMock() {
-    $definitions = static::$mockProviders;
+    $definitions = $this->mockProviders;
     $manager = $this->getMockBuilder('Drupal\video_embed_field\ProviderManager')
       ->disableOriginalConstructor()
       ->onlyMethods(['getDefinitions', 'getDefinition', 'createInstance'])

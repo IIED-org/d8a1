@@ -18,31 +18,22 @@ interface ArchiveWriterInterface {
    * be 'zip'.
    *
    * @return string
-   *   The requested string.
    */
   public function getFileExt();
 
   /**
-   * Sets the archive.
-   *
    * @param \Drupal\backup_migrate\Core\File\BackupFileWritableInterface $out
-   *   The out.
    */
   public function setArchive(BackupFileWritableInterface $out);
 
   /**
-   * Adds a file to the archive.
-   *
    * @param string $real_path
-   *   The real path.
    *   The real path to the file. Can be a stream URI.
    * @param string $new_path
-   *   The new path.
    *   The path that the file should have in the archive. Leave blank to use the
    *   original path.
    *
-   * @return mixed
-   *   The return value.
+   * @return
    */
   public function addFile($real_path, $new_path = '');
 
@@ -53,7 +44,6 @@ interface ArchiveWriterInterface {
    * needed.
    *
    * @return mixed
-   *   The return value.
    */
   public function closeArchive();
 

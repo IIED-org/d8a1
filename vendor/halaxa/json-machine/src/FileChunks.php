@@ -19,7 +19,7 @@ class FileChunks implements \IteratorAggregate
      * @param string $fileName
      * @param int    $chunkSize
      */
-    public function __construct($fileName, $chunkSize = 1024 * 16)
+    public function __construct($fileName, $chunkSize = 1024 * 8)
     {
         $this->fileName = $fileName;
         $this->chunkSize = $chunkSize;

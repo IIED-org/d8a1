@@ -78,16 +78,6 @@ class PurgersService extends ServiceBase implements PurgersServiceInterface {
   protected $purgers;
 
   /**
-   * Purger instance IDs blocked by a purger-specific diagnostic error.
-   *
-   * Populated by ::checksBeforeTakeoff() and consumed by ::invalidate(), it
-   * maps purger instance IDs to the diagnostic check that blocks them.
-   *
-   * @var \Drupal\purge\Plugin\Purge\DiagnosticCheck\DiagnosticCheckInterface[]
-   */
-  protected $purgersBlocked = [];
-
-  /**
    * The 'purge.diagnostics' service.
    *
    * @var \Drupal\purge\Plugin\Purge\DiagnosticCheck\DiagnosticsServiceInterface
@@ -175,26 +165,8 @@ class PurgersService extends ServiceBase implements PurgersServiceInterface {
    */
   protected function checksBeforeTakeoff(array $invalidations) {
 
-    // Block cache invalidation if there's a serious diagnostic severity. Checks
-    // that are bound to specific purger plugins only block those purgers, so
-    // that one failing purger does not prevent the others from purging. Checks
-    // without such a binding, or a set of checks that blocks every enabled
-    // purger, still halt invalidation altogether.
-    $this->purgersBlocked = [];
-    $enabled = $this->getPluginsEnabled();
-    foreach ($this->purgeDiagnostics->filterErrors() as $fire) {
-      $plugin_ids = $fire->getPluginDefinition()['dependent_purger_plugins'] ?? [];
-      if (empty($plugin_ids)) {
-        throw new DiagnosticsException($fire->getRecommendation());
-      }
-      foreach ($enabled as $id => $plugin_id) {
-        if (in_array($plugin_id, $plugin_ids) && !isset($this->purgersBlocked[$id])) {
-          $this->purgersBlocked[$id] = $fire;
-        }
-      }
-    }
-    if (count($this->purgersBlocked) && (count($this->purgersBlocked) === count($enabled))) {
-      $fire = reset($this->purgersBlocked);
+    // Block cache invalidation if there's a serious diagnostic severity.
+    if ($fire = $this->purgeDiagnostics->isSystemOnFire()) {
       throw new DiagnosticsException($fire->getRecommendation());
     }
 
@@ -402,12 +374,10 @@ class PurgersService extends ServiceBase implements PurgersServiceInterface {
     // Without this, the tests will throw "failed to instantiate user-supplied
     // statement class: CREATE TABLE {cache_config}".
     // phpcs:ignore DrupalPractice.Objects.GlobalDrupal.GlobalDrupal
-    // @phpstan-ignore globalDrupalDependencyInjection.useDependencyInjection
     $this->configFactory = \Drupal::configFactory();
     // Drush commands appreciate it when the config cache gets cleared.
     if (php_sapi_name() === 'cli') {
       // phpcs:ignore DrupalPractice.Objects.GlobalDrupal.GlobalDrupal
-      // @phpstan-ignore globalDrupalDependencyInjection.useDependencyInjection
       \Drupal::cache('config')->deleteAll();
     }
     $this->purgers = NULL;
@@ -438,10 +408,7 @@ class PurgersService extends ServiceBase implements PurgersServiceInterface {
       // longer valid, in which case it is fine to just skip those.
       catch (ServiceNotFoundException $e) {
         $this->logger->error("Error loading purger @id (@plugin_id): @error",
-          ['@id' => $id, '@plugin_id' => $plugin_id, '@error' => $e->getMessage()]);
-        // Keep the enabled list in sync with the loaded instances: callers
-        // such as ::getLabels() expect an instance for every enabled purger.
-        unset($this->pluginsEnabled[$id]);
+          ['@id' => $id, '@plugin_id' => $plugin_id, '@error' => $e]);
       }
     }
 
@@ -497,21 +464,6 @@ class PurgersService extends ServiceBase implements PurgersServiceInterface {
             $invalidation->setState(InvalidationInterface::NOT_SUPPORTED);
             continue;
           }
-          // Purgers blocked by a diagnostic error don't get offered anything,
-          // marking their items FAILED gets them retried when the check clears.
-          if (isset($this->purgersBlocked[$id])) {
-            $invalidation->setState(InvalidationInterface::FAILED);
-          }
-        }
-
-        // Skip purgers that a purger-specific diagnostic check blocks.
-        if (isset($this->purgersBlocked[$id])) {
-          $this->logger->debug("skipping @plugin's @id, blocked by diagnostic check @check.", [
-            '@id' => $id,
-            '@plugin' => $purger->getPluginId(),
-            '@check' => $this->purgersBlocked[$id]->getPluginId(),
-          ]);
-          continue;
         }
 
         // Filter supported objects and group them by the right purger methods.

@@ -36,7 +36,7 @@ final class PurchaseEvent extends EventBase implements ContainerFactoryPluginInt
    *
    * @var \Drupal\commerce_order\AdjustmentTransformerInterface
    */
-  protected AdjustmentTransformerInterface $transformer;
+  private AdjustmentTransformerInterface $transformer;
 
   /**
    * {@inheritDoc}

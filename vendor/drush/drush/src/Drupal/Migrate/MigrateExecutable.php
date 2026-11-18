@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drush\Drupal\Migrate;
 
+use Drupal\migrate\MigrateException;
 use Drupal\Component\Utility\Timer;
 use Drupal\migrate\Event\MigrateEvents;
 use Drupal\migrate\Event\MigrateImportEvent;
@@ -17,14 +18,10 @@ use Drupal\migrate\MigrateExecutable as MigrateExecutableBase;
 use Drupal\migrate\MigrateMessageInterface;
 use Drupal\migrate\MigrateSkipRowException;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
-use Drupal\migrate\Plugin\Migration;
-use Drupal\migrate\Plugin\migrate\source\SourcePluginBase;
-use Drupal\migrate\Plugin\migrate\source\SqlBase;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drush\Drupal\Migrate\MigrateEvents as MigrateRunnerEvents;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class MigrateExecutable extends MigrateExecutableBase
 {
@@ -56,7 +53,7 @@ class MigrateExecutable extends MigrateExecutableBase
     /**
      * Frequency (in items) at which progress messages should be emitted.
      */
-    protected ?int $feedback;
+    protected ?string $feedback;
 
     /**
      * Show timestamp in progress message.
@@ -74,11 +71,7 @@ class MigrateExecutable extends MigrateExecutableBase
     protected array $idlist;
 
     /**
-     * All source IDs found in source during this migration.
-     *
-     * Keyed by sourceIdKey(), so handleMissingSourceRows() can look them up.
-     *
-     * @var array<string, true>
+     * List of all source IDs that are found in source during this migration.
      */
     protected array $allSourceIdValues = [];
 
@@ -102,7 +95,7 @@ class MigrateExecutable extends MigrateExecutableBase
     /**
      * Whether to delete rows missing from source after an import.
      */
-    protected bool $deleteMissingSourceRows = false;
+    protected bool $deleteMissingSourceRows;
 
     /**
      * Static cached ID map.
@@ -143,7 +136,7 @@ class MigrateExecutable extends MigrateExecutableBase
 
         $this->output = $output;
         $this->limit = $options['limit'];
-        $this->feedback = $options['feedback'] ? intval($options['feedback']) : null;
+        $this->feedback = $options['feedback'];
         $this->showTimestamp = $options['timestamp'];
         $this->showTotal = $options['total'];
         // Deleting the missing source rows is not compatible with options that
@@ -152,7 +145,7 @@ class MigrateExecutable extends MigrateExecutableBase
         // - `--idlist` option is used,
         // - `--limit` option is used,
         // - The migration source plugin has high_water_property set.
-        $this->deleteMissingSourceRows = $options['delete'] && !($this->limit || $this->idlist !== [] || !empty($migration->getSourceConfiguration()['high_water_property']));
+        $this->deleteMissingSourceRows = $options['delete'] && !($this->limit || !empty($this->idlist) || !empty($migration->getSourceConfiguration()['high_water_property']));
         // Cannot use the progress bar when:
         // - `--no-progress` option is used,
         // - `--feedback` option is used,
@@ -171,76 +164,9 @@ class MigrateExecutable extends MigrateExecutableBase
         $this->listeners[MigrateRunnerEvents::DRUSH_MIGRATE_PREPARE_ROW] = [$this, 'onPrepareRow'];
         $this->listeners[MigrateMissingSourceRowsEvent::class] = [$this, 'onMissingSourceRows'];
 
-        $eventDispatcher = $this->getEventDispatcher();
-        assert($eventDispatcher instanceof EventDispatcherInterface);
         foreach ($this->listeners as $event => $listener) {
-            $eventDispatcher->addListener($event, $listener);
+            $this->getEventDispatcher()->addListener($event, $listener);
         }
-
-        if ($this->deleteMissingSourceRows) {
-            $this->disableMapJoin($migration);
-        }
-        if (!$this->interceptPrepareRow($migration) && $this->deleteMissingSourceRows) {
-            throw new \RuntimeException(sprintf(
-                "Cannot use --delete: the source plugin of the '%s' migration does not extend %s, so Drush cannot track which source rows still exist.",
-                $migration->id(),
-                SourcePluginBase::class,
-            ));
-        }
-    }
-
-    /**
-     * Stops an SqlBase source from hiding imported rows behind the map join.
-     *
-     * When SqlBase::mapJoinable() is true, SqlBase::initializeIterator() LEFT
-     * JOINs the ID map and yields only rows that are not imported yet or are
-     * flagged NEEDS_UPDATE. Rows that are already imported never reach
-     * prepareRow(), so onPrepareRow() does not record them and
-     * handleMissingSourceRows() would roll back every imported row that still
-     * exists in the source. Setting ignore_map makes the source yield every
-     * row; SourcePluginBase::next() then applies the same "not imported or
-     * needs update" filter per row, so the set of imported rows is unchanged.
-     * The join is only an optimization and only matters when the source and
-     * the map share a database connection.
-     */
-    private function disableMapJoin(MigrationInterface $migration): void
-    {
-        $configuration = $migration->getSourceConfiguration();
-        if (!empty($configuration['ignore_map']) || !$migration instanceof Migration || !$migration->getSourcePlugin() instanceof SqlBase) {
-            return;
-        }
-        // Drops the cached source plugin; the next getSourcePlugin() call
-        // builds one from the new configuration.
-        $migration->set('source', ['ignore_map' => true] + $configuration);
-    }
-
-    /**
-     * Routes 'migrate_prepare_row' hook invocations to the Drush event.
-     *
-     * Swaps the source plugin's lazy module handler for a decorator that
-     * dispatches MigrateEvents::DRUSH_MIGRATE_PREPARE_ROW for every scanned
-     * source row, including rows skipped by track_changes/high-water. The
-     * interception is per-instance and in-memory; unlike the former
-     * compile-time hook registration it cannot leak into the hook lists that
-     * Drupal >= 11.3 persists in shared keyvalue storage.
-     *
-     * @return bool
-     *   Whether the interception could be attached.
-     */
-    private function interceptPrepareRow(MigrationInterface $migration): bool
-    {
-        $source = $migration->getSourcePlugin();
-        if (!$source instanceof SourcePluginBase) {
-            return false;
-        }
-        $property = new \ReflectionProperty(SourcePluginBase::class, 'moduleHandler');
-        $moduleHandler = $property->getValue($source) ?? \Drupal::moduleHandler();
-        if (!$moduleHandler instanceof MigratePrepareRowModuleHandler) {
-            $eventDispatcher = $this->getEventDispatcher();
-            assert($eventDispatcher instanceof EventDispatcherInterface);
-            $property->setValue($source, new MigratePrepareRowModuleHandler($moduleHandler, $eventDispatcher));
-        }
-        return true;
     }
 
     /**
@@ -303,29 +229,12 @@ class MigrateExecutable extends MigrateExecutableBase
      * propagation, thus avoiding the destination object rollback, even when
      * the`--delete` option has been passed.
      *
+     * @param MigrationInterface $migration
      *
      * @see \Drush\Drupal\Migrate\MigrateExecutable::onMissingSourceRows()
      */
     protected function handleMissingSourceRows(MigrationInterface $migration): void
     {
-        // Zero observed rows with a non-empty source means the prepare-row
-        // interception is broken: every destination row would be considered
-        // missing and rolled back. Fail loudly instead.
-        // @see https://github.com/drush-ops/drush/issues/6595
-        if ($this->allSourceIdValues === [] && (clone $migration->getSourcePlugin())->count() > 0) {
-            // SqlBase sources that can join the map table only return the rows
-            // that still need importing, so an up-to-date migration observes no
-            // rows at all. Without --delete nothing would be rolled back, so
-            // skip the detection instead of failing.
-            if (!$this->deleteMissingSourceRows) {
-                return;
-            }
-            throw new \RuntimeException(sprintf(
-                "No source rows were observed during the '%s' import, but the source is not empty. Refusing to detect missing source rows; nothing was rolled back.",
-                $migration->id(),
-            ));
-        }
-
         $idMap = $migration->getIdMap();
         $idMap->rewind();
 
@@ -333,7 +242,7 @@ class MigrateExecutable extends MigrateExecutableBase
         $destinationIds = [];
         while ($idMap->valid()) {
             $mapSourceId = $idMap->currentSource();
-            if (!isset($this->allSourceIdValues[static::sourceIdKey($mapSourceId)])) {
+            if (!in_array($mapSourceId, $this->allSourceIdValues)) {
                 $destinationIds[] = $idMap->currentDestination();
             }
             $idMap->next();
@@ -343,20 +252,6 @@ class MigrateExecutable extends MigrateExecutableBase
             $missingSourceEvent = new MigrateMissingSourceRowsEvent($migration, $destinationIds);
             $this->getEventDispatcher()->dispatch($missingSourceEvent);
         }
-    }
-
-    /**
-     * Builds the lookup key of a source ID, for $allSourceIdValues.
-     *
-     * A keyed lookup instead of in_array() keeps handleMissingSourceRows()
-     * linear: with in_array() it is quadratic in the number of rows and takes
-     * many minutes after an import of 100K+ rows.
-     *
-     * @see https://github.com/drush-ops/drush/issues/5765
-     */
-    protected static function sourceIdKey(array $sourceIdValues): string
-    {
-        return implode("\x1F", array_values($sourceIdValues));
     }
 
     /**
@@ -569,7 +464,7 @@ class MigrateExecutable extends MigrateExecutableBase
         $row = $event->getRow();
         $sourceId = $row->getSourceIdValues();
 
-        if ($this->idlist !== []) {
+        if (!empty($this->idlist)) {
             $skip = true;
             foreach ($this->idlist as $id) {
                 if (array_values($sourceId) == $id) {
@@ -584,7 +479,7 @@ class MigrateExecutable extends MigrateExecutableBase
 
         // Collect all Source ID values so that we can handle missing source
         // rows post import.
-        $this->allSourceIdValues[static::sourceIdKey($sourceId)] = true;
+        $this->allSourceIdValues[] = $sourceId;
 
         if ($this->feedback && $this->counter && $this->counter % $this->feedback === 0) {
             $this->importFeedbackMessage(false);
@@ -609,6 +504,8 @@ class MigrateExecutable extends MigrateExecutableBase
 
     /**
      * Returns the number of items created.
+     *
+     * @return int
      */
     public function getCreatedCount(): int
     {
@@ -617,6 +514,8 @@ class MigrateExecutable extends MigrateExecutableBase
 
     /**
      * Returns the number of items updated.
+     *
+     * @return int
      */
     public function getUpdatedCount(): int
     {
@@ -625,6 +524,8 @@ class MigrateExecutable extends MigrateExecutableBase
 
     /**
      * Returns the number of items ignored.
+     *
+     * @return int
      */
     public function getIgnoredCount(): int
     {
@@ -633,6 +534,8 @@ class MigrateExecutable extends MigrateExecutableBase
 
     /**
      * Returns the number of items that failed.
+     *
+     * @return int
      */
     public function getFailedCount(): int
     {
@@ -644,6 +547,8 @@ class MigrateExecutable extends MigrateExecutableBase
      *
      * Note that STATUS_NEEDS_UPDATE is not counted, since this is typically set
      * on stubs created as side effects, not on the primary item being imported.
+     *
+     * @return int
      */
     public function getProcessedCount(): int
     {
@@ -655,6 +560,8 @@ class MigrateExecutable extends MigrateExecutableBase
 
     /**
      * Returns the number of items rolled back.
+     *
+     * @return int
      */
     public function getRollbackCount(): int
     {
@@ -718,10 +625,8 @@ class MigrateExecutable extends MigrateExecutableBase
      */
     public function unregisterListeners(): void
     {
-        $eventDispatcher = $this->getEventDispatcher();
-        assert($eventDispatcher instanceof EventDispatcherInterface);
         foreach ($this->listeners as $event => $listener) {
-            $eventDispatcher->removeListener($event, $listener);
+            $this->getEventDispatcher()->removeListener($event, $listener);
         }
     }
 }

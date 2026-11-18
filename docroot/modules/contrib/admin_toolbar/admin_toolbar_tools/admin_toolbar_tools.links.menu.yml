@@ -1,5 +1,5 @@
 admin_toolbar_tools.help:
-  title: 'Front page'
+  title: 'Tools'
   route_name: <front>
   menu_name: admin
   parent: system.admin

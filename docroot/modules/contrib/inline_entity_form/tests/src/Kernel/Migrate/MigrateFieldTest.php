@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\inline_entity_form\Kernel\Migrate;
 
 use Drupal\field\Entity\FieldStorageConfig;
@@ -14,16 +12,13 @@ use Drupal\field\FieldStorageConfigInterface;
  */
 class MigrateFieldTest extends MigrateTestBase {
 
-  // phpcs:disable
   /**
    * {@inheritdoc}
    */
-  // @phpstan-ignore-next-line
-  public static $modules = [
+  protected static $modules = [
     'node',
     'text',
   ];
-  // phpcs:enable
 
   /**
    * {@inheritdoc}

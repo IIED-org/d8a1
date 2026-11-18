@@ -27,7 +27,6 @@
 
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\IntegrityConstraintViolationException;
-use Drupal\Core\Utility\CallableResolver;
 use Drush\Drush;
 
 /**
@@ -42,7 +41,7 @@ use Drush\Drush;
  *
  * @param string $command
  *   (optional) The command to call for the back end process. By default this will be
- *   the 'batch:process' command, but some commands will
+ *   the 'batch-process' command, but some commands will
  *   have special initialization requirements, and will need to define and
  *   use their own command.
  * @param array $args
@@ -50,7 +49,7 @@ use Drush\Drush;
  * @param array $options
  *   (optional)
  */
-function drush_backend_batch_process($command = 'batch:process', $args = [], $options = []) {
+function drush_backend_batch_process($command = 'batch-process', $args = [], $options = []) {
   // Command line options to pass to the command.
   $options['u'] = \Drupal::currentUser()->id();
   return _drush_backend_batch_process($command, $args, $options);
@@ -89,7 +88,7 @@ function drush_batch_command($id) {
  *   A return array. The callers only care about the finished marker and an #abort on an operation.
  *
  */
-function _drush_backend_batch_process($command = 'batch:process', $args = [], $options = []) {
+function _drush_backend_batch_process($command = 'batch-process', $args = [], $options = []) {
   $result = NULL;
 
   $batch = &batch_get();
@@ -148,7 +147,7 @@ function _drush_backend_batch_process($command = 'batch:process', $args = [], $o
     $finished = FALSE;
 
     while (!$finished) {
-      $process = Drush::drush(Drush::aliasManager()->getSelf(), $command, $args, Drush::redispatchOptions() + ['strict' => 0]);
+      $process = Drush::drush(Drush::aliasManager()->getSelf(), $command, $args);
       // We already re-spawn when memory is low so no need for timeout.
       $process->setTimeout(null);
       // Suppress printing stdout since a JSON array is returned to us here.
@@ -184,7 +183,7 @@ function _drush_batch_command($id) {
 
   $data = Database::getConnection()->select('batch', 'b')
     ->fields('b', ['batch'])
-    ->condition('bid', (int) $id)
+    ->condition('bid', $id)
     ->execute()
     ->fetchField();
 
@@ -255,8 +254,7 @@ function _drush_batch_worker() {
       // See https://github.com/drush-ops/drush/issues/1930
       $halt_on_error = \Drush\Drush::config()->get('runtime.php.halt-on-error', TRUE);
       \Drush\Drush::config()->set('runtime.php.halt-on-error', FALSE);
-      $callable = \Drupal::service(CallableResolver::class)->getCallableFromDefinition($callback);
-      call_user_func_array($callable, array_merge($args, [&$batch_context]));
+      call_user_func_array($callback, array_merge($args, [&$batch_context]));
       if (!empty($task_message)) {
         Drush::logger()->notice(strip_tags($task_message));
       }
@@ -341,13 +339,14 @@ function _drush_batch_finished() {
       if (isset($batch_set['file']) && is_file($batch_set['file'])) {
         include_once DRUPAL_ROOT . '/' . $batch_set['file'];
       }
-      $callable = \Drupal::service(CallableResolver::class)->getCallableFromDefinition($batch_set['finished']);
-      $queue = _batch_queue($batch_set);
-      $operations = $queue->getAllItems();
-      $elapsed = $batch_set['elapsed'] / 1000;
-      $elapsed = \Drupal::service('date.formatter')->formatInterval($elapsed);
-      call_user_func_array($callable, [$batch_set['success'], $batch_set['results'], $operations, $elapsed]);
-      $results[$id] = $batch_set['results'];
+      if (is_callable($batch_set['finished'])) {
+        $queue = _batch_queue($batch_set);
+        $operations = $queue->getAllItems();
+        $elapsed = $batch_set['elapsed'] / 1000;
+        $elapsed = \Drupal::service('date.formatter')->formatInterval($elapsed);
+        call_user_func_array($batch_set['finished'], [$batch_set['success'], $batch_set['results'], $operations, $elapsed]);
+        $results[$id] = $batch_set['results'];
+      }
     }
   }
 

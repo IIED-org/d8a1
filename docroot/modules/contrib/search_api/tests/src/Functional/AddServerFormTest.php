@@ -3,7 +3,6 @@
 namespace Drupal\Tests\search_api\Functional;
 
 use Drupal\Tests\BrowserTestBase;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the "Add server" form.
@@ -12,7 +11,6 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  *
  * @group search_api
  */
-#[RunTestsInSeparateProcesses]
 class AddServerFormTest extends BrowserTestBase {
 
   /**

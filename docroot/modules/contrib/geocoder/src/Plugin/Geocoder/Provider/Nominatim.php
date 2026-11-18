@@ -12,13 +12,9 @@ use Drupal\geocoder\ConfigurableProviderUsingHandlerWithAdapterBase;
  *   name = "Nominatim",
  *   handler = "\Geocoder\Provider\Nominatim\Nominatim",
  *   arguments = {
- *     "rootUrl" = "https://nominatim.openstreetmap.org",
+ *     "rootUrl" = "",
  *     "userAgent" = "",
  *     "referer" = ""
- *   },
- *   throttle = {
- *     "period" = 2,
- *     "limit" = 1
  *   }
  * )
  */

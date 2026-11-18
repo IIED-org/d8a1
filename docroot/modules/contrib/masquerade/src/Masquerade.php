@@ -127,26 +127,14 @@ class Masquerade {
   }
 
   /**
-   * Returns the masquerading identifier.
-   *
-   * @return string|null
-   *   The per-session masquerade identifier or null when no value is set.
-   *
-   * @see \Drupal\masquerade\Session\MetadataBag::getMasquerade()
-   */
-  protected function getMasquerade() {
-    // Accessing metadata does not try to start session.
-    return $this->session->getMetadataBag()->getMasquerade();
-  }
-
-  /**
    * Returns whether the current user is masquerading.
    *
    * @return bool
    *   TRUE when already masquerading, FALSE otherwise.
    */
   public function isMasquerading() {
-    return (bool) $this->getMasquerade();
+    // Do not start new session trying to access its attributes.
+    return $this->session->isStarted() && $this->session->has('masquerading');
   }
 
   /**
@@ -157,15 +145,13 @@ class Masquerade {
    *
    * @return bool
    *   TRUE when masqueraded, FALSE otherwise.
-   *
-   * @see \Drupal\masquerade\Session\MetadataBag::setMasquerade()
    */
   public function switchTo(UserInterface $target_account) {
 
     // Save previous account ID to session storage, set this before
     // switching so that other modules can react to it, e.g. during
     // hook_user_logout().
-    $this->session->getMetadataBag()->setMasquerade($this->currentUser->id());
+    $this->session->set('masquerading', $this->currentUser->id());
 
     $account = $this->switchUser($target_account);
 
@@ -182,15 +168,13 @@ class Masquerade {
    *
    * @return bool
    *   TRUE when switched back, FALSE otherwise.
-   *
-   * @see \Drupal\masquerade\Session\MetadataBag::clearMasquerade()
    */
   public function switchBack() {
-    if (!$this->isMasquerading()) {
+    if (!$this->session->isStarted() && !$this->session->has('masquerading')) {
       return FALSE;
     }
     // Load previous user account.
-    $user = $this->userStorage->load($this->getMasquerade());
+    $user = $this->userStorage->load($this->session->get('masquerading'));
     if (!$user) {
       // Ensure the flag is cleared.
       $this->session->remove('masquerading');
@@ -202,7 +186,7 @@ class Masquerade {
 
     // Clear the masquerading flag after switching the user so that hook
     // implementations can differentiate this from a real logout/login.
-    $this->session->getMetadataBag()->clearMasquerade();
+    $this->session->remove('masquerading');
 
     $this->logger->info('User %username stopped masquerading as %old_username.', [
       '%username' => $user->getDisplayName(),

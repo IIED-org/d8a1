@@ -1,13 +1,8 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\inline_entity_form\FunctionalJavascript;
 
 use Drupal\node\Entity\Node;
-
-// cspell:ignore animaux haus haut kangourou kann maison nguru peut sautent
-// cspell:ignore sauter springen tous
 
 /**
  * Tests translating inline entities.
@@ -68,7 +63,6 @@ class TranslationTest extends InlineEntityFormTestBase {
 
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
-
     // Create a German node with a French translation.
     $first_inline_node = Node::create([
       'type' => 'ief_reference_type',
@@ -85,7 +79,6 @@ class TranslationTest extends InlineEntityFormTestBase {
     $this->drupalGet('node/add/ief_test_complex');
     $multi_fieldset = $assert_session->elementExists('css', 'fieldset[data-drupal-selector="edit-multi"]');
     $multi_fieldset->pressButton('Add existing node');
-
     // Reference the German node.
     $this->assertNotEmpty($field = $assert_session->waitForElement('xpath', $this->getXpathForAutoCompleteInput()));
     $field->setValue('Kann ein KÃ¤nguru hÃ¶her als ein Haus springen? (' . $first_inline_node->id() . ')');
@@ -147,7 +140,6 @@ class TranslationTest extends InlineEntityFormTestBase {
     $assert_session->elementExists('xpath', $first_name_field_xpath)->setValue('Damien');
     $update_button->press();
     $this->waitForRowByTitle("Un kangourou peut-il sauter plus haut qu'une maison? - mis Ã  jour");
-
     // Edit the second referenced translation.
     $second_reference->getParent()->pressButton('Edit');
     $this->assertNotEmpty($update_button = $assert_session->waitForButton('Update node'));
@@ -161,7 +153,6 @@ class TranslationTest extends InlineEntityFormTestBase {
     // Load using the original titles, confirming they haven't changed.
     $first_inline_node = $this->drupalGetNodeByTitle('Kann ein KÃ¤nguru hÃ¶her als ein Haus springen?', TRUE);
     $second_inline_node = $this->drupalGetNodeByTitle('Can a kangaroo jump higher than a house?', TRUE);
-
     // Confirm that the expected translated values are present.
     $this->assertEquals(TRUE, $first_inline_node->hasTranslation('fr'), 'The first inline entity has a FR translation');
     $this->assertEquals(TRUE, $second_inline_node->hasTranslation('fr'), 'The second inline entity has a FR translation');

@@ -16,7 +16,6 @@ class DrupalPublicFileExcludeFilter extends FileExcludeFilter {
    * Get the default values for the plugin.
    *
    * @return \Drupal\backup_migrate\Core\Config\Config
-   *   The return value.
    */
   public function configDefaults() {
     $config = [

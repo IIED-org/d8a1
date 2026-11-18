@@ -2,14 +2,12 @@
 
 namespace Drupal\search_api\Plugin\views\row;
 
-use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\TypedData\ComplexDataInterface;
 use Drupal\rest\Plugin\views\row\DataEntityRow;
 use Drupal\search_api\LoggerTrait;
 use Drupal\search_api\Plugin\views\query\SearchApiQuery;
 use Drupal\search_api\Plugin\views\SearchApiHandlerTrait;
 use Drupal\search_api\SearchApiException;
-use Drupal\views\Attribute\ViewsRow;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ViewExecutable;
 
@@ -18,14 +16,15 @@ use Drupal\views\ViewExecutable;
  *
  * @ingroup views_row_plugins
  *
+ * @ViewsRow(
+ *   id = "search_api_data",
+ *   title = @Translation("Entity (Search API)"),
+ *   help = @Translation("Retrieves entities as row data."),
+ *   display_types = {"data"}
+ * )
+ *
  * @see search_api_views_plugins_row_alter()
  */
-#[ViewsRow(
-  id: 'search_api_data',
-  title: new TranslatableMarkup('Entity (Search API)'),
-  help: new TranslatableMarkup('Retrieves entities as row data.'),
-  display_types: ['data'],
-)]
 class SearchApiDataRow extends DataEntityRow {
 
   use LoggerTrait;
@@ -93,6 +92,7 @@ class SearchApiDataRow extends DataEntityRow {
   /**
    * {@inheritdoc}
    */
-  public function query() {}
+  public function query() {
+  }
 
 }

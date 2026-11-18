@@ -4,16 +4,12 @@ namespace Drupal\Tests\purge\Kernel\Invalidation;
 
 use Drupal\purge\Plugin\Purge\Invalidation\PluginManager;
 use Drupal\Tests\purge\Kernel\KernelPluginManagerTestBase;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests \Drupal\purge\Plugin\Purge\Invalidation\PluginManager.
  *
  * @group purge
  */
-#[Group('purge')]
-#[RunTestsInSeparateProcesses]
 class PluginManagerTest extends KernelPluginManagerTestBase {
 
   /**

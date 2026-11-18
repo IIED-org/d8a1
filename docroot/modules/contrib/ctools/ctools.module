@@ -13,6 +13,13 @@ use Drupal\ctools\Plugin\Condition\NodeType;
 
 /**
  * Implements hook_theme().
+ *
+ * @param $existing
+ * @param $type
+ * @param $theme
+ * @param $path
+ *
+ * @return \array[][]
  */
 function ctools_theme($existing, $type, $theme, $path) {
   return [
@@ -38,10 +45,9 @@ function ctools_theme($existing, $type, $theme, $path) {
 }
 
 /**
- * Prepares variables for ctools wizard trail templates.
+ * Template Preprocess for Wizard Trail.
  *
- * @param array $variables
- *   The variables.
+ * @param $variables
  */
 function template_preprocess_ctools_wizard_trail(&$variables) {
   /** @var \Drupal\ctools\Wizard\FormWizardInterface|\Drupal\ctools\Wizard\EntityFormWizardInterface $wizard */
@@ -56,10 +62,9 @@ function template_preprocess_ctools_wizard_trail(&$variables) {
 }
 
 /**
- * Prepares variables for ctools wizard trail links templates.
+ * Template Preprocess for Trail links.
  *
- * @param array $variables
- *   The variables.
+ * @param $variables
  */
 function template_preprocess_ctools_wizard_trail_links(&$variables) {
   /** @var \Drupal\ctools\Wizard\FormWizardInterface|\Drupal\ctools\Wizard\EntityFormWizardInterface $wizard */
@@ -80,7 +85,9 @@ function template_preprocess_ctools_wizard_trail_links(&$variables) {
 }
 
 /**
- * Implements hook_condition_info_alter().
+ * Implements Hook Info alter.
+ *
+ * @param $definitions
  */
 function ctools_condition_info_alter(&$definitions) {
   // Replace all generic entity bundle conditions classes if they are unaltered,
@@ -95,9 +102,6 @@ function ctools_condition_info_alter(&$definitions) {
     // Drupal 9.x only: override core node_type with ctools constraints.
     $definitions['node_type'] = $definitions['entity_bundle:node'];
     $definitions['node_type']['id'] = 'node_type';
-    // The deprecated NodeType class is used on purpose so that downstream
-    // "instanceof NodeType" checks keep working on Drupal 9.
-    // @phpstan-ignore-next-line
     $definitions['node_type']['class'] = NodeType::class;
   }
 }

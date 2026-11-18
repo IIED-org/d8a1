@@ -9,10 +9,9 @@ use Drupal\backup_migrate\Core\Plugin\PluginCallerTrait;
 use Drupal\backup_migrate\Core\Plugin\PluginCallerInterface;
 use Drupal\backup_migrate\Drupal\File\DrupalTempFileAdapter;
 use Drupal\backup_migrate\Core\File\TempFileManager;
-use Drupal\Core\File\FileSystemInterface;
 
 /**
- * Provides the MySQLi source class.
+ *
  *
  * @package Drupal\backup_migrate\Core\Source
  */
@@ -25,21 +24,6 @@ class MySQLiSource extends DatabaseSource implements PluginCallerInterface {
    * @var resource
    */
   protected $connection;
-
-  /**
-   * Constructs a MySQLiSource object.
-   *
-   * @param \Drupal\backup_migrate\Core\Config\ConfigInterface|array $init
-   *   Initial configuration.
-   * @param \Drupal\Core\File\FileSystemInterface|null $fileSystem
-   *   The file system service.
-   */
-  public function __construct(
-    $init = [],
-    protected readonly ?FileSystemInterface $fileSystem = NULL,
-  ) {
-    parent::__construct($init);
-  }
 
   /**
    * {@inheritdoc}
@@ -60,11 +44,8 @@ class MySQLiSource extends DatabaseSource implements PluginCallerInterface {
    *   A backup file with the contents of the source dumped to it.
    */
   public function exportToFile() {
-    if ($connection = $this->getConnection()) {
-      if (!$this->fileSystem) {
-        throw new BackupMigrateException('Cannot export database because the file system service is missing.');
-      }
-      $adapter = new DrupalTempFileAdapter($this->fileSystem);
+    if ($connection = $this->_getConnection()) {
+      $adapter = new DrupalTempFileAdapter(\Drupal::service('file_system'));
       $tempfilemanager = new TempFileManager($adapter);
       $this->setTempFileManager($tempfilemanager);
       $file = $this->getTempFileManager()->create('mysql');
@@ -72,11 +53,7 @@ class MySQLiSource extends DatabaseSource implements PluginCallerInterface {
       $exclude = (array) $this->confGet('exclude_tables');
       $nodata = (array) $this->confGet('nodata_tables');
 
-      // Switch SQL mode to match header.
-      $sql_mode = $this->fetchValue("SELECT @@SESSION.sql_mode");
-      $this->query("SET sql_mode = 'NO_AUTO_VALUE_ON_ZERO'");
-
-      $file->write($this->getSqlHeader());
+      $file->write($this->_getSqlHeader());
       $tables = $this->getRawTables();
 
       $lines = 0;
@@ -89,19 +66,15 @@ class MySQLiSource extends DatabaseSource implements PluginCallerInterface {
         // @endcode
         $table = $this->plugins()->call('beforeDbTableBackup', $table, ['source' => $this]);
         if ($table['name'] && !isset($exclude[$table['name']]) && empty($table['exclude'])) {
-          $file->write($this->getTableCreateSql($table));
+          $file->write($this->_getTableCreateSql($table));
           $lines++;
           if (empty($table['nodata']) && !in_array($table['name'], $nodata)) {
-            $lines += $this->dumpTableSqlToFile($file, $table);
+            $lines += $this->_dumpTableSqlToFile($file, $table);
           }
         }
       }
 
-      $file->write($this->getSqlFooter());
-
-      // Set the SQL_mode back to the original value.
-      $this->query("SET SQL_mode = '$sql_mode'");
-
+      $file->write($this->_getSqlFooter());
       $file->close();
       return $file;
     }
@@ -118,21 +91,19 @@ class MySQLiSource extends DatabaseSource implements PluginCallerInterface {
    * This is the main restore function for this source.
    *
    * @param \Drupal\backup_migrate\Core\File\BackupFileReadableInterface $file
-   *   The backup file.
    *   The file to read the backup from. It will not be opened for reading.
    *
    * @return bool|int
-   *   TRUE when successful, FALSE otherwise.
    */
   public function importFromFile(BackupFileReadableInterface $file) {
     $num = 0;
 
-    if ($conn = $this->getConnection()) {
+    if ($conn = $this->_getConnection()) {
       // Open (or rewind) the file.
       $file->openForRead();
 
       // Read one line at a time and run the query.
-      while ($line = $this->readSqlCommand($file)) {
+      while ($line = $this->_readSqlCommand($file)) {
         // @todo Why is this disabled?
         // @code
         // if (_backup_migrate_check_timeout()) {
@@ -159,7 +130,7 @@ class MySQLiSource extends DatabaseSource implements PluginCallerInterface {
    *
    * @throws \Exception
    */
-  protected function getConnection() {
+  protected function _getConnection() {
     if (!$this->connection) {
       if (!function_exists('mysqli_init') && !extension_loaded('mysqli')) {
         throw new BackupMigrateException('Cannot connect to the database because the MySQLi extension is missing.');
@@ -235,14 +206,15 @@ class MySQLiSource extends DatabaseSource implements PluginCallerInterface {
    * Get the header for the top of the SQL file.
    *
    * @return string
-   *   The requested string.
    */
-  protected function getSqlHeader() {
-    $info = $this->dbInfo();
+  protected function _getSqlHeader() {
+    $info = $this->_dbInfo();
     $version = $info['version'];
     $host = $this->confGet('host');
     $db = $this->confGet('database');
     $timestamp = gmdate('r');
+    $generator = $this->confGet('generator');
+
     // @todo Expose these options in config with the ability to turn on and off.
     return <<<HEADER
 -- Generator: Backup and Migrate
@@ -272,7 +244,7 @@ HEADER;
   /**
    * The footer of the sql dump file.
    */
-  protected function getSqlFooter() {
+  protected function _getSqlFooter() {
     return <<<FOOTER
 
 
@@ -296,12 +268,10 @@ FOOTER;
    * comments.
    *
    * @param \Drupal\backup_migrate\Core\File\BackupFileReadableInterface $file
-   *   The backup file.
    *
    * @return string
-   *   The requested string.
    */
-  protected function readSqlCommand(BackupFileReadableInterface $file) {
+  protected function _readSqlCommand(BackupFileReadableInterface $file) {
     $out = '';
     while ($line = $file->readLine()) {
       $first2 = substr($line, 0, 2);
@@ -323,7 +293,7 @@ FOOTER;
   /**
    * Lock the list of given tables in the database.
    */
-  protected function lockTables($tables) {
+  protected function _lockTables($tables) {
     if ($tables) {
       $tables_escaped = [];
       foreach ($tables as $table) {
@@ -336,7 +306,7 @@ FOOTER;
   /**
    * Unlock all tables in the database.
    */
-  protected function unlockTables($settings) {
+  protected function _unlockTables($settings) {
     $this->query('UNLOCK TABLES');
   }
 
@@ -359,21 +329,19 @@ FOOTER;
    * Get the sql for the structure of the given table.
    *
    * @param array $table
-   *   The table.
    *
    * @return string
-   *   The requested string.
    */
-  protected function getTableCreateSql(array $table) {
+  protected function _getTableCreateSql(array $table) {
     $out = "";
 
     // If this is a view.
     if (empty($table['engine'])) {
       // Switch SQL mode to for a simpler version of the create view syntax.
-      $sql_mode = $this->fetchValue("SELECT @@SESSION.sql_mode");
+      $sql_mode = $this->_fetchValue("SELECT @@SESSION.sql_mode");
       // @todo Setting the sql_mode does not seem to work.
       $this->query("SET sql_mode = 'ANSI'");
-      $create = $this->fetchAssoc("SHOW CREATE VIEW `" . $table['name'] . "`");
+      $create = $this->_fetchAssoc("SHOW CREATE VIEW `" . $table['name'] . "`");
       if ($create) {
         // Lowercase the keys for consistency.
         $create = array_change_key_case($create);
@@ -389,7 +357,7 @@ FOOTER;
 
     // This is a regular table.
     else {
-      $create = $this->fetchAssoc("SHOW CREATE TABLE `" . $table['name'] . "`");
+      $create = $this->_fetchAssoc("SHOW CREATE TABLE `" . $table['name'] . "`");
       if ($create) {
         // Lowercase the keys for consistency.
         $create = array_change_key_case($create);
@@ -409,7 +377,7 @@ FOOTER;
   /**
    * Get the sql to insert the data for a given table.
    */
-  protected function dumpTableSqlToFile(BackupFileWritableInterface $file, $table) {
+  protected function _dumpTableSqlToFile(BackupFileWritableInterface $file, $table) {
     // If this is a view, do not export any data.
     if (empty($table['engine'])) {
       return 0;
@@ -433,7 +401,7 @@ FOOTER;
     while ($result && $row = $result->fetch_assoc()) {
       // DB Escape the values.
       $items = [];
-      foreach ($row as $value) {
+      foreach ($row as $key => $value) {
         $items[] = is_null($value) ? "null" : "'" . str_replace($search, $replace, $value) . "'";
         // @todo escape binary data.
       }
@@ -476,16 +444,14 @@ FOOTER;
   /**
    * Run a db query on this destination's db.
    *
-   * @param mixed $query
-   *   The query.
+   * @param $query
    *
    * @return bool|\mysqli_result
-   *   TRUE when successful, FALSE otherwise.
    *
    * @throws \Exception
    */
   protected function query($query) {
-    if ($conn = $this->getConnection()) {
+    if ($conn = $this->_getConnection()) {
       return $conn->query($query, MYSQLI_USE_RESULT);
     }
     else {
@@ -497,15 +463,13 @@ FOOTER;
    * Return the first result of the query as an associated array.
    *
    * @param string $query
-   *   The query.
    *   A SQL query.
    *
    * @return array
-   *   A render or configuration array.
    *
    * @throws \Exception
    */
-  protected function fetchAssoc($query) {
+  protected function _fetchAssoc($query) {
     $result = $this->query($query);
     if ($result) {
       return $result->fetch_assoc();
@@ -517,24 +481,22 @@ FOOTER;
    * Return the first field of the first result of a query.
    *
    * @param string $query
-   *   The query.
    *   A SQL query.
    *
    * @return null|object
-   *   The return value.
    *
    * @throws \Exception
    */
-  protected function fetchValue($query) {
-    $result = $this->fetchAssoc($query);
+  protected function _fetchValue($query) {
+    $result = $this->_fetchAssoc($query);
     return reset($result);
   }
 
   /**
    * Get the version info for the given DB.
    */
-  protected function dbInfo() {
-    $conn = $this->getConnection();
+  protected function _dbInfo() {
+    $conn = $this->_getConnection();
     return [
       'type' => 'mysql',
       'version' => $conn->server_version,

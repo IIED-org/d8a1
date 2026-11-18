@@ -6,39 +6,18 @@ use Drupal\backup_migrate\Core\Config\Config;
 use Drupal\backup_migrate\Core\Plugin\FileProcessorInterface;
 use Drupal\backup_migrate\Core\Plugin\FileProcessorTrait;
 use Drupal\backup_migrate\Core\Plugin\PluginBase;
-use Drupal\backup_migrate\Core\Translation\TranslatableTrait;
 use Drupal\backup_migrate\Core\File\BackupFileReadableInterface;
 use Drupal\backup_migrate\Core\File\BackupFileWritableInterface;
-use Drupal\Core\File\FileSystemInterface;
-use Drupal\Core\Messenger\MessengerInterface;
+use Defuse\Crypto\File as CryptoFile;
 
 /**
- * Provides the drupal encrypt class.
+ *
  *
  * @package Drupal\backup_migrate\Drupal\Filter
  */
 class DrupalEncrypt extends PluginBase implements FileProcessorInterface {
 
   use FileProcessorTrait;
-  use TranslatableTrait;
-
-  /**
-   * Constructs a DrupalEncrypt object.
-   *
-   * @param \Drupal\backup_migrate\Core\Config\ConfigInterface|array $init
-   *   Initial configuration.
-   * @param \Drupal\Core\File\FileSystemInterface|null $fileSystem
-   *   The file system service.
-   * @param \Drupal\Core\Messenger\MessengerInterface|null $messenger
-   *   The messenger.
-   */
-  public function __construct(
-    $init = [],
-    protected readonly ?FileSystemInterface $fileSystem = NULL,
-    protected readonly ?MessengerInterface $messenger = NULL,
-  ) {
-    parent::__construct($init);
-  }
 
   /**
    * {@inheritdoc}
@@ -66,13 +45,11 @@ class DrupalEncrypt extends PluginBase implements FileProcessorInterface {
         ];
       }
       else {
-        if ($this->messenger) {
-          $this->messenger->addMessage(t('In order to encrypt backup files, please install the Defuse PHP-encryption library via Composer with the following command: <code>composer require defuse/php-encryption</code>. See the <a href="@docs">Defuse PHP Encryption Documentation Page</a> for more information.',
+        \Drupal::messenger()->addMessage(t('In order to encrypt backup files, please install the Defuse PHP-encryption library via Composer with the following command: <code>composer require defuse/php-encryption</code>. See the <a href="@docs">Defuse PHP Encryption Documentation Page</a> for more information.',
           [
             '@docs' => 'https://www.drupal.org/node/3185484',
           ]
-          ), 'status');
-        }
+        ), 'status');
       }
     }
 
@@ -83,7 +60,6 @@ class DrupalEncrypt extends PluginBase implements FileProcessorInterface {
    * Get the default values for the plugin.
    *
    * @return \Drupal\backup_migrate\Core\Config\Config
-   *   The return value.
    */
   public function configDefaults() {
     return new Config([
@@ -92,63 +68,42 @@ class DrupalEncrypt extends PluginBase implements FileProcessorInterface {
   }
 
   /**
-   * Handles the encrypt file operation.
+   *
    */
-  protected function encryptFile(BackupFileReadableInterface $from, BackupFileWritableInterface $to) {
-    $path = $this->realpath($from->realpath());
-    $out_path = $this->realpath($to->realpath());
-    $crypto_file = '\Defuse\Crypto\File';
-    if (!$path || !$out_path || !class_exists($crypto_file)) {
-      return FALSE;
-    }
+  protected function _encryptFile(BackupFileReadableInterface $from, BackupFileWritableInterface $to) {
+    $path = \Drupal::service('file_system')->realpath($from->realpath());
+    $out_path = \Drupal::service('file_system')->realpath($to->realpath());
 
     try {
-      call_user_func([$crypto_file, 'encryptFileWithPassword'], $path, $out_path, $this->confGet('encrypt_password'));
-      $fileszc = filesize($this->realpath($to->realpath()));
+      CryptoFile::encryptFileWithPassword($path, $out_path, $this->confGet('encrypt_password'));
+      $fileszc = filesize(\Drupal::service('file_system')->realpath($to->realpath()));
       $to->setMeta('filesize', $fileszc);
       return TRUE;
     }
-    catch (\Exception $e) {
+    catch (Exception $e) {
       return FALSE;
     }
   }
 
   /**
-   * Handles the decrypt file operation.
+   *
    */
   protected function decryptFile(BackupFileReadableInterface $from, BackupFileWritableInterface $to) {
-    $path = $this->realpath($from->realpath());
-    $out_path = $this->realpath($to->realpath());
-    $crypto_file = '\Defuse\Crypto\File';
-    if (!$path || !$out_path || !class_exists($crypto_file)) {
-      return FALSE;
-    }
+    $path = \Drupal::service('file_system')->realpath($from->realpath());
+    $out_path = \Drupal::service('file_system')->realpath($to->realpath());
 
     try {
-      call_user_func([$crypto_file, 'decryptFileWithPassword'], $path, $out_path, $this->confGet('encrypt_password'));
+      CryptoFile::decryptFileWithPassword($path, $out_path, $this->confGet('encrypt_password'));
 
       return TRUE;
     }
-    catch (\Exception $e) {
+    catch (Exception $e) {
       return FALSE;
     }
   }
 
   /**
-   * Resolves a path through Drupal's file system service.
    *
-   * @param string $path
-   *   The path to resolve.
-   *
-   * @return string|false
-   *   The resolved real path, or FALSE on failure.
-   */
-  protected function realpath($path) {
-    return $this->fileSystem ? $this->fileSystem->realpath($path) : FALSE;
-  }
-
-  /**
-   * Handles the before restore operation.
    */
   public function beforeRestore(BackupFileReadableInterface $file) {
     $type = $file->getExtLast();
@@ -164,7 +119,7 @@ class DrupalEncrypt extends PluginBase implements FileProcessorInterface {
   }
 
   /**
-   * Handles the supported ops operation.
+   *
    */
   public function supportedOps() {
     return [
@@ -176,12 +131,12 @@ class DrupalEncrypt extends PluginBase implements FileProcessorInterface {
   }
 
   /**
-   * Handles the after backup operation.
+   *
    */
   public function afterBackup(BackupFileReadableInterface $file) {
     if ($this->confGet('encrypt')) {
       $out = $this->getTempFileManager()->pushExt($file, 'ssl');
-      $success = $this->encryptFile($file, $out);
+      $success = $this->_encryptFile($file, $out);
       if ($out && $success) {
         return $out;
       }

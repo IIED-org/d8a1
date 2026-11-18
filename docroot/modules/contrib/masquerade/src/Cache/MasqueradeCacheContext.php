@@ -26,9 +26,8 @@ class MasqueradeCacheContext extends RequestStackCacheContextBase implements Cac
    */
   public function getContext() {
     if ($request = $this->requestStack->getCurrentRequest()) {
-      if ($request->hasSession() && ($bag = $request->getSession()->getMetadataBag())) {
-        /** @var \Drupal\masquerade\Session\MetadataBag $bag */
-        if ($bag->getMasquerade()) {
+      if ($request->hasSession() && ($session = $request->getSession())) {
+        if ($session->has('masquerading')) {
           // Previous account supposed to be Authenticated.
           return '1';
         }

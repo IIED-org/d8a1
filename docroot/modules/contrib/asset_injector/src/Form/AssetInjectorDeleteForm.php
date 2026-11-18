@@ -2,12 +2,13 @@
 
 namespace Drupal\asset_injector\Form;
 
+use Drupal;
 use Drupal\Core\Entity\EntityConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 
 /**
- * Builds the form to delete Asset Injector entities.
+ * Builds the form to delete CSS Injector entities.
  */
 class AssetInjectorDeleteForm extends EntityConfirmFormBase {
 

@@ -4,16 +4,16 @@ namespace Drupal\Tests\token\Kernel;
 
 use Drupal\comment\Entity\Comment;
 use Drupal\comment\Tests\CommentTestTrait;
-use Drupal\Core\Url;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
+use Drupal\Core\Url;
 
 /**
  * Tests comment tokens.
  *
  * @group token
  */
-class CommentTest extends TokenKernelTestBase {
+class CommentTest extends KernelTestBase {
 
   use CommentTestTrait;
 
@@ -46,13 +46,10 @@ class CommentTest extends TokenKernelTestBase {
     $this->addDefaultCommentField('node', 'page');
   }
 
-  /**
-   *
-   */
-  public function testCommentTokens() {
+  function testCommentTokens() {
     $node = Node::create([
       'type' => 'page',
-      'title' => $this->randomMachineName(),
+      'title' => $this->randomMachineName()
     ]);
     $node->save();
 

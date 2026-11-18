@@ -1,9 +1,5 @@
 services:
 
-  # Every public purge service is aliased by its interface, so that consumers
-  # on Drupal 10.2+ can autowire it by type-hinting the interface. The string
-  # service IDs remain the canonical, public way to fetch them.
-
   # PURGE.LOGGER
   #
   # Provides logging services to purge and its submodules, via a single channel.
@@ -13,12 +9,10 @@ services:
     public: true
     tags:
       - { name: needs_destruction }
-  Drupal\purge\Logger\LoggerServiceInterface: '@purge.logger'
   purge.logger.parts_factory:
     class: Drupal\purge\Logger\LoggerChannelPartFactory
     arguments: ['@logger.channel.purge']
     public: false
-  Drupal\purge\Logger\LoggerChannelPartFactoryInterface: '@purge.logger.parts_factory'
   logger.channel.purge:
     parent: logger.channel_base
     arguments: ['purge']
@@ -32,7 +26,6 @@ services:
     class: Drupal\purge\Plugin\Purge\Queuer\QueuersService
     arguments: ['@plugin.manager.purge.queuer', '@config.factory']
     public: true
-  Drupal\purge\Plugin\Purge\Queuer\QueuersServiceInterface: '@purge.queuers'
   plugin.manager.purge.queuer:
     class: Drupal\purge\Plugin\Purge\Queuer\PluginManager
     parent: default_plugin_manager
@@ -48,7 +41,6 @@ services:
     class: Drupal\purge\Plugin\Purge\Invalidation\InvalidationsService
     arguments: ['@plugin.manager.purge.invalidation', '@purge.purgers']
     public: true
-  Drupal\purge\Plugin\Purge\Invalidation\InvalidationsServiceInterface: '@purge.invalidation.factory'
   plugin.manager.purge.invalidation:
     class: Drupal\purge\Plugin\Purge\Invalidation\PluginManager
     parent: default_plugin_manager
@@ -64,18 +56,15 @@ services:
     public: true
     tags:
       - { name: needs_destruction }
-  Drupal\purge\Plugin\Purge\Queue\QueueServiceInterface: '@purge.queue'
   purge.queue.txbuffer:
     public: true
     class: Drupal\purge\Plugin\Purge\Queue\TxBuffer
-  Drupal\purge\Plugin\Purge\Queue\TxBufferInterface: '@purge.queue.txbuffer'
   purge.queue.stats:
     class: Drupal\purge\Plugin\Purge\Queue\StatsTracker
-    arguments: ['@keyvalue']
+    arguments: ['@state']
     public: true
     tags:
       - { name: needs_destruction }
-  Drupal\purge\Plugin\Purge\Queue\StatsTrackerInterface: '@purge.queue.stats'
   plugin.manager.purge.queue:
     class: Drupal\purge\Plugin\Purge\Queue\PluginManager
     parent: default_plugin_manager
@@ -90,7 +79,6 @@ services:
     class: Drupal\purge\Plugin\Purge\DiagnosticCheck\DiagnosticsService
     arguments: ['@plugin.manager.purge.diagnostics', '@service_container']
     public: true
-  Drupal\purge\Plugin\Purge\DiagnosticCheck\DiagnosticsServiceInterface: '@purge.diagnostics'
   plugin.manager.purge.diagnostics:
     class:  Drupal\purge\Plugin\Purge\DiagnosticCheck\PluginManager
     parent: default_plugin_manager
@@ -103,7 +91,6 @@ services:
     class: Drupal\purge\Plugin\Purge\Processor\ProcessorsService
     arguments: ['@plugin.manager.purge.processor', '@config.factory']
     public: true
-  Drupal\purge\Plugin\Purge\Processor\ProcessorsServiceInterface: '@purge.processors'
   plugin.manager.purge.processor:
     class: Drupal\purge\Plugin\Purge\Processor\PluginManager
     parent: default_plugin_manager
@@ -116,18 +103,15 @@ services:
     class: Drupal\purge\Plugin\Purge\Purger\PurgersService
     arguments: ['@plugin.manager.purge.purgers', '@purge.logger', '@purge.purgers.tracker.capacity', '@purge.purgers.tracker.runtime_measurement', '@config.factory', '@lock', '@purge.diagnostics']
     public: true
-  Drupal\purge\Plugin\Purge\Purger\PurgersServiceInterface: '@purge.purgers'
   purge.purgers.tracker.capacity:
     class: Drupal\purge\Plugin\Purge\Purger\CapacityTracker
     public: true
-  Drupal\purge\Plugin\Purge\Purger\CapacityTrackerInterface: '@purge.purgers.tracker.capacity'
   purge.purgers.tracker.runtime_measurement:
     class: Drupal\purge\Plugin\Purge\Purger\RuntimeMeasurementTracker
     arguments: ['@state']
     public: true
     tags:
       - { name: needs_destruction }
-  Drupal\purge\Plugin\Purge\Purger\RuntimeMeasurementTrackerInterface: '@purge.purgers.tracker.runtime_measurement'
   plugin.manager.purge.purgers:
     class: Drupal\purge\Plugin\Purge\Purger\PluginManager
     parent: default_plugin_manager
@@ -142,7 +126,6 @@ services:
     class: Drupal\purge\Plugin\Purge\TagsHeader\TagsHeadersService
     arguments: ['@plugin.manager.purge.tagsheader', '@service_container']
     public: true
-  Drupal\purge\Plugin\Purge\TagsHeader\TagsHeadersServiceInterface: '@purge.tagsheaders'
   purge.tagsheaders.cacheable_response_subscriber:
     class: Drupal\purge\EventSubscriber\CacheableResponseSubscriber
     arguments: ['@purge.tagsheaders']
@@ -188,11 +171,6 @@ services:
   purge_drush.queuer_commands:
     class: Drupal\purge\Drush\Commands\QueuerCommands
     arguments: ['@purge.queuers']
-    tags:
-      - { name: drush.command }
-  purge_drush.sqlsanitize_commands:
-    class: Drupal\purge\Drush\Commands\SqlSanitizeCommands
-    arguments: ['@purge.queue', '@purge.queue.stats']
     tags:
       - { name: drush.command }
   purge_drush.types_command:

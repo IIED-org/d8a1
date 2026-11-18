@@ -12,18 +12,17 @@ use CommerceGuys\Addressing\AbstractEnum;
 final class AddressField extends AbstractEnum
 {
     // The values match the address property names.
-    public const ADMINISTRATIVE_AREA = 'administrativeArea';
-    public const LOCALITY = 'locality';
-    public const DEPENDENT_LOCALITY = 'dependentLocality';
-    public const POSTAL_CODE = 'postalCode';
-    public const SORTING_CODE = 'sortingCode';
-    public const ADDRESS_LINE1 = 'addressLine1';
-    public const ADDRESS_LINE2 = 'addressLine2';
-    public const ADDRESS_LINE3 = 'addressLine3';
-    public const ORGANIZATION = 'organization';
-    public const GIVEN_NAME = 'givenName';
-    public const ADDITIONAL_NAME = 'additionalName';
-    public const FAMILY_NAME = 'familyName';
+    const ADMINISTRATIVE_AREA = 'administrativeArea';
+    const LOCALITY = 'locality';
+    const DEPENDENT_LOCALITY = 'dependentLocality';
+    const POSTAL_CODE = 'postalCode';
+    const SORTING_CODE = 'sortingCode';
+    const ADDRESS_LINE1 = 'addressLine1';
+    const ADDRESS_LINE2 = 'addressLine2';
+    const ORGANIZATION = 'organization';
+    const GIVEN_NAME = 'givenName';
+    const ADDITIONAL_NAME = 'additionalName';
+    const FAMILY_NAME = 'familyName';
 
     /**
      * Gets the tokens (values prefixed with %).
@@ -33,8 +32,10 @@ final class AddressField extends AbstractEnum
      */
     public static function getTokens(): array
     {
-        return array_map(static function ($field) {
+        $tokens = array_map(function ($field) {
             return '%' . $field;
-        }, AddressField::getAll());
+        }, static::getAll());
+
+        return $tokens;
     }
 }

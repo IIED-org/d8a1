@@ -8,7 +8,6 @@ use Drupal\Core\Theme\ThemeManagerInterface;
 use Drupal\layout_builder\Plugin\Field\FieldType\LayoutSectionItem;
 use Drupal\layout_builder\Plugin\SectionStorage\OverridesSectionStorage;
 use Drupal\layout_builder\SectionComponent;
-use Drupal\search_api\Attribute\SearchApiViewsDisplay;
 use Drupal\search_api\Event\IsRenderedInCurrentRequestEvent;
 use Drupal\search_api\Event\SearchApiEvents;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -16,12 +15,13 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Represents a Views block display.
+ *
+ * @SearchApiDisplay(
+ *   id = "views_block",
+ *   views_display_type = "block",
+ *   deriver = "Drupal\search_api\Plugin\search_api\display\ViewsDisplayDeriver"
+ * )
  */
-#[SearchApiViewsDisplay(
-  id: 'views_block',
-  deriver: ViewsDisplayDeriver::class,
-  views_display_type: 'block'
-)]
 class ViewsBlock extends ViewsDisplayBase {
 
   /**
@@ -46,7 +46,7 @@ class ViewsBlock extends ViewsDisplayBase {
   protected $eventDispatcher;
 
   /**
-   * {@inheritdoc}
+   * {@inheritDoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     $plugin = parent::create($container, $configuration, $plugin_id, $plugin_definition);

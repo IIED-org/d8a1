@@ -22,23 +22,14 @@
           'aria-describedby',
           'password-policy-status',
         );
-        // Core disables the element that triggered an Ajax request, so the
-        // password field would lose the focus while its status is refreshed.
-        // Keep it enabled, for its own request only: the other Ajax elements
-        // of the form, like the role checkboxes, must not move the focus.
-        const passwordAjax = Drupal.ajax.instances.find(
-          (instance) => instance && instance.element === passwordInput,
-        );
-        if (passwordAjax) {
-          passwordAjax.beforeSend = function keepPasswordInputEnabled(...args) {
-            const hadFocus = document.activeElement === passwordInput;
-            Drupal.Ajax.prototype.beforeSend.apply(this, args);
-            passwordInput.disabled = false;
-            if (hadFocus && document.activeElement !== passwordInput) {
-              passwordInput.focus();
-            }
-          };
-        }
+        const ajaxBeforeSendOriginal = Drupal.Ajax.prototype.beforeSend;
+        Drupal.Ajax.prototype.beforeSend = (...args) => {
+          ajaxBeforeSendOriginal.apply(this, args);
+          // We want to be able to properly continue entering the password.
+          // So we need to avoid the field being disabled and losing focus.
+          $passwordInput.prop('disabled', false);
+          $passwordInput.focus();
+        };
         const delay = settings.password_policy_extras.status_refresh_delay;
         if (parseInt(delay, 10) > 0) {
           let timeout = null;

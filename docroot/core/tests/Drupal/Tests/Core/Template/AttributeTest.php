@@ -12,20 +12,12 @@ use Drupal\Core\Template\AttributeArray;
 use Drupal\Core\Template\AttributeString;
 use Drupal\Core\Template\Loader\StringLoader;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use Twig\Environment;
-use Twig\Markup as TwigMarkup;
-
-// cspell:ignore phpggc
 
 /**
- * Tests Drupal\Core\Template\Attribute.
+ * @coversDefaultClass \Drupal\Core\Template\Attribute
+ * @group Template
  */
-#[CoversClass(Attribute::class)]
-#[Group('Template')]
 class AttributeTest extends UnitTestCase {
 
   /**
@@ -86,6 +78,7 @@ class AttributeTest extends UnitTestCase {
 
   /**
    * Tests setting attributes.
+   * @covers ::setAttribute
    */
   public function testSetAttribute(): void {
     $attribute = new Attribute();
@@ -113,6 +106,7 @@ class AttributeTest extends UnitTestCase {
 
   /**
    * Tests removing attributes.
+   * @covers ::removeAttribute
    */
   public function testRemoveAttribute(): void {
     $attributes = [
@@ -151,6 +145,7 @@ class AttributeTest extends UnitTestCase {
 
   /**
    * Tests adding class attributes with the AttributeArray helper method.
+   * @covers ::addClass
    */
   public function testAddClasses(): void {
     // Add a class with the array syntax without first initializing the 'class'
@@ -206,6 +201,7 @@ class AttributeTest extends UnitTestCase {
 
   /**
    * Tests removing class attributes with the AttributeArray helper method.
+   * @covers ::removeClass
    */
   public function testRemoveClasses(): void {
     // Add duplicate class to ensure that both duplicates are removed.
@@ -236,6 +232,7 @@ class AttributeTest extends UnitTestCase {
 
   /**
    * Tests checking for class names with the Attribute method.
+   * @covers ::hasClass
    */
   public function testHasClass(): void {
     // Test an attribute without any classes.
@@ -250,9 +247,8 @@ class AttributeTest extends UnitTestCase {
 
   /**
    * Tests removing class attributes with the Attribute helper methods.
-   *
-   * @legacy-covers ::removeClass
-   * @legacy-covers ::addClass
+   * @covers ::removeClass
+   * @covers ::addClass
    */
   public function testChainAddRemoveClasses(): void {
     $attribute = new Attribute(
@@ -269,11 +265,11 @@ class AttributeTest extends UnitTestCase {
 
   /**
    * Tests the twig calls to the Attribute.
+   * @dataProvider providerTestAttributeClassHelpers
    *
-   * @legacy-covers ::removeClass
-   * @legacy-covers ::addClass
+   * @covers ::removeClass
+   * @covers ::addClass
    */
-  #[DataProvider('providerTestAttributeClassHelpers')]
   public function testTwigAddRemoveClasses($template, $expected, $seed_attributes = []): void {
     $loader = new StringLoader();
     $twig = new Environment($loader);
@@ -289,7 +285,7 @@ class AttributeTest extends UnitTestCase {
    *   An array of test data each containing of a twig template string,
    *   a resulting string of classes and an optional array of attributes.
    */
-  public static function providerTestAttributeClassHelpers(): array {
+  public static function providerTestAttributeClassHelpers() {
     // cSpell:disable
     return [
       ["{{ attributes.class }}", ''],
@@ -365,16 +361,14 @@ class AttributeTest extends UnitTestCase {
   }
 
   /**
-   * Tests attribute values.
-   *
-   * @legacy-covers ::createAttributeValue
+   * @covers ::createAttributeValue
+   * @dataProvider providerTestAttributeValues
    */
-  #[DataProvider('providerTestAttributeValues')]
   public function testAttributeValues(array $attributes, $expected): void {
     $this->assertEquals($expected, (new Attribute($attributes))->__toString());
   }
 
-  public static function providerTestAttributeValues(): array {
+  public static function providerTestAttributeValues() {
     $data = [];
 
     $string = '"> <script>alert(123)</script>"';
@@ -383,10 +377,6 @@ class AttributeTest extends UnitTestCase {
     $string = '&quot;><script>alert(123)</script>';
     $data['safe-object-xss2'] = [['title' => Markup::create($string)], ' title="&quot;&gt;alert(123)"'];
     $data['non-safe-object-xss2'] = [['title' => $string], ' title="' . Html::escape($string) . '"'];
-
-    // \Twig\Markup objects are generated when using twig defined variables
-    // like `{% set xxx %}Foo{% endset %}`.
-    $data['twig-markup'] = [['title' => new TwigMarkup('foo', 'UTF-8')], ' title="foo"'];
 
     return $data;
   }
@@ -462,7 +452,7 @@ class AttributeTest extends UnitTestCase {
    * @return int
    *   The number of results that are found.
    */
-  protected function getXPathResultCount($query, $html): int {
+  protected function getXPathResultCount($query, $html) {
     $document = Html::load($html);
     $xpath = new \DOMXPath($document);
 
@@ -485,7 +475,7 @@ class AttributeTest extends UnitTestCase {
    *   An array of test data each containing an array of attributes, the name
    *   of the attribute to check existence of, and the expected result.
    */
-  public static function providerTestHasAttribute(): array {
+  public static function providerTestHasAttribute() {
     return [
       [['class' => ['example-class']], 'class', TRUE],
       [[], 'class', FALSE],
@@ -496,9 +486,9 @@ class AttributeTest extends UnitTestCase {
   }
 
   /**
-   * Tests has attribute.
+   * @covers ::hasAttribute
+   * @dataProvider providerTestHasAttribute
    */
-  #[DataProvider('providerTestHasAttribute')]
   public function testHasAttribute(array $test_data, $test_attribute, $expected): void {
     $attributes = new Attribute($test_data);
     $this->assertSame($expected, $attributes->hasAttribute($test_attribute));
@@ -511,60 +501,29 @@ class AttributeTest extends UnitTestCase {
    *   An array of test data each containing an initial Attribute object, an
    *   Attribute object or array to be merged, and the expected result.
    */
-  public static function providerTestMerge(): array {
+  public static function providerTestMerge() {
     return [
-      [
-        new Attribute([]),
-        new Attribute(['class' => ['class1']]),
-        new Attribute(['class' => ['class1']]),
-      ],
-      [
-        new Attribute(['class' => ['example-class']]),
-        new Attribute(['class' => ['class1']]),
-        new Attribute(['class' => ['example-class', 'class1']]),
-      ],
-      [
-        new Attribute(['class' => ['example-class']]),
-        new Attribute(['id' => 'foo', 'href' => 'bar']),
-        new Attribute([
-          'class' => ['example-class'],
-          'id' => 'foo',
-          'href' => 'bar',
-        ]),
-      ],
+      [new Attribute([]), new Attribute(['class' => ['class1']]), new Attribute(['class' => ['class1']])],
+      [new Attribute(['class' => ['example-class']]), new Attribute(['class' => ['class1']]), new Attribute(['class' => ['example-class', 'class1']])],
+      [new Attribute(['class' => ['example-class']]), new Attribute(['id' => 'foo', 'href' => 'bar']), new Attribute(['class' => ['example-class'], 'id' => 'foo', 'href' => 'bar'])],
     ];
   }
 
   /**
-   * Tests merge.
+   * @covers ::merge
+   * @dataProvider providerTestMerge
    */
-  #[DataProvider('providerTestMerge')]
   public function testMerge($original, $merge, $expected): void {
     $this->assertEquals($expected, $original->merge($merge));
   }
 
   /**
-   * Tests merge argument exception.
+   * @covers ::merge
    */
   public function testMergeArgumentException(): void {
     $attributes = new Attribute(['class' => ['example-class']]);
     $this->expectException(\TypeError::class);
     $attributes->merge('not an array');
-  }
-
-  /**
-   * Tests type enforcement in \Drupal\Core\Template\Attribute::__toString.
-   */
-  #[IgnoreDeprecations]
-  public function testAttributeGadgetChain(): void {
-    // The Gadget Chain itself may trigger a deprecation before the Exception
-    // that prevents the payload from executing is thrown, so we ignore
-    // deprecations for this test.
-    $payload = 'O:30:"Drupal\Core\Template\Attribute":1:{s:7:"storage";a:1:{i:0;O:27:"Drupal\views\ViewExecutable":1:{s:17:"serializationData";a:9:{s:4:"args";N;s:15:"current_display";N;s:12:"current_page";N;s:6:"dom_id";N;s:8:"executed";N;s:12:"exposed_data";N;s:13:"exposed_input";N;s:17:"exposed_raw_input";N;s:7:"storage";N;}}}}';
-    $this->expectException(\RuntimeException::class);
-    $this->expectExceptionMessage('Unexpected type for $value (Drupal\views\ViewExecutable).');
-    // The print is to invoke the __toString() method.
-    print unserialize($payload);
   }
 
 }

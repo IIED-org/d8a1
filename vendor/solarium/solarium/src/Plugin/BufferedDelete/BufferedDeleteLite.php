@@ -9,7 +9,6 @@
 
 namespace Solarium\Plugin\BufferedDelete;
 
-use Solarium\Exception\InvalidArgumentException;
 use Solarium\Exception\RuntimeException;
 use Solarium\Plugin\AbstractBufferedUpdate\AbstractBufferedUpdate;
 use Solarium\Plugin\BufferedDelete\Delete\Id as DeleteById;
@@ -30,9 +29,9 @@ class BufferedDeleteLite extends AbstractBufferedUpdate
     /**
      * Buffered document ids and/or queries to delete.
      *
-     * @var DeleteInterface[]
+     * @var AbstractDelete[]
      */
-    protected array $buffer = [];
+    protected $buffer = [];
 
     /**
      * Add a document id to delete.
@@ -41,7 +40,7 @@ class BufferedDeleteLite extends AbstractBufferedUpdate
      *
      * @return self Provides fluent interface
      */
-    public function addDeleteById(int|string $id): self
+    public function addDeleteById($id): self
     {
         $this->buffer[] = new DeleteById($id);
 
@@ -107,31 +106,11 @@ class BufferedDeleteLite extends AbstractBufferedUpdate
      *
      * Any previously flushed deletes will not be included!
      *
-     * @return DeleteInterface[]
+     * @return AbstractDelete[]
      */
     public function getDeletes(): array
     {
         return $this->buffer;
-    }
-
-    /**
-     * Set the request format for the updates.
-     *
-     * Use UpdateQuery::REQUEST_FORMAT_JSON or UpdateQuery::REQUEST_FORMAT_XML as value.
-     *
-     * @param string $requestFormat
-     *
-     * @throws InvalidArgumentException
-     *
-     * @return self Provides fluent interface
-     */
-    public function setRequestFormat(string $requestFormat): self
-    {
-        if ($this->updateQuery::REQUEST_FORMAT_CBOR === strtolower($requestFormat)) {
-            throw new InvalidArgumentException('Unsupported request format: CBOR can only be used to add documents');
-        }
-
-        return parent::setRequestFormat($requestFormat);
     }
 
     /**
@@ -177,7 +156,7 @@ class BufferedDeleteLite extends AbstractBufferedUpdate
     /**
      * Add all deletes from the buffer as commands to the update query.
      *
-     * @param DeleteInterface[] $buffer
+     * @param AbstractDelete[] $buffer
      */
     protected function addBufferToQuery(array $buffer): void
     {
@@ -189,12 +168,10 @@ class BufferedDeleteLite extends AbstractBufferedUpdate
             $delete = $it->current();
 
             switch ($delete->getType()) {
-                case DeleteInterface::TYPE_ID:
-                    assert($delete instanceof DeleteById);
+                case AbstractDelete::TYPE_ID:
                     $command->addId($delete->getId());
                     break;
-                case DeleteInterface::TYPE_QUERY:
-                    assert($delete instanceof DeleteQuery);
+                case AbstractDelete::TYPE_QUERY:
                     $command->addQuery($delete->getQuery());
                     break;
                 default:

@@ -9,27 +9,45 @@ final class Country
 {
     /**
      * The two-letter country code.
+     *
+     * @var string
      */
-    protected string $countryCode;
+    protected $countryCode;
 
-    protected string $name;
+    /**
+     * The country name.
+     *
+     * @var string
+     */
+    protected $name;
 
     /**
      * The three-letter country code.
+     *
+     * @var string
      */
-    protected ?string $threeLetterCode = null;
+    protected $threeLetterCode;
 
     /**
      * The numeric country code.
+     *
+     * @var string
      */
-    protected ?string $numericCode = null;
+    protected $numericCode;
 
-    protected ?string $currencyCode = null;
+    /**
+     * The currency code.
+     *
+     * @var string
+     */
+    protected $currencyCode;
 
     /**
      * The locale (i.e. "en_US").
+     *
+     * @var string
      */
-    protected string $locale;
+    protected $locale;
 
     public function __construct(array $definition)
     {
@@ -104,6 +122,8 @@ final class Country
      * and have no three-letter or numeric ISO codes.
      * "Ascension Island" (AE) also has no numeric code, even though it has a
      * three-letter code.
+     *
+     * @return string|null
      */
     public function getNumericCode(): ?string
     {
@@ -114,6 +134,8 @@ final class Country
      * Gets the currency code.
      *
      * Represents the official currency used in the country, if known.
+     *
+     * @return string|null
      */
     public function getCurrencyCode(): ?string
     {

@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace DrupalCodeGenerator\Command;
 
@@ -45,7 +43,7 @@ final class Template extends BaseGenerator {
     if ($vars['create_theme'] || $vars['create_preprocess']) {
       $assets->addFile('{machine_name}.module')
         ->template('module.twig')
-        ->appendIfExists(9);
+        ->appendIfExists(7);
     }
   }
 

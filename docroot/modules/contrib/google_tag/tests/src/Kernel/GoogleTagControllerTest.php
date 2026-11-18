@@ -6,16 +6,11 @@ namespace Drupal\Tests\google_tag\Kernel;
 
 use Drupal\google_tag\GoogleTagController;
 use Drupal\Tests\user\Traits\UserCreationTrait;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * @coversDefaultClass \Drupal\google_tag\GoogleTagController
  * @group google_tag
  */
-#[Group('google_tag')]
-#[RunTestsInSeparateProcesses]
 final class GoogleTagControllerTest extends GoogleTagTestCase {
 
   use UserCreationTrait;
@@ -41,7 +36,6 @@ final class GoogleTagControllerTest extends GoogleTagTestCase {
    *
    * @dataProvider accessData
    */
-  #[DataProvider('accessData')]
   public function testContainerListingAccess(array $permissions, bool $use_collection, bool $expected_access): void {
     $user = $this->createUser($permissions);
     self::assertNotEquals(1, (int) $user->id());
@@ -67,7 +61,6 @@ final class GoogleTagControllerTest extends GoogleTagTestCase {
    *
    * @dataProvider accessData
    */
-  #[DataProvider('accessData')]
   public function testAddContainerAccess(array $permissions, bool $use_collection, bool $expected_access): void {
     $user = $this->createUser($permissions);
     self::assertNotEquals(1, (int) $user->id());

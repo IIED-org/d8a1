@@ -18,14 +18,21 @@ class UserFieldsEvent extends SocialAuthEventBase {
    *
    * @var array
    */
-  protected array $userFields;
+  protected $userFields;
+
+  /**
+   * The plugin id dispatching this event.
+   *
+   * @var string
+   */
+  protected $pluginId;
 
   /**
    * The data of the user to be created.
    *
    * @var \Drupal\social_auth\User\SocialAuthUserInterface
    */
-  protected SocialAuthUserInterface $user;
+  protected $user;
 
   /**
    * UserFieldsEvent constructor.
@@ -33,11 +40,11 @@ class UserFieldsEvent extends SocialAuthEventBase {
    * @param array $user_fields
    *   Initial user fields to populate the newly created user.
    * @param string $plugin_id
-   *   The plugin ID dispatching this event.
+   *   The plugin Id dispatching this event.
    * @param \Drupal\social_auth\User\SocialAuthUserInterface $user
    *   The data of the user to be created.
    */
-  public function __construct(array $user_fields, string $plugin_id, SocialAuthUserInterface $user) {
+  public function __construct(array $user_fields, $plugin_id, SocialAuthUserInterface $user) {
     $this->userFields = $user_fields;
     $this->pluginId = $plugin_id;
     $this->user = $user;
@@ -49,7 +56,7 @@ class UserFieldsEvent extends SocialAuthEventBase {
    * @return array
    *   Fields to initialize for the user creation.
    */
-  public function getUserFields(): array {
+  public function getUserFields() {
     return $this->userFields;
   }
 
@@ -59,8 +66,18 @@ class UserFieldsEvent extends SocialAuthEventBase {
    * @param array $user_fields
    *   The user fields.
    */
-  public function setUserFields(array $user_fields): void {
+  public function setUserFields(array $user_fields) {
     $this->userFields = $user_fields;
+  }
+
+  /**
+   * Gets the plugin id dispatching this event.
+   *
+   * @return string
+   *   The plugin id.
+   */
+  public function getPluginId() {
+    return $this->pluginId;
   }
 
   /**
@@ -69,7 +86,7 @@ class UserFieldsEvent extends SocialAuthEventBase {
    * @return \Drupal\social_auth\User\SocialAuthUserInterface
    *   The user's data.
    */
-  public function getSocialAuthUser(): SocialAuthUserInterface {
+  public function getSocialAuthUser() {
     return $this->user;
   }
 

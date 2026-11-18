@@ -3,9 +3,7 @@
 namespace Drupal\search_api\Plugin\search_api\processor;
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Utility\Token;
-use Drupal\search_api\Attribute\SearchApiProcessor;
 use Drupal\search_api\Datasource\DatasourceInterface;
 use Drupal\search_api\Item\ItemInterface;
 use Drupal\search_api\Plugin\search_api\processor\Property\CustomValueProperty;
@@ -14,17 +12,18 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Allows adding custom tokenized text values to the index.
+ *
+ * @SearchApiProcessor(
+ *   id = "custom_value",
+ *   label = @Translation("Custom value"),
+ *   description = @Translation("Allows adding custom tokenized text values to the index."),
+ *   stages = {
+ *     "add_properties" = 0,
+ *   },
+ *   locked = true,
+ *   hidden = true,
+ * )
  */
-#[SearchApiProcessor(
-  id: 'custom_value',
-  label: new TranslatableMarkup('Custom value'),
-  description: new TranslatableMarkup('Allows adding custom tokenized text values to the index.'),
-  stages: [
-    'add_properties' => 0,
-  ],
-  locked: TRUE,
-  hidden: TRUE,
-)]
 class CustomValue extends ProcessorPluginBase {
 
   /**
@@ -72,15 +71,15 @@ class CustomValue extends ProcessorPluginBase {
   public function getPropertyDefinitions(?DatasourceInterface $datasource = NULL) {
     $properties = [];
 
-    $definition = [
-      'label' => $datasource ? $this->t('Custom value (@datasource)', [
-        '@datasource' => $datasource->label(),
-      ]) : $this->t('Custom value'),
-      'description' => $this->t('Index a custom value with replacement tokens.'),
-      'type' => 'string',
-      'processor_id' => $this->getPluginId(),
-    ];
-    $properties[$this->getPropertyPath($datasource)] = new CustomValueProperty($definition);
+    if (!$datasource) {
+      $definition = [
+        'label' => $this->t('Custom value'),
+        'description' => $this->t('Index a custom value with replacement tokens.'),
+        'type' => 'string',
+        'processor_id' => $this->getPluginId(),
+      ];
+      $properties['custom_value'] = new CustomValueProperty($definition);
+    }
 
     return $properties;
   }
@@ -90,15 +89,8 @@ class CustomValue extends ProcessorPluginBase {
    */
   public function addFieldValues(ItemInterface $item) {
     // Get all of the "custom_value" fields on this item.
-    $fields_helper = $this->getFieldsHelper();
-    $item_fields = $item->getFields(FALSE);
-    $fields = $fields_helper->filterForPropertyPath($item_fields, NULL, $this->getPropertyPath());
-    // Add datasource-specific fields.
-    $fields += $fields_helper->filterForPropertyPath(
-      $item_fields,
-      $item->getDatasourceId(),
-      $this->getPropertyPath($item->getDatasource())
-    );
+    $fields = $this->getFieldsHelper()
+      ->filterForPropertyPath($item->getFields(), NULL, 'custom_value');
     // If the indexed item is an entity, we can pass that as data to the token
     // service. Otherwise, only global tokens are available.
     $entity = $item->getOriginalObject()->getValue();
@@ -112,12 +104,7 @@ class CustomValue extends ProcessorPluginBase {
     $token = $this->getToken();
     foreach ($fields as $field) {
       $config = $field->getConfiguration();
-      if (
-        empty($config['value'])
-        || !($field->getDataDefinition() instanceof CustomValueProperty)
-      ) {
-        // Avoid adding the same field value twice in the event of a property
-        // path collision within the datasource.
+      if (empty($config['value'])) {
         continue;
       }
       // Check if there are any tokens to replace.
@@ -132,17 +119,6 @@ class CustomValue extends ProcessorPluginBase {
         $field->addValue($field_value);
       }
     }
-  }
-
-  /**
-   * Returns the property path to use for the custom value property.
-   *
-   * @param \Drupal\search_api\Datasource\DatasourceInterface|null $datasource
-   *   (optional) The datasource to create a property path for. If NULL, the
-   *   default datasource-independent property path should be used.
-   */
-  protected function getPropertyPath(?DatasourceInterface $datasource = NULL) {
-    return $datasource ? 'search_api_custom_value' : 'custom_value';
   }
 
 }

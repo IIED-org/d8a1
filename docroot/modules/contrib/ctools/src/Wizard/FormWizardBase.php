@@ -56,7 +56,6 @@ abstract class FormWizardBase extends FormBase implements FormWizardInterface {
    *
    * @var string
    */
-  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
   protected $tempstore_id;
 
   /**
@@ -64,7 +63,6 @@ abstract class FormWizardBase extends FormBase implements FormWizardInterface {
    *
    * @var string|null
    */
-  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
   protected $machine_name;
 
   /**
@@ -82,8 +80,6 @@ abstract class FormWizardBase extends FormBase implements FormWizardInterface {
   protected $renderer;
 
   /**
-   * Constructs a new form wizard.
-   *
    * @param \Drupal\Core\TempStore\SharedTempStoreFactory $tempstore
    *   Tempstore Factory for keeping track of values in each step of the
    *   wizard.
@@ -93,15 +89,11 @@ abstract class FormWizardBase extends FormBase implements FormWizardInterface {
    *   The class resolver.
    * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $event_dispatcher
    *   The event dispatcher.
-   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
-   *   The route match.
-   * @param \Drupal\Core\Render\RendererInterface $renderer
-   *   The renderer.
-   * @param string $tempstore_id
+   * @param $tempstore_id
    *   The shared temp store factory collection name.
-   * @param string|null $machine_name
+   * @param null $machine_name
    *   The SharedTempStore key for our current wizard values.
-   * @param string|null $step
+   * @param null $step
    *   The current active step of the wizard.
    */
   public function __construct(SharedTempStoreFactory $tempstore, FormBuilderInterface $builder, ClassResolverInterface $class_resolver, EventDispatcherInterface $event_dispatcher, RouteMatchInterface $route_match, RendererInterface $renderer, $tempstore_id, $machine_name = NULL, $step = NULL) {
@@ -190,7 +182,6 @@ abstract class FormWizardBase extends FormBase implements FormWizardInterface {
    * The translated text of the "Next" button's text.
    *
    * @return string
-   *   The translated "Next" text.
    */
   public function getNextOp() {
     return $this->t('Next');
@@ -361,12 +352,9 @@ abstract class FormWizardBase extends FormBase implements FormWizardInterface {
    * Helper function for generating default form elements.
    *
    * @param array $form
-   *   The form.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   The form state.
    *
    * @return array
-   *   The modified form.
    */
   protected function customizeForm(array $form, FormStateInterface $form_state) {
     // Setup the step rendering theme element.
@@ -388,7 +376,6 @@ abstract class FormWizardBase extends FormBase implements FormWizardInterface {
    *   The current form state.
    *
    * @return array
-   *   The actions render array.
    */
   protected function actions(FormInterface $form_object, FormStateInterface $form_state) {
     $cached_values = $form_state->getTemporaryValue('wizard');
@@ -478,9 +465,6 @@ abstract class FormWizardBase extends FormBase implements FormWizardInterface {
     return $actions;
   }
 
-  /**
-   * Ajax submit handler.
-   */
   public function ajaxSubmit(array $form, FormStateInterface $form_state) {
     $cached_values = $form_state->getTemporaryValue('wizard');
     $response = new AjaxResponse();
@@ -489,9 +473,6 @@ abstract class FormWizardBase extends FormBase implements FormWizardInterface {
     return $response;
   }
 
-  /**
-   * Ajax previous handler.
-   */
   public function ajaxPrevious(array $form, FormStateInterface $form_state) {
     $cached_values = $form_state->getTemporaryValue('wizard');
     $response = new AjaxResponse();
@@ -500,18 +481,12 @@ abstract class FormWizardBase extends FormBase implements FormWizardInterface {
     return $response;
   }
 
-  /**
-   * Ajax finish handler.
-   */
   public function ajaxFinish(array $form, FormStateInterface $form_state) {
     $response = new AjaxResponse();
     $response->addCommand(new CloseModalDialogCommand());
     return $response;
   }
 
-  /**
-   * Gets the route name.
-   */
   public function getRouteName() {
     return $this->routeMatch->getRouteName();
   }

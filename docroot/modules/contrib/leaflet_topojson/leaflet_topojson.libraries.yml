@@ -5,7 +5,7 @@ leaflet-topojson:
     leaflet.drupal.topojson.js: {}
     //d3js.org/topojson.v1.min.js: { type: external, minified: true }
   dependencies:
-    - core/drupal
-    - core/jquery
     - leaflet/leaflet
     - leaflet/leaflet-drupal
+    - core/jquery
+    - core/drupal

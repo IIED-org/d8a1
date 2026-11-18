@@ -3,6 +3,6 @@
 namespace Drupal\encrypt\Exception;
 
 /**
- * Provides a custom exception for the Encrypt module.
+ * Class EncryptException.
  */
 class EncryptionMethodCanNotDecryptException extends \Exception {}

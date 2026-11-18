@@ -18,26 +18,15 @@ abstract class AbstractConverter implements ConverterInterface
         $result = [];
         foreach ($input as $key => $value) {
             if (is_array($value)) {
-                // handle empty arrays
-                if (count($value) === 0) {
-                    $result[$prefix . $key] = "";
-                    continue;
-                }
-
                 // handle arrays with numeric keys
                 if (isset($value[0])) {
                     $result[$prefix . $key] = implode(',', $value);
-                    continue;
+                } else {
+                    $result += $this->flatten($value, $prefix . $key . $keySeparator);
                 }
-                $result += $this->flatten($value, $prefix . $key . $keySeparator);
-                continue;
+            } else {
+                $result[$prefix . $key] = $value;
             }
-            // handle false values
-            if ($value === false) {
-                $result[$prefix . $key] = "0";
-                continue;
-            }
-            $result[$prefix . $key] = $value;
         }
         return $result;
     }

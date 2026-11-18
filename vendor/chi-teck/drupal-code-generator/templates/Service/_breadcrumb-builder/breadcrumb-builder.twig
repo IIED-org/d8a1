@@ -1,11 +1,9 @@
 {% import '@lib/di.twig' as di %}
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Drupal\{{ machine_name }};
 
-{% apply sort_namespaces %}
+{% sort %}
 use Drupal\Core\Breadcrumb\Breadcrumb;
 use Drupal\Core\Breadcrumb\BreadcrumbBuilderInterface;
 use Drupal\Core\Link;
@@ -14,7 +12,7 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
   {% if services %}
 {{ di.use(services) }}
   {% endif %}
-{% endapply %}
+{% endsort %}
 
 /**
  * @todo Add description for this breadcrumb builder.

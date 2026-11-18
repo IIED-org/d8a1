@@ -175,7 +175,7 @@ field_settings:
     type: text
     configuration:
       roles:
-        - anonymous
+        anonymous: anonymous
       view_mode:
         'entity:node':
           article: search_index
@@ -270,16 +270,13 @@ processor_settings:
   aggregated_field:
     weights:
       add_properties: 20
-  auto_aggregated_fulltext_field: {  }
   content_access:
     weights:
       preprocess_index: -6
       preprocess_query: -4
-  custom_value: {  }
   entity_status:
     weights:
       preprocess_index: -10
-  entity_type: {  }
   hierarchy:
     weights:
       preprocess_index: -44
@@ -291,7 +288,6 @@ processor_settings:
     prefix: '<strong>'
     suffix: '</strong>'
     excerpt: true
-    excerpt_always: false
     excerpt_length: 256
     exclude_fields: {  }
     highlight: always
@@ -338,7 +334,6 @@ processor_settings:
     weights:
       add_properties: 0
       pre_index_save: -10
-  solr_date_range: {  }
   stopwords:
     weights:
       preprocess_index: -48
@@ -392,7 +387,6 @@ processor_settings:
       - rendered_item
       - title
     spaces: ''
-    ignored: ._-
     overlap_cjk: 1
     minimum_word_size: '2'
   transliteration:
@@ -411,7 +405,6 @@ tracker_settings:
     indexing_order: fifo
 options:
   cron_limit: 100
-  delete_on_fail: true
   index_directly: true
   track_changes_in_references: true
 server: default_server

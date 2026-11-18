@@ -16,10 +16,10 @@ use Drush\Utils\StringUtils;
  * @param array
  *  An associative array of replacement items.
  *
- * @return string
+ * @return
  *   The processed string.
  */
-function dt($string, $args = []): string {
+function dt($string, $args = []) {
   return StringUtils::interpolate($string, $args);
 }
 
@@ -35,7 +35,7 @@ function dt($string, $args = []): string {
  * @return string
  *   The plain-text representation of the input.
  */
-function drush_html_to_text($html, $allowed_tags = NULL): string {
+function drush_html_to_text($html, $allowed_tags = NULL) {
   $replacements = [
     '<hr>' => '------------------------------------------------------------------------------',
     '<li>' => '  * ',

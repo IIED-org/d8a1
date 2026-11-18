@@ -3,7 +3,7 @@
 /*
  * This file is part of Psy Shell.
  *
- * (c) 2012-2026 Justin Hileman
+ * (c) 2012-2023 Justin Hileman
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -12,14 +12,13 @@
 namespace Psy\VersionUpdater\Downloader;
 
 use Psy\Exception\ErrorException;
-use Psy\Exception\RuntimeException;
 use Psy\Shell;
 use Psy\VersionUpdater\Downloader;
 
 class CurlDownloader implements Downloader
 {
-    private ?string $tempDir = null;
-    private ?string $outputFile = null;
+    private $tempDir = null;
+    private $outputFile = null;
 
     /** {@inheritDoc} */
     public function setTempDir(string $tempDir)
@@ -58,9 +57,7 @@ class CurlDownloader implements Downloader
         \curl_setopt($curl, \CURLOPT_URL, $url);
         $result = \curl_exec($curl);
         $error = \curl_error($curl);
-        if (\PHP_VERSION_ID < 80000) {
-            \curl_close($curl);
-        }
+        \curl_close($curl);
 
         \fclose($outputHandle);
 
@@ -74,17 +71,13 @@ class CurlDownloader implements Downloader
     /** {@inheritDoc} */
     public function getFilename(): string
     {
-        if ($this->outputFile === null) {
-            throw new RuntimeException('Call download() first');
-        }
-
         return $this->outputFile;
     }
 
     /** {@inheritDoc} */
     public function cleanup()
     {
-        if ($this->outputFile !== null && \file_exists($this->outputFile)) {
+        if (\file_exists($this->outputFile)) {
             \unlink($this->outputFile);
         }
     }

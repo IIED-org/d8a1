@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\captcha\Unit\Controller;
 
-use PHPUnit\Framework\Attributes\Group;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
@@ -19,7 +18,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @group captcha
  */
-#[Group('captcha')]
 class CaptchaPointListBuilderTest extends UnitTestCase {
 
   use ProphecyTrait;

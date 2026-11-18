@@ -24,8 +24,7 @@ settings:
   context_mapping:
     uid: '@user.current_user_context:current_user'
   views_label: ''
-  items_per_page: null
-  exposed: {  }
+  items_per_page: none
 visibility:
   request_path:
     id: request_path

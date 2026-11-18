@@ -29,7 +29,7 @@ class BufferedAddLite extends AbstractBufferedUpdate
      *
      * @var DocumentInterface[]
      */
-    protected array $buffer = [];
+    protected $buffer = [];
 
     /**
      * Set commitWithin time option.
@@ -201,16 +201,7 @@ class BufferedAddLite extends AbstractBufferedUpdate
         }
 
         $this->updateQuery->add(null, $command);
-
-        if ($this->updateQuery::REQUEST_FORMAT_CBOR === $this->getRequestFormat()) {
-            $this->updateQuery->addParam('commit', true);
-            $this->updateQuery->addParam('softCommit', $softCommit);
-            $this->updateQuery->addParam('waitSearcher', $waitSearcher);
-            $this->updateQuery->addParam('expungeDeletes', $expungeDeletes);
-        } else {
-            $this->updateQuery->addCommit($softCommit, $waitSearcher, $expungeDeletes);
-        }
-
+        $this->updateQuery->addCommit($softCommit, $waitSearcher, $expungeDeletes);
         $result = $this->client->update($this->updateQuery, $this->getEndpoint());
         $this->clear();
 

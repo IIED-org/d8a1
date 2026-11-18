@@ -4,20 +4,19 @@ namespace Drupal\ds\Plugin\DsField\User;
 
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Drupal\ds\Attribute\DsField;
 use Drupal\ds\Plugin\DsField\Entity;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Plugin that renders a view mode.
+ *
+ * @DsField(
+ *   id = "user",
+ *   title = @Translation("User"),
+ *   entity_type = "node",
+ *   provider = "user"
+ * )
  */
-#[DsField(
-  id: 'user',
-  title: new TranslatableMarkup('User'),
-  entity_type: 'node',
-  provider: 'user'
-)]
 class User extends Entity {
 
   /**
@@ -55,7 +54,7 @@ class User extends Entity {
   public function build() {
     $view_mode = $this->getEntityViewMode();
 
-    /** @var \Drupal\node\NodeInterface $node */
+    /* @var $node \Drupal\node\NodeInterface */
     $node = $this->entity();
     $uid = $node->getOwnerId();
     $user = $this->entityTypeManager

@@ -30,7 +30,7 @@ class SourceLinkTypeConstraint extends Constraint implements ConstraintValidator
   protected $context;
 
   /**
-   * {@inheritdoc}
+   * {@inheritDoc}
    */
   public function initialize(ExecutionContextInterface $context) {
     $this->context = $context;
@@ -39,7 +39,7 @@ class SourceLinkTypeConstraint extends Constraint implements ConstraintValidator
   /**
    * {@inheritdoc}
    */
-  public function validatedBy(): string {
+  public function validatedBy() {
     return get_class($this);
   }
 
@@ -49,7 +49,7 @@ class SourceLinkTypeConstraint extends Constraint implements ConstraintValidator
   public function validate($value, Constraint $constraint) {
     if (isset($value)) {
       $url_is_valid = TRUE;
-      /** @var \Drupal\link\LinkItemInterface $link_item */
+      /** @var $link_item \Drupal\link\LinkItemInterface */
       $link_item = $value;
       $link_type = $link_item->getFieldDefinition()->getSetting('link_type');
       $url_string = $link_item->url;
@@ -88,5 +88,5 @@ class SourceLinkTypeConstraint extends Constraint implements ConstraintValidator
       }
     }
   }
-
 }
+

@@ -10,7 +10,7 @@ use Drupal\Core\TempStore\SharedTempStoreFactory;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Resolver Relationship Delete Form.
+ * Resolver Relatinoship Delete Form.
  */
 abstract class ResolverRelationshipDelete extends ConfirmFormBase {
 
@@ -33,7 +33,6 @@ abstract class ResolverRelationshipDelete extends ConfirmFormBase {
    *
    * @var string
    */
-  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
   protected $tempstore_id;
 
   /**
@@ -41,7 +40,6 @@ abstract class ResolverRelationshipDelete extends ConfirmFormBase {
    *
    * @var string
    */
-  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
   protected $machine_name;
 
   /**
@@ -99,8 +97,6 @@ abstract class ResolverRelationshipDelete extends ConfirmFormBase {
   public function buildForm(array $form, FormStateInterface $form_state, $id = NULL, $tempstore_id = NULL, $machine_name = NULL) {
     $this->tempstore_id = $tempstore_id;
     $this->machine_name = $machine_name;
-    // Retained for backwards compatibility: subclasses may read $this->id in
-    // overridden submitForm() or actions() implementations.
     $this->id = $id;
 
     $cached_values = $this->tempstore->get($this->tempstore_id)->get($this->machine_name);
@@ -134,7 +130,7 @@ abstract class ResolverRelationshipDelete extends ConfirmFormBase {
    *   The form array.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current form state.
-   * @param array $cached_values
+   * @param $cached_values
    *   The current wizard cached values.
    *
    * @return array

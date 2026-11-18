@@ -40,7 +40,7 @@ class CountryConstraintValidator extends ConstraintValidator implements Containe
   /**
    * {@inheritdoc}
    */
-  public function validate(mixed $value, Constraint $constraint): void {
+  public function validate($value, Constraint $constraint) {
     $country_code = $value;
     if ($country_code === NULL || $country_code === '') {
       return;

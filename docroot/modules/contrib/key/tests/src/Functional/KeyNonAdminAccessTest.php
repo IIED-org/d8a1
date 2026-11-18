@@ -2,8 +2,6 @@
 
 namespace Drupal\Tests\key\Functional;
 
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Drupal\Tests\BrowserTestBase;
 
 /**
@@ -11,8 +9,6 @@ use Drupal\Tests\BrowserTestBase;
  *
  * @group key
  */
-#[Group('key')]
-#[RunTestsInSeparateProcesses]
 class KeyNonAdminAccessTest extends BrowserTestBase {
 
   use KeyTestTrait;

@@ -4,10 +4,10 @@ purge_queuer_coretags.settings:
   label: 'Core Tags Queuer settings.'
   mapping:
     blacklist:
-      label: 'A list of strings; tags containing any of them are not queued.'
+      label: 'A list of tag prefixes that should not be queued.'
       type: sequence
       translatable: false
       sequence:
         type: string
-        label: 'String that, when found anywhere in a tag, excludes it from the queue.'
+        label: 'Prefix string with which tags should not start with.'
         translatable: false

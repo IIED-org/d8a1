@@ -34,7 +34,7 @@ final class RefundEvent extends EventBase implements ContainerFactoryPluginInter
    *
    * @var \Drupal\commerce_order\AdjustmentTransformerInterface
    */
-  protected AdjustmentTransformerInterface $transformer;
+  private AdjustmentTransformerInterface $transformer;
 
   /**
    * {@inheritDoc}

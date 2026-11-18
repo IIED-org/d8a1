@@ -3,7 +3,7 @@
 namespace Drupal\memcache\Connection;
 
 /**
- * Defines the memcache connection.
+ * Class MemcacheConnection.
  */
 class MemcacheConnection implements MemcacheConnectionInterface {
 
@@ -25,7 +25,7 @@ class MemcacheConnection implements MemcacheConnectionInterface {
    * {@inheritdoc}
    */
   public function addServer($server_path, $persistent = FALSE) {
-    [$host, $port] = explode(':', $server_path);
+    list($host, $port) = explode(':', $server_path);
 
     // Support unix sockets in the format 'unix:///path/to/socket'.
     if ($host == 'unix') {

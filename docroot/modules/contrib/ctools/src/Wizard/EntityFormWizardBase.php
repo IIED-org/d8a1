@@ -25,8 +25,6 @@ abstract class EntityFormWizardBase extends FormWizardBase implements EntityForm
   protected $entityTypeManager;
 
   /**
-   * Constructs an EntityFormWizardBase object.
-   *
    * @param \Drupal\Core\TempStore\SharedTempStoreFactory $tempstore
    *   Tempstore Factory for keeping track of values in each step of the
    *   wizard.
@@ -36,17 +34,13 @@ abstract class EntityFormWizardBase extends FormWizardBase implements EntityForm
    *   The class resolver.
    * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $event_dispatcher
    *   The event dispatcher.
-   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
-   *   The route match.
-   * @param \Drupal\Core\Render\RendererInterface $renderer
-   *   The renderer.
-   * @param string $tempstore_id
-   *   The shared temp store factory collection name.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
-   * @param string|null $machine_name
+   * @param $tempstore_id
+   *   The shared temp store factory collection name.
+   * @param null $machine_name
    *   The SharedTempStore key for our current wizard values.
-   * @param string|null $step
+   * @param null $step
    *   The current active step of the wizard.
    */
   public function __construct(SharedTempStoreFactory $tempstore, FormBuilderInterface $builder, ClassResolverInterface $class_resolver, EventDispatcherInterface $event_dispatcher, RouteMatchInterface $route_match, RendererInterface $renderer, $tempstore_id, EntityTypeManagerInterface $entity_type_manager, $machine_name = NULL, $step = NULL) {
@@ -129,18 +123,15 @@ abstract class EntityFormWizardBase extends FormWizardBase implements EntityForm
    * Helper function for generating label and id form elements.
    *
    * @param array $form
-   *   The form array.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   The current form state of the wizard.
    *
    * @return array
-   *   The modified form array.
    */
   protected function customizeForm(array $form, FormStateInterface $form_state) {
     $form = parent::customizeForm($form, $form_state);
-    if ($this->getMachineName()) {
+    if ($this->machine_name) {
       $entity = $this->entityTypeManager->getStorage($this->getEntityType())
-        ->load($this->getMachineName());
+        ->load($this->machine_name);
     }
     else {
       $entity = NULL;
@@ -154,7 +145,7 @@ abstract class EntityFormWizardBase extends FormWizardBase implements EntityForm
         '#wizard' => $this,
         '#cached_values' => $cached_values,
       ];
-      $form['#prefix'] = $this->renderer->render($prefix);
+      $form['#prefix'] = \Drupal::service('renderer')->render($prefix);
     }
     // Get the current form operation.
     $operation = $this->getOperation($cached_values);

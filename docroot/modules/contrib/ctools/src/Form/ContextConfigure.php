@@ -40,7 +40,6 @@ abstract class ContextConfigure extends FormBase {
    *
    * @var string
    */
-  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
   protected $tempstore_id;
 
   /**
@@ -48,7 +47,6 @@ abstract class ContextConfigure extends FormBase {
    *
    * @var string
    */
-  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
   protected $machine_name;
 
   /**
@@ -171,8 +169,7 @@ abstract class ContextConfigure extends FormBase {
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
-    // If these are not equal, then we're adding a new context and should not
-    // override an existing context.
+    // If these are not equal, then we're adding a new context and should not override an existing context.
     if ($form_state->getValue('machine_name') != $form_state->getValue('context_id')) {
       $machine_name = $form_state->getValue('machine_name');
       $cached_values = $this->tempstore->get($this->tempstore_id)->get($this->machine_name);
@@ -246,24 +243,20 @@ abstract class ContextConfigure extends FormBase {
   /**
    * Document the route name and parameters for redirect after submission.
    *
-   * @param mixed $cached_values
-   *   The cached values.
+   * @param $cached_values
    *
    * @return array
    *   In the format of
-   *   ['route.name', ['machine_name' => $this->machine_name,
-   *   'step' => 'step_name']].
+   *   return ['route.name', ['machine_name' => $this->machine_name, 'step' => 'step_name]];
    */
   abstract protected function getParentRouteInfo($cached_values);
 
   /**
    * Custom logic for retrieving the contexts array from cached_values.
    *
-   * @param mixed $cached_values
-   *   The cached values.
+   * @param $cached_values
    *
    * @return \Drupal\Core\Plugin\Context\ContextInterface[]
-   *   The contexts array.
    */
   abstract protected function getContexts($cached_values);
 
@@ -287,8 +280,8 @@ abstract class ContextConfigure extends FormBase {
    *
    * @param string $value
    *   The name of the context.
-   * @param array $element
-   *   The machine_name element.
+   * @param $element
+   *   The machine_name element
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The form state.
    *
@@ -300,13 +293,9 @@ abstract class ContextConfigure extends FormBase {
   /**
    * Determines if the machine_name should be disabled.
    *
-   * @param mixed $cached_values
-   *   The cached values.
-   * @param string $machine_name
-   *   The machine name.
+   * @param $cached_values
    *
    * @return bool
-   *   TRUE if the machine name should be disabled, FALSE otherwise.
    */
   abstract protected function disableMachineName($cached_values, $machine_name);
 

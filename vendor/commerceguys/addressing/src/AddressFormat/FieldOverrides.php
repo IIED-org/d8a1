@@ -12,28 +12,26 @@ final class FieldOverrides
      *
      * @var string[]
      */
-    protected array $hiddenFields = [];
+    protected $hiddenFields = [];
 
     /**
      * The optional fields.
      *
      * @var string[]
      */
-    protected array $optionalFields = [];
+    protected $optionalFields = [];
 
     /**
      * The required fields.
      *
      * @var string[]
      */
-    protected array $requiredFields = [];
+    protected $requiredFields = [];
 
     /**
      * Creates a new FieldOverrides instance.
      *
      * @param array $definition The field overrides, keyed by field name.
-     *
-     * @throws \ReflectionException
      */
     public function __construct(array $definition)
     {
@@ -41,11 +39,11 @@ final class FieldOverrides
         FieldOverride::assertAllExist($definition);
 
         foreach ($definition as $field => $override) {
-            if ($override === FieldOverride::HIDDEN) {
+            if ($override == FieldOverride::HIDDEN) {
                 $this->hiddenFields[] = $field;
-            } elseif ($override === FieldOverride::OPTIONAL) {
+            } elseif ($override == FieldOverride::OPTIONAL) {
                 $this->optionalFields[] = $field;
-            } elseif ($override === FieldOverride::REQUIRED) {
+            } elseif ($override == FieldOverride::REQUIRED) {
                 $this->requiredFields[] = $field;
             }
         }

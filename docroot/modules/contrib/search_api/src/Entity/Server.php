@@ -2,16 +2,12 @@
 
 namespace Drupal\search_api\Entity;
 
-use Drupal\Component\Plugin\Exception\PluginException;
 use Drupal\Component\Utility\DeprecationHelper;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Config\Action\Attribute\ActionMethod;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
-use Drupal\Core\Entity\Attribute\ConfigEntityType;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Drupal\search_api\Backend\BackendInterface;
-use Drupal\search_api\Backend\BackendPluginManager;
 use Drupal\search_api\Event\DeterminingServerFeaturesEvent;
 use Drupal\search_api\Event\SearchApiEvents;
 use Drupal\search_api\IndexInterface;
@@ -69,50 +65,6 @@ use Drupal\search_api\Utility\Utility;
  *   }
  * )
  */
-#[ConfigEntityType(
-  id: 'search_api_server',
-  label: new TranslatableMarkup('Search server'),
-  label_collection: new TranslatableMarkup('Search servers'),
-  label_singular: new TranslatableMarkup('search server'),
-  label_plural: new TranslatableMarkup('search servers'),
-  config_prefix: 'server',
-  entity_keys: [
-    'id' => 'id',
-    'label' => 'name',
-    'uuid' => 'uuid',
-    'status' => 'status',
-  ],
-  handlers: [
-    'storage' => 'Drupal\search_api\Entity\SearchApiConfigEntityStorage',
-    'form' => [
-      'default' => 'Drupal\search_api\Form\ServerForm',
-      'edit' => 'Drupal\search_api\Form\ServerForm',
-      'delete' => 'Drupal\search_api\Form\ServerDeleteConfirmForm',
-      'disable' => 'Drupal\search_api\Form\ServerDisableConfirmForm',
-      'clear' => 'Drupal\search_api\Form\ServerClearConfirmForm',
-    ],
-  ],
-  links: [
-    'canonical' => '/admin/config/search/search-api/server/{search_api_server}',
-    'add-form' => '/admin/config/search/search-api/add-server',
-    'edit-form' => '/admin/config/search/search-api/server/{search_api_server}/edit',
-    'delete-form' => '/admin/config/search/search-api/server/{search_api_server}/delete',
-    'disable' => '/admin/config/search/search-api/server/{search_api_server}/disable',
-    'enable' => '/admin/config/search/search-api/server/{search_api_server}/enable',
-  ],
-  admin_permission: 'administer search_api',
-  label_count: [
-    'singular' => '@count search server',
-    'plural' => '@count search servers',
-  ],
-  config_export: [
-    'id',
-    'name',
-    'description',
-    'backend',
-    'backend_config',
-  ],
-)]
 class Server extends ConfigEntityBase implements ServerInterface {
 
   use InstallingTrait;
@@ -170,25 +122,6 @@ class Server extends ConfigEntityBase implements ServerInterface {
   /**
    * {@inheritdoc}
    */
-  public function set($property_name, $value): static {
-    if ($property_name === 'backend_config') {
-      $this->setBackendConfig($value);
-      return $this;
-    }
-
-    parent::set($property_name, $value);
-
-    // Make sure to reset the loaded backend plugin if the plugin ID changes.
-    if ($property_name === 'backend') {
-      $this->backendPlugin = NULL;
-    }
-
-    return $this;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function getDescription() {
     return $this->description;
   }
@@ -197,10 +130,8 @@ class Server extends ConfigEntityBase implements ServerInterface {
    * {@inheritdoc}
    */
   public function hasValidBackend() {
-    $backend_id = $this->getBackendId();
-    /** @noinspection PhpUnhandledExceptionInspection */
-    return $backend_id !== NULL
-      && $this->backendPluginManager()->getDefinition($backend_id, FALSE);
+    $backend_plugin_definition = \Drupal::service('plugin.manager.search_api.backend')->getDefinition($this->getBackendId(), FALSE);
+    return !empty($backend_plugin_definition);
   }
 
   /**
@@ -215,35 +146,16 @@ class Server extends ConfigEntityBase implements ServerInterface {
    */
   public function getBackend() {
     if (!$this->backendPlugin) {
-      $backend_id = $this->getBackendId();
-      if ($backend_id === NULL) {
-        $label = $this->label() ?: $this->id();
-        throw new SearchApiException("Backend ID not set for server \"$label\".");
-      }
-      $backend_plugin_manager = $this->backendPluginManager();
+      $backend_plugin_manager = \Drupal::service('plugin.manager.search_api.backend');
       $config = $this->backend_config;
       $config['#server'] = $this;
-      try {
-        $this->backendPlugin = $backend_plugin_manager->createInstance($backend_id, $config);
-      }
-      catch (PluginException) {
-        $label = $this->label() ?: $this->id();
+      if (!($this->backendPlugin = $backend_plugin_manager->createInstance($this->getBackendId(), $config))) {
+        $backend_id = $this->getBackendId();
+        $label = $this->label();
         throw new SearchApiException("The backend with ID '$backend_id' could not be retrieved for server '$label'.");
       }
     }
     return $this->backendPlugin;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getBackendIfAvailable(): ?BackendInterface {
-    try {
-      return $this->hasValidBackend() ? $this->getBackend() : NULL;
-    }
-    catch (SearchApiException) {
-      return NULL;
-    }
   }
 
   /**
@@ -259,16 +171,11 @@ class Server extends ConfigEntityBase implements ServerInterface {
   #[ActionMethod(adminLabel: new TranslatableMarkup('Set backend config'), pluralize: FALSE)]
   public function setBackendConfig(array $backend_config) {
     $this->backend_config = $backend_config;
-    try {
-      // Update the backend plugin's configuration, also allowing it to react to
-      // this change.
-      if ($this->getBackend()->getConfiguration() !== $backend_config) {
-        $this->getBackend()->setConfiguration($backend_config);
-      }
-    }
-    catch (SearchApiException) {
-      // Just ignore the exception in this instance and skip the call to
-      // BackendPluginInterface::setConfiguration().
+    // In case the backend plugin is already loaded, make sure the configuration
+    // stays in sync.
+    if ($this->backendPlugin
+        && $this->getBackend()->getConfiguration() !== $backend_config) {
+      $this->getBackend()->setConfiguration($backend_config);
     }
     return $this;
   }
@@ -285,14 +192,14 @@ class Server extends ConfigEntityBase implements ServerInterface {
    * {@inheritdoc}
    */
   public function viewSettings() {
-    return $this->getBackendIfAvailable()?->viewSettings() ?? [];
+    return $this->hasValidBackend() ? $this->getBackend()->viewSettings() : [];
   }
 
   /**
    * {@inheritdoc}
    */
   public function isAvailable() {
-    return (bool) $this->getBackendIfAvailable()?->isAvailable();
+    return $this->hasValidBackend() ? $this->getBackend()->isAvailable() : FALSE;
   }
 
   /**
@@ -307,7 +214,10 @@ class Server extends ConfigEntityBase implements ServerInterface {
    */
   public function getSupportedFeatures() {
     if (!isset($this->features)) {
-      $this->features = $this->getBackendIfAvailable()?->getSupportedFeatures() ?? [];
+      $this->features = [];
+      if ($this->hasValidBackend()) {
+        $this->features = $this->getBackend()->getSupportedFeatures();
+      }
       $description = 'This hook is deprecated in search_api:8.x-1.14 and is removed from search_api:2.0.0. Use the "search_api.determining_server_features" event instead. See https://www.drupal.org/node/3059866';
       \Drupal::moduleHandler()
         ->alterDeprecated($description, 'search_api_server_features', $this->features, $this);
@@ -323,21 +233,30 @@ class Server extends ConfigEntityBase implements ServerInterface {
    * {@inheritdoc}
    */
   public function supportsDataType($type) {
-    return (bool) $this->getBackendIfAvailable()?->supportsDataType($type);
+    if ($this->hasValidBackend()) {
+      return $this->getBackend()->supportsDataType($type);
+    }
+    return FALSE;
   }
 
   /**
    * {@inheritdoc}
    */
   public function getDiscouragedProcessors() {
-    return $this->getBackendIfAvailable()?->getDiscouragedProcessors() ?? [];
+    if ($this->hasValidBackend()) {
+      return $this->getBackend()->getDiscouragedProcessors();
+    }
+    return [];
   }
 
   /**
    * {@inheritdoc}
    */
   public function getBackendDefinedFields(IndexInterface $index) {
-    return $this->getBackendIfAvailable()?->getBackendDefinedFields($index) ?? [];
+    if ($this->hasValidBackend()) {
+      return $this->getBackend()->getBackendDefinedFields($index);
+    }
+    return [];
   }
 
   /**
@@ -594,11 +513,7 @@ class Server extends ConfigEntityBase implements ServerInterface {
       if (isset($overrides['backend'])) {
         $backend_id = $overrides['backend'];
       }
-      if ($backend_id === NULL) {
-        $label = $this->label() ?: $this->id();
-        throw new SearchApiException("Backend ID not set for server \"$label\".");
-      }
-      $backend_plugin_manager = $this->backendPluginManager();
+      $backend_plugin_manager = \Drupal::service('plugin.manager.search_api.backend');
       $backend_config['#server'] = $this;
       if (!($backend = $backend_plugin_manager->createInstance($backend_id, $backend_config))) {
         $label = $this->label();
@@ -628,16 +543,18 @@ class Server extends ConfigEntityBase implements ServerInterface {
    * {@inheritdoc}
    */
   public function postSave(EntityStorageInterface $storage, $update = TRUE) {
-    if ($update) {
-      $reindexing_necessary = $this->getBackendIfAvailable()?->postUpdate();
-      if ($reindexing_necessary) {
-        foreach ($this->getIndexes() as $index) {
-          $index->reindex();
+    if ($this->hasValidBackend()) {
+      if ($update) {
+        $reindexing_necessary = $this->getBackend()->postUpdate();
+        if ($reindexing_necessary) {
+          foreach ($this->getIndexes() as $index) {
+            $index->reindex();
+          }
         }
       }
-    }
-    else {
-      $this->getBackendIfAvailable()?->postInsert();
+      else {
+        $this->getBackend()->postInsert();
+      }
     }
   }
 
@@ -657,7 +574,10 @@ class Server extends ConfigEntityBase implements ServerInterface {
     // Iterate through the servers, executing the backends' preDelete() methods
     // and removing all their pending server tasks.
     foreach ($entities as $server) {
-      $server->getBackendIfAvailable()?->preDelete();
+      /** @var \Drupal\search_api\ServerInterface $server */
+      if ($server->hasValidBackend()) {
+        $server->getBackend()->preDelete();
+      }
       \Drupal::getContainer()->get('search_api.server_task_manager')->delete($server);
     }
   }
@@ -670,7 +590,7 @@ class Server extends ConfigEntityBase implements ServerInterface {
 
     // Add the backend's dependencies.
     if ($this->hasValidBackend()) {
-      $this->calculatePluginDependencies($this->getBackendIfAvailable());
+      $this->calculatePluginDependencies($this->getBackend());
     }
 
     return $this;
@@ -682,9 +602,9 @@ class Server extends ConfigEntityBase implements ServerInterface {
   public function onDependencyRemoval(array $dependencies) {
     $changed = parent::onDependencyRemoval($dependencies);
 
-    $backend = $this->getBackendIfAvailable();
-    if ($backend) {
+    if ($this->hasValidBackend()) {
       $removed_backend_dependencies = [];
+      $backend = $this->getBackend();
       foreach ($backend->calculateDependencies() as $dependency_type => $list) {
         if (isset($dependencies[$dependency_type])) {
           $removed_backend_dependencies[$dependency_type] = array_intersect_key($dependencies[$dependency_type], array_flip($list));
@@ -700,16 +620,6 @@ class Server extends ConfigEntityBase implements ServerInterface {
     }
 
     return $changed;
-  }
-
-  /**
-   * Retrieves the backend plugin manager.
-   *
-   * @return \Drupal\search_api\Backend\BackendPluginManager
-   *   The backend plugin manager.
-   */
-  protected function backendPluginManager(): BackendPluginManager {
-    return \Drupal::service('plugin.manager.search_api.backend');
   }
 
   /**

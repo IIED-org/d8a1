@@ -27,7 +27,7 @@ class Json extends AbstractRequestBuilder
     /**
      * Build request for an update query.
      *
-     * @param QueryInterface&UpdateQuery $query
+     * @param QueryInterface|UpdateQuery $query
      *
      * @throws RuntimeException
      *
@@ -126,7 +126,7 @@ class Json extends AbstractRequestBuilder
      */
     public function buildDeleteJson(Delete $command, array &$json): void
     {
-        if (0 !== \count($ids = $command->getIds())) {
+        if (0 !== count($ids = $command->getIds())) {
             $json[] = '"delete":'.json_encode($ids);
         }
 
@@ -136,7 +136,7 @@ class Json extends AbstractRequestBuilder
     }
 
     /**
-     * Add JSON for an optimize command.
+     * Build JSON for an optimize command.
      *
      * @param Optimize $command
      * @param array    $json
@@ -161,7 +161,7 @@ class Json extends AbstractRequestBuilder
     }
 
     /**
-     * Add JSON for a commit command.
+     * Build JSON for a commit command.
      *
      * @param Commit $command
      * @param array  $json
@@ -186,7 +186,7 @@ class Json extends AbstractRequestBuilder
     }
 
     /**
-     * Add JSON for a rollback command.
+     * Build JSON for a rollback command.
      *
      * @param array $json
      */

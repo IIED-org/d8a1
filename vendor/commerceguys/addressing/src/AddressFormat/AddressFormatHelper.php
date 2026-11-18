@@ -21,12 +21,11 @@ final class AddressFormatHelper
      *                 [organization],
      *                 [addressLine1],
      *                 [addressLine2],
-     *                 [addressLine3],
      *                 [locality, administrativeArea, postalCode]
      *               ]
      * @throws \ReflectionException
      */
-    public static function getGroupedFields(string $formatString, ?FieldOverrides $fieldOverrides = null): array
+    public static function getGroupedFields(string $formatString, FieldOverrides $fieldOverrides = null): array
     {
         $groupedFields = [];
         $hiddenFields = $fieldOverrides ? $fieldOverrides->getHiddenFields() : [];
@@ -43,7 +42,9 @@ final class AddressFormatHelper
         }
         // The indexes won't be sequential if there were any rows
         // without tokens, so reset them.
-        return array_values($groupedFields);
+        $groupedFields = array_values($groupedFields);
+
+        return $groupedFields;
     }
 
     /**

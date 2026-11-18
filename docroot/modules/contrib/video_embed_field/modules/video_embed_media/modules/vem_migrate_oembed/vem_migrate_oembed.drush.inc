@@ -5,8 +5,6 @@
  * Drush integration for vem_migrate_oembed.
  */
 
-use Drush\Drush;
-
 /**
  * Implements hook_drush_command().
  */
@@ -24,11 +22,11 @@ function vem_migrate_oembed_drush_command() {
 }
 
 /**
- * Callback for drush command "video-embed-media-migrate-oembed" (vemmo).
+ * Callback for drush commmand "video-embed-media-migrate-oembed" (vemmo).
  */
 function drush_vem_migrate_oembed_vem_migrate_oembed() {
   /** @var \Drupal\vem_migrate_oembed\VemMigrate $migrate */
   $migrate = \Drupal::service('vem_migrate_oembed.migrate');
   $migrate->migrate();
-  Drush::output()->writeln(dt('Migration complete.'));
+  \drush_print(\dt('Migration complete.'));
 }

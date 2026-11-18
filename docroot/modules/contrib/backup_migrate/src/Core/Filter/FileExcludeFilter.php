@@ -6,15 +6,13 @@ use Drupal\backup_migrate\Core\Config\Config;
 use Drupal\backup_migrate\Core\Plugin\PluginBase;
 
 /**
- * Provides the file exclude filter class.
+ *
  *
  * @package Drupal\backup_migrate\Core\Filter
  */
 class FileExcludeFilter extends PluginBase {
 
   /**
-   * The compiled patterns.
-   *
    * @var array
    *   A cache of compiled patterns.
    */
@@ -23,13 +21,10 @@ class FileExcludeFilter extends PluginBase {
   /**
    * The 'beforeDbTableBackup' plugin op.
    *
-   * @param string $path
-   *   The file path.
+   * @param array $table
    * @param array $params
-   *   The message parameters.
    *
-   * @return array
-   *   The file path.
+   * @return array $table
    */
   public function beforeFileBackup($path, $params = []) {
     $source = $this->confGet('source');
@@ -48,7 +43,6 @@ class FileExcludeFilter extends PluginBase {
    * Get the default values for the plugin.
    *
    * @return \Drupal\backup_migrate\Core\Config\Config
-   *   The return value.
    */
   public function configDefaults() {
     return new Config([
@@ -89,16 +83,12 @@ class FileExcludeFilter extends PluginBase {
    * Match a path to the list of exclude patterns.
    *
    * @param string $path
-   *   The path.
    *   The path to match.
    * @param array $exclude
-   *   The exclude.
    *   An array of regular expressions to match against.
    * @param string $base_path
-   *   The base path.
    *
    * @return bool
-   *   TRUE when successful, FALSE otherwise.
    */
   private function matchPath($path, array $exclude, $base_path = '') {
     $path = substr($path, strlen($base_path));
@@ -117,10 +107,8 @@ class FileExcludeFilter extends PluginBase {
    * Get a definition for user-configurable settings.
    *
    * @param array $params
-   *   The message parameters.
    *
    * @return array
-   *   A render or configuration array.
    */
   public function configSchema(array $params = []) {
     $schema = [];

@@ -6,7 +6,7 @@ dependencies:
     - 'block_content:basic:6af31ed0-70ce-47b9-a136-08dd2ef17b4e'
   module:
     - block_content
-    - node
+    - ctools
     - system
   theme:
     - pnp_bootstrap_sass
@@ -21,6 +21,8 @@ settings:
   label: 'Events crumb'
   label_display: '0'
   provider: block_content
+  status: true
+  info: ''
   view_mode: full
 visibility:
   'entity_bundle:node':

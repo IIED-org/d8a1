@@ -2,8 +2,6 @@
 
 namespace Drupal\purge\Plugin\Purge\DiagnosticCheck;
 
-use Drupal\Component\Utility\DeprecationHelper;
-use Drupal\Core\Extension\Requirement\RequirementSeverity;
 use Drupal\Core\Plugin\PluginBase;
 use Drupal\purge\Plugin\Purge\DiagnosticCheck\Exception\CheckNotImplementedCorrectly;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -18,14 +16,14 @@ abstract class DiagnosticCheckBase extends PluginBase implements DiagnosticCheck
    *
    * @var \Drupal\Core\StringTranslation\TranslatableMarkup
    */
-  protected $title;
+  private $title;
 
   /**
    * The description of the check as described in the plugin's metadata.
    *
    * @var \Drupal\Core\StringTranslation\TranslatableMarkup
    */
-  protected $description;
+  private $description;
 
   /**
    * The severity of the outcome of this check.
@@ -38,7 +36,7 @@ abstract class DiagnosticCheckBase extends PluginBase implements DiagnosticCheck
    *
    * @var int
    */
-  protected $severity;
+  private $severity;
 
   /**
    * A recommendation matching the severity level, may contain NULL.
@@ -169,29 +167,18 @@ abstract class DiagnosticCheckBase extends PluginBase implements DiagnosticCheck
     static $mapping;
     $this->runCheck();
     if (is_null($mapping)) {
-      // Drupal 11.2 introduced the RequirementSeverity enum and Drupal 12
-      // removed the REQUIREMENT_* constants from install.inc. Map onto the enum
-      // where core provides it and fall back to the legacy integer constants
-      // on older cores, so the same code runs on Drupal 10 through 12.
-      $mapping = DeprecationHelper::backwardsCompatibleCall(
-        \Drupal::VERSION,
-        '11.2.0',
-        fn() => [
-          self::SEVERITY_INFO    => RequirementSeverity::Info,
-          self::SEVERITY_OK      => RequirementSeverity::OK,
-          self::SEVERITY_WARNING => RequirementSeverity::Warning,
-          self::SEVERITY_ERROR   => RequirementSeverity::Error,
-        ],
-        function () {
-          include_once DRUPAL_ROOT . '/core/includes/install.inc';
-          return [
-            self::SEVERITY_INFO    => REQUIREMENT_INFO,
-            self::SEVERITY_OK      => REQUIREMENT_OK,
-            self::SEVERITY_WARNING => REQUIREMENT_WARNING,
-            self::SEVERITY_ERROR   => REQUIREMENT_ERROR,
-          ];
-        },
-      );
+      include_once DRUPAL_ROOT . '/core/includes/install.inc';
+
+      // Currently, our constants hold the exact same values as core's
+      // requirement constants. However, as our diagnostic checks API is more
+      // than just a objectification of hook_requirements we need to assure
+      // that this lasts over time, and thus map the constants.
+      $mapping = [
+        self::SEVERITY_INFO      => REQUIREMENT_INFO,
+        self::SEVERITY_OK        => REQUIREMENT_OK,
+        self::SEVERITY_WARNING   => REQUIREMENT_WARNING,
+        self::SEVERITY_ERROR     => REQUIREMENT_ERROR,
+      ];
     }
     return $mapping[$this->getSeverity()];
   }

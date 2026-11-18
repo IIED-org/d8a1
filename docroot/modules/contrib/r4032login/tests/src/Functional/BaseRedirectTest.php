@@ -44,7 +44,7 @@ class BaseRedirectTest extends BrowserTestBase {
   /**
    * Data provider for testBaseRedirect.
    */
-  public static function baseRedirectDataProvider() {
+  public function baseRedirectDataProvider() {
     return [
       [
         'admin/config',

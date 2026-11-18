@@ -51,7 +51,6 @@ class Swipe extends Config {
     }
 
     this._config = this._getConfig(config)
-    this._startX = 0
     this._deltaX = 0
     this._supportPointerEvents = Boolean(window.PointerEvent)
     this._initEvents()
@@ -77,22 +76,20 @@ class Swipe extends Config {
 
   // Private
   _start(event) {
-    this._deltaX = 0
-
     if (!this._supportPointerEvents) {
-      this._startX = event.touches[0].clientX
+      this._deltaX = event.touches[0].clientX
 
       return
     }
 
     if (this._eventIsPointerPenTouch(event)) {
-      this._startX = event.clientX
+      this._deltaX = event.clientX
     }
   }
 
   _end(event) {
     if (this._eventIsPointerPenTouch(event)) {
-      this._deltaX = event.clientX - this._startX
+      this._deltaX = event.clientX - this._deltaX
     }
 
     this._handleSwipe()
@@ -102,7 +99,7 @@ class Swipe extends Config {
   _move(event) {
     this._deltaX = event.touches && event.touches.length > 1 ?
       0 :
-      event.touches[0].clientX - this._startX
+      event.touches[0].clientX - this._deltaX
   }
 
   _handleSwipe() {

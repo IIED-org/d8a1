@@ -5,7 +5,7 @@ package: Testing
 dependencies:
   - google_tag:google_tag
 
-# Information added by Drupal.org packaging script on 2026-11-17
-version: '2.1.0'
+# Information added by Drupal.org packaging script on 2025-01-29
+version: '2.0.8'
 project: 'google_tag'
-datestamp: 1794893579
+datestamp: 1738126306

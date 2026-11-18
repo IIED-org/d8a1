@@ -16,9 +16,6 @@ privacy_policy_url: ''
 javascripts:
   - social.bund.de
 callback_code: ''
-on_init: ''
-on_accept: ''
-on_decline: ''
 wrapper_identifier:
   - .mastodon-embed
 attachments: {  }

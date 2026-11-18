@@ -21,12 +21,11 @@ interface KeyTypeMultivalueInterface {
   /**
    * Unserialize a string of key values into an array.
    *
-   * @param string|null $value
-   *   A serialized string of key values, or NULL if the key has no value.
+   * @param string $value
+   *   A serialized string of key values.
    *
-   * @return array|null
-   *   An array of key values, or NULL if the value is empty or cannot be
-   *   unserialized.
+   * @return array
+   *   An array of key values.
    */
   public function unserialize($value);
 

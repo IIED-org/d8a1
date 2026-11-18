@@ -8,12 +8,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a base class for Views displays.
- *
- * Display plugins extending this class should use the
- * \Drupal\search_api\Attribute\SearchApiViewsDisplay attribute for their plugin
- * definitions.
- *
- * @see \Drupal\search_api\Attribute\SearchApiViewsDisplay
  */
 abstract class ViewsDisplayBase extends DisplayPluginBase {
 
@@ -102,8 +96,7 @@ abstract class ViewsDisplayBase extends DisplayPluginBase {
   /**
    * Retrieves the view this search display is based on.
    *
-   * @return \Drupal\views\ViewEntityInterface
-   *   The view entity.
+   * @returns \Drupal\views\ViewEntityInterface
    */
   protected function getView() {
     $plugin_definition = $this->getPluginDefinition();

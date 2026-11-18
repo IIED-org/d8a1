@@ -23,8 +23,8 @@ namespace Symfony\Component\Finder\Iterator;
  */
 abstract class MultiplePcreFilterIterator extends \FilterIterator
 {
-    protected array $matchRegexps = [];
-    protected array $noMatchRegexps = [];
+    protected $matchRegexps = [];
+    protected $noMatchRegexps = [];
 
     /**
      * @param \Iterator<TKey, TValue> $iterator        The Iterator to filter
@@ -80,19 +80,23 @@ abstract class MultiplePcreFilterIterator extends \FilterIterator
      */
     protected function isRegex(string $str): bool
     {
-        $availableModifiers = 'imsxuADUn';
+        $availableModifiers = 'imsxuADU';
+
+        if (\PHP_VERSION_ID >= 80200) {
+            $availableModifiers .= 'n';
+        }
 
         if (preg_match('/^(.{3,}?)['.$availableModifiers.']*$/', $str, $m)) {
             $start = substr($m[1], 0, 1);
             $end = substr($m[1], -1);
 
             if ($start === $end) {
-                return !preg_match('/[*?[:alnum:] \\\\]/', $start) && false !== @preg_match($str, '');
+                return !preg_match('/[*?[:alnum:] \\\\]/', $start);
             }
 
             foreach ([['{', '}'], ['(', ')'], ['[', ']'], ['<', '>']] as $delimiters) {
                 if ($start === $delimiters[0] && $end === $delimiters[1]) {
-                    return false !== @preg_match($str, '');
+                    return true;
                 }
             }
         }

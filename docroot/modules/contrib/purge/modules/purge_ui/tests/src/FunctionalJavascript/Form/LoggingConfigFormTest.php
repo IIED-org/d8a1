@@ -3,20 +3,13 @@
 namespace Drupal\Tests\purge_ui\FunctionalJavascript\Form;
 
 use Drupal\Core\Ajax\AjaxResponse;
-use Drupal\purge\Logger\LoggerServiceInterface;
 use Drupal\purge_ui\Form\LoggingConfigForm;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests \Drupal\purge_ui\Form\LoggingConfigForm.
  *
  * @group purge
  */
-#[CoversClass(LoggingConfigForm::class)]
-#[Group('purge')]
-#[RunTestsInSeparateProcesses]
 class LoggingConfigFormTest extends AjaxFormTestBase {
 
   /**
@@ -44,36 +37,25 @@ class LoggingConfigFormTest extends AjaxFormTestBase {
    */
   public function setUp($switch_to_memory_queue = TRUE): void {
     parent::setUp($switch_to_memory_queue);
-    $this->setPurgeLogger(FALSE);
-  }
-
-  /**
-   * Replaces the purge.logger service with a test double.
-   *
-   * @param bool $mock
-   *   TRUE for a mock that the test sets expectations on, FALSE for a stub.
-   *   Call this before the first formInstance() call of a test.
-   */
-  protected function setPurgeLogger(bool $mock): void {
     $defaults = [
       [
         'id' => 'testchannel',
         'grants' => [2, 4, 1],
       ],
     ];
-    $this->purgeLogger = $mock
-      ? $this->createMock(LoggerServiceInterface::class)
-      : $this->createStub(LoggerServiceInterface::class);
+
+    // Set a mocked logger as service.
+    $this->purgeLogger = $this->createMock('Drupal\purge\Logger\LoggerServiceInterface');
     $this->purgeLogger->method('getChannels')->willReturn($defaults);
     $this->purgeLogger->method('hasChannel')
-      ->willReturnCallback(function ($subject) {
+      ->will($this->returnCallback(function ($subject) {
         return ($subject === 'testchannel');
-      });
+      }));
     $this->container->set('purge.logger', $this->purgeLogger);
   }
 
   /**
-   * Tests buildForm().
+   * @covers \Drupal\purge_ui\Form\LoggingConfigForm::buildForm
    */
   public function testBuildForm(): void {
     $form = $this->formInstance()->buildForm([], $this->getFormStateInstance());
@@ -106,10 +88,9 @@ class LoggingConfigFormTest extends AjaxFormTestBase {
   }
 
   /**
-   * Tests setChannels().
+   * @covers \Drupal\purge_ui\Form\LoggingConfigForm::setChannels
    */
   public function testSetChannels(): void {
-    $this->setPurgeLogger(TRUE);
     $form = $this->formInstance()->buildForm([], $this->getFormStateInstance());
     // Assert that empty submits only close the dialog, nothing else.
     $ajax = $this->formInstance()->setChannels($form, $this->getFormStateInstance());
@@ -137,10 +118,9 @@ class LoggingConfigFormTest extends AjaxFormTestBase {
   }
 
   /**
-   * Tests submitForm().
+   * @covers \Drupal\purge_ui\Form\LoggingConfigForm::submitForm
    */
   public function testSubmitForm(): void {
-    $this->setPurgeLogger(TRUE);
     $form = $this->formInstance()->buildForm([], $this->getFormStateInstance());
     // Verify that the returned $has_resulted_in_changes is FALSE without data.
     $this->assertFalse($this->formInstance()->submitForm($form, $this->getFormStateInstance()));

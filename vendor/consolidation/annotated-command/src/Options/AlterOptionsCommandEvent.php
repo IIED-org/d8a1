@@ -85,7 +85,7 @@ class AlterOptionsCommandEvent implements EventSubscriberInterface
     /**
      * @{@inheritdoc}
      */
-    public static function getSubscribedEvents(): array
+    public static function getSubscribedEvents()
     {
         return [ConsoleEvents::COMMAND => 'alterCommandOptions'];
     }

@@ -7,60 +7,111 @@ namespace CommerceGuys\Addressing\AddressFormat;
  */
 class AddressFormat
 {
-    protected string $countryCode;
+    /**
+     * The country code.
+     *
+     * @var string
+     */
+    protected $countryCode;
 
-    protected ?string $locale = null;
+    /**
+     * The locale.
+     *
+     * @var string
+     */
+    protected $locale;
 
-    protected string $format;
+    /**
+     * The format string.
+     *
+     * @var string
+     */
+    protected $format;
 
-    protected ?string $localFormat = null;
+    /**
+     * The local format string.
+     *
+     * @var string
+     */
+    protected $localFormat;
 
-    protected array $usedFields = [];
+    /**
+     * The used fields.
+     *
+     * @var array
+     */
+    protected $usedFields = [];
 
     /**
      * The used fields, grouped by line.
+     *
+     * @var array
      */
-    protected array $groupedFields = [];
+    protected $groupedFields = [];
 
-    protected mixed $requiredFields = [];
+    /**
+     * The required fields.
+     *
+     * @var array
+     */
+    protected $requiredFields = [];
 
     /**
      * The fields that need to be uppercased.
+     *
+     * @var string
      */
-    protected array $uppercaseFields = [];
+    protected $uppercaseFields = [];
 
-    protected array $defaultValues = [];
+    /**
+     * The administrative area type.
+     *
+     * @var string
+     */
+    protected $administrativeAreaType;
 
-    protected ?string $administrativeAreaType = null;
+    /**
+     * The locality type.
+     *
+     * @var string
+     */
+    protected $localityType;
 
-    protected ?string $localityType = null;
+    /**
+     * The dependent locality type.
+     *
+     * @var string
+     */
+    protected $dependentLocalityType;
 
-    protected ?string $dependentLocalityType = null;
+    /**
+     * The postal code type.
+     *
+     * @var string
+     */
+    protected $postalCodeType;
 
-    protected ?string $postalCodeType = null;
+    /**
+     * The postal code pattern.
+     *
+     * @var string
+     */
+    protected $postalCodePattern;
 
-    protected ?string $postalCodePattern = null;
-
-    protected ?string $postalCodePrefix = null;
+    /**
+     * The postal code prefix.
+     *
+     * @var string
+     */
+    protected $postalCodePrefix;
 
     /**
      * The subdivision depth.
      *
-     * @deprecated Use $subdivisionDataFields instead.
+     * @var int
      */
-    protected int $subdivisionDepth = 0;
+    protected $subdivisionDepth;
 
-    /**
-     * The subdivision data fields.
-     *
-     * An array of field names for which there is predefined subdivision data.
-     * For example: ['administrativeArea', 'locality']
-     */
-    protected array $subdivisionDataFields = [];
-
-    /**
-     * @throws \ReflectionException
-     */
     public function __construct(array $definition)
     {
         // Validate the presence of required properties.
@@ -69,38 +120,25 @@ class AddressFormat
                 throw new \InvalidArgumentException(sprintf('Missing required property %s.', $requiredProperty));
             }
         }
+        // Add defaults for properties that are allowed to be empty.
+        $definition += [
+            'locale' => null,
+            'local_format' => null,
+            'required_fields' => [],
+            'uppercase_fields' => [],
+            'postal_code_pattern' => null,
+            'postal_code_prefix' => null,
+            'subdivision_depth' => 0,
+        ];
+        AddressField::assertAllExist($definition['required_fields']);
+        AddressField::assertAllExist($definition['uppercase_fields']);
         $this->countryCode = $definition['country_code'];
-        $this->locale = $definition['locale'] ?? null;
+        $this->locale = $definition['locale'];
         $this->format = $definition['format'];
-        $this->localFormat = $definition['local_format'] ?? null;
-        if (isset($definition['required_fields'])) {
-            AddressField::assertAllExist($definition['required_fields']);
-            $this->requiredFields = $definition['required_fields'];
-        }
-        if (isset($definition['default_values'])) {
-            AddressField::assertAllExist(array_keys($definition['default_values']));
-            $this->defaultValues = $definition['default_values'];
-        }
-        if (isset($definition['uppercase_fields'])) {
-            AddressField::assertAllExist($definition['uppercase_fields']);
-            $this->uppercaseFields = $definition['uppercase_fields'];
-        }
-
-        if (isset($definition['subdivision_data_fields'])) {
-            AddressField::assertAllExist($definition['subdivision_data_fields']);
-            $this->subdivisionDataFields = $definition['subdivision_data_fields'];
-            // Set subdivision depth based on the count of data fields present in the format.
-            $this->subdivisionDepth = count(array_intersect($this->subdivisionDataFields, $this->getUsedSubdivisionFields()));
-        } elseif (isset($definition['subdivision_depth'])) {
-            // Backwards compatibility: convert subdivision_depth to subdivision_data_fields.
-            $this->subdivisionDepth = $definition['subdivision_depth'];
-            $availableFields = [
-                AddressField::ADMINISTRATIVE_AREA,
-                AddressField::LOCALITY,
-                AddressField::DEPENDENT_LOCALITY,
-            ];
-            $this->subdivisionDataFields = array_slice($availableFields, 0, $this->subdivisionDepth);
-        }
+        $this->localFormat = $definition['local_format'];
+        $this->requiredFields = $definition['required_fields'];
+        $this->uppercaseFields = $definition['uppercase_fields'];
+        $this->subdivisionDepth = $definition['subdivision_depth'];
 
         $usedFields = $this->getUsedFields();
         if (in_array(AddressField::ADMINISTRATIVE_AREA, $usedFields)) {
@@ -126,8 +164,8 @@ class AddressFormat
                 PostalCodeType::assertExists($definition['postal_code_type']);
                 $this->postalCodeType = $definition['postal_code_type'];
             }
-            $this->postalCodePattern = $definition['postal_code_pattern'] ?? null;
-            $this->postalCodePrefix = $definition['postal_code_prefix'] ?? null;
+            $this->postalCodePattern = $definition['postal_code_pattern'];
+            $this->postalCodePrefix = $definition['postal_code_prefix'];
         }
     }
 
@@ -167,7 +205,6 @@ class AddressFormat
      * %organization
      * %addressLine1
      * %addressLine2
-     * %addressLine3
      * %locality %administrativeArea %postalCode
      * </code>
      *
@@ -197,14 +234,13 @@ class AddressFormat
      * Gets the list of used fields.
      *
      * @return array An array of address fields.
-     * @throws \ReflectionException
      */
     public function getUsedFields(): array
     {
         if (empty($this->usedFields)) {
             $this->usedFields = [];
             foreach (AddressField::getAll() as $field) {
-                if (str_contains($this->format, '%' . $field)) {
+                if (strpos($this->format, '%' . $field) !== false) {
                     $this->usedFields[] = $field;
                 }
             }
@@ -216,7 +252,7 @@ class AddressFormat
     /**
      * Gets the list of used subdivision fields.
      *
-     * @throws \ReflectionException
+     * @return array An array of address fields.
      */
     public function getUsedSubdivisionFields(): array
     {
@@ -227,30 +263,15 @@ class AddressFormat
         ];
         // Remove fields not used by the format, and reset the keys.
         $fields = array_intersect($fields, $this->getUsedFields());
-        return array_values($fields);
-    }
+        $fields = array_values($fields);
 
-    /**
-     * Gets the subdivision data fields.
-     *
-     * Returns the list of subdivision fields for which there is predefined data.
-     * This is more precise than getUsedSubdivisionFields() which returns all
-     * subdivision fields used by the format, regardless of whether data exists.
-     *
-     * @return array An array of subdivision field names, such as:
-     *               ['administrativeArea']
-     *               ['administrativeArea', 'locality']
-     *               ['administrativeArea', 'locality', 'dependentLocality']
-     */
-    public function getSubdivisionDataFields(): array
-    {
-        return $this->subdivisionDataFields;
+        return $fields;
     }
 
     /**
      * Gets the list of required fields.
      *
-     * @return AddressField[]
+     * @return array An array of address fields.
      */
     public function getRequiredFields(): array
     {
@@ -260,21 +281,11 @@ class AddressFormat
     /**
      * Gets the list of fields that need to be uppercased.
      *
-     * @return AddressField[]
+     * @return array An array of address fields.
      */
-    public function getUppercaseFields(): array
+    public function getUppercaseFields()
     {
         return $this->uppercaseFields;
-    }
-
-    /**
-     * Gets the default values.
-     *
-     * @return array The default values, keyed by field name.
-     */
-    public function getDefaultValues(): array
-    {
-        return $this->defaultValues;
     }
 
     /**
@@ -361,7 +372,14 @@ class AddressFormat
      *
      * Indicates the number of levels of predefined subdivisions.
      *
-     * @deprecated Use getSubdivisionDataFields() instead.
+     * Note that a country might use a subdivision field without having
+     * predefined subdivisions for it.
+     * For example, if the locality field is used by the address format, but
+     * the subdivision depth is 1, that means that the field element should be
+     * rendered as a textbox, since there's no known data to put in a dropdown.
+     *
+     * It is also possible to have no subdivisions for specific parents, even
+     * though the country generally has predefined subdivisions at that depth.
      *
      * @return int The subdivision depth. Possible values:
      *             0: no subdivisions have been predefined.

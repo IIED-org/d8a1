@@ -1,29 +1,26 @@
 {% import '@lib/di.twig' as di %}
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Drupal\{{ machine_name }}\Plugin\QueueWorker;
 
-{% apply sort_namespaces %}
-use Drupal\Core\Queue\Attribute\QueueWorker;
+{% sort %}
 use Drupal\Core\Queue\QueueWorkerBase;
-use Drupal\Core\StringTranslation\TranslatableMarkup;
   {% if services %}
 {{ di.use(services) }}
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
   {% endif %}
-{% endapply %}
+{% endsort %}
 
 /**
  * Defines '{{ plugin_id }}' queue worker.
+ *
+ * @QueueWorker(
+ *   id = "{{ plugin_id }}",
+ *   title = @Translation("{{ plugin_label }}"),
+ *   cron = {"time" = 60},
+ * )
  */
-#[QueueWorker(
-  id: '{{ plugin_id }}',
-  title: new TranslatableMarkup('{{ plugin_label }}'),
-  cron: ['time' => 60],
-)]
 final class {{ class }} extends QueueWorkerBase {% if services %}implements ContainerFactoryPluginInterface {% endif %}{
 
 {% if services %}

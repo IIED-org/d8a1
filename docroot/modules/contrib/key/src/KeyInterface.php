@@ -73,46 +73,28 @@ interface KeyInterface extends ConfigEntityInterface {
   /**
    * Gets the value of the key.
    *
-   * @param bool $reset
-   *   Whether to bypass the value cached for the current request and retrieve
-   *   the value from the key provider again.
-   *
-   * @return string|null
-   *   The value of the key, or NULL if the key provider could not retrieve
-   *   it.
+   * @return string
+   *   The value of the key.
    */
-  public function getKeyValue($reset = FALSE);
+  public function getKeyValue();
 
   /**
    * Gets the values of the key.
    *
-   * @param bool $reset
-   *   Whether to bypass the value cached for the current request and retrieve
-   *   the value from the key provider again.
-   *
    * @return array
    *   The values of the key.
    */
-  public function getKeyValues($reset = FALSE);
+  public function getKeyValues();
 
   /**
    * Sets the value of the key.
    *
-   * Note, in very early 8.x-1.x versions of key, this method returned a value.
-   * With issue #2693145, setting the key value is done directly and no longer
-   * returns any value.
+   * @param string $key_value
+   *   The key value to set.
    *
-   * An array may only be passed for a key whose key type supports multiple
-   * values; it is serialized by the key type before being stored. The key
-   * value is written to the key provider when the key is saved.
-   *
-   * @param string|array|null $key_value
-   *   The key value to set: a string, or an array of values for a key whose
-   *   key type supports multiple values. If NULL, no value is written on save.
-   *
-   * @throws \InvalidArgumentException
-   *   Thrown if an array is passed for a key whose key type does not support
-   *   multiple values.
+   * @return string|bool
+   *   The key value or FALSE if the value could not be set, because the
+   *   provider does not support setting a key value, for instance.
    */
   public function setKeyValue($key_value);
 

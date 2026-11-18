@@ -8,8 +8,8 @@
 }
 
 .ds-3col-stacked-equal > .group-left {
-  float: left; /* LTR */
   width: 33%;
+  float: left; /* LTR */
 }
 
 [dir="rtl"] .ds-3col-stacked-equal > .group-left {
@@ -17,8 +17,8 @@
 }
 
 .ds-3col-stacked-equal > .group-middle {
-  float: left; /* LTR */
   width: 34%;
+  float: left; /* LTR */
 }
 
 [dir="rtl"] .ds-3col-stacked-equal > .group-middle {
@@ -26,8 +26,8 @@
 }
 
 .ds-3col-stacked-equal > .group-right {
-  float: right; /* LTR */
   width: 33%;
+  float: right; /* LTR */
 }
 
 [dir="rtl"] .ds-3col-stacked-equal > .group-right {

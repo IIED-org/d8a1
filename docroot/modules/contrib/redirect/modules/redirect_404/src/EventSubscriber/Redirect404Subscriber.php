@@ -88,7 +88,7 @@ class Redirect404Subscriber implements EventSubscriberInterface {
   /**
    * {@inheritdoc}
    */
-  public static function getSubscribedEvents(): array {
+  public static function getSubscribedEvents() {
     $events[KernelEvents::EXCEPTION][] = 'onKernelException';
     return $events;
   }
@@ -96,7 +96,7 @@ class Redirect404Subscriber implements EventSubscriberInterface {
   /**
    * Logs an exception of 404 Redirect errors.
    *
-   * @param \Symfony\Component\HttpKernel\Event\ExceptionEvent $event
+   * @param ExceptionEvent $event
    *   Is given by the event dispatcher.
    */
   public function onKernelException(ExceptionEvent $event) {

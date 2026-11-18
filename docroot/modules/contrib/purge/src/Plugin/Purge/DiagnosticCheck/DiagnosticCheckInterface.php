@@ -27,9 +27,6 @@ interface DiagnosticCheckInterface extends PluginInspectionInterface, ContainerF
 
   /**
    * BLOCKING severity -- Error condition; purge.purgers service cannot operate.
-   *
-   * Checks bound to purger plugins through 'dependent_purger_plugins' only
-   * block those purgers, all other purgers keep operating.
    */
   const SEVERITY_ERROR = 2;
 
@@ -39,12 +36,9 @@ interface DiagnosticCheckInterface extends PluginInspectionInterface, ContainerF
    * Diagnostic checks determine whether something you are checking for is in
    * shape, for instance CMI settings on which your plugin depends. Any check
    * reporting self::SEVERITY_ERROR in their run() methods, will cause purge to
-   * stop working. Checks bound to specific purger plugins through the
-   * 'dependent_purger_plugins' definition key, only stop those purgers as long
-   * as other purgers remain. Any other severity level will let the purgers
-   * proceed operating but you may report any warning through
-   * getRecommendation() to be shown on Drupal's status report, purge_ui or any
-   * other diagnostic listing.
+   * stop working. Any other severity level will let the purgers proceed
+   * operating but you may report any warning through getRecommendation() to be
+   * shown on Drupal's status report, purge_ui or any other diagnostic listing.
    *
    * @code
    * public function run() {
@@ -134,20 +128,23 @@ interface DiagnosticCheckInterface extends PluginInspectionInterface, ContainerF
    *     be set if not applicable.
    *   - description: The description of the check.
    *   - severity_status: severity string: 'info', 'ok', 'warning' or 'error'.
-   *   - severity: The check's result/severity level. A
-   *     \Drupal\Core\Extension\Requirement\RequirementSeverity case on
-   *     Drupal 11.2 and later, otherwise one of the legacy REQUIREMENT_INFO,
-   *     REQUIREMENT_OK, REQUIREMENT_WARNING or REQUIREMENT_ERROR integers.
+   *   - severity: The check's result/severity level, one of:
+   *     - REQUIREMENT_INFO: For info only.
+   *     - REQUIREMENT_OK: The requirement is satisfied.
+   *     - REQUIREMENT_WARNING: The requirement failed with a warning.
+   *     - REQUIREMENT_ERROR: The requirement failed with an error.
    */
   public function getRequirementsArray();
 
   /**
    * Get the severity level, expressed as a status_report severity.
    *
-   * @return int|\Drupal\Core\Extension\Requirement\RequirementSeverity
-   *   A RequirementSeverity case on Drupal 11.2 and later. On older cores one
-   *   of the legacy install.inc integer constants: REQUIREMENT_INFO,
-   *   REQUIREMENT_OK, REQUIREMENT_WARNING or REQUIREMENT_ERROR.
+   * @return int
+   *   Integer, matching either of the following constants:
+   *    - REQUIREMENT_INFO
+   *    - REQUIREMENT_OK
+   *    - REQUIREMENT_WARNING
+   *    - REQUIREMENT_ERROR
    */
   public function getRequirementsSeverity();
 

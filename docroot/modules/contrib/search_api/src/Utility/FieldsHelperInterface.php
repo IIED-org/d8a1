@@ -63,10 +63,7 @@ interface FieldsHelperInterface {
    * @param string[][] $required_properties
    *   The properties that should be extracted, keyed by datasource ID and
    *   property path, with the values being the IDs that the values should be
-   *   put under in the return value. Property paths passed here can have an
-   *   optional "|FIELD_ID" suffix (the pipe "|" character followed by the field
-   *   ID) to specify, especially for configurable properties, which field
-   *   should be used to obtain the effective configuration.
+   *   put under in the return value.
    * @param bool $load
    *   (optional) If FALSE, only field values already present will be returned.
    *   Otherwise, fields will be extracted (and underlying objects loaded) if

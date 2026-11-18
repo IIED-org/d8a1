@@ -1,56 +1,73 @@
 {
 	"country_code": "NI",
 	"subdivisions": {
-		"BO": {
-			"name": "Boaco"
+		"Boaco": {
+			"iso_code": "NI-BO",
+			"postal_code_pattern": "5[12]"
 		},
-		"CA": {
-			"name": "Carazo"
+		"Carazo": {
+			"iso_code": "NI-CA",
+			"postal_code_pattern": "4[56]"
 		},
-		"CI": {
-			"name": "Chinandega"
+		"Chinandega": {
+			"iso_code": "NI-CI",
+			"postal_code_pattern": "2[5-7]"
 		},
-		"CO": {
-			"name": "Chontales"
+		"Chontales": {
+			"iso_code": "NI-CO",
+			"postal_code_pattern": "5[56]"
 		},
-		"ES": {
-			"name": "Estelí"
+		"Estelí": {
+			"iso_code": "NI-ES",
+			"postal_code_pattern": "3[12]"
 		},
-		"GR": {
-			"name": "Granada"
+		"Granada": {
+			"iso_code": "NI-GR",
+			"postal_code_pattern": "4[34]"
 		},
-		"JI": {
-			"name": "Jinotega"
+		"Jinotega": {
+			"iso_code": "NI-JI",
+			"postal_code_pattern": "6[56]"
 		},
-		"LE": {
-			"name": "León"
+		"León": {
+			"iso_code": "NI-LE",
+			"postal_code_pattern": "2[12]"
 		},
-		"MD": {
-			"name": "Madriz"
+		"Madriz": {
+			"iso_code": "NI-MD",
+			"postal_code_pattern": "3[45]"
 		},
-		"MN": {
-			"name": "Managua"
+		"Managua": {
+			"iso_code": "NI-MN",
+			"postal_code_pattern": "1[0-6]"
 		},
-		"MS": {
-			"name": "Masaya"
+		"Masaya": {
+			"iso_code": "NI-MS",
+			"postal_code_pattern": "4[12]"
 		},
-		"MT": {
-			"name": "Matagalpa"
+		"Matagalpa": {
+			"iso_code": "NI-MT",
+			"postal_code_pattern": "6[1-3]"
 		},
-		"NS": {
-			"name": "Nueva Segovia"
+		"Nueva Segovia": {
+			"iso_code": "NI-NS",
+			"postal_code_pattern": "3[7-9]"
 		},
-		"AN": {
-			"name": "Región Autónoma de la Costa Caribe Norte"
+		"Región Autónoma de la Costa Caribe Norte": {
+			"iso_code": "NI-AN",
+			"postal_code_pattern": "7[12]"
 		},
-		"AS": {
-			"name": "Región Autónoma de la Costa Caribe Sur"
+		"Región Autónoma de la Costa Caribe Sur": {
+			"iso_code": "NI-AS",
+			"postal_code_pattern": "8[1-3]"
 		},
-		"SJ": {
-			"name": "Río San Juan"
+		"Río San Juan": {
+			"iso_code": "NI-SJ",
+			"postal_code_pattern": "9[12]"
 		},
-		"RI": {
-			"name": "Rivas"
+		"Rivas": {
+			"iso_code": "NI-RI",
+			"postal_code_pattern": "4[78]"
 		}
 	}
 }

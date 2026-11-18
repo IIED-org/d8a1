@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\redirect_domain\Unit;
 
 use Drupal\Core\Path\PathMatcher;
@@ -20,7 +18,7 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
  *
  * @group redirect_domain
  *
- * @coversDefaultClass \Drupal\redirect_domain\EventSubscriber\DomainRedirectRequestSubscriber
+ * @coversDefaultClass Drupal\redirect_domain\EventSubscriber\DomainRedirectRequestSubscriber
  */
 class DomainRedirectRequestSubscriberTest extends UnitTestCase {
 
@@ -128,14 +126,14 @@ class DomainRedirectRequestSubscriberTest extends UnitTestCase {
    * @param $query_string
    *   The query string in the url.
    *
-   * @return \Symfony\Component\HttpKernel\Event\RequestEvent
+   * @return RequestEvent
    *   The response for the request.
    */
   protected function getGetResponseEventStub($path_info, $query_string) {
     $request = Request::create($path_info . '?' . $query_string, 'GET', [], [], [], ['SCRIPT_NAME' => 'index.php']);
 
     $http_kernel = $this->createMock(HttpKernelInterface::class);
-    return new RequestEvent($http_kernel, $request, HttpKernelInterface::MAIN_REQUEST);
+    return new RequestEvent($http_kernel, $request, HttpKernelInterface::MASTER_REQUEST);
   }
 
   /**
@@ -157,5 +155,4 @@ class DomainRedirectRequestSubscriberTest extends UnitTestCase {
     $datasets[] = ['http://wildcardtest.com/does-not-exist', 'http://wildcardredirect.com'];
     return $datasets;
   }
-
 }

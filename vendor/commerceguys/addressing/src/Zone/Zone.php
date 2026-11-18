@@ -9,14 +9,26 @@ use CommerceGuys\Addressing\AddressInterface;
  */
 class Zone
 {
-    protected string $id;
-
-    protected string $label;
+    /**
+     * The ID.
+     *
+     * @var string
+     */
+    protected $id;
 
     /**
-     * @var ZoneTerritory[]
+     * The label.
+     *
+     * @var string
      */
-    protected array $territories;
+    protected $label;
+
+    /**
+     * The territories.
+     *
+     * @var \CommerceGuys\Addressing\Zone\ZoneTerritory[]
+     */
+    protected $territories;
 
     public function __construct(array $definition)
     {
@@ -26,7 +38,7 @@ class Zone
             }
         }
         if (!is_array($definition['territories'])) {
-            throw new \InvalidArgumentException('The property "territories" must be an array.');
+            throw new \InvalidArgumentException(sprintf('The property "territories" must be an array.'));
         }
 
         $this->id = $definition['id'];
@@ -49,7 +61,7 @@ class Zone
     /**
      * Gets the territories.
      *
-     * @return ZoneTerritory[] The territories.
+     * @return \CommerceGuys\Addressing\Zone\ZoneTerritory[] The territories.
      */
     public function getTerritories(): array
     {
@@ -58,6 +70,10 @@ class Zone
 
     /**
      * Checks whether the provided address belongs to the zone.
+     *
+     * @param \CommerceGuys\Addressing\AddressInterface $address The address.
+     *
+     * @return bool True if the provided address belongs to the zone, false otherwise.
      */
     public function match(AddressInterface $address): bool
     {

@@ -22,7 +22,6 @@ if (empty($autoloader)) {
     exit(1);
 }
 
-use Grasmash\YamlCli\Command\GetTypeCommand;
 use Grasmash\YamlCli\Command\GetValueCommand;
 use Grasmash\YamlCli\Command\LintCommand;
 use Grasmash\YamlCli\Command\UnsetKeyCommand;
@@ -32,7 +31,6 @@ use Symfony\Component\Console\Application;
 
 $application = new Application('yaml-cli', '@package_version@');
 $application->add(new GetValueCommand());
-$application->add(new GetTypeCommand());
 $application->add(new LintCommand());
 $application->add(new UnsetKeyCommand());
 $application->add(new UpdateKeyCommand());

@@ -101,8 +101,7 @@ class ZoneDefaultWidget extends WidgetBase {
    * {@inheritdoc}
    */
   public function errorElement(array $element, ConstraintViolationInterface $violation, array $form, FormStateInterface $form_state) {
-    $property_path_array = explode('.', $violation->getPropertyPath());
-    $error_element = NestedArray::getValue($element['zone'], [$property_path_array[1]]);
+    $error_element = NestedArray::getValue($element['zone'], $violation->arrayPropertyPath);
     return is_array($error_element) ? $error_element : FALSE;
   }
 

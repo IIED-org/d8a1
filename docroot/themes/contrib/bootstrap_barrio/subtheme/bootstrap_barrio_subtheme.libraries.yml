@@ -6,11 +6,9 @@ global-styling:
     component:
       css/style.css: {}
       css/colors.css: {}
-  dependencies:
-    - core/drupal
 bootstrap:
   js:
-    /libraries/popperjs/dist/umd/popper.min.js: { weight: -19 }
+    /libraries/popper.js/dist/umd/popper.min.js: { weight: -19 }
     /libraries/bootstrap/dist/js/bootstrap.min.js: { weight: -20 }
   css:
     component:

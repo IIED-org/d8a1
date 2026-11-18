@@ -6,7 +6,7 @@ dependencies:
     - 'block_content:basic:fd553d12-afd7-4ac1-8219-42fcfbad4bb3'
   module:
     - block_content
-    - node
+    - ctools
   theme:
     - pnp_bootstrap_sass
 id: initiativescrumb
@@ -20,6 +20,8 @@ settings:
   label: 'Initiatives crumb'
   label_display: '0'
   provider: block_content
+  status: true
+  info: ''
   view_mode: full
 visibility:
   'entity_bundle:node':

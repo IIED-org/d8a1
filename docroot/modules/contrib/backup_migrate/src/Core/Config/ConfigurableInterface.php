@@ -21,7 +21,6 @@ interface ConfigurableInterface {
    * Get the configuration object for this item.
    *
    * @return \Drupal\backup_migrate\Core\Config\ConfigInterface
-   *   The requested integer.
    */
   public function config();
 
@@ -32,7 +31,7 @@ interface ConfigurableInterface {
    *   The configuration object key to retrieve.
    *
    * @return mixed
-   *   *   The configuration value.
+   *   The configuration value.
    */
   public function confGet($key);
 
@@ -40,7 +39,6 @@ interface ConfigurableInterface {
    * Get the configuration defaults for this item.
    *
    * @return mixed
-   *   The return value.
    *
    * @internal param $key
    */
@@ -50,7 +48,6 @@ interface ConfigurableInterface {
    * Get a default (blank) schema.
    *
    * @param array $params
-   *   The message parameters.
    *   The parameters including:
    *    - operation - The operation being performed, will be one of:
    *      - 'backup': Configuration needed during a backup operation
@@ -58,7 +55,6 @@ interface ConfigurableInterface {
    *      - 'initialize': Core configuration always needed by this item.
    *
    * @return array
-   *   A render or configuration array.
    */
   public function configSchema(array $params = []);
 
@@ -66,10 +62,8 @@ interface ConfigurableInterface {
    * Get any validation errors in the config.
    *
    * @param array $params
-   *   The message parameters.
    *
    * @return array
-   *   A render or configuration array.
    */
   public function configErrors(array $params = []);
 

@@ -13,7 +13,6 @@
 
 /src/Commands/config/ @bircher
 
-/src/Commands/core/DrupalDependenciesCommands.php @claudiu-cristea
 /src/Commands/core/MigrateRunnerCommands.php @claudiu-cristea
 /src/Drupal/Migrate/ @claudiu-cristea
 
@@ -32,3 +31,5 @@
 /src/Commands/core/LocaleCommands.php @Sutharsan
 
 /src/Commands/core/QueueCommands.php @davereid
+
+

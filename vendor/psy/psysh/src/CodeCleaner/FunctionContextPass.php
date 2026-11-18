@@ -3,7 +3,7 @@
 /*
  * This file is part of Psy Shell.
  *
- * (c) 2012-2026 Justin Hileman
+ * (c) 2012-2023 Justin Hileman
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -18,7 +18,8 @@ use Psy\Exception\FatalErrorException;
 
 class FunctionContextPass extends CodeCleanerPass
 {
-    private int $functionDepth = 0;
+    /** @var int */
+    private $functionDepth;
 
     /**
      * @param array $nodes
@@ -28,8 +29,6 @@ class FunctionContextPass extends CodeCleanerPass
     public function beforeTraverse(array $nodes)
     {
         $this->functionDepth = 0;
-
-        return null;
     }
 
     /**
@@ -40,21 +39,19 @@ class FunctionContextPass extends CodeCleanerPass
         if ($node instanceof FunctionLike) {
             $this->functionDepth++;
 
-            return null;
+            return;
         }
 
         // node is inside function context
         if ($this->functionDepth !== 0) {
-            return null;
+            return;
         }
 
         // It causes fatal error.
         if ($node instanceof Yield_) {
             $msg = 'The "yield" expression can only be used inside a function';
-            throw new FatalErrorException($msg, 0, \E_ERROR, null, $node->getStartLine());
+            throw new FatalErrorException($msg, 0, \E_ERROR, null, $node->getLine());
         }
-
-        return null;
     }
 
     /**
@@ -67,7 +64,5 @@ class FunctionContextPass extends CodeCleanerPass
         if ($node instanceof FunctionLike) {
             $this->functionDepth--;
         }
-
-        return null;
     }
 }

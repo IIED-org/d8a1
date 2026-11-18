@@ -20,12 +20,7 @@ class SortWidgetKernelTest extends BetterExposedFiltersKernelTestBase {
   public static $testViews = ['bef_test'];
 
   /**
-   * Tests combining sort options.
-   *
-   * Tests combining sort order and sort by, as well as using a custom
-   * query string parameter.
-   *
-   * @throws \Drupal\Core\Entity\EntityStorageException
+   * Tests combining sort options (sort order and sort by).
    */
   public function testCombineSortOptions() {
     $view = Views::getView('bef_test');
@@ -40,7 +35,6 @@ class SortWidgetKernelTest extends BetterExposedFiltersKernelTestBase {
       'sort' => [
         'advanced' => [
           'combine' => TRUE,
-          'combine_param' => 'sort_bef_combine_test',
         ],
       ],
     ]);
@@ -50,22 +44,20 @@ class SortWidgetKernelTest extends BetterExposedFiltersKernelTestBase {
 
     // Assert our "sort_bef_combine" contains both sort by and sort order
     // options.
-    $options = $output['sort_bef_combine_test']['#options'];
+    $options = $output['sort_bef_combine']['#options'];
     $assert = [
       'created_ASC' => 'Created Asc',
       'created_DESC' => 'Created Desc',
     ];
 
     // Assert our combined sort options are added.
-    $this->assertEquals($options, $assert);
+    $this->assertEquals($options, $assert, 'Sort options are combined.');
 
     $view->destroy();
   }
 
   /**
    * Tests combining and rewriting sort options (sort order and sort by).
-   *
-   * @throws \Drupal\Core\Entity\EntityStorageException
    */
   public function testCombineRewriteSortOptions() {
     $view = Views::getView('bef_test');
@@ -80,7 +72,6 @@ class SortWidgetKernelTest extends BetterExposedFiltersKernelTestBase {
       'sort' => [
         'advanced' => [
           'combine' => TRUE,
-          'combine_param' => 'sort_bef_combine_test',
           'combine_rewrite' => "Created Desc|down\r\nCreated Asc|up",
         ],
       ],
@@ -91,22 +82,20 @@ class SortWidgetKernelTest extends BetterExposedFiltersKernelTestBase {
 
     // Assert our "sort_bef_combine" contains both sort by and sort order
     // options, and has its options rewritten.
-    $options = $output['sort_bef_combine_test']['#options'];
+    $options = $output['sort_bef_combine']['#options'];
     $assert = [
       'created_DESC' => 'down',
       'created_ASC' => 'up',
     ];
 
     // Assert our combined sort options are added.
-    $this->assertEquals($options, $assert);
+    $this->assertEquals($options, $assert, 'Sort options are combined and rewritten.');
 
     $view->destroy();
   }
 
   /**
    * Tests adding a reset sort option.
-   *
-   * @throws \Drupal\Core\Entity\EntityStorageException
    */
   public function testResetSortOptions() {
     $view = Views::getView('bef_test');
@@ -121,7 +110,6 @@ class SortWidgetKernelTest extends BetterExposedFiltersKernelTestBase {
       'sort' => [
         'advanced' => [
           'combine' => TRUE,
-          'combine_param' => 'sort_bef_combine_test',
           'reset' => TRUE,
           'reset_label' => 'Reset sort',
         ],
@@ -132,7 +120,7 @@ class SortWidgetKernelTest extends BetterExposedFiltersKernelTestBase {
     $output = $this->getExposedFormRenderArray($view);
 
     // Assert our "sort_bef_combine" contains a reset option at the top.
-    $options = $output['sort_bef_combine_test']['#options'];
+    $options = $output['sort_bef_combine']['#options'];
     $assert = [
       ' ' => 'Reset sort',
       'created_ASC' => 'Created Asc',
@@ -140,7 +128,7 @@ class SortWidgetKernelTest extends BetterExposedFiltersKernelTestBase {
     ];
 
     // Assert our combined sort options are added.
-    $this->assertEquals($options, $assert);
+    $this->assertEquals($options, $assert, 'Reset sort option was added.');
 
     $view->destroy();
   }

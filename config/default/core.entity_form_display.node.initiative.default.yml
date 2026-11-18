@@ -818,8 +818,7 @@ content:
     type: address_default
     weight: 24
     region: content
-    settings:
-      wrapper_type: details
+    settings: {  }
     third_party_settings: {  }
   field_area_description:
     type: text_textarea
@@ -970,21 +969,21 @@ content:
       display_label: true
     third_party_settings:
       field_states_ui:
-        field_states:
-          5c4135bb-ecb2-4bbc-b1ee-669c229409a1:
-            id: invisible
-            data:
-              target: field_illegal_disincentives
-              comparison: unchecked
-              value: '1'
-              submit:
-                save: Add
-                cancel: Cancel
-            uuid: 5c4135bb-ecb2-4bbc-b1ee-669c229409a1
         form:
           type: ''
           list: ''
           add: Add
+        field_states:
+          5c4135bb-ecb2-4bbc-b1ee-669c229409a1:
+            uuid: 5c4135bb-ecb2-4bbc-b1ee-669c229409a1
+            id: invisible
+            data:
+              target: field_illegal_disincentives
+              comparison: unchecked
+              value: true
+              submit:
+                save: Add
+                cancel: Cancel
       conditional_fields:
         023cfce4-1c58-4050-9a83-6798d87ad336:
           entity_type: node
@@ -1173,15 +1172,6 @@ content:
       display_label: true
     third_party_settings:
       field_states_ui:
-        field_states:
-          d850d779-ec2b-4a56-8566-69c503db303d:
-            id: invisible
-            data:
-              target: field_illegal_disincentives
-              comparison: unchecked
-              value: ''
-              submit: 'Add Cancel'
-            uuid: d850d779-ec2b-4a56-8566-69c503db303d
         form:
           type: ''
           list:
@@ -1190,6 +1180,15 @@ content:
                 edit: Edit
                 delete: Delete
           add: Add
+        field_states:
+          d850d779-ec2b-4a56-8566-69c503db303d:
+            uuid: d850d779-ec2b-4a56-8566-69c503db303d
+            id: invisible
+            data:
+              target: field_illegal_disincentives
+              comparison: unchecked
+              value: ''
+              submit: 'Add Cancel'
       conditional_fields:
         6ec154bc-2291-4d08-a0a1-118ecce6f6ee:
           entity_type: node
@@ -1215,15 +1214,6 @@ content:
       display_label: true
     third_party_settings:
       field_states_ui:
-        field_states:
-          f5281516-5008-41dc-8c08-8b34987e8075:
-            id: invisible
-            data:
-              target: field_illegal_disincentives
-              comparison: unchecked
-              value: ''
-              submit: 'Add Cancel'
-            uuid: f5281516-5008-41dc-8c08-8b34987e8075
         form:
           type: ''
           list:
@@ -1232,6 +1222,15 @@ content:
                 edit: Edit
                 delete: Delete
           add: Add
+        field_states:
+          f5281516-5008-41dc-8c08-8b34987e8075:
+            uuid: f5281516-5008-41dc-8c08-8b34987e8075
+            id: invisible
+            data:
+              target: field_illegal_disincentives
+              comparison: unchecked
+              value: ''
+              submit: 'Add Cancel'
       conditional_fields:
         57f6295f-8015-4460-aaaf-c5d22c43092f:
           entity_type: node
@@ -1583,15 +1582,6 @@ content:
       display_label: true
     third_party_settings:
       field_states_ui:
-        field_states:
-          9279c20b-ca01-4880-a9b2-0b070b7cfd76:
-            id: invisible
-            data:
-              target: field_illegal_disincentives
-              comparison: unchecked
-              value: ''
-              submit: 'Add Cancel'
-            uuid: 9279c20b-ca01-4880-a9b2-0b070b7cfd76
         form:
           type: ''
           list:
@@ -1600,6 +1590,15 @@ content:
                 edit: Edit
                 delete: Delete
           add: Add
+        field_states:
+          9279c20b-ca01-4880-a9b2-0b070b7cfd76:
+            uuid: 9279c20b-ca01-4880-a9b2-0b070b7cfd76
+            id: invisible
+            data:
+              target: field_illegal_disincentives
+              comparison: unchecked
+              value: ''
+              submit: 'Add Cancel'
       conditional_fields:
         ef18431d-673a-4310-a1bb-681d94294a7c:
           entity_type: node

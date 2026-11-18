@@ -43,7 +43,6 @@ class DsCacheTestBlock extends BlockBase {
    * {@inheritdoc}
    */
   public function getCacheTags() {
-    return [];
   }
 
   /**

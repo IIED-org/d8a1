@@ -4,16 +4,12 @@ namespace Drupal\Tests\purge\Kernel\DiagnosticCheck;
 
 use Drupal\purge\Plugin\Purge\DiagnosticCheck\DiagnosticCheckInterface;
 use Drupal\Tests\purge\Kernel\KernelServiceTestBase;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests \Drupal\purge\Plugin\Purge\DiagnosticCheck\DiagnosticsService.
  *
  * @group purge
  */
-#[Group('purge')]
-#[RunTestsInSeparateProcesses]
 class ServiceSmokeAndFireTest extends KernelServiceTestBase {
 
   /**
@@ -42,7 +38,7 @@ class ServiceSmokeAndFireTest extends KernelServiceTestBase {
   public function testIsSystemOnFireReturnsFalse(): void {
     $this->initializePurgersService(['ida' => 'a']);
     $this->initializeService();
-    $this->assertIsNotObject($this->service->isSystemOnFire());
+    $this->assertFalse(is_object($this->service->isSystemOnFire()));
     $this->assertEquals($this->service->isSystemOnFire(), FALSE);
   }
 
@@ -54,7 +50,7 @@ class ServiceSmokeAndFireTest extends KernelServiceTestBase {
     $this->initializeService();
     // ERROR level check is expected now because we didn't load any purgers.
     $fire = $this->service->isSystemOnFire();
-    $this->assertIsObject($fire);
+    $this->assertTrue(is_object($fire));
     if (is_object($fire)) {
       $this->assertInstanceOf(DiagnosticCheckInterface::class, $fire);
     }
@@ -67,7 +63,7 @@ class ServiceSmokeAndFireTest extends KernelServiceTestBase {
     $this->initializePurgersService(['idb' => 'b']);
     $this->initializeService();
     $smoke = $this->service->isSystemShowingSmoke();
-    $this->assertIsObject($smoke);
+    $this->assertTrue(is_object($smoke));
     if (is_object($smoke)) {
       $this->assertInstanceOf(DiagnosticCheckInterface::class, $smoke);
     }

@@ -53,6 +53,7 @@ class RedirectLoopException extends \RuntimeException {
    *
    * @return int
    *   The redirect ID.
+   *
    */
   public function getRedirectId() {
     return $this->rid;

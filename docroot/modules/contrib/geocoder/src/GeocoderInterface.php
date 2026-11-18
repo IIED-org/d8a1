@@ -3,7 +3,6 @@
 namespace Drupal\geocoder;
 
 use Geocoder\Model\AddressCollection;
-use Geocoder\Query\GeocodeQuery;
 
 /**
  * Provides a geocoder factory method interface.
@@ -13,15 +12,15 @@ interface GeocoderInterface {
   /**
    * Geocodes a string.
    *
-   * @param \Geocoder\Query\GeocodeQuery|string $address
-   *   The GeocodeQuery or string to geocode.
+   * @param string $address_string
+   *   The string to geocode.
    * @param \Drupal\geocoder\GeocoderProviderInterface[] $providers
    *   A list of Geocoder providers to use to perform the geocoding.
    *
    * @return \Geocoder\Model\AddressCollection|\Geometry|null
    *   An address collection or NULL on geocoding failure.
    */
-  public function geocode(GeocodeQuery|string $address, array $providers);
+  public function geocode(string $address_string, array $providers);
 
   /**
    * Reverse geocodes coordinates.

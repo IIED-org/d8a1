@@ -2,7 +2,6 @@
 
 namespace Drupal\ctools_wizard_test;
 
-use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Config\Entity\ConfigEntityListBuilder;
 use Drupal\Core\Entity\EntityInterface;
 
@@ -31,9 +30,9 @@ class ExampleConfigEntityListBuilder extends ConfigEntityListBuilder {
   }
 
   /**
-   * {@inheritdoc}
+   * @inheritDoc
    */
-  public function getOperations(EntityInterface $entity, ?CacheableMetadata $cacheability = NULL) {
+  public function getOperations(EntityInterface $entity) {
     $operations = parent::getOperations($entity);
 
     if (!empty($operations['edit'])) {

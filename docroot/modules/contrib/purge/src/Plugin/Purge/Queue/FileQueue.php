@@ -4,17 +4,16 @@ namespace Drupal\purge\Plugin\Purge\Queue;
 
 use Drupal\Core\DestructableInterface;
 use Drupal\Core\StreamWrapper\PublicStream;
-use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Drupal\purge\Attribute\PurgeQueue;
 
 /**
  * A \Drupal\purge\Plugin\Purge\Queue\QueueInterface compliant file-based queue.
+ *
+ * @PurgeQueue(
+ *   id = "file",
+ *   label = @Translation("File"),
+ *   description = @Translation("A file-based queue for fast I/O systems."),
+ * )
  */
-#[PurgeQueue(
-  id: 'file',
-  label: new TranslatableMarkup('File'),
-  description: new TranslatableMarkup('A file-based queue for fast I/O systems.'),
-)]
 class FileQueue extends MemoryQueue implements QueueInterface, DestructableInterface {
 
   /**

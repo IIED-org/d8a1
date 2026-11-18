@@ -42,12 +42,7 @@ class PhpProcess extends Process
         if ('phpdbg' === \PHP_SAPI) {
             $file = tempnam(sys_get_temp_dir(), 'dbg');
             file_put_contents($file, $script);
-            $pid = getmypid();
-            register_shutdown_function(static function () use ($file, $pid) {
-                if ($pid === getmypid()) {
-                    unlink($file);
-                }
-            });
+            register_shutdown_function('unlink', $file);
             $php[] = $file;
             $script = null;
         }
@@ -61,9 +56,9 @@ class PhpProcess extends Process
     }
 
     /**
-     * @param (callable('out'|'err', string):void)|null $callback
+     * @return void
      */
-    public function start(?callable $callback = null, array $env = []): void
+    public function start(?callable $callback = null, array $env = [])
     {
         if (null === $this->getCommandLine()) {
             throw new RuntimeException('Unable to find the PHP executable.');

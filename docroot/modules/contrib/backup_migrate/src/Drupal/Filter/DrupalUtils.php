@@ -5,10 +5,9 @@ namespace Drupal\backup_migrate\Drupal\Filter;
 use Drupal\backup_migrate\Core\File\BackupFileReadableInterface;
 use Drupal\backup_migrate\Core\Plugin\PluginBase;
 use Drupal\backup_migrate\Core\Config\Config;
-use Drupal\Core\State\StateInterface;
 
 /**
- * Provides the drupal utils class.
+ *
  *
  * @package Drupal\backup_migrate\Drupal\Filter
  */
@@ -20,21 +19,6 @@ class DrupalUtils extends PluginBase {
    * @var bool
    */
   protected $maintenanceMode;
-
-  /**
-   * Constructs a DrupalUtils object.
-   *
-   * @param \Drupal\backup_migrate\Core\Config\ConfigInterface|array $init
-   *   Initial configuration.
-   * @param \Drupal\Core\State\StateInterface|null $state
-   *   The state service.
-   */
-  public function __construct(
-    $init = [],
-    protected readonly ?StateInterface $state = NULL,
-  ) {
-    parent::__construct($init);
-  }
 
   /**
    * {@inheritdoc}
@@ -61,7 +45,6 @@ class DrupalUtils extends PluginBase {
    * Get the default values for the plugin.
    *
    * @return \Drupal\backup_migrate\Core\Config\Config
-   *   The return value.
    */
   public function configDefaults() {
     return new Config([
@@ -89,8 +72,8 @@ class DrupalUtils extends PluginBase {
    */
   protected function takeSiteOffline() {
     // Take the site offline.
-    if ($this->state && $this->confGet('site_offline') && !$this->state->get('system.maintenance_mode')) {
-      $this->state->set('system.maintenance_mode', TRUE);
+    if ($this->confGet('site_offline') && !\Drupal::state()->get('system.maintenance_mode')) {
+      \Drupal::state()->set('system.maintenance_mode', TRUE);
       $this->maintenanceMode = TRUE;
     }
   }
@@ -101,9 +84,7 @@ class DrupalUtils extends PluginBase {
   protected function takeSiteOnline() {
     // Take the site online again.
     if ($this->maintenanceMode) {
-      if ($this->state) {
-        $this->state->set('system.maintenance_mode', FALSE);
-      }
+      \Drupal::state()->set('system.maintenance_mode', FALSE);
     }
   }
 
@@ -116,10 +97,8 @@ class DrupalUtils extends PluginBase {
    * @todo Remove this.
    *
    * @param \Drupal\backup_migrate\Core\File\BackupFileReadableInterface $file
-   *   The backup file.
    *
    * @return \Drupal\backup_migrate\Core\File\BackupFileReadableInterface
-   *   The requested integer.
    */
   public function beforeRestore(BackupFileReadableInterface $file) {
     return $file;

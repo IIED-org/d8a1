@@ -5,7 +5,6 @@ namespace Drupal\purge\Plugin\Purge\Queue;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
-use Drupal\purge\Attribute\PurgeQueue;
 
 /**
  * The queue plugin manager.
@@ -28,10 +27,8 @@ class PluginManager extends DefaultPluginManager {
       'Plugin/Purge/Queue',
       $namespaces,
       $module_handler,
-      QueueInterface::class,
-      PurgeQueue::class,
-      'Drupal\purge\Annotation\PurgeQueue',
-    );
+      'Drupal\purge\Plugin\Purge\Queue\QueueInterface',
+      'Drupal\purge\Annotation\PurgeQueue');
     $this->alterInfo('purge_queues');
     $this->setCacheBackend($cache_backend, 'purge_queue_plugins');
   }

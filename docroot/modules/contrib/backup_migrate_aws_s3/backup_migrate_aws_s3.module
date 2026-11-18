@@ -1,0 +1,37 @@
+<?php
+
+/**
+ * @file
+ * Primary hook implementations for Backup Migrate S3.
+ */
+
+use Drupal\backup_migrate\Core\Main\BackupMigrateInterface;
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function backup_migrate_aws_s3_help($route_name, RouteMatchInterface $route_match) {
+  if ($route_name == 'help.page.backup_migrate_aws_s3') {
+    $text = file_get_contents(__DIR__ . '/README.md');
+    if (!\Drupal::moduleHandler()->moduleExists('markdown')) {
+      return '<pre>' . $text . '</pre>';
+    }
+    else {
+      /** @var \Drupal\markdown\PluginManager\ParserManagerInterface $parser_manager */
+      $parser_manager = \Drupal::service('plugin.manager.markdown.parser');
+      $parser = $parser_manager->getDefaultParser([
+        'render_strategy' => ['type' => 'none'],
+      ]);
+      return $parser->parse($text);
+    }
+  }
+  return NULL;
+}
+
+/**
+ * Implements hook_backup_migrate_service_object_alter().
+ */
+function backup_migrate_aws_s3_backup_migrate_service_object_alter(BackupMigrateInterface &$bam, $options = []) {
+}

@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Contains \Drupal\redirect\Plugin\migrate\source\d7\PathRedirect.
+ */
+
 namespace Drupal\redirect\Plugin\migrate\source\d7;
 
 use Drupal\migrate\Row;

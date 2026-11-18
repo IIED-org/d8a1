@@ -21,11 +21,10 @@ class RadioButtonsSortWidgetKernelTest extends BetterExposedFiltersKernelTestBas
 
   /**
    * Tests the exposed radio buttons sort widget.
-   *
-   * @throws \Drupal\Core\Entity\EntityStorageException
    */
   public function testExposedRadioButtons() {
     $view = Views::getView('bef_test');
+    $display = &$view->storage->getDisplay('default');
 
     // Change exposed sort to radio buttons (i.e. 'bef').
     $this->setBetterExposedOptions($view, [
@@ -39,11 +38,11 @@ class RadioButtonsSortWidgetKernelTest extends BetterExposedFiltersKernelTestBas
 
     // Check our sort item "sort_by" is rendered as links.
     $actual = $this->xpath('//form//input[@type="radio" and starts-with(@id, "edit-sort-by")]');
-    $this->assertCount(1, $actual);
+    $this->assertCount(1, $actual, 'Exposed sort "sort_by" has correct number of exposed radio buttons.');
 
     // Check our sort item "sort_order" is rendered as links.
     $actual = $this->xpath('//form//input[@type="radio" and starts-with(@id, "edit-sort-order")]');
-    $this->assertCount(2, $actual);
+    $this->assertCount(2, $actual, 'Exposed sort "sort_order" has correct number of exposed radio buttons.');
 
     $view->destroy();
   }

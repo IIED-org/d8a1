@@ -98,15 +98,13 @@ class PathautoLocaleTest extends WebDriverTestBase {
     $permissions = [
       'administer pathauto',
       'administer url aliases',
-      'bulk delete aliases',
-      'bulk update aliases',
       'create url aliases',
       'bypass node access',
       'access content overview',
       'administer languages',
       'translate any entity',
       'administer content translation',
-      'create content translations',
+      'create content translations'
     ];
     $admin_user = $this->drupalCreateUser($permissions);
     $this->drupalLogin($admin_user);
@@ -183,7 +181,8 @@ class PathautoLocaleTest extends WebDriverTestBase {
     ];
     $this->drupalGet('admin/config/search/path/update_bulk');
     $this->submitForm($edit, 'Update');
-    $this->assertSession()->waitForText('Generated 2 URL aliases.');
+    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->assertSession()->pageTextContains('Generated 2 URL aliases.');
     $this->assertAlias('/node/' . $node->id(), '/the-articles/english-node', 'en');
     $this->assertAlias('/node/' . $node->id(), '/les-articles/french-node', 'fr');
   }
@@ -200,11 +199,7 @@ class PathautoLocaleTest extends WebDriverTestBase {
     $pattern->save();
 
     // Create a node with language Not Applicable.
-    $node = $this->createNode([
-      'type' => 'article',
-      'title' => 'Test node',
-      'langcode' => LanguageInterface::LANGCODE_NOT_APPLICABLE,
-    ]);
+    $node = $this->createNode(['type' => 'article', 'title' => 'Test node', 'langcode' => LanguageInterface::LANGCODE_NOT_APPLICABLE]);
 
     // Check that the generated alias has language Not Specified.
     $alias = \Drupal::service('pathauto.alias_storage_helper')->loadBySource('/node/' . $node->id());
@@ -221,18 +216,12 @@ class PathautoLocaleTest extends WebDriverTestBase {
   protected function enableArticleTranslation() {
     // Enable content translation on articles.
     $this->drupalGet('admin/config/regional/content-language');
-
-    // Enable translation for node.
-    $this->assertSession()->fieldExists('entity_types[node]')->check();
-    // Open details for Content settings in Drupal 10.2.
-    $nodeSettings = $this->getSession()->getPage()->find('css', '#edit-settings-node summary');
-    if ($nodeSettings) {
-      $nodeSettings->click();
-    }
-    $this->assertSession()->fieldExists('settings[node][article][translatable]')->check();
-    $this->assertSession()->fieldExists('settings[node][article][settings][language][language_alterable]')->check();
-
-    $this->getSession()->getPage()->pressButton('Save configuration');
+    $edit = [
+      'entity_types[node]' => TRUE,
+      'settings[node][article][translatable]' => TRUE,
+      'settings[node][article][settings][language][language_alterable]' => TRUE,
+    ];
+    $this->submitForm($edit, 'Save configuration');
   }
 
 }

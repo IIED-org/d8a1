@@ -59,7 +59,7 @@ class SkipRedirectTest extends BrowserTestBase {
   /**
    * Data provider for testSkipRedirect.
    */
-  public static function skipRedirectDataProvider() {
+  public function skipRedirectDataProvider() {
     return [
       [
         'admin/config/development',

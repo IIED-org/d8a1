@@ -56,7 +56,7 @@ class LateRuntimeProcessor implements EventSubscriberInterface {
   /**
    * {@inheritdoc}
    */
-  public static function getSubscribedEvents(): array {
+  public static function getSubscribedEvents() {
     // Set a high priority so it is executed before services are destructed. Not
     // doing this would, for example, result in successful invalidation never
     // being deleted from the queue.
@@ -92,12 +92,6 @@ class LateRuntimeProcessor implements EventSubscriberInterface {
    *   The event object.
    */
   public function onKernelTerminate(TerminateEvent $event) {
-
-    // Do not process during config import: config is in a transient state and
-    // purger services referenced in config may not exist in the container yet.
-    if ($this->container->get('config.installer')->isSyncing()) {
-      return;
-    }
 
     // Immediately stop if our plugin is disabled.
     if (!$this->initialize()) {

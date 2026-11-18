@@ -14,9 +14,10 @@ use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\inline_entity_form\ElementSubmit;
+use Drupal\inline_entity_form\WidgetSubmit;
 use Drupal\inline_entity_form\Form\EntityInlineForm;
 use Drupal\inline_entity_form\Plugin\Field\FieldWidget\InlineEntityFormComplex;
-use Drupal\inline_entity_form\WidgetSubmit;
+use Drupal\inline_entity_form\MigrationHelper;
 use Drupal\migrate\Plugin\MigrateSourceInterface;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Row;
@@ -131,9 +132,8 @@ function inline_entity_form_reference_form(array $reference_form, FormStateInter
   $reference_form['#element_validate'][] = 'inline_entity_form_reference_form_validate';
   $reference_form['#ief_element_submit'][] = 'inline_entity_form_reference_form_submit';
 
-  // Allow other modules and themes to alter the form.
+  // Allow other modules to alter the form.
   \Drupal::moduleHandler()->alter('inline_entity_form_reference_form', $reference_form, $form_state);
-  \Drupal::theme()->alter('inline_entity_form_reference_form', $reference_form, $form_state);
 
   return $reference_form;
 }
@@ -216,10 +216,7 @@ function inline_entity_form_open_form(array $form, FormStateInterface $form_stat
   $form_state->setRebuild();
 
   // Get the current form values.
-  $parents = $element['#field_parents'] ?? [];
-  if (!empty($element['#field_name'])) {
-    $parents[] = $element['#field_name'];
-  }
+  $parents = array_merge($element['#field_parents'], [$element['#field_name']]);
   $form_values = NestedArray::getValue($form_state->getUserInput(), $parents);
 
   $triggering_element = $form_state->getTriggeringElement();
@@ -476,7 +473,7 @@ function template_preprocess_inline_entity_form_entity_table(array &$variables) 
  * Implements hook_migrate_prepare_row().
  */
 function inline_entity_form_migrate_prepare_row(Row $row, MigrateSourceInterface $source, MigrationInterface $migration) {
-  \Drupal::service('inline_entity_form.migration_helper')
+  \Drupal::classResolver(MigrationHelper::class)
     ->alterRow($row, $source, $migration);
 }
 
@@ -484,6 +481,6 @@ function inline_entity_form_migrate_prepare_row(Row $row, MigrateSourceInterface
  * Implements hook_migration_plugins_alter().
  */
 function inline_entity_form_migration_plugins_alter(array &$migrations) {
-  \Drupal::service('inline_entity_form.migration_helper')
+  \Drupal::classResolver(MigrationHelper::class)
     ->alterPlugins($migrations);
 }

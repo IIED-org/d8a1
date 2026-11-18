@@ -90,6 +90,7 @@ class TestLogger extends LoggerChannel implements LoggerChannelFactoryInterface 
   /**
    * {@inheritdoc}
    */
-  public function addLogger(LoggerInterface $logger, $priority = 0): void {}
+  public function addLogger(LoggerInterface $logger, $priority = 0): void {
+  }
 
 }

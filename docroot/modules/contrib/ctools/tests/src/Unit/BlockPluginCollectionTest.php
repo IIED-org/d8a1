@@ -18,7 +18,6 @@ use Drupal\Tests\UnitTestCase;
 class BlockPluginCollectionTest extends UnitTestCase {
 
   use ProphecyTrait;
-
   /**
    * Tests the getAllByRegion() method.
    *

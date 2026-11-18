@@ -4,7 +4,6 @@ namespace Drupal\social_api\Entity;
 
 use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\ContentEntityInterface;
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Site\Settings;
 
 /**
@@ -15,10 +14,12 @@ class SocialApi extends ContentEntityBase implements ContentEntityInterface {
   /**
    * {@inheritdoc}
    */
-  public static function create(array $values = []): EntityInterface {
+  public static function create(array $values = []) {
+
     if (isset($values['token'])) {
       $values['token'] = static::encryptToken($values['token']);
     }
+
     return parent::create($values);
   }
 
@@ -28,7 +29,7 @@ class SocialApi extends ContentEntityBase implements ContentEntityInterface {
    * @return int
    *   User ID.
    */
-  public function getUserId(): int {
+  public function getUserId() {
     return (int) $this->get('user_id')->target_id;
   }
 
@@ -38,10 +39,12 @@ class SocialApi extends ContentEntityBase implements ContentEntityInterface {
    * @param string $token
    *   The serialized access token.
    *
-   * @return static
+   * @return \Drupal\social_api\Entity\SocialApi
+   *   Drupal Social Auth Entity.
    */
-  public function setToken(string $token): static {
+  public function setToken($token) {
     $this->set('token', $this->encryptToken($token));
+
     return $this;
   }
 
@@ -51,8 +54,9 @@ class SocialApi extends ContentEntityBase implements ContentEntityInterface {
    * @return string
    *   The serialized access token.
    */
-  public function getToken(): string {
+  public function getToken() {
     $token = $this->get('token')->value;
+
     return $this->decryptToken($token);
   }
 
@@ -65,7 +69,7 @@ class SocialApi extends ContentEntityBase implements ContentEntityInterface {
    * @return string
    *   The encrypted token.
    */
-  protected static function encryptToken(string $token): string {
+  protected static function encryptToken($token) {
     $key = static::getEncryptionKey();
 
     // Remove the base64 encoding from our key.
@@ -80,7 +84,7 @@ class SocialApi extends ContentEntityBase implements ContentEntityInterface {
 
     // The $iv is just as important as the key for decrypting, so save it with
     // our encrypted data using a unique separator (::).
-    return base64_encode("$encrypted::$iv");
+    return base64_encode($encrypted . '::' . $iv);
   }
 
   /**
@@ -92,7 +96,7 @@ class SocialApi extends ContentEntityBase implements ContentEntityInterface {
    * @return string
    *   The plain-text token provided by the provider.
    */
-  protected function decryptToken(string $token): string {
+  protected function decryptToken($token) {
     $key = $this->getEncryptionKey();
 
     // Removes the base64 encoding from our key.
@@ -111,7 +115,7 @@ class SocialApi extends ContentEntityBase implements ContentEntityInterface {
    * @return string
    *   The encryption key.
    */
-  protected static function getEncryptionKey(): string {
+  protected static function getEncryptionKey() {
     return Settings::getHashSalt();
   }
 

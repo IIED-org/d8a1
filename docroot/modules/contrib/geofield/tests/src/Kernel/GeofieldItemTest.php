@@ -2,22 +2,18 @@
 
 namespace Drupal\Tests\geofield\Kernel;
 
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
-use Drupal\Core\Field\FieldItemInterface;
 use Drupal\Core\Field\FieldItemListInterface;
+use Drupal\Core\Field\FieldItemInterface;
 use Drupal\entity_test\Entity\EntityTest;
-use Drupal\field\Entity\FieldConfig;
-use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\Tests\field\Kernel\FieldKernelTestBase;
+use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\field\Entity\FieldConfig;
 
 /**
  * Tests using entity fields of the geofield field type.
  *
  * @group geofield
  */
-#[Group('geofield')]
-#[RunTestsInSeparateProcesses]
 class GeofieldItemTest extends FieldKernelTestBase {
 
   /**

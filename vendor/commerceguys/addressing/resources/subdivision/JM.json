@@ -1,47 +1,47 @@
 {
 	"country_code": "JM",
 	"subdivisions": {
-		"13": {
-			"name": "Clarendon"
+		"Clarendon": {
+			"iso_code": "JM-13"
 		},
-		"09": {
-			"name": "Hanover"
+		"Hanover": {
+			"iso_code": "JM-09"
 		},
-		"01": {
-			"name": "Kingston"
+		"Kingston": {
+			"iso_code": "JM-01"
 		},
-		"12": {
-			"name": "Manchester"
+		"Manchester": {
+			"iso_code": "JM-12"
 		},
-		"04": {
-			"name": "Portland"
+		"Portland": {
+			"iso_code": "JM-04"
 		},
-		"02": {
-			"name": "St. Andrew"
+		"St. Andrew": {
+			"iso_code": "JM-02"
 		},
-		"06": {
-			"name": "St. Ann"
+		"St. Ann": {
+			"iso_code": "JM-06"
 		},
-		"14": {
-			"name": "St. Catherine"
+		"St. Catherine": {
+			"iso_code": "JM-14"
 		},
-		"11": {
-			"name": "St. Elizabeth"
+		"St. Elizabeth": {
+			"iso_code": "JM-11"
 		},
-		"08": {
-			"name": "St. James"
+		"St. James": {
+			"iso_code": "JM-08"
 		},
-		"05": {
-			"name": "St. Mary"
+		"St. Mary": {
+			"iso_code": "JM-05"
 		},
-		"03": {
-			"name": "St. Thomas"
+		"St. Thomas": {
+			"iso_code": "JM-03"
 		},
-		"07": {
-			"name": "Trelawny"
+		"Trelawny": {
+			"iso_code": "JM-07"
 		},
-		"10": {
-			"name": "Westmoreland"
+		"Westmoreland": {
+			"iso_code": "JM-10"
 		}
 	}
 }

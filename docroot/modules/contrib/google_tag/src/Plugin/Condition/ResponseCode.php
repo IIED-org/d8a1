@@ -27,7 +27,7 @@ final class ResponseCode extends ConditionPluginBase implements ContainerFactory
    *
    * @var \Symfony\Component\HttpFoundation\RequestStack
    */
-  protected $requestStack;
+  private $requestStack;
 
   /**
    * Creates a new Response code instance.

@@ -3,7 +3,7 @@
 namespace Drupal\search_api\Plugin\views\argument;
 
 use Drupal\Core\Entity\EntityRepositoryInterface;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\taxonomy\TermStorageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -29,18 +29,22 @@ class SearchApiTerm extends SearchApiStandard {
   protected $entityRepository;
 
   /**
-   * The entity type manager.
+   * The term storage.
+   *
+   * @var \Drupal\taxonomy\TermStorageInterface
    */
-  protected EntityTypeManagerInterface $entityTypeManager;
+  protected $termStorage;
 
   /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    /** @var static $plugin */
     $plugin = parent::create($container, $configuration, $plugin_id, $plugin_definition);
 
     $plugin->setEntityRepository($container->get('entity.repository'));
-    $plugin->setEntityTypeManager($container->get('entity_type.manager'));
+    $plugin->setTermStorage($container->get('entity_type.manager')
+      ->getStorage('taxonomy_term'));
 
     return $plugin;
   }
@@ -75,22 +79,20 @@ class SearchApiTerm extends SearchApiStandard {
    *   The term storage.
    */
   public function getTermStorage() {
-    if (isset($this->entityTypeManager)) {
-      return $this->entityTypeManager->getStorage('taxonomy_term');
-    }
-    return \Drupal::entityTypeManager()->getStorage('taxonomy_term');
+    return $this->termStorage ?: \Drupal::service('entity_type.manager')
+      ->getStorage('taxonomy_term');
   }
 
   /**
-   * Sets the entity type manager.
+   * Sets the term storage.
    *
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
-   *   The entity type manager.
+   * @param \Drupal\taxonomy\TermStorageInterface $term_storage
+   *   The term storage.
    *
    * @return $this
    */
-  public function setEntityTypeManager(EntityTypeManagerInterface $entity_type_manager): static {
-    $this->entityTypeManager = $entity_type_manager;
+  public function setTermStorage(TermStorageInterface $term_storage) {
+    $this->termStorage = $term_storage;
     return $this;
   }
 

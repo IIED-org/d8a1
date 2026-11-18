@@ -18,7 +18,6 @@ abstract class DestinationBase extends PluginBase implements ReadableDestination
    * Get a list of supported operations and their weight.
    *
    * @return array
-   *   A render or configuration array.
    */
   public function supportedOps() {
     return [];
@@ -82,7 +81,6 @@ abstract class DestinationBase extends PluginBase implements ReadableDestination
    * without regard for metadata.
    *
    * @param \Drupal\backup_migrate\Core\File\BackupFileReadableInterface $file
-   *   The backup file.
    */
   abstract protected function saveTheFile(BackupFileReadableInterface $file);
 
@@ -93,7 +91,6 @@ abstract class DestinationBase extends PluginBase implements ReadableDestination
    * file.
    *
    * @param \Drupal\backup_migrate\Core\File\BackupFileInterface $file
-   *   The backup file.
    */
   abstract protected function saveTheFileMetadata(BackupFileInterface $file);
 
@@ -101,7 +98,6 @@ abstract class DestinationBase extends PluginBase implements ReadableDestination
    * Load the actual metadata for the file.
    *
    * @param \Drupal\backup_migrate\Core\File\BackupFileInterface $file
-   *   The backup file.
    */
   abstract protected function loadFileMetadataArray(BackupFileInterface $file);
 

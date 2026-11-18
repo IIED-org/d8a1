@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\r4032login\Functional;
 
 use Drupal\Tests\BrowserTestBase;
@@ -78,14 +76,14 @@ class SettingsUpdateTest extends BrowserTestBase {
     $this->assertSession()
       ->pageTextContains("The user login form path '/admin/config/system/site-information' is either invalid or a logged out user does not have access to it.");
 
-    // This submission should succeed.
+    // This submission should success
     // because the <front> path is valid for anonymous.
-    $anonymousSettings['user_login_path'] = '/';
+    $anonymousSettings['user_login_path'] = '<front>';
     $this->submitForm($anonymousSettings, 'Save configuration');
     $this->assertSession()
-      ->pageTextContains("The configuration options have been saved.");
+      ->pageTextContains("The user login form path '<front>' is either invalid or a logged out user does not have access to it.");
 
-    // This submission should succeed.
+    // This submission should success
     // because the external https://www.drupal.org/user/login path is valid
     // for anonymous.
     $anonymousSettings['user_login_path'] = 'https://www.drupal.org/user/login';
@@ -93,7 +91,7 @@ class SettingsUpdateTest extends BrowserTestBase {
     $this->assertSession()
       ->pageTextContains('The configuration options have been saved.');
 
-    // This submission should succeed.
+    // This submission should success
     // because the internal /user/login path is valid for anonymous.
     $anonymousSettings['user_login_path'] = '/user/login';
     $this->submitForm($anonymousSettings, 'Save configuration');
@@ -123,7 +121,7 @@ class SettingsUpdateTest extends BrowserTestBase {
   /**
    * Data provider for testSettingsUpdate.
    */
-  public static function settingsUpdateDataProvider() {
+  public function settingsUpdateDataProvider() {
     return [
       [
         [],

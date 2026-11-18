@@ -1,5 +1,5 @@
 id: ga
-label: 'Google Analytics (legacy)'
+label: 'Google Analytics'
 description: 'Tracks online visits of the website as a service.'
 langcode: en
 status: false
@@ -20,6 +20,3 @@ javascripts:
   - analytics.js
 attachments:
   - ga4_google_analytics
-on_init: ''
-on_accept: ''
-on_decline: ''

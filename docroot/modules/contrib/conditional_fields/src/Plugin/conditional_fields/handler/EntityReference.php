@@ -2,12 +2,9 @@
 
 namespace Drupal\conditional_fields\Plugin\conditional_fields\handler;
 
-use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\conditional_fields\ConditionalFieldsHandlerBase;
 use Drupal\conditional_fields\ConditionalFieldsInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Core\Entity\EntityInterface;
 
 /**
  * Provides states handler for entity reference fields.
@@ -16,31 +13,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   id = "states_handler_entity_reference_autocomplete",
  * )
  */
-class EntityReference extends ConditionalFieldsHandlerBase implements ContainerFactoryPluginInterface {
-
-  /**
-   * Provides an interface for entity type managers.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
-   * Constructs an entity reference states handler.
-   *
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
-   *   The entity type manager service.
-   */
-  final public function __construct(EntityTypeManagerInterface $entity_type_manager) {
-    $this->entityTypeManager = $entity_type_manager;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static($container->get('entity_type.manager'));
-  }
+class EntityReference extends ConditionalFieldsHandlerBase {
 
   /**
    * {@inheritdoc}
@@ -55,7 +28,7 @@ class EntityReference extends ConditionalFieldsHandlerBase implements ContainerF
         if (empty($value_form)) {
           break;
         }
-        $entity_type = $this->entityTypeManager->getStorage($field["#target_type"]);
+        $entity_type = \Drupal::entityTypeManager()->getStorage($field["#target_type"]);
         if ($options['field_cardinality'] == 1) {
           $entity = $entity_type->load($value_form[0]['target_id']);
           $state[$options['state']][$options['selector']] = $this->getAutocompleteSuggestions($entity);

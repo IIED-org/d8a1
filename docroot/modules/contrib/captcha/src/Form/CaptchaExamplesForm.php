@@ -33,9 +33,6 @@ class CaptchaExamplesForm extends FormBase {
 
   /**
    * {@inheritdoc}
-   *
-   * @return static
-   *   The created instance.
    */
   public static function create(ContainerInterface $container) {
     return new static(
@@ -45,9 +42,6 @@ class CaptchaExamplesForm extends FormBase {
 
   /**
    * {@inheritdoc}
-   *
-   * @return string
-   *   The unique string identifying the form.
    */
   public function getFormId() {
     return 'captcha_examples';
@@ -55,9 +49,6 @@ class CaptchaExamplesForm extends FormBase {
 
   /**
    * {@inheritdoc}
-   *
-   * @return array
-   *   The form structure.
    */
   public function buildForm(array $form, FormStateInterface $form_state, $module = NULL, $challenge = NULL) {
     $form = [];

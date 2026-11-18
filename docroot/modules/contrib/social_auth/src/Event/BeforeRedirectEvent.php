@@ -16,14 +16,21 @@ class BeforeRedirectEvent extends SocialAuthEventBase {
    *
    * @var \Drupal\social_auth\SocialAuthDataHandler
    */
-  protected SocialAuthDataHandler $dataHandler;
+  protected $dataHandler;
+
+  /**
+   * The plugin id dispatching this event.
+   *
+   * @var string
+   */
+  protected $pluginId;
 
   /**
    * The destination where use will redirect after successful authentication.
    *
-   * @var string|null
+   * @var string
    */
-  protected ?string $destination = NULL;
+  protected $destination;
 
   /**
    * BeforeRedirectEvent constructor.
@@ -31,11 +38,11 @@ class BeforeRedirectEvent extends SocialAuthEventBase {
    * @param \Drupal\social_auth\SocialAuthDataHandler $data_handler
    *   The Social Auth data handler.
    * @param string $plugin_id
-   *   The plugin ID dispatching this event.
-   * @param string|null $destination
+   *   The plugin Id dispatching this event.
+   * @param string $destination
    *   The destination where user will redirect after successful authentication.
    */
-  public function __construct(SocialAuthDataHandler $data_handler, string $plugin_id, ?string $destination = NULL) {
+  public function __construct(SocialAuthDataHandler $data_handler, $plugin_id, $destination = NULL) {
     $this->dataHandler = $data_handler;
     $this->pluginId = $plugin_id;
     $this->destination = $destination;
@@ -47,8 +54,18 @@ class BeforeRedirectEvent extends SocialAuthEventBase {
    * @return \Drupal\social_auth\SocialAuthDataHandler
    *   The Social Auth data handler.
    */
-  public function getDataHandler(): SocialAuthDataHandler {
+  public function getDataHandler() {
     return $this->dataHandler;
+  }
+
+  /**
+   * Gets the plugin id dispatching this event.
+   *
+   * @return string
+   *   The plugin id.
+   */
+  public function getPluginId() {
+    return $this->pluginId;
   }
 
   /**
@@ -57,7 +74,7 @@ class BeforeRedirectEvent extends SocialAuthEventBase {
    * @return string
    *   The destination path.
    */
-  public function getDestination(): string {
+  public function getDestination() {
     return $this->destination;
   }
 

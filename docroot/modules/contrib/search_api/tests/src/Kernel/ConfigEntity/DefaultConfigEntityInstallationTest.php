@@ -2,19 +2,17 @@
 
 namespace Drupal\Tests\search_api\Kernel\ConfigEntity;
 
-use Drupal\Component\Serialization\Yaml;
+use Drupal\Core\Serialization\Yaml;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\search_api\Entity\Index;
 use Drupal\search_api\Entity\Server;
 use Drupal\search_api_test\PluginTestTrait;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests that installing config entities from an extension works correctly.
  *
  * @group search_api
  */
-#[RunTestsInSeparateProcesses]
 class DefaultConfigEntityInstallationTest extends KernelTestBase {
 
   use PluginTestTrait;

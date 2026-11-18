@@ -1,28 +1,24 @@
 name: CI
-on:
-  push:
-    paths-ignore:
-      - "*.md"
-      - .gitignore
-      - index.cjs
-      - index.d.ts
-      - index.mjs
+on: push
 
 jobs:
-  php-tests:
+  test:
     name: Tests on PHP ${{ matrix.php-versions }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
         php-versions:
+          - "8.1"
           - "8.2"
-          - "8.3"
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Validate composer.json and composer.lock
-        run: composer validate --strict
+      - name: Install packages
+        run: sudo apt-get install -y jsonlint
+
+      - name: Lint JSON files
+        run: find . -type f -name "*.json" | xargs jsonlint-php
 
       - name: Install PHP
         uses: shivammathur/setup-php@v2
@@ -35,7 +31,7 @@ jobs:
         run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
 
       - name: Cache dependencies
-        uses: actions/cache@v4
+        uses: actions/cache@v3
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
@@ -46,16 +42,3 @@ jobs:
 
       - name: Test conversion of countries data
         run: php countries.php convert
-
-  json-lint:
-    name: Lint JSON files
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Install packages
-        run: sudo apt-get install -y jsonlint
-
-      - name: Lint JSON files
-        run: find . -type f -name "*.json" | xargs jsonlint-php

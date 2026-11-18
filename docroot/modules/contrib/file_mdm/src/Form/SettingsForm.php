@@ -23,7 +23,7 @@ class SettingsForm extends ConfigFormBase {
    */
   protected array $metadataPlugins = [];
 
-  public static function create(ContainerInterface $container): static {
+  public static function create(ContainerInterface $container) {
     $instance = parent::create($container);
     $manager = $container->get(FileMetadataPluginManagerInterface::class);
     foreach ($manager->getDefinitions() as $id => $definition) {
@@ -35,15 +35,15 @@ class SettingsForm extends ConfigFormBase {
     return $instance;
   }
 
-  public function getFormId(): string {
+  public function getFormId() {
     return 'file_mdm_settings';
   }
 
-  protected function getEditableConfigNames(): array {
+  protected function getEditableConfigNames() {
     return ['file_mdm.settings'];
   }
 
-  public function buildForm(array $form, FormStateInterface $form_state): array {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     $config = $this->config('file_mdm.settings');
 
     // Missing file logging. Only take for options log levels ERROR or below.
@@ -93,7 +93,7 @@ class SettingsForm extends ConfigFormBase {
     return parent::buildForm($form, $form_state);
   }
 
-  public function validateForm(array &$form, FormStateInterface $form_state): void {
+  public function validateForm(array &$form, FormStateInterface $form_state) {
     parent::validateForm($form, $form_state);
     // Call the form validation handler for each of the plugins.
     foreach ($this->metadataPlugins as $plugin) {
@@ -101,7 +101,7 @@ class SettingsForm extends ConfigFormBase {
     }
   }
 
-  public function submitForm(array &$form, FormStateInterface $form_state): void {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     // Call the form submit handler for each of the plugins.
     foreach ($this->metadataPlugins as $plugin) {
       $plugin->submitConfigurationForm($form, $form_state);

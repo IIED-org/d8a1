@@ -8,9 +8,6 @@ use Drupal\address\Event\AddressFormatEvent;
 use Drupal\address\Event\SubdivisionsEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-// cspell:ignore Blaenau Bridgend Ceredigion Conwy Cynon Glamorgan Merthyr
-// cspell:ignore Pembrokeshire Tarfaen Tydfil Wrexham
-
 /**
  * Adds a county field and a predefined list of counties for Great Britain.
  *
@@ -48,7 +45,7 @@ class GreatBritainEventSubscriber implements EventSubscriberInterface {
    * Provides the subdivisions for Great Britain.
    *
    * Note: Provides just the Welsh counties. A real subscriber would include
-   * the full list, taken from https://www.iso.org/obp/ui/#iso:code:3166:GB.
+   * the full list, sourced from the CLDR "Territory Subdivisions" listing.
    *
    * @param \Drupal\address\Event\SubdivisionsEvent $event
    *   The subdivisions event.
@@ -66,12 +63,16 @@ class GreatBritainEventSubscriber implements EventSubscriberInterface {
       'country_code' => $parents[0],
       'parents' => $parents,
       'subdivisions' => [
-        // Subdivisions can be keyed by name, or by an ISO code such as "CRF".
-        // If the subdivision code (displayed on the formatted address) or the
-        // subdivision name (displayed in dropdowns) do not match the key
-        // (e.g. "Cardiff"), they should be explicitly set in the array.
+        // Key by the subdivision code, which is the value that's displayed on
+        // the formatted address. Could be an abbreviation (e.g 'CA' for
+        // California) or a full name like below.
+        // If it's an abbreviation, define a 'name' in the subarray, to be used
+        // in the address widget dropdown.
         'Anglesey' => [],
-        'Blaenau Gwent' => [],
+        // You can optionally define an ISO 3166-2 code for each subdivision.
+        'Blaenau Gwent' => [
+          'iso_code' => 'GB-BGW',
+        ],
         'Bridgend' => [],
         'Caerphilly' => [],
         'Cardiff' => [],

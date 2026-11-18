@@ -1,12 +1,8 @@
 advagg
-alexandru
-andrascu
 capath
-damienmckenna
 demoplugin
 devmajor
 devminor
-dgorton
 DONT
 filedirectory
 filesmsg
@@ -18,9 +14,6 @@ fullname
 generatorurl
 generatorversion
 gname
-ikit
-kenna
-kpoeppe
 linkname
 maxbody
 mybackups
@@ -31,9 +24,7 @@ myplugin
 myuser
 nobrowser
 phpmyadmin
-poeppe
 quickbackup
-ronan
 scheduleid
 showbody
 showmeta

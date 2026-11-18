@@ -38,7 +38,7 @@ class Ds {
       }
     }
 
-    return $static_fields[$entity_type] ?? [];
+    return isset($static_fields[$entity_type]) ? $static_fields[$entity_type] : [];
   }
 
   /**
@@ -70,12 +70,12 @@ class Ds {
     ];
 
     // Load the plugin.
-    /** @var \Drupal\ds\Plugin\DsField\DsFieldInterface $field_instance */
+    /* @var $field_instance \Drupal\ds\Plugin\DsField\DsFieldInterface */
     $field_instance = \Drupal::service('plugin.manager.ds')->createInstance($field['plugin_id'], $configuration);
 
-    /** @var \Drupal\Core\Entity\Display\EntityDisplayInterface $display */
+    /* @var $display \Drupal\Core\Entity\Display\EntityDisplayInterface */
     if ($field_settings = $display->getThirdPartySetting('ds', 'fields')) {
-      $settings = $field_settings[$key]['settings'] ?? [];
+      $settings = isset($field_settings[$key]['settings']) ? $field_settings[$key]['settings'] : [];
       // Unset field template settings.
       if (isset($settings['ft'])) {
         unset($settings['ft']);
@@ -119,7 +119,7 @@ class Ds {
    */
   public static function layoutExists($id) {
     $layouts = self::getLayouts();
-    return isset($layouts[$id]);
+    return isset($layouts[$id]) ? TRUE : FALSE;
   }
 
   /**
@@ -132,13 +132,13 @@ class Ds {
    * @param string $view_mode
    *   The name of the view mode.
    * @param bool $fallback
-   *   Whether to fall back to default or not.
+   *   Whether to fallback to default or not.
    *
-   * @return \Drupal\Core\Entity\Display\EntityDisplayInterface|\Drupal\Core\Entity\EntityInterface|false
+   * @return array|bool
    *   The display.
    */
-  public static function getDisplay(string $entity_type, string $bundle, string $view_mode, bool $fallback = TRUE) {
-    /** @var \Drupal\Core\Entity\Display\EntityDisplayInterface $entity_display */
+  public static function getDisplay($entity_type, $bundle, $view_mode, $fallback = TRUE) {
+    /* @var $entity_display \Drupal\Core\Entity\Display\EntityDisplayInterface */
     $entity_manager = \Drupal::entityTypeManager();
     $entity_display = $entity_manager->getStorage('entity_view_display')->load($entity_type . '.' . $bundle . '.' . $view_mode);
     if ($entity_display) {
@@ -148,14 +148,14 @@ class Ds {
       $overridden = FALSE;
     }
 
-    if ($entity_display && $overridden) {
+    if ($entity_display) {
       return $entity_display;
     }
 
     // In case $view_mode is not found, check if we have a default layout,
     // but only if the view mode settings aren't overridden for this view mode.
     if ($view_mode != 'default' && !$overridden && $fallback) {
-      /** @var \Drupal\Core\Entity\Display\EntityDisplayInterface $entity_default_display */
+      /* @var $entity_default_display \Drupal\Core\Entity\Display\EntityDisplayInterface */
       $entity_manager = \Drupal::entityTypeManager();
       $entity_default_display = $entity_manager->getStorage('entity_view_display')->load($entity_type . '.' . $bundle . '.default');
       if ($entity_default_display) {

@@ -2,17 +2,17 @@
 
 namespace Drupal\Tests\token\Kernel;
 
-use Drupal\Core\Url;
-use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\Entity\Vocabulary;
+use Drupal\language\Entity\ConfigurableLanguage;
+use Drupal\Core\Url;
 
 /**
  * Tests taxonomy tokens.
  *
  * @group token
  */
-class TaxonomyTest extends TokenKernelTestBase {
+class TaxonomyTest extends KernelTestBase {
 
   protected $vocab;
 
@@ -41,7 +41,7 @@ class TaxonomyTest extends TokenKernelTestBase {
   /**
    * Test the additional taxonomy term tokens.
    */
-  public function testTaxonomyTokens() {
+  function testTaxonomyTokens() {
     $root_term = $this->addTerm($this->vocab, ['name' => 'Root term', 'path' => ['alias' => '/root-term']]);
     $tokens = [
       'url' => Url::fromRoute('entity.taxonomy_term.canonical', ['taxonomy_term' => $root_term->id()], ['absolute' => TRUE])->toString(),
@@ -54,7 +54,7 @@ class TaxonomyTest extends TokenKernelTestBase {
       'parents:count' => NULL,
       'parents:keys' => NULL,
       'root' => NULL,
-      // Deprecated tokens.
+      // Deprecated tokens
       'url:alias' => '/root-term',
     ];
     $this->assertTokens('term', ['term' => $root_term], $tokens);
@@ -72,7 +72,7 @@ class TaxonomyTest extends TokenKernelTestBase {
       'parents:keys' => $root_term->id(),
       'root' => $root_term->label(),
       'root:tid' => $root_term->id(),
-      // Deprecated tokens.
+      // Deprecated tokens
       'url:alias' => "/taxonomy/term/{$parent_term->id()}",
     ];
     $this->assertTokens('term', ['term' => $parent_term], $tokens);
@@ -89,7 +89,7 @@ class TaxonomyTest extends TokenKernelTestBase {
   /**
    * Test the additional vocabulary tokens.
    */
-  public function testVocabularyTokens() {
+  function testVocabularyTokens() {
     $vocabulary = $this->vocab;
     $tokens = [
       'machine-name' => 'tags',
@@ -98,10 +98,7 @@ class TaxonomyTest extends TokenKernelTestBase {
     $this->assertTokens('vocabulary', ['vocabulary' => $vocabulary], $tokens);
   }
 
-  /**
-   *
-   */
-  public function addVocabulary(array $vocabulary = []) {
+  function addVocabulary(array $vocabulary = []) {
     $vocabulary += [
       'name' => mb_strtolower($this->randomMachineName(5)),
       'nodes' => ['article' => 'article'],
@@ -110,10 +107,7 @@ class TaxonomyTest extends TokenKernelTestBase {
     return $vocabulary;
   }
 
-  /**
-   *
-   */
-  public function addTerm($vocabulary, array $term = []) {
+  function addTerm($vocabulary, array $term = []) {
     $term += [
       'name' => mb_strtolower($this->randomMachineName(5)),
       'vid' => $vocabulary->id(),
@@ -126,7 +120,7 @@ class TaxonomyTest extends TokenKernelTestBase {
   /**
    * Test the multilingual terms.
    */
-  public function testMultilingualTerms() {
+  function testMultilingualTerms() {
     // Add a second language.
     $language = ConfigurableLanguage::createFromLangcode('de');
     $language->save();

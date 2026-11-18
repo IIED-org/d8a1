@@ -18,13 +18,13 @@ use Drupal\user\Entity\User;
 class TypedDataResolverTest extends KernelTestBase {
 
   /**
-   * {@inheritdoc}
+   * Modules to enable.
+   *
+   * @var array
    */
   protected static $modules = ['user', 'system', 'entity_test', 'ctools'];
 
   /**
-   * The ctools.typed_data.resolver service.
-   *
    * @var \Drupal\ctools\TypedDataResolver
    */
   protected $typedDataResolver;
@@ -35,6 +35,7 @@ class TypedDataResolverTest extends KernelTestBase {
   protected function setUp(): void {
     parent::setUp();
 
+    $this->installSchema('system', 'sequences');
     $this->installEntitySchema('user');
 
     $this->typedDataResolver = \Drupal::service('ctools.typed_data.resolver');
@@ -78,7 +79,7 @@ class TypedDataResolverTest extends KernelTestBase {
    *   The entity to test with.
    * @param string $property_path
    *   The property path to look for.
-   * @param string $expected_data_type
+   * @param $expected_data_type
    *   The expected data type.
    *
    * @return \Drupal\Core\Plugin\Context\ContextInterface

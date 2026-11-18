@@ -9,7 +9,6 @@ use Drupal\search_api\Datasource\DatasourceInterface;
 use Drupal\search_api\Item\Field;
 use Drupal\search_api\Processor\ProcessorPropertyInterface;
 use Drupal\user\Entity\User;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the "Reverse entity references" processor.
@@ -18,7 +17,6 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  *
  * @coversDefaultClass \Drupal\search_api\Plugin\search_api\processor\ReverseEntityReferences
  */
-#[RunTestsInSeparateProcesses]
 class ReverseEntityReferencesTest extends ProcessorTestBase {
 
   /**

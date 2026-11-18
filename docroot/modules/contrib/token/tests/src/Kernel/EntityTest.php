@@ -12,7 +12,7 @@ use Drupal\taxonomy\VocabularyInterface;
  *
  * @group token
  */
-class EntityTest extends TokenKernelTestBase {
+class EntityTest extends KernelTestBase {
 
   /**
    * {@inheritdoc}

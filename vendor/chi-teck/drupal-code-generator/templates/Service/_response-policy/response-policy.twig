@@ -1,18 +1,16 @@
 {% import '@lib/di.twig' as di %}
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Drupal\{{ machine_name }}\PageCache;
 
-{% apply sort_namespaces %}
+{% sort %}
 use Drupal\Core\PageCache\ResponsePolicyInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
   {% if services %}
 {{ di.use(services) }}
   {% endif %}
-{% endapply %}
+{% endsort %}
 
 /**
  * @todo Add policy description here.

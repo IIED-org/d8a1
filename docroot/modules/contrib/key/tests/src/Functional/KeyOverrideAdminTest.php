@@ -2,8 +2,6 @@
 
 namespace Drupal\Tests\key\Functional;
 
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Drupal\Tests\BrowserTestBase;
 
 /**
@@ -11,28 +9,16 @@ use Drupal\Tests\BrowserTestBase;
  *
  * @group key
  */
-#[Group('key')]
-#[RunTestsInSeparateProcesses]
 class KeyOverrideAdminTest extends BrowserTestBase {
 
   use KeyTestTrait;
 
-  /**
-   * {@inheritdoc}
-   */
   protected static $modules = ['key'];
 
   /**
    * {@inheritdoc}
    */
   protected $defaultTheme = 'stark';
-
-  /**
-   * The Drupal user entity.
-   *
-   * @var \Drupal\user\Entity\User
-   */
-  protected $overrideUser;
 
   /**
    * {@inheritdoc}

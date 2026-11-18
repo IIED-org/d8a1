@@ -2,18 +2,14 @@
 
 namespace Drupal\Tests\key\Functional;
 
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Drupal\Tests\BrowserTestBase;
-use Drupal\key\KeyInterface;
+use Drupal\Key\KeyInterface;
 
 /**
  * Tests the key.repository service.
  *
  * @group key
  */
-#[Group('key')]
-#[RunTestsInSeparateProcesses]
 class KeyRepositoryServiceTest extends BrowserTestBase {
 
   use KeyTestTrait;

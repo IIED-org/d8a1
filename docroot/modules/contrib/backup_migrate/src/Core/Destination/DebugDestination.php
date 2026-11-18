@@ -59,7 +59,6 @@ class DebugDestination extends StreamDestination implements WritableDestinationI
    * Get the default values for the plugin.
    *
    * @return \Drupal\backup_migrate\Core\Config\Config
-   *   The return value.
    */
   public function configDefaults() {
     return new Config([

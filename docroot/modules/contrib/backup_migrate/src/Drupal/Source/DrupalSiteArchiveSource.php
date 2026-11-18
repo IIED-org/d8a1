@@ -2,34 +2,30 @@
 
 namespace Drupal\backup_migrate\Drupal\Source;
 
-use Drupal\Component\Datetime\TimeInterface;
 use Drupal\backup_migrate\Core\Source\FileDirectorySource;
 use Drupal\backup_migrate\Core\Source\SourceInterface;
 use Drupal\backup_migrate\Core\File\BackupFileReadableInterface;
 
 /**
- * Provides the drupal site archive source class.
+ *
  *
  * @package Drupal\backup_migrate\Drupal\Source
  */
 class DrupalSiteArchiveSource extends FileDirectorySource {
 
   /**
-   * Handles the construct operation.
-   *
-   * @param \Drupal\backup_migrate\Core\Config\ConfigInterface|array $init
-   *   Initial configuration.
-   * @param \Drupal\backup_migrate\Core\Source\SourceInterface $dbSource
-   *   The database source.
-   * @param \Drupal\Component\Datetime\TimeInterface|null $time
-   *   The time service.
+   * @var \Drupal\backup_migrate\Core\Source\SourceInterface
    */
-  public function __construct(
-    $init,
-    protected readonly SourceInterface $dbSource,
-    protected readonly ?TimeInterface $time = NULL,
-  ) {
+  protected $dbSource;
+
+  /**
+   * @param \Drupal\backup_migrate\Core\Config\ConfigInterface|array $init
+   * @param \Drupal\backup_migrate\Core\Source\SourceInterface $db
+   */
+  public function __construct($init, SourceInterface $db) {
     parent::__construct($init);
+
+    $this->dbSource = $db;
   }
 
   /**
@@ -38,11 +34,9 @@ class DrupalSiteArchiveSource extends FileDirectorySource {
    * Do not include files that match the 'exclude_filepaths' setting.
    *
    * @param string $dir
-   *   The dir.
    *   The name of the directory to list.
    *
    * @return array
-   *   A render or configuration array.
    *
    * @throws \Drupal\backup_migrate\Core\Exception\BackupMigrateException
    * @throws \Drupal\backup_migrate\Core\Exception\IgnorableException
@@ -76,11 +70,9 @@ class DrupalSiteArchiveSource extends FileDirectorySource {
    * This is the main restore function for this source.
    *
    * @param \Drupal\backup_migrate\Core\File\BackupFileReadableInterface $file
-   *   The backup file.
    *   The file to read the backup from. It will not be opened for reading.
    *
    * @return bool|void
-   *   TRUE when successful, FALSE otherwise.
    */
   public function importFromFile(BackupFileReadableInterface $file) {
     // @todo Implement importFromFile() method.
@@ -90,14 +82,13 @@ class DrupalSiteArchiveSource extends FileDirectorySource {
    * Get a file which contains the file.
    *
    * @return \Drupal\backup_migrate\Core\File\BackupFileWritableInterface
-   *   The requested integer.
    */
   protected function getManifestFile() {
     $out = $this->getTempFileManager()->create('ini');
 
     $info = [
       'Global' => [
-        'datestamp' => $this->time ? $this->time->getRequestTime() : time(),
+        'datestamp' => \Drupal::time()->getRequestTime(),
         "formatversion" => "2011-07-02",
         "generator" => "Backup and Migrate (http://drupal.org/project/backup_migrate)",
         "generatorversion" => backup_migrate_module_version(),
@@ -126,7 +117,7 @@ class DrupalSiteArchiveSource extends FileDirectorySource {
    *   array of field/value pairs.
    *
    * @return string
-   *   *   The data in INI format.
+   *   The data in INI format.
    */
   private function arrayToIni(array $info) {
     $content = "";
@@ -142,10 +133,7 @@ class DrupalSiteArchiveSource extends FileDirectorySource {
   }
 
   /**
-   * Gets the database source.
-   *
    * @return \Drupal\backup_migrate\Core\Source\SourceInterface
-   *   The requested integer.
    */
   public function getDbSource() {
     return $this->dbSource;

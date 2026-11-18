@@ -92,7 +92,7 @@ final class TagContainerResolver {
     if ($request === NULL) {
       return NULL;
     }
-    if (!$this->resolved->offsetExists($request)) {
+    if (!$this->resolved->contains($request)) {
       $storage = $this->entityTypeManager->getStorage('google_tag_container');
       $config_ids = $storage->getQuery()
         // @todo remove after https://github.com/mglaman/phpstan-drupal/issues/479

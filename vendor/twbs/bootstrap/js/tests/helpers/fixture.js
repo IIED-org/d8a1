@@ -1,11 +1,11 @@
-const FIXTURE_ID = 'fixture'
+const fixtureId = 'fixture'
 
 export const getFixture = () => {
-  let fixtureElement = document.getElementById(FIXTURE_ID)
+  let fixtureElement = document.getElementById(fixtureId)
 
   if (!fixtureElement) {
     fixtureElement = document.createElement('div')
-    fixtureElement.setAttribute('id', FIXTURE_ID)
+    fixtureElement.setAttribute('id', fixtureId)
     fixtureElement.style.position = 'absolute'
     fixtureElement.style.top = '-10000px'
     fixtureElement.style.left = '-10000px'

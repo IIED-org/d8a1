@@ -1,15 +1,13 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Drupal\{{ machine_name }};
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
-{% apply sort_namespaces %}
+{% sort %}
 {% for interface in interfaces %}
 use Drupal\Core\DependencyInjection\{{ interface }};
 {% endfor %}
-{% endapply %}
+{% endsort %}
 
 /**
  * Defines a service provider for the {{ name }} module.

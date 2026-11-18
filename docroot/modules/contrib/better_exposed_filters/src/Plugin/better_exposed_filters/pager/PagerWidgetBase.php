@@ -2,10 +2,10 @@
 
 namespace Drupal\better_exposed_filters\Plugin\better_exposed_filters\pager;
 
-use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\better_exposed_filters\Plugin\BetterExposedFiltersWidgetBase;
 use Drupal\better_exposed_filters\Plugin\BetterExposedFiltersWidgetInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
  * Base class for Better exposed pager widget plugins.
@@ -19,7 +19,7 @@ abstract class PagerWidgetBase extends BetterExposedFiltersWidgetBase implements
    *
    * @var array
    */
-  protected array $pagerElements = [
+  protected $pagerElements = [
     'items_per_page',
     'offset',
   ];
@@ -27,7 +27,7 @@ abstract class PagerWidgetBase extends BetterExposedFiltersWidgetBase implements
   /**
    * {@inheritdoc}
    */
-  public function defaultConfiguration(): array {
+  public function defaultConfiguration() {
     return parent::defaultConfiguration() + [
       'advanced' => [
         'is_secondary' => FALSE,
@@ -38,14 +38,14 @@ abstract class PagerWidgetBase extends BetterExposedFiltersWidgetBase implements
   /**
    * {@inheritdoc}
    */
-  public static function isApplicable(mixed $handler = NULL, array $options = []): bool {
+  public static function isApplicable($handler = NULL, array $options = []) {
     return TRUE;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function buildConfigurationForm(array $form, FormStateInterface $form_state): array {
+  public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
     $form = [];
 
     $form['advanced']['is_secondary'] = [
@@ -66,7 +66,7 @@ abstract class PagerWidgetBase extends BetterExposedFiltersWidgetBase implements
   /**
    * {@inheritdoc}
    */
-  public function exposedFormAlter(array &$form, FormStateInterface $form_state): void {
+  public function exposedFormAlter(array &$form, FormStateInterface $form_state) {
     $is_secondary = !empty($form['secondary']) && $this->configuration['advanced']['is_secondary'];
 
     foreach ($this->pagerElements as $element) {

@@ -23,14 +23,14 @@ class SocialAuthLoginBlock extends BlockBase implements ContainerFactoryPluginIn
    *
    * @var \Drupal\social_api\Plugin\NetworkManager
    */
-  private NetworkManager $networkManager;
+  private $networkManager;
 
   /**
    * Immutable configuration for social_auth.settings.
    *
    * @var \Drupal\Core\Config\ImmutableConfig
    */
-  private ImmutableConfig $socialAuthConfig;
+  private $socialAuthConfig;
 
   /**
    * SocialAuthLoginBlock constructor.
@@ -51,7 +51,7 @@ class SocialAuthLoginBlock extends BlockBase implements ContainerFactoryPluginIn
     string $plugin_id,
     $plugin_definition,
     ImmutableConfig $social_auth_config,
-    NetworkManager $network_manager,
+    NetworkManager $network_manager
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->networkManager = $network_manager;
@@ -61,7 +61,7 @@ class SocialAuthLoginBlock extends BlockBase implements ContainerFactoryPluginIn
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition): static {
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     return new static(
       $configuration,
       $plugin_id,
@@ -74,16 +74,20 @@ class SocialAuthLoginBlock extends BlockBase implements ContainerFactoryPluginIn
   /**
    * {@inheritdoc}
    */
-  public function build(): array {
-    $networks = [];
-    foreach ($this->networkManager->getDefinitions() as $definition) {
-      $networks[] = $this->networkManager->createInstance($definition['id']);
-    }
-
+  public function build() {
     // Add social network name to data passed to template.
+    // @todo Move `route` and `img_path` settings to the Network declaration.
+    $networks = $this->networkManager->getDefinitions();
+    $social_networks = $this->socialAuthConfig->get('auth');
+    foreach ($social_networks as $id => &$social_network) {
+      $social_network['name'] = NULL;
+      if (isset($networks[$id]) && isset($networks[$id]['social_network'])) {
+        $social_network['name'] = $networks[$id]['social_network'];
+      }
+    }
     return [
       '#theme' => 'login_with',
-      '#networks' => $networks,
+      '#social_networks' => $social_networks,
     ];
   }
 

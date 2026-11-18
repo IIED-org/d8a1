@@ -19,9 +19,9 @@ class CToolsViewsBasicViewBlockTest extends UITestBase {
   /**
    * Exempt from strict schema checking.
    *
-   * @var bool
-   *
    * @see \Drupal\Core\Config\Development\ConfigSchemaChecker
+   *
+   * @var bool
    */
   protected $strictConfigSchema = FALSE;
 
@@ -58,7 +58,6 @@ class CToolsViewsBasicViewBlockTest extends UITestBase {
     parent::setUp($import_test_views);
 
     ViewTestData::createTestViews(get_class($this), ['ctools_views_test_views']);
-    // @phpstan-ignore-next-line Storing is practical for many call sites.
     $this->storage = $this->container->get('entity_type.manager')->getStorage('block');
   }
 

@@ -40,8 +40,6 @@ use Drupal\Core\State\StateInterface;
  *     "uuid",
  *     "enabled",
  *     "keep",
- *     "encrypt",
- *     "encrypt_password",
  *     "period",
  *     "cron",
  *     "source_id",

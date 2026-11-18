@@ -3,16 +3,12 @@
 namespace Drupal\Tests\purge_ui\FunctionalJavascript;
 
 use Drupal\Core\Url;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests \Drupal\purge_ui\Controller\DashboardController::buildPurgers().
  *
  * @group purge
  */
-#[Group('purge')]
-#[RunTestsInSeparateProcesses]
 class DashboardPurgersTest extends DashboardTestBase {
 
   /**
@@ -46,21 +42,19 @@ class DashboardPurgersTest extends DashboardTestBase {
     $this->assertSession()->linkByHrefExists(Url::fromRoute('purge_ui.purger_detail_form', $purger_0_route_params)->toString());
     $this->assertSession()->linkByHrefNotExists(Url::fromRoute('purge_ui.purger_config_dialog_form', $purger_0_route_params)->toString());
     $this->assertSession()->linkByHrefExists(Url::fromRoute('purge_ui.purger_delete_form', $purger_0_route_params)->toString());
-    $this->assertSession()->linkByHrefExists(Url::fromRoute('purge_ui.purger_invalidate_form', $purger_0_route_params)->toString());
     $purger_1_route_params = ['id' => 'id1'];
     $this->assertSession()->linkByHrefExists(Url::fromRoute('purge_ui.purger_detail_form', $purger_1_route_params)->toString());
     $this->assertSession()->linkByHrefExists(Url::fromRoute('purge_ui.purger_config_dialog_form', $purger_1_route_params)->toString());
     $this->assertSession()->linkByHrefExists(Url::fromRoute('purge_ui.purger_delete_form', $purger_1_route_params)->toString());
-    $this->assertSession()->linkByHrefExists(Url::fromRoute('purge_ui.purger_invalidate_form', $purger_1_route_params)->toString());
-    // The invalidate button depends on the 'purge_ui_invalidate' processor.
-    $this->initializeProcessorsService([], TRUE);
-    $this->drupalGet($this->route);
-    $this->assertSession()->linkByHrefNotExists(Url::fromRoute('purge_ui.purger_invalidate_form', $purger_0_route_params)->toString());
-    $this->initializeProcessorsService(['purge_ui_invalidate']);
-    $this->drupalGet($this->route);
-    $this->assertSession()->linkByHrefExists(Url::fromRoute('purge_ui.purger_invalidate_form', $purger_0_route_params)->toString());
 
-    $expected_checkmark_image_url = $this->container->get('file_url_generator')->generateString('core/misc/icons/73b355/check.svg');
+    if ($this->container->has('file_url_generator')) {
+      $expected_checkmark_image_url = $this->container->get('file_url_generator')->generateString('core/misc/icons/73b355/check.svg');
+    }
+    else {
+      // Assert that the purger-type supportability matrix shows the checkmarks.
+      // @phpstan-ignore-next-line
+      $expected_checkmark_image_url = file_url_transform_relative(file_create_url('core/misc/icons/73b355/check.svg'));
+    }
 
     $this->assertFalse(empty($this->cssSelect('img[width=18][height=18][alt=Supported][title=Supported][src="' . $expected_checkmark_image_url . '"]')));
     $this->assertSession()->responseNotContains('<img supports="drupal-domain"');

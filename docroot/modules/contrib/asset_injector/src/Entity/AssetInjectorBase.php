@@ -2,12 +2,12 @@
 
 namespace Drupal\asset_injector\Entity;
 
-use Drupal\asset_injector\AssetFileStorage;
 use Drupal\asset_injector\AssetInjectorInterface;
-use Drupal\Core\Condition\ConditionPluginCollection;
+use Drupal\asset_injector\AssetFileStorage;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityWithPluginCollectionInterface;
+use Drupal\Core\Condition\ConditionPluginCollection;
 
 /**
  * Class AssetInjectorBase: Base asset injector class.
@@ -77,7 +77,7 @@ abstract class AssetInjectorBase extends ConfigEntityBase implements AssetInject
    */
   public function libraryNameSuffix() {
     $extension = $this->extension();
-    return "$extension.$this->id";
+    return "$extension/$this->id";
   }
 
   /**

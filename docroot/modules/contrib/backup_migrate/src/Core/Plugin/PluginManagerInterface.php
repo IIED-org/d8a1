@@ -12,25 +12,20 @@ interface PluginManagerInterface {
   /**
    * Add an item to the manager.
    *
-   * @param string $id
-   *   The identifier.
+   * @param $id
    * @param \Drupal\backup_migrate\Core\Plugin\PluginInterface|object $item
-   *   The item.
    *   The source to add.
    *
-   * @return mixed
-   *   The return value.
+   * @return
    */
   public function add($id, PluginInterface $item);
 
   /**
    * Get the item with the given id.
    *
-   * @param string $id
-   *   The identifier.
+   * @param $id
    *
    * @return \Drupal\backup_migrate\Core\Plugin\PluginInterface
-   *   The requested integer.
    *   The item specified by the id or NULL if it doesn't exist.
    */
   public function get($id);
@@ -39,7 +34,7 @@ interface PluginManagerInterface {
    * Get a list of all of the items.
    *
    * @return \Drupal\backup_migrate\Core\Plugin\PluginInterface[]
-   *   *   An ordered list of the sources, keyed by their id.
+   *   An ordered list of the sources, keyed by their id.
    */
   public function getAll();
 
@@ -55,11 +50,9 @@ interface PluginManagerInterface {
    * Get all plugins that implement the given operation.
    *
    * @param string $op
-   *   The op.
    *   The name of the operation.
    *
    * @return \Drupal\backup_migrate\Core\Plugin\PluginInterface[]
-   *   The requested integer.
    */
   public function getAllByOp($op);
 
@@ -74,18 +67,14 @@ interface PluginManagerInterface {
    * these to be passed as a keyed array.
    *
    * @param string $op
-   *   The op.
    *   The name of the operation to be called.
    * @param mixed $operand
-   *   The operand.
    *   If there in an object being operated on (eg. a backup file) it will be
    *    passed to each plugin in succession. If not then this will be NULL.
    * @param array $params
-   *   The message parameters.
    *   Optional operation parameters as a key/value array.
    *
    * @return mixed
-   *   The return value.
    */
   public function call($op, $operand = NULL, array $params = []);
 
@@ -101,7 +90,7 @@ interface PluginManagerInterface {
    *   Optional operation parameters as a key/value array.
    *
    * @return array
-   *   *   The results in an array keyed by the plugin id.
+   *   The results in an array keyed by the plugin id.
    */
   public function map($op, array $params = []);
 

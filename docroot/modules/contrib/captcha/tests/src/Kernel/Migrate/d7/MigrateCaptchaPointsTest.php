@@ -2,8 +2,7 @@
 
 namespace Drupal\Tests\captcha\Kernel\Migrate\d7;
 
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
+use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
 use Drupal\captcha\CaptchaPointInterface;
 use Drupal\captcha\Constants\CaptchaConstants;
 use Drupal\captcha\Entity\CaptchaPoint;
@@ -13,9 +12,7 @@ use Drupal\captcha\Entity\CaptchaPoint;
  *
  * @group captcha
  */
-#[Group('captcha')]
-#[RunTestsInSeparateProcesses]
-class MigrateCaptchaPointsTest extends CaptchaMigrateDrupal7TestBase {
+class MigrateCaptchaPointsTest extends MigrateDrupal7TestBase {
 
   /**
    * {@inheritdoc}

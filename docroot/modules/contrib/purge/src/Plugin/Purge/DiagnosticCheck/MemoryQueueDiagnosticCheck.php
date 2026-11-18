@@ -2,18 +2,17 @@
 
 namespace Drupal\purge\Plugin\Purge\DiagnosticCheck;
 
-use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Drupal\purge\Attribute\PurgeDiagnosticCheck;
-
 /**
  * Issues a warning on how unreliable the memory queue is for day-day use.
+ *
+ * @PurgeDiagnosticCheck(
+ *   id = "memoryqueuewarning",
+ *   title = @Translation("Memory queue"),
+ *   description = @Translation("Checks when the memory queue is in use."),
+ *   dependent_queue_plugins = {"memory"},
+ *   dependent_purger_plugins = {}
+ * )
  */
-#[PurgeDiagnosticCheck(
-  id: 'memoryqueuewarning',
-  title: new TranslatableMarkup('Memory queue'),
-  description: new TranslatableMarkup('Checks when the memory queue is in use.'),
-  dependent_queue_plugins: ['memory'],
-)]
 class MemoryQueueDiagnosticCheck extends DiagnosticCheckBase implements DiagnosticCheckInterface {
 
   /**

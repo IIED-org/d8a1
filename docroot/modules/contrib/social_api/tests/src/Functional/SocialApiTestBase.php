@@ -4,7 +4,6 @@ namespace Drupal\Tests\social_api\Functional;
 
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Tests\BrowserTestBase;
-use Drupal\user\UserInterface;
 
 /**
  * Defines a base class for testing Social Auth implementers.
@@ -32,33 +31,33 @@ abstract class SocialApiTestBase extends BrowserTestBase {
    *
    * @var \Drupal\user\UserInterface
    */
-  protected UserInterface $noPermsUser;
+  protected $noPermsUser;
 
   /**
    * A test user with corresponding permissions.
    *
    * @var \Drupal\user\UserInterface
    */
-  protected UserInterface $adminUser;
+  protected $adminUser;
 
   /**
    * The permissions for the admin user.
    *
    * @var array
    */
-  protected array $adminUserPermissions;
+  protected $adminUserPermissions;
 
   /**
    * The module machine name that is being tested.
    *
    * @var string
    */
-  protected string $module;
+  protected $module;
 
   /**
    * The default theme.
    *
-   * @var mixed
+   * @var string
    */
   protected $defaultTheme = 'stark';
 
@@ -67,28 +66,28 @@ abstract class SocialApiTestBase extends BrowserTestBase {
    *
    * @var null|string
    */
-  protected ?string $provider = NULL;
+  protected $provider = NULL;
 
   /**
    * The module type (social_auth, social_post).
    *
    * @var string
    */
-  protected string $moduleType;
+  protected $moduleType;
 
   /**
    * Settings fields to test.
    *
    * @var array
    */
-  protected array $fields = [];
+  protected $fields = [];
 
   /**
    * The settings to be saved.
    *
    * @var array
    */
-  protected array $edit;
+  protected $edit;
 
   /**
    * {@inheritdoc}
@@ -116,13 +115,17 @@ abstract class SocialApiTestBase extends BrowserTestBase {
 
   /**
    * Test for configuration page.
+   *
+   * @throws \Behat\Mink\Exception\ElementNotFoundException
+   * @throws \Behat\Mink\Exception\ExpectationException
    */
   public function checkPermissionForSettingsPage() {
+
     $assert = $this->assertSession();
 
     // Verifies that permissions are applied to the defined paths.
     $forbidden_paths = [
-      "/admin/config/social-api/$this->moduleType/$this->provider",
+      '/admin/config/social-api/' . $this->moduleType . '/' . $this->provider,
     ];
 
     // Checks each of the paths to make sure we don't have access. At this point
@@ -165,9 +168,9 @@ abstract class SocialApiTestBase extends BrowserTestBase {
   public function checkSettingsFormSubmission() {
     $this->drupalLogin($this->adminUser);
     $path = 'admin/config/social-api/' . $this->moduleType . '/' . $this->provider;
-
     $this->drupalGet($path);
-    $this->submitForm($this->edit, 'Save configuration');
+
+    $this->submitForm($this->edit, $this->t('Save configuration'));
     $this->assertSession()->pageTextContains('The configuration options have been saved.');
   }
 

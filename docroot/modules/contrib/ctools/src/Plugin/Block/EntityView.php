@@ -2,6 +2,7 @@
 
 namespace Drupal\ctools\Plugin\Block;
 
+use Drupal\Component\Plugin\Exception\ContextException;
 use Drupal\Core\Access\AccessResultForbidden;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Cache\CacheableMetadata;
@@ -24,12 +25,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class EntityView extends BlockBase implements ContextAwarePluginInterface, ContainerFactoryPluginInterface {
 
-  /**
-   * A static cache of the recursion protection.
-   *
-   * @var array
-   */
-  protected static $recursion = [];
+  static protected $recusion = [];
 
   /**
    * The entity type manager.
@@ -108,21 +104,15 @@ class EntityView extends BlockBase implements ContextAwarePluginInterface, Conta
     $this->configuration['view_mode'] = $form_state->getValue('view_mode');
   }
 
-  /**
-   * Increments access recursion counter for an entity.
-   */
   protected function accessRecursion(EntityInterface $entity, array $config) {
-    if (!isset(self::$recursion[$entity->uuid()][$config['view_mode']])) {
-      self::$recursion[$entity->uuid()][$config['view_mode']] = 0;
+    if (!isset(self::$recusion[$entity->uuid()][$config['view_mode']])) {
+      self::$recusion[$entity->uuid()][$config['view_mode']] = 0;
     }
-    return self::$recursion[$entity->uuid()][$config['view_mode']]++;
+    return self::$recusion[$entity->uuid()][$config['view_mode']]++;
   }
 
-  /**
-   * Gets the access recursion count for an entity.
-   */
   protected function getAccessRecursion(EntityInterface $entity, array $config) {
-    return self::$recursion[$entity->uuid()][$config['view_mode']] ?? 0;
+    return self::$recusion[$entity->uuid()][$config['view_mode']] ?? 0;
   }
 
   /**
@@ -150,7 +140,7 @@ class EntityView extends BlockBase implements ContextAwarePluginInterface, Conta
    * {@inheritdoc}
    */
   public function build() {
-    /** @var \Drupal\Core\Entity\EntityInterface $entity */
+    /** @var $entity \Drupal\Core\Entity\EntityInterface */
     $entity = $this->getContextValue('entity');
     $build = [];
     if ($this::accessRecursion($entity, $this->getConfiguration())) {

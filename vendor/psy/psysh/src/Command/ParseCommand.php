@@ -3,7 +3,7 @@
 /*
  * This file is part of Psy Shell.
  *
- * (c) 2012-2026 Justin Hileman
+ * (c) 2012-2023 Justin Hileman
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -11,7 +11,6 @@
 
 namespace Psy\Command;
 
-use PhpParser\Error as PhpParserError;
 use PhpParser\Node;
 use PhpParser\Parser;
 use Psy\Context;
@@ -30,16 +29,24 @@ use Symfony\Component\VarDumper\Caster\Caster;
  */
 class ParseCommand extends Command implements ContextAware, PresenterAware
 {
-    protected Context $context;
-    private Presenter $presenter;
-    private Parser $parser;
+    /**
+     * Context instance (for ContextAware interface).
+     *
+     * @var Context
+     */
+    protected $context;
+
+    private $presenter;
+    private $parserFactory;
+    private $parsers;
 
     /**
      * {@inheritdoc}
      */
     public function __construct($name = null)
     {
-        $this->parser = (new ParserFactory())->createParser();
+        $this->parserFactory = new ParserFactory();
+        $this->parsers = [];
 
         parent::__construct($name);
     }
@@ -81,14 +88,19 @@ class ParseCommand extends Command implements ContextAware, PresenterAware
     /**
      * {@inheritdoc}
      */
-    protected function configure(): void
+    protected function configure()
     {
+        $kindMsg = 'One of PhpParser\\ParserFactory constants: '
+            .\implode(', ', ParserFactory::getPossibleKinds())
+            ." (default is based on current interpreter's version).";
+
         $this
             ->setName('parse')
             ->setDefinition([
-                new CodeArgument('code', CodeArgument::REQUIRED, 'PHP code to parse.'),
-                new InputOption('depth', '', InputOption::VALUE_REQUIRED, 'Depth to parse.', 10),
-            ])
+            new CodeArgument('code', CodeArgument::REQUIRED, 'PHP code to parse.'),
+            new InputOption('depth', '', InputOption::VALUE_REQUIRED, 'Depth to parse.', 10),
+            new InputOption('kind', '', InputOption::VALUE_REQUIRED, $kindMsg, $this->parserFactory->getDefaultKind()),
+        ])
             ->setDescription('Parse PHP code and show the abstract syntax tree.')
             ->setHelp(
                 <<<'HELP'
@@ -107,36 +119,31 @@ HELP
     /**
      * {@inheritdoc}
      */
-    protected function execute(InputInterface $input, OutputInterface $output): int
+    protected function execute(InputInterface $input, OutputInterface $output)
     {
         $code = $input->getArgument('code');
+        $parserKind = $input->getOption('kind');
         $depth = $input->getOption('depth');
 
-        if (!\preg_match('/^\s*<\\?/', $code)) {
-            $code = '<?php '.$code;
-        }
-
-        try {
-            $nodes = $this->parser->parse($code);
-        } catch (PhpParserError $e) {
-            if ($this->parseErrorIsEOF($e)) {
-                $nodes = $this->parser->parse($code.';');
-            } else {
-                throw $e;
-            }
-        }
-
-        $this->shellOutput($output)->page($this->presenter->present($nodes, $depth, Presenter::RAW), OutputInterface::OUTPUT_RAW);
+        $nodes = $this->getParser($parserKind)->parse($code);
+        $output->page($this->presenter->present($nodes, $depth));
 
         $this->context->setReturnValue($nodes);
 
         return 0;
     }
 
-    private function parseErrorIsEOF(PhpParserError $e): bool
+    /**
+     * Get (or create) the Parser instance.
+     *
+     * @param string|null $kind One of Psy\ParserFactory constants (only for PHP parser 2.0 and above)
+     */
+    private function getParser(string $kind = null): CodeArgumentParser
     {
-        $msg = $e->getRawMessage();
+        if (!\array_key_exists($kind, $this->parsers)) {
+            $this->parsers[$kind] = new CodeArgumentParser($this->parserFactory->createParser($kind));
+        }
 
-        return ($msg === 'Unexpected token EOF') || (\strpos($msg, 'Syntax error, unexpected EOF') !== false);
+        return $this->parsers[$kind];
     }
 }

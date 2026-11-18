@@ -9,7 +9,6 @@ use Drupal\search_api\IndexInterface;
 use Drupal\search_api\SearchApiException;
 use Drupal\search_api\ServerInterface;
 use Drupal\search_api\Task\TaskInterface;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests whether the Search API task system works correctly.
@@ -18,7 +17,6 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  *
  * @group search_api
  */
-#[RunTestsInSeparateProcesses]
 class TaskTest extends KernelTestBase {
 
   /**

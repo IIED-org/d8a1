@@ -6,6 +6,7 @@ use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\Plugin\Field\FieldWidget\StringTextareaWidget;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\user\Entity\User;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -21,12 +22,35 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   }
  * )
  */
-class RevisionLogWidget extends StringTextareaWidget {
+class RevisionLogWidget extends StringTextareaWidget implements ContainerFactoryPluginInterface {
+
+  protected $user;
 
   /**
-   * Current user.
+   * Create the widget instance.
+   *
+   * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
+   *   The symfony container.
+   * @param array $configuration
+   *   The plugin configuration.
+   * @param string $plugin_id
+   *   The the plugin id.
+   * @param mixed $plugin_definition
+   *   The plugin definition.
+   *
+   * @return \Drupal\Core\Plugin\ContainerFactoryPluginInterface|\Drupal\hide_revision_field\Plugin\Field\FieldWidget\RevisionLogWidget
+   *   The widget.
    */
-  protected AccountProxyInterface $user;
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    return new static(
+      $plugin_id,
+      $plugin_definition,
+      $configuration['field_definition'],
+      $configuration['settings'],
+      $configuration['third_party_settings'],
+      $container->get('current_user')
+    );
+  }
 
   /**
    * Constructs a RevisionLogWidget object.
@@ -52,27 +76,12 @@ class RevisionLogWidget extends StringTextareaWidget {
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new self(
-      $plugin_id,
-      $plugin_definition,
-      $configuration['field_definition'],
-      $configuration['settings'],
-      $configuration['third_party_settings'],
-      $container->get('current_user')
-    );
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public static function defaultSettings() {
     return [
       'show' => TRUE,
       'default' => '',
       'permission_based' => FALSE,
       'allow_user_settings' => TRUE,
-      'hide_revision' => FALSE,
     ] + parent::defaultSettings();
   }
 
@@ -84,38 +93,27 @@ class RevisionLogWidget extends StringTextareaWidget {
     $settings = $this->getSettings();
     $element['show'] = [
       '#type' => 'checkbox',
-      '#title' => $this->t('Show'),
+      '#title' => t('Show'),
       '#default_value' => $settings['show'],
       '#description' => $this->t('Show field by default.'),
     ];
     $element['allow_user_settings'] = [
       '#type' => 'checkbox',
-      '#title' => $this->t('Allow user specific configuration.'),
+      '#title' => t('Allow user specific configuration.'),
       '#default_value' => $settings['allow_user_settings'],
       '#description' => $this->t('Allow users to configure their own default value/display of the revision log field on their profile pages.'),
     ];
     $element['permission_based'] = [
       '#type' => 'checkbox',
-      '#title' => $this->t('Display Based on Permissions'),
+      '#title' => t('Display Based on Permissions'),
       '#default_value' => $settings['permission_based'],
       '#description' => $this->t('Show field if user has permission "%perm: Customize revision logs".', [
         '%perm' => $this->fieldDefinition->getTargetEntityTypeId(),
       ]),
     ];
-    $element['hide_revision'] = [
-      '#type' => 'checkbox',
-      '#title' => $this->t('Hide whole revision tab'),
-      '#default_value' => $settings['hide_revision'],
-      '#description' => $this->t('Hide the whole revision tab, otherwise only the revision log message field is hidden'),
-      '#states' => [
-        'visible' => [
-          [':input[name*="settings][show"]' => ['unchecked' => TRUE]],
-        ],
-      ],
-    ];
     $element['default'] = [
       '#type' => 'textfield',
-      '#title' => $this->t('Default'),
+      '#title' => t('Default'),
       '#default_value' => $settings['default'],
       '#description' => $this->t('Default value for revision log.'),
     ];
@@ -134,9 +132,6 @@ class RevisionLogWidget extends StringTextareaWidget {
     }
     else {
       $summary[] = $this->t('Hidden by default');
-    }
-    if ($settings['hide_revision'] && !$settings['show']) {
-      $summary[] = $this->t('Hide whole revision tab');
     }
     if ($settings['default']) {
       $summary[] = $this->t('Default value: %default', [
@@ -179,12 +174,11 @@ class RevisionLogWidget extends StringTextareaWidget {
       $form_object = $form_state->getFormObject();
       /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
 
-      $entity = NULL;
       // Get entity from an inline entity form or a standard ContentEntityForm.
-      if (!empty($form['#type']) && $form['#type'] === 'inline_entity_form' && !empty($form['#entity'])) {
+      if (!empty($form['#type']) && $form['#type'] == 'inline_entity_form' && !empty($form['#entity'])) {
         $entity = $form['#entity'];
       }
-      elseif (!empty($form['#type']) && $form['#type'] === 'container') {
+      elseif (!empty($form['#type']) && $form['#type'] == 'container') {
         $complete_form = $form_state->getCompleteForm();
         if (!empty($complete_form['widget']['inline_entity_form']['#entity'])) {
           $entity = $complete_form['widget']['inline_entity_form']['#entity'];
@@ -197,27 +191,26 @@ class RevisionLogWidget extends StringTextareaWidget {
         $entity = $items->getEntity();
       }
 
-      if ($entity !== NULL) {
+      if (!empty($entity)) {
         if (empty($form_state->get('langcode'))) {
           $form_state->set('langcode', $entity->language()->getId());
         }
         $user = User::load($this->user->id());
-        if ($user) {
-          $user_settings = [];
-          $user_settings_raw = $user->get('revision_log_settings')->value;
-          if ($user_settings_raw) {
-            $user_settings = unserialize($user_settings_raw, ['allowed_classes' => FALSE]);
-          }
-          if (isset($user_settings[$entity->getEntityType()->id()][$entity->bundle()])) {
-            $show = $user_settings[$entity->getEntityType()->id()][$entity->bundle()];
-          }
+        $user_settings = [];
+        $user_settings_raw = $user->get('revision_log_settings')->value;
+        if ($user_settings_raw) {
+          $user_settings = unserialize($user_settings_raw, ['allowed_classes' => FALSE]);
+        }
+        if (isset($user_settings[$entity->getEntityType()
+          ->id()][$entity->bundle()])) {
+          $show = $user_settings[$entity->getEntityType()
+            ->id()][$entity->bundle()];
         }
       }
     }
 
     if (!$show) {
       $element['value']['#type'] = 'hidden';
-      $element['value']['#hide_revision'] = $settings['hide_revision'];
     }
     return $element;
   }

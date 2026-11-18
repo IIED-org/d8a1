@@ -22,7 +22,7 @@ final class PackageRequiresAdjuster
         private readonly Composer $composer
     ) {
         $this->drupalCoreConstraint = (new VersionParser())
-            ->parseConstraints('^8 || ^9 || ^10 || ^11 || ^12');
+            ->parseConstraints('^8 || ^9 || ^10');
     }
 
     public function applies(PackageInterface $package): bool
@@ -34,14 +34,8 @@ final class PackageRequiresAdjuster
         ) {
             return false;
         }
-        /**
-         * @var array{drupal-lenient?: array{allow-all?: bool, allowed-list?: list<string>|mixed}} $extra
-         */
         $extra = $this->composer->getPackage()->getExtra();
-        $allowAll = $extra['drupal-lenient']['allow-all'] ?? false;
-        if ($allowAll) {
-            return true;
-        }
+        // @phpstan-ignore-next-line
         $allowedList = $extra['drupal-lenient']['allowed-list'] ?? [];
         if (!is_array($allowedList) || count($allowedList) === 0) {
             return false;

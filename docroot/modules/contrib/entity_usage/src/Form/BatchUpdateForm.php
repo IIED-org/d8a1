@@ -2,9 +2,9 @@
 
 namespace Drupal\entity_usage\Form;
 
+use Drupal\entity_usage\EntityUsageBatchManager;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\entity_usage\EntityUsageBatchManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -13,19 +13,28 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class BatchUpdateForm extends FormBase {
 
   /**
-   * BatchUpdateForm constructor.
+   * The EntityUsageBatchManager service.
+   *
+   * @var \Drupal\entity_usage\EntityUsageBatchManager
    */
-  final public function __construct(
-    private EntityUsageBatchManager $batchManager,
-  ) {
+  protected $batchManager;
+
+  /**
+   * BatchUpdateForm constructor.
+   *
+   * @param \Drupal\entity_usage\EntityUsageBatchManager $batch_manager
+   *   The entity usage batch manager.
+   */
+  public function __construct(EntityUsageBatchManager $batch_manager) {
+    $this->batchManager = $batch_manager;
   }
 
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container): static {
+  public static function create(ContainerInterface $container) {
     return new static(
-      $container->get(EntityUsageBatchManager::class)
+      $container->get('entity_usage.batch_manager')
     );
   }
 
@@ -39,7 +48,7 @@ class BatchUpdateForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state): array {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     $form['description'] = [
       '#markup' => $this->t("This page allows you to delete and re-generate again all entity usage statistics in your system.<br /><br />You may want to check the settings page to fine-tune what entities should be tracked, and other options."),
     ];
@@ -56,7 +65,7 @@ class BatchUpdateForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, FormStateInterface $form_state): void {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->batchManager->recreate();
   }
 

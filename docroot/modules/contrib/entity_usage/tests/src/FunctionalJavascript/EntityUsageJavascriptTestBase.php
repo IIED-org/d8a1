@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\entity_usage\FunctionalJavascript;
 
-use Drupal\FunctionalJavascriptTests\JSWebAssert;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 
 /**
@@ -51,17 +50,8 @@ abstract class EntityUsageJavascriptTestBase extends WebDriverTestBase {
   /**
    * Waits for jQuery to become ready and animations to complete.
    */
-  protected function waitForAjaxToFinish(): void {
+  protected function waitForAjaxToFinish() {
     $this->assertSession()->assertWaitOnAjaxRequest();
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  public function assertSession($name = NULL): JSWebAssert {
-    $assert_session = parent::assertSession($name);
-    assert($assert_session instanceof JSWebAssert);
-    return $assert_session;
   }
 
   /**
@@ -74,7 +64,7 @@ abstract class EntityUsageJavascriptTestBase extends WebDriverTestBase {
    * @param string $message
    *   (Optional) Message to pass to assertJsCondition().
    */
-  protected function waitUntilVisible($selector, $timeout = 2000, $message = ''): void {
+  protected function waitUntilVisible($selector, $timeout = 2000, $message = '') {
     $condition = "jQuery('" . $selector . ":visible').length > 0";
     $this->assertJsCondition($condition, $timeout, $message);
   }
@@ -87,7 +77,7 @@ abstract class EntityUsageJavascriptTestBase extends WebDriverTestBase {
    * is intended for developers to help debug browser test failures and capture
    * more verbose output.
    */
-  protected function saveHtmlOutput(): void {
+  protected function saveHtmlOutput() {
     $out = $this->getSession()->getPage()->getContent();
     // Ensure that any changes to variables in the other thread are picked up.
     $this->refreshVariables();

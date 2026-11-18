@@ -2,12 +2,12 @@
 
 namespace Drupal\varnish_purger\Form;
 
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\purge\Plugin\Purge\Invalidation\InvalidationsServiceInterface;
 use Drupal\purge_ui\Form\PurgerConfigFormBase;
 use Drupal\varnish_purger\Entity\VarnishPurgerSettings;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Abstract form base for Varnish based configurable purgers.
@@ -24,11 +24,13 @@ abstract class VarnishPurgerFormBase extends PurgerConfigFormBase {
   /**
    * Static listing of all possible requests methods.
    *
-   * @var array
+   * @todo
+   *   Confirm if all relevant HTTP methods are covered.
+   *   http://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html
    *
-   * @todo Confirm if all relevant HTTP methods are covered. http://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html
+   * @var array
    */
-  protected $requestMethods = ['BAN', 'PURGE'];
+  protected $request_methods = ['BAN', 'PURGE'];
 
   /**
    * Static listing of the possible connection schemes.
@@ -78,7 +80,7 @@ abstract class VarnishPurgerFormBase extends PurgerConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getFormId() {
+  public function getFormID() {
     return 'varnish_purger.configuration_form';
   }
 
@@ -164,8 +166,8 @@ abstract class VarnishPurgerFormBase extends PurgerConfigFormBase {
     $form['request']['request_method'] = [
       '#title' => $this->t('Request Method'),
       '#type' => 'select',
-      '#default_value' => $this->requestMethods[(int) array_search($settings->request_method, $this->requestMethods)],
-      '#options' => array_combine($this->requestMethods, $this->requestMethods),
+      '#default_value' => $this->request_methods[(int) array_search($settings->request_method, $this->request_methods)],
+      '#options' => array_combine($this->request_methods, $this->request_methods),
     ];
     $form['request']['scheme'] = [
       '#title' => $this->t('Scheme'),
@@ -218,7 +220,7 @@ abstract class VarnishPurgerFormBase extends PurgerConfigFormBase {
     ];
     for ($i = 0; $i < $form_state->get('headers_items_count'); $i++) {
       if (!isset($form['headers']['headers'][$i])) {
-        $header = $settings->headers[$i] ??
+        $header = isset($settings->headers[$i]) ? $settings->headers[$i] :
           ['field' => '', 'value' => ''];
         $form['headers']['headers'][$i]['field'] = [
           '#type' => 'textfield',
@@ -254,7 +256,6 @@ abstract class VarnishPurgerFormBase extends PurgerConfigFormBase {
    *   The current state of the form.
    *
    * @return array
-   *   An associative array containing the structure of the form.
    */
   public function buildFormHeadersRebuild(array &$form, FormStateInterface $form_state) {
     return $form['headers']['headers'];
@@ -360,9 +361,10 @@ abstract class VarnishPurgerFormBase extends PurgerConfigFormBase {
   /**
    * Build the 'tokens' section of the form.
    *
-   * @todo This implementation depends on purge_tokens_token_info(), provided by
-   *   the purge_token submodule. I'm aware this isn't the cleanest pattern but
-   *   the most sensible way I can think of to get the supported token patterns.
+   * @todo
+   *   This implementation depends on purge_tokens_token_info(), provided by the
+   *   purge_token submodule. I'm aware this isn't the cleanest pattern but the
+   *   most sensible way I can think of to get the supported token patterns.
    *
    * @param array $form
    *   An associative array containing the structure of the form.
@@ -373,6 +375,7 @@ abstract class VarnishPurgerFormBase extends PurgerConfigFormBase {
    */
   public function buildFormTokensHelp(array &$form, FormStateInterface $form_state, VarnishPurgerSettings $settings) {
     if (function_exists('purge_tokens_token_info')) {
+      $tokens = purge_tokens_token_info()['tokens'];
       $form['tokens'] = [
         '#type' => 'details',
         '#group' => 'tabs',

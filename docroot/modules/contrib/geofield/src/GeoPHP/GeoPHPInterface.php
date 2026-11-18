@@ -18,15 +18,15 @@ interface GeoPHPInterface {
   /**
    * Loads a geometry object given some parameters.
    *
-   * @param mixed $data
+   * @param mixed|null $data
    *   The data to load.
-   * @param string|null $type
+   * @param string $type
    *   The string type.
    *
    * @return \Geometry|null
    *   The geometry object
    */
-  public function load(mixed $data = NULL, ?string $type = NULL): ?\Geometry;
+  public function load($data = NULL, $type = NULL);
 
   /**
    * Get the Adapter Map.

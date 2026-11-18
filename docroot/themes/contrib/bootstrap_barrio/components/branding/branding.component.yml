@@ -4,9 +4,6 @@ $schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schema
 # The human readable name.
 name: Branding
 
-# Description for Canvas library panel.
-description: Site branding component with logo, name, and slogan.
-
 # Status can be: "experimental", "stable", "deprecated", "obsolete".
 status: stable
 
@@ -21,25 +18,20 @@ props:
   type: object
 
   properties:
+    attributes:
+      type: Drupal\Core\Template\Attribute
+      title: Attributes
+      description: Wrapper attributes.
     site_logo:
       type: string
-      format: uri-reference
-      title: Site Logo
-      description: URL to the site logo image.
-      examples: ['/themes/custom/mytheme/logo.svg']
+      format: iri-reference
     url:
       type: string
-      title: Branding URL
-      description: URL for the branding link (usually homepage).
-      format: uri-reference
-      examples: ['/']
+      title: Branding url
+      format: iri-reference
     site_name:
       type: string
-      title: Site Name
-      description: The name of the site.
-      examples: ['My Drupal Site']
+      title: Site name
     site_slogan:
       type: string
-      title: Site Slogan
-      description: The slogan or tagline of the site.
-      examples: ['Building the future of the web']
+      title: Site slogan

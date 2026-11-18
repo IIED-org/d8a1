@@ -2,8 +2,6 @@
 
 namespace Drupal\Tests\image_captcha\Functional;
 
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Drupal\Tests\BrowserTestBase;
 
 /**
@@ -11,8 +9,6 @@ use Drupal\Tests\BrowserTestBase;
  *
  * @group image_captcha
  */
-#[Group('image_captcha')]
-#[RunTestsInSeparateProcesses]
 class ImageCaptchaInstallationTest extends BrowserTestBase {
 
   /**

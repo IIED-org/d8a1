@@ -66,12 +66,7 @@ class PhpSubprocess extends Process
         $tmpIni = $this->writeTmpIni($this->getAllIniFiles(), sys_get_temp_dir());
 
         $php = array_merge($php, ['-n', '-c', $tmpIni]);
-        $pid = getmypid();
-        register_shutdown_function(static function () use ($tmpIni, $pid) {
-            if ($pid === getmypid()) {
-                unlink($tmpIni);
-            }
-        });
+        register_shutdown_function('unlink', $tmpIni);
 
         $command = array_merge($php, $command);
 
@@ -83,9 +78,6 @@ class PhpSubprocess extends Process
         throw new LogicException(\sprintf('The "%s()" method cannot be called when using "%s".', __METHOD__, self::class));
     }
 
-    /**
-     * @param (callable('out'|'err', string):void)|null $callback
-     */
     public function start(?callable $callback = null, array $env = []): void
     {
         if (null === $this->getCommandLine()) {

@@ -4,18 +4,17 @@ namespace Drupal\purge\Plugin\Purge\Queue;
 
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Queue\DatabaseQueue as CoreDatabaseQueue;
-use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Drupal\purge\Attribute\PurgeQueue;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * A QueueInterface compliant database backed queue.
+ *
+ * @PurgeQueue(
+ *   id = "database",
+ *   label = @Translation("Database"),
+ *   description = @Translation("A scalable database backed queue."),
+ * )
  */
-#[PurgeQueue(
-  id: 'database',
-  label: new TranslatableMarkup('Database'),
-  description: new TranslatableMarkup('A scalable database backed queue.'),
-)]
 class DatabaseQueue extends CoreDatabaseQueue implements QueueInterface {
   use QueueBasePageTrait;
 
@@ -59,7 +58,7 @@ class DatabaseQueue extends CoreDatabaseQueue implements QueueInterface {
         'created' => time(),
       ]);
     if ($id = $query->execute()) {
-      return $this->castItemId($id);
+      return (int) $id;
     }
     return FALSE;
   }
@@ -94,7 +93,7 @@ class DatabaseQueue extends CoreDatabaseQueue implements QueueInterface {
       // A multiple row-insert doesn't give back all the individual IDs, so
       // calculate them back by applying subtraction.
       for ($i = 1; $i <= count($records); $i++) {
-        $item_ids[] = $this->castItemId($id);
+        $item_ids[] = $id;
         $id++;
       }
       return $item_ids;
@@ -102,29 +101,6 @@ class DatabaseQueue extends CoreDatabaseQueue implements QueueInterface {
     else {
       return FALSE;
     }
-  }
-
-  /**
-   * Casts an item ID to the type this queue hands out.
-   *
-   * PDO returns integer columns as strings on MySQL and SQLite, whereas
-   * \Drupal\purge\Plugin\Purge\Queue\TxBuffer::getByProperty() compares item
-   * IDs strictly. Every method that returns item IDs - createItem(),
-   * createItemMultiple(), claimItem(), claimItemMultiple() and selectPage() -
-   * runs them through this method so that they are of one consistent type.
-   *
-   * Subclasses that store non-integer item IDs, for instance a hash of the
-   * item data to allow upserts, can override this method instead of having to
-   * duplicate the methods above.
-   *
-   * @param mixed $item_id
-   *   The item ID as returned by the database.
-   *
-   * @return mixed
-   *   The casted item ID, an integer by default.
-   */
-  protected function castItemId($item_id) {
-    return (int) $item_id;
   }
 
   /**
@@ -154,7 +130,7 @@ class DatabaseQueue extends CoreDatabaseQueue implements QueueInterface {
       $conditions = [':now' => time()];
       $item = $this->connection->queryRange('SELECT * FROM {' . static::TABLE_NAME . '} q WHERE ((expire = 0) OR (:now > expire)) ORDER BY created, item_id ASC', 0, 1, $conditions)->fetchObject();
       if ($item) {
-        $item->item_id = $this->castItemId($item->item_id);
+        $item->item_id = (int) $item->item_id;
         $item->expire = (int) $item->expire;
 
         // Try to update the item. Only one thread can succeed in UPDATEing the
@@ -171,7 +147,7 @@ class DatabaseQueue extends CoreDatabaseQueue implements QueueInterface {
 
         // If there are affected rows, this update succeeded.
         if ($update->execute()) {
-          $item->data = unserialize($item->data, ['allowed_classes' => FALSE]);
+          $item->data = unserialize($item->data);
           return $item;
         }
       }
@@ -198,9 +174,9 @@ class DatabaseQueue extends CoreDatabaseQueue implements QueueInterface {
         continue;
       }
       $item_ids[] = $item->item_id;
-      $item->item_id = $this->castItemId($item->item_id);
+      $item->item_id = (int) $item->item_id;
       $item->expire = (int) $item->expire;
-      $item->data = unserialize($item->data, ['allowed_classes' => FALSE]);
+      $item->data = unserialize($item->data);
       $returned_items[] = $item;
     }
 
@@ -238,7 +214,7 @@ class DatabaseQueue extends CoreDatabaseQueue implements QueueInterface {
     // Extract item IDs and serialized data so comparing becomes easier.
     $items_data = [];
     foreach ($items as $item) {
-      $items_data[$this->castItemId($item->item_id)] = serialize($item->data);
+      $items_data[intval($item->item_id)] = serialize($item->data);
     }
 
     // Figure out which items have changed their data and update just those.
@@ -248,7 +224,7 @@ class DatabaseQueue extends CoreDatabaseQueue implements QueueInterface {
       ->condition('item_id', array_keys($items_data), 'IN')
       ->execute();
     foreach ($originals as $original) {
-      $item_id = $this->castItemId($original->item_id);
+      $item_id = intval($original->item_id);
       if ($original->data !== $items_data[$item_id]) {
         $this->connection->update(static::TABLE_NAME)
           ->fields(['data' => $items_data[$item_id]])
@@ -351,9 +327,9 @@ class DatabaseQueue extends CoreDatabaseQueue implements QueueInterface {
       if (!$item) {
         continue;
       }
-      $item->item_id = $this->castItemId($item->item_id);
+      $item->item_id = (int) $item->item_id;
       $item->expire = (int) $item->expire;
-      $item->data = unserialize($item->data, ['allowed_classes' => FALSE]);
+      $item->data = unserialize($item->data);
       $items[] = $item;
     }
     return $items;

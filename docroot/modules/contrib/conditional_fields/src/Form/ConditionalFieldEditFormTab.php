@@ -31,12 +31,7 @@ class ConditionalFieldEditFormTab extends ConditionalFieldEditForm {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     parent::submitForm($form, $form_state);
     $values = $form_state->cleanValues()->getValues();
-    if ($values['entity_type'] == 'paragraph') {
-      $parameters = ["{$values['entity_type']}s_type" => $values['bundle']];
-    }
-    else {
-      $parameters = ["{$values['entity_type']}_type" => $values['bundle']];
-    }
+    $parameters = ["{$values['entity_type']}_type" => $values['bundle']];
     $redirect = $this->redirectPath . "." . $values['entity_type'];
 
     $form_state->setRedirect($redirect, $parameters);

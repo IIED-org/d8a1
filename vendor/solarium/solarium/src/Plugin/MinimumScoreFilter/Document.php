@@ -16,21 +16,23 @@ use Solarium\QueryType\Select\Result\Document as SelectDocument;
 /**
  * Minimum score filter query result document.
  *
- * Decorates the original document with a filter indicator.
- *
- * @mixin SelectDocument
+ * Decorates the original document with a filter indicator
  */
 class Document implements DocumentInterface, \IteratorAggregate, \Countable, \ArrayAccess, \JsonSerializable
 {
     /**
      * Original document.
+     *
+     * @var SelectDocument
      */
-    protected SelectDocument $document;
+    protected $document;
 
     /**
      * Is this document marked as a low score?
+     *
+     * @var bool
      */
-    protected bool $marked;
+    protected $marked;
 
     /**
      * Constructor.
@@ -52,9 +54,9 @@ class Document implements DocumentInterface, \IteratorAggregate, \Countable, \Ar
      *
      * @return mixed
      */
-    public function __call(string $name, array $arguments): mixed
+    public function __call(string $name, array $arguments)
     {
-        return $this->document->$name(...$arguments);
+        return $this->document->$name($arguments);
     }
 
     /**
@@ -64,7 +66,7 @@ class Document implements DocumentInterface, \IteratorAggregate, \Countable, \Ar
      *
      * @return mixed
      */
-    public function __get(string $name): mixed
+    public function __get($name)
     {
         return $this->document->__get($name);
     }
@@ -76,7 +78,7 @@ class Document implements DocumentInterface, \IteratorAggregate, \Countable, \Ar
      *
      * @return bool
      */
-    public function __isset(string $name): bool
+    public function __isset($name): bool
     {
         return $this->document->__isset($name);
     }
@@ -88,11 +90,11 @@ class Document implements DocumentInterface, \IteratorAggregate, \Countable, \Ar
      * is a readonly document an exception will be thrown to prevent this.
      *
      * @param string $name
-     * @param mixed  $value
+     * @param string $value
      *
      * @throws RuntimeException
      */
-    public function __set(string $name, mixed $value): void
+    public function __set($name, $value): void
     {
         throw new RuntimeException('A readonly document cannot be altered');
     }
@@ -149,6 +151,7 @@ class Document implements DocumentInterface, \IteratorAggregate, \Countable, \Ar
         $this->document->offsetUnset($offset);
     }
 
+    #[\ReturnTypeWillChange]
     /**
      * ArrayAccess implementation.
      *
@@ -156,7 +159,6 @@ class Document implements DocumentInterface, \IteratorAggregate, \Countable, \Ar
      *
      * @return mixed
      */
-    #[\ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         return $this->document->offsetGet($offset);
@@ -183,10 +185,11 @@ class Document implements DocumentInterface, \IteratorAggregate, \Countable, \Ar
         return $this->document->getFields();
     }
 
+    #[\ReturnTypeWillChange]
     /**
      * {@inheritdoc}
      */
-    public function jsonSerialize(): mixed
+    public function jsonSerialize()
     {
         return $this->document;
     }

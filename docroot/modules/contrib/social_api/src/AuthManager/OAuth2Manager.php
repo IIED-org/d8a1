@@ -17,49 +17,43 @@ abstract class OAuth2Manager implements OAuth2ManagerInterface {
    * The service client.
    *
    * @var \League\OAuth2\Client\Provider\AbstractProvider|mixed
-   *
-   * @todo Figure out why this is mixed and narrow it.
    */
-  protected mixed $client = NULL;
+  protected $client;
 
   /**
    * Access token for OAuth2 authentication.
    *
    * @var \League\OAuth2\Client\Token\AccessToken|string|mixed
-   *
-   * @todo Figure out why this is mixed and narrow it.
    */
-  protected mixed $accessToken = NULL;
+  protected $accessToken;
 
   /**
    * Social Auth implementer settings.
    *
    * @var \Drupal\Core\Config\ImmutableConfig
    */
-  protected ImmutableConfig $settings;
+  protected $settings;
 
   /**
    * The logger factory.
    *
    * @var \Drupal\Core\Logger\LoggerChannelFactoryInterface
    */
-  protected LoggerChannelFactoryInterface $loggerFactory;
+  protected $loggerFactory;
 
   /**
    * The current request.
    *
    * @var \Symfony\Component\HttpFoundation\Request|null
    */
-  protected ?Request $request;
+  protected $request;
 
   /**
    * The user returned by the provider.
    *
    * @var \League\OAuth2\Client\Provider\GenericResourceOwner|array|mixed
-   *
-   * @todo Figure out why this is mixed and narrow it.
    */
-  protected mixed $user = NULL;
+  protected $user;
 
   /**
    * OAuth2Manager Constructor.
@@ -68,7 +62,7 @@ abstract class OAuth2Manager implements OAuth2ManagerInterface {
    *   The implementer settings.
    * @param \Drupal\Core\Logger\LoggerChannelFactoryInterface $logger_factory
    *   The logger factory.
-   * @param \Symfony\Component\HttpFoundation\Request|null $request
+   * @param \Symfony\Component\HttpFoundation\Request $request
    *   The current request.
    */
   public function __construct(ImmutableConfig $settings,
@@ -83,7 +77,7 @@ abstract class OAuth2Manager implements OAuth2ManagerInterface {
   /**
    * {@inheritdoc}
    */
-  public function setClient($client): static {
+  public function setClient($client) {
     $this->client = $client;
     return $this;
   }
@@ -91,21 +85,21 @@ abstract class OAuth2Manager implements OAuth2ManagerInterface {
   /**
    * {@inheritdoc}
    */
-  public function getClient(): mixed {
+  public function getClient() {
     return $this->client;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getAccessToken(): mixed {
+  public function getAccessToken() {
     return $this->accessToken;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function setAccessToken($access_token): static {
+  public function setAccessToken($access_token) {
     $this->accessToken = $access_token;
     return $this;
   }

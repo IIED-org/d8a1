@@ -5,8 +5,6 @@ namespace Drupal\purge_ui_remove_block_plugins_test;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
-use Drupal\purge\Attribute\PurgeQueue;
-use Drupal\purge\Plugin\Purge\Queue\QueueInterface;
 
 /**
  * PluginManager that will never deliver any plugins (for testing purposes).
@@ -29,8 +27,7 @@ class BlackholePluginManager extends DefaultPluginManager {
       'Plugin/Purge/Blackhole',
       $namespaces,
       $module_handler,
-      QueueInterface::class,
-      PurgeQueue::class,
+      'Drupal\purge\Plugin\Purge\Queue\QueueInterface',
       'Drupal\purge\Annotation\PurgeQueue');
     $this->setCacheBackend($cache_backend, 'purge_here_are_no_plugins');
   }

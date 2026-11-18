@@ -15,20 +15,14 @@ namespace Drupal\backup_migrate\Core\Translation;
 interface TranslatorInterface {
 
   /**
-   * Translates a string.
-   *
    * @param string $string
-   *   The string.
    *   The string to be translated.
-   * @param mixed $replacements
-   *   The replacements.
+   * @param $replacements
    *   Any untranslatable variables to be replaced into the string.
-   * @param mixed $context
-   *   The context.
+   * @param $context
    *   Extra context to help translators distinguish ambiguous strings.
    *
    * @return mixed
-   *   The return value.
    */
   public function translate($string, $replacements = [], $context = []);
 

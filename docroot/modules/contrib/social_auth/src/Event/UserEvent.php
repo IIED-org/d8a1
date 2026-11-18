@@ -2,8 +2,8 @@
 
 namespace Drupal\social_auth\Event;
 
-use Drupal\social_auth\User\SocialAuthUserInterface;
 use Drupal\user\UserInterface;
+use Drupal\social_auth\User\SocialAuthUserInterface;
 
 /**
  * Dispatched when user is created or logged in through Social Auth.
@@ -15,16 +15,23 @@ class UserEvent extends SocialAuthEventBase {
   /**
    * The user.
    *
-   * @var \Drupal\user\UserInterface
+   * @var \Drupal\user\Entity\User
    */
-  protected UserInterface $user;
+  protected $user;
+
+  /**
+   * The plugin id dispatching this event.
+   *
+   * @var string
+   */
+  protected $pluginId;
 
   /**
    * The user's data passed by Social Auth.
    *
-   * @var \Drupal\social_auth\User\SocialAuthUserInterface|null
+   * @var \Drupal\social_auth\User\SocialAuthUserInterface
    */
-  protected ?SocialAuthUserInterface $socialAuthUser;
+  protected $socialAuthUser;
 
   /**
    * UserEvent constructor.
@@ -36,7 +43,7 @@ class UserEvent extends SocialAuthEventBase {
    * @param \Drupal\social_auth\User\SocialAuthUserInterface|null $social_auth_user
    *   The user's data passed by Social Auth.
    */
-  public function __construct(UserInterface $user, string $plugin_id, ?SocialAuthUserInterface $social_auth_user = NULL) {
+  public function __construct(UserInterface $user, $plugin_id, SocialAuthUserInterface $social_auth_user = NULL) {
     $this->user = $user;
     $this->pluginId = $plugin_id;
     $this->socialAuthUser = $social_auth_user;
@@ -48,8 +55,18 @@ class UserEvent extends SocialAuthEventBase {
    * @return \Drupal\user\UserInterface
    *   The user.
    */
-  public function getUser(): UserInterface {
+  public function getUser() {
     return $this->user;
+  }
+
+  /**
+   * Gets the plugin id dispatching this event.
+   *
+   * @return string
+   *   The plugin id.
+   */
+  public function getPluginId() {
+    return $this->pluginId;
   }
 
   /**
@@ -58,7 +75,7 @@ class UserEvent extends SocialAuthEventBase {
    * @return \Drupal\social_auth\User\SocialAuthUserInterface
    *   The user's data.
    */
-  public function getSocialAuthUser(): SocialAuthUserInterface {
+  public function getSocialAuthUser() {
     return $this->socialAuthUser;
   }
 

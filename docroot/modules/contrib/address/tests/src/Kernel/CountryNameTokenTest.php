@@ -12,9 +12,6 @@ use Drupal\node\Entity\NodeType;
 use Drupal\Tests\taxonomy\Traits\TaxonomyTestTrait;
 use Drupal\Tests\token\Functional\TokenTestTrait;
 
-// cspell:ignore Ahuachapán Canillo Creu Frankreich Issoire Staaten Tombe
-// cspell:ignore Vereinigte
-
 /**
  * Tests the country name token.
  *

@@ -34,7 +34,7 @@ class BundleField extends DeriverBase implements ContainerDeriverInterface {
   protected $entityTypeManager;
 
   /**
-   * Constructs a Bundlefield object.
+   * Constructs a DsEntityRow object.
    *
    * @param string $base_plugin_id
    *   The base plugin ID.
@@ -64,8 +64,11 @@ class BundleField extends DeriverBase implements ContainerDeriverInterface {
       $base_table = $entity_type->getBaseTable();
       if ($entity_type->get('field_ui_base_route') && !empty($base_table)) {
         $this->derivatives[$entity_type_id] = $base_plugin_definition;
-        $this->derivatives[$entity_type_id]['entity_type'] = $entity_type_id;
-        $this->derivatives[$entity_type_id]['title'] = 'Bundle name';
+        $this->derivatives[$entity_type_id] += [
+          'provider' => $entity_type_id,
+          'title' => 'Bundle name',
+          'entity_type' => $entity_type_id,
+        ];
       }
     }
 

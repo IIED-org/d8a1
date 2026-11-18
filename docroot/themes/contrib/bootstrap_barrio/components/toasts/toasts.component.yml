@@ -2,50 +2,43 @@
 $schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
 
 # The human readable name.
-name: Toast
-
-# Description for Canvas library panel.
-description: A Bootstrap toast notification component.
+name: Toasts
 
 # Status can be: "experimental", "stable", "deprecated", "obsolete".
 status: stable
-
-# Group for organization in Canvas sidebar.
-group: Feedback
 
 # Schema for the props. We support www.json-schema.org. Learn more about the
 # syntax there.
 props:
   type: object
   properties:
-    title:
-      type: string
-      title: Toast Title
-      description: The title displayed in the toast header.
-      examples: ['Notification']
-    autohide:
-      type: boolean
-      title: Auto Hide
-      description: Whether the toast should automatically hide.
-      examples: [true]
-    delay:
-      type: integer
-      title: Delay
-      description: Delay in milliseconds before auto-hiding.
-      examples: [5000]
+    attributes:
+      type: Drupal\Core\Template\Attribute
+      title: Attributes
+      description: Wrapper attributes.
 
 # Slots always hold arbitrary markup. We know that beforehand, so no need for
 # a schema for slots.
 slots:
+  # The key is the name of the slot. In your template you will use
+  # {% block content %}.
   content:
     title: Content
-    description: The main toast content.
+    required: true
+    description: The teaser content
   image:
     title: Image
-    description: Toast header image or icon.
+    required: false
+    description: Teaser image
   meta:
     title: Meta
-    description: Additional meta information (timestamp, etc.).
+    required: false
+    description: Teaser meta
   prefix:
     title: Prefix
-    description: Content before the toast body.
+    required: false
+    description: Contextual links slot
+  title:
+    title: Title content
+    required: false
+    description: Teaser title

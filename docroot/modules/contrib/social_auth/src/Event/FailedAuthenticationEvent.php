@@ -17,21 +17,28 @@ class FailedAuthenticationEvent extends SocialAuthEventBase {
    *
    * @var \Drupal\social_auth\SocialAuthDataHandler
    */
-  protected SocialAuthDataHandler $dataHandler;
+  protected $dataHandler;
+
+  /**
+   * The plugin id dispatching this event.
+   *
+   * @var string
+   */
+  protected $pluginId;
 
   /**
    * The error string.
    *
    * @var string
    */
-  protected string $error;
+  protected $error;
 
   /**
    * RedirectResponse object.
    *
-   * @var \Symfony\Component\HttpFoundation\RedirectResponse|null
+   * @var \Symfony\Component\HttpFoundation\RedirectResponse
    */
-  protected ?RedirectResponse $response;
+  protected $response;
 
   /**
    * FailedAuthenticationEvent constructor.
@@ -39,11 +46,11 @@ class FailedAuthenticationEvent extends SocialAuthEventBase {
    * @param \Drupal\social_auth\SocialAuthDataHandler $data_handler
    *   The Social Auth data handler.
    * @param string $plugin_id
-   *   The plugin ID dispatching this event.
-   * @param string|null $error
+   *   The plugin Id dispatching this event.
+   * @param string $error
    *   The error string.
    */
-  public function __construct(SocialAuthDataHandler $data_handler, string $plugin_id, ?string $error = NULL) {
+  public function __construct(SocialAuthDataHandler $data_handler, $plugin_id, $error = NULL) {
     $this->dataHandler = $data_handler;
     $this->pluginId = $plugin_id;
     $this->error = $error;
@@ -55,8 +62,18 @@ class FailedAuthenticationEvent extends SocialAuthEventBase {
    * @return \Drupal\social_auth\SocialAuthDataHandler
    *   The Social Auth data handler.
    */
-  public function getDataHandler(): SocialAuthDataHandler {
+  public function getDataHandler() {
     return $this->dataHandler;
+  }
+
+  /**
+   * Gets the plugin id dispatching this event.
+   *
+   * @return string
+   *   The plugin id.
+   */
+  public function getPluginId() {
+    return $this->pluginId;
   }
 
   /**
@@ -65,17 +82,17 @@ class FailedAuthenticationEvent extends SocialAuthEventBase {
    * @return string
    *   The error string.
    */
-  public function getError(): string {
+  public function getError() {
     return $this->error;
   }
 
   /**
    * Returns the current redirect response object.
    *
-   * @return \Symfony\Component\HttpFoundation\RedirectResponse
+   * @return \Symfony\Component\HttpFoundation\Response
    *   The response from the provider.
    */
-  public function getResponse(): RedirectResponse {
+  public function getResponse() {
     return $this->response;
   }
 
@@ -85,7 +102,7 @@ class FailedAuthenticationEvent extends SocialAuthEventBase {
    * @param \Symfony\Component\HttpFoundation\RedirectResponse $response
    *   The response from the provider.
    */
-  public function setResponse(RedirectResponse $response): void {
+  public function setResponse(RedirectResponse $response) {
     $this->response = $response;
   }
 
@@ -95,7 +112,7 @@ class FailedAuthenticationEvent extends SocialAuthEventBase {
    * @return bool
    *   Whether a response was set.
    */
-  public function hasResponse(): bool {
+  public function hasResponse() {
     return $this->response !== NULL;
   }
 

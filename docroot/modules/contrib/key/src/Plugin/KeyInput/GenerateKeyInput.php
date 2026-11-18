@@ -2,21 +2,18 @@
 
 namespace Drupal\key\Plugin\KeyInput;
 
-use Drupal\Core\Entity\EntityFormInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Drupal\key\Attribute\KeyInput;
-use Drupal\key\KeyInterface;
 use Drupal\key\Plugin\KeyInputBase;
 
 /**
  * Defines a key input that generates a key value.
+ *
+ * @KeyInput(
+ *   id = "generate",
+ *   label = @Translation("Generate"),
+ *   description = @Translation("A key input that generates a key value.")
+ * )
  */
-#[KeyInput(
-  id: 'generate',
-  label: new TranslatableMarkup('Generate'),
-  description: new TranslatableMarkup('A key input that generates a key value.'),
-)]
 class GenerateKeyInput extends KeyInputBase {
 
   /**
@@ -83,10 +80,8 @@ class GenerateKeyInput extends KeyInputBase {
       ];
     }
     else {
-      $form_object = $form_state->getFormObject();
-      assert($form_object instanceof EntityFormInterface);
-      $key = $form_object->getEntity();
-      assert($key instanceof KeyInterface);
+      /** @var \Drupal\key\Entity\Key $key */
+      $key = $form_state->getFormObject()->getEntity();
       $key_type = $key->getKeyType();
 
       // Generate the key value using the key type configuration.

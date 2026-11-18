@@ -5,11 +5,10 @@ declare(strict_types=1);
 namespace Drush\Attributes;
 
 use Attribute;
-use Consolidation\AnnotatedCommand\CommandData;
-use Consolidation\AnnotatedCommand\CommandError;
+use Consolidation\AnnotatedCommand\Parser\CommandInfo;
 
-#[Attribute(Attribute::TARGET_METHOD | Attribute::TARGET_CLASS)]
-class ValidatePhpExtensions extends ValidatorBase implements ValidatorInterface
+#[Attribute(Attribute::TARGET_METHOD)]
+class ValidatePhpExtensions
 {
     /**
      * @param $extensions
@@ -20,12 +19,9 @@ class ValidatePhpExtensions extends ValidatorBase implements ValidatorInterface
     ) {
     }
 
-    public function validate(CommandData $commandData)
+    public static function handle(\ReflectionAttribute $attribute, CommandInfo $commandInfo)
     {
-        $missing = array_filter($this->extensions, fn($extension) => !extension_loaded($extension));
-        if ($missing) {
-            $msg = dt('The following PHP extensions are required: !extensions', ['!extensions' => implode(', ', $missing)]);
-            return new CommandError($msg);
-        }
+        $args = $attribute->getArguments();
+        $commandInfo->addAnnotation('validate-php-extension', $args['extensions'] ?? $args[0]);
     }
 }

@@ -105,15 +105,15 @@ class FormatterConfigurationTest extends BrowserTestBase {
     $this->submitForm([
       'fields[' . $this->fieldName . '][type]' => $formatter,
       'fields[' . $this->fieldName . '][region]' => 'content',
-    ], 'Refresh');
-    $this->submitForm([], 'Save');
+    ], t('Refresh'));
+    $this->submitForm([], t('Save'));
   }
 
   /**
    * Update the settings for the current formatter.
    *
    * @param array $settings
-   *   The settings to update the formatter with.
+   *   The settings to update the foramtter with.
    */
   protected function updateFormatterSettings($settings) {
     $edit = [];
@@ -123,7 +123,7 @@ class FormatterConfigurationTest extends BrowserTestBase {
     $this->drupalGet($this->manageDisplay);
     $this->find('input[name="' . $this->fieldName . '_settings_edit"]')->click();
     $this->submitForm($edit, $this->fieldName . '_plugin_settings_update');
-    $this->submitForm([], 'Save');
+    $this->submitForm([], t('Save'));
   }
 
   /**

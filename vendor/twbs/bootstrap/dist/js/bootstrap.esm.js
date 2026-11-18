@@ -1,6 +1,6 @@
 /*!
-  * Bootstrap v5.3.9 (https://getbootstrap.com/)
-  * Copyright 2011-2026 The Bootstrap Authors (https://github.com/twbs/bootstrap/graphs/contributors)
+  * Bootstrap v5.3.2 (https://getbootstrap.com/)
+  * Copyright 2011-2023 The Bootstrap Authors (https://github.com/twbs/bootstrap/graphs/contributors)
   * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
   */
 import * as Popper from '@popperjs/core';
@@ -65,11 +65,9 @@ const MILLISECONDS_MULTIPLIER = 1000;
 const TRANSITION_END = 'transitionend';
 
 /**
- * Properly escapes ID selectors to handle special characters in IDs
- * (e.g. forward slashes, periods) so that they work with `document.querySelector`.
- *
- * @param {string} selector the selector to escape
- * @returns {string} the escaped selector
+ * Properly escape IDs selectors to handle weird IDs
+ * @param {string} selector
+ * @returns {string}
  */
 const parseSelector = selector => {
   if (selector && window.CSS && window.CSS.escape) {
@@ -147,7 +145,7 @@ const isVisible = element => {
     return false;
   }
   const elementIsVisible = getComputedStyle(element).getPropertyValue('visibility') === 'visible';
-  // Handle `details` element as its content may falsely appear visible when it is closed
+  // Handle `details` element as its content may falsie appear visible when it is closed
   const closedDetails = element.closest('details:not([open])');
   if (!closedDetails) {
     return elementIsVisible;
@@ -198,16 +196,17 @@ const findShadowRoot = element => {
 const noop = () => {};
 
 /**
- * Trick to restart an element's animation by forcing a reflow.
+ * Trick to restart an element's animation
  *
- * @param {HTMLElement} element the element whose animation should be restarted
- * @returns {void}
+ * @param {HTMLElement} element
+ * @return void
  *
- * @see https://www.harrytheo.com/blog/2021/02/restart-a-css-animation-with-javascript/#restarting-a-css-animation
+ * @see https://www.charistheo.io/blog/2021/02/restart-a-css-animation-with-javascript/#restarting-a-css-animation
  */
 const reflow = element => {
   element.offsetHeight; // eslint-disable-line no-unused-expressions
 };
+
 const getjQuery = () => {
   if (window.jQuery && !document.body.hasAttribute('data-bs-no-jquery')) {
     return window.jQuery;
@@ -248,7 +247,7 @@ const defineJQueryPlugin = plugin => {
   });
 };
 const execute = (possibleCallback, args = [], defaultValue = possibleCallback) => {
-  return typeof possibleCallback === 'function' ? possibleCallback.call(...args) : defaultValue;
+  return typeof possibleCallback === 'function' ? possibleCallback(...args) : defaultValue;
 };
 const executeAfterTransition = (callback, transitionElement, waitForTransition = true) => {
   if (!waitForTransition) {
@@ -279,11 +278,11 @@ const executeAfterTransition = (callback, transitionElement, waitForTransition =
 /**
  * Return the previous/next element of a list.
  *
- * @param {Element[]} list the list of elements to traverse
- * @param {Element} activeElement the currently active element
- * @param {boolean} shouldGetNext whether to return the next element (`true`) or the previous one (`false`)
- * @param {boolean} isCycleAllowed whether to cycle back to the opposite end of the list when reaching the boundary
- * @returns {Element} the appropriate previous/next element from the list
+ * @param {array} list    The list of elements
+ * @param activeElement   The active element
+ * @param shouldGetNext   Choose to get next or previous element
+ * @param isCycleAllowed
+ * @return {Element|elem} The proper element
  */
 const getNextActiveElement = (list, activeElement, shouldGetNext, isCycleAllowed) => {
   const listLength = list.length;
@@ -570,7 +569,7 @@ const Manipulator = {
     const bsKeys = Object.keys(element.dataset).filter(key => key.startsWith('bs') && !key.startsWith('bsConfig'));
     for (const key of bsKeys) {
       let pureKey = key.replace(/^bs/, '');
-      pureKey = pureKey.charAt(0).toLowerCase() + pureKey.slice(1);
+      pureKey = pureKey.charAt(0).toLowerCase() + pureKey.slice(1, pureKey.length);
       attributes[pureKey] = normalizeData(element.dataset[key]);
     }
     return attributes;
@@ -645,7 +644,7 @@ class Config {
  * Constants
  */
 
-const VERSION = '5.3.9';
+const VERSION = '5.3.2';
 
 /**
  * Class definition
@@ -671,8 +670,6 @@ class BaseComponent extends Config {
       this[propertyName] = null;
     }
   }
-
-  // Private
   _queueCallback(callback, element, isAnimated = true) {
     executeAfterTransition(callback, element, isAnimated);
   }
@@ -728,9 +725,9 @@ const getSelector = element => {
     if (hrefAttribute.includes('#') && !hrefAttribute.startsWith('#')) {
       hrefAttribute = `#${hrefAttribute.split('#')[1]}`;
     }
-    selector = hrefAttribute && hrefAttribute !== '#' ? hrefAttribute.trim() : null;
+    selector = hrefAttribute && hrefAttribute !== '#' ? parseSelector(hrefAttribute.trim()) : null;
   }
-  return selector ? selector.split(',').map(sel => parseSelector(sel)).join(',') : null;
+  return selector;
 };
 const SelectorEngine = {
   find(selector, element = document.documentElement) {
@@ -1003,7 +1000,6 @@ class Swipe extends Config {
       return;
     }
     this._config = this._getConfig(config);
-    this._startX = 0;
     this._deltaX = 0;
     this._supportPointerEvents = Boolean(window.PointerEvent);
     this._initEvents();
@@ -1027,24 +1023,23 @@ class Swipe extends Config {
 
   // Private
   _start(event) {
-    this._deltaX = 0;
     if (!this._supportPointerEvents) {
-      this._startX = event.touches[0].clientX;
+      this._deltaX = event.touches[0].clientX;
       return;
     }
     if (this._eventIsPointerPenTouch(event)) {
-      this._startX = event.clientX;
+      this._deltaX = event.clientX;
     }
   }
   _end(event) {
     if (this._eventIsPointerPenTouch(event)) {
-      this._deltaX = event.clientX - this._startX;
+      this._deltaX = event.clientX - this._deltaX;
     }
     this._handleSwipe();
     execute(this._config.endCallback);
   }
   _move(event) {
-    this._deltaX = event.touches && event.touches.length > 1 ? 0 : event.touches[0].clientX - this._startX;
+    this._deltaX = event.touches && event.touches.length > 1 ? 0 : event.touches[0].clientX - this._deltaX;
   }
   _handleSwipe() {
     const absDeltaX = Math.abs(this._deltaX);
@@ -1301,10 +1296,8 @@ class Carousel extends BaseComponent {
       return;
     }
     const activeIndicator = SelectorEngine.findOne(SELECTOR_ACTIVE, this._indicatorsElement);
-    if (activeIndicator) {
-      activeIndicator.classList.remove(CLASS_NAME_ACTIVE$2);
-      activeIndicator.removeAttribute('aria-current');
-    }
+    activeIndicator.classList.remove(CLASS_NAME_ACTIVE$2);
+    activeIndicator.removeAttribute('aria-current');
     const newActiveIndicator = SelectorEngine.findOne(`[data-bs-slide-to="${index}"]`, this._indicatorsElement);
     if (newActiveIndicator) {
       newActiveIndicator.classList.add(CLASS_NAME_ACTIVE$2);
@@ -1608,11 +1601,11 @@ class Collapse extends BaseComponent {
     this._element.style[dimension] = '';
     this._queueCallback(complete, this._element, true);
   }
-
-  // Private
   _isShown(element = this._element) {
     return element.classList.contains(CLASS_NAME_SHOW$7);
   }
+
+  // Private
   _configAfterMerge(config) {
     config.toggle = Boolean(config.toggle); // Coerce string values
     config.parent = getElement(config.parent);
@@ -1866,7 +1859,7 @@ class Dropdown extends BaseComponent {
   }
   _createPopper() {
     if (typeof Popper === 'undefined') {
-      throw new TypeError('Bootstrap\'s dropdowns require Popper (https://github.com/floating-ui/popper-docs/blob/main/docs/v2/index.md)');
+      throw new TypeError('Bootstrap\'s dropdowns require Popper (https://popper.js.org)');
     }
     let referenceElement = this._element;
     if (this._config.reference === 'parent') {
@@ -1945,7 +1938,7 @@ class Dropdown extends BaseComponent {
     }
     return {
       ...defaultBsPopperConfig,
-      ...execute(this._config.popperConfig, [undefined, defaultBsPopperConfig])
+      ...execute(this._config.popperConfig, [defaultBsPopperConfig])
     };
   }
   _selectMenuItem({
@@ -2080,6 +2073,7 @@ const Default$8 = {
   // if false, we use the backdrop helper without adding any element to the dom
   rootElement: 'body' // give the choice to place backdrop under different elements
 };
+
 const DefaultType$8 = {
   className: 'string',
   clickCallback: '(function|null)',
@@ -2204,6 +2198,7 @@ const Default$7 = {
   autofocus: true,
   trapElement: null // The element to trap focus inside of
 };
+
 const DefaultType$7 = {
   autofocus: 'boolean',
   trapElement: 'element'
@@ -2930,10 +2925,7 @@ const DefaultAllowlist = {
   br: [],
   col: [],
   code: [],
-  dd: [],
   div: [],
-  dl: [],
-  dt: [],
   em: [],
   hr: [],
   h1: [],
@@ -2967,6 +2959,7 @@ const uriAttributes = new Set(['background', 'cite', 'href', 'itemtype', 'longde
  *
  * Shout-out to Angular https://github.com/angular/angular/blob/15.2.8/packages/core/src/sanitization/url_sanitizer.ts#L38
  */
+// eslint-disable-next-line unicorn/better-regex
 const SAFE_URL_PATTERN = /^(?!javascript:)(?:[a-z0-9+.-]+:|[^&:/?#]*(?:[/?#]|$))/i;
 const allowedAttribute = (attribute, allowedAttributeList) => {
   const attributeName = attribute.nodeName.toLowerCase();
@@ -3131,7 +3124,7 @@ class TemplateFactory extends Config {
     return this._config.sanitize ? sanitizeHtml(arg, this._config.allowList, this._config.sanitizeFn) : arg;
   }
   _resolvePossibleFunction(arg) {
-    return execute(arg, [undefined, this]);
+    return execute(arg, [this]);
   }
   _putElementInTemplate(element, templateElement) {
     if (this._config.html) {
@@ -3230,7 +3223,7 @@ const DefaultType$3 = {
 class Tooltip extends BaseComponent {
   constructor(element, config) {
     if (typeof Popper === 'undefined') {
-      throw new TypeError('Bootstrap\'s tooltips require Popper (https://github.com/floating-ui/popper-docs/blob/main/docs/v2/index.md)');
+      throw new TypeError('Bootstrap\'s tooltips require Popper (https://popper.js.org)');
     }
     super(element, config);
 
@@ -3276,6 +3269,7 @@ class Tooltip extends BaseComponent {
     if (!this._isEnabled) {
       return;
     }
+    this._activeTrigger.click = !this._activeTrigger.click;
     if (this._isShown()) {
       this._leave();
       return;
@@ -3463,7 +3457,7 @@ class Tooltip extends BaseComponent {
     return offset;
   }
   _resolvePossibleFunction(arg) {
-    return execute(arg, [this._element, this._element]);
+    return execute(arg, [this._element]);
   }
   _getPopperConfig(attachment) {
     const defaultBsPopperConfig = {
@@ -3501,7 +3495,7 @@ class Tooltip extends BaseComponent {
     };
     return {
       ...defaultBsPopperConfig,
-      ...execute(this._config.popperConfig, [undefined, defaultBsPopperConfig])
+      ...execute(this._config.popperConfig, [defaultBsPopperConfig])
     };
   }
   _setListeners() {
@@ -3510,7 +3504,6 @@ class Tooltip extends BaseComponent {
       if (trigger === 'click') {
         EventHandler.on(this._element, this.constructor.eventName(EVENT_CLICK$1), this._config.selector, event => {
           const context = this._initializeOnDelegatedTarget(event);
-          context._activeTrigger[TRIGGER_CLICK] = !(context._isShown() && context._activeTrigger[TRIGGER_CLICK]);
           context.toggle();
         });
       } else if (trigger !== TRIGGER_MANUAL) {
@@ -3578,16 +3571,6 @@ class Tooltip extends BaseComponent {
   }
   _getConfig(config) {
     const dataAttributes = Manipulator.getDataAttributes(this._element);
-
-    // Read text attributes without coercing their values.
-    const title = this._element.getAttribute('data-bs-title');
-    const content = this._element.getAttribute('data-bs-content');
-    if (title !== null) {
-      dataAttributes.title = title;
-    }
-    if (content !== null) {
-      dataAttributes.content = content;
-    }
     for (const dataAttribute of Object.keys(dataAttributes)) {
       if (DISALLOWED_ATTRIBUTES.has(dataAttribute)) {
         delete dataAttributes[dataAttribute];
@@ -3863,7 +3846,7 @@ class ScrollSpy extends BaseComponent {
     // unregister any previous listeners
     EventHandler.off(this._config.target, EVENT_CLICK);
     EventHandler.on(this._config.target, EVENT_CLICK, SELECTOR_TARGET_LINKS, event => {
-      const observableSection = this._observableSections.get(event.delegateTarget.hash);
+      const observableSection = this._observableSections.get(event.target.hash);
       if (observableSection) {
         event.preventDefault();
         const root = this._rootElement || window;
@@ -4386,6 +4369,7 @@ class Toast extends BaseComponent {
   }
 
   // Private
+
   _maybeScheduleHide() {
     if (!this._config.autohide) {
       return;

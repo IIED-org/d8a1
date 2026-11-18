@@ -1,10 +1,9 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace DrupalCodeGenerator;
 
 use Composer\InstalledVersions;
+use Drupal\Core\DependencyInjection\ContainerNotInitializedException;
 use DrupalCodeGenerator\Command\Navigation;
 use DrupalCodeGenerator\Event\GeneratorInfo;
 use DrupalCodeGenerator\Event\GeneratorInfoAlter;
@@ -25,47 +24,40 @@ use DrupalCodeGenerator\Twig\TwigEnvironment;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Console\Application as BaseApplication;
 use Symfony\Component\Console\Helper\HelperSet;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Filesystem\Filesystem as SymfonyFileSystem;
 use Twig\Loader\FilesystemLoader as TemplateLoader;
 
 /**
  * DCG console application.
- *
- * @psalm-suppress DeprecatedInterface
- * @psalm-suppress DeprecatedTrait
- *
- * @todo Use Drupal replacement for ContainerAwareInterface when it's available.
- * @see https://www.drupal.org/project/drupal/issues/3397522
  */
-final class Application extends BaseApplication implements EventDispatcherInterface {
+final class Application extends BaseApplication implements ContainerAwareInterface, EventDispatcherInterface {
+
+  use ContainerAwareTrait;
 
   /**
    * Path to DCG root directory.
    */
-  public const string ROOT = __DIR__ . '/..';
+  public const ROOT = __DIR__ . '/..';
 
   /**
    * DCG version.
    *
    * @deprecated Use \DrupalCodeGenerator\Application->getVersion() instead.
    */
-  public const string VERSION = 'unknown';
+  public const VERSION = 'unknown';
 
   /**
    * DCG API version.
    */
-  public const int API = 3;
+  public const API = 3;
 
   /**
    * Path to templates directory.
    */
-  public const string TEMPLATE_PATH = self::ROOT . '/templates';
-
-  /**
-   * {@selfdoc}
-   */
-  private ContainerInterface $container;
+  public const TEMPLATE_PATH = self::ROOT . '/templates';
 
   /**
    * Creates the application.
@@ -75,9 +67,9 @@ final class Application extends BaseApplication implements EventDispatcherInterf
   public static function create(ContainerInterface $container): self {
     $application = new self(
       'Drupal Code Generator',
-      InstalledVersions::getPrettyVersion('chi-teck/drupal-code-generator'),
+      InstalledVersions::getVersion('chi-teck/drupal-code-generator'),
     );
-    $application->container = $container;
+    $application->setContainer($container);
 
     $file_system = new SymfonyFileSystem();
     $template_loader = new TemplateLoader();
@@ -90,7 +82,7 @@ final class Application extends BaseApplication implements EventDispatcherInterf
         new TwigRenderer(new TwigEnvironment($template_loader)),
         new ListPrinter(),
         new TablePrinter(),
-        new ModuleInfo($container->get('module_handler'), $container->get('extension.list.module')),
+        new ModuleInfo($container->get('module_handler')),
         new ThemeInfo($container->get('theme_handler')),
         new ServiceInfo($container),
         new HookInfo($container->get('module_handler')),
@@ -101,7 +93,7 @@ final class Application extends BaseApplication implements EventDispatcherInterf
     );
 
     $generator_factory = new GeneratorFactory(
-      $container->get('class_resolver'),
+      $application->getContainer()->get('class_resolver'),
     );
 
     $core_generators = $generator_factory->getGenerators();
@@ -125,6 +117,9 @@ final class Application extends BaseApplication implements EventDispatcherInterf
    * Returns Drupal container.
    */
   public function getContainer(): ContainerInterface {
+    if (!isset($this->container)) {
+      throw new ContainerNotInitializedException('Application::$container is not initialized yet.');
+    }
     return $this->container;
   }
 
@@ -142,7 +137,7 @@ final class Application extends BaseApplication implements EventDispatcherInterf
    * @psalm-suppress InvalidReturnStatement
    */
   public function dispatch(object $event): object {
-    return $this->container->get('event_dispatcher')->dispatch($event);
+    return $this->getContainer()->get('event_dispatcher')->dispatch($event);
   }
 
 }

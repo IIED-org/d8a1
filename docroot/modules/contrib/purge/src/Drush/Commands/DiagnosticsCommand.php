@@ -39,7 +39,6 @@ class DiagnosticsCommand extends DrushCommands {
   public static function create(ContainerInterface $container): self {
     return new static($container->get('purge.diagnostics'));
   }
-
   /**
    * Only add @default-fields for the table format.
    *

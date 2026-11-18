@@ -1,11 +1,9 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace PHPSTORM_META {
 
 {% for definition in definitions %}
-  // {{  definition.label|replace({"\n": " ", "\r": " "}) }}.
+  // {{  definition.label }}.
   {% set key = definition.type ~ '__bundles' %}
   registerArgumentsSet('{{ key }}',
   {% for bundle in definition.bundles %}

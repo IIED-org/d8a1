@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\redirect_404\Functional;
 
 use Drupal\Core\Database\Database;
@@ -82,5 +80,4 @@ class Redirect404LogSuppressorTest extends Redirect404TestBase {
     $this->assertEquals(2, Database::getConnection()->query("SELECT COUNT(*) FROM {watchdog} WHERE type = 'access denied'")->fetchField());
 
   }
-
 }

@@ -42,22 +42,20 @@ class TranslationLanguageRenderer extends DefaultLanguageRenderer {
   /**
    * {@inheritdoc}
    */
-  public function preRenderByRelationship(array $result, string $relationship): void {
-    parent::dsPreRender($result, $relationship, TRUE);
+  public function preRender(array $result) {
+    parent::dsPreRender($result, TRUE);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function renderByRelationship(ResultRow $row, string $relationship): array {
-    if ($this->getEntity($row, $relationship)) {
-      $entity_id = $row->_entity->id();
-      $langcode = $this->getLangcodeByRelationship($row, $relationship);
-      if (isset($this->build[$entity_id][$langcode])) {
-        $build = $this->build[$entity_id][$langcode];
-        $this->alterBuild($build, $row);
-        return $build;
-      }
+  public function render(ResultRow $row) {
+    $entity_id = $row->_entity->id();
+    $langcode = $this->getLangcode($row);
+    if (isset($this->build[$entity_id][$langcode])) {
+      $build = $this->build[$entity_id][$langcode];
+      $this->alterBuild($build, $row);
+      return $build;
     }
 
     return [];
@@ -67,8 +65,7 @@ class TranslationLanguageRenderer extends DefaultLanguageRenderer {
    * {@inheritdoc}
    */
   public function getLangcode(ResultRow $row) {
-    return $row->{$this->langcodeAlias} ?? $this->languageManager->getDefaultLanguage()
-      ->getId();
+    return isset($row->{$this->langcodeAlias}) ? $row->{$this->langcodeAlias} : $this->languageManager->getDefaultLanguage()->getId();
   }
 
 }

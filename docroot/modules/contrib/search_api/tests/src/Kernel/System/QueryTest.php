@@ -10,14 +10,12 @@ use Drupal\search_api\Query\ConditionGroup;
 use Drupal\search_api\Query\Query;
 use Drupal\search_api\Query\QueryInterface;
 use Drupal\search_api_test\PluginTestTrait;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests query functionality.
  *
  * @group search_api
  */
-#[RunTestsInSeparateProcesses]
 class QueryTest extends KernelTestBase {
 
   use PluginTestTrait;
@@ -91,7 +89,7 @@ class QueryTest extends KernelTestBase {
    *   (optional) Whether hooks and processors should be invoked with this
    *   processing level.
    *
-   * @dataProvider processingLevelTestDataProvider
+   * @dataProvider testProcessingLevelDataProvider
    */
   public function testProcessingLevel($level, $hooks_and_processors_invoked = TRUE) {
     /** @var \Drupal\search_api\Processor\ProcessorInterface $processor */
@@ -142,7 +140,7 @@ class QueryTest extends KernelTestBase {
    *   Arrays of method arguments for the
    *   \Drupal\Tests\search_api\Kernel\QueryTest::testProcessingLevel() method.
    */
-  public static function processingLevelTestDataProvider() {
+  public static function testProcessingLevelDataProvider() {
     return [
       'none' => [QueryInterface::PROCESSING_NONE, FALSE],
       'basic' => [QueryInterface::PROCESSING_BASIC],

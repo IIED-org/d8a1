@@ -5,7 +5,6 @@ namespace Drupal\search_api\Task;
 use Drupal\Component\Utility\DeprecationHelper;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Drupal\search_api\Event\SearchApiEvents;
 use Drupal\search_api\IndexInterface;
 use Drupal\search_api\LoggerTrait;
 use Drupal\search_api\SearchApiException;
@@ -20,10 +19,32 @@ class ServerTaskManager implements ServerTaskManagerInterface, EventSubscriberIn
   use LoggerTrait;
   use StringTranslationTrait;
 
-  public function __construct(
-    protected TaskManagerInterface $taskManager,
-    protected EntityTypeManagerInterface $entityTypeManager,
-  ) {}
+  /**
+   * The Search API task manager.
+   *
+   * @var \Drupal\search_api\Task\TaskManagerInterface
+   */
+  protected $taskManager;
+
+  /**
+   * The entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
+   * Constructs a ServerTaskManager object.
+   *
+   * @param \Drupal\search_api\Task\TaskManagerInterface $task_manager
+   *   The Search API task manager.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
+   */
+  public function __construct(TaskManagerInterface $task_manager, EntityTypeManagerInterface $entity_type_manager) {
+    $this->taskManager = $task_manager;
+    $this->entityTypeManager = $entity_type_manager;
+  }
 
   /**
    * {@inheritdoc}
@@ -32,7 +53,7 @@ class ServerTaskManager implements ServerTaskManagerInterface, EventSubscriberIn
     $events = [];
 
     foreach (static::getSupportedTypes() as $type) {
-      $events[SearchApiEvents::EXECUTE_TASK_EVENT_PREFIX . $type][] = ['processEvent'];
+      $events['search_api.task.' . $type][] = ['processEvent'];
     }
 
     return $events;

@@ -26,7 +26,7 @@ class SocialApiImplementerInstaller {
    * @return array
    *   Requirements messages.
    */
-  public static function checkLibrary(string $machine_name, string $name, string $library, float $min_version, float $max_version): array {
+  public static function checkLibrary($machine_name, $name, $library, $min_version, $max_version) {
     $requirements = [];
 
     // Ensure library is installed.
@@ -44,7 +44,7 @@ class SocialApiImplementerInstaller {
         ];
       }
     }
-    catch (\OutOfBoundsException) {
+    catch (\OutOfBoundsException $e) {
       $requirements[$machine_name] = [
         'description' => t(
           "@name could not be installed because @library was not found. @name must be installed using Composer. Please read the installation instructions.",

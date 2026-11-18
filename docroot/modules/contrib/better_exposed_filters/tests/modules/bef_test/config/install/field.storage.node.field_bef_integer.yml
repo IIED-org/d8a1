@@ -14,9 +14,6 @@ type: list_integer
 settings:
   allowed_values:
     -
-      value: 0
-      label: Zero
-    -
       value: 1
       label: One
     -

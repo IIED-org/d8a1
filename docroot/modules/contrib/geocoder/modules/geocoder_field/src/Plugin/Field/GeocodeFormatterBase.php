@@ -1,33 +1,30 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Drupal\geocoder_field\Plugin\Field;
 
-use Drupal\Component\Plugin\Exception\PluginException;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Logger\LoggerChannelTrait;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\Core\Render\RendererInterface;
-use Drupal\Core\Utility\LinkGeneratorInterface;
-use Drupal\geocoder\DumperInterface;
 use Drupal\geocoder\DumperPluginManager;
 use Drupal\geocoder\Entity\GeocoderProvider;
 use Drupal\geocoder\GeocoderInterface;
 use Drupal\geocoder\ProviderPluginManager;
-use Geocoder\Model\AddressCollection;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Core\Render\RendererInterface;
+use Drupal\Core\Utility\LinkGeneratorInterface;
+use Drupal\Core\Logger\LoggerChannelFactoryInterface;
+use Geocoder\Model\AddressCollection;
+use Drupal\Component\Plugin\Exception\PluginException;
 
 /**
  * Base Plugin implementation of the Geocode formatter.
  */
 abstract class GeocodeFormatterBase extends FormatterBase implements ContainerFactoryPluginInterface {
-
-  use LoggerChannelTrait;
 
   /**
    * The geocoder service.
@@ -63,6 +60,13 @@ abstract class GeocodeFormatterBase extends FormatterBase implements ContainerFa
    * @var \Drupal\Core\Utility\LinkGeneratorInterface
    */
   protected $link;
+
+  /**
+   * The logger factory.
+   *
+   * @var \Drupal\Core\Logger\LoggerChannelFactoryInterface
+   */
+  protected $loggerFactory;
 
   /**
    * The entity type manager.
@@ -105,6 +109,8 @@ abstract class GeocodeFormatterBase extends FormatterBase implements ContainerFa
    *   The renderer.
    * @param \Drupal\Core\Utility\LinkGeneratorInterface $link_generator
    *   The Link Generator service.
+   * @param \Drupal\Core\Logger\LoggerChannelFactoryInterface $logger_factory
+   *   The logger factory.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
    */
@@ -121,7 +127,8 @@ abstract class GeocodeFormatterBase extends FormatterBase implements ContainerFa
     DumperPluginManager $dumper_plugin_manager,
     RendererInterface $renderer,
     LinkGeneratorInterface $link_generator,
-    EntityTypeManagerInterface $entity_type_manager,
+    LoggerChannelFactoryInterface $logger_factory,
+    EntityTypeManagerInterface $entity_type_manager
   ) {
     parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $label, $view_mode, $third_party_settings);
     $this->geocoder = $geocoder;
@@ -129,13 +136,14 @@ abstract class GeocodeFormatterBase extends FormatterBase implements ContainerFa
     $this->dumperPluginManager = $dumper_plugin_manager;
     $this->renderer = $renderer;
     $this->link = $link_generator;
+    $this->loggerFactory = $logger_factory;
     $this->entityTypeManager = $entity_type_manager;
     try {
       $this->geocoderProviders = $this->entityTypeManager->getStorage('geocoder_provider')
         ->loadMultiple();
     }
     catch (\Exception $e) {
-      $this->getLogger('geocoder')->error($e->getMessage());
+      watchdog_exception('geocoder', $e);
     }
   }
 
@@ -156,6 +164,7 @@ abstract class GeocodeFormatterBase extends FormatterBase implements ContainerFa
       $container->get('plugin.manager.geocoder.dumper'),
       $container->get('renderer'),
       $container->get('link_generator'),
+      $container->get('logger.factory'),
       $container->get('entity_type.manager')
     );
   }
@@ -193,13 +202,8 @@ abstract class GeocodeFormatterBase extends FormatterBase implements ContainerFa
     // Generates the Draggable Table of Selectable Geocoder providers.
     $element['providers'] = $this->providerPluginManager->providersPluginsTableList($enabled_providers);
 
-    // Set a validation for the providers' selection.
-    $element['providers']['#element_validate'] = [
-      [
-        get_class($this),
-        'validateProvidersSettingsForm',
-      ],
-    ];
+    // Set a validation for the providers selection.
+    $element['providers']['#element_validate'] = [[get_class($this), 'validateProvidersSettingsForm']];
 
     $element['dumper'] = [
       '#type' => 'select',
@@ -243,19 +247,20 @@ abstract class GeocodeFormatterBase extends FormatterBase implements ContainerFa
     $elements = [];
     try {
       $dumper = $this->dumperPluginManager->createInstance($this->getSetting('dumper'));
-      $providers = $this->getEnabledGeocoderProviders();
-
-      foreach ($items as $delta => $item) {
-        if ($address_collection = $this->geocoder->geocode($item->value, $providers)) {
-          $elements[$delta] = [
-            '#markup' => $address_collection instanceof AddressCollection && !$address_collection->isEmpty() && $dumper instanceof DumperInterface ? $dumper->dump($address_collection->first()) : "",
-          ];
-        }
-      }
     }
     catch (PluginException $e) {
-      $this->getLogger('geocoder')->error($e->getMessage());
+      $this->loggerFactory->get('geocoder')->error('No Dumper has been set');
     }
+    $providers = $this->getEnabledGeocoderProviders();
+
+    foreach ($items as $delta => $item) {
+      if ($address_collection = $this->geocoder->geocode($item->value, $providers)) {
+        $elements[$delta] = [
+          '#markup' => $address_collection instanceof AddressCollection && !$address_collection->isEmpty() ? $dumper->dump($address_collection->first()) : "",
+        ];
+      }
+    }
+
     return $elements;
   }
 
@@ -295,14 +300,14 @@ abstract class GeocodeFormatterBase extends FormatterBase implements ContainerFa
   }
 
   /**
-   * Validates the providers' selection.
+   * Validates the providers selection.
    *
    * @param array $element
    *   The form API form element.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The form state object.
    */
-  public static function validateProvidersSettingsForm(array $element, FormStateInterface $form_state) {
+  public static function validateProvidersSettingsForm(array $element, FormStateInterface &$form_state) {
     $providers = !empty($element['#value']) ? array_filter($element['#value'], function ($value) {
       return isset($value['checked']) && TRUE == $value['checked'];
     }) : [];

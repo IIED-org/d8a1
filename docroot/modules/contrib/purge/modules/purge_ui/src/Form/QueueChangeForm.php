@@ -125,5 +125,4 @@ class QueueChangeForm extends FormBase {
   protected function successfulAjaxSubmit(array $form, FormStateInterface $form_state) {
     return $this->changeQueue($form, $form_state);
   }
-
 }

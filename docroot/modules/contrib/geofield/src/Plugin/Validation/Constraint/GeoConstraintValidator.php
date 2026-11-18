@@ -2,8 +2,8 @@
 
 namespace Drupal\geofield\Plugin\Validation\Constraint;
 
-use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\geofield\GeoPHP\GeoPHPInterface;
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
@@ -42,7 +42,7 @@ class GeoConstraintValidator extends ConstraintValidator implements ContainerInj
   /**
    * {@inheritdoc}
    */
-  public function validate(mixed $value, Constraint $constraint): void {
+  public function validate($value, Constraint $constraint) {
     if (isset($value)) {
       $valid_geometry = TRUE;
 

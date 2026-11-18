@@ -2,15 +2,17 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.field.node.ctools_block_field_test.field_body
+    - field.field.node.ctools_block_field_test.body
     - node.type.ctools_block_field_test
   module:
     - user
+_core:
+  default_config_hash: clNnyw6fhh5SwIme5I_3zjbLv-PMfpY-JXofVAC3CV8
 id: node.ctools_block_field_test.default
 targetEntityType: node
 bundle: ctools_block_field_test
 mode: default
 content: {  }
 hidden:
-  field_body: true
+  body: true
   links: true

@@ -23,7 +23,6 @@ abstract class ManageContext extends FormBase {
    *
    * @var string
    */
-  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
   protected $machine_name;
 
   /**
@@ -52,7 +51,6 @@ abstract class ManageContext extends FormBase {
    *
    * @var array
    */
-  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
   protected $property_types = [];
 
   /**
@@ -185,7 +183,7 @@ abstract class ManageContext extends FormBase {
    *   The form state.
    *
    * @return \Drupal\Core\Ajax\AjaxResponse
-   *   Form ajax response.
+   *   Form ajax repsonse.
    */
   public function addContext(array &$form, FormStateInterface $form_state) {
     $context = $form_state->getValue('context');
@@ -215,7 +213,7 @@ abstract class ManageContext extends FormBase {
    *   The form state.
    *
    * @return \Drupal\Core\Ajax\AjaxResponse
-   *   Form ajax response.
+   *   Form ajax repsonse.
    */
   public function addRelationship(array &$form, FormStateInterface $form_state) {
     $relationship = $form_state->getValue('relationships');
@@ -269,9 +267,9 @@ abstract class ManageContext extends FormBase {
         '#links' => $this->getOperations($cached_values, $row, $route_name, $route_parameters),
       ];
       $contexts[$row] = [
-        0 => $row,
-        1 => $context->getContextDefinition()->getLabel(),
-        2 => $context->getContextDefinition()->getDataType(),
+        $row,
+        $context->getContextDefinition()->getLabel(),
+        $context->getContextDefinition()->getDataType(),
         'operations' => [
           'data' => $build,
         ],
@@ -426,10 +424,8 @@ abstract class ManageContext extends FormBase {
   abstract protected function getRelationshipOperationsRouteInfo($cached_values, $machine_name, $row);
 
   /**
-   * Determines if a context is editable.
-   *
    * @param mixed $cached_values
-   *   Cached context values.
+   *  Cached context values.
    * @param string $row
    *   Context Row.
    *

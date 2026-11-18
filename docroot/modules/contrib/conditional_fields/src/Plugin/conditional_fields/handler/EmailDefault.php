@@ -61,9 +61,7 @@ class EmailDefault extends ConditionalFieldsHandlerBase {
           ];
         }
 
-        if (isset($input_states)) {
-          $state[$options['state']][] = $input_states;
-        }
+        $state[$options['state']][] = $input_states;
         break;
 
       default:

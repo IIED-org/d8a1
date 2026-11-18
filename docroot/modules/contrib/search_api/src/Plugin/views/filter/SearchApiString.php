@@ -2,8 +2,6 @@
 
 namespace Drupal\search_api\Plugin\views\filter;
 
-use Drupal\views\Attribute\ViewsFilter;
-
 /**
  * Defines a filter for adding conditions on string fields to the query.
  *
@@ -13,8 +11,9 @@ use Drupal\views\Attribute\ViewsFilter;
  * with", etc. as used by Views' string filter.)
  *
  * @ingroup views_filter_handlers
+ *
+ * @ViewsFilter("search_api_string")
  */
-#[ViewsFilter('search_api_string')]
 class SearchApiString extends SearchApiNumeric {
 
   /**

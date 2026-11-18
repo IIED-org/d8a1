@@ -33,7 +33,7 @@ trait GeofieldProximityHandlerTrait {
       }
     }
     catch (\Exception $e) {
-      $this->getLogger('geofield')->error($e->getMessage());
+      watchdog_exception('geofield', $e);
     }
   }
 

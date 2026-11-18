@@ -68,7 +68,7 @@ class AuthenticatedRedirectTest extends BrowserTestBase {
   /**
    * Data provider for testBaseRedirect.
    */
-  public static function baseRedirectDataProvider() {
+  public function baseRedirectDataProvider() {
     return [
       [
         '',
@@ -81,6 +81,12 @@ class AuthenticatedRedirectTest extends BrowserTestBase {
         'admin/config',
         404,
         '/test',
+      ],
+      [
+        'https://www.drupal.org',
+        'admin/config',
+        200,
+        'https://www.drupal.org',
       ],
     ];
   }

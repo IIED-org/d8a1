@@ -23,10 +23,7 @@ use FontLib\Table\Type\name;
 )]
 class Font extends FileMetadataPluginBase {
 
-  /**
-   * @return list<string>
-   */
-  public function getSupportedKeys(?array $options = NULL): array {
+  public function getSupportedKeys(array $options = NULL): array {
     return array_merge(['FontType', 'FontWeight'], array_values(name::$nameIdCodes));
   }
 

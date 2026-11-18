@@ -2,8 +2,8 @@
 
 namespace Drupal\purge_queuer_coretags;
 
+use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Core\Cache\CacheTagsInvalidatorInterface;
-use Drupal\purge\Plugin\Purge\Invalidation\Exception\InvalidExpressionException;
 use Drupal\purge\Plugin\Purge\Invalidation\Exception\TypeUnsupportedException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -30,10 +30,7 @@ class CacheTagsQueuer implements CacheTagsInvalidatorInterface {
   }
 
   /**
-   * A list of strings; tags containing any of them do not go into the queue.
-   *
-   * Matching is done with strpos(), so an entry matches anywhere inside the
-   * tag and not only at its start.
+   * A list of tag prefixes that should not go into the queue.
    *
    * @var string[]
    */
@@ -63,28 +60,11 @@ class CacheTagsQueuer implements CacheTagsInvalidatorInterface {
   protected $purgeQueue;
 
   /**
-   * The queuer plugin or FALSE when disabled, NULL when not yet initialized.
+   * The queuer plugin or FALSE when disabled.
    *
-   * @var null|false|\Drupal\purge_queuer_coretags\Plugin\Purge\Queuer\CoreTagsQueuer
+   * @var false|\Drupal\purge_queuer_coretags\Plugin\Purge\Queuer\CoreTagsQueuer
    */
   protected $queuer;
-
-  /**
-   * Determines whether a non-live workspace is currently active.
-   *
-   * Content saved in a non-live workspace is only visible to users previewing
-   * that workspace, so the cache tags that core invalidates for it cannot
-   * affect anything an external cache serves to the public. Those tags are
-   * queued once the workspace gets published, as core publishes outside of any
-   * active workspace.
-   *
-   * @return bool
-   *   TRUE when the workspaces module is installed and a workspace is active.
-   */
-  protected function hasActiveWorkspace() {
-    return $this->container->has('workspaces.manager')
-      && $this->container->get('workspaces.manager')->hasActiveWorkspace();
-  }
 
   /**
    * Initialize the invalidation factory and queue service.
@@ -117,18 +97,10 @@ class CacheTagsQueuer implements CacheTagsInvalidatorInterface {
   /**
    * {@inheritdoc}
    *
-   * Queues invalidated cache tags as tag purgeables.
+   * Queues invalidated cache tags as tag purgables.
    */
   public function invalidateTags(array $tags) {
     if (!$this->initialize()) {
-      return;
-    }
-
-    // Skip tags invalidated while a non-live workspace is active, they'll be
-    // invalidated again when the workspace gets published. The tags are not
-    // remembered as invalidated either, so that publishing them later on in
-    // the same request still queues them.
-    if ($this->hasActiveWorkspace()) {
       return;
     }
 
@@ -137,9 +109,7 @@ class CacheTagsQueuer implements CacheTagsInvalidatorInterface {
     foreach ($tags as $tag) {
       if (!in_array($tag, $this->invalidatedTags)) {
 
-        // Check the tag against the blacklist and skip if it matches. This is
-        // deliberately a substring match, not a prefix match: sites rely on
-        // entries such as ':revisions' or '_list' matching mid-tag.
+        // Check the tag against the blacklist and skip if it matches.
         $blacklisted = FALSE;
         foreach ($this->blacklistedTagPrefixes as $prefix) {
           if (strpos($tag, $prefix) !== FALSE) {
@@ -152,18 +122,14 @@ class CacheTagsQueuer implements CacheTagsInvalidatorInterface {
             $this->invalidatedTags[] = $tag;
           }
           catch (TypeUnsupportedException $e) {
-            // When there's no purger enabled, don't bother queueing tags.
+            // When there's no purger enabled for it, don't bother queuing tags.
             return;
           }
-          catch (InvalidExpressionException $e) {
-            // Tags that purgers can never invalidate (e.g. containing spaces)
-            // are skipped: core is calling us from within entity and config
-            // saves, where throwing would take the whole request down.
-            $this->invalidatedTags[] = $tag;
-            $this->container->get('purge.logger')->get('queuers')->error(
-              "Skipped cache tag '@tag': @reason",
-              ['@tag' => $tag, '@reason' => $e->getMessage()]
-            );
+          catch (PluginNotFoundException $e) {
+            // When Drupal uninstalls Purge, rebuilds plugin caches it might
+            // run into the condition where the tag plugin isn't available. In
+            // these scenarios we want the queuer to silently fail.
+            return;
           }
         }
       }

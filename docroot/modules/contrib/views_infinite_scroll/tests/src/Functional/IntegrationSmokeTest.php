@@ -21,7 +21,7 @@ class IntegrationSmokeTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['views', 'views_ui', 'views_infinite_scroll'];
+  public static $modules = ['views', 'views_ui', 'views_infinite_scroll'];
 
   /**
    * {@inheritdoc}

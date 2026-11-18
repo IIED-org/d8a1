@@ -16,35 +16,35 @@ abstract class UserManager implements UserManagerInterface {
    *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  protected EntityTypeManagerInterface $entityTypeManager;
+  protected $entityTypeManager;
 
   /**
    * The Messenger service.
    *
    * @var \Drupal\Core\Messenger\MessengerInterface
    */
-  protected MessengerInterface $messenger;
+  protected $messenger;
 
   /**
    * The Drupal logger factory.
    *
    * @var \Drupal\Core\Logger\LoggerChannelFactoryInterface
    */
-  protected LoggerChannelFactoryInterface $loggerFactory;
+  protected $loggerFactory;
 
   /**
    * The entity type.
    *
    * @var string
    */
-  protected string $entityType;
+  protected $entityType;
 
   /**
    * The implementer plugin id.
    *
    * @var string
    */
-  protected string $pluginId;
+  protected $pluginId;
 
   /**
    * Constructor.
@@ -58,7 +58,7 @@ abstract class UserManager implements UserManagerInterface {
    * @param \Drupal\Core\Logger\LoggerChannelFactoryInterface $logger_factory
    *   Used for logging errors.
    */
-  public function __construct(string $entity_type,
+  public function __construct($entity_type,
                               EntityTypeManagerInterface $entity_type_manager,
                               MessengerInterface $messenger,
                               LoggerChannelFactoryInterface $logger_factory) {
@@ -72,41 +72,39 @@ abstract class UserManager implements UserManagerInterface {
   /**
    * {@inheritdoc}
    */
-  public function getPluginId(): string {
+  public function getPluginId() {
     return $this->pluginId;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function setPluginId($plugin_id): void {
+  public function setPluginId($plugin_id) {
     $this->pluginId = $plugin_id;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getDrupalUserId(string $provider_user_id): int|false {
-    try {
-      $storage = $this->entityTypeManager->getStorage($this->entityType);
-      $query = $storage->getQuery();
-      $query->accessCheck(FALSE);
-      $query->condition('plugin_id', $this->pluginId);
-      $query->condition('provider_user_id', $provider_user_id);
-      $uids = $query->execute();
+  public function getDrupalUserId($provider_user_id) {
 
-      if ($uids) {
-        /** @var \Drupal\social_api\Entity\SocialApi[] $user */
-        $user = $storage->loadMultiple($uids);
-        if (!empty($user)) {
-          return current($user)->getUserId();
-        }
+    try {
+      /** @var \Drupal\social_api\Entity\SocialApi[] $user */
+      $user = $this->entityTypeManager
+        ->getStorage($this->entityType)
+        ->loadByProperties([
+          'plugin_id' => $this->pluginId,
+          'provider_user_id' => $provider_user_id,
+        ]);
+
+      if (!empty($user)) {
+        return current($user)->getUserId();
       }
     }
-    catch (\Exception $e) {
+    catch (\Exception $ex) {
       $this->loggerFactory
         ->get($this->getPluginId())
-        ->error('Failed to to query entity. Exception: @message', ['@message' => $e->getMessage()]);
+        ->error('Failed to to query entity. Exception: @message', ['@message' => $ex->getMessage()]);
     }
 
     return FALSE;

@@ -2,6 +2,7 @@
 
 namespace Drupal\entity_reference_revisions\Plugin\views\display;
 
+use Drupal\Core\Database\Query\Condition;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 
 /**
@@ -121,16 +122,15 @@ class EntityReferenceRevisions extends DisplayPluginBase {
     $options = $this->getOption('entity_reference_revisions_options');
 
     // Restrict the autocomplete options based on what's been typed already.
-    $db = \Drupal::database();
     if (isset($options['match'])) {
       $style_options = $this->getOption('style');
-      $value = $db->escapeLike($options['match']) . '%';
+      $value = \Drupal::database()->escapeLike($options['match']) . '%';
       if ($options['match_operator'] != 'STARTS_WITH') {
         $value = '%' . $value;
       }
 
       // Multiple search fields are OR'd together.
-      $conditions = $db->condition('OR');
+      $conditions = new Condition('OR');
 
       // Build the condition using the selected search fields.
       foreach ($style_options['options']['search_fields'] as $field_alias) {

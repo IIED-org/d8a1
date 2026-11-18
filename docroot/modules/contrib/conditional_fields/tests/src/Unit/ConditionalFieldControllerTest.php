@@ -3,6 +3,7 @@
 namespace Drupal\Tests\conditional_fields\Unit;
 
 use Drupal\Tests\UnitTestCase;
+
 use Drupal\conditional_fields\Controller\ConditionalFieldController;
 
 /**
@@ -39,19 +40,19 @@ class ConditionalFieldControllerTest extends UnitTestCase {
       ->getMock();
     $entity_types['content_a']->expects($this->any())
       ->method('getLabel')
-      ->willReturn("contentA");
+      ->will($this->returnValue("contentA"));
 
     // `content_b` shouldn't appear in test results.
     $entity_types['content_b'] = $this->createMock('Drupal\Core\Config\Entity\ConfigEntityTypeInterface');
     $entity_types['content_b']->expects($this->any())
       ->method('getLabel')
-      ->willReturn("contentB");
+      ->will($this->returnValue("contentB"));
 
     // Setup Drupal Container.
     $entity_type_manager = $this->createMock('Drupal\Core\Entity\EntityTypeManagerInterface');
     $entity_type_manager->expects($this->any())
       ->method('getDefinitions')
-      ->willReturn($entity_types);
+      ->will($this->returnValue($entity_types));
 
     // For only one test case this classes not used,
     // change this after adding new test cases.

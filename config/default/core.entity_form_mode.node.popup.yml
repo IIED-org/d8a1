@@ -6,6 +6,6 @@ dependencies:
     - node
 id: node.popup
 label: Popup
-description: null
+description: ''
 targetEntityType: node
 cache: true

@@ -2,19 +2,33 @@
 
 namespace Drupal\social_auth_google\Settings;
 
-use Drupal\social_auth\Settings\SettingsInterface;
-
 /**
  * Defines an interface for Social Auth Google settings.
  */
-interface GoogleAuthSettingsInterface extends SettingsInterface {
+interface GoogleAuthSettingsInterface {
+
+  /**
+   * Gets the client ID.
+   *
+   * @return string
+   *   The client ID.
+   */
+  public function getClientId();
+
+  /**
+   * Gets the client secret.
+   *
+   * @return string
+   *   The client secret.
+   */
+  public function getClientSecret();
 
   /**
    * Gets the restricted domain.
    *
-   * @return string|null
+   * @return string
    *   The restricted domain.
    */
-  public function getRestrictedDomain(): ?string;
+  public function getRestrictedDomain();
 
 }

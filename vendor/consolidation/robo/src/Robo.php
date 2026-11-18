@@ -26,7 +26,7 @@ use Symfony\Component\Process\Process;
 class Robo
 {
     const APPLICATION_NAME = 'Robo';
-    private const VERSION = '5.2.3';
+    private const VERSION = '4.0.6';
 
     /**
      * The currently active container object, or NULL if not initialized yet.
@@ -547,7 +547,7 @@ class Robo
         // If the instance is a Symfony Command, register it with
         // the application
         if ($instance instanceof Command) {
-            $app->addCommand($instance);
+            $app->add($instance);
             return $instance;
         }
 
@@ -555,7 +555,7 @@ class Robo
         $commandFactory = $container->get('commandFactory');
         $commandList = $commandFactory->createCommandsFromClass($instance);
         foreach ($commandList as $command) {
-            $app->addCommand($command);
+            $app->add($command);
         }
         return $instance;
     }

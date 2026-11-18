@@ -3,7 +3,7 @@
 /*
  * This file is part of Psy Shell.
  *
- * (c) 2012-2026 Justin Hileman
+ * (c) 2012-2023 Justin Hileman
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -36,7 +36,7 @@ class ValidClassNamePass extends NamespaceAwarePass
     const INTERFACE_TYPE = 'interface';
     const TRAIT_TYPE = 'trait';
 
-    private int $conditionalScopes = 0;
+    private $conditionalScopes = 0;
 
     /**
      * Validate class, interface and trait definitions.
@@ -56,7 +56,7 @@ class ValidClassNamePass extends NamespaceAwarePass
         if (self::isConditional($node)) {
             $this->conditionalScopes++;
 
-            return null;
+            return;
         }
 
         if ($this->conditionalScopes === 0) {
@@ -68,8 +68,6 @@ class ValidClassNamePass extends NamespaceAwarePass
                 $this->validateTraitStatement($node);
             }
         }
-
-        return null;
     }
 
     /**
@@ -81,9 +79,9 @@ class ValidClassNamePass extends NamespaceAwarePass
     {
         if (self::isConditional($node)) {
             $this->conditionalScopes--;
-        }
 
-        return null;
+            return;
+        }
     }
 
     private static function isConditional(Node $node): bool
@@ -141,7 +139,7 @@ class ValidClassNamePass extends NamespaceAwarePass
     protected function ensureCanDefine(Stmt $stmt, string $scopeType = self::CLASS_TYPE)
     {
         // Anonymous classes don't have a name, and uniqueness shouldn't be enforced.
-        if (!\property_exists($stmt, 'name') || $stmt->name === null) {
+        if ($stmt->name === null) {
             return;
         }
 
@@ -264,6 +262,30 @@ class ValidClassNamePass extends NamespaceAwarePass
     }
 
     /**
+     * Get a symbol type key for storing in the scope name cache.
+     *
+     * @deprecated No longer used. Scope type should be passed into ensureCanDefine directly.
+     *
+     * @codeCoverageIgnore
+     *
+     * @throws FatalErrorException
+     *
+     * @param Stmt $stmt
+     */
+    protected function getScopeType(Stmt $stmt): string
+    {
+        if ($stmt instanceof Class_) {
+            return self::CLASS_TYPE;
+        } elseif ($stmt instanceof Interface_) {
+            return self::INTERFACE_TYPE;
+        } elseif ($stmt instanceof Trait_) {
+            return self::TRAIT_TYPE;
+        }
+
+        throw $this->createError('Unsupported statement type', $stmt);
+    }
+
+    /**
      * Check whether a class exists, or has been defined in the current code snippet.
      *
      * Gives `self`, `static` and `parent` a free pass.
@@ -315,8 +337,6 @@ class ValidClassNamePass extends NamespaceAwarePass
         if (isset($this->currentScope[$name])) {
             return $this->currentScope[$name];
         }
-
-        return null;
     }
 
     /**
@@ -327,6 +347,6 @@ class ValidClassNamePass extends NamespaceAwarePass
      */
     protected function createError(string $msg, Stmt $stmt): FatalErrorException
     {
-        return new FatalErrorException($msg, 0, \E_ERROR, null, $stmt->getStartLine());
+        return new FatalErrorException($msg, 0, \E_ERROR, null, $stmt->getLine());
     }
 }

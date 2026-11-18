@@ -12,7 +12,6 @@ use Drupal\search_api\Utility\Utility;
 use Drupal\Tests\search_api\Kernel\ViewsTestField;
 use Drupal\user\Entity\User;
 use Drupal\search_api\Plugin\views\ResultRow;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the functionality of our Views field plugin trait.
@@ -21,7 +20,6 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  *
  * @coversDefaultClass \Drupal\search_api\Plugin\views\field\SearchApiFieldTrait
  */
-#[RunTestsInSeparateProcesses]
 class ViewsFieldTraitTest extends KernelTestBase {
 
   /**
@@ -157,7 +155,7 @@ class ViewsFieldTraitTest extends KernelTestBase {
       '_item' => $item,
       '_object' => $item->getOriginalObject(),
       '_relationship_objects' => [
-        '' => [$item->getOriginalObject()],
+        NULL => [$item->getOriginalObject()],
       ],
     ]);
     $item_id = Utility::createCombinedId($datasource_id, '2:en');

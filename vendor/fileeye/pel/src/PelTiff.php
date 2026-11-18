@@ -1,10 +1,36 @@
 <?php
 
-declare(strict_types=1);
+/**
+ * PEL: PHP Exif Library.
+ * A library with support for reading and
+ * writing all Exif headers in JPEG and TIFF images using PHP.
+ *
+ * Copyright (C) 2004, 2005, 2006 Martin Geisler.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program in the file COPYING; if not, write to the
+ * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
+ * Boston, MA 02110-1301 USA
+ */
 
-namespace lsolesen\pel;
-
-use Stringable;
+/**
+ * Classes for dealing with TIFF data.
+ *
+ * @author Martin Geisler <mgeisler@users.sourceforge.net>
+ * @license http://www.gnu.org/licenses/gpl.html GNU General Public
+ *          License (GPL)
+ * @package PEL
+ */
 
 /**
  * Class for handling TIFF data.
@@ -24,26 +50,34 @@ use Stringable;
  * $ifd1 = $ifd0->getNextIfd();
  * </code>
  *
- * Should one have some image data of an unknown type, then the
- * {@link PelTiff::isValid()} function is handy: it will quickly test if the
+ * Should one have some image data of an unknown type, then the {@link
+ * PelTiff::isValid()} function is handy: it will quickly test if the
  * data could be valid TIFF data. The {@link PelJpeg::isValid()}
  * function does the same for JPEG images.
+ *
+ * @author Martin Geisler <mgeisler@users.sourceforge.net>
+ * @package PEL
  */
-class PelTiff implements Stringable
+namespace lsolesen\pel;
+
+class PelTiff
 {
+
     /**
      * TIFF header.
      *
      * This must follow after the two bytes indicating the byte order.
      */
-    public const TIFF_HEADER = 0x002A;
+    const TIFF_HEADER = 0x002A;
 
     /**
      * The first Image File Directory, if any.
      *
      * If set, then the type of the IFD must be {@link PelIfd::IFD0}.
+     *
+     * @var PelIfd
      */
-    private ?PelIfd $ifd = null;
+    private $ifd = null;
 
     /**
      * Construct a new object for holding TIFF data.
@@ -55,9 +89,9 @@ class PelTiff implements Stringable
      *
      * Use {@link setIfd()} to explicitly set the IFD.
      *
-     * @param bool|string|PelDataWindow $data;
+     * @param boolean|string|PelDataWindow $data;
      */
-    public function __construct(bool|string|PelDataWindow $data = false)
+    public function __construct($data = false)
     {
         if ($data === false) {
             return;
@@ -74,34 +108,18 @@ class PelTiff implements Stringable
     }
 
     /**
-     * Return a string representation of this object.
-     *
-     * @return string a string describing this object. This is mostly useful
-     *         for debugging.
-     */
-    public function __toString(): string
-    {
-        $str = Pel::fmt("Dumping TIFF data...\n");
-        if ($this->ifd !== null) {
-            $str .= $this->ifd->__toString();
-        }
-
-        return $str;
-    }
-
-    /**
      * Load TIFF data.
      *
      * The data given will be parsed and an internal tree representation
-     * will be built. If the data cannot be parsed correctly, a
-     * {@link PelInvalidDataException} is thrown, explaining the problem.
+     * will be built. If the data cannot be parsed correctly, a {@link
+     * PelInvalidDataException} is thrown, explaining the problem.
      *
      * @param PelDataWindow $d
      *            the data from which the object will be
      *            constructed. This should be valid TIFF data, coming either
      *            directly from a TIFF image or from the Exif data in a JPEG image.
      */
-    public function load(PelDataWindow $d): void
+    public function load(PelDataWindow $d)
     {
         Pel::debug('Parsing %d bytes of TIFF data...', $d->getSize());
 
@@ -111,9 +129,8 @@ class PelTiff implements Stringable
          * to the first IFD.
          */
         if ($d->getSize() < 8) {
-            throw new PelInvalidDataException('Expected at least 8 bytes of TIFF data, found just %d bytes.', $d->getSize());
+            throw new PelInvalidDataException('Expected at least 8 bytes of TIFF ' . 'data, found just %d bytes.', $d->getSize());
         }
-
         /* Byte order */
         if ($d->strcmp(0, 'II')) {
             Pel::debug('Found Intel byte order');
@@ -122,11 +139,11 @@ class PelTiff implements Stringable
             Pel::debug('Found Motorola byte order');
             $d->setByteOrder(PelConvert::BIG_ENDIAN);
         } else {
-            throw new PelInvalidDataException('Unknown byte order found in TIFF data: 0x%2X%2X', $d->getByte(0), $d->getByte(1));
+            throw new PelInvalidDataException('Unknown byte order found in TIFF ' . 'data: 0x%2X%2X', $d->getByte(0), $d->getByte(1));
         }
 
         /* Verify the TIFF header */
-        if ($d->getShort(2) !== self::TIFF_HEADER) {
+        if ($d->getShort(2) != self::TIFF_HEADER) {
             throw new PelInvalidDataException('Missing TIFF magic value.');
         }
         /* IFD 0 offset */
@@ -149,22 +166,21 @@ class PelTiff implements Stringable
      * @param string $filename
      *            the filename. This must be a readable file.
      */
-    public function loadFile(string $filename): void
+    public function loadFile($filename)
     {
-        $stream = new PelFileStream($filename);
-
-        $this->load(new PelDataWindow($stream));
+        $this->load(new PelDataWindow(file_get_contents($filename)));
     }
 
     /**
      * Set the first IFD.
      *
      * @param PelIfd $ifd
-     *            the new first IFD, which must be of type {@link PelIfd::IFD0}.
+     *            the new first IFD, which must be of type {@link
+     *            PelIfd::IFD0}.
      */
-    public function setIfd(PelIfd $ifd): void
+    public function setIfd(PelIfd $ifd)
     {
-        if ($ifd->getType() !== PelIfd::IFD0) {
+        if ($ifd->getType() != PelIfd::IFD0) {
             throw new PelInvalidDataException('Invalid type of IFD: %d, expected %d.', $ifd->getType(), PelIfd::IFD0);
         }
         $this->ifd = $ifd;
@@ -176,7 +192,7 @@ class PelTiff implements Stringable
      * @return PelIfd|null the first IFD contained in the TIFF data, if any.
      *         If there is no IFD null will be returned.
      */
-    public function getIfd(): ?PelIfd
+    public function getIfd()
     {
         return $this->ifd;
     }
@@ -188,15 +204,15 @@ class PelTiff implements Stringable
      * little-endian} or {@link PelConvert::BIG_ENDIAN big-endian} byte
      * order, and so this method takes an argument specifying that.
      *
-     * @param bool $order
+     * @param boolean $order
      *            the desired byte order of the TIFF data.
-     *            This should be one of {@link PelConvert::LITTLE_ENDIAN} or {@link PelConvert::BIG_ENDIAN}.
-     *
+     *            This should be one of {@link PelConvert::LITTLE_ENDIAN} or {@link
+     *            PelConvert::BIG_ENDIAN}.
      * @return string the bytes representing this object.
      */
-    public function getBytes(bool $order = PelConvert::LITTLE_ENDIAN): string
+    public function getBytes($order = PelConvert::LITTLE_ENDIAN)
     {
-        if ($order === PelConvert::LITTLE_ENDIAN) {
+        if ($order == PelConvert::LITTLE_ENDIAN) {
             $bytes = 'II';
         } else {
             $bytes = 'MM';
@@ -234,13 +250,28 @@ class PelTiff implements Stringable
      * @param string $filename
      *            the filename to save in. An existing file with the
      *            same name will be overwritten!
-     *
-     * @return int|FALSE The number of bytes that were written to the
+     * @return integer|FALSE The number of bytes that were written to the
      *         file, or FALSE on failure.
      */
-    public function saveFile(string $filename): int|false
+    public function saveFile($filename)
     {
         return file_put_contents($filename, $this->getBytes());
+    }
+
+    /**
+     * Return a string representation of this object.
+     *
+     * @return string a string describing this object. This is mostly useful
+     *         for debugging.
+     */
+    public function __toString()
+    {
+        $str = Pel::fmt("Dumping TIFF data...\n");
+        if ($this->ifd !== null) {
+            $str .= $this->ifd->__toString();
+        }
+
+        return $str;
     }
 
     /**
@@ -252,13 +283,11 @@ class PelTiff implements Stringable
      *
      * @param PelDataWindow $d
      *            the bytes that will be examined.
-     *
-     * @return bool true if the data looks like valid TIFF data,
+     * @return boolean true if the data looks like valid TIFF data,
      *         false otherwise.
-     *
      * @see PelJpeg::isValid()
      */
-    public static function isValid(PelDataWindow $d): bool
+    public static function isValid(PelDataWindow $d)
     {
         /* First check that we have enough data. */
         if ($d->getSize() < 8) {
@@ -276,6 +305,6 @@ class PelTiff implements Stringable
         }
 
         /* Verify the TIFF header */
-        return $d->getShort(2) === self::TIFF_HEADER;
+        return $d->getShort(2) == self::TIFF_HEADER;
     }
 }

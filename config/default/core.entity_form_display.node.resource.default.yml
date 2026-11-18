@@ -98,8 +98,7 @@ content:
     type: address_default
     weight: 10
     region: content
-    settings:
-      wrapper_type: details
+    settings: {  }
     third_party_settings: {  }
   field_authors:
     type: string_textfield
@@ -122,20 +121,20 @@ content:
     settings: {  }
     third_party_settings:
       field_states_ui:
+        form:
+          type: ''
+          list:
+            720378c0-8b17-4676-b493-52f1b2c7f11a:
+              operations: {  }
         field_states:
           720378c0-8b17-4676-b493-52f1b2c7f11a:
+            uuid: 720378c0-8b17-4676-b493-52f1b2c7f11a
             id: visible
             data:
               target: field_standalone_resource
               comparison: checked
               value: ''
               submit: 'Add Cancel'
-            uuid: 720378c0-8b17-4676-b493-52f1b2c7f11a
-        form:
-          type: ''
-          list:
-            720378c0-8b17-4676-b493-52f1b2c7f11a:
-              operations: {  }
   field_geofield:
     type: geofield_latlon
     weight: 11
@@ -172,15 +171,6 @@ content:
     settings: {  }
     third_party_settings:
       field_states_ui:
-        field_states:
-          a2505c87-bf2c-4a51-92a7-78363f9d388c:
-            id: visible
-            data:
-              target: field_standalone_resource
-              comparison: checked
-              value: ''
-              submit: 'Add Cancel'
-            uuid: a2505c87-bf2c-4a51-92a7-78363f9d388c
         form:
           type: ''
           list:
@@ -189,6 +179,15 @@ content:
                 edit: Edit
                 delete: Delete
           add: Add
+        field_states:
+          a2505c87-bf2c-4a51-92a7-78363f9d388c:
+            uuid: a2505c87-bf2c-4a51-92a7-78363f9d388c
+            id: visible
+            data:
+              target: field_standalone_resource
+              comparison: checked
+              value: ''
+              submit: 'Add Cancel'
   field_resource_type:
     type: paragraphs
     weight: 4

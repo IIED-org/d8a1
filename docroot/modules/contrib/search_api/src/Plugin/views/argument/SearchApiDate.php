@@ -2,7 +2,6 @@
 
 namespace Drupal\search_api\Plugin\views\argument;
 
-use Drupal\views\Attribute\ViewsArgument;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Datetime\DateFormatterInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -11,8 +10,9 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Defines a contextual filter for conditions on date fields.
  *
  * @ingroup views_argument_handlers
+ *
+ * @ViewsArgument("search_api_date")
  */
-#[ViewsArgument('search_api_date')]
 class SearchApiDate extends SearchApiStandard {
 
   /**

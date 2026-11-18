@@ -4,7 +4,7 @@ type: module
 hidden: true
 package: Testing
 
-# Information added by Drupal.org packaging script on 2026-09-30
-version: '3.1.1'
+# Information added by Drupal.org packaging script on 2022-12-19
+version: '8.x-2.5'
 project: 'video_embed_field'
-datestamp: 1790757259
+datestamp: 1671413313

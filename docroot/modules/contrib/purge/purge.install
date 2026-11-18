@@ -5,19 +5,15 @@
  * Installation file for the purge module.
  */
 
-use Drupal\Core\Hook\Attribute\LegacyRequirementsHook;
-use Drupal\purge\Hook\PurgeRequirementsHooks;
-use Drupal\purge\Plugin\Purge\Queue\StatsTracker;
-
 /**
  * Implements hook_requirements().
  */
-#[LegacyRequirementsHook]
 function purge_requirements($phase) {
   if ($phase !== 'runtime') {
     return [];
   }
-  return PurgeRequirementsHooks::requirements(\Drupal::service('purge.diagnostics'));
+  $checks = \Drupal::service('purge.diagnostics');
+  return $checks->toRequirementsArray($checks->filterWarningAndErrors(), TRUE);
 }
 
 /**
@@ -27,5 +23,4 @@ function purge_uninstall() {
   if (\Drupal::database()->schema()->tableExists('purge_queue')) {
     \Drupal::database()->schema()->dropTable('purge_queue');
   }
-  \Drupal::keyValue(StatsTracker::COLLECTION)->deleteAll();
 }

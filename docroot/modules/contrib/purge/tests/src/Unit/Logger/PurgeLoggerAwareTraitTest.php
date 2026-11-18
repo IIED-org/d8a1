@@ -2,20 +2,13 @@
 
 namespace Drupal\Tests\purge\Unit\Logger;
 
-use Drupal\purge\Logger\PurgeLoggerAwareTrait;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversTrait;
-use PHPUnit\Framework\Attributes\Group;
-use Psr\Log\LoggerInterface;
 
 /**
- * Tests the PurgeLoggerAwareTrait trait.
- *
  * @coversDefaultClass \Drupal\purge\Logger\PurgeLoggerAwareTrait
+ *
  * @group purge
  */
-#[CoversTrait(PurgeLoggerAwareTrait::class)]
-#[Group('purge')]
 class PurgeLoggerAwareTraitTest extends UnitTestCase {
 
   /**
@@ -29,36 +22,26 @@ class PurgeLoggerAwareTraitTest extends UnitTestCase {
    * {@inheritdoc}
    */
   protected function setUp(): void {
-    parent::setUp();
-    $this->logger = $this->createStub(LoggerInterface::class);
+    $this->logger = $this->createMock('\Psr\Log\LoggerInterface');
   }
 
   /**
-   * Create a test object that uses the trait.
-   */
-  protected function createTraitObject(): object {
-    return new class() {
-      use PurgeLoggerAwareTrait;
-    };
-  }
-
-  /**
-   * Tests the logger() method returns the set logger.
+   * @covers ::logger
    */
   public function testLogger(): void {
-    $object = $this->createTraitObject();
-    $object->setLogger($this->logger);
-    $this->assertEquals($this->logger, $object->logger());
+    $trait = $this->getMockForTrait('\Drupal\purge\Logger\PurgeLoggerAwareTrait');
+    $trait->setLogger($this->logger);
+    $this->assertEquals($this->logger, $trait->logger());
   }
 
   /**
-   * Tests the logger() method throws exception when logger is not set.
+   * @covers ::logger
    */
   public function testLoggerUnset(): void {
-    $object = $this->createTraitObject();
+    $trait = $this->getMockForTrait('\Drupal\purge\Logger\PurgeLoggerAwareTrait');
     $this->expectException(\LogicException::class);
     $this->expectExceptionMessage('Logger unavailable, call ::setLogger().');
-    $object->logger();
+    $trait->logger();
   }
 
 }

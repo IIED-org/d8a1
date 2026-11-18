@@ -112,7 +112,7 @@ abstract class InlineEntityFormBase extends WidgetBase implements ContainerFacto
   /**
    * {@inheritdoc}
    */
-  public function __sleep(): array {
+  public function __sleep() {
     $keys = array_diff(parent::__sleep(), ['inlineFormHandler']);
     return $keys;
   }
@@ -120,7 +120,7 @@ abstract class InlineEntityFormBase extends WidgetBase implements ContainerFacto
   /**
    * {@inheritdoc}
    */
-  public function __wakeup(): void {
+  public function __wakeup() {
     parent::__wakeup();
     $this->createInlineFormHandler();
   }
@@ -155,7 +155,7 @@ abstract class InlineEntityFormBase extends WidgetBase implements ContainerFacto
    * the form state keys can be sorted to ensure inside-out saving of entities.
    *
    * Also, "add" and "edit" IEFs have different array parents, which messes up
-   * form state, so we fixup this here with a "pragmatic hack".
+   * form state, so we fixup this here with a, errrm, pragmatic hack.
    *
    * @param string[] $parents
    *   The array parents.
@@ -302,7 +302,7 @@ abstract class InlineEntityFormBase extends WidgetBase implements ContainerFacto
     $summary[] = $this->t('Form mode: @mode', ['@mode' => $form_mode_label]);
     if ($this->getSetting('override_labels')) {
       $summary[] = $this->t(
-        'Overridden labels are used: %singular and %plural',
+        'Overriden labels are used: %singular and %plural',
         [
           '%singular' => $this->getSetting('label_singular'),
           '%plural' => $this->getSetting('label_plural'),
@@ -325,14 +325,10 @@ abstract class InlineEntityFormBase extends WidgetBase implements ContainerFacto
   }
 
   /**
-   * Retrieves the labels for the entity type.
+   * Gets the entity type managed by this handler.
    *
-   * If the admin has specified custom labels, it returns them. Otherwise, it
-   * delegates to the inline form handler to retrieve the entity type labels.
-   *
-   * @return array
-   *   An associative array, keyed by 'singular' and 'plural', where the values
-   *   are the corresponding entity type labels.
+   * @return \Drupal\Core\Entity\EntityTypeInterface
+   *   The entity type.
    */
   protected function getEntityTypeLabels() {
     // The admin has specified the exact labels that should be used.
@@ -422,13 +418,13 @@ abstract class InlineEntityFormBase extends WidgetBase implements ContainerFacto
    *   Delta.
    * @param array $parents
    *   Array of parent element names.
-   * @param \Drupal\Core\Entity\EntityInterface|null $entity
+   * @param \Drupal\Core\Entity\EntityInterface $entity
    *   Optional entity object.
    *
    * @return array
    *   IEF form element structure.
    */
-  protected function getInlineEntityForm($operation, $bundle, $langcode, $delta, array $parents, ?EntityInterface $entity = NULL) {
+  protected function getInlineEntityForm($operation, $bundle, $langcode, $delta, array $parents, EntityInterface $entity = NULL) {
     $element = [
       '#type' => 'inline_entity_form',
       '#entity_type' => $this->getFieldSetting('target_type'),
@@ -470,15 +466,10 @@ abstract class InlineEntityFormBase extends WidgetBase implements ContainerFacto
    * @see \Drupal\inline_entity_form\TranslationHelper::initFormLangcodes()
    *
    * @todo Replace line 472 \Drupal call with Dependency Injection.
-   * @see https://www.drupal.org/project/inline_entity_form/issues/3413349
    */
   protected function isTranslating(FormStateInterface $form_state) {
-    // phpcs:disable DrupalPractice.Objects.GlobalDrupal.GlobalDrupal
-    // @phpstan-ignore-next-line
-    if (\Drupal::hasService('content_translation.manager') && TranslationHelper::isTranslating($form_state)) {
-      // @phpstan-ignore-next-line
+    if (TranslationHelper::isTranslating($form_state)) {
       $translation_manager = \Drupal::service('content_translation.manager');
-      //phpcs:enable
       $target_type = $this->getFieldSetting('target_type');
       foreach ($this->getTargetBundles() as $bundle) {
         if ($translation_manager->isEnabled($target_type, $bundle)) {

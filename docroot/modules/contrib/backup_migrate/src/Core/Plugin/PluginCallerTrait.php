@@ -10,9 +10,7 @@ namespace Drupal\backup_migrate\Core\Plugin;
 trait PluginCallerTrait {
 
   /**
-   * Stores the value.
-   *
-   * @var \Drupal\backup_migrate\Core\Plugin\PluginManagerInterface The plugins
+   * @var \Drupal\backup_migrate\Core\Plugin\PluginManagerInterface
    */
   protected $plugins;
 
@@ -20,7 +18,6 @@ trait PluginCallerTrait {
    * Inject the plugin manager.
    *
    * @param \Drupal\backup_migrate\Core\Plugin\PluginManagerInterface $plugins
-   *   The plugins.
    */
   public function setPluginManager(PluginManagerInterface $plugins) {
     $this->plugins = $plugins;
@@ -30,7 +27,6 @@ trait PluginCallerTrait {
    * Get the plugin manager.
    *
    * @return \Drupal\backup_migrate\Core\Plugin\PluginManagerInterface
-   *   The requested integer.
    */
   public function plugins() {
     // Return the list of plugins or a blank placeholder.

@@ -1,17 +1,18 @@
 <?php
 
+use GuzzleHttp\Pool;
 /**
  * @file
  * Contains varnish_focal_point_purge.module.
  */
 
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\file\Entity\File;
-use Drupal\file\FileInterface;
 use Drupal\image\Entity\ImageStyle;
+use Drupal\Core\Entity\EntityInterface;
+use GuzzleHttp\Client;
+use Drupal\file\FileInterface;
 use Drupal\varnish_purger\Plugin\Purge\Purger\VarnishPurger;
-use GuzzleHttp\Pool;
 
 /**
  * Implements hook_help().
@@ -67,24 +68,24 @@ function varnish_focal_point_purge_entity_update(EntityInterface $entity) {
     return;
   }
 
-  // @todo Consider are we not doing duplicated work related to varnish_image purge...
+  // TODO: Consider are we not doing duplicated work related to varnish_image purge...
   // Do the actual purging...
-  /** @var Client $client */
+  /* @var $client Client */
   $client = \Drupal::service('http_client');
 
   // Generator for purge requests to be sent out.
-  $requests = function () use ($client, $file) {
+  $requests = function() use ($client, $file) {
     $styles = ImageStyle::loadMultiple();
 
-    /** @var Drupal\image\Entity\ImageStyle; $style */
+    /* @var $style Drupal\image\Entity\ImageStyle; */
     foreach ($styles as $style) {
       $url = $style->buildUrl($file->getFileUri());
 
       yield function () use ($client, $url) {
         return $client->requestAsync('URIBAN', $url)->then(
-          function () {
+          function() {
           },
-          function ($reason) use ($url) {
+          function($reason) use ($url) {
             $message = $reason instanceof \Exception ? $reason->getMessage() : (string) $reason;
 
             $logger = \Drupal::logger('varnish_focal_point_purge');
@@ -96,7 +97,7 @@ function varnish_focal_point_purge_entity_update(EntityInterface $entity) {
   };
 
   // Prepare a POOL that will make the requests with a given concurrency.
-  // @todo Have the concurrency exposed as configuration somewhere.
+  // TODO: Have the concurrency exposed as configuration somewhere.
   $concurrency = VarnishPurger::VARNISH_PURGE_CONCURRENCY;
   (new Pool($client, $requests(), ['concurrency' => $concurrency]))
     ->promise()

@@ -4,8 +4,8 @@ namespace Drupal\Tests\r4032login\Unit {
 
   use Drupal\Core\DependencyInjection\ContainerBuilder;
   use Drupal\Core\Url;
-  use Drupal\Tests\UnitTestCase;
   use Drupal\r4032login\EventSubscriber\R4032LoginSubscriber;
+  use Drupal\Tests\UnitTestCase;
   use Symfony\Component\EventDispatcher\EventDispatcher;
   use Symfony\Component\HttpFoundation\Request;
   use Symfony\Component\HttpKernel\Event\ExceptionEvent;
@@ -86,7 +86,6 @@ namespace Drupal\Tests\r4032login\Unit {
      * {@inheritdoc}
      */
     protected function setUp(): void {
-      parent::setUp();
       $this->kernel = $this->createMock('Symfony\Component\HttpKernel\HttpKernelInterface');
       $this->configFactory = $this->getConfigFactoryStub([
         'r4032login.settings' => [
@@ -109,7 +108,7 @@ namespace Drupal\Tests\r4032login\Unit {
       $this->urlAssembler = $this->createMock('Drupal\Core\Utility\UnroutedUrlAssemblerInterface');
       $this->urlAssembler->expects($this->any())
         ->method('assemble')
-        ->willReturnArgument(0);
+        ->will($this->returnArgument(0));
       $this->router = $this->createMock('Drupal\Tests\Core\Routing\TestRouterInterface');
 
       $container = new ContainerBuilder();
@@ -161,7 +160,7 @@ namespace Drupal\Tests\r4032login\Unit {
         ->willReturn(TRUE);
 
       $r4032login = new R4032LoginSubscriber($config, $this->currentUser, $this->pathMatcher, $this->eventDispatcher, $this->messenger, $this->redirectDestination);
-      $event = new ExceptionEvent($this->kernel, $request, HttpKernelInterface::MAIN_REQUEST, new AccessDeniedHttpException());
+      $event = new ExceptionEvent($this->kernel, $request, HttpKernelInterface::MASTER_REQUEST, new AccessDeniedHttpException());
       $dispatcher = new EventDispatcher();
       $dispatcher->addListener(KernelEvents::EXCEPTION, [
         $r4032login,
@@ -208,7 +207,7 @@ namespace Drupal\Tests\r4032login\Unit {
         ->willReturn(TRUE);
 
       $r4032login = new R4032LoginSubscriber($config, $this->currentUser, $this->pathMatcher, $this->eventDispatcher, $this->messenger, $this->redirectDestination);
-      $event = new ExceptionEvent($this->kernel, $request, HttpKernelInterface::MAIN_REQUEST, new AccessDeniedHttpException());
+      $event = new ExceptionEvent($this->kernel, $request, HttpKernelInterface::MASTER_REQUEST, new AccessDeniedHttpException());
       $dispatcher = new EventDispatcher();
       $dispatcher->addListener(KernelEvents::EXCEPTION, [
         $r4032login,
@@ -257,7 +256,7 @@ namespace Drupal\Tests\r4032login\Unit {
         ->willReturn(TRUE);
 
       $r4032login = new R4032LoginSubscriber($config, $this->currentUser, $this->pathMatcher, $this->eventDispatcher, $this->messenger, $this->redirectDestination);
-      $event = new ExceptionEvent($this->kernel, $request, HttpKernelInterface::MAIN_REQUEST, new AccessDeniedHttpException());
+      $event = new ExceptionEvent($this->kernel, $request, HttpKernelInterface::MASTER_REQUEST, new AccessDeniedHttpException());
       $dispatcher = new EventDispatcher();
       $dispatcher->addListener(KernelEvents::EXCEPTION, [
         $r4032login,
@@ -294,7 +293,7 @@ namespace Drupal\Tests\r4032login\Unit {
      * @return array
      *   An array of Request objects, configuration values, and expected paths.
      */
-    public static function providerRequests() {
+    public function providerRequests() {
       return [
         [
           new Request([

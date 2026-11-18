@@ -5,9 +5,3 @@ http_response_headers.form:
   dependencies:
     - core/jquery
     - core/drupal
-
-http_response_headers.admin:
-  version: VERSION
-  css:
-    theme:
-      assets/admin.css: {}

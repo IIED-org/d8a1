@@ -100,6 +100,7 @@ class PatternEditForm extends EntityForm {
       '#ajax' => [
         'callback' => '::ajaxReplacePatternForm',
         'wrapper' => 'pathauto-pattern',
+        'method' => 'replace',
       ],
     ];
 
@@ -236,7 +237,7 @@ class PatternEditForm extends EntityForm {
             'negate' => FALSE,
             'context_mapping' => [
               $entity_type => $entity_type,
-            ],
+            ]
           ]
         );
       }
@@ -251,7 +252,7 @@ class PatternEditForm extends EntityForm {
             'negate' => FALSE,
             'context_mapping' => [
               'language' => $language_mapping,
-            ],
+            ]
           ]
         );
         $entity->addRelationship($language_mapping, $this->t('Language'));

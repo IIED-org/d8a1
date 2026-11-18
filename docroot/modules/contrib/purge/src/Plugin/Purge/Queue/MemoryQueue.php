@@ -2,21 +2,19 @@
 
 namespace Drupal\purge\Plugin\Purge\Queue;
 
-use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Drupal\purge\Attribute\PurgeQueue;
-
 /**
  * A QueueInterface compliant volatile memory buffer queue.
  *
  * @warning
  * This queue does not extend core's Memory queue on purpose, as it does not
  * suit extending it very well nor does its lease time handling work.
+ *
+ * @PurgeQueue(
+ *   id = "memory",
+ *   label = @Translation("Memory"),
+ *   description = @Translation("A non-persistent, per-request memory queue (not useful on production systems)."),
+ * )
  */
-#[PurgeQueue(
-  id: 'memory',
-  label: new TranslatableMarkup('Memory'),
-  description: new TranslatableMarkup('A non-persistent, per-request memory queue (not useful on production systems).'),
-)]
 class MemoryQueue extends QueueBase implements QueueInterface {
 
   /**
@@ -34,7 +32,7 @@ class MemoryQueue extends QueueBase implements QueueInterface {
   protected $buffer;
 
   /**
-   * Define constants for the array indices in our buffer.
+   * Define constants for the array indiced in our buffer.
    */
   const DATA = 0;
   const EXPIRE = 1;
@@ -116,7 +114,7 @@ class MemoryQueue extends QueueBase implements QueueInterface {
       $this->buffer[$id][self::EXPIRE] = time() + $lease_time;
       $item = new \stdClass();
       $item->item_id = $id;
-      $item->data = unserialize($this->buffer[$id][self::DATA], ['allowed_classes' => FALSE]);
+      $item->data = unserialize($this->buffer[$id][self::DATA]);
       $item->expire = $this->buffer[$id][self::EXPIRE];
       $item->created = $this->buffer[$id][self::CREATED];
       return $item;
@@ -223,7 +221,7 @@ class MemoryQueue extends QueueBase implements QueueInterface {
       }
       $item = new \stdClass();
       $item->item_id = $id;
-      $item->data = unserialize($this->buffer[$id][self::DATA], ['allowed_classes' => FALSE]);
+      $item->data = unserialize($this->buffer[$id][self::DATA]);
       $item->expire = $this->buffer[$id][self::EXPIRE];
       $item->created = $this->buffer[$id][self::CREATED];
       $items[] = $item;

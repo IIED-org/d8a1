@@ -2,16 +2,11 @@
 
 namespace Drupal\Tests\purge\Kernel\Invalidation;
 
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
-
 /**
  * Tests \Drupal\purge\Plugin\Purge\Invalidation\WildcardUrlInvalidation.
  *
  * @group purge
  */
-#[Group('purge')]
-#[RunTestsInSeparateProcesses]
 class WildcardUrlInvalidationTest extends PluginTestBase {
 
   /**

@@ -23,7 +23,6 @@ use Drupal\Tests\UnitTestCase;
 class ContextMapperTest extends UnitTestCase {
 
   use ProphecyTrait;
-
   /**
    * The typed data manager.
    *
@@ -32,15 +31,11 @@ class ContextMapperTest extends UnitTestCase {
   protected $typedDataManager;
 
   /**
-   * The entity repository.
-   *
    * @var \Drupal\Core\Entity\EntityRepositoryInterface|\Prophecy\Prophecy\ProphecyInterface
    */
   protected $entityRepository;
 
   /**
-   * The static context.
-   *
    * @var \Drupal\page_manager\ContextMapper
    */
   protected $staticContext;

@@ -33,7 +33,6 @@ class Country extends FormElement {
       '#input' => TRUE,
       '#multiple' => FALSE,
       '#default_value' => NULL,
-      '#disabled' => FALSE,
       '#process' => [
         [$class, 'processCountry'],
         [$class, 'processGroup'],
@@ -85,7 +84,7 @@ class Country extends FormElement {
     if (count($country_list) == 1 && $element['#required']) {
       $element['country_code'] = [
         '#type' => 'hidden',
-        '#value' => key($country_list),
+        '#value' => key($available_countries),
       ];
     }
     else {
@@ -97,7 +96,6 @@ class Country extends FormElement {
         '#options' => $country_list,
         '#default_value' => $element['#default_value'],
         '#required' => $element['#required'],
-        '#disabled' => $element['#disabled'],
         '#limit_validation_errors' => [],
         '#attributes' => [
           'class' => ['country'],
@@ -142,11 +140,6 @@ class Country extends FormElement {
       $country_list = array_intersect_key($country_list, $available_countries);
     }
     $default_country = key($country_list);
-
-    $site_country = \Drupal::config('system.date')->get('country.default');
-    if ($site_country && isset($country_list[$site_country])) {
-      $default_country = $site_country;
-    }
 
     return $default_country;
   }

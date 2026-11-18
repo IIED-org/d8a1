@@ -143,6 +143,7 @@ class TokenTreeTable extends Table {
     }
     elseif (!empty($token_info['parent'])) {
       $row['data-tt-parent-id'] = static::cleanCssIdentifier($token_info['parent']);
+      unset($row['parent']);
     }
 
     return $row;

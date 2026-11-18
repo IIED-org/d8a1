@@ -67,7 +67,7 @@ class AuthenticatedRedirectCustomMessageTest extends BrowserTestBase {
   /**
    * Data provider for testAuthenticatedRedirectMessage.
    */
-  public static function baseRedirectMessageDataProvider() {
+  public function baseRedirectMessageDataProvider() {
     return [
       [
         'You are not supposed to be here.',

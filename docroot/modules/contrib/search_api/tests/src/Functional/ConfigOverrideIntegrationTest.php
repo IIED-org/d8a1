@@ -4,14 +4,12 @@ namespace Drupal\Tests\search_api\Functional;
 
 use Drupal\search_api_test\MethodOverrides;
 use Drupal\search_api_test\PluginTestTrait;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Contains integration tests for config entities with overrides.
  *
  * @group search_api
  */
-#[RunTestsInSeparateProcesses]
 class ConfigOverrideIntegrationTest extends SearchApiBrowserTestBase {
 
   use PluginTestTrait;
@@ -198,13 +196,12 @@ class ConfigOverrideIntegrationTest extends SearchApiBrowserTestBase {
     // Clear the index, see if that triggers an error.
     $this->submitForm([], 'Confirm');
 
-    // The server "Delete" form also uses the overridden entity for the title.
-    // However, the dependency could be loaded with or without overrides,
-    // depending on the current Drupal version, so pointless to check for that.
-    // @see https://www.drupal.org/node/3582108
+    // The server "Delete" form also uses overrides.
     $this->drupalGet($base_path . '/server/test_server/delete');
     $this->assertSession()->pageTextContains('Overridden server');
     $this->assertSession()->responseNotContains('New server name');
+    $this->assertSession()->pageTextContains('Overridden index');
+    $this->assertSession()->responseNotContains('Test index');
 
     // Delete the server, see if that triggers any errors.
     $this->submitForm([], 'Delete');

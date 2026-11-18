@@ -8,12 +8,8 @@ use Drupal\Core\TypedData\MapDataDefinition;
 use Drupal\Core\TypedData\Plugin\DataType\ItemList;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\search_api\Entity\Index;
-use Drupal\search_api\Item\Field;
 use Drupal\search_api\Utility\Utility;
-use Drupal\search_api_test_extraction\Plugin\search_api\processor\TestAddPropertiesProcessor;
-use Drupal\user\Entity\Role;
 use Drupal\user\Entity\User;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests extraction of field values, as used during indexing.
@@ -22,7 +18,6 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  *
  * @group search_api
  */
-#[RunTestsInSeparateProcesses]
 class FieldValuesExtractionTest extends KernelTestBase {
 
   /**
@@ -103,7 +98,7 @@ class FieldValuesExtractionTest extends KernelTestBase {
     ]);
     $this->entities[2]->save();
 
-    Role::load(Role::ANONYMOUS_ID)->grantPermission('view test entity')->save();
+    user_role_grant_permissions('anonymous', ['view test entity']);
 
     User::create([
       'id' => $this->entities[0],
@@ -205,7 +200,7 @@ class FieldValuesExtractionTest extends KernelTestBase {
     );
 
     $properties = [
-      '' => [
+      NULL => [
         'rendered_item' => 'a',
         // Since there is no field defined on "aggregated_field" for the index,
         // we won't be able to extract it.
@@ -312,7 +307,7 @@ class FieldValuesExtractionTest extends KernelTestBase {
   public function testNestedComplexFieldValuesExtraction() {
     // Complex data definition structure.
 
-    // phpcs:disable Drupal.Commenting.InlineComment.NotCapital,Drupal.Commenting.InlineComment.SpacingBefore
+    // phpcs:disable Drupal.Commenting.InlineComment.NotCapital
     // data => ListDataDefinition (list) [
     //   itemDefinition => ComplexDataDefinition (map) [
     //     propertyDefinitions => [
@@ -363,40 +358,6 @@ class FieldValuesExtractionTest extends KernelTestBase {
 
     $extracted_values = $this->fieldsHelper->extractFieldValues($data);
     $this->assertEquals([$target_value], $extracted_values);
-  }
-
-  /**
-   * Tests that field extraction via the item object also works correctly.
-   *
-   * @covers \Drupal\search_api\Item\Item::getFields
-   */
-  public function testItemGetFields(): void {
-    $datasource_id = 'entity:entity_test_mulrev_changed';
-
-    // Add two processor-provided fields to the index.
-    $field = new Field($this->index, 'value_1');
-    $field->setType('string');
-    $field->setPropertyPath(TestAddPropertiesProcessor::PROPERTY_NAME);
-    $this->index->addField($field);
-    $field = new Field($this->index, 'value_2');
-    $field->setType('string');
-    $field->setDatasourceId($datasource_id);
-    $field->setPropertyPath(TestAddPropertiesProcessor::PROPERTY_NAME);
-    $this->index->addField($field);
-
-    $entity = $this->entities[0];
-    $item = $this->fieldsHelper->createItemFromObject(
-      $this->index,
-      $entity->getTypedData(),
-      Utility::createCombinedId($datasource_id, "{$entity->id()}:en")
-    );
-
-    $fields = $item->getFields();
-
-    $this->assertEquals(['Article 1'], $fields['foo']->getValues());
-    $this->assertCount(1, $fields['bar']->getValues());
-    $this->assertEquals(['foo-article-2'], $fields['value_1']->getValues());
-    $this->assertEquals(['foo-article-2'], $fields['value_2']->getValues());
   }
 
 }

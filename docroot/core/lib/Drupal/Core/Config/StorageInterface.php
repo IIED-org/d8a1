@@ -51,8 +51,7 @@ interface StorageInterface {
    *
    * @return array
    *   A list of the configuration data stored for the configuration object name
-   *   that could be loaded for the passed list of names, keyed by configuration
-   *   object name.
+   *   that could be loaded for the passed list of names.
    */
   public function readMultiple(array $names);
 

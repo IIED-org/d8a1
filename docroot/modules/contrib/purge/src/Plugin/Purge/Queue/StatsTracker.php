@@ -2,8 +2,6 @@
 
 namespace Drupal\purge\Plugin\Purge\Queue;
 
-use Drupal\Core\KeyValueStore\KeyValueFactoryInterface;
-use Drupal\Core\KeyValueStore\KeyValueStoreInterface;
 use Drupal\Core\State\StateInterface;
 use Drupal\purge\Plugin\Purge\Invalidation\InvStatesInterface;
 
@@ -11,11 +9,6 @@ use Drupal\purge\Plugin\Purge\Invalidation\InvStatesInterface;
  * Provides the queue statistics tracker.
  */
 class StatsTracker implements StatsTrackerInterface {
-
-  /**
-   * The key-value collection that stores the statistics.
-   */
-  const COLLECTION = 'purge.queue.stats';
 
   /**
    * Loaded statistical counters.
@@ -34,26 +27,14 @@ class StatsTracker implements StatsTrackerInterface {
   protected $position = 0;
 
   /**
-   * The key-value store that holds the statistics.
-   *
-   * @var \Drupal\Core\KeyValueStore\KeyValueStoreInterface
-   */
-  protected $storage;
-
-  /**
-   * The key-value store that holds the statistics, through the state API.
+   * The state key value store.
    *
    * @var \Drupal\Core\State\StateInterface
-   *
-   * @deprecated in purge:8.x-3.8 and is removed from purge:4.0.0. Use $storage
-   *   instead.
-   *
-   * @see https://www.drupal.org/project/purge/issues/3635585
    */
   protected $state;
 
   /**
-   * Buffer of counter values that need to be written back to storage.
+   * Buffer of counter values that need to be written back to state storage.
    *
    * @var float[]
    */
@@ -88,37 +69,11 @@ class StatsTracker implements StatsTrackerInterface {
   /**
    * Construct a statistics tracker.
    *
-   * @param \Drupal\Core\KeyValueStore\KeyValueFactoryInterface|\Drupal\Core\State\StateInterface $key_value_factory
-   *   The key-value store factory. Passing the state service is deprecated.
+   * @param \Drupal\Core\State\StateInterface $state
+   *   The state key value store.
    */
-  public function __construct(KeyValueFactoryInterface|StateInterface $key_value_factory) {
-    if ($key_value_factory instanceof StateInterface) {
-      @trigger_error('Passing the state service to ' . __METHOD__ . '() is deprecated in purge:8.x-3.8 and is removed from purge:4.0.0. Pass the keyvalue service instead. See https://www.drupal.org/project/purge/issues/3635585', E_USER_DEPRECATED);
-      // @phpstan-ignore globalDrupalDependencyInjection.useDependencyInjection
-      $key_value_factory = \Drupal::service('keyvalue');
-    }
-    $this->storage = $key_value_factory->get(self::COLLECTION);
-    // @phpstan-ignore property.deprecated, new.deprecatedClass, method.deprecatedClass
-    $this->state = new StatsTrackerState($this->storage);
-  }
-
-  /**
-   * Returns the key-value store that holds the statistics.
-   *
-   * Subclasses written for purge:8.x-3.7 and earlier may override the
-   * constructor and set $this->state without calling the parent constructor,
-   * in which case $this->storage is not set yet.
-   *
-   * @return \Drupal\Core\KeyValueStore\KeyValueStoreInterface
-   *   The key-value store.
-   */
-  private function getStorage(): KeyValueStoreInterface {
-    if (!isset($this->storage)) {
-      @trigger_error('Not calling ' . self::class . '::__construct() from a subclass constructor is deprecated in purge:8.x-3.8 and is required in purge:4.0.0. See https://www.drupal.org/project/purge/issues/3635585', E_USER_DEPRECATED);
-      // @phpstan-ignore globalDrupalDependencyInjection.useDependencyInjection
-      $this->storage = \Drupal::keyValue(self::COLLECTION);
-    }
-    return $this->storage;
+  public function __construct(StateInterface $state) {
+    $this->state = $state;
   }
 
   /**
@@ -129,8 +84,8 @@ class StatsTracker implements StatsTrackerInterface {
       return;
     }
 
-    // Fetch all statistic values from storage at once.
-    $values = $this->getStorage()->getMultiple($this->stats);
+    // Fetch all statistic values from the state API at once.
+    $values = $this->state->getMultiple($this->stats);
 
     // Instantiate the persistent counters with the given values.
     foreach ($this->stats as $i => $statekey) {
@@ -207,9 +162,9 @@ class StatsTracker implements StatsTrackerInterface {
    */
   public function destruct() {
 
-    // When the buffer contains changes, write them to storage in one go.
+    // When the buffer contains changes, write them to the state API in one go.
     if (count($this->stateBuffer)) {
-      $this->getStorage()->setMultiple($this->stateBuffer);
+      $this->state->setMultiple($this->stateBuffer);
       $this->stateBuffer = [];
     }
   }

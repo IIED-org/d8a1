@@ -3,32 +3,19 @@
 namespace Drupal\geofield\Plugin\migrate\process;
 
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\geofield\WktGeneratorInterface;
-use Drupal\migrate\Attribute\MigrateProcess;
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\Row;
+use Drupal\geofield\WktGeneratorInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Migrate latitude & longitude single values into a Geofield.
+ * Process latitude and longitude and return the value for the D8 geofield.
  *
- * The "geofield_latlon" process plugin transforms pairs of
- * latitude & longitude single values into Geofield WKT format value.
- *
- * Example:
- *
- * @code
- *  process:
- *    field_geofield:
- *    plugin: geofield_latlon
- *    source:
- *    - latitude
- *    - longitude
- *
- * @endcode
+ * @MigrateProcessPlugin(
+ *   id = "geofield_latlon"
+ * )
  */
-#[MigrateProcess('geofield_latlon')]
 class GeofieldLatLon extends ProcessPluginBase implements ContainerFactoryPluginInterface {
 
   /**
@@ -48,9 +35,6 @@ class GeofieldLatLon extends ProcessPluginBase implements ContainerFactoryPlugin
 
   /**
    * {@inheritdoc}
-   *
-   * @return static
-   *   A new instance of the plugin.
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     return new static(
@@ -63,15 +47,12 @@ class GeofieldLatLon extends ProcessPluginBase implements ContainerFactoryPlugin
 
   /**
    * {@inheritdoc}
-   *
-   * @return mixed
-   *   The transformed value.
    */
   public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
     $value = array_map('floatval', $value);
     [$lat, $lon] = $value;
 
-    if (empty($lat) && empty($lon)) {
+    if (empty($lat) || empty($lon)) {
       return NULL;
     }
 

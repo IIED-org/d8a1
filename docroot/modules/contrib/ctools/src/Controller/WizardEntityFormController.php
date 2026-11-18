@@ -21,8 +21,6 @@ class WizardEntityFormController extends WizardFormController {
   protected $entityTypeManager;
 
   /**
-   * Constructor.
-   *
    * @param \Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface $argument_resolver
    *   The argument resolver.
    * @param \Drupal\Core\Form\FormBuilderInterface $form_builder

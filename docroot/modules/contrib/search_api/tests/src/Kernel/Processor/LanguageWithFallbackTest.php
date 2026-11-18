@@ -8,7 +8,6 @@ use Drupal\node\Entity\Node;
 use Drupal\search_api\Item\Field;
 use Drupal\search_api\Utility\Utility;
 use Drupal\Tests\search_api\Kernel\PostRequestIndexingTrait;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the "Language (with fallback)" processor at a higher level.
@@ -17,7 +16,6 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  *
  * @coversDefaultClass \Drupal\search_api\Plugin\search_api\processor\LanguageWithFallback
  */
-#[RunTestsInSeparateProcesses]
 class LanguageWithFallbackTest extends ProcessorTestBase {
 
   use PostRequestIndexingTrait;

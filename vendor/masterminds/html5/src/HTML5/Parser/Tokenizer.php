@@ -567,7 +567,7 @@ class Tokenizer
      */
     protected function quotedAttributeValue($quote)
     {
-        $stoplist = $quote;
+        $stoplist = "\f" . $quote;
         $val = '';
 
         while (true) {

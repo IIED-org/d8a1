@@ -1,60 +1,50 @@
 (function ($) {
 
   /**
-   * Override Leaflet's create_geometry method to add topojson.
-   *
-   * @param feature
-   *   The feature definition coming from Drupal backend.
-   * @param map_settings
-   *   The map_settings if defined, false otherwise..
-   *
-   * @returns {*}
-   *   The generated Leaflet Geometry.
+   * Override the leaflet module's create_feature method to add topojson.
    */
-    Drupal.Leaflet.prototype.create_geometry = function(feature, map_settings = false) {
-      let lFeature;
-      switch (feature.type) {
-        case 'point':
-          lFeature = this.create_point(feature);
-          break;
-
-        case 'linestring':
-          lFeature = this.create_linestring(feature, map_settings ? map_settings['leaflet_markercluster']['include_path'] : false);
-          break;
-
-        case 'polygon':
-          lFeature = this.create_polygon(feature, map_settings ? map_settings['leaflet_markercluster']['include_path'] : false);
-          break;
-
-        case 'multipolygon':
-          lFeature = this.create_multipolygon(feature, map_settings ? map_settings['leaflet_markercluster']['include_path'] : false);
-          break;
-
-        case 'multipolyline':
-          lFeature = this.create_multipoly(feature, map_settings ? map_settings['leaflet_markercluster']['include_path'] : false);
-          break;
-
-        // In case of singular cases where feature.type is json we use this.create_json method.
-        // @see https://www.drupal.org/project/leaflet/issues/3377403
-        // @see https://www.drupal.org/project/leaflet/issues/3186029
-        case 'json':
-          lFeature = this.create_json(feature.json, feature.events);
-          break;
-
-        case 'topojson':
-          lFeature = this.create_topojson(feature.json);
-          break;
-
-        case 'multipoint':
-        case 'geometrycollection':
-          lFeature = this.create_collection(feature);
-          break;
-
-        default:
-          lFeature = {};
-      }
-      return lFeature;
+  Drupal.Leaflet.prototype.create_feature = function (feature) {
+    var lFeature;
+    switch (feature.type) {
+      case 'point':
+        lFeature = this.create_point(feature);
+        break;
+      case 'linestring':
+        lFeature = this.create_linestring(feature);
+        break;
+      case 'polygon':
+        lFeature = this.create_polygon(feature);
+        break;
+      case 'multipolygon':
+      case 'multipolyline':
+        lFeature = this.create_multipoly(feature);
+        break;
+      case 'json':
+        lFeature = this.create_json(feature.json);
+        break;
+      case 'topojson':
+        lFeature = this.create_topojson(feature.json);
+        break;
+      default:
+        return; // Crash and burn.
     }
+
+    // assign our given unique ID, useful for associating nodes
+    if (feature.leaflet_id) {
+      lFeature._leaflet_id = feature.leaflet_id;
+    }
+
+    var options = {};
+    if (feature.options) {
+      for (var option in feature.options) {
+        options[option] = feature.options[option];
+      }
+
+      lFeature.setStyle(options);
+    }
+
+    return lFeature;
+  };
 
   /**
    * Add a new TopoJSON method to the leaflet object.

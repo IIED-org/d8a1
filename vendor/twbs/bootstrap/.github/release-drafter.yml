@@ -40,7 +40,7 @@ categories:
       - 'accessibility'
   - title: '🔧 Utility API'
     labels:
-      - 'utility-api'
+      - 'utility API'
       - 'utilities'
   - title: '🏭 Tests'
     labels:
@@ -50,7 +50,7 @@ categories:
       - 'build'
       - 'meta'
       - 'chore'
-      - 'ci'
+      - 'CI'
   - title: '📦 Dependencies'
     labels:
       - 'dependencies'

@@ -62,7 +62,7 @@ class DsExtrasController extends ControllerBase {
       $node = $node_revision;
     }
     else {
-      $node = $this->entityTypeManager()->getStorage('node')->loadRevision($node_revision);
+      $this->entityTypeManager()->getStorage('node')->loadRevision($node_revision);
     }
 
     // Determine view mode.

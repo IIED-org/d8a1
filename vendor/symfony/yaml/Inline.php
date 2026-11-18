@@ -112,7 +112,7 @@ class Inline
      *
      * @throws DumpException When trying to dump PHP resource
      */
-    public static function dump(mixed $value, int $flags = 0, bool $rootLevel = false): string
+    public static function dump(mixed $value, int $flags = 0): string
     {
         switch (true) {
             case \is_resource($value):
@@ -128,7 +128,7 @@ class Inline
                     default => 'Y-m-d\TH:i:s.uP',
                 });
             case $value instanceof \UnitEnum:
-                return \sprintf('!php/enum %s::%s', $value::class, $value->name);
+                return \sprintf('!php/const %s::%s', $value::class, $value->name);
             case \is_object($value):
                 if ($value instanceof TaggedValue) {
                     return '!'.$value->getTag().' '.self::dump($value->getValue(), $flags);
@@ -150,7 +150,7 @@ class Inline
             case \is_array($value):
                 return self::dumpArray($value, $flags);
             case null === $value:
-                return self::dumpNull($flags, $rootLevel);
+                return self::dumpNull($flags);
             case true === $value:
                 return 'true';
             case false === $value:
@@ -187,7 +187,6 @@ class Inline
             case self::isBinaryString($value):
                 return '!!binary '.base64_encode($value);
             case Escaper::requiresDoubleQuoting($value):
-            case Yaml::DUMP_FORCE_DOUBLE_QUOTES_ON_VALUES & $flags:
                 return Escaper::escapeWithDoubleQuotes($value);
             case Escaper::requiresSingleQuoting($value):
                 $singleQuoted = Escaper::escapeWithSingleQuotes($value);
@@ -258,26 +257,21 @@ class Inline
     private static function dumpHashArray(array|\ArrayObject|\stdClass $value, int $flags): string
     {
         $output = [];
-        $keyFlags = $flags & ~Yaml::DUMP_FORCE_DOUBLE_QUOTES_ON_VALUES;
         foreach ($value as $key => $val) {
             if (\is_int($key) && Yaml::DUMP_NUMERIC_KEY_AS_STRING & $flags) {
                 $key = (string) $key;
             }
 
-            $output[] = \sprintf('%s: %s', self::dump($key, $keyFlags), self::dump($val, $flags));
+            $output[] = \sprintf('%s: %s', self::dump($key, $flags), self::dump($val, $flags));
         }
 
         return \sprintf('{ %s }', implode(', ', $output));
     }
 
-    private static function dumpNull(int $flags, bool $rootLevel = false): string
+    private static function dumpNull(int $flags): string
     {
         if (Yaml::DUMP_NULL_AS_TILDE & $flags) {
             return '~';
-        }
-
-        if (Yaml::DUMP_NULL_AS_EMPTY & $flags && !$rootLevel) {
-            return '';
         }
 
         return 'null';
@@ -296,11 +290,11 @@ class Inline
             $output = self::parseQuotedScalar($scalar, $i);
 
             if (null !== $delimiters) {
-                $j = $i + strspn($scalar, " \n", $i);
-                if (!isset($scalar[$j])) {
+                $tmp = ltrim(substr($scalar, $i), " \n");
+                if ('' === $tmp) {
                     throw new ParseException(\sprintf('Unexpected end of line, expected one of "%s".', implode('', $delimiters)), self::$parsedLineNumber + 1, $scalar, self::$parsedFilename);
                 }
-                if (!\in_array($scalar[$j], $delimiters)) {
+                if (!\in_array($tmp[0], $delimiters)) {
                     throw new ParseException(\sprintf('Unexpected characters (%s).', substr($scalar, $i)), self::$parsedLineNumber + 1, $scalar, self::$parsedFilename);
                 }
             }
@@ -313,20 +307,10 @@ class Inline
                 $i += \strlen($output);
 
                 // remove comments
-                if (Parser::preg_match('/(?<![ \t])[ \t]++#/', $output, $match, \PREG_OFFSET_CAPTURE)) {
+                if (Parser::preg_match('/[ \t]+#/', $output, $match, \PREG_OFFSET_CAPTURE)) {
                     $output = substr($output, 0, $match[0][1]);
                 }
-            } elseif (\strlen($characters = implode('', $delimiters)) === \count($delimiters)) {
-                // the scalar ends at the first delimiter, which must come before any new line
-                $length = strcspn($scalar, $characters."\n", $i);
-
-                if (!isset($scalar[$i + $length]) || !str_contains($characters, $scalar[$i + $length])) {
-                    throw new ParseException(\sprintf('Malformed inline YAML string: "%s".', $scalar), self::$parsedLineNumber + 1, null, self::$parsedFilename);
-                }
-
-                $output = trim(substr($scalar, $i, $length));
-                $i += $length;
-            } elseif (Parser::preg_match('/(.*?)('.implode('|', $delimiters).')/A', $scalar, $match, 0, $i)) {
+            } elseif (Parser::preg_match('/^(.*?)('.implode('|', $delimiters).')/', substr($scalar, $i), $match)) {
                 $output = $match[1];
                 $i += \strlen($output);
                 $output = trim($output);
@@ -355,7 +339,7 @@ class Inline
      */
     private static function parseQuotedScalar(string $scalar, int &$i = 0): string
     {
-        if (!Parser::preg_match('/'.self::REGEX_QUOTED_STRING.'/A', $scalar, $match, 0, $i)) {
+        if (!Parser::preg_match('/'.self::REGEX_QUOTED_STRING.'/Au', substr($scalar, $i), $match)) {
             throw new ParseException(\sprintf('Malformed inline YAML string: "%s".', substr($scalar, $i)), self::$parsedLineNumber + 1, $scalar, self::$parsedFilename);
         }
 
@@ -436,24 +420,39 @@ class Inline
                         $value = self::parseMapping($state, $sequence, $flags, $i, $references);
                         break;
                     default:
-                        // a !php/const or !php/enum key of an embedded mapping is evaluated by parseMapping()
-                        $evaluate = null === $tag && !Parser::preg_match('/!php\/(?:const|enum) [^ ,\]]+?(?<!:): +[^ ,\]]/A', substr($sequence, $i, strcspn($sequence, ',]', $i)));
-                        $offset = $i;
-                        $value = self::parseScalar($sequence, $flags, [',', ']'], $i, $evaluate, $references, $isQuoted, $state);
+                        $value = self::parseScalar($sequence, $flags, [',', ']'], $i, null === $tag, $references, $isQuoted, $state);
 
                         // the value can be an array if a reference has been resolved to an array var
                         if (\is_string($value) && !$isQuoted && str_contains($value, ': ')) {
-                            // embedded mapping, whose value can be a collection that spans several scalars
-                            $value = '{'.$value;
+                            // embedded mapping?
+                            $j = $i;
+                            $mappingValue = $value;
+                            $mappingException = null;
+                            do {
+                                try {
+                                    $pos = 0;
+                                    $value = self::parseMapping($state, '{'.$mappingValue.'}', $flags, $pos, $references);
+                                    $i = $j;
+                                    $mappingException = null;
+                                    break;
+                                } catch (ParseException $exception) {
+                                    $mappingException = $exception;
+                                    if ($j >= $len) {
+                                        break;
+                                    }
 
-                            if ($i < $end = self::findEmbeddedMappingEnd($sequence, $offset)) {
-                                $value .= substr($sequence, $i, $end - $i);
-                                $i = $end;
+                                    $mappingValue .= $sequence[$j++];
+                                    if ($j >= $len) {
+                                        break;
+                                    }
+
+                                    $mappingValue .= self::parseScalar($sequence, $flags, [',', ']'], $j, null === $tag, $references);
+                                }
+                            } while ($j < $len);
+
+                            if ($mappingException) {
+                                throw $mappingException;
                             }
-
-                            $value .= '}';
-                            $pos = 0;
-                            $value = self::parseMapping($state, $value, $flags, $pos, $references);
                         }
 
                         --$i;
@@ -477,86 +476,6 @@ class Inline
         } finally {
             $state->leaveNestingLevel();
         }
-    }
-
-    /**
-     * Returns the offset of the "," or "]" that ends the embedded mapping starting at $i.
-     *
-     * Tokens are split the same way as in Parser::lexInlineStructure().
-     */
-    private static function findEmbeddedMappingEnd(string $sequence, int $i): int
-    {
-        $closingTags = [];
-        $len = \strlen($sequence);
-        $start = $i;
-
-        while ($i < $len) {
-            switch ($sequence[$i]) {
-                case '[':
-                    $closingTags[] = ']';
-                    $start = ++$i;
-                    break;
-                case '{':
-                    $closingTags[] = '}';
-                    $start = ++$i;
-                    break;
-                case ',':
-                    if (!$closingTags) {
-                        return $i;
-                    }
-                    $start = ++$i;
-                    break;
-                case ']':
-                case '}':
-                    if ($sequence[$i] !== array_pop($closingTags)) {
-                        return $i;
-                    }
-                    $start = ++$i;
-                    break;
-                case '"':
-                case "'":
-                case '&':
-                case '*':
-                    // a plain scalar can contain quotes, anchors and aliases, so the tokens are split again from $start, 100 per call to stay below pcre.backtrack_limit
-                    for ($end = $i, $i = $start; $i <= $end && $i < $len; $start = $i) {
-                        if (preg_match('/(?:[ \t:]++|"[^"\\\\]*+(?:\\\\.[^"\\\\]*+)*+"|\'[^\']*+\'|[&*][^ \t,\[\]{}]*+|[^ \t:"\'&*,\[\]{}][^:,\[\]{}]*+){1,100}+/As', $sequence, $match, 0, $i)) {
-                            $i += \strlen($match[0]);
-                            continue;
-                        }
-
-                        // an unterminated quoted string, or a PCRE error
-                        switch ($sequence[$i]) {
-                            case ' ':
-                            case "\t":
-                            case ':':
-                                ++$i;
-                                break;
-                            case '"':
-                            case "'":
-                                $quotation = $sequence[$i];
-                                while (++$i < $len && $quotation !== $sequence[$i]) {
-                                    if ('\\' === $sequence[$i] && '"' === $quotation) {
-                                        ++$i;
-                                    }
-                                }
-                                ++$i;
-                                break;
-                            case '&':
-                            case '*':
-                                $i += 1 + strcspn($sequence, " \t,[]{}", $i + 1);
-                                break;
-                            default:
-                                $i += strcspn($sequence, ',:[]{}', $i);
-                        }
-                    }
-                    break;
-                default:
-                    // spaces, colons and plain scalars
-                    $i += strcspn($sequence, ',[]{}"\'&*', $i);
-            }
-        }
-
-        return $len;
     }
 
     /**
@@ -599,15 +518,9 @@ class Inline
                     throw new ParseException('Missing mapping key.', self::$parsedLineNumber + 1, $mapping);
                 }
 
-                $isKeyEvaluated = '!php/const' === $key || '!php/enum' === $key;
-
-                if ($isKeyEvaluated) {
+                if ('!php/const' === $key || '!php/enum' === $key) {
                     $key .= ' '.self::parseScalar($mapping, $flags, ['(?<!:):(?!:)'], $i, false);
                     $key = self::evaluateScalar($state, $key, $flags);
-
-                    if (!\is_string($key) && !\is_int($key)) {
-                        throw new ParseException((is_numeric($key) ? 'Numeric' : 'Non-string').' keys are not supported. Quote your evaluable mapping keys instead.', self::$parsedLineNumber + 1, $mapping);
-                    }
                 }
 
                 if (self::$objectForMap && \is_string($key) && str_starts_with($key, "\0")) {
@@ -618,7 +531,7 @@ class Inline
                     break;
                 }
 
-                if (!$isKeyQuoted && !$isKeyEvaluated) {
+                if (!$isKeyQuoted) {
                     $evaluatedKey = self::evaluateScalar($state, $key, $flags, $references);
 
                     if ('' !== $key && $evaluatedKey !== $key && (!\is_string($evaluatedKey) || '!' === $key[0]) && !\is_int($evaluatedKey)) {
@@ -630,7 +543,7 @@ class Inline
                     throw new ParseException('Colons must be followed by a space or an indication character (i.e. " ", ",", "[", "]", "{", "}").', self::$parsedLineNumber + 1, $mapping);
                 }
 
-                $isMergeKey = !$isKeyQuoted && !$isKeyEvaluated && '<<' === $key;
+                $isMergeKey = !$isKeyQuoted && '<<' === $key;
 
                 if ($isMergeKey) {
                     $allowOverwrite = true;
@@ -777,12 +690,12 @@ class Inline
             $value = substr($scalar, 1);
 
             // remove comments
-            if (Parser::preg_match('/(?<![ \t])[ \t]++#/', $value, $match, \PREG_OFFSET_CAPTURE)) {
+            if (Parser::preg_match('/[ \t]+#/', $value, $match, \PREG_OFFSET_CAPTURE)) {
                 $value = substr($value, 0, $match[0][1]);
             }
 
             // an unquoted *
-            if ('' === $value) {
+            if (false === $value || '' === $value) {
                 throw new ParseException('A reference must contain at least one character.', self::$parsedLineNumber + 1, $value, self::$parsedFilename);
             }
 
@@ -812,7 +725,7 @@ class Inline
                     case '!!binary' === $scalar:
                         return '';
                     case str_starts_with($scalar, '!!str '):
-                        $s = substr($scalar, 6);
+                        $s = (string) substr($scalar, 6);
 
                         if (\in_array($s[0] ?? '', ['"', "'"], true)) {
                             $isQuotedString = true;
@@ -861,31 +774,24 @@ class Inline
                             }
 
                             $i = 0;
-                            $enumName = self::parseScalar(substr($scalar, 10), 0, null, $i, false);
-                            $useName = str_contains($enumName, '::');
-                            $enum = $useName ? strstr($enumName, '::', true) : $enumName;
-
-                            if (!enum_exists($enum)) {
+                            $enum = self::parseScalar(substr($scalar, 10), 0, null, $i, false);
+                            if ($useValue = str_ends_with($enum, '->value')) {
+                                $enum = substr($enum, 0, -7);
+                            }
+                            if (!\defined($enum)) {
                                 throw new ParseException(\sprintf('The enum "%s" is not defined.', $enum), self::$parsedLineNumber + 1, $scalar, self::$parsedFilename);
                             }
-                            if (!$useName) {
-                                return $enum::cases();
-                            }
-                            if ($useValue = str_ends_with($enumName, '->value')) {
-                                $enumName = substr($enumName, 0, -7);
-                            }
 
-                            if (!\defined($enumName)) {
-                                throw new ParseException(\sprintf('The string "%s" is not the name of a valid enum.', $enumName), self::$parsedLineNumber + 1, $scalar, self::$parsedFilename);
+                            $value = \constant($enum);
+
+                            if (!$value instanceof \UnitEnum) {
+                                throw new ParseException(\sprintf('The string "%s" is not the name of a valid enum.', $enum), self::$parsedLineNumber + 1, $scalar, self::$parsedFilename);
                             }
-
-                            $value = \constant($enumName);
-
                             if (!$useValue) {
                                 return $value;
                             }
                             if (!$value instanceof \BackedEnum) {
-                                throw new ParseException(\sprintf('The enum "%s" defines no value next to its name.', $enumName), self::$parsedLineNumber + 1, $scalar, self::$parsedFilename);
+                                throw new ParseException(\sprintf('The enum "%s" defines no value next to its name.', $enum), self::$parsedLineNumber + 1, $scalar, self::$parsedFilename);
                             }
 
                             return $value->value;
@@ -980,7 +886,7 @@ class Inline
             return null;
         }
 
-        if (!Parser::preg_match('/&(?P<ref>[^ \t,\[\]\{\}\n]++)\s*+/A', $value, $matches, 0, $i)) {
+        if (!Parser::preg_match('/^&(?P<ref>[^ \t,\[\]\{\}\n]++)\s*+/A', substr($value, $i), $matches)) {
             return null;
         }
 
@@ -991,7 +897,7 @@ class Inline
 
     private static function parseTag(string $value, int &$i, int $flags): ?string
     {
-        if (!isset($value[$i]) || '!' !== $value[$i]) {
+        if ('!' !== $value[$i]) {
             return null;
         }
 

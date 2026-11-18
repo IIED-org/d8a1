@@ -2,7 +2,6 @@
 
 namespace Drupal\search_api\Plugin\views\field;
 
-use Drupal\views\Attribute\ViewsField;
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfo;
@@ -16,8 +15,9 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Handles the display of entity reference fields in Search API Views.
  *
  * @ingroup views_field_handlers
+ *
+ * @ViewsField("search_api_entity")
  */
-#[ViewsField('search_api_entity')]
 class SearchApiEntity extends SearchApiStandard {
 
   use FieldAPIHandlerTrait;
@@ -238,7 +238,7 @@ class SearchApiEntity extends SearchApiStandard {
       $bundle = $entity->bundle();
       $operation = ($this->getDisplayMethod($bundle) == 'label') ? 'view label' : 'view';
       if ($entity->access($operation, $account)) {
-        foreach ($to_load[$id] as [$i, $j]) {
+        foreach ($to_load[$id] as list($i, $j)) {
           if ($entity->access('view', $account)) {
             $langcode = $values[$i]->search_api_language;
             if ($entity instanceof TranslatableInterface && $entity->hasTranslation($langcode)) {

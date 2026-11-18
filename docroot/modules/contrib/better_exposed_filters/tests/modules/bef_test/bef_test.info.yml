@@ -8,9 +8,8 @@ dependencies:
   - drupal:node
   - drupal:options
   - drupal:user
-  - drupal:path
 
-# Information added by Drupal.org packaging script on 2026-10-09
-version: '7.2.0'
+# Information added by Drupal.org packaging script on 2022-12-20
+version: '6.0.3'
 project: 'better_exposed_filters'
-datestamp: 1791536369
+datestamp: 1671541879

@@ -1,6 +1,9 @@
 <?php
 
-declare(strict_types=1);
+/**
+ * @file
+ * Contains \Drupal\Tests\redirect\Kernel\Migrate\d7\PathRedirectWithoutDefaultTest.
+ */
 
 namespace Drupal\Tests\redirect\Kernel\Migrate\d7;
 

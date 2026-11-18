@@ -1,5 +1,5 @@
 id: d7_captcha_settings
-label: 'CAPTCHA Settings'
+label: 'Captcha Settings'
 migration_tags:
   - Drupal 7
   - Configuration

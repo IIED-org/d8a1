@@ -2,9 +2,6 @@
 
 namespace Drupal\search_api\Plugin\views\cache;
 
-use Drupal\Core\Cache\Cache;
-use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Drupal\views\Attribute\ViewsCache;
 use Drupal\views\Plugin\views\cache\Time;
 
 /**
@@ -20,25 +17,29 @@ use Drupal\views\Plugin\views\cache\Time;
  * multi-site search, or searches that include external data.
  *
  * @ingroup views_cache_plugins
+ *
+ * @ViewsCache(
+ *   id = "search_api_time",
+ *   title = @Translation("Search API (time-based)"),
+ *   help = @Translation("Cache results for a predefined time period. Useful for sites that use external search engines such as Solr, or index multiple datasources. <strong>Caution:</strong> Will lead to stale results and might harm performance for complex search pages.")
+ * )
  */
-#[ViewsCache(
-  id: 'search_api_time',
-  title: new TranslatableMarkup('Search API (time-based)'),
-  help: new TranslatableMarkup('Cache results for a predefined time period. Useful for sites that use external search engines such as Solr, or index multiple datasources. <strong>Caution:</strong> Will lead to stale results and might harm performance for complex search pages.'),
-)]
 class SearchApiTimeCache extends Time {
 
   use SearchApiCachePluginTrait;
 
   /**
-   * {@inheritdoc}
+   * {@inheritDoc}
    */
   public function getCacheTags(): array {
-    // The time-based cache ignores all tag-based invalidation except if the
-    // search index or the view are modified.
-    $index_tags = $this->getQuery()->getIndex()->getCacheTagsToInvalidate();
-    $views_storage_tags = $this->view->storage->getCacheTags();
-    return Cache::mergeTags($index_tags, $views_storage_tags);
+    $tags = parent::getCacheTags();
+    // Do not invalidate time-based cache if any items on the index are indexed
+    // or deleted.
+    $key = array_search('search_api_list:' . $this->getQuery()->getIndex()->id(), $tags, TRUE);
+    if ($key !== FALSE) {
+      unset($tags[$key]);
+    }
+    return array_values($tags);
   }
 
 }

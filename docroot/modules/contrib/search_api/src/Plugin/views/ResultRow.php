@@ -13,7 +13,6 @@ use Drupal\views\ViewExecutable;
  * @property string search_api_language
  * @property float search_api_relevance
  * @property string|null search_api_excerpt
- * @property bool $search_api_has_fields_from_server
  */
 class ResultRow extends ViewsResultRow {
 
@@ -46,7 +45,7 @@ class ResultRow extends ViewsResultRow {
     'search_api_excerpt' => 'getExcerpt',
   ];
 
-  // phpcs:disable Drupal.NamingConventions.ValidVariableName.LowerCamelName
+  // @codingStandardsIgnoreStart PSR2.Classes.PropertyDeclaration.Underscore
 
   /**
    * The Search API result item for this row.
@@ -78,7 +77,7 @@ class ResultRow extends ViewsResultRow {
    */
   public $_relationship_parent_indices = [];
 
-  // phpcs:enable
+  // @codingStandardsIgnoreEnd
 
   /**
    * Implements the magic __isset() method to lazy-load certain properties.

@@ -3,16 +3,12 @@
 namespace Drupal\Tests\purge_ui\FunctionalJavascript\Form;
 
 use Drupal\purge_ui\Form\ProcessorAddForm;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests \Drupal\purge_ui\Form\ProcessorAddForm.
  *
  * @group purge
  */
-#[Group('purge')]
-#[RunTestsInSeparateProcesses]
 class ProcessorAddFormTest extends AjaxFormTestBase {
 
   /**
@@ -54,7 +50,6 @@ class ProcessorAddFormTest extends AjaxFormTestBase {
         'c',
         'withform',
         'purge_ui_block_processor',
-        'purge_ui_invalidate',
         'drush_purge_queue_work',
         'drush_purge_invalidate',
       ]

@@ -4,16 +4,12 @@ namespace Drupal\Tests\purge\Kernel\Processor;
 
 use Drupal\purge\Plugin\Purge\Processor\ProcessorInterface;
 use Drupal\Tests\purge\Kernel\KernelServiceTestBase;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests \Drupal\purge\Plugin\Purge\Processor\ProcessorsService.
  *
  * @group purge
  */
-#[Group('purge')]
-#[RunTestsInSeparateProcesses]
 class ServiceTest extends KernelServiceTestBase {
 
   /**

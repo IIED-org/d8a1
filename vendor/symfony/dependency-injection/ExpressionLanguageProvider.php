@@ -28,11 +28,12 @@ class ExpressionLanguageProvider implements ExpressionFunctionProviderInterface
 {
     private ?\Closure $serviceCompiler;
 
-    public function __construct(
-        ?callable $serviceCompiler = null,
-        private ?\Closure $getEnv = null,
-    ) {
+    private ?\Closure $getEnv;
+
+    public function __construct(?callable $serviceCompiler = null, ?\Closure $getEnv = null)
+    {
         $this->serviceCompiler = null === $serviceCompiler ? null : $serviceCompiler(...);
+        $this->getEnv = $getEnv;
     }
 
     public function getFunctions(): array

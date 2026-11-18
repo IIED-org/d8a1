@@ -121,7 +121,7 @@ class InfiniteScroll extends SqlBase {
       'initially_load_all_pages' => [
         '#type' => 'checkbox',
         '#title' => $this->t('Initially load all pages up to the requested page'),
-        '#description' => $this->t('When initially loading a page beyond the first, this option will load all pages up to the requested page instead of just the requested page. So, if you have the pager set to 10 items per page, and you load the page with ?page=2 in the url, you will get page 0, 1 and 2 loaded for a total of 30 items. <strong>Important:</strong> Loading a high page number loads and renders all items up to that page in a single request, which can lead to long page load times and high server load on views with many results. On such views, limit the maximum number of loaded pages with the <em>Number of pages</em> setting.'),
+        '#description' => $this->t('When initially loading a page beyond the first, this option will load all pages up to the requested page instead of just the requested page. So, if you have the pager set to 10 items per page, and you load the page with ?page=2 in the url, you will get page 0, 1 and 2 loaded for a total of 30 items. <em>Note that this could cause some long page load times when loading many pages.</em>'),
         '#default_value' => $options['initially_load_all_pages'],
       ],
     ];
@@ -136,13 +136,7 @@ class InfiniteScroll extends SqlBase {
     // If configured, for pages beyond the first, we want to show all items up
     // to the current page.
     if ($this->options['views_infinite_scroll']['initially_load_all_pages'] && !\Drupal::request()->isXmlHttpRequest() && $this->current_page > 0) {
-      $pages_to_load = $this->current_page + 1;
-      // Respect the "Number of pages" setting, so the requested page from the
-      // URL can't load more items than the pager is configured to show.
-      if (!empty($this->options['total_pages'])) {
-        $pages_to_load = min($pages_to_load, (int) $this->options['total_pages']);
-      }
-      $limit = $pages_to_load * $this->options['items_per_page'];
+      $limit = ($this->current_page + 1) * $this->options['items_per_page'];
       $offset = $this->options['offset'];
       $this->view->query->setLimit($limit);
       $this->view->query->setOffset($offset);

@@ -6,7 +6,7 @@ namespace Drush\Attributes;
 
 use Attribute;
 
-#[Attribute(Attribute::TARGET_METHOD | Attribute::TARGET_CLASS)]
+#[Attribute(Attribute::TARGET_METHOD)]
 class HandleRemoteCommands extends NoArgumentsBase
 {
     const NAME = 'handle-remote-commands';

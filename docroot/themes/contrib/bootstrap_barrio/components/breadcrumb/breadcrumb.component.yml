@@ -4,14 +4,8 @@ $schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schema
 # The human readable name.
 name: Breadcrumb
 
-# Description for Canvas library panel.
-description: A Bootstrap breadcrumb navigation component.
-
 # Status can be: "experimental", "stable", "deprecated", "obsolete".
 status: stable
-
-# Group for organization in Canvas sidebar.
-group: Navigation
 
 # Schema for the props. We support www.json-schema.org. Learn more about the
 # syntax there.
@@ -21,26 +15,14 @@ props:
     breadcrumb:
       type: array
       title: Breadcrumbs
-      description: Breadcrumb navigation items.
-      items:
+      description: Breadcrumb items.
+      item:
         type: object
-        title: Breadcrumb Item
+        title: Breadcrumb
         properties:
           url:
             type: string
             title: URL
-            format: uri-reference
-            description: Link URL for the breadcrumb item.
-            examples: ['/']
           text:
             type: string
             title: Text
-            description: Display text for the breadcrumb item.
-            examples: ['Home']
-      examples:
-        - - url: '/'
-            text: 'Home'
-          - url: '/products'
-            text: 'Products'
-          - url: ''
-            text: 'Current Page'

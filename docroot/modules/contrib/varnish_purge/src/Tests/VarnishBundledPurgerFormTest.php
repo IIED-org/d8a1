@@ -26,9 +26,9 @@ class VarnishBundledPurgerFormTest extends VarnishPurgerFormTestBase {
   /**
    * The token group names the form is supposed to display.
    *
-   * @var string[]
-   *
    * @see purge_tokens_token_info()
+   *
+   * @var string[]
    */
   protected $tokenGroups = ['invalidations'];
 

@@ -20,6 +20,11 @@ class AdminFunctionalityTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
+  protected $strictConfigSchema = FALSE;
+
+  /**
+   * {@inheritdoc}
+   */
   protected $defaultTheme = 'stark';
 
   /**
@@ -291,8 +296,8 @@ class AdminFunctionalityTest extends BrowserTestBase {
   public function testSchedulesAdmin() {
     // Load the schedule page.
     // @todo Confirm the table only has one record.
-    $session = $this->assertSession();
     $this->drupalGet('admin/config/development/backup_migrate/schedule');
+    $session = $this->assertSession();
     $session->statusCodeEquals(200);
     $session->pageTextContains('Schedule Name');
     $session->pageTextContains('Enabled');
@@ -302,8 +307,7 @@ class AdminFunctionalityTest extends BrowserTestBase {
     $session->pageTextContains('Keep');
     $session->pageTextContains('Daily Schedule');
     $session->pageTextContains('No');
-    $session->pageTextContains('Daily');
-    $session->pageTextNotContains('Every 0 weeks');
+    $session->pageTextContains('Every 0 weeks');
     $session->pageTextContains('Never');
     $session->pageTextContains('Disabled');
     $session->pageTextContains('All backups');
@@ -393,7 +397,6 @@ class AdminFunctionalityTest extends BrowserTestBase {
     $session->fieldExists('config[metadata][description]');
     $session->fieldExists('config[db_exclude][exclude_tables][]');
     $session->fieldExists('config[db_exclude][nodata_tables][]');
-    $session->fieldExists('config[db_exclude][exclude_patterns]');
     $session->fieldExists('config[private_files_exclude][exclude_filepaths]');
     $session->fieldExists('config[public_files_exclude][exclude_filepaths]');
     $session->buttonExists('Save');
@@ -403,14 +406,12 @@ class AdminFunctionalityTest extends BrowserTestBase {
       'label' => 'Test profile',
       'id' => 'test_profile',
       'config[namer][filename]' => 'test_backup',
-      'config[namer][timestamp]' => TRUE,
-      'config[namer][timestamp_format]' => 'Y-m-d\TH-i-s',
+      'config[namer][timestamp]' => 'Y-m-d\TH-i-s',
       'config[compressor][compression]' => 'none',
       'config[utils][site_offline]' => 1,
       'config[metadata][description]' => 'Test description text.',
       'config[db_exclude][exclude_tables][]' => [],
       'config[db_exclude][nodata_tables][]' => [],
-      'config[db_exclude][exclude_patterns]' => '',
       'config[private_files_exclude][exclude_filepaths]' => 'test_private_exclude',
       'config[public_files_exclude][exclude_filepaths]' => 'test_public_exclude',
     ];

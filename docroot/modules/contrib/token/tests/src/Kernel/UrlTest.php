@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @group token
  */
-class UrlTest extends TokenKernelTestBase {
+class UrlTest extends KernelTestBase {
 
   /**
    * The token service.
@@ -55,11 +55,11 @@ class UrlTest extends TokenKernelTestBase {
     foreach ($this->expectedCurrentRequestUrlResults() as $data_set) {
       list ($request, $text, $data, $options, $expected_output) = $data_set;
       // Set the request as the current one.
+      $this->requestStack->pop();
       $this->requestStack->push($request);
       $this->currentRouteMatch->resetRouteMatch();
 
       $this->assertEquals($expected_output, $this->token->replace($text, $data, $options));
-      $this->requestStack->pop();
     }
   }
 

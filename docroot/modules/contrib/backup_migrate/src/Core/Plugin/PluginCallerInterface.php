@@ -15,7 +15,6 @@ interface PluginCallerInterface {
    * Inject the plugin manager.
    *
    * @param \Drupal\backup_migrate\Core\Plugin\PluginManagerInterface $plugins
-   *   The plugins.
    */
   public function setPluginManager(PluginManagerInterface $plugins);
 
@@ -23,7 +22,6 @@ interface PluginCallerInterface {
    * Get the plugin manager.
    *
    * @return \Drupal\backup_migrate\Core\Plugin\PluginManagerInterface
-   *   The requested integer.
    */
   public function plugins();
 

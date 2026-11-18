@@ -5,14 +5,12 @@ namespace Drupal\Tests\search_api\Kernel\Server;
 use Drupal\Component\Uuid\Php;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\search_api\Entity\Server;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests that importing a server works correctly.
  *
  * @group search_api
  */
-#[RunTestsInSeparateProcesses]
 class ServerImportTest extends KernelTestBase {
 
   /**

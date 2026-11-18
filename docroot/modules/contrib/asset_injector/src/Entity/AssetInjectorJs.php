@@ -3,11 +3,11 @@
 namespace Drupal\asset_injector\Entity;
 
 /**
- * Defines the JS Injector entity.
+ * Defines the Js Injector entity.
  *
  * @ConfigEntityType(
  *   id = "asset_injector_js",
- *   label = @Translation("JS Injector"),
+ *   label = @Translation("Js Injector"),
  *   list_cache_tags = { "library_info" },
  *   handlers = {
  *     "access" = "Drupal\asset_injector\AssetInjectorAccessControlHandler",
@@ -54,14 +54,14 @@ namespace Drupal\asset_injector\Entity;
 class AssetInjectorJs extends AssetInjectorBase {
 
   /**
-   * Load JS in the header of the page.
+   * Load js in the header of the page.
    *
    * @var bool
    */
   public $header;
 
   /**
-   * Preprocess JS before adding.
+   * Preprocess css before adding.
    *
    * @var bool
    */

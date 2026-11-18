@@ -37,41 +37,42 @@ class Tokens implements \IteratorAggregate, PositionAware
 
     private function createGenerator(): Generator
     {
-        $regex = '/ [{}\[\],:] | [^\xEF\xBB\xBF\s{}\[\],:]+ /x';
+        $regex = '/
+            [{}\[\],:]
+            #| true|false|null
+            #| [\deE.+-]+
+            #| (t|tr|tru|f|fa|fal|fals|n|nu|nul)$
+            | [^\xEF\xBB\xBF\s{}\[\],:]+    # todo make matching logic positive as in comments above and solve 2 failing tests
+        /x';
 
         $inString = 0;
         $carry = '';
 
         foreach ($this->jsonChunks as $jsonChunk) {
-            $chunkBlocks = explode('"', $carry.$jsonChunk);
+            $chunkItems = explode('"', $carry.$jsonChunk);
             $carry = '';
 
-            $chunkItemsLastSafeIndex = count($chunkBlocks) - 2;
+            $chunkItemsLastSafeIndex = count($chunkItems) - 2;
             for ($i = 0; $i <= $chunkItemsLastSafeIndex; ++$i) {
                 if ($inString) {
-                    if ($this->stringIsEscaping($chunkBlocks[$i])) {
-                        $carry .= $chunkBlocks[$i].'"';
+                    if ($this->stringIsEscaping($chunkItems[$i])) {
+                        $carry .= $chunkItems[$i].'"';
                     } else {
-                        yield "\"$carry$chunkBlocks[$i]\"";
+                        yield '"'.$carry.$chunkItems[$i].'"';
                         $carry = '';
                         $inString = 0;
                     }
                 } else {
-                    $chunkBlock = trim($chunkBlocks[$i]);
-                    if (strlen($chunkBlock) == 1) {
-                        yield $chunkBlock;
-                    } else {
-                        preg_match_all($regex, $chunkBlock, $matches);
-                        yield from $matches[0];
-                    }
+                    preg_match_all($regex, $chunkItems[$i], $matches);
+                    yield from $matches[0];
                     $inString = 1;
                 }
             }
 
             if ($inString) {
-                $carry .= $chunkBlocks[$i];
+                $carry .= $chunkItems[$i];
             } else {
-                preg_match_all($regex, $chunkBlocks[$i], $matches);
+                preg_match_all($regex, $chunkItems[$i], $matches);
                 $carry = array_pop($matches[0]);
                 yield from $matches[0];
             }
@@ -86,7 +87,7 @@ class Tokens implements \IteratorAggregate, PositionAware
     {
         $i = strlen($token);
         $slashes = 0;
-        while (--$i >= 0 && $token[$i] === '\\') {
+        while (--$i >= 0 && isset($token[$i]) && $token[$i] === '\\') {
             ++$slashes;
         }
 

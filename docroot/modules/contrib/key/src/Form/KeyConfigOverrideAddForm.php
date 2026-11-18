@@ -14,9 +14,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
- * Form to add a configuration override for a key entity.
- *
- * @package Drupal\key\Form
+ * KeyConfigOverrideAddForm class.
  */
 class KeyConfigOverrideAddForm extends EntityForm {
 
@@ -183,9 +181,9 @@ class KeyConfigOverrideAddForm extends EntityForm {
     ];
 
     $form['clear_overridden'] = [
-      '#title' => $this->t('Clear the stored configuration value'),
+      '#title' => $this->t('Clear overridden value'),
       '#type' => 'checkbox',
-      '#description' => $this->t('Set the value stored in configuration for the selected item to NULL, so potentially sensitive data is removed from the database and from configuration exports. This does not affect the override: code that reads the configuration item will still receive the value of the selected key.'),
+      '#description' => $this->t('Check this field to clear any existing value for the overridden configuration item. This is important to make sure potentially sensitive data is removed from the configuration.'),
       '#default_value' => TRUE,
     ];
 

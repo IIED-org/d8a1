@@ -36,8 +36,7 @@ class ConfigForCommand implements EventSubscriberInterface
     /**
      * {@inheritdoc}
      */
-    #[\ReturnTypeWillChange]
-    public static function getSubscribedEvents(): array
+    public static function getSubscribedEvents()
     {
         return [ConsoleEvents::COMMAND => 'injectConfiguration'];
     }

@@ -16,38 +16,28 @@ use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Base class for condition configure operations.
+ * Base class for condition configur operations.
  */
 abstract class ConditionConfigure extends FormBase {
 
   /**
-   * The tempstore factory.
-   *
    * @var \Drupal\Core\TempStore\SharedTempStoreFactory
    */
   protected $tempstore;
 
   /**
-   * The condition plugin manager.
-   *
    * @var \Drupal\Core\Condition\ConditionManager
    */
   protected $manager;
 
   /**
-   * The tempstore ID.
-   *
    * @var string
    */
-  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
   protected $tempstore_id;
 
   /**
-   * The machine name.
-   *
    * @var string
    */
-  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
   protected $machine_name;
 
   /**
@@ -196,6 +186,7 @@ abstract class ConditionConfigure extends FormBase {
    *
    * @param array $cached_values
    *   Cached values that will get set.
+   *
    * @param mixed $conditions
    *   The conditions to set within the cached values.
    *

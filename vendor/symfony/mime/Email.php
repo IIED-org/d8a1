@@ -362,6 +362,18 @@ class Email extends Message
 
     /**
      * @return $this
+     *
+     * @deprecated since Symfony 6.2, use addPart() instead
+     */
+    public function attachPart(DataPart $part): static
+    {
+        @trigger_deprecation('symfony/mime', '6.2', 'The "%s()" method is deprecated, use "addPart()" instead.', __METHOD__);
+
+        return $this->addPart($part);
+    }
+
+    /**
+     * @return $this
      */
     public function addPart(DataPart $part): static
     {
@@ -388,7 +400,10 @@ class Email extends Message
         return $this->generateBody();
     }
 
-    public function ensureValidity(): void
+    /**
+     * @return void
+     */
+    public function ensureValidity()
     {
         $this->ensureBodyValid();
 
@@ -573,7 +588,7 @@ class Email extends Message
      */
     public function __unserialize(array $data): void
     {
-        if (!\is_string($data[1] ?? '') || !\is_string($data[3] ?? '')) {
+        if (($data[1] ?? null) instanceof \Stringable || ($data[3] ?? null) instanceof \Stringable) {
             throw new \BadMethodCallException('Cannot unserialize '.self::class);
         }
 

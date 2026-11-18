@@ -3,15 +3,12 @@
 namespace Drupal\search_api\Plugin\search_api\processor;
 
 use Drupal\comment\CommentInterface;
-use Drupal\Component\Utility\DeprecationHelper;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Session\AccountProxyInterface;
-use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\Session\AnonymousUserSession;
 use Drupal\Core\TypedData\ComplexDataInterface;
-use Drupal\node\NodeGrantsHelper;
 use Drupal\node\NodeInterface;
-use Drupal\search_api\Attribute\SearchApiProcessor;
 use Drupal\search_api\Datasource\DatasourceInterface;
 use Drupal\search_api\IndexInterface;
 use Drupal\search_api\Item\ItemInterface;
@@ -24,17 +21,18 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Adds content access checks for nodes and comments.
+ *
+ * @SearchApiProcessor(
+ *   id = "content_access",
+ *   label = @Translation("Content access"),
+ *   description = @Translation("Adds content access checks for nodes and comments."),
+ *   stages = {
+ *     "add_properties" = 0,
+ *     "pre_index_save" = -10,
+ *     "preprocess_query" = -30,
+ *   },
+ * )
  */
-#[SearchApiProcessor(
-  id: 'content_access',
-  label: new TranslatableMarkup('Content access'),
-  description: new TranslatableMarkup('Adds content access checks for nodes and comments.'),
-  stages: [
-    'add_properties' => 0,
-    'pre_index_save' => -10,
-    'preprocess_query' => -30,
-  ],
-)]
 class ContentAccess extends ProcessorPluginBase {
 
   use LoggerTrait;
@@ -150,6 +148,13 @@ class ContentAccess extends ProcessorPluginBase {
    * {@inheritdoc}
    */
   public function addFieldValues(ItemInterface $item) {
+    static $anonymous_user;
+
+    if (!isset($anonymous_user)) {
+      // Load the anonymous user.
+      $anonymous_user = new AnonymousUserSession();
+    }
+
     // Only run for node and comment items.
     $entity_type_id = $item->getDatasource()->getEntityTypeId();
     if (!in_array($entity_type_id, ['node', 'comment'])) {
@@ -275,7 +280,6 @@ class ContentAccess extends ProcessorPluginBase {
       }
     }
 
-    // phpcs:disable Drupal.Commenting.InlineComment.SpacingBefore
     // The filter structure we want looks like this:
     //   [belongs to other datasource]
     //   OR
@@ -286,7 +290,6 @@ class ContentAccess extends ProcessorPluginBase {
     //   )
     // If there are no "other" datasources, we don't need the nested OR,
     // however, and can add the inner conditions directly to the query.
-    // phpcs:enable
     if ($unaffected_datasources) {
       $outer_conditions = $query->createAndAddConditionGroup('OR', ['content_access']);
       foreach ($unaffected_datasources as $datasource_id) {
@@ -350,12 +353,7 @@ class ContentAccess extends ProcessorPluginBase {
     }
     $node_grants_field_id = $node_grants_field->getFieldIdentifier();
     $grants_conditions = $query->createConditionGroup('OR', ['content_access_grants']);
-    $grants = DeprecationHelper::backwardsCompatibleCall(
-      \Drupal::VERSION,
-      '11.4.0',
-      fn () => \Drupal::service(NodeGrantsHelper::class)->nodeAccessGrants('view', $account),
-      fn () => node_access_grants('view', $account),
-    );
+    $grants = node_access_grants('view', $account);
     foreach ($grants as $realm => $gids) {
       foreach ($gids as $gid) {
         $grants_conditions->addCondition($node_grants_field_id, "node_access_$realm:$gid");

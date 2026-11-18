@@ -3,16 +3,14 @@
 namespace Drupal\backup_migrate\Core\File;
 
 /**
- * Provides the temp file manager class.
+ *
  *
  * @package Drupal\backup_migrate\Core\Services
  */
 class TempFileManager implements TempFileManagerInterface {
 
   /**
-   * Stores the value.
-   *
-   * @var \Drupal\backup_migrate\Core\File\TempFileAdapterInterface The adapter
+   * @var \Drupal\backup_migrate\Core\File\TempFileAdapterInterface
    */
   protected $adapter;
 
@@ -22,7 +20,6 @@ class TempFileManager implements TempFileManagerInterface {
    * This manager needs the adapter to create the actual temp files.
    *
    * @param \Drupal\backup_migrate\Core\File\TempFileAdapterInterface $adapter
-   *   The adapter.
    */
   public function __construct(TempFileAdapterInterface $adapter) {
     $this->adapter = $adapter;
@@ -34,11 +31,9 @@ class TempFileManager implements TempFileManagerInterface {
    * The new file should be writable.
    *
    * @param string $ext
-   *   The ext.
    *   The file extension for this file (optional)
    *
    * @return BackupFileWritableInterface
-   *   The requested integer.
    */
   public function create($ext = '') {
     $file = new WritableStreamBackupFile($this->adapter->createTempFile($ext));
@@ -55,14 +50,11 @@ class TempFileManager implements TempFileManagerInterface {
    * For example: xxx.mysql would become xxx.mysql.gz.
    *
    * @param \Drupal\backup_migrate\Core\File\BackupFileInterface $file
-   *   The backup file.
    *   The file to add the extension to.
-   * @param mixed $ext
-   *   The ext.
+   * @param $ext
    *   The new file extension.
    *
    * @return \Drupal\backup_migrate\Core\File\BackupFileWritableInterface
-   *   The requested integer.
    *   A new writable backup file with the new extension and all of the metadata
    *   from the previous file.
    */
@@ -91,10 +83,8 @@ class TempFileManager implements TempFileManagerInterface {
    * For example: xxx.mysql.gz would become xxx.mysql.
    *
    * @param \Drupal\backup_migrate\Core\File\BackupFileInterface $file
-   *   The backup file.
    *
    * @return \Drupal\backup_migrate\Core\File\BackupFileWritableInterface
-   *   The requested integer.
    *   A new writable backup file with the last extension removed and
    *   all of the metadata from the previous file.
    */

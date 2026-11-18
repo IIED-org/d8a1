@@ -72,13 +72,11 @@ ds_views_entity_row:
         switch:
           type: boolean
           label: 'Use the alternative view mode selected in the display settings tab.'
-    delta_fieldset:
+    deltas_fieldset:
       type: mapping
-      label: 'Delta fields settings'
+      label: 'Delta fields'
       mapping:
         delta_fields:
-          type: sequence
-          label: 'Delta fields'
           sequence:
-            type: string
-            label: 'Field wrapper'
+            - type: string
+              label: 'Field wrapper'

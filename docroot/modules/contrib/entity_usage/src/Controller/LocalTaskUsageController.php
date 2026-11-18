@@ -2,10 +2,7 @@
 
 namespace Drupal\entity_usage\Controller;
 
-use Drupal\Core\Access\AccessResultInterface;
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Controller for our local tasks.
@@ -21,7 +18,7 @@ class LocalTaskUsageController extends ListUsageController {
    * @return \Drupal\Core\Access\AccessResultInterface
    *   The access result.
    */
-  public function checkAccessLocalTask(RouteMatchInterface $route_match): AccessResultInterface {
+  public function checkAccessLocalTask(RouteMatchInterface $route_match) {
     $entity = $this->getEntityFromRouteMatch($route_match);
     return parent::checkAccess($entity->getEntityTypeId(), $entity->id());
   }
@@ -32,10 +29,10 @@ class LocalTaskUsageController extends ListUsageController {
    * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
    *   A RouteMatch object.
    *
-   * @return \Drupal\Core\StringTranslation\TranslatableMarkup
+   * @return string
    *   The title to be used on this page.
    */
-  public function getTitleLocalTask(RouteMatchInterface $route_match): TranslatableMarkup {
+  public function getTitleLocalTask(RouteMatchInterface $route_match) {
     $entity = $this->getEntityFromRouteMatch($route_match);
     return parent::getTitle($entity->getEntityTypeId(), $entity->id());
   }
@@ -46,10 +43,10 @@ class LocalTaskUsageController extends ListUsageController {
    * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
    *   A RouteMatch object.
    *
-   * @return mixed[]
+   * @return array
    *   The page build to be rendered.
    */
-  public function listUsageLocalTask(RouteMatchInterface $route_match): array {
+  public function listUsageLocalTask(RouteMatchInterface $route_match) {
     $entity = $this->getEntityFromRouteMatch($route_match);
     return parent::listUsagePage($entity->getEntityTypeId(), $entity->id());
   }
@@ -63,7 +60,7 @@ class LocalTaskUsageController extends ListUsageController {
    * @return \Drupal\Core\Entity\EntityInterface|null
    *   The entity object as determined from the passed-in route match.
    */
-  protected function getEntityFromRouteMatch(RouteMatchInterface $route_match): ?EntityInterface {
+  protected function getEntityFromRouteMatch(RouteMatchInterface $route_match) {
     $parameter_name = $route_match->getRouteObject()->getOption('_entity_usage_entity_type_id');
     return $route_match->getParameter($parameter_name);
   }

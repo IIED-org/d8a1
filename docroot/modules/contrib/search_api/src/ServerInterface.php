@@ -3,7 +3,6 @@
 namespace Drupal\search_api;
 
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
-use Drupal\search_api\Backend\BackendInterface;
 use Drupal\search_api\Backend\BackendSpecificInterface;
 
 /**
@@ -56,14 +55,6 @@ interface ServerInterface extends ConfigEntityInterface, BackendSpecificInterfac
    *   Thrown if the backend plugin could not be retrieved.
    */
   public function getBackend();
-
-  /**
-   * Retrieves the backend plugin, if available.
-   *
-   * @return \Drupal\search_api\Backend\BackendInterface|null
-   *   This server's backend plugin, or NULL if it could not be retrieved.
-   */
-  public function getBackendIfAvailable(): ?BackendInterface;
 
   /**
    * Retrieves the configuration of this server's backend plugin.

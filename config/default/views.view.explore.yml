@@ -966,6 +966,9 @@ display:
             multiple: false
             remember_roles:
               authenticated: authenticated
+              anonymous: '0'
+              editor: '0'
+              administrator: '0'
             placeholder: ''
           is_grouped: false
           group_info:
@@ -3666,11 +3669,7 @@ display:
           input_required: false
           text_input_required: 'Select any filter and click on Apply to see results'
           text_input_required_format: basic_html
-          bef:
-            general:
-              auto_submit_sort_only: false
-              autosubmit_breakpoint: ''
-              autosubmit_textfield_minimum_length: 3
+          bef: {  }
       cache:
         type: search_api_none
         options: {  }
@@ -3781,6 +3780,10 @@ display:
             multiple: false
             remember_roles:
               authenticated: authenticated
+              anonymous: '0'
+              contributor: '0'
+              editor: '0'
+              administrator: '0'
             placeholder: 'Search case studies'
           is_grouped: false
           group_info:
@@ -4007,6 +4010,7 @@ display:
         - 'languages:language_interface'
         - url
         - url.query_args
+        - user
         - 'user.node_grants:view'
         - user.permissions
       tags:

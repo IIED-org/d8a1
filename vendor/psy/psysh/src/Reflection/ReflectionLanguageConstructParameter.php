@@ -3,7 +3,7 @@
 /*
  * This file is part of Psy Shell.
  *
- * (c) 2012-2026 Justin Hileman
+ * (c) 2012-2023 Justin Hileman
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -18,17 +18,10 @@ namespace Psy\Reflection;
  */
 class ReflectionLanguageConstructParameter extends \ReflectionParameter
 {
-    /** @var string|array|object */
     private $function;
-    /** @var int|string */
     private $parameter;
-    private array $opts;
+    private $opts;
 
-    /**
-     * @param string|array|object $function
-     * @param int|string          $parameter
-     * @param array               $opts
-     */
     public function __construct($function, $parameter, array $opts)
     {
         $this->function = $function;
@@ -38,10 +31,13 @@ class ReflectionLanguageConstructParameter extends \ReflectionParameter
 
     /**
      * No class here.
+     *
+     * @todo remove \ReturnTypeWillChange attribute after dropping support for PHP 7.0 (when we can use nullable types)
      */
-    public function getClass(): ?\ReflectionClass
+    #[\ReturnTypeWillChange]
+    public function getClass()
     {
-        return null;
+        return;
     }
 
     /**
@@ -51,17 +47,7 @@ class ReflectionLanguageConstructParameter extends \ReflectionParameter
      */
     public function isArray(): bool
     {
-        return !empty($this->opts['isArray']);
-    }
-
-    public function hasType(): bool
-    {
-        return false;
-    }
-
-    public function getType(): ?\ReflectionType
-    {
-        return null;
+        return \array_key_exists('isArray', $this->opts) && $this->opts['isArray'];
     }
 
     /**
@@ -98,12 +84,7 @@ class ReflectionLanguageConstructParameter extends \ReflectionParameter
      */
     public function isOptional(): bool
     {
-        return !empty($this->opts['isOptional']);
-    }
-
-    public function isVariadic(): bool
-    {
-        return !empty($this->opts['isVariadic']);
+        return \array_key_exists('isOptional', $this->opts) && $this->opts['isOptional'];
     }
 
     /**
@@ -125,6 +106,6 @@ class ReflectionLanguageConstructParameter extends \ReflectionParameter
      */
     public function isPassedByReference(): bool
     {
-        return !empty($this->opts['isPassedByReference']);
+        return \array_key_exists('isPassedByReference', $this->opts) && $this->opts['isPassedByReference'];
     }
 }

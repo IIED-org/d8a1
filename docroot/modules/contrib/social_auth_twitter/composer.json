@@ -1,0 +1,47 @@
+{
+    "name": "drupal/social_auth_twitter",
+    "type": "drupal-module",
+    "description": "Social Auth integration for Twitter",
+    "keywords": ["Drupal"],
+    "license": "GPL-2.0-or-later",
+    "homepage": "https://www.drupal.org/project/social_auth_twitter",
+    "support": {
+        "issues": "https://www.drupal.org/project/issues/social_auth_twitter",
+        "source": "https://git.drupalcode.org/project/social_auth_twitter"
+    },
+    "authors": [
+        {
+            "name": "Andriy Khomych",
+            "email": "andriy.khomych@gmail.com"
+        },
+        {
+            "name": "Getulio Valentin Sánchez (gvso)",
+            "email": "valentin2507@gmail.com"
+        },
+        {
+            "name": "Utkarsh Dixit (denutkarsh)",
+            "email": "downloadplaza97@gmail.com"
+        }
+    ],
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://packages.drupal.org/8"
+        }
+    ],
+    "require": {
+        "abraham/twitteroauth": "^3 || ^4",
+        "drupal/core": "^9.3 || ^10",
+        "drupal/social_auth": "^3.0"
+    },
+    "require-dev": {
+        "drupal/coder": "^8.3"
+    },
+    "minimum-stability": "dev",
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
+    }
+}

@@ -1,13 +1,11 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\block_class\Constants;
 
 /**
  * Block Class Constants.
  */
-final class BlockClassConstants {
+class BlockClassConstants {
 
   /**
    * Block Class Permission.

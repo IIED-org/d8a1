@@ -81,7 +81,7 @@ class KeyConfigOverrideListBuilder extends ConfigEntityListBuilder {
    * {@inheritdoc}
    */
   public function buildRow(EntityInterface $entity) {
-    /** @var \Drupal\key\KeyConfigOverrideInterface $entity */
+    /* @var $entity \Drupal\key\KeyConfigOverrideInterface */
 
     // Build the complete configuration ID.
     $config_id = '';

@@ -6,7 +6,7 @@ use Drupal\backup_migrate\Core\Exception\HttpClientException;
 use Drupal\backup_migrate\Core\File\ReadableStreamBackupFile;
 
 /**
- * Provides the php curl http client class.
+ *
  *
  * @package Drupal\backup_migrate\Core\Service
  */
@@ -15,11 +15,9 @@ class PhpCurlHttpClient implements HttpClientInterface {
   /**
    * Get the body of the given resource.
    *
-   * @param string $url
-   *   The URL.
+   * @param $url
    *
    * @return mixed
-   *   The return value.
    */
   public function get($url) {
     // @todo Implement if needed.
@@ -28,13 +26,10 @@ class PhpCurlHttpClient implements HttpClientInterface {
   /**
    * Post the given data (as a string or an array) to the given URL.
    *
-   * @param string $url
-   *   The URL.
-   * @param array $data
-   *   The data.
+   * @param $url
+   * @param $data
    *
    * @return mixed
-   *   The return value.
    */
   public function post($url, $data) {
     $ch = $this->getCurlResource($url);
@@ -47,15 +42,11 @@ class PhpCurlHttpClient implements HttpClientInterface {
   /**
    * Post a file along with other data (as an array).
    *
-   * @param string $url
-   *   The URL.
+   * @param $url
    * @param \Drupal\backup_migrate\Core\File\ReadableStreamBackupFile $file
-   *   The backup file.
-   * @param array $data
-   *   The data.
+   * @param $data
    *
    * @return mixed
-   *   The return value.
    */
   public function postFile($url, ReadableStreamBackupFile $file, $data) {
     $data['file'] = new \CURLFile($file->realpath());
@@ -66,11 +57,9 @@ class PhpCurlHttpClient implements HttpClientInterface {
   /**
    * Get the CURL Resource with default options.
    *
-   * @param string $url
-   *   The URL.
+   * @param $url
    *
    * @return resource
-   *   The return value.
    */
   protected function getCurlResource($url) {
     $ch = curl_init($url);
@@ -84,11 +73,9 @@ class PhpCurlHttpClient implements HttpClientInterface {
   /**
    * Perform the http action and return the body or throw an exception.
    *
-   * @param mixed $ch
-   *   The ch.
+   * @param $ch
    *
    * @return mixed
-   *   The return value.
    *
    * @throws \Drupal\backup_migrate\Core\Exception\HttpClientException
    */

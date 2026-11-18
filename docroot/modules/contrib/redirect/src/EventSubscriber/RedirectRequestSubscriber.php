@@ -25,9 +25,7 @@ use Symfony\Component\Routing\RequestContext;
  */
 class RedirectRequestSubscriber implements EventSubscriberInterface {
 
-  /**
-   * @var  \Drupal\redirect\RedirectRepository
-   */
+  /** @var  \Drupal\redirect\RedirectRepository */
   protected $redirectRepository;
 
   /**
@@ -89,10 +87,8 @@ class RedirectRequestSubscriber implements EventSubscriberInterface {
    *   The entity type manager.
    * @param \Drupal\redirect\RedirectChecker $checker
    *   The redirect checker service.
-   * @param \Symfony\Component\Routing\RequestContext $context
+   * @param \Symfony\Component\Routing\RequestContext
    *   Request context.
-   * @param \Drupal\Core\PathProcessor\InboundPathProcessorInterface $path_processor
-   *   The path processor.
    */
   public function __construct(RedirectRepository $redirect_repository, LanguageManagerInterface $language_manager, ConfigFactoryInterface $config, AliasManagerInterface $alias_manager, ModuleHandlerInterface $module_handler, EntityTypeManagerInterface $entity_type_manager, RedirectChecker $checker, RequestContext $context, InboundPathProcessorInterface $path_processor) {
     $this->redirectRepository = $redirect_repository;

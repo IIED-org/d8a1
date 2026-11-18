@@ -82,7 +82,7 @@ dependencies:
     - field.field.node.initiative.field_year_finished
     - image.style.thumbnail
     - node.type.initiative
-    - workflows.workflow.node_added
+    - workflows.workflow.editorial
   module:
     - address
     - content_moderation
@@ -467,8 +467,7 @@ content:
     type: address_default
     weight: 5
     region: content
-    settings:
-      wrapper_type: details
+    settings: {  }
     third_party_settings: {  }
   field_alternative_language_versi:
     type: file_generic

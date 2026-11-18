@@ -3,13 +3,11 @@
 namespace Drupal\address;
 
 use CommerceGuys\Addressing\AddressFormat\AddressField;
-use CommerceGuys\Addressing\AddressFormat\AddressFormat;
 use CommerceGuys\Addressing\AddressFormat\AdministrativeAreaType;
 use CommerceGuys\Addressing\AddressFormat\DependentLocalityType;
 use CommerceGuys\Addressing\AddressFormat\LocalityType;
 use CommerceGuys\Addressing\AddressFormat\PostalCodeType;
-
-// cspell:ignore Cedex Eircode Townland
+use CommerceGuys\Addressing\AddressFormat\AddressFormat;
 
 /**
  * Provides translated labels for the library enums.
@@ -29,13 +27,12 @@ class LabelHelper {
       AddressField::GIVEN_NAME => t('First name', [], ['context' => 'Address label']),
       AddressField::ADDITIONAL_NAME => t('Middle name', [], ['context' => 'Address label']),
       AddressField::FAMILY_NAME => t('Last name', [], ['context' => 'Address label']),
-      AddressField::ORGANIZATION => t('Organization', [], ['context' => 'Address label']),
+      AddressField::ORGANIZATION => t('Company', [], ['context' => 'Address label']),
       AddressField::ADDRESS_LINE1 => t('Address line 1', [], ['context' => 'Address label']),
       AddressField::ADDRESS_LINE2 => t('Address line 2', [], ['context' => 'Address label']),
-      AddressField::ADDRESS_LINE3 => t('Address line 3', [], ['context' => 'Address label']),
       AddressField::POSTAL_CODE => t('Postal code', [], ['context' => 'Address label']),
       AddressField::SORTING_CODE => t('Sorting code', [], ['context' => 'Address label']),
-      AddressField::DEPENDENT_LOCALITY => t('Dependent locality (e.g. Neighborhood)', [], ['context' => 'Address label']),
+      AddressField::DEPENDENT_LOCALITY => t('Dependent locality (e.g. Neighbourhood)', [], ['context' => 'Address label']),
       AddressField::LOCALITY => t('Locality (e.g. City)', [], ['context' => 'Address label']),
       AddressField::ADMINISTRATIVE_AREA => t('Administrative area (e.g. State or Province)', [], ['context' => 'Address label']),
     ];
@@ -45,7 +42,8 @@ class LabelHelper {
    * Gets the field labels suitable for the given address format.
    *
    * Intended to be shown to the end user, they sometimes use a more familiar
-   * term than the field name.
+   * term than the field name (Company instead of Organization, Contact name
+   * instead of Recipient, etc).
    *
    * @param \CommerceGuys\Addressing\AddressFormat\AddressFormat $address_format
    *   The address format.
@@ -63,12 +61,10 @@ class LabelHelper {
       AddressField::GIVEN_NAME => t('First name', [], ['context' => 'Address label']),
       AddressField::ADDITIONAL_NAME => t('Middle name', [], ['context' => 'Address label']),
       AddressField::FAMILY_NAME => t('Last name', [], ['context' => 'Address label']),
-      AddressField::ORGANIZATION => t('Organization', [], ['context' => 'Address label']),
+      AddressField::ORGANIZATION => t('Company', [], ['context' => 'Address label']),
       AddressField::ADDRESS_LINE1 => t('Street address', [], ['context' => 'Address label']),
-      // The address line 2 and 3 labels are
-      // usually shown only to screen-reader users.
+      // The address line 2 label is usually shown only to screen-reader users.
       AddressField::ADDRESS_LINE2 => t('Street address line 2', [], ['context' => 'Address label']),
-      AddressField::ADDRESS_LINE3 => t('Street address line 3', [], ['context' => 'Address label']),
       AddressField::POSTAL_CODE => self::getPostalCodeLabel($postal_code_type),
       // Google's library always labels the sorting code field as "Cedex".
       AddressField::SORTING_CODE => t('Cedex', [], ['context' => 'Address label']),
@@ -110,13 +106,13 @@ class LabelHelper {
       AdministrativeAreaType::COUNTY => t('County', [], ['context' => 'Address label']),
       AdministrativeAreaType::DEPARTMENT => t('Department', [], ['context' => 'Address label']),
       AdministrativeAreaType::DISTRICT => t('District', [], ['context' => 'Address label']),
-      AdministrativeAreaType::DO_SI => t('Do/Si', [], ['context' => 'Address label']),
+      AdministrativeAreaType::DO_SI => t('Do si', [], ['context' => 'Address label']),
       AdministrativeAreaType::EMIRATE => t('Emirate', [], ['context' => 'Address label']),
       AdministrativeAreaType::ISLAND => t('Island', [], ['context' => 'Address label']),
+      AdministrativeAreaType::OBLAST => t('Oblast', [], ['context' => 'Address label']),
       AdministrativeAreaType::PARISH => t('Parish', [], ['context' => 'Address label']),
       AdministrativeAreaType::PREFECTURE => t('Prefecture', [], ['context' => 'Address label']),
       AdministrativeAreaType::PROVINCE => t('Province', [], ['context' => 'Address label']),
-      AdministrativeAreaType::REGION => t('Region', [], ['context' => 'Address label']),
       AdministrativeAreaType::STATE => t('State', [], ['context' => 'Address label']),
     ];
   }
@@ -152,7 +148,6 @@ class LabelHelper {
       LocalityType::DISTRICT => t('District', [], ['context' => 'Address label']),
       LocalityType::POST_TOWN => t('Post town', [], ['context' => 'Address label']),
       LocalityType::SUBURB => t('Suburb', [], ['context' => 'Address label']),
-      LocalityType::TOWN_CITY => t('Town/City', [], ['context' => 'Address label']),
     ];
   }
 
@@ -185,7 +180,7 @@ class LabelHelper {
     return [
       DependentLocalityType::DISTRICT => t('District', [], ['context' => 'Address label']),
       DependentLocalityType::NEIGHBORHOOD => t('Neighborhood', [], ['context' => 'Address label']),
-      DependentLocalityType::VILLAGE_TOWNSHIP => t('Village/Township', [], ['context' => 'Address label']),
+      DependentLocalityType::VILLAGE_TOWNSHIP => t('Village township', [], ['context' => 'Address label']),
       DependentLocalityType::SUBURB => t('Suburb', [], ['context' => 'Address label']),
       DependentLocalityType::TOWNLAND => t('Townland', [], ['context' => 'Address label']),
     ];

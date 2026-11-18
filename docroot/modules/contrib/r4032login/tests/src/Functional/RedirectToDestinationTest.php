@@ -25,26 +25,26 @@ class RedirectToDestinationTest extends BrowserTestBase {
   /**
    * Tests the behavior of the redirect_to_destination option.
    *
-   * @param string $user_login_path
+   * @param string $loginPath
    *   The login path.
-   * @param bool $redirect_to_destination
+   * @param bool $optionValue
    *   The option value for "redirect_to_destination".
    *
    * @dataProvider redirectToDestinationDataProvider
    */
-  public function testRedirectToDestination($user_login_path, $redirect_to_destination) {
+  public function testRedirectToDestination($loginPath, $optionValue) {
     $config = $this->config('r4032login.settings');
-    $config->set('user_login_path', $user_login_path);
-    $config->set('redirect_to_destination', $redirect_to_destination);
+    $config->set('user_login_path', $loginPath);
+    $config->set('redirect_to_destination', $optionValue);
     $config->save();
 
     $this->drupalGet('admin/config');
 
     $currentUrl = $this->getSession()->getCurrentUrl();
-    $expectedUrl = $user_login_path == '<front>'
-      ? Url::fromRoute($user_login_path)->toString()
-      : Url::fromUserInput($user_login_path)->toString();
-    if ($redirect_to_destination) {
+    $expectedUrl = $loginPath == '<front>'
+      ? Url::fromRoute($loginPath)->toString()
+      : Url::fromUserInput($loginPath)->toString();
+    if ($optionValue) {
       $expectedUrl .= '?destination=' . Url::fromUserInput('/admin/config')->toString();
     }
     $expectedUrl = $this->getAbsoluteUrl($expectedUrl);
@@ -55,7 +55,7 @@ class RedirectToDestinationTest extends BrowserTestBase {
   /**
    * Data provider for testRedirectToDestination.
    */
-  public static function redirectToDestinationDataProvider() {
+  public function redirectToDestinationDataProvider() {
     return [
       [
         'user_login_path' => '/user/login',

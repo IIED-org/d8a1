@@ -274,10 +274,8 @@ class Carousel extends BaseComponent {
 
     const activeIndicator = SelectorEngine.findOne(SELECTOR_ACTIVE, this._indicatorsElement)
 
-    if (activeIndicator) {
-      activeIndicator.classList.remove(CLASS_NAME_ACTIVE)
-      activeIndicator.removeAttribute('aria-current')
-    }
+    activeIndicator.classList.remove(CLASS_NAME_ACTIVE)
+    activeIndicator.removeAttribute('aria-current')
 
     const newActiveIndicator = SelectorEngine.findOne(`[data-bs-slide-to="${index}"]`, this._indicatorsElement)
 

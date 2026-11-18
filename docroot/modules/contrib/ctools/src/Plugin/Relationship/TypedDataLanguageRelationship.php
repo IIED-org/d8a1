@@ -6,8 +6,6 @@ use Drupal\Core\Plugin\Context\Context;
 use Drupal\Core\Plugin\Context\ContextDefinition;
 
 /**
- * Custom relationship.
- *
  * @Relationship(
  *   id = "typed_data_language_relationship",
  *   deriver = "\Drupal\ctools\Plugin\Deriver\TypedDataLanguageRelationshipDeriver"

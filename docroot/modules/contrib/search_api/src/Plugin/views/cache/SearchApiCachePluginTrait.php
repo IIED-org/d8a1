@@ -7,8 +7,6 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Cache\Context\CacheContextsManager;
-use Drupal\Core\Cache\VariationCache;
-use Drupal\Core\Cache\VariationCacheInterface;
 use Drupal\search_api\Plugin\views\query\SearchApiQuery;
 use Drupal\search_api\SearchApiException;
 use Drupal\search_api\Utility\QueryHelperInterface;
@@ -121,7 +119,7 @@ trait SearchApiCachePluginTrait {
     $query = $this->getQuery();
 
     // Get the max-age value according to the configuration of the view.
-    $max_age = $this->cacheSetMaxAge($type);
+    $expire = $this->cacheSetMaxAge($type);
     // Get the max-age value of the executed query. A 3rd party module might
     // have set a different value on the query, especially in case of an error.
     // Search API advises backend implementations to set a max-age of "0" on
@@ -137,50 +135,38 @@ trait SearchApiCachePluginTrait {
       // caching (max-age is "0") as well.
       // In case that Cache::PERMANENT is configured for the view, any runtime
       // value set on the query has precedence.
-      if ($max_age === Cache::PERMANENT || $query_max_age < $max_age) {
-        $max_age = $query_max_age;
+      if ($expire === Cache::PERMANENT || $query_max_age < $expire) {
+        $expire = $query_max_age;
       }
     }
 
-    if ($max_age === 0) {
+    if ($expire === 0) {
       // Don't cache the results.
       return;
     }
 
-    // Vary the cached results by the cache contexts of the query, too. These
-    // are only known once the search has run, for example the cache contexts
-    // of the item access checks, so they are stored as a cache redirect. The
-    // contexts of the display are already part of the results key.
-    $display_cache_contexts = $this->displayHandler->getCacheMetadata()->getCacheContexts();
-    $cacheability = (new CacheableMetadata())
-      ->setCacheContexts(array_values(array_diff($query->getCacheContexts(), $display_cache_contexts)))
-      ->setCacheTags(Cache::mergeTags($this->getCacheTags(), $query->getCacheTags()))
-      ->setCacheMaxAge($max_age);
+    if ($expire !== Cache::PERMANENT) {
+      $expire += (int) $view->getRequest()->server->get('REQUEST_TIME');
+    }
+    $tags = Cache::mergeTags($this->getCacheTags(), $query->getCacheTags());
 
     // Unset the search_api_view query options to avoid serializing the full
     // ViewExecutable object in the cache. Keep the previous values so we can
     // restore them afterwards. (In 99% of cases both values will just be
     // $this->view but better to be extra-careful.)
     $search_api_query = $query->getSearchApiQuery();
-    if (!$search_api_query) {
-      return;
-    }
     $view_in_query = $search_api_query->setOption('search_api_view', NULL);
     $view_in_query_original = $search_api_query->getOriginalQuery()->setOption('search_api_view', NULL);
 
-    $result_set = $query->getSearchApiResults();
-    if ($result_set === NULL) {
-      return;
-    }
     try {
       $data = [
         'result' => $view->result,
         'total_rows' => $view->total_rows ?? 0,
         'current_page' => $view->getCurrentPage(),
-        'search_api results' => $result_set,
+        'search_api results' => $query->getSearchApiResults(),
       ];
-      $this->getVariationCache()
-        ->set([$this->generateResultsKey()], $data, $cacheability, new CacheableMetadata());
+      $this->getCacheBackend()
+        ->set($this->generateResultsKey(), $data, $expire, $tags);
     }
     finally {
       // We reset the search_api_view query options to their original values.
@@ -199,31 +185,32 @@ trait SearchApiCachePluginTrait {
 
     // Values to set: $view->result, $view->total_rows, $view->execute_time,
     // $view->current_page.
-    $cache = $this->getVariationCache()
-      ->get([$this->generateResultsKey()], new CacheableMetadata());
-    if (!empty($cache->data['search_api results'])) {
-      $view = $this->getView();
-      $view->result = $cache->data['result'];
-      $view->total_rows = $cache->data['total_rows'];
-      $view->setCurrentPage($cache->data['current_page']);
-      $view->execute_time = 0;
+    if ($cache = $this->getCacheBackend()->get($this->generateResultsKey())) {
+      $cutoff = $this->cacheExpire($type);
+      if (!$cutoff || $cache->created > $cutoff) {
+        $view = $this->getView();
+        $view->result = $cache->data['result'];
+        $view->total_rows = $cache->data['total_rows'];
+        $view->setCurrentPage($cache->data['current_page']);
+        $view->execute_time = 0;
 
-      // Trick Search API into believing a search happened, to make faceting
-      // et al. work.
-      /** @var \Drupal\search_api\Query\ResultSetInterface $results */
-      $results = $cache->data['search_api results'];
-      $this->getQueryHelper()->addResults($results);
+        // Trick Search API into believing a search happened, to make faceting
+        // et al. work.
+        /** @var \Drupal\search_api\Query\ResultSetInterface $results */
+        $results = $cache->data['search_api results'];
+        $this->getQueryHelper()->addResults($results);
 
-      try {
-        $query = $results->getQuery();
-        $query->setOption('search_api_view', $view);
-        $this->getQuery()->setSearchApiQuery($query);
+        try {
+          $query = $results->getQuery();
+          $query->setOption('search_api_view', $view);
+          $this->getQuery()->setSearchApiQuery($query);
+        }
+        catch (SearchApiException) {
+          // Ignore.
+        }
+
+        return TRUE;
       }
-      catch (SearchApiException) {
-        // Ignore.
-      }
-
-      return TRUE;
     }
     return FALSE;
   }
@@ -261,20 +248,6 @@ trait SearchApiCachePluginTrait {
     }
 
     return $this->resultsKey;
-  }
-
-  /**
-   * Retrieves a variation cache wrapping the results cache backend.
-   *
-   * @return \Drupal\Core\Cache\VariationCacheInterface
-   *   The variation cache.
-   */
-  protected function getVariationCache(): VariationCacheInterface {
-    return new VariationCache(
-      \Drupal::requestStack(),
-      $this->getCacheBackend(),
-      $this->getCacheContextsManager(),
-    );
   }
 
   /**

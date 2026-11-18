@@ -18,7 +18,7 @@ use CommerceGuys\Addressing\AbstractEnum;
  */
 final class FieldOverride extends AbstractEnum
 {
-    public const HIDDEN = 'hidden';
-    public const OPTIONAL = 'optional';
-    public const REQUIRED = 'required';
+    const HIDDEN = 'hidden';
+    const OPTIONAL = 'optional';
+    const REQUIRED = 'required';
 }

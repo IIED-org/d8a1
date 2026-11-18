@@ -14,14 +14,12 @@ use Drupal\search_api\IndexInterface;
 use Drupal\search_api\Utility\Utility;
 use Drupal\search_api_test\PluginTestTrait;
 use Drupal\user\Entity\User;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests correct reactions to changes for the index.
  *
  * @group search_api
  */
-#[RunTestsInSeparateProcesses]
 class IndexChangesTest extends KernelTestBase {
 
   use PluginTestTrait;
@@ -191,7 +189,6 @@ class IndexChangesTest extends KernelTestBase {
     $info = [
       'datasource_id' => 'entity:entity_test_mulrev_changed',
       'property_path' => 'id',
-      'type' => 'string',
     ];
     $field = \Drupal::getContainer()
       ->get('search_api.fields_helper')
@@ -336,12 +333,10 @@ class IndexChangesTest extends KernelTestBase {
     $info = [
       'datasource_id' => 'entity:entity_test_mulrev_changed',
       'property_path' => 'id',
-      'type' => 'string',
     ];
     $this->index->addField($fields_helper->createField($this->index, 'id', $info));
     $info = [
       'property_path' => 'search_api_url',
-      'type' => 'string',
     ];
     $this->index->addField($fields_helper->createField($this->index, 'url', $info));
 
@@ -416,13 +411,11 @@ class IndexChangesTest extends KernelTestBase {
     $info = [
       'datasource_id' => $datasource_id,
       'property_path' => 'field1',
-      'type' => 'string',
     ];
     $this->index->addField($fields_helper->createField($this->index, 'field1', $info));
     $info = [
       'datasource_id' => $datasource_id,
       'property_path' => 'field2',
-      'type' => 'string',
     ];
     $this->index->addField($fields_helper->createField($this->index, 'field2', $info));
 
@@ -452,7 +445,6 @@ class IndexChangesTest extends KernelTestBase {
     $info = [
       'datasource_id' => $datasource_id,
       'property_path' => 'name',
-      'type' => 'string',
     ];
     $field = \Drupal::getContainer()
       ->get('search_api.fields_helper')

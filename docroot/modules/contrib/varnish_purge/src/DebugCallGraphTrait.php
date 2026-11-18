@@ -8,9 +8,6 @@ use GuzzleHttp\Exception\RequestException;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
-/**
- * Provides a method to debug caller graph.
- */
 trait DebugCallGraphTrait {
   use PurgeLoggerAwareTrait;
 
@@ -28,7 +25,6 @@ trait DebugCallGraphTrait {
    *   Fully namespaced class or an instantiated object.
    *
    * @return string
-   *   Short and readable class name.
    */
   protected function getClassName($class) {
     if (is_object($class)) {
@@ -83,7 +79,6 @@ trait DebugCallGraphTrait {
    *   The HTTP request object.
    *
    * @return string[]
-   *   Debug information from a request.
    */
   protected function debugInfoForRequest(RequestInterface $r) {
     $info = [];
@@ -106,9 +101,8 @@ trait DebugCallGraphTrait {
    *   Optional exception in case of failures.
    *
    * @return string[]
-   *   Debug information from a response.
    */
-  protected function debugInfoForResponse(ResponseInterface $r, ?RequestException $e = NULL) {
+  protected function debugInfoForResponse(ResponseInterface $r, RequestException $e = NULL) {
     $info = [];
     $info['rsp http'] = $r->getProtocolVersion();
     $info['rsp status'] = $r->getStatusCode();
@@ -187,10 +181,10 @@ trait DebugCallGraphTrait {
         ->getStatusCode() : '???';
     }
 
-    // Log the normal message to the error output stream.
+    // Log the normal message to the emergency output stream.
     /** @var \Drupal\purge\Logger\LoggerChannelPartInterface $logger */
     $logger = $this->logger();
-    $logger->error("$msg @msg", $vars);
+    $logger->emergency("$msg @msg", $vars);
 
     // In debugging mode, follow with quite some more data.
     if ($logger->isDebuggingEnabled()) {
@@ -205,5 +199,4 @@ trait DebugCallGraphTrait {
       $this->logDebugTable($table);
     }
   }
-
 }

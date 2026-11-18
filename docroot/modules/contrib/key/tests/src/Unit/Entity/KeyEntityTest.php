@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\key\Unit\Entity;
 
-use PHPUnit\Framework\Attributes\Group;
 use Drupal\key\Entity\Key;
 use Drupal\key\Plugin\KeyProvider\ConfigKeyProvider;
 use Drupal\key\Plugin\KeyType\AuthenticationKeyType;
@@ -13,7 +12,6 @@ use Drupal\Tests\key\Unit\KeyTestBase;
  * @coversDefaultClass \Drupal\key\Entity\Key
  * @group key
  */
-#[Group('key')]
 class KeyEntityTest extends KeyTestBase {
 
   /**
@@ -43,7 +41,7 @@ class KeyEntityTest extends KeyTestBase {
    * @var array
    *   Key type settings to use for Authentication key type.
    */
-  protected $keyTypeSettings;
+  protected $key_type_settings;
 
   /**
    * Key provider settings.
@@ -51,7 +49,7 @@ class KeyEntityTest extends KeyTestBase {
    * @var array
    *   Key provider settings to use for Configuration key provider.
    */
-  protected $keyProviderSettings;
+  protected $key_provider_settings;
 
   /**
    * Key input settings.
@@ -59,7 +57,7 @@ class KeyEntityTest extends KeyTestBase {
    * @var array
    *   Key input settings to use for None key input.
    */
-  protected $keyInputSettings;
+  protected $key_input_settings;
 
   /**
    * Assert that key entity getters work.
@@ -69,7 +67,7 @@ class KeyEntityTest extends KeyTestBase {
     $values = [
       'key_id' => $this->getRandomGenerator()->word(15),
       'key_provider' => 'config',
-      'key_provider_settings' => $this->keyProviderSettings,
+      'key_provider_settings' => $this->key_provider_settings,
     ];
     $key = new Key($values, 'key');
 
@@ -88,20 +86,20 @@ class KeyEntityTest extends KeyTestBase {
       'id' => 'authentication',
       'label' => 'Authentication',
     ];
-    $this->keyTypeSettings = [];
-    $plugin = new AuthenticationKeyType($this->keyTypeSettings, 'authentication', $definition);
+    $this->key_type_settings = [];
+    $plugin = new AuthenticationKeyType($this->key_type_settings, 'authentication', $definition);
 
     // Mock the KeyTypeManager service.
     $this->keyTypeManager = $this->createMock('\Drupal\key\Plugin\KeyPluginManager');
 
-    $this->keyTypeManager
+    $this->keyTypeManager->expects($this->any())
       ->method('getDefinitions')
       ->willReturn([
         ['id' => 'authentication', 'label' => 'Authentication'],
       ]);
-    $this->keyTypeManager
+    $this->keyTypeManager->expects($this->any())
       ->method('createInstance')
-      ->with('authentication', $this->keyTypeSettings)
+      ->with('authentication', $this->key_type_settings)
       ->willReturn($plugin);
     $this->container->set('plugin.manager.key.key_type', $this->keyTypeManager);
 
@@ -110,13 +108,13 @@ class KeyEntityTest extends KeyTestBase {
       'label' => 'Configuration',
       'tags' => ['config'],
     ];
-    $this->keyProviderSettings = ['key_value' => $this->createToken(), 'base64_encoded' => FALSE];
-    $plugin = new ConfigKeyProvider($this->keyProviderSettings, 'config', $definition);
+    $this->key_provider_settings = ['key_value' => $this->createToken(), 'base64_encoded' => FALSE];
+    $plugin = new ConfigKeyProvider($this->key_provider_settings, 'config', $definition);
 
     // Mock the KeyProviderManager service.
     $this->keyProviderManager = $this->createMock('\Drupal\key\Plugin\KeyPluginManager');
 
-    $this->keyProviderManager
+    $this->keyProviderManager->expects($this->any())
       ->method('getDefinitions')
       ->willReturn([
         ['id' => 'file', 'label' => 'File', 'tags' => ['file']],
@@ -126,9 +124,9 @@ class KeyEntityTest extends KeyTestBase {
           'tags' => ['config'],
         ],
       ]);
-    $this->keyProviderManager
+    $this->keyProviderManager->expects($this->any())
       ->method('createInstance')
-      ->with('config', $this->keyProviderSettings)
+      ->with('config', $this->key_provider_settings)
       ->willReturn($plugin);
     $this->container->set('plugin.manager.key.key_provider', $this->keyProviderManager);
 
@@ -136,20 +134,20 @@ class KeyEntityTest extends KeyTestBase {
       'id' => 'none',
       'label' => 'None',
     ];
-    $this->keyInputSettings = [];
-    $plugin = new NoneKeyInput($this->keyInputSettings, 'none', $definition);
+    $this->key_input_settings = [];
+    $plugin = new NoneKeyInput($this->key_input_settings, 'none', $definition);
 
     // Mock the KeyInputManager service.
     $this->keyInputManager = $this->createMock('\Drupal\key\Plugin\KeyPluginManager');
 
-    $this->keyInputManager
+    $this->keyInputManager->expects($this->any())
       ->method('getDefinitions')
       ->willReturn([
         ['id' => 'none', 'label' => 'None'],
       ]);
-    $this->keyInputManager
+    $this->keyInputManager->expects($this->any())
       ->method('createInstance')
-      ->with('none', $this->keyInputSettings)
+      ->with('none', $this->key_input_settings)
       ->willReturn($plugin);
     $this->container->set('plugin.manager.key.key_input', $this->keyInputManager);
 

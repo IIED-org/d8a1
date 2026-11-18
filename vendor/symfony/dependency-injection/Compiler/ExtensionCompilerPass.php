@@ -21,12 +21,13 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  */
 class ExtensionCompilerPass implements CompilerPassInterface
 {
-    public function process(ContainerBuilder $container): void
+    /**
+     * @return void
+     */
+    public function process(ContainerBuilder $container)
     {
-        $passes = $container->getCompilerPassConfig()->getPasses();
-
         foreach ($container->getExtensions() as $extension) {
-            if (!$extension instanceof CompilerPassInterface || \in_array($extension, $passes, true)) {
+            if (!$extension instanceof CompilerPassInterface) {
                 continue;
             }
 

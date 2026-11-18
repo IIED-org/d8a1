@@ -4,20 +4,19 @@ namespace Drupal\ds\Plugin\DsField\Comment;
 
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Drupal\ds\Attribute\DsField;
 use Drupal\ds\Plugin\DsField\Entity;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Plugin that renders a view mode.
+ *
+ * @DsField(
+ *   id = "comment_user",
+ *   title = @Translation("User"),
+ *   entity_type = "comment",
+ *   provider = "user"
+ * )
  */
-#[DsField(
-  id: 'comment_user',
-  title: new TranslatableMarkup('User'),
-  entity_type: 'comment',
-  provider: 'user'
-)]
 class CommentUser extends Entity {
 
   /**
@@ -55,7 +54,7 @@ class CommentUser extends Entity {
   public function build() {
     $view_mode = $this->getEntityViewMode();
 
-    /** @var \Drupal\comment\CommentInterface $comment */
+    /* @var $comment \Drupal\comment\CommentInterface */
     $comment = $this->entity();
     $uid = $comment->getOwnerId();
     $user = $this->entityTypeManager

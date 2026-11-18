@@ -1,18 +1,16 @@
 {% import '@lib/di.twig' as di %}
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Drupal\{{ machine_name }};
 
-{% apply sort_namespaces %}
+{% sort %}
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
   {% if services %}
 {{ di.use(services) }}
   {% endif %}
-{% endapply %}
+{% endsort %}
 
 /**
  * @todo Add a description for the middleware.

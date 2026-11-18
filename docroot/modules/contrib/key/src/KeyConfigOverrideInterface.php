@@ -5,7 +5,7 @@ namespace Drupal\key;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 
 /**
- * The interface for key configuration overrides.
+ * KeyConfigOverrideInterface interface.
  */
 interface KeyConfigOverrideInterface extends ConfigEntityInterface {
 

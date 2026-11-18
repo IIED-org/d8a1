@@ -44,7 +44,6 @@ class MetadataWriter extends PluginBase implements FileProcessorInterface, Plugi
    * Get the default values for the plugin.
    *
    * @return \Drupal\backup_migrate\Core\Config\Config
-   *   The return value.
    */
   public function configDefaults() {
     return new Config([
@@ -60,7 +59,6 @@ class MetadataWriter extends PluginBase implements FileProcessorInterface, Plugi
    * Generate a list of metadata keys to be stored with the backup.
    *
    * @return array
-   *   A render or configuration array.
    */
   protected function getMetaKeys() {
     return [
@@ -79,7 +77,7 @@ class MetadataWriter extends PluginBase implements FileProcessorInterface, Plugi
   public function setUp($operand, $options) {
     if ($options['operation'] == 'backup' && $options['source_id']) {
       $this->config()->set('bam_sourceid', $options['source_id']);
-      if ($this->plugins()->get($options['source_id'])) {
+      if ($source = $this->plugins()->get($options['source_id'])) {
         // @todo Query the source for it's type and name.
       }
     }
@@ -90,10 +88,8 @@ class MetadataWriter extends PluginBase implements FileProcessorInterface, Plugi
    * Run after a backup. Add metadata to the file.
    *
    * @param \Drupal\backup_migrate\Core\File\BackupFileWritableInterface $file
-   *   The backup file.
    *
    * @return \Drupal\backup_migrate\Core\File\BackupFileWritableInterface
-   *   The requested integer.
    */
   public function afterBackup(BackupFileWritableInterface $file) {
     // Add the various metadata.

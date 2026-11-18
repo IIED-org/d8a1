@@ -16,42 +16,52 @@ class Term implements \ArrayAccess
 {
     /**
      * The term.
+     *
+     * @var string
      */
-    protected string $term;
+    protected $term;
 
     /**
      * Term frequency.
+     *
+     * @var int|null
      */
-    protected ?int $tf;
+    protected $tf;
 
     /**
      * Positions.
      *
      * @var int[]|null
      */
-    protected ?array $positions;
+    protected $positions;
 
     /**
      * Offsets.
+     *
+     * @var array|null
      */
-    protected ?array $offsets;
+    protected $offsets;
 
     /**
      * Payloads.
      *
      * @var string[]|null
      */
-    protected ?array $payloads;
+    protected $payloads;
 
     /**
      * Document frequency.
+     *
+     * @var int|null
      */
-    protected ?int $df;
+    protected $df;
 
     /**
      * TF / DF (i.e., TF * IDF).
+     *
+     * @var float|null
      */
-    protected ?float $tfIdf;
+    protected $tfIdf;
 
     /**
      * Constructor.
@@ -157,6 +167,7 @@ class Term implements \ArrayAccess
         return \in_array($offset, ['tf', 'positions', 'offsets', 'payloads', 'df', 'tf-idf']);
     }
 
+    #[\ReturnTypeWillChange]
     /**
      * ArrayAccess implementation.
      *
@@ -164,7 +175,6 @@ class Term implements \ArrayAccess
      *
      * @return mixed
      */
-    #[\ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         if ('tf-idf' === $offset) {

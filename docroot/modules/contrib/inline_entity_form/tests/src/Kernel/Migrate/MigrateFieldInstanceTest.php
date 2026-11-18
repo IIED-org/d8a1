@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\inline_entity_form\Kernel\Migrate;
 
 use Drupal\field\Entity\FieldConfig;
@@ -14,17 +12,14 @@ use Drupal\field\FieldConfigInterface;
  */
 class MigrateFieldInstanceTest extends MigrateTestBase {
 
-  // phpcs:disable
   /**
    * {@inheritdoc}
    */
-  // @phpstan-ignore-next-line
-  public static $modules = [
+  protected static $modules = [
     'inline_entity_form',
     'node',
     'text',
   ];
-  // phpcs:enable
 
   /**
    * {@inheritdoc}

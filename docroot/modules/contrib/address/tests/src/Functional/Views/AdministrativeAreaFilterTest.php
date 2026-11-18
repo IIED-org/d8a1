@@ -78,11 +78,8 @@ class AdministrativeAreaFilterTest extends BrowserTestBase {
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->fieldNotExists('field_address_test_administrative_area');
 
-    // For a country without admin areas, the filter still shouldn't exist. Such
-    // countries can be identified by examining
-    // CountryRepository::getBaseDefinitions() and confirming that the country
-    // does not have a file in resources/subdivision.
-    $this->drupalGet('address-test/views/filter-administrative-area/AC');
+    // For a country without admin areas, the filter still shouldn't exist.
+    $this->drupalGet('address-test/views/filter-administrative-area/CR');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->fieldNotExists('field_address_test_administrative_area');
 
@@ -111,11 +108,8 @@ class AdministrativeAreaFilterTest extends BrowserTestBase {
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->fieldNotExists('field_address_test_administrative_area');
 
-    // For a country without admin areas, the filter still shouldn't exist. Such
-    // countries can be identified by examining
-    // CountryRepository::getBaseDefinitions() and confirming that the country
-    // does not have a file in resources/subdivision.
-    $options = ['query' => ['field_address_test_country_code' => 'AC']];
+    // For a country without admin areas, the filter still shouldn't exist.
+    $options = ['query' => ['field_address_test_country_code' => 'CR']];
     $this->drupalGet('address-test/views/filter-administrative-area', $options);
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->fieldNotExists('field_address_test_administrative_area');
@@ -173,14 +167,14 @@ class AdministrativeAreaFilterTest extends BrowserTestBase {
         'RJ' => 'Rio de Janeiro',
       ],
       'EG' => [
-        'ALX' => 'Alexandria Governorate',
-        'C' => 'Cairo Governorate',
+        'Alexandria Governorate' => 'Alexandria Governorate',
+        'Cairo Governorate' => 'Cairo Governorate',
       ],
       'MX' => [
-        'CHP' => 'Chiapas',
-        'JAL' => 'Jalisco',
-        'OAX' => 'Oaxaca',
-        'VER' => 'Veracruz',
+        'Chis.' => 'Chiapas',
+        'Jal.' => 'Jalisco',
+        'Oax.' => 'Oaxaca',
+        'Ver.' => 'Veracruz',
       ],
       'US' => [
         'LA' => 'Louisiana',

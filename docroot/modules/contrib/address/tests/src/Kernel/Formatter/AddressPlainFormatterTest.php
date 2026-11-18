@@ -2,9 +2,7 @@
 
 namespace Drupal\Tests\address\Kernel\Formatter;
 
-use Drupal\entity_test\Entity\EntityTestMul;
-
-// cspell:ignore Canillo Creu
+use Drupal\entity_test\Entity\EntityTest;
 
 /**
  * Tests the address_plain formatter.
@@ -14,111 +12,51 @@ use Drupal\entity_test\Entity\EntityTestMul;
 class AddressPlainFormatterTest extends FormatterTestBase {
 
   /**
+   * The entity with an address field to test formatting with.
+   *
+   * @var \Drupal\Core\Entity\EntityInterface
+   */
+  protected $entity;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
     parent::setUp();
 
     $this->createField('address', 'address_plain');
+
+    $this->entity = EntityTest::create([]);
+    $this->entity->{$this->fieldName} = [
+      'country_code' => 'AD',
+      'locality' => 'Canillo',
+      'postal_code' => 'AD500',
+      'address_line1' => 'C. Prat de la Creu, 62-64',
+    ];
+
   }
 
   /**
    * Tests the rendered output.
-   *
-   * @dataProvider renderDataProvider
    */
-  public function testRender($value, $expected_elements) {
-    $entity = EntityTestMul::create([]);
-    $entity->{$this->fieldName} = $value;
-    $this->renderEntityFields($entity, $this->display);
+  public function testRender() {
+    $this->renderEntityFields($this->entity, $this->display);
 
-    // Confirm the expected elements.
+    // Confirm the expected elements, including the predefined locality
+    // (properly escaped), country name.
+    $expected_elements = [
+      'C. Prat de la Creu, 62-64',
+      'AD500',
+      'Canillo',
+      'Andorra',
+    ];
     foreach ($expected_elements as $expected_element) {
       $this->assertRaw($expected_element);
     }
-  }
 
-  /**
-   * Data provider for plain formatter output test.
-   */
-  public static function renderDataProvider(): array {
-    return [
-      // Regular address.
-      [
-        [
-          'country_code' => 'AD',
-          'locality' => 'Canillo',
-          'postal_code' => 'AD500',
-          'address_line1' => 'C. Prat de la Creu, 62-64',
-        ],
-        [
-          'C. Prat de la Creu, 62-64',
-          'AD500',
-          'Canillo',
-          'Andorra',
-        ],
-      ],
-      // Only country and admin area.
-      [
-        [
-          'country_code' => 'US',
-          'administrative_area' => 'CA',
-        ],
-        [
-          'CA',
-          'United States',
-        ],
-      ],
-      // Only country and locality.
-      [
-        [
-          'country_code' => 'US',
-          'locality' => 'San Francisco',
-        ],
-        [
-          'San Francisco',
-          'United States',
-        ],
-      ],
-      // Only country and postal code.
-      [
-        [
-          'country_code' => 'US',
-          'postal_code' => '94103',
-        ],
-        [
-          '94103',
-          'United States',
-        ],
-      ],
-      // Only country, administrative area and locality.
-      [
-        [
-          'country_code' => 'US',
-          'administrative_area' => 'CA',
-          'locality' => 'San Francisco',
-        ],
-        [
-          'San Francisco',
-          'CA',
-          'United States',
-        ],
-      ],
-    ];
-  }
-
-  /**
-   * Confirm that an unrecognized locality is shown unmodified.
-   */
-  public function testFakeLocality() {
-    $entity = EntityTestMul::create([]);
-    $entity->{$this->fieldName} = [
-      'country_code' => 'AD',
-      'locality' => 'FAKE_LOCALITY',
-      'postal_code' => 'AD500',
-      'address_line1' => 'C. Prat de la Creu, 62-64',
-    ];
-    $this->renderEntityFields($entity, $this->display);
+    // Confirm that an unrecognized locality is shown unmodified.
+    $this->entity->{$this->fieldName}->locality = 'FAKE_LOCALITY';
+    $this->renderEntityFields($this->entity, $this->display);
     $this->assertRaw('FAKE_LOCALITY');
   }
 
@@ -128,33 +66,26 @@ class AddressPlainFormatterTest extends FormatterTestBase {
    * @see \Drupal\Tests\node\Functional\NodeTemplateSuggestionsTest
    */
   public function testAddressPlainThemeHookSuggestions() {
-    $entity = EntityTestMul::create([]);
-    $entity->{$this->fieldName} = [
-      'country_code' => 'AD',
-      'locality' => 'Canillo',
-      'postal_code' => 'AD500',
-      'address_line1' => 'C. Prat de la Creu, 62-64',
-    ];
     foreach (['full', 'my_custom_view_mode'] as $view_mode) {
-      // Simulate theming of the address test entity.
+      // Simulate themeing of the address test entity.
       $variables['theme_hook_original'] = 'address_plain';
       $variables['view_mode'] = $view_mode;
-      $variables['address'] = $entity->{$this->fieldName}->get(0);
+      $variables['address'] = $this->entity->{$this->fieldName};
       $suggestions = \Drupal::moduleHandler()->invokeAll('theme_suggestions_address_plain', [$variables]);
 
       $expected_suggestions = [
         // Hook __ entity_type __ view_mode.
-        'address_plain__entity_test_mul__' . $view_mode,
+        'address_plain__entity_test__' . $view_mode,
         // Hook __ entity_type __ bundle.
-        'address_plain__entity_test_mul__entity_test_mul',
+        'address_plain__entity_test__entity_test',
         // Hook __ entity_type __ bundle __ view_mode.
-        'address_plain__entity_test_mul__entity_test_mul__' . $view_mode,
+        'address_plain__entity_test__entity_test__' . $view_mode,
         // Hook __ field_name.
         'address_plain__' . $this->fieldName,
         // Hook __ entity_type __ field_name.
-        'address_plain__entity_test_mul__' . $this->fieldName,
+        'address_plain__entity_test__' . $this->fieldName,
         // Hook __ entity_type __ field_name __ bundle.
-        'address_plain__entity_test_mul__' . $this->fieldName . '__entity_test_mul',
+        'address_plain__entity_test__' . $this->fieldName . '__entity_test',
       ];
       $this->assertEquals($expected_suggestions, $suggestions, 'Unexpected theme suggestions for ' . $view_mode);
     }

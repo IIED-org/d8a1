@@ -2,8 +2,6 @@
 
 namespace Drupal\better_exposed_filters;
 
-use Drupal\Core\StringTranslation\TranslatableMarkup;
-
 /**
  * Defines a helper class for better exposed filters.
  */
@@ -21,15 +19,13 @@ class BetterExposedFiltersHelper {
    *   String representing the entry in the settings form.
    * @param bool $reorder
    *   Reorder $options based on the rewrite settings.
-   * @param bool $rewrite_based_on_key
-   *   Flag determining whether options labels should be rewritten based on key.
    *
    * @return array
    *   Rewritten $options.
    */
-  public static function rewriteOptions(array $options, string $rewrite_settings, bool $reorder = FALSE, bool $rewrite_based_on_key = FALSE): array {
+  public static function rewriteOptions(array $options, $rewrite_settings, $reorder = FALSE) {
     // Break out early if we don't have anything to rewrite.
-    if (empty($rewrite_settings)) {
+    if (empty($rewrite_settings) || !is_string($rewrite_settings)) {
       return $options;
     }
 
@@ -47,17 +43,16 @@ class BetterExposedFiltersHelper {
 
     $lines = explode("\n", trim($rewrite_settings));
     foreach ($lines as $line) {
-      if (trim($line) === '' || !str_contains($line, '|')) {
-        continue;
-      }
-      [$search, $replace] = array_map('trim', explode('|', $line, 2));
-      $rewrites[$search] = $replace;
+      list($search, $replace) = array_map('trim', explode('|', $line));
+      if (!empty($search)) {
+        $rewrites[$search] = $replace;
 
-      // Find the key of the option we need to reorder.
-      if ($reorder) {
-        $key = array_search($search, $flat_options);
-        if ($key !== FALSE) {
-          $order[] = $key;
+        // Find the key of the option we need to reorder.
+        if ($reorder) {
+          $key = array_search($search, $flat_options);
+          if ($key !== FALSE) {
+            $order[] = $key;
+          }
         }
       }
     }
@@ -80,42 +75,29 @@ class BetterExposedFiltersHelper {
 
     // Rewrite the option value.
     foreach ($return as $index => &$choice) {
-      if ($rewrite_based_on_key) {
-        if (isset($rewrites[$index])) {
-          if ('' === $rewrites[$index]) {
-            unset($return[$index]);
-          }
-          else {
-            // phpcs:ignore
-            $return[$index] = new TranslatableMarkup($rewrites[$index]);
-          }
-        }
+      if (is_object($choice) && isset($choice->option)) {
+        $key = key($choice->option);
+        $value = &$choice->option[$key];
+      }
+      elseif (is_array($choice) && array_key_exists('name', $choice)) {
+        $value = &$choice['name'];
       }
       else {
-        if (is_object($choice) && isset($choice->option)) {
-          $key = key($choice->option);
-          $value = &$choice->option[$key];
-        }
-        elseif (is_array($choice) && array_key_exists('name', $choice)) {
-          $value = &$choice['name'];
+        $choice = (string) $choice;
+        $value = &$choice;
+      }
+
+      if (!is_scalar($value)) {
+        // We give up...
+        continue;
+      }
+
+      if (isset($rewrites[$value])) {
+        if ('' === $rewrites[$value]) {
+          unset($return[$index]);
         }
         else {
-          $choice = (string) $choice;
-          $value = &$choice;
-        }
-
-        if (!is_scalar($value)) {
-          // We give up...
-          continue;
-        }
-
-        if (isset($rewrites[$value])) {
-          if ('' === $rewrites[$value]) {
-            unset($return[$index]);
-          }
-          else {
-            $value = $rewrites[$value];
-          }
+          $value = $rewrites[$value];
         }
       }
     }
@@ -134,7 +116,7 @@ class BetterExposedFiltersHelper {
    * @return array
    *   Flattened list of scalar options.
    */
-  public static function flattenOptions(array $options, bool $preserve_keys = FALSE): array {
+  public static function flattenOptions(array $options, $preserve_keys = FALSE) {
     $flat_options = [];
 
     foreach ($options as $key => $choice) {
@@ -162,105 +144,12 @@ class BetterExposedFiltersHelper {
    * @return array
    *   Alphabetically sorted array of original values.
    */
-  public static function sortOptions(array $options): array {
+  public static function sortOptions(array $options) {
     // Flatten array of mixed values to a simple array of scalar values.
     $flat_options = self::flattenOptions($options, TRUE);
 
     // Alphabetically sort our list of concatenated values.
-    uasort($flat_options, function ($a, $b) {
-      $transliteration = \Drupal::transliteration();
-      return strnatcasecmp($transliteration->transliterate($a), $transliteration->transliterate($b));
-    });
-
-    // Now use its keys to sort the original array.
-    return array_replace(array_flip(array_keys($flat_options)), $options);
-  }
-
-  /**
-   * Sort options using enhanced methods.
-   *
-   * @param array $options
-   *   Array of unsorted options.
-   * @param string $method
-   *   Sort method: 'alpha' or 'key'.
-   * @param string $direction
-   *   Sort direction: 'asc' or 'desc'.
-   * @param bool $natural
-   *   Use natural sorting for alphabetical sorts.
-   *
-   * @return array
-   *   Sorted array of original values.
-   */
-  public static function sortOptionsCustom(array $options, string $method = 'alpha', string $direction = 'asc', bool $natural = TRUE): array {
-    if ($method === 'key') {
-      return self::sortOptionsByKey($options, $direction);
-    }
-
-    // Alpha sorting - use existing logic but with direction control.
-    if ($method === 'alpha') {
-      return self::sortOptionsAlphabetical($options, $direction, $natural);
-    }
-
-    // Default fallback.
-    return self::sortOptions($options);
-  }
-
-  /**
-   * Sort options by their keys.
-   *
-   * @param array $options
-   *   Array of options to sort.
-   * @param string $direction
-   *   Sort direction: 'asc' or 'desc'.
-   *
-   * @return array
-   *   Sorted array.
-   */
-  public static function sortOptionsByKey(array $options, string $direction = 'asc'): array {
-    if ($direction === 'desc') {
-      krsort($options, SORT_NATURAL | SORT_FLAG_CASE);
-    }
-    else {
-      ksort($options, SORT_NATURAL | SORT_FLAG_CASE);
-    }
-    return $options;
-  }
-
-  /**
-   * Sort options alphabetically with direction control.
-   *
-   * @param array $options
-   *   Array of options to sort.
-   * @param string $direction
-   *   Sort direction: 'asc' or 'desc'.
-   * @param bool $natural
-   *   Use natural sorting algorithm.
-   *
-   * @return array
-   *   Sorted array.
-   */
-  public static function sortOptionsAlphabetical(array $options, string $direction = 'asc', bool $natural = TRUE): array {
-    // Don't use the existing sortOptions method to avoid conflicts
-    // Always use our consistent sorting approach.
-    // Flatten array of mixed values to a simple array of scalar values.
-    $flat_options = self::flattenOptions($options, TRUE);
-
-    // Sort based on parameters.
-    if ($natural) {
-      uasort($flat_options, function ($a, $b) use ($direction) {
-        $transliteration = \Drupal::transliteration();
-        $result = strnatcasecmp($transliteration->transliterate($a), $transliteration->transliterate($b));
-        return $direction === 'desc' ? -$result : $result;
-      });
-    }
-    else {
-      uasort($flat_options, function ($a, $b) use ($direction) {
-        $transliteration = \Drupal::transliteration();
-        $result = strcasecmp($transliteration->transliterate($a), $transliteration->transliterate($b));
-        return $direction === 'desc' ? -$result : $result;
-      });
-    }
-
+    asort($flat_options);
     // Now use its keys to sort the original array.
     return array_replace(array_flip(array_keys($flat_options)), $options);
   }
@@ -277,7 +166,7 @@ class BetterExposedFiltersHelper {
    * @return array
    *   Alphabetically sorted array of original values.
    */
-  public static function sortNestedOptions(array $options, string $delimiter = '-'): array {
+  public static function sortNestedOptions(array $options, $delimiter = '-') {
     // Flatten array of mixed values to a simple array of scalar values.
     $flat_options = self::flattenOptions($options, TRUE);
     $prev_key = NULL;
@@ -309,11 +198,7 @@ class BetterExposedFiltersHelper {
     }
 
     // Alphabetically sort our list of concatenated values.
-    uasort($flat_options, function ($a, $b) {
-      $transliteration = \Drupal::transliteration();
-      return strnatcasecmp($transliteration->transliterate($a), $transliteration->transliterate($b));
-    });
-
+    asort($flat_options);
     // Now use its keys to sort the original array.
     return array_replace(array_flip(array_keys($flat_options)), $options);
   }

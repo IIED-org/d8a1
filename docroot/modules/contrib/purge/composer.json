@@ -5,9 +5,8 @@
     "license": "GPL-2.0-or-later",
     "authors": [
         {
-            "name": "Contributors",
-            "homepage": "https://www.drupal.org/node/1046710/committers",
-            "role": "Contributors"
+            "name": "Niels van Mourik",
+            "homepage": "http://www.nielsvm.org"
         }
     ],
     "extra": {

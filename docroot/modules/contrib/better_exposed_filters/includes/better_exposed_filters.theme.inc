@@ -12,7 +12,7 @@ use Drupal\Core\Template\Attribute;
 /**
  * Implements hook_theme().
  */
-function better_exposed_filters_theme($existing, $type, $theme, $path): array {
+function better_exposed_filters_theme($existing, $type, $theme, $path) {
   return [
     'bef_checkboxes' => [
       'render element' => 'element',
@@ -26,30 +26,24 @@ function better_exposed_filters_theme($existing, $type, $theme, $path): array {
     'bef_hidden' => [
       'render element' => 'element',
     ],
-    'bef_number' => [
-      'render element' => 'element',
-    ],
   ];
 }
 
 /**
  * Implements hook_theme_suggestions_alter().
  */
-function better_exposed_filters_theme_suggestions_alter(array &$suggestions, array $variables, $hook): void {
+function better_exposed_filters_theme_suggestions_alter(array &$suggestions, array $variables, $hook) {
   // Target bef elements.
-  if ($hook === 'form_element' || str_starts_with($hook, 'bef_')) {
-    $plugin_type = $variables['element']['#context']['#plugin_type'] ?? FALSE;
-    if ($plugin_type === 'bef') {
+  if ($hook === 'form_element') {
+    $plugin_type = $variables['element']['#context']['plugin_type'] ?? FALSE;
+    if ($plugin_type && $plugin_type === 'bef') {
       $view_id = $variables['element']['#context']['#view_id'];
       $display_id = $variables['element']['#context']['#display_id'];
-      $field_name = $variables['element']['#name'];
 
       if ($view_id) {
         $suggestions[] = $hook . '__' . $view_id;
-        $suggestions[] = $hook . '__' . $view_id . '__' . $field_name;
         if ($display_id) {
           $suggestions[] = $hook . '__' . $view_id . '__' . $display_id;
-          $suggestions[] = $hook . '__' . $view_id . '__' . $display_id . '__' . $field_name;
         }
       }
     }
@@ -65,14 +59,14 @@ function better_exposed_filters_theme_suggestions_alter(array &$suggestions, arr
  *   An associative array containing:
  *   - form: A render element representing the form.
  */
-function better_exposed_filters_preprocess_views_exposed_form(array &$variables): void {
+function better_exposed_filters_preprocess_views_exposed_form(array &$variables) {
   // Checks if Token module is enabled.
   if (!\Drupal::moduleHandler()->moduleExists('token')) {
     return;
   }
   // Replaces tokens in description field of the exposed filter.
   foreach ($variables['form']['#info'] as $name => &$info) {
-    if (isset($info['description']) && str_starts_with($name, 'filter-') && isset($variables['form'][explode('filter-', $name)[1]]['#description'])) {
+    if (isset($info['description']) && isset($variables['form'][explode('filter-', $name)[1]]['#description'])) {
       $info['description'] = \Drupal::service('token')->replace($info['description']);
       $variables['form'][explode('filter-', $name)[1]]['#description'] = $info['description'];
     }
@@ -92,7 +86,7 @@ function better_exposed_filters_preprocess_views_exposed_form(array &$variables)
  *   An associative array containing:
  *   - element: An associative array containing the exposed form element.
  */
-function template_preprocess_bef_checkboxes(array &$variables): void {
+function template_preprocess_bef_checkboxes(array &$variables) {
   $element = &$variables['element'];
 
   // Create new wrapper attributes since the element attributes will be used
@@ -111,12 +105,6 @@ function template_preprocess_bef_checkboxes(array &$variables): void {
   if (!empty($variables['element']['#bef_nested'])) {
     _bef_preprocess_nested_elements($variables);
   }
-
-  // Handle scrollable container.
-  if (!empty($element['#bef_scrollable'])) {
-    $variables['wrapper_attributes']->addClass('bef-scrollable');
-    $variables['wrapper_attributes']->setAttribute('style', 'max-height: ' . (int) $element['#bef_scrollable_height'] . 'px;');
-  }
 }
 
 /**
@@ -128,7 +116,7 @@ function template_preprocess_bef_checkboxes(array &$variables): void {
  *   An associative array containing:
  *   - element: An associative array containing the exposed form element.
  */
-function template_preprocess_bef_radios(array &$variables): void {
+function template_preprocess_bef_radios(array &$variables) {
   $element = &$variables['element'];
 
   // Create new wrapper attributes since the element attributes will be used
@@ -145,34 +133,6 @@ function template_preprocess_bef_radios(array &$variables): void {
   if (!empty($variables['element']['#bef_nested'])) {
     _bef_preprocess_nested_elements($variables);
   }
-
-  // Handle scrollable container.
-  if (!empty($element['#bef_scrollable'])) {
-    $variables['wrapper_attributes']->addClass('bef-scrollable');
-    $variables['wrapper_attributes']->setAttribute('style', 'max-height: ' . (int) $element['#bef_scrollable_height'] . 'px;');
-  }
-}
-
-/**
- * Prepares variables for bef-number template.
- *
- * Default template: bef-number.html.twig.
- *
- * @param array $variables
- *   An associative array containing:
- *   - element: An associative array containing the exposed form element.
- */
-function template_preprocess_bef_number(array &$variables): void {
-  $element = &$variables['element'];
-  $variables['children'] = Element::children($element);
-  $variables['display_inline'] = $element['#bef_display_inline'] ?? FALSE;
-
-  if (!isset($element['#name'])) {
-    $variables['attributes']['name'] = $element['#parent'][0];
-  }
-  else {
-    $variables['attributes']['name'] = $element['#name'];
-  }
 }
 
 /**
@@ -184,7 +144,7 @@ function template_preprocess_bef_number(array &$variables): void {
  *   An associative array containing:
  *   - element: An associative array containing the exposed form element.
  */
-function template_preprocess_bef_hidden(array &$variables): void {
+function template_preprocess_bef_hidden(array &$variables) {
   $element = $variables['element'];
 
   // This theme function is only used for multi-select elements.
@@ -199,8 +159,8 @@ function template_preprocess_bef_hidden(array &$variables): void {
     ];
   }
 
-  // @todo Check for optgroups.
-  // Put subelements in the $element_set array and add a
+  // @todo
+  // Check for optgroups.  Put subelements in the $element_set array and add a
   // group heading. Otherwise, just add the element to the set.
   // $element_set = array();
   // if (is_array($elem)) {
@@ -220,24 +180,20 @@ function template_preprocess_bef_hidden(array &$variables): void {
  *   An associative array containing:
  *   - element: An associative array containing the exposed form element.
  */
-function template_preprocess_bef_links(array &$variables): void {
+function template_preprocess_bef_links(array &$variables) {
   // Collect some variables before we start tweaking the element.
   $element = &$variables['element'];
   $options = $element['#options'];
   $name = $element['#name'];
   $multiple = $element['#multiple'] ?? FALSE;
 
-  // We remove these keys because bef-links renders as a div making these
-  // not needed.
-  $keys_to_remove = ['size', 'name', 'multiple'];
-
-  foreach ($keys_to_remove as $key) {
-    if (isset($variables['attributes'][$key])) {
-      // Add the attribute as a data-* attribute for easier JS access.
-      $variables['attributes']["data-$key"] = $variables['attributes'][$key];
-    }
+  // Set multiple attribute.
+  if ($multiple) {
+    $variables['attributes']['multiple'] = 'multiple';
   }
-  $variables['attributes'] = array_diff_key($variables['attributes'], array_flip($keys_to_remove));
+
+  // Set element name.
+  $variables['attributes']['name'] = $name;
 
   // Get the query string arguments from the current request.
   $existing_query = \Drupal::service('request_stack')->getCurrentRequest()->query->all();
@@ -250,7 +206,6 @@ function template_preprocess_bef_links(array &$variables): void {
   if (!is_array($selectedValues)) {
     $selectedValues = [$selectedValues => $selectedValues];
   }
-  $variables['selected'] = $selectedValues;
 
   // Set hidden elements array.
   $hiddens = [];
@@ -272,16 +227,12 @@ function template_preprocess_bef_links(array &$variables): void {
     // Allow visitors to toggle a filter setting on and off. This is not as
     // simple as setOptions('foo', '') as that still leaves an entry which is
     // rendered rather than removing the entry from the query string altogether.
-    // Calling $url->setOption() still leaves a value behind. Instead, we work
+    // Calling $url->setOption() still leaves a value behind. Instead we work
     // with the entire options array and remove items from it as needed.
     $urlOptions = $url->getOptions();
 
     if ($multiple) {
       $newQuery = $existing_query;
-      // Unset any empty parameters first.
-      if (empty($newQuery[$name])) {
-        unset($newQuery[$name]);
-      }
       if (!isset($newQuery[$name])) {
         $newQuery[$name] = [];
       }
@@ -292,10 +243,10 @@ function template_preprocess_bef_links(array &$variables): void {
         });
       }
       else {
-        if (!isset($newQuery[$name]) || !is_array($newQuery[$name])) {
-          $newQuery[$name] = [];
-        }
-        $newQuery[$name][$optionValue] = $optionValue;
+        $newQuery[$name][] = $optionValue;
+      }
+      if (empty($newQuery[$name])) {
+        unset($newQuery[$name]);
       }
 
       $urlOptions['query'] = $newQuery;
@@ -327,10 +278,9 @@ function template_preprocess_bef_links(array &$variables): void {
     $variables['links'][$optionValue] = [
       '#attributes' => [
         'id' => Html::getUniqueId('edit-' . implode('-', [$name, $optionValue])),
-        'data-bef-value' => $optionValue,
+        'name' => $name . '[' . $optionValue . ']',
         'class' => [
           'bef-link',
-          Html::getUniqueId('edit-' . $name),
         ],
       ],
       '#type' => 'link',
@@ -353,12 +303,6 @@ function template_preprocess_bef_links(array &$variables): void {
   if (!empty($variables['element']['#bef_nested'])) {
     _bef_preprocess_nested_elements($variables);
   }
-
-  // Handle scrollable container.
-  if (!empty($element['#bef_scrollable'])) {
-    $variables['attributes']['class'][] = 'bef-scrollable';
-    $variables['attributes']['style'] = 'max-height: ' . (int) $element['#bef_scrollable_height'] . 'px;';
-  }
 }
 
 /******************************************************************************
@@ -375,7 +319,7 @@ function template_preprocess_bef_links(array &$variables): void {
  *   An associative array containing:
  *   - element: An associative array containing the exposed form element.
  */
-function _bef_preprocess_nested_elements(array &$variables): void {
+function _bef_preprocess_nested_elements(array &$variables) {
   // Provide a hierarchical info on the element children for the template to
   // render as a nested <ul>. Views prepends '-' characters for each level of
   // depth in the vocabulary. Store that information, but remove the hyphens as
@@ -384,7 +328,7 @@ function _bef_preprocess_nested_elements(array &$variables): void {
   $variables['depth'] = [];
   foreach ($variables['children'] as $child) {
     if ($child === 'All') {
-      // For non-required filters, put any/all option at the root.
+      // For non-required filters, put the any/all option at the root.
       $variables['depth'][$child] = 0;
       // And don't change the text as it defaults to "- Any -" and we do not
       // want to remove the leading hyphens.

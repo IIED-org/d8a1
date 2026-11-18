@@ -2,10 +2,10 @@
   position: relative;
 }
 
-.video-embed-field-responsive-video::after {
+.video-embed-field-responsive-video:after {
+  content: '';
   display: block;
   padding-bottom: 56.25%;
-  content: "";
 }
 
 .video-embed-field-responsive-video iframe {
@@ -24,8 +24,8 @@
 }
 
 .video-embed-field-lazy {
-  position: relative;
   cursor: pointer;
+  position: relative;
 }
 
 .video-embed-field-lazy img {
@@ -33,14 +33,14 @@
 }
 
 .video-embed-field-lazy-play {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 72px;
   height: 72px;
-  margin-top: -36px;
+  width: 72px;
+  left: 50%;
+  top: 50%;
   margin-left: -36px;
-  cursor: pointer;
+  margin-top: -36px;
+  position: absolute;
   background: url("icons/play.svg") no-repeat;
+  cursor: pointer;
   background-size: 72px 72px;
 }

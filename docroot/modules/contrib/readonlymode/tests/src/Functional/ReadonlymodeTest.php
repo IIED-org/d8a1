@@ -13,16 +13,11 @@ use Drupal\Tests\BrowserTestBase;
 class ReadOnlyModeTest extends BrowserTestBase {
 
   /**
-   * {@inheritdoc}
-   */
-  protected $defaultTheme = 'stark';
-
-  /**
    * Modules to enable.
    *
    * @var array
    */
-  protected static $modules = ['readonlymode'];
+  public static $modules = ['readonlymode'];
 
   protected $profile = 'minimal';
 

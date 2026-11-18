@@ -26,9 +26,9 @@ interface AddressInterface
      * This is a CLDR country code, since CLDR includes additional countries
      * for addressing purposes, such as Canary Islands (IC).
      *
-     * @return ?string The two-letter country code.
+     * @return string The two-letter country code.
      */
-    public function getCountryCode(): ?string;
+    public function getCountryCode();
 
     /**
      * Gets the administrative area.
@@ -36,10 +36,10 @@ interface AddressInterface
      * Called the "state" in the United States, "region" in France, "province" in Italy,
      * "county" in Great Britain, "prefecture" in Japan, etc.
      *
-     * @return ?string The administrative area. A subdivision code if there
+     * @return string The administrative area. A subdivision code if there
      *                are predefined subdivision at this level.
      */
-    public function getAdministrativeArea(): ?string;
+    public function getAdministrativeArea();
 
     /**
      * Gets the locality (i.e city).
@@ -47,10 +47,10 @@ interface AddressInterface
      * Some countries do not use this field; their address lines are sufficient
      * to locate an address within a sub-administrative area.
      *
-     * @return string|null The administrative area. A subdivision code if there
+     * @return string The administrative area. A subdivision code if there
      *                are predefined subdivision at this level.
      */
-    public function getLocality(): ?string;
+    public function getLocality();
 
     /**
      * Gets the dependent locality (i.e neighbourhood).
@@ -62,46 +62,53 @@ interface AddressInterface
      * @return string The administrative area. A subdivision code if there
      *                are predefined subdivision at this level.
      */
-    public function getDependentLocality(): ?string;
+    public function getDependentLocality();
 
     /**
      * Gets the postal code.
      *
      * The value is often alphanumeric.
+     *
+     * @return string The postal code.
      */
-    public function getPostalCode(): ?string;
+    public function getPostalCode();
 
     /**
      * Gets the sorting code.
      *
      * For example, CEDEX in France.
+     *
+     * @return string The sorting code.
      */
-    public function getSortingCode(): ?string;
+    public function getSortingCode();
 
     /**
      * Gets the first line of address block.
+     *
+     * @return string The first line of the address block.
      */
-    public function getAddressLine1(): ?string;
+    public function getAddressLine1();
 
     /**
      * Gets the second line of address block.
+     *
+     * @return string The second line of the address block.
      */
-    public function getAddressLine2(): ?string;
-
-    /**
-     * Gets the third line of address block.
-     */
-    public function getAddressLine3(): ?string;
+    public function getAddressLine2();
 
     /**
      * Gets the organization.
+     *
+     * @return string The organization.
      */
-    public function getOrganization(): ?string;
+    public function getOrganization();
 
     /**
      * Gets the given name (i.e first name).
+     *
+     * @return string The given name.
      */
-    public function getGivenName(): ?string;
+    public function getGivenName();
 
     /**
      * Gets the additional name.
@@ -109,19 +116,25 @@ interface AddressInterface
      * Can be used to hold a middle name, or a patronymic.
      * If a remote API does not have an additional_name/middle_name parameter,
      * append it to the given name.
+     *
+     * @return string The additional name.
      */
-    public function getAdditionalName(): ?string;
+    public function getAdditionalName();
 
     /**
      * Gets the family name (i.e last name).
+     *
+     * @return string The family name.
      */
-    public function getFamilyName(): ?string;
+    public function getFamilyName();
 
     /**
      * Gets the locale.
      *
      * Allows the initially-selected address format / subdivision translations
      * to be selected and used the next time this address is modified.
+     *
+     * @return string The locale.
      */
-    public function getLocale(): ?string;
+    public function getLocale();
 }

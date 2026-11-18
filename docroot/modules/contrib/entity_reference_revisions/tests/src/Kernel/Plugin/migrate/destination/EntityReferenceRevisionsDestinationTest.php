@@ -76,8 +76,8 @@ class EntityReferenceRevisionsDestinationTest extends KernelTestBase implements 
   /**
    * Provides multiple migration definitions for "getEntityTypeId" test.
    */
-  public static function getEntityTypeIdDataProvider() {
-    $data = self::getEntityDataProvider();
+  public function getEntityTypeIdDataProvider() {
+    $data = $this->getEntityDataProvider();
 
     foreach ($data as &$datum) {
       $datum['expected'] = 'entity_test_composite';
@@ -123,7 +123,7 @@ class EntityReferenceRevisionsDestinationTest extends KernelTestBase implements 
   /**
    * Provides multiple migration definitions for "getEntity" test.
    */
-  public static function getEntityDataProvider() {
+  public function getEntityDataProvider() {
     return [
       'without keys' => [
         'definition' => [
@@ -281,7 +281,7 @@ class EntityReferenceRevisionsDestinationTest extends KernelTestBase implements 
   /**
    * Provides multiple migration definitions for "getEntity" test.
    */
-  public static function getEntityDataProviderForceRevision() {
+  public function getEntityDataProviderForceRevision() {
     return [
       'with ids, new revisions and no force revision' => [
         'definition' => [
@@ -449,7 +449,7 @@ class EntityReferenceRevisionsDestinationTest extends KernelTestBase implements 
   /**
    * Provides multiple migration definitions for "getEntity" test.
    */
-  public static function destinationFieldMappingDataProvider() {
+  public function destinationFieldMappingDataProvider() {
     return [
       'scenario 1' => [
         [

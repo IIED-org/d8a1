@@ -4,7 +4,6 @@ bluesky
 bsky
 Bytedance
 ckidow
-cookieless
 deepchat
 Deepchat
 Dont
@@ -17,7 +16,6 @@ Kellermann
 kellermann
 Kipke
 klarohq
-laro
 Livechat
 livechat
 localstorage
@@ -30,7 +28,6 @@ NOERROR
 oembeds
 PBLLC
 piwik
-posthog
 recaptcha
 Sascha
 sascha

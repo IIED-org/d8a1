@@ -51,7 +51,7 @@ class RedirectStatusCodeTest extends BrowserTestBase {
   /**
    * Data provider for testRedirectStatusCode.
    */
-  public static function redirectStatusCodeDataProvider() {
+  public function redirectStatusCodeDataProvider() {
     return [
       [
         301,

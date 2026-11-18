@@ -28,6 +28,5 @@
         <!-- @see https://github.com/vimeo/psalm/issues/8765 -->
         <PossiblyUndefinedVariable errorLevel="suppress"/>
         <PropertyNotSetInConstructor errorLevel="suppress"/>
-        <RiskyTruthyFalsyComparison errorLevel="suppress"/>
     </issueHandlers>
 </psalm>

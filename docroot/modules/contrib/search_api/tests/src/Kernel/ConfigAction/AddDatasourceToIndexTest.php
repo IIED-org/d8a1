@@ -10,7 +10,6 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\search_api\Entity\Index;
 use Drupal\search_api\Entity\Server;
 use Drupal\search_api\ServerInterface;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests that the "add datasource to index" config action works correctly.
@@ -19,7 +18,6 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  * @group search_api
  * @group Recipe
  */
-#[RunTestsInSeparateProcesses]
 class AddDatasourceToIndexTest extends KernelTestBase {
 
   /**
@@ -77,16 +75,14 @@ class AddDatasourceToIndexTest extends KernelTestBase {
   }
 
   /**
-   * Tests the "add datasource" config action.
+   * Tests the "add datasource"
    *
    * @param string $entity_name
-   *   The entity name.
-   * @param string|null $message
-   *   The expected exception message; or NULL if no exception is expected.
+   * @param string $message
    *
    * @dataProvider addDatasourceToIndexTestDataProvider
    */
-  public function testAddDatasourceToIndex(string $entity_name, ?string $message): void {
+  public function testAddDatasourceToIndex(string $entity_name, string $message): void {
     if (version_compare(\Drupal::VERSION, '10.3', '<')) {
       $this->markTestSkipped('Config actions and recipes are not available before Drupal 10.3.');
     }
@@ -125,13 +121,10 @@ class AddDatasourceToIndexTest extends KernelTestBase {
    */
   public static function addDatasourceToIndexTestDataProvider(): array {
     return [
-      ['entity:node', NULL],
-      ['entity:user', NULL],
+      ['entity:node', ''],
+      ['entity:user', ''],
       ['entity:search_api_task', 'Datasource "entity:search_api_task" already exists on index "Test index".'],
-      [
-        'entity:bogus',
-        'Error while adding datasource "entity:bogus" to index "Test index": The "entity:bogus" plugin does not exist. Valid plugin IDs for Drupal\search_api\Datasource\DatasourcePluginManager are: entity:search_api_task, entity:user, entity:node, search_api_test.',
-      ],
+      ['entity:bogus', 'Error while adding datasource "entity:bogus" to index "Test index": The "entity:bogus" plugin does not exist. Valid plugin IDs for Drupal\search_api\Datasource\DatasourcePluginManager are: entity:search_api_task, entity:user, entity:node, search_api_test.'],
     ];
   }
 

@@ -19,9 +19,7 @@
       function updateCallback(progress, status, pb) {
         if (progress === '100') {
           pb.stopMonitoring();
-          const url = new URL(batch.uri, window.location.origin);
-          url.searchParams.set('op', 'finished');
-          window.location = url.toString();
+          window.location = `${batch.uri}&op=finished`;
         }
       }
 
@@ -38,9 +36,7 @@
           errorCallback,
         );
         progressBar.setProgress(-1, batch.initMessage);
-        const url = new URL(batch.uri, window.location.origin);
-        url.searchParams.set('op', 'do');
-        progressBar.startMonitoring(url.toString(), 10);
+        progressBar.startMonitoring(`${batch.uri}&op=do`, 10);
         // Remove HTML from no-js progress bar.
         $progress.empty();
         // Append the JS progressbar element.

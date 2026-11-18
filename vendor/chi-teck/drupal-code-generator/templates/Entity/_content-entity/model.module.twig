@@ -1,18 +1,16 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 /**
  * @file
  * Provides {{ entity_type_label|article|lower }} entity type.
  */
 
-{% apply sort_namespaces %}
+{% sort %}
 use Drupal\Core\Render\Element;
   {% if author_base_field %}
 use Drupal\user\UserInterface;
   {% endif %}
-{% endapply %}
+{% endsort %}
 
 /**
  * Implements hook_theme().

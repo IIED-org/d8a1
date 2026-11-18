@@ -7,16 +7,12 @@ use Drupal\purge\Plugin\Purge\Queue\Exception\InvalidPropertyException;
 use Drupal\purge\Plugin\Purge\Queue\ProxyItem;
 use Drupal\purge\Plugin\Purge\Queue\TxBuffer;
 use Drupal\Tests\purge\Kernel\KernelTestBase;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests \Drupal\purge\Tests\Queue\ProxyItem.
  *
  * @group purge
  */
-#[Group('purge')]
-#[RunTestsInSeparateProcesses]
 class ProxyItemTest extends KernelTestBase {
 
   /**
@@ -61,10 +57,10 @@ class ProxyItemTest extends KernelTestBase {
     $this->assertNull($p->item_id);
 
     // Test the 'data' array property and its peculiar format.
-    $this->assertIsArray($p->data);
+    $this->assertTrue(is_array($p->data));
     $this->assertEquals($i->getPluginId(), $p->data[ProxyItem::DATA_INDEX_TYPE]);
     $this->assertEquals($i->getType(), $p->data[ProxyItem::DATA_INDEX_TYPE]);
-    $this->assertIsArray($p->data[ProxyItem::DATA_INDEX_STATES]);
+    $this->assertTrue(is_array($p->data[ProxyItem::DATA_INDEX_STATES]));
     $this->assertEquals(1, count($p->data[ProxyItem::DATA_INDEX_STATES]));
     $this->assertTrue(isset($p->data[ProxyItem::DATA_INDEX_STATES]['a']));
     $this->assertEquals(InvalidationInterface::PROCESSING, $p->data[ProxyItem::DATA_INDEX_STATES]['a']);

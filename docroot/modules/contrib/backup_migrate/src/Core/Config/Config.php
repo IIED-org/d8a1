@@ -10,17 +10,12 @@ namespace Drupal\backup_migrate\Core\Config;
 class Config implements ConfigInterface {
 
   /**
-   * Stores the value.
-   *
-   * @var array The configuration values
+   * @var array
    */
   protected $config;
 
   /**
-   * Handles the construct operation.
-   *
    * @param array $init
-   *   The init.
    */
   public function __construct(array $init = []) {
     if ($init instanceof ConfigInterface) {

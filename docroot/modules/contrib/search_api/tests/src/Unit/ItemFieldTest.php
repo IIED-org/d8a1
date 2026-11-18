@@ -49,9 +49,8 @@ class ItemFieldTest extends UnitTestCase {
 
     $index = new Index([], 'search_api_index');
 
-    $this->field = (new Field($index, 'field'))
-      ->setType('test')
-      ->setDataTypeManager($data_type_manager);
+    $this->field = new Field($index, 'field');
+    $this->field->setDataTypeManager($data_type_manager);
   }
 
   /**

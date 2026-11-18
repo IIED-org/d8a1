@@ -16,15 +16,13 @@ use Drupal\field\Entity\FieldConfig;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Base deriver for typed data properties.
+ *
  */
 abstract class TypedDataPropertyDeriverBase extends DeriverBase implements ContainerDeriverInterface {
 
   use StringTranslationTrait;
 
   /**
-   * The typed data manager.
-   *
    * @var \Drupal\Core\TypedData\TypedDataManagerInterface
    */
   protected $typedDataManager;
@@ -78,13 +76,9 @@ abstract class TypedDataPropertyDeriverBase extends DeriverBase implements Conta
   }
 
   /**
-   * Gets the data type from a property definition.
+   * @param $property_definition
    *
-   * @param \Drupal\Core\TypedData\DataDefinitionInterface $property_definition
-   *   The property definition.
-   *
-   * @return string
-   *   The data type.
+   * @return mixed
    */
   protected function getDataType($property_definition) {
     if ($property_definition instanceof DataReferenceDefinitionInterface) {
@@ -102,7 +96,7 @@ abstract class TypedDataPropertyDeriverBase extends DeriverBase implements Conta
    * This method should directly manipulate $this->derivatives and not return
    * values. This allows implementations control over the derivative names.
    *
-   * @param array $base_plugin_definition
+   * @param $base_plugin_definition
    *   The base plugin definition.
    * @param string $data_type_id
    *   The plugin id of the data type.

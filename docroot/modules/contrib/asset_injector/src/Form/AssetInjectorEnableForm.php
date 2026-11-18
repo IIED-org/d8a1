@@ -2,16 +2,13 @@
 
 namespace Drupal\asset_injector\Form;
 
+use Drupal;
 use Drupal\Core\Entity\EntityConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 
 /**
- * Provides a confirmation form for enabling asset injector configurations.
- *
- * This form is used to confirm the enabling of an asset injector configuration.
- * It displays a confirmation message and allows the user to either proceed
- * with the enabling or cancel the operation.
+ * Class AssetInjectorEnableForm.
  *
  * @package Drupal\asset_injector\Form
  */

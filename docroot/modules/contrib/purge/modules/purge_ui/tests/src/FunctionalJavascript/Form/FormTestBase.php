@@ -44,14 +44,14 @@ abstract class FormTestBase extends BrowserTestBase {
   /**
    * The form id, equal to the route name when left as NULL.
    *
-   * @var null|string
+   * @var null|\Drupal\Core\Form\FormBuilderInterface
    */
   protected $formId = NULL;
 
   /**
    * The tested form instance.
    *
-   * @var null|\Drupal\Core\Form\FormInterface
+   * @var null|\Drupal\Core\Form\FormBuilderInterface
    */
   protected $formInstance = NULL;
 
@@ -93,6 +93,7 @@ abstract class FormTestBase extends BrowserTestBase {
     if (is_null($this->formId)) {
       $this->formId = $this->route;
     }
+    $this->installModulesFromClassProperty($this->container);
   }
 
   /**

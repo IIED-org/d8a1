@@ -5,7 +5,7 @@ use Robo\Symfony\ConsoleIO;
 
 class RoboFile extends \Robo\Tasks
 {
-    const MAIN_BRANCH = '5.x';
+    const MAIN_BRANCH = '4.x';
 
     /**
      * Run the Robo unit tests.
@@ -393,10 +393,6 @@ class RoboFile extends \Robo\Tasks
                 ->dev()
                 ->noUpdate()
                 ->args($devProjectsToRemove)
-            ->taskComposerRequire()
-                ->dir($roboBuildDir)
-                ->dependency('consolidation/self-update', '*')
-                ->noUpdate()
             ->taskComposerInstall()
                 ->dir($roboBuildDir)
                 ->noScripts()

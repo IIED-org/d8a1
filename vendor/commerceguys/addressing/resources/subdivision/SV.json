@@ -1,54 +1,68 @@
 {
 	"country_code": "SV",
 	"subdivisions": {
-		"AH": {
-			"code": "Ahuachapan",
-			"name": "Ahuachapán"
+		"Ahuachapan": {
+			"name": "Ahuachapán",
+			"iso_code": "SV-AH",
+			"postal_code_pattern": "CP 21"
 		},
-		"CA": {
-			"code": "Cabanas",
-			"name": "Cabañas"
+		"Cabanas": {
+			"name": "Cabañas",
+			"iso_code": "SV-CA",
+			"postal_code_pattern": "CP 12"
 		},
-		"CH": {
-			"code": "Calatenango",
-			"name": "Chalatenango"
+		"Calatenango": {
+			"name": "Chalatenango",
+			"iso_code": "SV-CH",
+			"postal_code_pattern": "CP 13"
 		},
-		"CU": {
-			"code": "Cuscatlan",
-			"name": "Cuscatlán"
+		"Cuscatlan": {
+			"name": "Cuscatlán",
+			"iso_code": "SV-CU",
+			"postal_code_pattern": "CP 14"
 		},
-		"LI": {
-			"name": "La Libertad"
+		"La Libertad": {
+			"iso_code": "SV-LI",
+			"postal_code_pattern": "CP 15"
 		},
-		"PA": {
-			"name": "La Paz"
+		"La Paz": {
+			"iso_code": "SV-PA",
+			"postal_code_pattern": "CP 16"
 		},
-		"UN": {
-			"code": "La Union",
-			"name": "La Unión"
+		"La Union": {
+			"name": "La Unión",
+			"iso_code": "SV-UN",
+			"postal_code_pattern": "CP 31"
 		},
-		"MO": {
-			"code": "Morazan",
-			"name": "Morazán"
+		"Morazan": {
+			"name": "Morazán",
+			"iso_code": "SV-MO",
+			"postal_code_pattern": "CP 32"
 		},
-		"SM": {
-			"name": "San Miguel"
+		"San Miguel": {
+			"iso_code": "SV-SM",
+			"postal_code_pattern": "CP 33"
 		},
-		"SS": {
-			"name": "San Salvador"
+		"San Salvador": {
+			"iso_code": "SV-SS",
+			"postal_code_pattern": "CP 11"
 		},
-		"SV": {
-			"name": "San Vicente"
+		"San Vicente": {
+			"iso_code": "SV-SV",
+			"postal_code_pattern": "CP 17"
 		},
-		"SA": {
-			"name": "Santa Ana"
+		"Santa Ana": {
+			"iso_code": "SV-SA",
+			"postal_code_pattern": "CP 22"
 		},
-		"SO": {
-			"name": "Sonsonate"
+		"Sonsonate": {
+			"iso_code": "SV-SO",
+			"postal_code_pattern": "CP 23"
 		},
-		"US": {
-			"code": "Usulutan",
-			"name": "Usulután"
+		"Usulutan": {
+			"name": "Usulután",
+			"iso_code": "SV-US",
+			"postal_code_pattern": "CP 34"
 		}
 	}
 }

@@ -3,7 +3,7 @@ status: true
 langcode: en
 field_name: body
 entity_type: entity_test_mulrev_changed
-type: text_long
+type: text_with_summary
 settings: {  }
 module: text
 locked: false

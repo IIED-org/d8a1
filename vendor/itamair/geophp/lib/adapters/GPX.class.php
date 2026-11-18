@@ -14,7 +14,6 @@ class GPX extends GeoAdapter
 {
   private $namespace = FALSE;
   private $nss = ''; // Name-space string. eg 'georss:'
-  private $xmlobj;
 
   /**
    * Read GPX string into geometry objects

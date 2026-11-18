@@ -3,17 +3,16 @@
 namespace Drupal\ds\Plugin\DsField;
 
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
-use Drupal\ds\Attribute\DsField;
-use Drupal\ds\Plugin\Derivative\BundleField as BundleFieldDerivative;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Defines a generic bundle field.
+ *
+ * @DsField(
+ *   id = "bundle_field",
+ *   deriver = "Drupal\ds\Plugin\Derivative\BundleField"
+ * )
  */
-#[DsField(
-  id: 'bundle_field',
-  deriver: BundleFieldDerivative::class
-)]
 class BundleField extends DsFieldBase {
 
   /**

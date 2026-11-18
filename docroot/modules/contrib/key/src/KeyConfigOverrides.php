@@ -29,11 +29,11 @@ class KeyConfigOverrides implements ConfigFactoryOverrideInterface {
   protected $cacheBackend;
 
   /**
-   * Mapping, or NULL if it has not been built yet.
+   * Mapping.
    *
-   * @var array|null
+   * @var array
    */
-  protected $mapping = NULL;
+  protected $mapping;
 
   /**
    * In override.
@@ -45,14 +45,14 @@ class KeyConfigOverrides implements ConfigFactoryOverrideInterface {
   /**
    * Creates a new ModuleConfigOverrides instance.
    *
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   * @param \Drupal\Core\Config\ConfigFactoryInterface|null $config_factory
    *   The config factory.
-   * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
+   * @param \Drupal\Core\Cache\CacheBackendInterface|null $cache_backend
    *   The cache backend.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, CacheBackendInterface $cache_backend) {
-    $this->configFactory = $config_factory;
-    $this->cacheBackend = $cache_backend;
+  public function __construct(ConfigFactoryInterface $config_factory = NULL, CacheBackendInterface $cache_backend = NULL) {
+    $this->configFactory = $config_factory ?: \Drupal::configFactory();
+    $this->cacheBackend = $cache_backend ?: \Drupal::cache('data');
   }
 
   /**
@@ -64,56 +64,48 @@ class KeyConfigOverrides implements ConfigFactoryOverrideInterface {
     }
     $this->inOverride = TRUE;
 
-    // Always clear the flag, including on early returns and exceptions.
-    // Otherwise the service would stop applying overrides for the rest of
-    // the request.
+    $mapping = $this->getMapping();
+    if (!$mapping) {
+      return [];
+    }
+
     try {
-      $mapping = $this->getMapping();
-      if (!$mapping) {
-        return [];
+      $storage = \Drupal::entityTypeManager()->getStorage('key');
+    }
+    catch (\Exception $e) {
+      return [];
+    }
+
+    $overrides = [];
+
+    foreach ($names as $name) {
+      if (!array_key_exists($name, $mapping)) {
+        continue;
       }
 
-      try {
-        // @phpstan-ignore-next-line
-        $storage = \Drupal::entityTypeManager()->getStorage('key');
-      }
-      catch (\Exception $e) {
-        return [];
-      }
+      $override = [];
 
-      $overrides = [];
+      foreach ($mapping[$name] as $config_item => $key_id) {
+        $key_value = $storage->load($key_id)->getKeyValue();
 
-      foreach ($names as $name) {
-        if (!array_key_exists($name, $mapping)) {
+        if (!isset($key_value)) {
           continue;
         }
 
-        $override = [];
-
-        foreach ($mapping[$name] as $config_item => $key_id) {
-          $key_storage = $storage->load($key_id);
-          $key_value = $key_storage ? $key_storage->getKeyValue() : NULL;
-
-          if (!isset($key_value)) {
-            continue;
-          }
-
-          // Turn the dot-separated configuration item name into a nested
-          // array and set the value.
-          $config_item_parents = explode('.', $config_item);
-          NestedArray::setValue($override, $config_item_parents, $key_value);
-        }
-
-        if ($override) {
-          $overrides[$name] = $override;
-        }
+        // Turn the dot-separated configuration item name into a nested
+        // array and set the value.
+        $config_item_parents = explode('.', $config_item);
+        NestedArray::setValue($override, $config_item_parents, $key_value);
       }
 
-      return $overrides;
+      if ($override) {
+        $overrides[$name] = $override;
+      }
     }
-    finally {
-      $this->inOverride = FALSE;
-    }
+
+    $this->inOverride = FALSE;
+
+    return $overrides;
   }
 
   /**
@@ -144,51 +136,32 @@ class KeyConfigOverrides implements ConfigFactoryOverrideInterface {
    *   A mapping of key configuration overrides.
    */
   protected function getMapping() {
-    if ($this->mapping !== NULL) {
-      return $this->mapping;
-    }
+    if (!$this->mapping) {
+      $mapping = [];
+      $override_ids = $this->configFactory->listAll('key.config_override.');
+      $overrides = $this->configFactory->loadMultiple($override_ids);
 
-    // Overrides are rarely changed, so persist the mapping rather than listing
-    // and loading every override in each request. Saving or deleting an
-    // override invalidates the list cache tag.
-    $cid = 'key_config_override_mapping';
-    if ($cache = $this->cacheBackend->get($cid)) {
-      $this->mapping = $cache->data;
-      return $this->mapping;
-    }
+      foreach ($overrides as $id => $override) {
+        $override = $override->get();
 
-    $mapping = [];
-    $override_ids = $this->configFactory->listAll('key.config_override.');
-    $overrides = $this->configFactory->loadMultiple($override_ids);
+        $config_id = '';
+        if (!empty($override['config_prefix'])) {
+          $config_id .= $override['config_prefix'] . '.';
+        }
+        if (isset($override['config_name'])) {
+          $config_id .= $override['config_name'];
+        }
 
-    foreach ($overrides as $id => $override) {
-      $override = $override->get();
+        $config_item = $override['config_item'];
+        $key_id = $override['key_id'];
 
-      $config_id = '';
-      if (!empty($override['config_prefix'])) {
-        $config_id .= $override['config_prefix'] . '.';
-      }
-      if (isset($override['config_name'])) {
-        $config_id .= $override['config_name'];
+        $mapping[$config_id][$config_item] = $key_id;
       }
 
-      $config_item = $override['config_item'];
-      $key_id = $override['key_id'];
-
-      $mapping[$config_id][$config_item] = $key_id;
+      $this->mapping = $mapping;
     }
-
-    $this->cacheBackend->set($cid, $mapping, CacheBackendInterface::CACHE_PERMANENT, ['config:key_config_override_list']);
-    $this->mapping = $mapping;
 
     return $this->mapping;
-  }
-
-  /**
-   * Resets the statically cached mapping of key configuration overrides.
-   */
-  public function resetMapping() {
-    $this->mapping = NULL;
   }
 
 }

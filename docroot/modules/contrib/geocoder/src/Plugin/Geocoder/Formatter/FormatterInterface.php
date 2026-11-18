@@ -2,7 +2,7 @@
 
 namespace Drupal\geocoder\Plugin\Geocoder\Formatter;
 
-use Geocoder\Location;
+use Geocoder\Model\Address;
 
 /**
  * Provides an interface for geocoder formatter plugins.
@@ -15,7 +15,7 @@ interface FormatterInterface {
   /**
    * Dumps the argument into a specific format.
    *
-   * @param \Geocoder\Location $address
+   * @param \Geocoder\Model\Address $address
    *   The address to be formatted.
    *   This (might but) is not referring to Geocoder\Location for backport
    *   compatibility with 8.x-2.x version. Third party modules might have
@@ -24,6 +24,6 @@ interface FormatterInterface {
    * @return string
    *   The formatted address.
    */
-  public function format(Location $address);
+  public function format(Address $address);
 
 }

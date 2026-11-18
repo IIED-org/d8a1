@@ -2,19 +2,20 @@
 
 namespace Drupal\purge\Plugin\Purge\DiagnosticCheck;
 
-use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Drupal\purge\Attribute\PurgeDiagnosticCheck;
 use Drupal\purge\Plugin\Purge\Queuer\QueuersServiceInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Queuers.
+ *
+ * @PurgeDiagnosticCheck(
+ *   id = "queuersavailable",
+ *   title = @Translation("Queuers"),
+ *   description = @Translation("Checks if there is a queuer that propagates the queue."),
+ *   dependent_queue_plugins = {},
+ *   dependent_purger_plugins = {}
+ * )
  */
-#[PurgeDiagnosticCheck(
-  id: 'queuersavailable',
-  title: new TranslatableMarkup('Queuers'),
-  description: new TranslatableMarkup('Checks if there is a queuer that propagates the queue.'),
-)]
 class QueuersAvailableDiagnosticCheck extends DiagnosticCheckBase implements DiagnosticCheckInterface {
 
   /**

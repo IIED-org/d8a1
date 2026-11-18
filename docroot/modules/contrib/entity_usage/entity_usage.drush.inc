@@ -8,7 +8,7 @@
 /**
  * Implements hook_drush_command().
  */
-function entity_usage_drush_command(): array {
+function entity_usage_drush_command() {
   $items = [];
 
   $items['entity-usage-recreate'] = [
@@ -22,7 +22,7 @@ function entity_usage_drush_command(): array {
 /**
  * Command callback for 'entity-usage-recreate'.
  */
-function drush_entity_usage_recreate(): void {
+function drush_entity_usage_recreate() {
   \Drupal::service('entity_usage.batch_manager')->recreate();
   drush_backend_batch_process();
 }

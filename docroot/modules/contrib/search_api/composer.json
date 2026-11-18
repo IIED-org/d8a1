@@ -24,9 +24,8 @@
     },
     "license": "GPL-2.0-or-later",
     "require-dev": {
-        "drupal/config_readonly": "1.x-dev",
-        "drupal/language_fallback_fix": "1.x-dev",
-        "drupal/search_api_autocomplete": "1.x-dev"
+        "drupal/language_fallback_fix": "@dev",
+        "drupal/search_api_autocomplete": "@dev"
     },
     "suggest": {
         "drupal/facets": "Adds the ability to create faceted searches.",
@@ -35,10 +34,5 @@
     },
     "conflict": {
         "drupal/search_api_solr": "2.* || 3.0 || 3.1"
-    },
-    "extra": {
-        "branch-alias": {
-            "dev-8.x-1.x": "1.x-dev"
-        }
     }
 }

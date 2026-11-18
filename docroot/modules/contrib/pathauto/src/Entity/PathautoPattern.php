@@ -16,7 +16,6 @@ use Drupal\Core\TypedData\DataReferenceDefinitionInterface;
 use Drupal\Core\TypedData\DataReferenceInterface;
 use Drupal\Core\TypedData\ListDataDefinitionInterface;
 use Drupal\Core\TypedData\ListInterface;
-use Drupal\Core\Utility\Error;
 use Drupal\pathauto\PathautoPatternInterface;
 
 /**
@@ -370,13 +369,7 @@ class PathautoPattern extends ConfigEntityBase implements PathautoPatternInterfa
             $context_handler->applyContextMapping($condition, $contexts);
           }
           catch (ContextException $e) {
-            if (method_exists(Error::class, 'logException')) {
-              Error::logException(\Drupal::logger('pathauto'), $e);
-            }
-            else {
-              /* @phpstan-ignore-next-line */
-              watchdog_exception('pathauto', $e);
-            }
+            watchdog_exception('pathauto', $e);
             return FALSE;
           }
         }
@@ -422,7 +415,7 @@ class PathautoPattern extends ConfigEntityBase implements PathautoPatternInterfa
       return $contexts[$token];
     }
     else {
-      [$base, $property_path] = explode(':', $token, 2);
+      list($base, $property_path) = explode(':', $token, 2);
       // A base must always be set. This method recursively calls itself
       // setting bases for this reason.
       if (!empty($contexts[$base])) {

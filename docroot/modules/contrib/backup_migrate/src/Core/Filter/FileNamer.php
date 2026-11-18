@@ -7,11 +7,9 @@ use Drupal\backup_migrate\Core\Plugin\FileProcessorInterface;
 use Drupal\backup_migrate\Core\Plugin\FileProcessorTrait;
 use Drupal\backup_migrate\Core\Plugin\PluginBase;
 use Drupal\backup_migrate\Core\File\BackupFileReadableInterface;
-use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\Core\Utility\Token;
 
 /**
- * Provides the file namer class.
+ *
  *
  * @package Drupal\backup_migrate\Core\Filter
  */
@@ -19,29 +17,11 @@ class FileNamer extends PluginBase implements FileProcessorInterface {
   use FileProcessorTrait;
 
   /**
-   * Constructs a FileNamer object.
-   *
-   * @param \Drupal\backup_migrate\Core\Config\ConfigInterface|array $init
-   *   Initial configuration.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface|null $moduleHandler
-   *   The module handler.
-   * @param \Drupal\Core\Utility\Token|null $token
-   *   The token service.
-   */
-  public function __construct(
-    $init = [],
-    protected readonly ?ModuleHandlerInterface $moduleHandler = NULL,
-    protected readonly ?Token $token = NULL,
-  ) {
-    parent::__construct($init);
-  }
-
-  /**
    * {@inheritdoc}
    */
   public function configSchema(array $params = []) {
     $schema = [];
-    if ($this->moduleHandler && $this->moduleHandler->moduleExists('token')) {
+    if (\Drupal::moduleHandler()->moduleExists('token')) {
       $must_match = '/^[\w\-_:\[\]]+$/';
       $must_match_err = $this->t('%title must contain only letters, numbers, dashes (-) and underscores (_). And Site Tokens.');
     }
@@ -87,7 +67,6 @@ class FileNamer extends PluginBase implements FileProcessorInterface {
    * Get the default values for the plugin.
    *
    * @return \Drupal\backup_migrate\Core\Config\Config
-   *   The return value.
    */
   public function configDefaults() {
     return new Config([
@@ -101,7 +80,6 @@ class FileNamer extends PluginBase implements FileProcessorInterface {
    * Get a list of supported operations and their weight.
    *
    * @return array
-   *   A render or configuration array.
    */
   public function supportedOps() {
     return [
@@ -113,14 +91,13 @@ class FileNamer extends PluginBase implements FileProcessorInterface {
    * Run on a backup. Name the backup file according to the configuration.
    *
    * @param \Drupal\backup_migrate\Core\File\BackupFileReadableInterface $file
-   *   The backup file.
    *
    * @return \Drupal\backup_migrate\Core\File\BackupFileReadableInterface
-   *   The requested integer.
    */
   public function afterBackup(BackupFileReadableInterface $file) {
-    if ($this->moduleHandler && $this->moduleHandler->moduleExists('token') && $this->token) {
-      $name = $this->token->replace($this->confGet('filename'));
+    if (\Drupal::moduleHandler()->moduleExists('token')) {
+      $token = \Drupal::token();
+      $name = $token->replace($this->confGet('filename'));
     }
     else {
       $name = $this->confGet('filename');

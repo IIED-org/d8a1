@@ -3,19 +3,20 @@
 namespace Drupal\purge\Plugin\Purge\DiagnosticCheck;
 
 use Drupal\Core\State\StateInterface;
-use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Drupal\purge\Attribute\PurgeDiagnosticCheck;
 use Drupal\purge\Plugin\Purge\Queue\StatsTrackerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Reports how many items are in the queue and prevents unsustainable volumes.
+ *
+ * @PurgeDiagnosticCheck(
+ *   id = "queue_size",
+ *   title = @Translation("Queue size"),
+ *   description = @Translation("Reports the size of the queue."),
+ *   dependent_queue_plugins = {},
+ *   dependent_purger_plugins = {}
+ * )
  */
-#[PurgeDiagnosticCheck(
-  id: 'queue_size',
-  title: new TranslatableMarkup('Queue size'),
-  description: new TranslatableMarkup('Reports the size of the queue.'),
-)]
 class QueueSizeDiagnosticCheck extends DiagnosticCheckBase implements DiagnosticCheckInterface {
 
   /**
@@ -84,21 +85,12 @@ class QueueSizeDiagnosticCheck extends DiagnosticCheckBase implements Diagnostic
       return self::SEVERITY_WARNING;
     }
     else {
-      // The 'purge.dangerous' state flag lets sites that legitimately generate
-      // very large queues opt out of the safety shutdown, e.g. via
-      // "drush state:set purge.dangerous 1". The check then keeps warning
-      // but no longer blocks purgers from processing the queue.
-      $dangerous = (bool) $this->state->get('purge.dangerous', FALSE);
-      if ($dangerous) {
-        $this->recommendation = $this->t(
-          'Your queue exceeded 100,000 items! The safety shutdown is disabled because the purge.dangerous state flag is set, so cache invalidation continues at your own risk. This can happen when no processors are clearing your queue, or when queueing outpaces processing. Please solve the structural nature of the issue by adding processing power or reducing your queue loads.'
-        );
-        return self::SEVERITY_WARNING;
-      }
+      $shutdown = $this->t('Purge has shut down cache invalidation to prevent your servers from actually crashing.');
+      $dangerous = $this->state->get('purge.dangerous', FALSE);
       $this->recommendation = $this->t(
-        'Your queue exceeded 100,000 items! Purge has shut down cache invalidation to prevent your servers from actually crashing. This can happen when no processors are clearing your queue, or when queueing outpaces processing. Please first solve the structural nature of the issue by adding processing power or reducing your queue loads. Empty the queue to unblock your system. If your site legitimately generates queues this large, you can disable this shutdown by setting the purge.dangerous state flag, e.g. "drush state:set purge.dangerous 1".'
-      );
-      return self::SEVERITY_ERROR;
+        'Your queue exceeded 100,000 items! @dangerous This can happen when no processors are clearing your queue, or when queueing outpaces processing. Please first solve the structural nature of the issue by adding processing power or reducing your queue loads. Empty the queue to unblock your system.',
+        ['@dangerous' => !$dangerous ? $shutdown : '']);
+      return $dangerous ? self::SEVERITY_WARNING : self::SEVERITY_ERROR;
     }
   }
 

@@ -23,11 +23,12 @@ final class Header
             foreach (self::splitList($value) as $val) {
                 $part = [];
                 foreach (self::splitParameters($val) as $kvp) {
-                    if (preg_match('/^=*(<[^>]+>|[^=]+)=*(.*)$/Ds', $kvp, $matches)) {
-                        if ($matches[2] !== '') {
-                            $part[trim($matches[1], $trimmed)] = trim($matches[2], $trimmed);
+                    if (preg_match_all('/<[^>]+>|[^=]+/', $kvp, $matches)) {
+                        $m = $matches[0];
+                        if (isset($m[1])) {
+                            $part[trim($m[0], $trimmed)] = trim($m[1], $trimmed);
                         } else {
-                            $part[] = trim($matches[1], $trimmed);
+                            $part[] = trim($m[0], $trimmed);
                         }
                     }
                 }

@@ -3,7 +3,7 @@
 /*
  * This file is part of Psy Shell.
  *
- * (c) 2012-2026 Justin Hileman
+ * (c) 2012-2023 Justin Hileman
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -21,7 +21,6 @@ use PhpParser\Node\Expr\MethodCall;
 use PhpParser\Node\Expr\PropertyFetch;
 use PhpParser\Node\Expr\StaticCall;
 use PhpParser\Node\Expr\Variable;
-use PhpParser\Node\VariadicPlaceholder;
 use Psy\Exception\FatalErrorException;
 
 /**
@@ -44,7 +43,7 @@ class PassableByReferencePass extends CodeCleanerPass
         if ($node instanceof FuncCall) {
             // if function name is an expression or a variable, give it a pass for now.
             if ($node->name instanceof Expr || $node->name instanceof Variable) {
-                return null;
+                return;
             }
 
             $name = (string) $node->name;
@@ -57,42 +56,25 @@ class PassableByReferencePass extends CodeCleanerPass
                 $refl = new \ReflectionFunction($name);
             } catch (\ReflectionException $e) {
                 // Well, we gave it a shot!
-                return null;
-            }
-
-            $args = [];
-            foreach ($node->args as $position => $arg) {
-                if ($arg instanceof VariadicPlaceholder) {
-                    continue;
-                }
-
-                // Named arguments were added in php-parser 4.1, so we need to check if the property exists
-                $key = (\property_exists($arg, 'name') && $arg->name !== null) ? $arg->name->name : $position;
-                $args[$key] = $arg;
+                return;
             }
 
             foreach ($refl->getParameters() as $key => $param) {
-                if (\array_key_exists($key, $args) || \array_key_exists($param->name, $args)) {
-                    $arg = $args[$param->name] ?? $args[$key];
+                if (\array_key_exists($key, $node->args)) {
+                    $arg = $node->args[$key];
                     if ($param->isPassedByReference() && !$this->isPassableByReference($arg)) {
-                        throw new FatalErrorException(self::EXCEPTION_MESSAGE, 0, \E_ERROR, null, $node->getStartLine());
+                        throw new FatalErrorException(self::EXCEPTION_MESSAGE, 0, \E_ERROR, null, $node->getLine());
                     }
                 }
             }
         }
-
-        return null;
     }
 
     private function isPassableByReference(Node $arg): bool
     {
-        if (!\property_exists($arg, 'value')) {
-            return false;
-        }
-
         // Unpacked arrays can be passed by reference
         if ($arg->value instanceof Array_) {
-            return \property_exists($arg, 'unpack') && $arg->unpack;
+            return $arg->unpack;
         }
 
         // FuncCall, MethodCall and StaticCall are all PHP _warnings_ not fatal errors, so we'll let
@@ -130,7 +112,7 @@ class PassableByReferencePass extends CodeCleanerPass
             } elseif (++$nonPassable > 2) {
                 // There can be *at most* two non-passable-by-reference args in a row. This is about
                 // as close as we can get to validating the arguments for this function :-/
-                throw new FatalErrorException(self::EXCEPTION_MESSAGE, 0, \E_ERROR, null, $node->getStartLine());
+                throw new FatalErrorException(self::EXCEPTION_MESSAGE, 0, \E_ERROR, null, $node->getLine());
             }
         }
     }

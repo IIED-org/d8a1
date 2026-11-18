@@ -10,20 +10,17 @@ use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\Messenger\MessengerInterface;
-use Drupal\Core\Password\PasswordGeneratorInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Transliteration\PhpTransliteration;
 use Drupal\Core\Utility\Token;
-use Drupal\file\FileInterface;
 use Drupal\social_api\User\UserManager as SocialApiUserManager;
-use Drupal\social_auth\Entity\SocialAuth;
+use Drupal\social_auth\Event\UserFieldsEvent;
 use Drupal\social_auth\Event\SocialAuthEvents;
 use Drupal\social_auth\Event\UserEvent;
-use Drupal\social_auth\Event\UserFieldsEvent;
 use Drupal\social_auth\SettingsTrait;
-use Drupal\user\Entity\User;
 use Drupal\user\UserInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Drupal\social_auth\Entity\SocialAuth;
 
 /**
  * Manages database related tasks.
@@ -38,49 +35,42 @@ class UserManager extends SocialApiUserManager {
    *
    * @var \Drupal\Core\Entity\EntityFieldManagerInterface
    */
-  protected EntityFieldManagerInterface $entityFieldManager;
+  protected $entityFieldManager;
 
   /**
    * Used for user picture directory and file transliteration.
    *
    * @var \Drupal\Core\Transliteration\PhpTransliteration
    */
-  protected PhpTransliteration $transliteration;
+  protected $transliteration;
 
   /**
    * Used to get the current UI language.
    *
    * @var \Drupal\Core\Language\LanguageManagerInterface
    */
-  protected LanguageManagerInterface $languageManager;
+  protected $languageManager;
 
   /**
    * Event dispatcher.
    *
    * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
    */
-  protected EventDispatcherInterface $eventDispatcher;
+  protected $eventDispatcher;
 
   /**
    * Used for token support in Drupal user picture directory.
    *
    * @var \Drupal\Core\Utility\Token
    */
-  protected Token $token;
+  protected $token;
 
   /**
    * Used for saving the profile picture of the users.
    *
    * @var \Drupal\Core\File\FileSystemInterface
    */
-  protected FileSystemInterface $fileSystem;
-
-  /**
-   * Password generator.
-   *
-   * @var \Drupal\Core\Password\PasswordGeneratorInterface
-   */
-  protected PasswordGeneratorInterface $passwordGenerator;
+  protected $fileSystem;
 
   /**
    * Constructor.
@@ -105,22 +95,18 @@ class UserManager extends SocialApiUserManager {
    *   Used for token support in Drupal user picture directory.
    * @param \Drupal\Core\File\FileSystemInterface $file_system
    *   Used for saving the profile picture of the users.
-   * @param \Drupal\Core\Password\PasswordGeneratorInterface $password_generator
-   *   Used for generating a new usr password randomly.
    */
-  public function __construct(
-    EntityTypeManagerInterface $entity_type_manager,
-    MessengerInterface $messenger,
-    LoggerChannelFactoryInterface $logger_factory,
-    ConfigFactoryInterface $config_factory,
-    EntityFieldManagerInterface $entity_field_manager,
-    PhpTransliteration $transliteration,
-    LanguageManagerInterface $language_manager,
-    EventDispatcherInterface $event_dispatcher,
-    Token $token,
-    FileSystemInterface $file_system,
-    PasswordGeneratorInterface $password_generator,
-  ) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager,
+                              MessengerInterface $messenger,
+                              LoggerChannelFactoryInterface $logger_factory,
+                              ConfigFactoryInterface $config_factory,
+                              EntityFieldManagerInterface $entity_field_manager,
+                              PhpTransliteration $transliteration,
+                              LanguageManagerInterface $language_manager,
+                              EventDispatcherInterface $event_dispatcher,
+                              Token $token,
+                              FileSystemInterface $file_system) {
+
     parent::__construct('social_auth', $entity_type_manager, $messenger, $logger_factory);
 
     $this->configFactory = $config_factory;
@@ -130,7 +116,6 @@ class UserManager extends SocialApiUserManager {
     $this->eventDispatcher = $event_dispatcher;
     $this->token = $token;
     $this->fileSystem = $file_system;
-    $this->passwordGenerator = $password_generator;
   }
 
   /**
@@ -143,7 +128,7 @@ class UserManager extends SocialApiUserManager {
    *   The Drupal user if successful
    *   Null otherwise.
    */
-  public function createNewUser(SocialAuthUserInterface $user): ?UserInterface {
+  public function createNewUser(SocialAuthUserInterface $user) {
     // Download profile picture for the newly created user.
     if ($user->getPictureUrl()) {
       $this->setProfilePic($user);
@@ -176,7 +161,8 @@ class UserManager extends SocialApiUserManager {
    *   Drupal user account if user was created
    *   False otherwise
    */
-  public function createUser(SocialAuthUserInterface $user): User|false {
+  public function createUser(SocialAuthUserInterface $user) {
+
     $name = $user->getName();
     $email = $user->getEmail();
 
@@ -228,12 +214,10 @@ class UserManager extends SocialApiUserManager {
 
       return $new_user;
     }
-    catch (\Exception $e) {
+    catch (\Exception $ex) {
       $this->loggerFactory
         ->get($this->getPluginId())
-        ->error('Could not create new user. Exception: @message', [
-          '@message' => $e->getMessage(),
-        ]);
+        ->error('Could not create new user. Exception: @message', ['@message' => $ex->getMessage()]);
     }
 
     $this->messenger->addError($this->t('You could not be authenticated, please contact the administrator.'));
@@ -253,11 +237,11 @@ class UserManager extends SocialApiUserManager {
    * @param array|null $user_data
    *   Additional user data collected.
    *
-   * @return bool
+   * @return true
    *   if user record is added in social_auth entity table
    *   Else false.
    */
-  public function addUserRecord(int $user_id, string $provider_user_id, string $token, ?array $user_data): bool {
+  public function addUserRecord($user_id, $provider_user_id, $token, $user_data) {
     // Make sure we have everything we need.
     if (!$user_id || !$this->pluginId || !$provider_user_id) {
       $this->loggerFactory
@@ -290,11 +274,11 @@ class UserManager extends SocialApiUserManager {
         // Save the entity.
         $user_info->save();
       }
-      catch (\Exception $e) {
+      catch (\Exception $ex) {
         $this->loggerFactory
           ->get($this->getPluginId())
           ->error('Failed to add user record in Social Auth entity.
-            Exception: @message', ['@message' => $e->getMessage()]);
+            Exception: @message', ['@message' => $ex->getMessage()]);
 
         $this->messenger->addError($this->t('You could not be authenticated, please contact the administrator.'));
 
@@ -322,7 +306,7 @@ class UserManager extends SocialApiUserManager {
    *   Drupal user account if found
    *   False otherwise
    */
-  public function loadUserByProperty(string $field, string $value): User|false {
+  public function loadUserByProperty($field, $value) {
     try {
       $users = $this->entityTypeManager
         ->getStorage('user')
@@ -332,12 +316,10 @@ class UserManager extends SocialApiUserManager {
         return current($users);
       }
     }
-    catch (\Exception $e) {
+    catch (\Exception $ex) {
       $this->loggerFactory
         ->get($this->getPluginId())
-        ->error('Failed to load user. Exception: @message', [
-          '@message' => $e->getMessage(),
-        ]);
+        ->error('Failed to load user. Exception: @message', ['@message' => $ex->getMessage()]);
     }
 
     // If user was not found, return FALSE.
@@ -351,18 +333,19 @@ class UserManager extends SocialApiUserManager {
    *   True if picture was successfully set.
    *   False otherwise.
    */
-  protected function saveUser(UserInterface $drupal_user): bool {
+  protected function saveUser(UserInterface $drupal_user) {
     try {
       $drupal_user->save();
 
       return TRUE;
     }
-    catch (EntityStorageException $e) {
+    catch (EntityStorageException $ex) {
       $this->loggerFactory
         ->get($this->getPluginId())
-        ->error('Failed to save user. Exception: @message', [
-          '@message' => $e->getMessage(),
-        ]);
+        ->error(
+          'Failed to save user. Exception: @message',
+            ['@message' => $ex->getMessage()]
+        );
 
       return FALSE;
     }
@@ -378,7 +361,7 @@ class UserManager extends SocialApiUserManager {
    *   True if picture was successfully set.
    *   False otherwise.
    */
-  protected function setProfilePic(SocialAuthUserInterface $user): bool {
+  protected function setProfilePic(SocialAuthUserInterface $user) {
     $picture_url = $user->getPictureUrl();
     $id = $user->getProviderId();
 
@@ -400,16 +383,12 @@ class UserManager extends SocialApiUserManager {
    *   Absolute URL where to download the profile picture.
    * @param string $id
    *   Social network ID of the user.
-   * @param ?string $directory
-   *   (optional) The directory to which the file should be downloaded.
-   *   Defaults to the directory configured for the "user_picture" field, if it
-   *   exists.
    *
    * @return \Drupal\file\FileInterface|false
    *   FileInterface object if file was successfully downloaded
    *   False otherwise
    */
-  public function downloadProfilePic(string $picture_url, string $id, ?string $directory = NULL): FileInterface|false {
+  protected function downloadProfilePic($picture_url, $id) {
     // Make sure that we have everything we need.
     if (!$picture_url || !$id) {
       return FALSE;
@@ -417,24 +396,18 @@ class UserManager extends SocialApiUserManager {
 
     // Determine target directory.
     $scheme = $this->configFactory->get('system.file')->get('default_scheme');
+    $file_directory = $this->getPictureDirectory();
 
-    // If a download directory was not given, try to determine one from the
-    // "user_picture" field on the "user" entity type. If the field does not
-    // exist, return early.
-    if (is_null($directory)) {
-      $file_directory = $this->getPictureDirectory();
-
-      if (!$file_directory) {
-        return FALSE;
-      }
-      $directory = $scheme . '://' . $file_directory;
-
-      // Replace tokens.
-      $directory = $this->token->replace($directory);
-
-      // Transliterate directory name.
-      $directory = $this->transliteration->transliterate($directory, 'en', '_', 50);
+    if (!$file_directory) {
+      return FALSE;
     }
+    $directory = $scheme . '://' . $file_directory;
+
+    // Replace tokens.
+    $directory = $this->token->replace($directory);
+
+    // Transliterate directory name.
+    $directory = $this->transliteration->transliterate($directory, 'en', '_', 50);
 
     if (!$this->fileSystem->prepareDirectory($directory, $this->fileSystem::CREATE_DIRECTORY)) {
       $this->loggerFactory
@@ -481,7 +454,7 @@ class UserManager extends SocialApiUserManager {
    * @return string
    *   Unique drupal username.
    */
-  protected function generateUniqueUsername(string $name): string {
+  protected function generateUniqueUsername($name) {
     $max_length = 60;
     $name = mb_substr($name, 0, $max_length);
     $name = str_replace(' ', '', $name);
@@ -500,7 +473,9 @@ class UserManager extends SocialApiUserManager {
     }
 
     // Trim leading and trailing whitespace.
-    return trim($candidate);
+    $candidate = trim($candidate);
+
+    return $candidate;
   }
 
   /**
@@ -514,7 +489,7 @@ class UserManager extends SocialApiUserManager {
    * @return array
    *   Fields to initialize for the user creation.
    */
-  protected function getUserFields(SocialAuthUserInterface $user, string $langcode): array {
+  protected function getUserFields(SocialAuthUserInterface $user, $langcode) {
     $fields = [
       'name' => $this->generateUniqueUsername($user->getName()),
       'mail' => $user->getEmail(),
@@ -528,10 +503,12 @@ class UserManager extends SocialApiUserManager {
     ];
 
     // Dispatches SocialAuthEvents::USER_FIELDS, so that other modules can
-    // update this array before a user is saved.
+    // update this array before an user is saved.
     $event = new UserFieldsEvent($fields, $this->getPluginId(), $user);
     $this->eventDispatcher->dispatch($event, SocialAuthEvents::USER_FIELDS);
-    return $event->getUserFields();
+    $fields = $event->getUserFields();
+
+    return $fields;
   }
 
   /**
@@ -541,7 +518,7 @@ class UserManager extends SocialApiUserManager {
    *   True if user pictures are enabled
    *   False otherwise
    */
-  protected function userPictureEnabled(): bool {
+  protected function userPictureEnabled() {
     $field_definitions = $this->entityFieldManager->getFieldDefinitions('user', 'user');
 
     return isset($field_definitions['user_picture']);
@@ -550,11 +527,11 @@ class UserManager extends SocialApiUserManager {
   /**
    * Returns picture directory if site supports the user picture feature.
    *
-   * @return string|false
+   * @return string|bool
    *   Directory for user pictures if site supports user picture feature.
    *   False otherwise.
    */
-  protected function getPictureDirectory(): string|false {
+  protected function getPictureDirectory() {
     $field_definitions = $this->entityFieldManager->getFieldDefinitions('user', 'user');
     if (isset($field_definitions['user_picture'])) {
       return $field_definitions['user_picture']->getSetting('file_directory');
@@ -578,8 +555,8 @@ class UserManager extends SocialApiUserManager {
    *
    * @see user_password
    */
-  protected function userPassword(int $length): string {
-    return $this->passwordGenerator->generate($length);
+  protected function userPassword($length) {
+    return \Drupal::service('password_generator')->generate($length);
   }
 
   /**
@@ -591,17 +568,8 @@ class UserManager extends SocialApiUserManager {
    *
    * @see system_retrieve_file
    */
-  protected function systemRetrieveFile(string $url, string $destination, bool $managed, int $replace): mixed {
-    // See change record for deprecation: https://www.drupal.org/node/3223362
-    // @phpstan-ignore-next-line
-    $data = (string) \Drupal::httpClient()->get($url)->getBody();
-    // @phpstan-ignore-next-line as it is deprecated in D10.3.0 version.
-    $file_replace = FileSystemInterface::EXISTS_REPLACE;
-    if ($managed) {
-      // @phpstan-ignore-next-line
-      return \Drupal::service('file.repository')->writeData($data, $destination, $file_replace);
-    }
-    return $this->fileSystem->saveData($data, $destination, $file_replace);
+  protected function systemRetrieveFile($url, $destination, $managed, $replace) {
+    return system_retrieve_file($url, $destination, $managed, $replace);
   }
 
 }

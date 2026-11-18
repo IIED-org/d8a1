@@ -2,8 +2,6 @@
 
 namespace Drupal\Tests\key\Functional;
 
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Core\Url;
@@ -13,8 +11,6 @@ use Drupal\Core\Url;
  *
  * @group key
  */
-#[Group('key')]
-#[RunTestsInSeparateProcesses]
 class KeyAdminTest extends BrowserTestBase {
 
   use KeyTestTrait;

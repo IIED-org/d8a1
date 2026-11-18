@@ -13,26 +13,18 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 abstract class ContextDelete extends ConfirmFormBase {
 
   /**
-   * The tempstore factory.
-   *
    * @var \Drupal\Core\TempStore\SharedTempStoreFactory
    */
   protected $tempstore;
 
   /**
-   * The tempstore ID.
-   *
    * @var string
    */
-  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
   protected $tempstore_id;
 
   /**
-   * The machine name.
-   *
    * @var string
    */
-  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
   protected $machine_name;
 
   /**
@@ -40,7 +32,6 @@ abstract class ContextDelete extends ConfirmFormBase {
    *
    * @var string|array
    */
-  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
   protected $context_id;
 
   /**

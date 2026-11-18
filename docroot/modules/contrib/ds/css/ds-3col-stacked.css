@@ -8,8 +8,8 @@
 }
 
 .ds-3col-stacked > .group-left {
-  float: left; /* LTR */
   width: 25%;
+  float: left; /* LTR */
 }
 
 [dir="rtl"] .ds-3col-stacked > .group-left {
@@ -17,8 +17,8 @@
 }
 
 .ds-3col-stacked > .group-middle {
-  float: left; /* LTR */
   width: 50%;
+  float: left; /* LTR */
 }
 
 [dir="rtl"] .ds-3col-stacked > .group-middle {
@@ -26,8 +26,8 @@
 }
 
 .ds-3col-stacked > .group-right {
-  float: right; /* LTR */
   width: 25%;
+  float: right; /* LTR */
 }
 
 [dir="rtl"] .ds-3col-stacked > .group-right {

@@ -2,8 +2,6 @@
 
 namespace Drupal\search_api\Plugin\DataType;
 
-use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Drupal\Core\TypedData\Attribute\DataType;
 use Drupal\Core\TypedData\Plugin\DataType\StringData;
 
 /**
@@ -15,9 +13,10 @@ use Drupal\Core\TypedData\Plugin\DataType\StringData;
  *
  * Therefore, we define this special data type so Search API processors can use
  * it for their property definitions.
+ *
+ * @DataType(
+ *   id = "search_api_text",
+ *   label = @Translation("Text (Search API)")
+ * )
  */
-#[DataType(
-  id: 'search_api_text',
-  label: new TranslatableMarkup('Text (Search API)'),
-)]
 class Text extends StringData {}

@@ -63,35 +63,33 @@ abstract class FileMetadataPluginBase extends PluginBase implements FileMetadata
   protected bool $hasMetadataChangedFromCacheVersion = FALSE;
 
   /**
-   * @param array<mixed> $configuration
-   *   The plugin configuration.
-   * @param array<mixed> $plugin_definition
-   *   The plugin definition.
+   * Constructs a FileMetadataPluginBase plugin.
+   *
+   * @param array $configuration
+   *   A configuration array containing information about the plugin instance.
+   * @param string $plugin_id
+   *   The plugin_id for the plugin instance.
+   * @param array $plugin_definition
+   *   The plugin implementation definition.
+   * @param \Drupal\Core\Cache\CacheBackendInterface $cache
+   *   The cache service.
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
+   *   The config factory.
+   * @param \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface $streamWrapperManager
+   *   The stream wrapper manager service.
    */
-  public function __construct(
+  final public function __construct(
     array $configuration,
     string $plugin_id,
     array $plugin_definition,
-    // @todo add readonly to the arguments.
-    protected CacheBackendInterface $cache,
-    protected ConfigFactoryInterface $configFactory,
-    protected StreamWrapperManagerInterface $streamWrapperManager,
+    protected readonly CacheBackendInterface $cache,
+    protected readonly ConfigFactoryInterface $configFactory,
+    protected readonly StreamWrapperManagerInterface $streamWrapperManager,
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
   }
 
-  /**
-   * @param array<mixed> $configuration
-   *   The plugin configuration.
-   * @param string $plugin_id
-   *   The plugin id.
-   * @param array<mixed> $plugin_definition
-   *   The plugin definition.
-   *
-   * @return static
-   */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    // @phpstan-ignore new.static
     return new static(
       $configuration,
       $plugin_id,
@@ -130,10 +128,7 @@ abstract class FileMetadataPluginBase extends PluginBase implements FileMetadata
     return $editable ? $this->configFactory->getEditable($config_name) : $this->configFactory->get($config_name);
   }
 
-  /**
-   * @return array
-   */
-  public function buildConfigurationForm(array $form, FormStateInterface $form_state): array {
+  public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
     $form['override'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Override main caching settings'),
@@ -159,10 +154,10 @@ abstract class FileMetadataPluginBase extends PluginBase implements FileMetadata
     return $form;
   }
 
-  public function validateConfigurationForm(array &$form, FormStateInterface $form_state): void {
+  public function validateConfigurationForm(array &$form, FormStateInterface $form_state) {
   }
 
-  public function submitConfigurationForm(array &$form, FormStateInterface $form_state): void {
+  public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
     // @codingStandardsIgnoreStart
     $this->configuration['cache']['override'] = (bool) $form_state->getValue([$this->getPluginId(), 'override']);
     $this->configuration['cache']['settings'] = $form_state->getValue([$this->getPluginId(), 'cache_details', 'settings']);
@@ -266,7 +261,7 @@ abstract class FileMetadataPluginBase extends PluginBase implements FileMetadata
   /**
    * Checks if file metadata should be cached.
    *
-   * @return array<mixed>|false
+   * @return array|bool
    *   The caching settings array retrieved from configuration if file metadata
    *   is cacheable, FALSE otherwise.
    */

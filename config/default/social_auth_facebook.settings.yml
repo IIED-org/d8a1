@@ -1,5 +1,5 @@
-client_id: '480929555750570'
-client_secret: f57cefd819b8db248f85aa517f58ead7
+app_id: '480929555750570'
+app_secret: f57cefd819b8db248f85aa517f58ead7
 graph_version: '3.1'
 scopes: ''
 endpoints: ''

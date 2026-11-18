@@ -11,6 +11,7 @@
     }
   },
   "require-dev": {
+    "drupal/ckeditor": "^1",
     "drupal/colorbox": "^2"
   }
 }

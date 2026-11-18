@@ -21,12 +21,9 @@ gulp.task('sass', function() {
         .pipe(browserSync.stream());
 });
 
-// Move the javascript files into our js folder.
-// Bootstrap JS comes from the "bootstrap5" alias (Bootstrap 5 bundle, includes
-// Popper, no jQuery needed) because Bootstrap 4 JS refuses jQuery 4 (Drupal 11).
-// The SCSS above still compiles from "bootstrap" (v4).
+// Move the javascript files into our js folder
 gulp.task('js', function() {
-    return gulp.src(['node_modules/bootstrap5/dist/js/bootstrap.bundle.min.js', 'node_modules/bootstrap5/dist/js/bootstrap.bundle.min.js.map', 'node_modules/jquery/dist/jquery.min.js'])
+    return gulp.src(['node_modules/bootstrap/dist/js/bootstrap.min.js', 'node_modules/jquery/dist/jquery.min.js', 'node_modules/popper.js/dist/umd/popper.min.js', 'node_modules/popper.js/dist/umd/popper.min.js.map', 'node_modules/bootstrap/dist/js/bootstrap.min.js.map'])
         .pipe(gulp.dest("js"))
         .pipe(browserSync.stream());
 });

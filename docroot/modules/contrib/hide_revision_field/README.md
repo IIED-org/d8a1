@@ -1,39 +1,55 @@
-# CONTENTS OF THIS FILE
+# Hide Revision Field
 
- * Introduction
- * Requirements
- * Installation
- * Configuration
- * Maintainers
-
-
-## INTRODUCTION
-
+## ABOUT
 Hide Revision Field provides a configurable field formatter for the revision log
 field for revisionable entities. This allows you to create revisions but reduces
 noise for your content editors/site owners. All revisionable content entity
 types are supported including module added.
 
- * For a full description of the module, visit the project page:
-   <https://drupal.org/project/hide_revision_field>
+The widget has 4 settings for each instance:
 
- * To submit bug reports and feature suggestions, or to track changes:
-   <https://drupal.org/project/issues/hide_revision_field>
-
+  - `Default`: Provide a default log message.
+  - `Show` (TRUE): Whether to show the field. If enabled the two other options
+  will override this.
+  - `Permission Based` (FALSE): Show if the user has the
+  `access revision field` permission.
+  - `Allow user specific configuration` (TRUE): Enables users to customize this
+  field's visibility via their profile page if they have the
+  `administer revision field personalization` permission.
 
 ## REQUIREMENTS
+Drupal 8 is required, Drupal 8.6.x or higher is suggested.
 
-Drupal core user module.
+## VERSIONS
+* 8.x-2.x (Supported): (This version) Use for all new projects. There is a
+ partial upgrade path from 8.x-1.x; user customization will have to be reset.
 
+* 8.x-1.x (Deprecated): Use for Drupal 8.3 and under if necessary.
 
 ## INSTALLATION
+Install as you would normally install a contributed Drupal module. See the
+[install
+docs](https://drupal.org/documentation/install/modules-themes/modules-8)
+if required in the Drupal documentation for further information.
 
-Install as you would normally install a contributed Drupal module. Visit:
-<https://www.drupal.org/node/1897420> for further information.
+### UPGRADING FROM 8.x-1.x to 8.x-2.x
+**Note:** Perform update separately from core updates (especially 8.5->8.6).
+
+  * Update code:
+
+    * If using Composer adjust your version constraint to update to `^2.1` or
+     similar.
+
+    * Otherwise, delete the module folder and extract the new version there.
+
+  * Run `update.php` or `drush updb` (Drush) or `drupal update:execute` (Drupal
+    Console).
+
+  * If you had changed any user specific settings, they will need to be reset (
+    See [Configuration](#configuration)).
 
 
 ## CONFIGURATION
-    
 * The primary configuration can be accessed for each supported entity bundle on
   the form display edit page for the entity type. For example for the Node type
   Article that would be at `/admin/structure/types/manage/article/form-display`.
@@ -50,7 +66,6 @@ Install as you would normally install a contributed Drupal module. Visit:
   at the field display settings level. If enabled, that can be configured for
   each user on their user profile form (ie `/user/1/edit`).
 
-
-## MAINTAINERS
-
- * Andrei Ivnitskii - <https://www.drupal.org/u/ivnish>
+## FAQ
+Any questions? Ask away on the issue queue or contact the maintainer
+[Nick Wilde](https://drupal.org/u/nickwilde).

@@ -5,10 +5,10 @@
  * Post update functions for Geocoder.
  */
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
-use Drupal\Core\Entity\EntityStorageException;
 use Drupal\geocoder\Entity\GeocoderProvider;
+use Drupal\Core\Entity\EntityStorageException;
 
 /**
  * Convert simple provider configuration to provider entities.
@@ -38,7 +38,7 @@ function geocoder_post_update_convert_simple_config_to_entities(): void {
       ])->save();
     }
     catch (EntityStorageException $e) {
-      \Drupal::service('logger.channel.geocoder')->error($e->getMessage());
+      watchdog_exception('geocoder_provider', $e);
     }
   }
   $config->clear('plugins_options');

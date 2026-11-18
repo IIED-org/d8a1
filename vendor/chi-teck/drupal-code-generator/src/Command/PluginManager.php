@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace DrupalCodeGenerator\Command;
 
@@ -38,7 +36,6 @@ final class PluginManager extends BaseGenerator {
 
     $discovery_types = [
       'annotation' => 'Annotation',
-      'attribute' => 'Attribute',
       'yaml' => 'YAML',
       'hook' => 'Hook',
     ];
@@ -54,12 +51,6 @@ final class PluginManager extends BaseGenerator {
         $assets->addFile('src/Annotation/{class_prefix}.php', 'annotation/src/Annotation/Example.php.twig');
         $assets->addFile('src/{class_prefix}PluginBase.php', 'annotation/src/ExamplePluginBase.php.twig');
         $assets->addFile('src/Plugin/{class_prefix}/Foo.php', 'annotation/src/Plugin/Example/Foo.php.twig');
-        break;
-
-      case 'attribute':
-        $assets->addFile('src/Attribute/{class_prefix}.php', 'attribute/src/Attribute/Example.php.twig');
-        $assets->addFile('src/{class_prefix}PluginBase.php', 'attribute/src/ExamplePluginBase.php.twig');
-        $assets->addFile('src/Plugin/{class_prefix}/Foo.php', 'attribute/src/Plugin/Example/Foo.php.twig');
         break;
 
       case 'yaml':

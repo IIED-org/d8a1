@@ -23,8 +23,6 @@ class ExifTagMapper implements ExifTagMapperInterface {
    *
    * Maps IFDs or their aliases expressed as literals to the EXIF integer
    * identifier.
-   *
-   * @var array<string,int>
    */
   protected array $stringToIfdMap;
 
@@ -32,26 +30,20 @@ class ExifTagMapper implements ExifTagMapperInterface {
    * The string to TAG map.
    *
    * Maps TAGs expressed as literals to the EXIF integer IFD/TAG identifiers.
-   *
-   * @var array<string, array{0: int, 1: int}>
    */
   protected array $stringToTagMap;
 
   /**
    * The supported metadata 'keys'.
    *
-   * A list of IFD/TAG combinations, expressed as literals.
-   *
-   * @var list<array{0: string, 1: string}>
+   * A simple array of IFD/TAG combinations, expressed as literals.
    */
   protected array $supportedKeysMap;
 
   /**
    * The supported IFDs.
    *
-   * A list of IFDs, expressed as literal/integer combinations.
-   *
-   * @var list<array{0: string, 1: int}>
+   * A simple array of IFDs, expressed as literal/integer combinations.
    */
   protected array $supportedIfdsMap;
 
@@ -81,7 +73,6 @@ class ExifTagMapper implements ExifTagMapperInterface {
     if (!isset($key[0]) || !isset($key[1])) {
       throw new FileMetadataException('Invalid $key array specified, must have two values', NULL, __METHOD__);
     }
-
     // Deal with ifd.
     if (is_int($key[0])) {
       $ifd = $key[0];
@@ -92,7 +83,6 @@ class ExifTagMapper implements ExifTagMapperInterface {
     else {
       throw new FileMetadataException('Invalid EXIF IFD specified, must be a string or an integer', NULL, __METHOD__);
     }
-
     // Deal with tag.
     if (is_string($key[1])) {
       $tag = $this->stringToTag($key[1])[1];
@@ -103,16 +93,15 @@ class ExifTagMapper implements ExifTagMapperInterface {
     else {
       throw new FileMetadataException('Invalid EXIF TAG specified, must be a string or an integer', NULL, __METHOD__);
     }
-
     return ['ifd' => $ifd, 'tag' => $tag];
   }
 
-  public function getSupportedKeys(?array $options = NULL): array {
+  public function getSupportedKeys(array $options = NULL): array {
     if (isset($options['ifds'])) {
       return $this->getSupportedIfdsMap();
     }
     elseif (isset($options['ifd'])) {
-      return array_filter($this->getSupportedKeysMap(), function ($a) use ($options): bool {
+      return array_filter($this->getSupportedKeysMap(), function ($a) use ($options) {
         return strtolower($options['ifd']) === strtolower($a[0]);
       });
     }
@@ -126,8 +115,8 @@ class ExifTagMapper implements ExifTagMapperInterface {
    *
    * Builds and caches the list as needed.
    *
-   * @return list<array{0: string, 1: int}>
-   *   A list of IFDs, expressed as literal/integer combinations.
+   * @return array
+   *   A simple array of IFDs, expressed as literal/integer combinations.
    */
   protected function getSupportedIfdsMap(): array {
     if (!isset($this->supportedIfdsMap)) {
@@ -158,8 +147,8 @@ class ExifTagMapper implements ExifTagMapperInterface {
    *
    * Builds and caches the list as needed.
    *
-   * @return list<array{0: string, 1: string}>
-   *   A list of IFD/TAG combinations, expressed as literals.
+   * @return array
+   *   A simple array of IFD/TAG combinations, expressed as literals.
    */
   protected function getSupportedKeysMap(): array {
     if (!isset($this->supportedKeysMap)) {
@@ -191,8 +180,8 @@ class ExifTagMapper implements ExifTagMapperInterface {
    * @param string $value
    *   A TAG literal.
    *
-   * @return array{0: int, 1: int}
-   *   An array with IFD and TAG, expressed as integers.
+   * @return array
+   *   A simple array of with IFD and TAG, expressed as integers.
    *
    * @throws \Drupal\file_mdm\FileMetadataException
    *   When the IFD/TAG combination could not be found.
@@ -210,7 +199,7 @@ class ExifTagMapper implements ExifTagMapperInterface {
    *
    * Builds and caches the list as needed.
    *
-   * @return array<string, array{0: int, 1: int}>
+   * @return array
    *   An associative array where keys are TAG literals, and values a simple
    *   array of IFD/TAG integer identifiers.
    */
@@ -262,7 +251,7 @@ class ExifTagMapper implements ExifTagMapperInterface {
    *
    * Builds and caches the list as needed.
    *
-   * @return array<string,int>
+   * @return array
    *   An associative array where keys are IFD literals, and values the IFD
    *   integer identifiers.
    */

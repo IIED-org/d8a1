@@ -2,7 +2,6 @@
 
 namespace Drupal\purge_ui\Form;
 
-use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Messenger\MessengerInterface;
@@ -73,13 +72,6 @@ class PurgeBlockForm extends FormBase {
   protected $purgeQueue;
 
   /**
-   * The module handler to invoke hooks on.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   */
-  protected $moduleHandler;
-
-  /**
    * Construct a PurgeBlockForm object.
    *
    * @param string[] $config
@@ -96,10 +88,11 @@ class PurgeBlockForm extends FormBase {
    *   The purge queue service.
    * @param \Drupal\purge\Plugin\Purge\Queuer\QueuersServiceInterface $purge_queuers
    *   The purge queuers service.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface|null $module_handler
-   *   The module handler to invoke hooks on.
    */
-  final public function __construct(array $config, MessengerInterface $messenger, ProcessorsServiceInterface $purge_processors, PurgersServiceInterface $purge_purgers, InvalidationsServiceInterface $purge_invalidation_factory, QueueServiceInterface $purge_queue, QueuersServiceInterface $purge_queuers, ?ModuleHandlerInterface $module_handler = NULL) {
+  final public function __construct(array $config, MessengerInterface $messenger, ProcessorsServiceInterface $purge_processors, PurgersServiceInterface $purge_purgers, InvalidationsServiceInterface $purge_invalidation_factory, QueueServiceInterface $purge_queue, QueuersServiceInterface $purge_queuers) {
+    if (is_null($config)) {
+      throw new \LogicException('\Drupal\purge_ui\Form\PurgeBlockForm should be directly instantiated with block configuration passed in.');
+    }
     $this->config = $config;
     $this->messenger = $messenger;
     $this->processor = $purge_processors->get('purge_ui_block_processor');
@@ -107,12 +100,6 @@ class PurgeBlockForm extends FormBase {
     $this->purgePurgers = $purge_purgers;
     $this->purgeInvalidationFactory = $purge_invalidation_factory;
     $this->purgeQueue = $purge_queue;
-    if ($module_handler === NULL) {
-      @trigger_error('Calling ' . __METHOD__ . '() without the $module_handler argument is deprecated in purge:8.x-3.8 and will be required in purge:4.0.0. See https://www.drupal.org/node/3523147', E_USER_DEPRECATED);
-      // @phpstan-ignore globalDrupalDependencyInjection.useDependencyInjection
-      $module_handler = \Drupal::moduleHandler();
-    }
-    $this->moduleHandler = $module_handler;
   }
 
   /**
@@ -123,7 +110,7 @@ class PurgeBlockForm extends FormBase {
    * @param string[] $config
    *   The form's configuration array, which determines how and what we purge.
    */
-  public static function create(ContainerInterface $container, array $config = []) {
+  public static function create(ContainerInterface $container, array $config = NULL) {
     return new static(
       $config,
       $container->get('messenger'),
@@ -131,21 +118,15 @@ class PurgeBlockForm extends FormBase {
       $container->get('purge.purgers'),
       $container->get('purge.invalidation.factory'),
       $container->get('purge.queue'),
-      $container->get('purge.queuers'),
-      $container->get('module_handler')
+      $container->get('purge.queuers')
     );
   }
 
   /**
    * Gather information for the invalidation objects to be queued/purged.
    *
-   * Modules can add or remove expressions by implementing
-   * hook_purge_ui_block_expressions_alter().
-   *
    * @return string[]
    *   List of expressions to be queued/purged as invalidation objects.
-   *
-   * @see hook_purge_ui_block_expressions_alter()
    */
   protected function gatherInvalidationsData() {
     $request = $this->getRequest();
@@ -167,9 +148,7 @@ class PurgeBlockForm extends FormBase {
         break;
 
     }
-    $expressions = array_values(array_unique($expressions));
-    $this->moduleHandler->alter('purge_ui_block_expressions', $expressions, $this->config);
-    return array_values(array_unique($expressions));
+    return array_unique($expressions);
   }
 
   /**

@@ -2,10 +2,10 @@
 
 namespace Drupal\social_auth_facebook\Plugin\Network;
 
+use Drupal\Core\Url;
 use Drupal\social_api\SocialApiException;
 use Drupal\social_auth\Plugin\Network\NetworkBase;
-use Drupal\social_auth\Plugin\Network\NetworkInterface;
-use Drupal\social_auth\Settings\SettingsInterface;
+use Drupal\social_auth_facebook\Settings\FacebookAuthSettings;
 use League\OAuth2\Client\Provider\Facebook;
 
 /**
@@ -15,17 +15,8 @@ use League\OAuth2\Client\Provider\Facebook;
  *
  * @Network(
  *   id = "social_auth_facebook",
- *   short_name = "facebook",
  *   social_network = "Facebook",
- *   img_path = "img/facebook_logo.svg",
  *   type = "social_auth",
- *   class_name = "\League\OAuth2\Client\Provider\Facebook",
- *   auth_manager = "\Drupal\social_auth_facebook\FacebookAuthManager",
- *   routes = {
- *     "redirect": "social_auth.network.redirect",
- *     "callback": "social_auth.network.callback",
- *     "settings_form": "social_auth.network.settings_form",
- *   },
  *   handlers = {
  *     "settings": {
  *       "class": "\Drupal\social_auth_facebook\Settings\FacebookAuthSettings",
@@ -34,12 +25,19 @@ use League\OAuth2\Client\Provider\Facebook;
  *   }
  * )
  */
-class FacebookAuth extends NetworkBase implements NetworkInterface {
+class FacebookAuth extends NetworkBase implements FacebookAuthInterface {
 
   /**
-   * {@inheritdoc}
+   * Sets the underlying SDK library.
+   *
+   * @return \League\OAuth2\Client\Provider\Facebook|false
+   *   The initialized 3rd party library instance.
+   *   False if library could not be initialized.
+   *
+   * @throws \Drupal\social_api\SocialApiException
+   *   If the SDK library does not exist.
    */
-  protected function initSdk(): mixed {
+  protected function initSdk() {
 
     $class_name = '\League\OAuth2\Client\Provider\Facebook';
     if (!class_exists($class_name)) {
@@ -48,12 +46,13 @@ class FacebookAuth extends NetworkBase implements NetworkInterface {
 
     /** @var \Drupal\social_auth_facebook\Settings\FacebookAuthSettings $settings */
     $settings = $this->settings;
+
     if ($this->validateConfig($settings)) {
       // All these settings are mandatory.
       $league_settings = [
-        'clientId'          => $settings->getClientId(),
-        'clientSecret'      => $settings->getClientSecret(),
-        'redirectUri'       => $this->getCallbackUrl()->setAbsolute()->toString(),
+        'clientId'          => $settings->getAppId(),
+        'clientSecret'      => $settings->getAppSecret(),
+        'redirectUri'       => Url::fromRoute('social_auth_facebook.callback')->setAbsolute()->toString(),
         'graphApiVersion'   => 'v' . $settings->getGraphVersion(),
       ];
 
@@ -62,6 +61,7 @@ class FacebookAuth extends NetworkBase implements NetworkInterface {
       if (!empty($config['proxy']['http'])) {
         $league_settings['proxy'] = $config['proxy']['http'];
       }
+
       return new Facebook($league_settings);
     }
 
@@ -69,16 +69,28 @@ class FacebookAuth extends NetworkBase implements NetworkInterface {
   }
 
   /**
-   * {@inheritdoc}
+   * Checks that module is configured.
+   *
+   * @param \Drupal\social_auth_facebook\Settings\FacebookAuthSettings $settings
+   *   The Social Auth Facebook settings.
+   *
+   * @return bool
+   *   True if module is configured.
+   *   False otherwise.
    */
-  protected function validateConfig(SettingsInterface $settings): bool {
+  protected function validateConfig(FacebookAuthSettings $settings) {
+    $app_id = $settings->getAppId();
+    $app_secret = $settings->getAppSecret();
     $graph_version = $settings->getGraphVersion();
-    if (!parent::validateConfig($settings) || !$graph_version) {
+
+    if (!$app_id || !$app_secret || !$graph_version) {
       $this->loggerFactory
         ->get('social_auth_facebook')
-        ->error('Define graph version on module settings.');
+        ->error('Define App ID and App Secret on module settings.');
+
       return FALSE;
     }
+
     return TRUE;
   }
 

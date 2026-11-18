@@ -7,7 +7,6 @@ use Drupal\node\NodeInterface;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use Drupal\search_api\Utility\Utility;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the "Type-specific boosting" processor.
@@ -16,7 +15,6 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  *
  * @coversDefaultClass \Drupal\search_api\Plugin\search_api\processor\TypeBoost
  */
-#[RunTestsInSeparateProcesses]
 class TypeBoostTest extends ProcessorTestBase {
 
   /**

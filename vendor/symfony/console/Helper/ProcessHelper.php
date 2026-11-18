@@ -11,7 +11,6 @@
 
 namespace Symfony\Component\Console\Helper;
 
-use Symfony\Component\Console\Formatter\OutputFormatter;
 use Symfony\Component\Console\Output\ConsoleOutputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Process\Exception\ProcessFailedException;
@@ -95,9 +94,9 @@ class ProcessHelper extends Helper
      *
      * @see run()
      */
-    public function mustRun(OutputInterface $output, array|Process $cmd, ?string $error = null, ?callable $callback = null, int $verbosity = OutputInterface::VERBOSITY_VERY_VERBOSE): Process
+    public function mustRun(OutputInterface $output, array|Process $cmd, ?string $error = null, ?callable $callback = null): Process
     {
-        $process = $this->run($output, $cmd, $error, $callback, $verbosity);
+        $process = $this->run($output, $cmd, $error, $callback);
 
         if (!$process->isSuccessful()) {
             throw new ProcessFailedException($process);
@@ -128,7 +127,7 @@ class ProcessHelper extends Helper
 
     private function escapeString(string $str): string
     {
-        return OutputFormatter::escapeTrailingBackslash(str_replace('<', '\\<', $str));
+        return str_replace('<', '\\<', $str);
     }
 
     public function getName(): string

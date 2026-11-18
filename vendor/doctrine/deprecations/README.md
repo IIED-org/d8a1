@@ -34,13 +34,6 @@ Alternatively, call:
 \Doctrine\Deprecations\Deprecation::enableTrackingDeprecations();
 ```
 
-To disable deduplication (useful for testing), set the `DOCTRINE_DEPRECATIONS_DEDUPLICATION`
-environment variable to `false`. Alternatively, call:
-
-```php
-\Doctrine\Deprecations\Deprecation::withoutDeduplication();
-```
-
 Tracking is enabled with all three modes and provides access to all triggered
 deprecations and their individual count:
 
@@ -189,14 +182,8 @@ deprecations triggered during the test suite execution.
 Note that you can still trigger Deprecations in your code, provided you use the
 `#[IgnoreDeprecations]` to ignore them for tests that call it.
 
-You can disable deduplication by setting the `DOCTRINE_DEPRECATIONS_DEDUPLICATION`
-environment variable to `false`:
-
-```bash
-DOCTRINE_DEPRECATIONS_DEDUPLICATION=false vendor/bin/phpunit
-```
-
-Alternatively, you can use a bootstrap file to achieve the same effect:
+At the moment, it is not possible to disable deduplication with an environment
+variable, but you can use a bootstrap file to achieve that:
 
 ```php
 // tests/bootstrap.php

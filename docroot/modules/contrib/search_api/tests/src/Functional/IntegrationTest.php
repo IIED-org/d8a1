@@ -9,7 +9,6 @@ use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
-use Drupal\filter\FilterFormatRepositoryInterface;
 use Drupal\node\Entity\Node;
 use Drupal\search_api\Entity\Index;
 use Drupal\search_api\Entity\Server;
@@ -20,14 +19,12 @@ use Drupal\search_api\Utility\Utility;
 use Drupal\search_api_test\Plugin\search_api\tracker\TestTracker;
 use Drupal\search_api_test\PluginTestTrait;
 use Drupal\Tests\search_api\Kernel\PostRequestIndexingTrait;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the overall functionality of the Search API framework and admin UI.
  *
  * @group search_api
  */
-#[RunTestsInSeparateProcesses]
 class IntegrationTest extends SearchApiBrowserTestBase {
 
   use PluginTestTrait;
@@ -55,6 +52,13 @@ class IntegrationTest extends SearchApiBrowserTestBase {
   protected $serverId;
 
   /**
+   * A storage instance for indexes.
+   *
+   * @var \Drupal\Core\Entity\EntityStorageInterface
+   */
+  protected $indexStorage;
+
+  /**
    * {@inheritdoc}
    */
   protected static $modules = [
@@ -72,6 +76,7 @@ class IntegrationTest extends SearchApiBrowserTestBase {
    */
   public function setUp(): void {
     parent::setUp();
+    $this->indexStorage = \Drupal::entityTypeManager()->getStorage('search_api_index');
 
     $permissions = [
       'administer search_api',
@@ -80,7 +85,6 @@ class IntegrationTest extends SearchApiBrowserTestBase {
       'bypass node access',
       'administer content types',
       'administer node fields',
-      'administer site configuration',
     ];
     $this->adminUser = $this->drupalCreateUser($permissions);
     $this->adminUser2 = $this->drupalCreateUser($permissions);
@@ -120,8 +124,6 @@ class IntegrationTest extends SearchApiBrowserTestBase {
     $this->changeIndexServer();
     $this->checkIndexing();
     $this->checkIndexActions();
-
-    $this->checkAdminStatusPage();
 
     $this->deleteServer();
   }
@@ -188,10 +190,6 @@ class IntegrationTest extends SearchApiBrowserTestBase {
     $this->changeIndexServer();
     $this->checkIndexing();
     $this->checkIndexActions();
-
-    $this->checkAdminStatusPage();
-
-    $this->deleteServer();
   }
 
   /**
@@ -364,8 +362,8 @@ class IntegrationTest extends SearchApiBrowserTestBase {
 
     $this->submitForm([], 'Save and add fields');
     $this->assertSession()->pageTextContains('The index was successfully saved.');
-    \Drupal::entityTypeManager()->getStorage('search_api_index')->resetCache([$index2_id]);
-    $index = \Drupal::entityTypeManager()->getStorage('search_api_index')->load($index2_id);
+    $this->indexStorage->resetCache([$index2_id]);
+    $index = $this->indexStorage->load($index2_id);
     $this->assertSession()->addressEquals($index->toUrl('add-fields'));
 
     $this->drupalGet('admin/config/search/search-api');
@@ -423,7 +421,7 @@ class IntegrationTest extends SearchApiBrowserTestBase {
     $this->submitForm($edit, 'Save');
 
     /** @var \Drupal\search_api\IndexInterface $index */
-    $index = \Drupal::entityTypeManager()->getStorage('search_api_index')->load($this->indexId);
+    $index = $this->indexStorage->load($this->indexId);
     $remaining = $index->getTrackerInstance()->getRemainingItemsCount();
     $this->assertEquals(0, $remaining, 'Index was not scheduled for re-indexing when saving its server.');
 
@@ -537,17 +535,11 @@ class IntegrationTest extends SearchApiBrowserTestBase {
     $article1 = $this->drupalCreateNode(['type' => 'article']);
     $this->drupalCreateNode(['type' => 'article']);
     $this->drupalCreateNode(['type' => 'page']);
-    $format = DeprecationHelper::backwardsCompatibleCall(
-      \Drupal::VERSION,
-      '11.4.0',
-      fn () => \Drupal::service(FilterFormatRepositoryInterface::class)->getDefaultFormat()->id(),
-      fn () => filter_default_format(),
-    );
     $page2 = Node::create([
       'body' => [
         [
           'value' => $this->randomMachineName(32),
-          'format' => $format,
+          'format' => filter_default_format(),
         ],
       ],
       'title' => $this->randomMachineName(8),
@@ -1075,29 +1067,12 @@ class IntegrationTest extends SearchApiBrowserTestBase {
     $this->drupalGet('admin/structure/types/manage/article/fields/node.article.field_link/delete');
     $this->assertSession()->pageTextNotContains('The listed configuration will be deleted.');
     $this->assertSession()->pageTextContains('Search index');
-    $this->assertNotNull(FieldStorageConfig::load('node.field_link'));
-    $this->submitForm([], 'Delete');
-    // Field storage config should have been removed, too.
-    $this->assertNull(FieldStorageConfig::load('node.field_link'));
 
-    $this->drupalGet('admin/structure/types/manage/article/fields/node.article.field_image/delete');
-    $this->assertSession()->pageTextNotContains('Search index');
-    $this->assertNotNull(FieldStorageConfig::load('node.field_image'));
     $this->submitForm([], 'Delete');
-    // Since this was just one of two bundles that have this field, the field
-    // storage config should still be there.
-    $this->assertNotNull(FieldStorageConfig::load('node.field_image'));
+    $this->drupalGet('admin/structure/types/manage/article/fields/node.article.field_image/delete');
+    $this->submitForm([], 'Delete');
 
     $this->assertNotNull($this->getIndex(), 'Index was not deleted.');
-
-    // In Drupal 10.4+, the following is needed to get the deletion of the
-    // "field_link" field properly propagated throughout the system, since for
-    // some reason \Drupal\Core\Entity\EntityFieldManager::$fieldDefinitions is
-    // otherwise not properly reset.
-    // The change in question was https://www.drupal.org/node/3537962.
-    $entity_field_manager = \Drupal::service('entity_field.manager');
-    $property = new \ReflectionProperty($entity_field_manager, 'fieldDefinitions');
-    $property->setValue($entity_field_manager, NULL);
 
     $this->drupalGet($this->getIndexPath('fields'));
     $this->assertSession()->statusCodeEquals(200);
@@ -1515,14 +1490,6 @@ class IntegrationTest extends SearchApiBrowserTestBase {
     $this->submitForm($edit, 'Save');
     $this->assertSession()->pageTextContains('The index was successfully saved.');
 
-    // Make sure the index's dependencies were updated correctly.
-    $index_dependencies = $this->getIndex(TRUE)->getDependencies();
-    $server_dependencies = array_values(array_filter(
-      $index_dependencies['config'],
-      fn ($config_name) => str_starts_with($config_name, 'search_api.server.'),
-    ));
-    $this->assertEquals(["search_api.server.{$this->serverId}"], $server_dependencies);
-
     // After saving the new index, we should have called reindex.
     $remaining_items = $this->countRemainingItems();
     $this->assertEquals($node_count, $remaining_items, 'All items still need to be indexed.');
@@ -1582,32 +1549,6 @@ class IntegrationTest extends SearchApiBrowserTestBase {
     $this->assertSession()->pageTextNotContains('Number of indexed items is less than expected');
     $this->assertSession()->pageTextNotContains("Couldn't index items.");
     $this->assertSession()->pageTextNotContains('An error occurred');
-
-    // Test indexing of just some items, but with unlimited batch size.
-    $this->getIndex()->reindex();
-    $this->drupalGet($this->getIndexPath());
-    $this->submitForm([
-      'limit' => '2',
-      'batch_size' => 'all',
-    ], 'Index now');
-    $this->assertSession()->statusCodeEquals(200);
-    $this->checkForMetaRefresh();
-    $this->assertSession()->pageTextContains("Successfully indexed 2 items.");
-    $this->assertSession()->pageTextNotContains('Number of indexed items is less than expected');
-    $this->assertSession()->pageTextNotContains("Couldn't index items.");
-    $this->assertSession()->pageTextNotContains('An error occurred');
-    $this->drupalGet($this->getIndexPath());
-    $this->submitForm([
-      'limit' => 'all',
-      'batch_size' => 'all',
-    ], 'Index now');
-    $this->assertSession()->statusCodeEquals(200);
-    $this->checkForMetaRefresh();
-    --$count;
-    $this->assertSession()->pageTextContains("Successfully indexed $count items.");
-    $this->assertSession()->pageTextNotContains('Number of indexed items is less than expected');
-    $this->assertSession()->pageTextNotContains("Couldn't index items.");
-    $this->assertSession()->pageTextNotContains('An error occurred');
   }
 
   /**
@@ -1662,15 +1603,6 @@ class IntegrationTest extends SearchApiBrowserTestBase {
   }
 
   /**
-   * Verifies that there are no warnings or errors in the Status Report.
-   */
-  protected function checkAdminStatusPage(): void {
-    $this->drupalGet('admin/reports/status');
-    $this->assertSession()->statusCodeEquals(200);
-    $this->assertSession()->pageTextNotContains('Search API');
-  }
-
-  /**
    * Tests deleting a search server via the UI.
    */
   protected function deleteServer() {
@@ -1689,9 +1621,9 @@ class IntegrationTest extends SearchApiBrowserTestBase {
     $this->assertSession()->addressEquals('admin/config/search/search-api');
 
     // Confirm that the index hasn't been deleted.
-    \Drupal::entityTypeManager()->getStorage('search_api_index')->resetCache([$this->indexId]);
+    $this->indexStorage->resetCache([$this->indexId]);
     /** @var \Drupal\search_api\IndexInterface $index */
-    $index = \Drupal::entityTypeManager()->getStorage('search_api_index')->load($this->indexId);
+    $index = $this->indexStorage->load($this->indexId);
     $this->assertInstanceOf(IndexInterface::class, $index, 'The index associated with the server was not deleted.');
     $this->assertFalse($index->status(), 'The index associated with the server was disabled.');
     $this->assertNull($index->getServerId(), 'The index was removed from the server.');
@@ -1708,9 +1640,9 @@ class IntegrationTest extends SearchApiBrowserTestBase {
    */
   protected function getIndex($reset = FALSE) {
     if ($reset) {
-      \Drupal::entityTypeManager()->getStorage('search_api_index')->resetCache([$this->indexId]);
+      $this->indexStorage->resetCache([$this->indexId]);
     }
-    return \Drupal::entityTypeManager()->getStorage('search_api_index')->load($this->indexId);
+    return $this->indexStorage->load($this->indexId);
   }
 
   /**

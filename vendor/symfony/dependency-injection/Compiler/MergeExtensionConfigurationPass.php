@@ -14,7 +14,6 @@ namespace Symfony\Component\DependencyInjection\Compiler;
 use Symfony\Component\Config\Definition\BaseNode;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Exception\LogicException;
-use Symfony\Component\DependencyInjection\Exception\ParameterNotFoundException;
 use Symfony\Component\DependencyInjection\Exception\RuntimeException;
 use Symfony\Component\DependencyInjection\Extension\ConfigurationExtensionInterface;
 use Symfony\Component\DependencyInjection\Extension\Extension;
@@ -30,7 +29,10 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
  */
 class MergeExtensionConfigurationPass implements CompilerPassInterface
 {
-    public function process(ContainerBuilder $container): void
+    /**
+     * @return void
+     */
+    public function process(ContainerBuilder $container)
     {
         $parameters = $container->getParameterBag()->all();
         $definitions = $container->getDefinitions();
@@ -57,14 +59,7 @@ class MergeExtensionConfigurationPass implements CompilerPassInterface
                     BaseNode::setPlaceholderUniquePrefix($resolvingBag->getEnvPlaceholderUniquePrefix());
                 }
             }
-
-            try {
-                $config = $resolvingBag->resolveValue($config);
-            } catch (ParameterNotFoundException $e) {
-                $e->setSourceExtensionName($name);
-
-                throw $e;
-            }
+            $config = $resolvingBag->resolveValue($config);
 
             try {
                 $tmpContainer = new MergeExtensionConfigurationContainerBuilder($extension, $resolvingBag);
@@ -94,18 +89,6 @@ class MergeExtensionConfigurationPass implements CompilerPassInterface
 
             $container->merge($tmpContainer);
             $container->getParameterBag()->add($parameters);
-        }
-
-        foreach ($container->getDefinitions() as $id => $definition) {
-            if (isset($aliases[$id]) || (isset($definitions[$id]) && $definitions[$id] !== $definition)) {
-                // count the env vars of extension definitions that user-defined services or aliases replace
-                try {
-                    $value = serialize($definition);
-                } catch (\Throwable) {
-                    $value = $definition;
-                }
-                $container->resolveEnvPlaceholders($value);
-            }
         }
 
         $container->addDefinitions($definitions);
@@ -188,12 +171,12 @@ class MergeExtensionConfigurationContainerBuilder extends ContainerBuilder
         throw new LogicException(\sprintf('You cannot add compiler pass "%s" from extension "%s". Compiler passes must be registered before the container is compiled.', get_debug_type($pass), $this->extensionClass));
     }
 
-    public function registerExtension(ExtensionInterface $extension): void
+    public function registerExtension(ExtensionInterface $extension)
     {
         throw new LogicException(\sprintf('You cannot register extension "%s" from "%s". Extensions must be registered before the container is compiled.', get_debug_type($extension), $this->extensionClass));
     }
 
-    public function compile(bool $resolveEnvPlaceholders = false): void
+    public function compile(bool $resolveEnvPlaceholders = false)
     {
         throw new LogicException(\sprintf('Cannot compile the container in extension "%s".', $this->extensionClass));
     }
@@ -208,7 +191,7 @@ class MergeExtensionConfigurationContainerBuilder extends ContainerBuilder
         $value = $bag->resolveValue($value);
 
         if (!$bag instanceof EnvPlaceholderParameterBag) {
-            return parent::resolveEnvPlaceholders($value, true, $usedEnvs);
+            return parent::resolveEnvPlaceholders($value, $format, $usedEnvs);
         }
 
         foreach ($bag->getEnvPlaceholders() as $env => $placeholders) {
@@ -222,6 +205,6 @@ class MergeExtensionConfigurationContainerBuilder extends ContainerBuilder
             }
         }
 
-        return parent::resolveEnvPlaceholders($value, true, $usedEnvs);
+        return parent::resolveEnvPlaceholders($value, $format, $usedEnvs);
     }
 }

@@ -3,7 +3,7 @@ name: cspell
 on:
   push:
     branches:
-      - v5-dev
+      - main
   pull_request:
   workflow_dispatch:
 
@@ -23,16 +23,14 @@ jobs:
 
     steps:
       - name: Clone repository
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        uses: actions/checkout@v4
         with:
           persist-credentials: false
 
       - name: Run cspell
-        uses: streetsidesoftware/cspell-action@ce1816e4ce36532956ac6e983737392774b6e169 # v9.2.0
+        uses: streetsidesoftware/cspell-action@v3
         with:
           config: ".cspell.json"
-          files: |
-            .gitignore
-            **/*.{md,mdx,yml,yaml,json,js,cjs,mjs,ts}
+          files: "**/*.md"
           inline: error
           incremental_files_only: false

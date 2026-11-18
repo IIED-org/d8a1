@@ -2,18 +2,16 @@
 
 namespace Drupal\Tests\search_api\Kernel\Views;
 
-use Drupal\Component\Serialization\Yaml;
+use Drupal\Core\Serialization\Yaml;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\views\Entity\View;
 use Drupal\views\ViewEntityInterface;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests that the correct query type is stored with views.
  *
  * @group search_api
  */
-#[RunTestsInSeparateProcesses]
 class ViewsQueryTypeTest extends KernelTestBase {
 
   /**

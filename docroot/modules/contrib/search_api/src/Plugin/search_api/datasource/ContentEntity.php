@@ -16,7 +16,6 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\TypedData\EntityDataDefinitionInterface;
-use Drupal\Core\Field\FieldException;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
@@ -31,7 +30,6 @@ use Drupal\Core\TypedData\TypedDataManagerInterface;
 use Drupal\external_entities\Entity\Query\External\Query as ExternalEntitiesQuery;
 use Drupal\field\FieldConfigInterface;
 use Drupal\field\FieldStorageConfigInterface;
-use Drupal\search_api\Attribute\SearchApiDatasource;
 use Drupal\search_api\Datasource\DatasourcePluginBase;
 use Drupal\search_api\IndexInterface;
 use Drupal\search_api\LoggerTrait;
@@ -43,11 +41,12 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Represents a datasource which exposes the content entities.
+ *
+ * @SearchApiDatasource(
+ *   id = "entity",
+ *   deriver = "Drupal\search_api\Plugin\search_api\datasource\ContentEntityDeriver"
+ * )
  */
-#[SearchApiDatasource(
-  id: 'entity',
-  deriver: ContentEntityDeriver::class,
-)]
 class ContentEntity extends DatasourcePluginBase implements PluginFormInterface {
 
   use LoggerTrait;
@@ -478,12 +477,7 @@ class ContentEntity extends DatasourcePluginBase implements PluginFormInterface 
     // confusion.
     foreach ($properties as $key => $property) {
       if (!$property->isComputed() || $key === 'path') {
-        try {
-          if ($property->getFieldStorageDefinition()->hasCustomStorage()) {
-            unset($properties[$key]);
-          }
-        }
-        catch (FieldException) {
+        if ($property->getFieldStorageDefinition()->hasCustomStorage()) {
           unset($properties[$key]);
         }
       }
@@ -1190,13 +1184,8 @@ class ContentEntity extends DatasourcePluginBase implements PluginFormInterface 
         catch (\Throwable $e) {
           // We don't want to catch all PHP \Error objects thrown, but just the
           // ones caused by #2893747.
-          if (
-            !($e instanceof \Exception)
-            && (
-              get_class($e) !== \Error::class
-              || !str_starts_with($e->getMessage(), 'Call to a member function getColumns() on')
-            )
-          ) {
+          if (!($e instanceof \Exception)
+              && (get_class($e) !== \Error::class || $e->getMessage() !== 'Call to a member function getColumns() on bool')) {
             throw $e;
           }
           $vars = [
@@ -1289,14 +1278,7 @@ class ContentEntity extends DatasourcePluginBase implements PluginFormInterface 
   }
 
   /**
-   * Retrieves all indexes that are configured to index the given entity.
-   *
-   * @param \Drupal\Core\Entity\ContentEntityInterface $entity
-   *   The entity for which to check.
-   *
-   * @return \Drupal\search_api\IndexInterface[]
-   *   All indexes that are configured to index the given entity (using this
-   *   datasource class).
+   * {@inheritdoc}
    */
   public static function getIndexesForEntity(ContentEntityInterface $entity) {
     return \Drupal::getContainer()

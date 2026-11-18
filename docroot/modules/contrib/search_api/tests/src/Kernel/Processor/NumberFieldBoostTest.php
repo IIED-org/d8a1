@@ -10,7 +10,6 @@ use Drupal\node\NodeInterface;
 use Drupal\search_api\Query\Query;
 use Drupal\search_api\Query\QueryInterface;
 use Drupal\search_api\Query\ResultSetInterface;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the "Number field boost" processor.
@@ -19,7 +18,6 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  *
  * @coversDefaultClass \Drupal\search_api\Plugin\search_api\processor\NumberFieldBoost
  */
-#[RunTestsInSeparateProcesses]
 class NumberFieldBoostTest extends ProcessorTestBase {
 
   /**

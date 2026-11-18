@@ -5,7 +5,6 @@ namespace Drupal\purge\Plugin\Purge\Purger;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
-use Drupal\purge\Attribute\PurgePurger;
 
 /**
  * The purger plugin manager.
@@ -28,10 +27,8 @@ class PluginManager extends DefaultPluginManager {
       'Plugin/Purge/Purger',
       $namespaces,
       $module_handler,
-      PurgerInterface::class,
-      PurgePurger::class,
-      'Drupal\purge\Annotation\PurgePurger',
-    );
+      'Drupal\purge\Plugin\Purge\Purger\PurgerInterface',
+      'Drupal\purge\Annotation\PurgePurger');
     $this->alterInfo('purge_purgers');
     $this->setCacheBackend($cache_backend, 'purge_purger_plugins');
   }

@@ -2,10 +2,6 @@
 
 namespace Drupal\Tests\purge\Unit;
 
-use Drupal\Core\Config\Config;
-use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\Core\Config\ImmutableConfig;
-
 /**
  * Overrides ::getConfigFactoryStub().
  *
@@ -22,30 +18,6 @@ trait FixGetConfigFactoryStubTrait {
    *   work in unit tests, e.g.: ->getEditable()->set()->save().
    */
   public function getConfigFactoryStub(array $configs = []) {
-    return $this->buildConfigFactoryDouble($configs, FALSE);
-  }
-
-  /**
-   * Returns a config factory mock that tests can set expectations on.
-   *
-   * @param array $configs
-   *   An associative array of configuration settings whose keys are
-   *   configuration object names and whose values are key => value arrays.
-   *
-   * @return \PHPUnit\Framework\MockObject\MockObject|\Drupal\Core\Config\ConfigFactoryInterface
-   *   A mock configuration factory.
-   */
-  public function getConfigFactoryMock(array $configs = []) {
-    return $this->buildConfigFactoryDouble($configs, TRUE);
-  }
-
-  /**
-   * Builds the config factory stub or mock.
-   *
-   * PHPUnit 12 raises a notice for every mock that has no expectations, so
-   * tests that only need canned return values get a stub.
-   */
-  private function buildConfigFactoryDouble(array $configs, bool $mock) {
     $config_get_map = [];
     $config_editable_map = [];
     // Construct the desired configuration object stubs, each with its own
@@ -58,29 +30,37 @@ trait FixGetConfigFactoryStubTrait {
       // Also allow to pass in no argument.
       $map[] = ['', $config_values];
 
-      $immutable_config_object = $this->createStub(ImmutableConfig::class);
-      $immutable_config_object->method('get')
-        ->willReturnMap($map);
+      $immutable_config_object = $this->getMockBuilder('Drupal\Core\Config\ImmutableConfig')
+        ->disableOriginalConstructor()
+        ->getMock();
+      $immutable_config_object->expects($this->any())
+        ->method('get')
+        ->will($this->returnValueMap($map));
       $config_get_map[] = [$config_name, $immutable_config_object];
 
-      $mutable_config_object = $this->createStub(Config::class);
-      $mutable_config_object->method('get')
-        ->willReturnMap($map);
-      $mutable_config_object->method('set')
-        ->willReturn($mutable_config_object);
-      $mutable_config_object->method('save')
-        ->willReturn($mutable_config_object);
+      $mutable_config_object = $this->getMockBuilder('Drupal\Core\Config\Config')
+        ->disableOriginalConstructor()
+        ->getMock();
+      $mutable_config_object->expects($this->any())
+        ->method('get')
+        ->will($this->returnValueMap($map));
+      $mutable_config_object->expects($this->any())
+        ->method('set')
+        ->will($this->returnValue($mutable_config_object));
+      $mutable_config_object->expects($this->any())
+        ->method('save')
+        ->will($this->returnValue($mutable_config_object));
       $config_editable_map[] = [$config_name, $mutable_config_object];
     }
     // Construct a config factory with the array of configuration object stubs
     // as its return map.
-    $config_factory = $mock
-      ? $this->createMock(ConfigFactoryInterface::class)
-      : $this->createStub(ConfigFactoryInterface::class);
-    $config_factory->method('get')
-      ->willReturnMap($config_get_map);
-    $config_factory->method('getEditable')
-      ->willReturnMap($config_editable_map);
+    $config_factory = $this->createMock('Drupal\Core\Config\ConfigFactoryInterface');
+    $config_factory->expects($this->any())
+      ->method('get')
+      ->will($this->returnValueMap($config_get_map));
+    $config_factory->expects($this->any())
+      ->method('getEditable')
+      ->will($this->returnValueMap($config_editable_map));
     return $config_factory;
   }
 

@@ -23,10 +23,10 @@ class ArgumentProcessorTest extends TestCase
             ],
 
             [
-                '["drush", "status", "-vvv", "--fields=root,uri"]',
+                '["drush", "status", "--fields=root,uri"]',
                 [],
                 ['drush', 'status'],
-                ['vvv' => TRUE, 'fields' => 'root,uri'],
+                ['fields' => 'root,uri'],
                 [],
             ],
 

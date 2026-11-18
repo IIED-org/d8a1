@@ -94,7 +94,7 @@ abstract class DsFieldBase extends PluginBase implements DsFieldInterface, Confi
     $limits = $definition['ui_limit'];
     foreach ($limits as $limit) {
       if (strpos($limit, '|') !== FALSE) {
-        [$bundle_limit, $view_mode_limit] = explode('|', $limit);
+        list($bundle_limit, $view_mode_limit) = explode('|', $limit);
 
         if (($bundle_limit == $this->bundle() || $bundle_limit == '*') && ($view_mode_limit == $this->viewMode() || $view_mode_limit == '*')) {
           return TRUE;

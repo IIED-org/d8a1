@@ -148,7 +148,6 @@ class TokenMenuTest extends TokenTestBase {
       'administer nodes',
       'administer content types',
       'access administration pages',
-      'administer site configuration'
     ]));
     // Setup node type menu options.
     $edit = [
@@ -157,7 +156,7 @@ class TokenMenuTest extends TokenTestBase {
       'menu_parent' => 'main-menu:',
     ];
     $this->drupalGet('admin/structure/types/manage/page');
-    $this->submitForm($edit, 'Save');
+    $this->submitForm($edit, 'Save content type');
 
     // Use a menu-link token in the body.
     $this->drupalGet('node/add/page');

@@ -1,14 +1,35 @@
 <?php
 
-declare(strict_types=1);
-
-namespace lsolesen\pel;
+/**
+ * PEL: PHP Exif Library.
+ * A library with support for reading and
+ * writing all Exif headers in JPEG and TIFF images using PHP.
+ *
+ * Copyright (C) 2004, 2005 Martin Geisler.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program in the file COPYING; if not, write to the
+ * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
+ * Boston, MA 02110-1301 USA
+ */
 
 /**
  * Class to hold version information.
  *
  * There are three Exif entries that hold version information: the
- * {@link PelTag::EXIF_VERSION}, {@link PelTag::FLASH_PIX_VERSION}, and {@link PelTag::INTEROPERABILITY_VERSION} tags. This class manages
+ * {@link PelTag::EXIF_VERSION}, {@link
+ * PelTag::FLASH_PIX_VERSION}, and {@link
+ * PelTag::INTEROPERABILITY_VERSION} tags. This class manages
  * those tags.
  *
  * The class is used in a very straight-forward way:
@@ -19,31 +40,40 @@ namespace lsolesen\pel;
  * standard. It is easy to test for standards level of an unknown
  * entry:
  * <code>
- * if ($entry->getTag() === PelTag::EXIF_VERSION &&
+ * if ($entry->getTag() == PelTag::EXIF_VERSION &&
  * $entry->getValue() > 2.0) {
  * echo 'Recent Exif version.';
  * }
  * </code>
+ *
+ * @author Martin Geisler <mgeisler@users.sourceforge.net>
+ * @package PEL
  */
+namespace lsolesen\pel;
+
 class PelEntryVersion extends PelEntry
 {
+
     /**
      * The version held by this entry.
+     *
+     * @var float
      */
-    private float $version;
+    private $version;
 
     /**
      * Make a new entry for holding a version.
      *
-     * @param int $tag
-     *            This should be one of {@link PelTag::EXIF_VERSION}, {@link PelTag::FLASH_PIX_VERSION},
+     * @param integer $tag
+     *            This should be one of {@link
+     *            PelTag::EXIF_VERSION}, {@link PelTag::FLASH_PIX_VERSION},
      *            or {@link PelTag::INTEROPERABILITY_VERSION}.
      * @param float $version
      *            The size of the entries leave room for
      *            exactly four digits: two digits on either side of the decimal
      *            point.
      */
-    public function __construct(int $tag, float $version = 0.0)
+    public function __construct($tag, $version = 0.0)
     {
         $this->tag = $tag;
         $this->format = PelFormat::UNDEFINED;
@@ -58,7 +88,7 @@ class PelEntryVersion extends PelEntry
      *            exactly four digits: two digits on either side of the decimal
      *            point.
      */
-    public function setValue(mixed $version = 0.0): void
+    public function setValue($version = 0.0)
     {
         $this->version = $version;
         $major = floor($version);
@@ -75,7 +105,7 @@ class PelEntryVersion extends PelEntry
      *         given to {@link setValue} or {@link __construct the
      *         constructor}.
      */
-    public function getValue(): float
+    public function getValue()
     {
         return $this->version;
     }
@@ -83,16 +113,15 @@ class PelEntryVersion extends PelEntry
     /**
      * Return a text string with the version.
      *
-     * @param bool $brief
+     * @param boolean $brief
      *            controls if the output should be brief. Brief
      *            output omits the word 'Version' so the result is just 'Exif x.y'
      *            instead of 'Exif Version x.y' if the entry holds information
      *            about the Exif version --- the output for FlashPix is similar.
-     *
      * @return string the version number with the type of the tag,
      *         either 'Exif' or 'FlashPix'.
      */
-    public function getText(bool $brief = false): string
+    public function getText($brief = false)
     {
         $v = $this->version;
 
@@ -100,7 +129,7 @@ class PelEntryVersion extends PelEntry
          * Versions numbers like 2.0 would be output as just 2 if we don't
          * add the '.0' ourselves.
          */
-        if (floor($this->version) === $this->version) {
+        if (floor($this->version) == $this->version) {
             $v .= '.0';
         }
 
@@ -108,25 +137,27 @@ class PelEntryVersion extends PelEntry
             case PelTag::EXIF_VERSION:
                 if ($brief) {
                     return Pel::fmt('Exif %s', $v);
+                } else {
+                    return Pel::fmt('Exif Version %s', $v);
                 }
-                return Pel::fmt('Exif Version %s', $v);
-
             case PelTag::FLASH_PIX_VERSION:
                 if ($brief) {
                     return Pel::fmt('FlashPix %s', $v);
+                } else {
+                    return Pel::fmt('FlashPix Version %s', $v);
                 }
-                return Pel::fmt('FlashPix Version %s', $v);
-
             case PelTag::INTEROPERABILITY_VERSION:
                 if ($brief) {
                     return Pel::fmt('Interoperability %s', $v);
+                } else {
+                    return Pel::fmt('Interoperability Version %s', $v);
                 }
-                return Pel::fmt('Interoperability Version %s', $v);
         }
 
         if ($brief) {
-            return (string) $v;
+            return $v;
+        } else {
+            return Pel::fmt('Version %s', $v);
         }
-        return Pel::fmt('Version %s', $v);
     }
 }

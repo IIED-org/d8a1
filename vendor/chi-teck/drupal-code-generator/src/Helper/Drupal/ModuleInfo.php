@@ -1,11 +1,8 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace DrupalCodeGenerator\Helper\Drupal;
 
 use Drupal\Core\Extension\Extension;
-use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Symfony\Component\Console\Helper\Helper;
 use Symfony\Component\Filesystem\Path;
@@ -18,10 +15,7 @@ final class ModuleInfo extends Helper implements ExtensionInfoInterface {
   /**
    * Constructs the object.
    */
-  public function __construct(
-    private readonly ModuleHandlerInterface $moduleHandler,
-    private readonly ModuleExtensionList $moduleList,
-  ) {}
+  public function __construct(private readonly ModuleHandlerInterface $moduleHandler) {}
 
   /**
    * {@inheritdoc}
@@ -38,8 +32,7 @@ final class ModuleInfo extends Helper implements ExtensionInfoInterface {
   public function getExtensions(): array {
     $modules = [];
     foreach ($this->moduleHandler->getModuleList() as $machine_name => $module) {
-      /** @psalm-suppress InternalMethod */
-      $modules[$machine_name] = $this->moduleList->getName($machine_name);
+      $modules[$machine_name] = $this->moduleHandler->getName($machine_name);
     }
     return $modules;
   }

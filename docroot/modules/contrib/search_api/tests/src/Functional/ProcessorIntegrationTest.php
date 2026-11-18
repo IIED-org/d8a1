@@ -12,14 +12,12 @@ use Drupal\search_api\Entity\Server;
 use Drupal\search_api\Item\Field;
 use Drupal\search_api\Processor\ProcessorInterface;
 use Drupal\search_api_test\PluginTestTrait;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the admin UI for processors.
  *
  * @group search_api
  */
-#[RunTestsInSeparateProcesses]
 class ProcessorIntegrationTest extends SearchApiBrowserTestBase {
 
   use EntityReferenceFieldCreationTrait;
@@ -513,10 +511,9 @@ TAGS
       'alt' => FALSE,
       'tags' => [
         'h1' => 10,
-        'h2' => 2.5,
       ],
     ];
-    $form_values['tags'] = "h1: 10\nh2: 2.5";
+    $form_values['tags'] = 'h1: 10';
     $this->editSettingsForm($configuration, 'html_filter', $form_values);
   }
 

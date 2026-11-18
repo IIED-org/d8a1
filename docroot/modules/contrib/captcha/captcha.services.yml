@@ -8,7 +8,3 @@ services:
   captcha.helper:
     class: Drupal\captcha\Service\CaptchaService
     arguments: ['@module_handler']
-
-  Drupal\captcha\Hook\CaptchaRequirementsHooks:
-    class: Drupal\captcha\Hook\CaptchaRequirementsHooks
-    autowire: true

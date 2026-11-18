@@ -1,8 +1,36 @@
 <?php
 
-declare(strict_types=1);
+/**
+ * PEL: PHP Exif Library.
+ * A library with support for reading and
+ * writing all Exif headers in JPEG and TIFF images using PHP.
+ *
+ * Copyright (C) 2004, 2005, 2006, 2007 Martin Geisler.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program in the file COPYING; if not, write to the
+ * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
+ * Boston, MA 02110-1301 USA
+ */
 
-namespace lsolesen\pel;
+/**
+ * Namespace for functions operating on Exif tags.
+ *
+ * @author Martin Geisler <mgeisler@users.sourceforge.net>
+ * @license http://www.gnu.org/licenses/gpl.html GNU General Public
+ *          License (GPL)
+ * @package PEL
+ */
 
 /**
  * Class with static methods for Exif tags.
@@ -21,9 +49,15 @@ namespace lsolesen\pel;
  *
  * All the methods in this class are static and should be called with
  * the Exif tag on which they should operate.
+ *
+ * @author Martin Geisler <mgeisler@users.sourceforge.net>
+ * @package PEL
  */
+namespace lsolesen\pel;
+
 class PelTag
 {
+
     /**
      * Interoperability index.
      *
@@ -31,7 +65,7 @@ class PelTag
      *
      * Components: 4.
      */
-    public const INTEROPERABILITY_INDEX = 0x0001;
+    const INTEROPERABILITY_INDEX = 0x0001;
 
     /**
      * Interoperability version.
@@ -40,7 +74,7 @@ class PelTag
      *
      * Components: 4.
      */
-    public const INTEROPERABILITY_VERSION = 0x0002;
+    const INTEROPERABILITY_VERSION = 0x0002;
 
     /**
      * Image width.
@@ -49,7 +83,7 @@ class PelTag
      *
      * Components: 1.
      */
-    public const IMAGE_WIDTH = 0x0100;
+    const IMAGE_WIDTH = 0x0100;
 
     /**
      * Image length.
@@ -58,7 +92,7 @@ class PelTag
      *
      * Components: 1.
      */
-    public const IMAGE_LENGTH = 0x0101;
+    const IMAGE_LENGTH = 0x0101;
 
     /**
      * Number of bits per component.
@@ -67,7 +101,7 @@ class PelTag
      *
      * Components: 3.
      */
-    public const BITS_PER_SAMPLE = 0x0102;
+    const BITS_PER_SAMPLE = 0x0102;
 
     /**
      * Compression scheme.
@@ -76,7 +110,7 @@ class PelTag
      *
      * Components: 1.
      */
-    public const COMPRESSION = 0x0103;
+    const COMPRESSION = 0x0103;
 
     /**
      * Pixel composition.
@@ -85,7 +119,7 @@ class PelTag
      *
      * Components: 1.
      */
-    public const PHOTOMETRIC_INTERPRETATION = 0x0106;
+    const PHOTOMETRIC_INTERPRETATION = 0x0106;
 
     /**
      * Fill Order
@@ -94,7 +128,7 @@ class PelTag
      *
      * Components: Unknown.
      */
-    public const FILL_ORDER = 0x010A;
+    const FILL_ORDER = 0x010A;
 
     /**
      * Document Name
@@ -103,7 +137,7 @@ class PelTag
      *
      * Components: any number.
      */
-    public const DOCUMENT_NAME = 0x010D;
+    const DOCUMENT_NAME = 0x010D;
 
     /**
      * Image Description
@@ -112,7 +146,7 @@ class PelTag
      *
      * Components: any number.
      */
-    public const IMAGE_DESCRIPTION = 0x010E;
+    const IMAGE_DESCRIPTION = 0x010E;
 
     /**
      * Manufacturer
@@ -121,7 +155,7 @@ class PelTag
      *
      * Components: any number.
      */
-    public const MAKE = 0x010F;
+    const MAKE = 0x010F;
 
     /**
      * Model
@@ -130,7 +164,7 @@ class PelTag
      *
      * Components: any number.
      */
-    public const MODEL = 0x0110;
+    const MODEL = 0x0110;
 
     /**
      * Strip Offsets
@@ -139,7 +173,7 @@ class PelTag
      *
      * Components: any number.
      */
-    public const STRIP_OFFSETS = 0x0111;
+    const STRIP_OFFSETS = 0x0111;
 
     /**
      * Orientation of image.
@@ -148,7 +182,7 @@ class PelTag
      *
      * Components: 1.
      */
-    public const ORIENTATION = 0x0112;
+    const ORIENTATION = 0x0112;
 
     /**
      * Number of components.
@@ -157,7 +191,7 @@ class PelTag
      *
      * Components: 1.
      */
-    public const SAMPLES_PER_PIXEL = 0x0115;
+    const SAMPLES_PER_PIXEL = 0x0115;
 
     /**
      * Rows per Strip
@@ -166,7 +200,7 @@ class PelTag
      *
      * Components: 1.
      */
-    public const ROWS_PER_STRIP = 0x0116;
+    const ROWS_PER_STRIP = 0x0116;
 
     /**
      * Strip Byte Count
@@ -175,7 +209,7 @@ class PelTag
      *
      * Components: any number.
      */
-    public const STRIP_BYTE_COUNTS = 0x0117;
+    const STRIP_BYTE_COUNTS = 0x0117;
 
     /**
      * Image resolution in width direction.
@@ -184,7 +218,7 @@ class PelTag
      *
      * Components: 1.
      */
-    public const X_RESOLUTION = 0x011A;
+    const X_RESOLUTION = 0x011A;
 
     /**
      * Image resolution in height direction.
@@ -193,7 +227,7 @@ class PelTag
      *
      * Components: 1.
      */
-    public const Y_RESOLUTION = 0x011B;
+    const Y_RESOLUTION = 0x011B;
 
     /**
      * Image data arrangement.
@@ -202,7 +236,7 @@ class PelTag
      *
      * Components: 1.
      */
-    public const PLANAR_CONFIGURATION = 0x011C;
+    const PLANAR_CONFIGURATION = 0x011C;
 
     /**
      * Unit of X and Y resolution.
@@ -211,7 +245,7 @@ class PelTag
      *
      * Components: 1.
      */
-    public const RESOLUTION_UNIT = 0x0128;
+    const RESOLUTION_UNIT = 0x0128;
 
     /**
      * Transfer function.
@@ -220,7 +254,7 @@ class PelTag
      *
      * Components: 3.
      */
-    public const TRANSFER_FUNCTION = 0x012D;
+    const TRANSFER_FUNCTION = 0x012D;
 
     /**
      * Software used.
@@ -229,16 +263,17 @@ class PelTag
      *
      * Components: any number.
      */
-    public const SOFTWARE = 0x0131;
+    const SOFTWARE = 0x0131;
 
     /**
      * File change date and time.
      *
-     * Format: {@link PelFormat::ASCII}, modelled by the {@link PelEntryTime} class.
+     * Format: {@link PelFormat::ASCII}, modelled by the {@link
+     * PelEntryTime} class.
      *
      * Components: 20.
      */
-    public const DATE_TIME = 0x0132;
+    const DATE_TIME = 0x0132;
 
     /**
      * Person who created the image.
@@ -247,7 +282,7 @@ class PelTag
      *
      * Components: any number.
      */
-    public const ARTIST = 0x013B;
+    const ARTIST = 0x013B;
 
     /**
      * Predictor.
@@ -256,7 +291,7 @@ class PelTag
      *
      * Components: 1.
      */
-    public const PREDICTOR = 0x013D;
+    const PREDICTOR = 0x013D;
 
     /**
      * White point chromaticity.
@@ -265,7 +300,7 @@ class PelTag
      *
      * Components: 2.
      */
-    public const WHITE_POINT = 0x013E;
+    const WHITE_POINT = 0x013E;
 
     /**
      * Chromaticities of primaries.
@@ -274,7 +309,7 @@ class PelTag
      *
      * Components: 6.
      */
-    public const PRIMARY_CHROMATICITIES = 0x013F;
+    const PRIMARY_CHROMATICITIES = 0x013F;
 
     /**
      * Extra Samples.
@@ -283,7 +318,7 @@ class PelTag
      *
      * Components: 1.
      */
-    public const EXTRA_SAMPLES = 0x0152;
+    const EXTRA_SAMPLES = 0x0152;
 
     /**
      * Sample Format.
@@ -292,7 +327,7 @@ class PelTag
      *
      * Components: 4.
      */
-    public const SAMPLE_FORMAT = 0x0153;
+    const SAMPLE_FORMAT = 0x0153;
 
     /**
      * Transfer Range
@@ -301,7 +336,7 @@ class PelTag
      *
      * Components: Unknown.
      */
-    public const TRANSFER_RANGE = 0x0156;
+    const TRANSFER_RANGE = 0x0156;
 
     /**
      * JPEGProc
@@ -310,7 +345,7 @@ class PelTag
      *
      * Components: Unknown.
      */
-    public const JPEG_PROC = 0x0200;
+    const JPEG_PROC = 0x0200;
 
     /**
      * Offset to JPEG SOI.
@@ -319,7 +354,7 @@ class PelTag
      *
      * Components: 1.
      */
-    public const JPEG_INTERCHANGE_FORMAT = 0x0201;
+    const JPEG_INTERCHANGE_FORMAT = 0x0201;
 
     /**
      * Bytes of JPEG data.
@@ -328,7 +363,7 @@ class PelTag
      *
      * Components: 1.
      */
-    public const JPEG_INTERCHANGE_FORMAT_LENGTH = 0x0202;
+    const JPEG_INTERCHANGE_FORMAT_LENGTH = 0x0202;
 
     /**
      * Color space transformation matrix coefficients.
@@ -337,7 +372,7 @@ class PelTag
      *
      * Components: 3.
      */
-    public const YCBCR_COEFFICIENTS = 0x0211;
+    const YCBCR_COEFFICIENTS = 0x0211;
 
     /**
      * Subsampling ratio of Y to C.
@@ -346,7 +381,7 @@ class PelTag
      *
      * Components: 2.
      */
-    public const YCBCR_SUB_SAMPLING = 0x0212;
+    const YCBCR_SUB_SAMPLING = 0x0212;
 
     /**
      * Y and C positioning.
@@ -355,7 +390,7 @@ class PelTag
      *
      * Components: 1.
      */
-    public const YCBCR_POSITIONING = 0x0213;
+    const YCBCR_POSITIONING = 0x0213;
 
     /**
      * Pair of black and white reference values.
@@ -364,7 +399,7 @@ class PelTag
      *
      * Components: 6.
      */
-    public const REFERENCE_BLACK_WHITE = 0x0214;
+    const REFERENCE_BLACK_WHITE = 0x0214;
 
     /**
      * Application Notes.
@@ -373,7 +408,7 @@ class PelTag
      *
      * Components: Unknown.
      */
-    public const APPLICATION_NOTES = 0x02bc;
+    const APPLICATION_NOTES = 0x02bc;
 
     /**
      * Related Image File Format
@@ -382,7 +417,7 @@ class PelTag
      *
      * Components: Unknown.
      */
-    public const RELATED_IMAGE_FILE_FORMAT = 0x1000;
+    const RELATED_IMAGE_FILE_FORMAT = 0x1000;
 
     /**
      * Related Image Width
@@ -391,7 +426,7 @@ class PelTag
      *
      * Components: Unknown, probably 1.
      */
-    public const RELATED_IMAGE_WIDTH = 0x1001;
+    const RELATED_IMAGE_WIDTH = 0x1001;
 
     /**
      * Related Image Length
@@ -400,7 +435,7 @@ class PelTag
      *
      * Components: Unknown, probably 1.
      */
-    public const RELATED_IMAGE_LENGTH = 0x1002;
+    const RELATED_IMAGE_LENGTH = 0x1002;
 
     /**
      * Rating
@@ -409,7 +444,7 @@ class PelTag
      *
      * Components: 1.
      */
-    public const RATING = 0x4746;
+    const RATING = 0x4746;
 
     /**
      * Rating percent
@@ -418,7 +453,7 @@ class PelTag
      *
      * Components: 1.
      */
-    public const RATING_PERCENT = 0x4749;
+    const RATING_PERCENT = 0x4749;
 
     /**
      * CFA Repeat Pattern Dim.
@@ -427,7 +462,7 @@ class PelTag
      *
      * Components: 2.
      */
-    public const CFA_REPEAT_PATTERN_DIM = 0x828D;
+    const CFA_REPEAT_PATTERN_DIM = 0x828D;
 
     /**
      * Battery level.
@@ -436,16 +471,17 @@ class PelTag
      *
      * Components: Unknown.
      */
-    public const BATTERY_LEVEL = 0x828F;
+    const BATTERY_LEVEL = 0x828F;
 
     /**
      * Copyright holder.
      *
-     * Format: {@link PelFormat::ASCII}, modelled by the {@link PelEntryCopyright} class.
+     * Format: {@link PelFormat::ASCII}, modelled by the {@link
+     * PelEntryCopyright} class.
      *
      * Components: any number.
      */
-    public const COPYRIGHT = 0x8298;
+    const COPYRIGHT = 0x8298;
 
     /**
      * Exposure Time
@@ -454,7 +490,7 @@ class PelTag
      *
      * Components: 1.
      */
-    public const EXPOSURE_TIME = 0x829A;
+    const EXPOSURE_TIME = 0x829A;
 
     /**
      * FNumber
@@ -463,7 +499,7 @@ class PelTag
      *
      * Components: 1.
      */
-    public const FNUMBER = 0x829D;
+    const FNUMBER = 0x829D;
 
     /**
      * IPTC/NAA
@@ -472,7 +508,7 @@ class PelTag
      *
      * Components: any number.
      */
-    public const IPTC_NAA = 0x83BB;
+    const IPTC_NAA = 0x83BB;
 
     /**
      * Exif IFD Pointer
@@ -481,7 +517,7 @@ class PelTag
      *
      * Components: 1.
      */
-    public const EXIF_IFD_POINTER = 0x8769;
+    const EXIF_IFD_POINTER = 0x8769;
 
     /**
      * Inter Color Profile
@@ -490,7 +526,7 @@ class PelTag
      *
      * Components: any number.
      */
-    public const INTER_COLOR_PROFILE = 0x8773;
+    const INTER_COLOR_PROFILE = 0x8773;
 
     /**
      * Exposure Program
@@ -499,7 +535,7 @@ class PelTag
      *
      * Components: 1.
      */
-    public const EXPOSURE_PROGRAM = 0x8822;
+    const EXPOSURE_PROGRAM = 0x8822;
 
     /**
      * Spectral Sensitivity
@@ -508,7 +544,7 @@ class PelTag
      *
      * Components: any number.
      */
-    public const SPECTRAL_SENSITIVITY = 0x8824;
+    const SPECTRAL_SENSITIVITY = 0x8824;
 
     /**
      * GPS Info IFD Pointer
@@ -517,7 +553,7 @@ class PelTag
      *
      * Components: 1.
      */
-    public const GPS_INFO_IFD_POINTER = 0x8825;
+    const GPS_INFO_IFD_POINTER = 0x8825;
 
     /**
      * ISO Speed Ratings
@@ -526,7 +562,7 @@ class PelTag
      *
      * Components: 2.
      */
-    public const ISO_SPEED_RATINGS = 0x8827;
+    const ISO_SPEED_RATINGS = 0x8827;
 
     /**
      * OECF
@@ -535,34 +571,37 @@ class PelTag
      *
      * Components: any number.
      */
-    public const OECF = 0x8828;
+    const OECF = 0x8828;
 
     /**
      * Exif version.
      *
-     * Format: {@link PelFormat::UNDEFINED}, modelled by the {@link PelEntryVersion} class.
+     * Format: {@link PelFormat::UNDEFINED}, modelled by the {@link
+     * PelEntryVersion} class.
      *
      * Components: 4.
      */
-    public const EXIF_VERSION = 0x9000;
+    const EXIF_VERSION = 0x9000;
 
     /**
      * Date and time of original data generation.
      *
-     * Format: {@link PelFormat::ASCII}, modelled by the {@link PelEntryTime} class.
+     * Format: {@link PelFormat::ASCII}, modelled by the {@link
+     * PelEntryTime} class.
      *
      * Components: 20.
      */
-    public const DATE_TIME_ORIGINAL = 0x9003;
+    const DATE_TIME_ORIGINAL = 0x9003;
 
     /**
      * Date and time of digital data generation.
      *
-     * Format: {@link PelFormat::ASCII}, modelled by the {@link PelEntryTime} class.
+     * Format: {@link PelFormat::ASCII}, modelled by the {@link
+     * PelEntryTime} class.
      *
      * Components: 20.
      */
-    public const DATE_TIME_DIGITIZED = 0x9004;
+    const DATE_TIME_DIGITIZED = 0x9004;
 
     /**
      * Offset time (timezone) of file change time.
@@ -571,7 +610,7 @@ class PelTag
      *
      * Components: 7.
      */
-    public const OFFSET_TIME = 0x9010;
+    const OFFSET_TIME = 0x9010;
 
     /**
      * Offset time (timezone) of original data generation.
@@ -580,7 +619,7 @@ class PelTag
      *
      * Components: 7.
      */
-    public const OFFSET_TIME_ORIGINAL = 0x9011;
+    const OFFSET_TIME_ORIGINAL = 0x9011;
 
     /**
      * Offset time (timezone) of digital data generation.
@@ -589,7 +628,7 @@ class PelTag
      *
      * Components: 7.
      */
-    public const OFFSET_TIME_DIGITIZED = 0x9012;
+    const OFFSET_TIME_DIGITIZED = 0x9012;
 
     /**
      * Meaning of each component.
@@ -598,7 +637,7 @@ class PelTag
      *
      * Components: 4.
      */
-    public const COMPONENTS_CONFIGURATION = 0x9101;
+    const COMPONENTS_CONFIGURATION = 0x9101;
 
     /**
      * Image compression mode.
@@ -607,7 +646,7 @@ class PelTag
      *
      * Components: 1.
      */
-    public const COMPRESSED_BITS_PER_PIXEL = 0x9102;
+    const COMPRESSED_BITS_PER_PIXEL = 0x9102;
 
     /**
      * Shutter speed
@@ -616,7 +655,7 @@ class PelTag
      *
      * Components: 1.
      */
-    public const SHUTTER_SPEED_VALUE = 0x9201;
+    const SHUTTER_SPEED_VALUE = 0x9201;
 
     /**
      * Aperture
@@ -625,7 +664,7 @@ class PelTag
      *
      * Components: 1.
      */
-    public const APERTURE_VALUE = 0x9202;
+    const APERTURE_VALUE = 0x9202;
 
     /**
      * Brightness
@@ -634,7 +673,7 @@ class PelTag
      *
      * Components: 1.
      */
-    public const BRIGHTNESS_VALUE = 0x9203;
+    const BRIGHTNESS_VALUE = 0x9203;
 
     /**
      * Exposure Bias
@@ -643,7 +682,7 @@ class PelTag
      *
      * Components: 1.
      */
-    public const EXPOSURE_BIAS_VALUE = 0x9204;
+    const EXPOSURE_BIAS_VALUE = 0x9204;
 
     /**
      * Max Aperture Value
@@ -652,7 +691,7 @@ class PelTag
      *
      * Components: 1.
      */
-    public const MAX_APERTURE_VALUE = 0x9205;
+    const MAX_APERTURE_VALUE = 0x9205;
 
     /**
      * Subject Distance
@@ -661,7 +700,7 @@ class PelTag
      *
      * Components: 1.
      */
-    public const SUBJECT_DISTANCE = 0x9206;
+    const SUBJECT_DISTANCE = 0x9206;
 
     /**
      * Metering Mode
@@ -670,7 +709,7 @@ class PelTag
      *
      * Components: 1.
      */
-    public const METERING_MODE = 0x9207;
+    const METERING_MODE = 0x9207;
 
     /**
      * Light Source
@@ -679,7 +718,7 @@ class PelTag
      *
      * Components: 1.
      */
-    public const LIGHT_SOURCE = 0x9208;
+    const LIGHT_SOURCE = 0x9208;
 
     /**
      * Flash
@@ -688,7 +727,7 @@ class PelTag
      *
      * Components: 1.
      */
-    public const FLASH = 0x9209;
+    const FLASH = 0x9209;
 
     /**
      * Focal Length
@@ -697,7 +736,7 @@ class PelTag
      *
      * Components: 1.
      */
-    public const FOCAL_LENGTH = 0x920A;
+    const FOCAL_LENGTH = 0x920A;
 
     /**
      * Subject Area
@@ -706,7 +745,7 @@ class PelTag
      *
      * Components: 4.
      */
-    public const SUBJECT_AREA = 0x9214;
+    const SUBJECT_AREA = 0x9214;
 
     /**
      * Maker Note
@@ -715,16 +754,17 @@ class PelTag
      *
      * Components: any number.
      */
-    public const MAKER_NOTE = 0x927C;
+    const MAKER_NOTE = 0x927C;
 
     /**
      * User Comment
      *
-     * Format: {@link PelFormat::UNDEFINED}, modelled by the {@link PelEntryUserComment} class.
+     * Format: {@link PelFormat::UNDEFINED}, modelled by the {@link
+     * PelEntryUserComment} class.
      *
      * Components: any number.
      */
-    public const USER_COMMENT = 0x9286;
+    const USER_COMMENT = 0x9286;
 
     /**
      * SubSec Time
@@ -733,7 +773,7 @@ class PelTag
      *
      * Components: any number.
      */
-    public const SUB_SEC_TIME = 0x9290;
+    const SUB_SEC_TIME = 0x9290;
 
     /**
      * SubSec Time Original
@@ -742,7 +782,7 @@ class PelTag
      *
      * Components: any number.
      */
-    public const SUB_SEC_TIME_ORIGINAL = 0x9291;
+    const SUB_SEC_TIME_ORIGINAL = 0x9291;
 
     /**
      * SubSec Time Digitized
@@ -751,7 +791,7 @@ class PelTag
      *
      * Components: any number.
      */
-    public const SUB_SEC_TIME_DIGITIZED = 0x9292;
+    const SUB_SEC_TIME_DIGITIZED = 0x9292;
 
     /**
      * Windows XP Title
@@ -761,7 +801,7 @@ class PelTag
      *
      * Components: any number.
      */
-    public const XP_TITLE = 0x9C9B;
+    const XP_TITLE = 0x9C9B;
 
     /**
      * Windows XP Comment
@@ -771,7 +811,7 @@ class PelTag
      *
      * Components: any number.
      */
-    public const XP_COMMENT = 0x9C9C;
+    const XP_COMMENT = 0x9C9C;
 
     /**
      * Windows XP Author
@@ -781,7 +821,7 @@ class PelTag
      *
      * Components: any number.
      */
-    public const XP_AUTHOR = 0x9C9D;
+    const XP_AUTHOR = 0x9C9D;
 
     /**
      * Windows XP Keywords
@@ -791,7 +831,7 @@ class PelTag
      *
      * Components: any number.
      */
-    public const XP_KEYWORDS = 0x9C9E;
+    const XP_KEYWORDS = 0x9C9E;
 
     /**
      * Windows XP Subject
@@ -801,16 +841,17 @@ class PelTag
      *
      * Components: any number.
      */
-    public const XP_SUBJECT = 0x9C9F;
+    const XP_SUBJECT = 0x9C9F;
 
     /**
      * Supported Flashpix version
      *
-     * Format: {@link PelFormat::UNDEFINED}, modelled by the {@link PelEntryVersion} class.
+     * Format: {@link PelFormat::UNDEFINED}, modelled by the {@link
+     * PelEntryVersion} class.
      *
      * Components: 4.
      */
-    public const FLASH_PIX_VERSION = 0xA000;
+    const FLASH_PIX_VERSION = 0xA000;
 
     /**
      * Color space information.
@@ -819,7 +860,7 @@ class PelTag
      *
      * Components: 1.
      */
-    public const COLOR_SPACE = 0xA001;
+    const COLOR_SPACE = 0xA001;
 
     /**
      * Valid image width.
@@ -828,7 +869,7 @@ class PelTag
      *
      * Components: 1.
      */
-    public const PIXEL_X_DIMENSION = 0xA002;
+    const PIXEL_X_DIMENSION = 0xA002;
 
     /**
      * Valid image height.
@@ -837,7 +878,7 @@ class PelTag
      *
      * Components: 1.
      */
-    public const PIXEL_Y_DIMENSION = 0xA003;
+    const PIXEL_Y_DIMENSION = 0xA003;
 
     /**
      * Related audio file.
@@ -846,7 +887,7 @@ class PelTag
      *
      * Components: any number.
      */
-    public const RELATED_SOUND_FILE = 0xA004;
+    const RELATED_SOUND_FILE = 0xA004;
 
     /**
      * Interoperability IFD Pointer
@@ -855,7 +896,7 @@ class PelTag
      *
      * Components: 1.
      */
-    public const INTEROPERABILITY_IFD_POINTER = 0xA005;
+    const INTEROPERABILITY_IFD_POINTER = 0xA005;
 
     /**
      * Flash energy.
@@ -864,7 +905,7 @@ class PelTag
      *
      * Components: 1.
      */
-    public const FLASH_ENERGY = 0xA20B;
+    const FLASH_ENERGY = 0xA20B;
 
     /**
      * Spatial frequency response.
@@ -873,7 +914,7 @@ class PelTag
      *
      * Components: any number.
      */
-    public const SPATIAL_FREQUENCY_RESPONSE = 0xA20C;
+    const SPATIAL_FREQUENCY_RESPONSE = 0xA20C;
 
     /**
      * Focal plane X resolution.
@@ -882,7 +923,7 @@ class PelTag
      *
      * Components: 1.
      */
-    public const FOCAL_PLANE_X_RESOLUTION = 0xA20E;
+    const FOCAL_PLANE_X_RESOLUTION = 0xA20E;
 
     /**
      * Focal plane Y resolution.
@@ -891,7 +932,7 @@ class PelTag
      *
      * Components: 1.
      */
-    public const FOCAL_PLANE_Y_RESOLUTION = 0xA20F;
+    const FOCAL_PLANE_Y_RESOLUTION = 0xA20F;
 
     /**
      * Focal plane resolution unit.
@@ -900,7 +941,7 @@ class PelTag
      *
      * Components: 1.
      */
-    public const FOCAL_PLANE_RESOLUTION_UNIT = 0xA210;
+    const FOCAL_PLANE_RESOLUTION_UNIT = 0xA210;
 
     /**
      * Subject location.
@@ -909,7 +950,7 @@ class PelTag
      *
      * Components: 1.
      */
-    public const SUBJECT_LOCATION = 0xA214;
+    const SUBJECT_LOCATION = 0xA214;
 
     /**
      * Exposure index.
@@ -918,7 +959,7 @@ class PelTag
      *
      * Components: 1.
      */
-    public const EXPOSURE_INDEX = 0xA215;
+    const EXPOSURE_INDEX = 0xA215;
 
     /**
      * Sensing method.
@@ -927,7 +968,7 @@ class PelTag
      *
      * Components: 1.
      */
-    public const SENSING_METHOD = 0xA217;
+    const SENSING_METHOD = 0xA217;
 
     /**
      * File source.
@@ -936,7 +977,7 @@ class PelTag
      *
      * Components: 1.
      */
-    public const FILE_SOURCE = 0xA300;
+    const FILE_SOURCE = 0xA300;
 
     /**
      * Scene type.
@@ -945,7 +986,7 @@ class PelTag
      *
      * Components: 1.
      */
-    public const SCENE_TYPE = 0xA301;
+    const SCENE_TYPE = 0xA301;
 
     /**
      * CFA pattern.
@@ -954,7 +995,7 @@ class PelTag
      *
      * Components: any number.
      */
-    public const CFA_PATTERN = 0xA302;
+    const CFA_PATTERN = 0xA302;
 
     /**
      * Custom image processing.
@@ -963,7 +1004,7 @@ class PelTag
      *
      * Components: 1.
      */
-    public const CUSTOM_RENDERED = 0xA401;
+    const CUSTOM_RENDERED = 0xA401;
 
     /**
      * Exposure mode.
@@ -972,7 +1013,7 @@ class PelTag
      *
      * Components: 1.
      */
-    public const EXPOSURE_MODE = 0xA402;
+    const EXPOSURE_MODE = 0xA402;
 
     /**
      * White balance.
@@ -981,7 +1022,7 @@ class PelTag
      *
      * Components: 1.
      */
-    public const WHITE_BALANCE = 0xA403;
+    const WHITE_BALANCE = 0xA403;
 
     /**
      * Digital zoom ratio.
@@ -990,7 +1031,7 @@ class PelTag
      *
      * Components: 1.
      */
-    public const DIGITAL_ZOOM_RATIO = 0xA404;
+    const DIGITAL_ZOOM_RATIO = 0xA404;
 
     /**
      * Focal length in 35mm film.
@@ -999,7 +1040,7 @@ class PelTag
      *
      * Components: 1.
      */
-    public const FOCAL_LENGTH_IN_35MM_FILM = 0xA405;
+    const FOCAL_LENGTH_IN_35MM_FILM = 0xA405;
 
     /**
      * Scene capture type.
@@ -1008,7 +1049,7 @@ class PelTag
      *
      * Components: 1.
      */
-    public const SCENE_CAPTURE_TYPE = 0xA406;
+    const SCENE_CAPTURE_TYPE = 0xA406;
 
     /**
      * Gain control.
@@ -1017,7 +1058,7 @@ class PelTag
      *
      * Components: 1.
      */
-    public const GAIN_CONTROL = 0xA407;
+    const GAIN_CONTROL = 0xA407;
 
     /**
      * Contrast.
@@ -1026,7 +1067,7 @@ class PelTag
      *
      * Components: 1.
      */
-    public const CONTRAST = 0xA408;
+    const CONTRAST = 0xA408;
 
     /**
      * Saturation.
@@ -1035,7 +1076,7 @@ class PelTag
      *
      * Components: 1.
      */
-    public const SATURATION = 0xA409;
+    const SATURATION = 0xA409;
 
     /**
      * Sharpness.
@@ -1044,7 +1085,7 @@ class PelTag
      *
      * Components: 1.
      */
-    public const SHARPNESS = 0xA40A;
+    const SHARPNESS = 0xA40A;
 
     /**
      * Device settings description.
@@ -1053,7 +1094,7 @@ class PelTag
      * of a particular camera model. The tag is used only to indicate
      * the picture-taking conditions in the reader.
      */
-    public const DEVICE_SETTING_DESCRIPTION = 0xA40B;
+    const DEVICE_SETTING_DESCRIPTION = 0xA40B;
 
     /**
      * Subject distance range.
@@ -1062,7 +1103,7 @@ class PelTag
      *
      * Components: 1.
      */
-    public const SUBJECT_DISTANCE_RANGE = 0xA40C;
+    const SUBJECT_DISTANCE_RANGE = 0xA40C;
 
     /**
      * Image unique ID.
@@ -1071,7 +1112,7 @@ class PelTag
      *
      * Components: 32.
      */
-    public const IMAGE_UNIQUE_ID = 0xA420;
+    const IMAGE_UNIQUE_ID = 0xA420;
 
     /**
      * Gamma.
@@ -1080,7 +1121,7 @@ class PelTag
      *
      * Components: 1.
      */
-    public const GAMMA = 0xA500;
+    const GAMMA = 0xA500;
 
     /**
      * PrintIM
@@ -1089,7 +1130,7 @@ class PelTag
      *
      * Components: unknown.
      */
-    public const PRINT_IM = 0xC4A5;
+    const PRINT_IM = 0xC4A5;
 
     /**
      * GPS tag version.
@@ -1098,7 +1139,7 @@ class PelTag
      *
      * Components: 4.
      */
-    public const GPS_VERSION_ID = 0x0000;
+    const GPS_VERSION_ID = 0x0000;
 
     /**
      * North or South Latitude.
@@ -1107,7 +1148,7 @@ class PelTag
      *
      * Components: 2.
      */
-    public const GPS_LATITUDE_REF = 0x0001;
+    const GPS_LATITUDE_REF = 0x0001;
 
     /**
      * Latitude.
@@ -1116,7 +1157,7 @@ class PelTag
      *
      * Components: 3.
      */
-    public const GPS_LATITUDE = 0x0002;
+    const GPS_LATITUDE = 0x0002;
 
     /**
      * East or West Longitude.
@@ -1125,7 +1166,7 @@ class PelTag
      *
      * Components: 2.
      */
-    public const GPS_LONGITUDE_REF = 0x0003;
+    const GPS_LONGITUDE_REF = 0x0003;
 
     /**
      * Longitude.
@@ -1134,7 +1175,7 @@ class PelTag
      *
      * Components: 3.
      */
-    public const GPS_LONGITUDE = 0x0004;
+    const GPS_LONGITUDE = 0x0004;
 
     /**
      * Altitude reference.
@@ -1143,7 +1184,7 @@ class PelTag
      *
      * Components: 1.
      */
-    public const GPS_ALTITUDE_REF = 0x0005;
+    const GPS_ALTITUDE_REF = 0x0005;
 
     /**
      * Altitude.
@@ -1152,7 +1193,7 @@ class PelTag
      *
      * Components: 1.
      */
-    public const GPS_ALTITUDE = 0x0006;
+    const GPS_ALTITUDE = 0x0006;
 
     /**
      * GPS time (atomic clock).
@@ -1161,7 +1202,7 @@ class PelTag
      *
      * Components: 3.
      */
-    public const GPS_TIME_STAMP = 0x0007;
+    const GPS_TIME_STAMP = 0x0007;
 
     /**
      * GPS satellites used for measurement.
@@ -1170,7 +1211,7 @@ class PelTag
      *
      * Components: Any.
      */
-    public const GPS_SATELLITES = 0x0008;
+    const GPS_SATELLITES = 0x0008;
 
     /**
      * GPS receiver status.
@@ -1179,7 +1220,7 @@ class PelTag
      *
      * Components: 2.
      */
-    public const GPS_STATUS = 0x0009;
+    const GPS_STATUS = 0x0009;
 
     /**
      * GPS measurement mode.
@@ -1188,7 +1229,7 @@ class PelTag
      *
      * Components: 2.
      */
-    public const GPS_MEASURE_MODE = 0x000A;
+    const GPS_MEASURE_MODE = 0x000A;
 
     /**
      * Measurement precision.
@@ -1197,7 +1238,7 @@ class PelTag
      *
      * Components: 1.
      */
-    public const GPS_DOP = 0x000B;
+    const GPS_DOP = 0x000B;
 
     /**
      * Speed unit.
@@ -1206,7 +1247,7 @@ class PelTag
      *
      * Components: 2.
      */
-    public const GPS_SPEED_REF = 0x000C;
+    const GPS_SPEED_REF = 0x000C;
 
     /**
      * Speed of GPS receiver.
@@ -1215,7 +1256,7 @@ class PelTag
      *
      * Components: 1.
      */
-    public const GPS_SPEED = 0x000D;
+    const GPS_SPEED = 0x000D;
 
     /**
      * Reference for direction of movement.
@@ -1224,7 +1265,7 @@ class PelTag
      *
      * Components: 2.
      */
-    public const GPS_TRACK_REF = 0x000E;
+    const GPS_TRACK_REF = 0x000E;
 
     /**
      * Direction of movement.
@@ -1233,7 +1274,7 @@ class PelTag
      *
      * Components: 1.
      */
-    public const GPS_TRACK = 0x000F;
+    const GPS_TRACK = 0x000F;
 
     /**
      * Reference for direction of image.
@@ -1242,7 +1283,7 @@ class PelTag
      *
      * Components: 2.
      */
-    public const GPS_IMG_DIRECTION_REF = 0x0010;
+    const GPS_IMG_DIRECTION_REF = 0x0010;
 
     /**
      * Direction of image.
@@ -1251,7 +1292,7 @@ class PelTag
      *
      * Components: 1.
      */
-    public const GPS_IMG_DIRECTION = 0x0011;
+    const GPS_IMG_DIRECTION = 0x0011;
 
     /**
      * Geodetic survey data used.
@@ -1260,7 +1301,7 @@ class PelTag
      *
      * Components: Any.
      */
-    public const GPS_MAP_DATUM = 0x0012;
+    const GPS_MAP_DATUM = 0x0012;
 
     /**
      * Reference for latitude of destination.
@@ -1269,7 +1310,7 @@ class PelTag
      *
      * Components: 2.
      */
-    public const GPS_DEST_LATITUDE_REF = 0x0013;
+    const GPS_DEST_LATITUDE_REF = 0x0013;
 
     /**
      * Latitude of destination.
@@ -1278,7 +1319,7 @@ class PelTag
      *
      * Components: 3.
      */
-    public const GPS_DEST_LATITUDE = 0x0014;
+    const GPS_DEST_LATITUDE = 0x0014;
 
     /**
      * Reference for longitude of destination.
@@ -1287,7 +1328,7 @@ class PelTag
      *
      * Components: 2.
      */
-    public const GPS_DEST_LONGITUDE_REF = 0x0015;
+    const GPS_DEST_LONGITUDE_REF = 0x0015;
 
     /**
      * Longitude of destination.
@@ -1296,7 +1337,7 @@ class PelTag
      *
      * Components: 3.
      */
-    public const GPS_DEST_LONGITUDE = 0x0016;
+    const GPS_DEST_LONGITUDE = 0x0016;
 
     /**
      * Reference for bearing of destination.
@@ -1305,7 +1346,7 @@ class PelTag
      *
      * Components: 2.
      */
-    public const GPS_DEST_BEARING_REF = 0x0017;
+    const GPS_DEST_BEARING_REF = 0x0017;
 
     /**
      * Bearing of destination.
@@ -1314,7 +1355,7 @@ class PelTag
      *
      * Components: 1.
      */
-    public const GPS_DEST_BEARING = 0x0018;
+    const GPS_DEST_BEARING = 0x0018;
 
     /**
      * Reference for distance to destination.
@@ -1323,7 +1364,7 @@ class PelTag
      *
      * Components: 2.
      */
-    public const GPS_DEST_DISTANCE_REF = 0x0019;
+    const GPS_DEST_DISTANCE_REF = 0x0019;
 
     /**
      * Distance to destination.
@@ -1332,7 +1373,7 @@ class PelTag
      *
      * Components: 1.
      */
-    public const GPS_DEST_DISTANCE = 0x001A;
+    const GPS_DEST_DISTANCE = 0x001A;
 
     /**
      * Name of GPS processing method.
@@ -1341,7 +1382,7 @@ class PelTag
      *
      * Components: Any.
      */
-    public const GPS_PROCESSING_METHOD = 0x001B;
+    const GPS_PROCESSING_METHOD = 0x001B;
 
     /**
      * Name of GPS area.
@@ -1350,7 +1391,7 @@ class PelTag
      *
      * Components: Any.
      */
-    public const GPS_AREA_INFORMATION = 0x001C;
+    const GPS_AREA_INFORMATION = 0x001C;
 
     /**
      * GPS date.
@@ -1359,7 +1400,7 @@ class PelTag
      *
      * Components: 11.
      */
-    public const GPS_DATE_STAMP = 0x001D;
+    const GPS_DATE_STAMP = 0x001D;
 
     /**
      * GPS differential correction.
@@ -1368,7 +1409,7 @@ class PelTag
      *
      * Components: 1.
      */
-    public const GPS_DIFFERENTIAL = 0x001E;
+    const GPS_DIFFERENTIAL = 0x001E;
 
     /**
      * Canon camera settings.
@@ -1377,7 +1418,7 @@ class PelTag
      *
      * Components: Any.
      */
-    public const CANON_CAMERA_SETTINGS = 0x0001;
+    const CANON_CAMERA_SETTINGS = 0x0001;
 
     /**
      * Canon focal length.
@@ -1386,7 +1427,7 @@ class PelTag
      *
      * Components: Any.
      */
-    public const CANON_FOCAL_LENGTH = 0x0002;
+    const CANON_FOCAL_LENGTH = 0x0002;
 
     /**
      * Canon shot info.
@@ -1395,7 +1436,7 @@ class PelTag
      *
      * Components: Any.
      */
-    public const CANON_SHOT_INFO = 0x0004;
+    const CANON_SHOT_INFO = 0x0004;
 
     /**
      * Canon panorama.
@@ -1404,7 +1445,7 @@ class PelTag
      *
      * Components: Any.
      */
-    public const CANON_PANORAMA = 0x0005;
+    const CANON_PANORAMA = 0x0005;
 
     /**
      * Canon image type.
@@ -1413,7 +1454,7 @@ class PelTag
      *
      * Components: Any.
      */
-    public const CANON_IMAGE_TYPE = 0x0006;
+    const CANON_IMAGE_TYPE = 0x0006;
 
     /**
      * Canon firmware version.
@@ -1422,7 +1463,7 @@ class PelTag
      *
      * Components: Any.
      */
-    public const CANON_FIRMWARE_VERSION = 0x0007;
+    const CANON_FIRMWARE_VERSION = 0x0007;
 
     /**
      * Canon file number.
@@ -1431,7 +1472,7 @@ class PelTag
      *
      * Components: Any.
      */
-    public const CANON_FILE_NUMBER = 0x0008;
+    const CANON_FILE_NUMBER = 0x0008;
 
     /**
      * Canon owner name.
@@ -1440,7 +1481,7 @@ class PelTag
      *
      * Components: Any.
      */
-    public const CANON_OWNER_NAME = 0x0009;
+    const CANON_OWNER_NAME = 0x0009;
 
     /**
      * Canon serial number.
@@ -1449,7 +1490,7 @@ class PelTag
      *
      * Components: Any.
      */
-    public const CANON_SERIAL_NUMBER = 0x000c;
+    const CANON_SERIAL_NUMBER = 0x000c;
 
     /**
      * Canon camera info.
@@ -1458,7 +1499,7 @@ class PelTag
      *
      * Components: Any.
      */
-    public const CANON_CAMERA_INFO = 0x000d;
+    const CANON_CAMERA_INFO = 0x000d;
 
     /**
      * Canon custom functions.
@@ -1467,7 +1508,7 @@ class PelTag
      *
      * Components: Any.
      */
-    public const CANON_CUSTOM_FUNCTIONS = 0x000f;
+    const CANON_CUSTOM_FUNCTIONS = 0x000f;
 
     /**
      * Canon model id.
@@ -1476,7 +1517,7 @@ class PelTag
      *
      * Components: Any.
      */
-    public const CANON_MODEL_ID = 0x0010;
+    const CANON_MODEL_ID = 0x0010;
 
     /**
      * Canon picture info.
@@ -1485,7 +1526,7 @@ class PelTag
      *
      * Components: Any.
      */
-    public const CANON_PICTURE_INFO = 0x0012;
+    const CANON_PICTURE_INFO = 0x0012;
 
     /**
      * Canon thumbnail image valid area.
@@ -1494,7 +1535,7 @@ class PelTag
      *
      * Components: Any.
      */
-    public const CANON_THUMBNAIL_IMAGE_VALID_AREA = 0x0013;
+    const CANON_THUMBNAIL_IMAGE_VALID_AREA = 0x0013;
 
     /**
      * Canon serial number format.
@@ -1503,7 +1544,7 @@ class PelTag
      *
      * Components: Any.
      */
-    public const CANON_SERIAL_NUMBER_FORMAT = 0x0015;
+    const CANON_SERIAL_NUMBER_FORMAT = 0x0015;
 
     /**
      * Canon super macro.
@@ -1512,7 +1553,7 @@ class PelTag
      *
      * Components: Any.
      */
-    public const CANON_SUPER_MACRO = 0x001a;
+    const CANON_SUPER_MACRO = 0x001a;
 
     /**
      * Canon firmware revision.
@@ -1521,7 +1562,7 @@ class PelTag
      *
      * Components: Any.
      */
-    public const CANON_FIRMWARE_REVISION = 0x001e;
+    const CANON_FIRMWARE_REVISION = 0x001e;
 
     /**
      * Canon af info.
@@ -1530,7 +1571,7 @@ class PelTag
      *
      * Components: Any.
      */
-    public const CANON_AF_INFO = 0x0026;
+    const CANON_AF_INFO = 0x0026;
 
     /**
      * Canon original decision data offset.
@@ -1539,7 +1580,7 @@ class PelTag
      *
      * Components: Any.
      */
-    public const CANON_ORIGINAL_DECISION_DATA_OFFSET = 0x0083;
+    const CANON_ORIGINAL_DECISION_DATA_OFFSET = 0x0083;
 
     /**
      * Canon white balance table.
@@ -1548,7 +1589,7 @@ class PelTag
      *
      * Components: Any.
      */
-    public const CANON_WHITE_BALANCE_TABLE = 0x00a4;
+    const CANON_WHITE_BALANCE_TABLE = 0x00a4;
 
     /**
      * Canon file info.
@@ -1557,7 +1598,7 @@ class PelTag
      *
      * Components: Any.
      */
-    public const CANON_FILE_INFO = 0x0093;
+    const CANON_FILE_INFO = 0x0093;
 
     /**
      * Canon lens model.
@@ -1566,7 +1607,7 @@ class PelTag
      *
      * Components: Any.
      */
-    public const CANON_LENS_MODEL = 0x0095;
+    const CANON_LENS_MODEL = 0x0095;
 
     /**
      * Canon internal serial number.
@@ -1575,7 +1616,7 @@ class PelTag
      *
      * Components: Any.
      */
-    public const CANON_INTERNAL_SERIAL_NUMBER = 0x0096;
+    const CANON_INTERNAL_SERIAL_NUMBER = 0x0096;
 
     /**
      * Canon dust removal data.
@@ -1584,7 +1625,7 @@ class PelTag
      *
      * Components: Any.
      */
-    public const CANON_DUST_REMOVAL_DATA = 0x0097;
+    const CANON_DUST_REMOVAL_DATA = 0x0097;
 
     /**
      * Canon custom functions (2).
@@ -1593,7 +1634,7 @@ class PelTag
      *
      * Components: Any.
      */
-    public const CANON_CUSTOM_FUNCTIONS_2 = 0x0099;
+    const CANON_CUSTOM_FUNCTIONS_2 = 0x0099;
 
     /**
      * Canon processing info.
@@ -1602,7 +1643,7 @@ class PelTag
      *
      * Components: Any.
      */
-    public const CANON_PROCESSING_INFO = 0x00a0;
+    const CANON_PROCESSING_INFO = 0x00a0;
 
     /**
      * Canon measured color.
@@ -1611,7 +1652,7 @@ class PelTag
      *
      * Components: Any.
      */
-    public const CANON_MEASURED_COLOR = 0x00aa;
+    const CANON_MEASURED_COLOR = 0x00aa;
 
     /**
      * Canon color space.
@@ -1620,7 +1661,7 @@ class PelTag
      *
      * Components: Any.
      */
-    public const CANON_COLOR_SPACE = 0x00b4;
+    const CANON_COLOR_SPACE = 0x00b4;
 
     /**
      * Canon vrd offset.
@@ -1629,7 +1670,7 @@ class PelTag
      *
      * Components: Any.
      */
-    public const CANON_VRD_OFFSET = 0x00d0;
+    const CANON_VRD_OFFSET = 0x00d0;
 
     /**
      * Canon sensor info.
@@ -1638,7 +1679,7 @@ class PelTag
      *
      * Components: Any.
      */
-    public const CANON_SENSOR_INFO = 0x00e0;
+    const CANON_SENSOR_INFO = 0x00e0;
 
     /**
      * Canon color data.
@@ -1647,172 +1688,170 @@ class PelTag
      *
      * Components: Any.
      */
-    public const CANON_COLOR_DATA = 0x4001;
+    const CANON_COLOR_DATA = 0x4001;
 
-    public const CANON_CS_MACRO = 0x0001;
+    const CANON_CS_MACRO = 0x0001;
 
-    public const CANON_CS_SELF_TIMER = 0x0002;
+    const CANON_CS_SELF_TIMER = 0x0002;
 
-    public const CANON_CS_QUALITY = 0x0003;
+    const CANON_CS_QUALITY = 0x0003;
 
-    public const CANON_CS_FLASH_MODE = 0x0004;
+    const CANON_CS_FLASH_MODE = 0x0004;
 
-    public const CANON_CS_DRIVE_MODE = 0x0005;
+    const CANON_CS_DRIVE_MODE = 0x0005;
 
-    public const CANON_CS_FOCUS_MODE = 0x0007;
+    const CANON_CS_FOCUS_MODE = 0x0007;
 
-    public const CANON_CS_RECORD_MODE = 0x0009;
+    const CANON_CS_RECORD_MODE = 0x0009;
 
-    public const CANON_CS_IMAGE_SIZE = 0x000a;
+    const CANON_CS_IMAGE_SIZE = 0x000a;
 
-    public const CANON_CS_EASY_MODE = 0x000b;
+    const CANON_CS_EASY_MODE = 0x000b;
 
-    public const CANON_CS_DIGITAL_ZOOM = 0x000c;
+    const CANON_CS_DIGITAL_ZOOM = 0x000c;
 
-    public const CANON_CS_CONTRAST = 0x000d;
+    const CANON_CS_CONTRAST = 0x000d;
 
-    public const CANON_CS_SATURATION = 0x000e;
+    const CANON_CS_SATURATION = 0x000e;
 
-    public const CANON_CS_SHARPNESS = 0x000f;
+    const CANON_CS_SHARPNESS = 0x000f;
 
-    public const CANON_CS_ISO_SPEED = 0x0010;
+    const CANON_CS_ISO_SPEED = 0x0010;
 
-    public const CANON_CS_METERING_MODE = 0x0011;
+    const CANON_CS_METERING_MODE = 0x0011;
 
-    public const CANON_CS_FOCUS_TYPE = 0x0012;
+    const CANON_CS_FOCUS_TYPE = 0x0012;
 
-    public const CANON_CS_AF_POINT = 0x0013;
+    const CANON_CS_AF_POINT = 0x0013;
 
-    public const CANON_CS_EXPOSURE_PROGRAM = 0x0014;
+    const CANON_CS_EXPOSURE_PROGRAM = 0x0014;
 
-    public const CANON_CS_LENS_TYPE = 0x0016;
+    const CANON_CS_LENS_TYPE = 0x0016;
 
-    public const CANON_CS_LENS = 0x0017;
+    const CANON_CS_LENS = 0x0017;
 
-    public const CANON_CS_SHORT_FOCAL = 0x0018;
+    const CANON_CS_SHORT_FOCAL = 0x0018;
 
-    public const CANON_CS_FOCAL_UNITS = 0x0019;
+    const CANON_CS_FOCAL_UNITS = 0x0019;
 
-    public const CANON_CS_MAX_APERTURE = 0x001a;
+    const CANON_CS_MAX_APERTURE = 0x001a;
 
-    public const CANON_CS_MIN_APERTURE = 0x001b;
+    const CANON_CS_MIN_APERTURE = 0x001b;
 
-    public const CANON_CS_FLASH_ACTIVITY = 0x001c;
+    const CANON_CS_FLASH_ACTIVITY = 0x001c;
 
-    public const CANON_CS_FLASH_DETAILS = 0x001d;
+    const CANON_CS_FLASH_DETAILS = 0x001d;
 
-    public const CANON_CS_FOCUS_CONTINUOUS = 0x0020;
+    const CANON_CS_FOCUS_CONTINUOUS = 0x0020;
 
-    public const CANON_CS_AE_SETTING = 0x0021;
+    const CANON_CS_AE_SETTING = 0x0021;
 
-    public const CANON_CS_IMAGE_STABILIZATION = 0x0022;
+    const CANON_CS_IMAGE_STABILIZATION = 0x0022;
 
-    public const CANON_CS_DISPLAY_APERTURE = 0x0023;
+    const CANON_CS_DISPLAY_APERTURE = 0x0023;
 
-    public const CANON_CS_ZOOM_SOURCE_WIDTH = 0x0024;
+    const CANON_CS_ZOOM_SOURCE_WIDTH = 0x0024;
 
-    public const CANON_CS_ZOOM_TARGET_WIDTH = 0x0025;
+    const CANON_CS_ZOOM_TARGET_WIDTH = 0x0025;
 
-    public const CANON_CS_SPOT_METERING_MODE = 0x0027;
+    const CANON_CS_SPOT_METERING_MODE = 0x0027;
 
-    public const CANON_CS_PHOTO_EFFECT = 0x0028;
+    const CANON_CS_PHOTO_EFFECT = 0x0028;
 
-    public const CANON_CS_MANUAL_FLASH_OUTPUT = 0x0029;
+    const CANON_CS_MANUAL_FLASH_OUTPUT = 0x0029;
 
-    public const CANON_CS_COLOR_TONE = 0x002a;
+    const CANON_CS_COLOR_TONE = 0x002a;
 
-    public const CANON_CS_SRAW_QUALITY = 0x002e;
+    const CANON_CS_SRAW_QUALITY = 0x002e;
 
-    public const CANON_SI_ISO_SPEED = 0x0002;
+    const CANON_SI_ISO_SPEED = 0x0002;
 
-    public const CANON_SI_MEASURED_EV = 0x0003;
+    const CANON_SI_MEASURED_EV = 0x0003;
 
-    public const CANON_SI_TARGET_APERTURE = 0x0004;
+    const CANON_SI_TARGET_APERTURE = 0x0004;
 
-    public const CANON_SI_TARGET_SHUTTER_SPEED = 0x0005;
+    const CANON_SI_TARGET_SHUTTER_SPEED = 0x0005;
 
-    public const CANON_SI_WHITE_BALANCE = 0x0007;
+    const CANON_SI_WHITE_BALANCE = 0x0007;
 
-    public const CANON_SI_SLOW_SHUTTER = 0x0008;
+    const CANON_SI_SLOW_SHUTTER = 0x0008;
 
-    public const CANON_SI_SEQUENCE = 0x0009;
+    const CANON_SI_SEQUENCE = 0x0009;
 
-    public const CANON_SI_AF_POINT_USED = 0x000e;
+    const CANON_SI_AF_POINT_USED = 0x000e;
 
-    public const CANON_SI_FLASH_BIAS = 0x000f;
+    const CANON_SI_FLASH_BIAS = 0x000f;
 
-    public const CANON_SI_AUTO_EXPOSURE_BRACKETING = 0x0010;
+    const CANON_SI_AUTO_EXPOSURE_BRACKETING = 0x0010;
 
-    public const CANON_SI_SUBJECT_DISTANCE = 0x0013;
+    const CANON_SI_SUBJECT_DISTANCE = 0x0013;
 
-    public const CANON_SI_APERTURE_VALUE = 0x0015;
+    const CANON_SI_APERTURE_VALUE = 0x0015;
 
-    public const CANON_SI_SHUTTER_SPEED_VALUE = 0x0016;
+    const CANON_SI_SHUTTER_SPEED_VALUE = 0x0016;
 
-    public const CANON_SI_MEASURED_EV2 = 0x0017;
+    const CANON_SI_MEASURED_EV2 = 0x0017;
 
-    public const CANON_SI_CAMERA_TYPE = 0x001a;
+    const CANON_SI_CAMERA_TYPE = 0x001a;
 
-    public const CANON_SI_AUTO_ROTATE = 0x001b;
+    const CANON_SI_AUTO_ROTATE = 0x001b;
 
-    public const CANON_SI_ND_FILTER = 0x001c;
+    const CANON_SI_ND_FILTER = 0x001c;
 
-    public const CANON_PA_PANORAMA_FRAME = 0x0002;
+    const CANON_PA_PANORAMA_FRAME = 0x0002;
 
-    public const CANON_PA_PANORAMA_DIRECTION = 0x0005;
+    const CANON_PA_PANORAMA_DIRECTION = 0x0005;
 
-    public const CANON_PI_IMAGE_WIDTH = 0x0002;
+    const CANON_PI_IMAGE_WIDTH = 0x0002;
 
-    public const CANON_PI_IMAGE_HEIGHT = 0x0003;
+    const CANON_PI_IMAGE_HEIGHT = 0x0003;
 
-    public const CANON_PI_IMAGE_WIDTH_AS_SHOT = 0x0004;
+    const CANON_PI_IMAGE_WIDTH_AS_SHOT = 0x0004;
 
-    public const CANON_PI_IMAGE_HEIGHT_AS_SHOT = 0x0005;
+    const CANON_PI_IMAGE_HEIGHT_AS_SHOT = 0x0005;
 
-    public const CANON_PI_AF_POINTS_USED = 0x0016;
+    const CANON_PI_AF_POINTS_USED = 0x0016;
 
-    public const CANON_PI_AF_POINTS_USED_20D = 0x001a;
+    const CANON_PI_AF_POINTS_USED_20D = 0x001a;
 
-    public const CANON_FI_FILE_NUMBER = 0x0001;
+    const CANON_FI_FILE_NUMBER = 0x0001;
 
-    public const CANON_FI_BRACKET_MODE = 0x0003;
+    const CANON_FI_BRACKET_MODE = 0x0003;
 
-    public const CANON_FI_BRACKET_VALUE = 0x0004;
+    const CANON_FI_BRACKET_VALUE = 0x0004;
 
-    public const CANON_FI_BRACKET_SHOT_NUMBER = 0x0005;
+    const CANON_FI_BRACKET_SHOT_NUMBER = 0x0005;
 
-    public const CANON_FI_RAW_JPG_QUALITY = 0x0006;
+    const CANON_FI_RAW_JPG_QUALITY = 0x0006;
 
-    public const CANON_FI_RAW_JPG_SIZE = 0x0007;
+    const CANON_FI_RAW_JPG_SIZE = 0x0007;
 
-    public const CANON_FI_NOISE_REDUCTION = 0x0008;
+    const CANON_FI_NOISE_REDUCTION = 0x0008;
 
-    public const CANON_FI_WB_BRACKET_MODE = 0x0009;
+    const CANON_FI_WB_BRACKET_MODE = 0x0009;
 
-    public const CANON_FI_WB_BRACKET_VALUE_AB = 0x000c;
+    const CANON_FI_WB_BRACKET_VALUE_AB = 0x000c;
 
-    public const CANON_FI_WB_BRACKET_VALUE_GM = 0x000d;
+    const CANON_FI_WB_BRACKET_VALUE_GM = 0x000d;
 
-    public const CANON_FI_FILTER_EFFECT = 0x000e;
+    const CANON_FI_FILTER_EFFECT = 0x000e;
 
-    public const CANON_FI_TONING_EFFECT = 0x000f;
+    const CANON_FI_TONING_EFFECT = 0x000f;
 
-    public const CANON_FI_MACRO_MAGNIFICATION = 0x0010;
+    const CANON_FI_MACRO_MAGNIFICATION = 0x0010;
 
-    public const CANON_FI_LIVE_VIEW_SHOOTING = 0x0013;
+    const CANON_FI_LIVE_VIEW_SHOOTING = 0x0013;
 
-    public const CANON_FI_FOCUS_DISTANCE_UPPER = 0x0014;
+    const CANON_FI_FOCUS_DISTANCE_UPPER = 0x0014;
 
-    public const CANON_FI_FOCUS_DISTANCE_LOWER = 0x0015;
+    const CANON_FI_FOCUS_DISTANCE_LOWER = 0x0015;
 
-    public const CANON_FI_FLASH_EXPOSURE_LOCK = 0x0019;
+    const CANON_FI_FLASH_EXPOSURE_LOCK = 0x0019;
 
     /**
      * Values for tags short names.
-     *
-     * @var array<int, string>
      */
-    public static array $exifTagsShort = [
+    protected static $exifTagsShort = [
         self::INTEROPERABILITY_INDEX => 'InteroperabilityIndex',
         self::INTEROPERABILITY_VERSION => 'InteroperabilityVersion',
         self::IMAGE_WIDTH => 'ImageWidth',
@@ -1930,15 +1969,13 @@ class PelTag
         self::PREDICTOR => 'Predictor',
         self::EXTRA_SAMPLES => 'ExtraSamples',
         self::SAMPLE_FORMAT => 'SampleFormat',
-        self::APPLICATION_NOTES => 'ApplicationNotes',
+        self::APPLICATION_NOTES => 'ApplicationNotes'
     ];
 
     /**
      * Values for tags titles.
-     *
-     * @var array<int, string>
      */
-    public static array $exifTagsTitle = [
+    protected static $exifTagsTitle = [
         self::INTEROPERABILITY_INDEX => 'Interoperability Index',
         self::INTEROPERABILITY_VERSION => 'Interoperability Version',
         self::IMAGE_WIDTH => 'Image Width',
@@ -2056,15 +2093,13 @@ class PelTag
         self::PREDICTOR => 'Predictor',
         self::EXTRA_SAMPLES => 'Extra Samples',
         self::SAMPLE_FORMAT => 'Sample Format',
-        self::APPLICATION_NOTES => 'Application Notes',
+        self::APPLICATION_NOTES => 'Application Notes'
     ];
 
     /**
      * Values for gps tags short names.
-     *
-     * @var array<int, string>
      */
-    public static array $gpsTagsShort = [
+    protected static $gpsTagsShort = [
         self::GPS_VERSION_ID => 'GPSVersionID',
         self::GPS_LATITUDE_REF => 'GPSLatitudeRef',
         self::GPS_LATITUDE => 'GPSLatitude',
@@ -2095,15 +2130,13 @@ class PelTag
         self::GPS_PROCESSING_METHOD => 'GPSProcessingMethod',
         self::GPS_AREA_INFORMATION => 'GPSAreaInformation',
         self::GPS_DATE_STAMP => 'GPSDateStamp',
-        self::GPS_DIFFERENTIAL => 'GPSDifferential',
+        self::GPS_DIFFERENTIAL => 'GPSDifferential'
     ];
 
     /**
      * Values for canon maker notes tags titles
-     *
-     * @var array<int, string>
      */
-    public static array $canonTagsTitle = [
+    protected static $canonTagsTitle = [
         self::CANON_CAMERA_SETTINGS => 'Camera Settings',
         self::CANON_FOCAL_LENGTH => 'Focal Length',
         self::CANON_SHOT_INFO => 'Shot Info',
@@ -2133,15 +2166,13 @@ class PelTag
         self::CANON_COLOR_SPACE => 'Color Space',
         self::CANON_VRD_OFFSET => 'VRD offset',
         self::CANON_SENSOR_INFO => 'Sensor info',
-        self::CANON_COLOR_DATA => 'Color data',
+        self::CANON_COLOR_DATA => 'Color data'
     ];
 
     /**
      * Values for canon maker notes tags short names
-     *
-     * @var array<int, string>
      */
-    public static array $canonTagsShort = [
+    protected static $canonTagsShort = [
         self::CANON_CAMERA_SETTINGS => 'CameraSettings',
         self::CANON_FOCAL_LENGTH => 'FocalLength',
         self::CANON_SHOT_INFO => 'ShotInfo',
@@ -2171,15 +2202,13 @@ class PelTag
         self::CANON_COLOR_SPACE => 'ColorSpace',
         self::CANON_VRD_OFFSET => 'VRDOffset',
         self::CANON_SENSOR_INFO => 'SensorInfo',
-        self::CANON_COLOR_DATA => 'ColorData',
+        self::CANON_COLOR_DATA => 'ColorData'
     ];
 
     /**
      * Values for canon camera settings tags titles
-     *
-     * @var array<int, string>
      */
-    public static array $canonCsTagsTitle = [
+    protected static $canonCsTagsTitle = [
         self::CANON_CS_MACRO => 'Macro Mode',
         self::CANON_CS_SELF_TIMER => 'Self Timer',
         self::CANON_CS_QUALITY => 'Quality',
@@ -2216,15 +2245,13 @@ class PelTag
         self::CANON_CS_PHOTO_EFFECT => 'Photo Effect',
         self::CANON_CS_MANUAL_FLASH_OUTPUT => 'Manual Flash Output',
         self::CANON_CS_COLOR_TONE => 'Color Tone',
-        self::CANON_CS_SRAW_QUALITY => 'SRAW Quality',
+        self::CANON_CS_SRAW_QUALITY => 'SRAW Quality'
     ];
 
     /**
      * Values for canon camera settings tags short names
-     *
-     * @var array<int, string>
      */
-    public static array $canonCsTagsShort = [
+    protected static $canonCsTagsShort = [
         self::CANON_CS_MACRO => 'MacroMode',
         self::CANON_CS_SELF_TIMER => 'SelfTimer',
         self::CANON_CS_QUALITY => 'Quality',
@@ -2261,15 +2288,13 @@ class PelTag
         self::CANON_CS_PHOTO_EFFECT => 'PhotoEffect',
         self::CANON_CS_MANUAL_FLASH_OUTPUT => 'ManualFlashOutput',
         self::CANON_CS_COLOR_TONE => 'ColorTone',
-        self::CANON_CS_SRAW_QUALITY => 'SRAWQuality',
+        self::CANON_CS_SRAW_QUALITY => 'SRAWQuality'
     ];
 
     /**
      * Values for canon shot info tags titles
-     *
-     * @var array<int, string>
      */
-    public static array $canonSiTagsTitle = [
+    protected static $canonSiTagsTitle = [
         self::CANON_SI_ISO_SPEED => 'ISO Speed Used',
         self::CANON_SI_MEASURED_EV => 'Measured EV',
         self::CANON_SI_TARGET_APERTURE => 'Target Aperture',
@@ -2286,15 +2311,13 @@ class PelTag
         self::CANON_SI_MEASURED_EV2 => 'Measured EV 2',
         self::CANON_SI_CAMERA_TYPE => 'Camera Type',
         self::CANON_SI_AUTO_ROTATE => 'Auto Rotate',
-        self::CANON_SI_ND_FILTER => 'ND Filter',
+        self::CANON_SI_ND_FILTER => 'ND Filter'
     ];
 
     /**
      * Values for canon shot info tags short names
-     *
-     * @var array<int, string>
      */
-    public static array $canonSiTagsShort = [
+    protected static $canonSiTagsShort = [
         self::CANON_SI_ISO_SPEED => 'ISOSpeedUsed',
         self::CANON_SI_MEASURED_EV => 'MeasuredEV',
         self::CANON_SI_TARGET_APERTURE => 'TargetAperture',
@@ -2311,63 +2334,53 @@ class PelTag
         self::CANON_SI_MEASURED_EV2 => 'MeasuredEV2',
         self::CANON_SI_CAMERA_TYPE => 'CameraType',
         self::CANON_SI_AUTO_ROTATE => 'AutoRotate',
-        self::CANON_SI_ND_FILTER => 'NDFilter',
+        self::CANON_SI_ND_FILTER => 'NDFilter'
     ];
 
     /**
      * Values for canon panorama tags titles
-     *
-     * @var array<int, string>
      */
-    public static array $canonPaTagsTitle = [
+    protected static $canonPaTagsTitle = [
         self::CANON_PA_PANORAMA_FRAME => 'Panorama Frame',
-        self::CANON_PA_PANORAMA_DIRECTION => 'Panorama Direction',
+        self::CANON_PA_PANORAMA_DIRECTION => 'Panorama Direction'
     ];
 
     /**
      * Values for canon panorama tags short names
-     *
-     * @var array<int, string>
      */
-    public static array $canonPaTagsShort = [
+    protected static $canonPaTagsShort = [
         self::CANON_PA_PANORAMA_FRAME => 'PanoramaFrame',
-        self::CANON_PA_PANORAMA_DIRECTION => 'PanoramaDirection',
+        self::CANON_PA_PANORAMA_DIRECTION => 'PanoramaDirection'
     ];
 
     /**
      * Values for canon picture info tags titles
-     *
-     * @var array<int, string>
      */
-    public static array $canonPiTagsTitle = [
+    protected static $canonPiTagsTitle = [
         self::CANON_PI_IMAGE_WIDTH => 'Image Width',
         self::CANON_PI_IMAGE_HEIGHT => 'Image Height',
         self::CANON_PI_IMAGE_WIDTH_AS_SHOT => 'Image Width As Shot',
         self::CANON_PI_IMAGE_HEIGHT_AS_SHOT => 'Image Height As Shot',
         self::CANON_PI_AF_POINTS_USED => 'AF Points Used',
-        self::CANON_PI_AF_POINTS_USED_20D => 'AF Points Used (20D)',
+        self::CANON_PI_AF_POINTS_USED_20D => 'AF Points Used (20D)'
     ];
 
     /**
      * Values for canon picture info tags short names
-     *
-     * @var array<int, string>
      */
-    public static array $canonPiTagsShort = [
+    protected static $canonPiTagsShort = [
         self::CANON_PI_IMAGE_WIDTH => 'ImageWidth',
         self::CANON_PI_IMAGE_HEIGHT => 'ImageHeight',
         self::CANON_PI_IMAGE_WIDTH_AS_SHOT => 'ImageWidthAsShot',
         self::CANON_PI_IMAGE_HEIGHT_AS_SHOT => 'ImageHeightAsShot',
         self::CANON_PI_AF_POINTS_USED => 'AFPointsUsed',
-        self::CANON_PI_AF_POINTS_USED_20D => 'AFPointsUsed(20D)',
+        self::CANON_PI_AF_POINTS_USED_20D => 'AFPointsUsed(20D)'
     ];
 
     /**
      * Values for canon file info tags titles
-     *
-     * @var array<int, string>
      */
-    public static array $canonFiTagsTitle = [
+    protected static $canonFiTagsTitle = [
         self::CANON_FI_FILE_NUMBER => 'File Number',
         self::CANON_FI_BRACKET_MODE => 'Bracket Mode',
         self::CANON_FI_BRACKET_VALUE => 'Bracket Value',
@@ -2384,15 +2397,13 @@ class PelTag
         self::CANON_FI_LIVE_VIEW_SHOOTING => 'Live View Shooting',
         self::CANON_FI_FOCUS_DISTANCE_UPPER => 'Focus Distance Upper',
         self::CANON_FI_FOCUS_DISTANCE_LOWER => 'Focus Distance Lower',
-        self::CANON_FI_FLASH_EXPOSURE_LOCK => 'Flash Exposure Lock',
+        self::CANON_FI_FLASH_EXPOSURE_LOCK => 'Flash Exposure Lock'
     ];
 
     /**
      * Values for canon file info tags short names
-     *
-     * @var array<int, string>
      */
-    public static array $canonFiTagsShort = [
+    protected static $canonFiTagsShort = [
         self::CANON_FI_FILE_NUMBER => 'FileNumber',
         self::CANON_FI_BRACKET_MODE => 'BracketMode',
         self::CANON_FI_BRACKET_VALUE => 'BracketValue',
@@ -2409,23 +2420,26 @@ class PelTag
         self::CANON_FI_LIVE_VIEW_SHOOTING => 'LiveViewShooting',
         self::CANON_FI_FOCUS_DISTANCE_UPPER => 'FocusDistanceUpper',
         self::CANON_FI_FOCUS_DISTANCE_LOWER => 'FocusDistanceLower',
-        self::CANON_FI_FLASH_EXPOSURE_LOCK => 'FlashExposureLock',
+        self::CANON_FI_FLASH_EXPOSURE_LOCK => 'FlashExposureLock'
     ];
 
     /**
      * Returns a string from container with key $tag and subcontainer index of $idx
      *
-     * @param array<int, string> $container
+     * @param array $container
      *            {@link PelTag::EXIF_TAGS_SHORT}, {@link PelTag::EXIF_TAGS_TITLE},
      *            {@link PelTag::GPS_TAGS_SHORT} or {@link PelTag::GPS_TAGS_TITLE} container.
      * @param int $tag
      *            the tag.
-     *
      * @return string short name or long name of the tag.
      */
-    public static function getValue(array $container, int $tag): string
+    public static function getValue($container, $tag)
     {
-        return $container[$tag] ?? self::unknownTag($tag);
+        if (isset($container[$tag])) {
+            return $container[$tag];
+        }
+
+        return self::unknownTag($tag);
     }
 
     /**
@@ -2433,11 +2447,12 @@ class PelTag
      * Return false for the unknown tag name.
      *
      * @deprecated Use getExifTagByName() and getGpsTagByName() to distinct the type of tag.
-     *
      * @param string $name
      *            tag short name.
+     * @return mixed (bool|int)
+     *         the tag.
      */
-    public static function getTagByName(string $name): int|false
+    public static function getTagByName($name)
     {
         $k = array_search($name, self::$exifTagsShort);
         if ($k !== false) {
@@ -2458,8 +2473,10 @@ class PelTag
      *
      * @param string $name
      *            tag short name.
+     * @return mixed (bool|int)
+     *         the tag.
      */
-    public static function getExifTagByName(string $name): int|false
+    public static function getExifTagByName($name)
     {
         return array_search($name, static::$exifTagsShort);
     }
@@ -2470,10 +2487,24 @@ class PelTag
      *
      * @param string $name
      *            tag short name.
+     * @return mixed (bool|int)
+     *         the tag.
      */
-    public static function getGpsTagByName(string $name): int|false
+    public static function getGpsTagByName($name)
     {
         return array_search($name, static::$gpsTagsShort);
+    }
+
+    /**
+     * Returns string defining unknown tag.
+     *
+     * @param int $tag
+     *            the tag.
+     * @return string description string.
+     */
+    protected static function unknownTag($tag)
+    {
+        return Pel::fmt('Unknown: 0x%04X', $tag);
     }
 
     /**
@@ -2485,25 +2516,36 @@ class PelTag
      *            or {@link PelIfd::INTEROPERABILITY}.
      * @param int $tag
      *            the tag.
-     *
      * @return string the short name of the tag, e.g., 'ImageWidth' for
      *         the {@link IMAGE_WIDTH} tag. If the tag is not known, the string
      *         'Unknown:0xTTTT' will be returned where 'TTTT' is the hexadecimal
      *         representation of the tag.
      */
-    public static function getName(int $type, int $tag): string
+    public static function getName($type, $tag)
     {
-        return match ($type) {
-            PelIfd::IFD0, PelIfd::IFD1, PelIfd::EXIF, PelIfd::INTEROPERABILITY => self::getValue(self::$exifTagsShort, $tag),
-            PelIfd::GPS => self::getValue(self::$gpsTagsShort, $tag),
-            PelIfd::CANON_MAKER_NOTES => self::getValue(self::$canonTagsShort, $tag),
-            PelIfd::CANON_CAMERA_SETTINGS => self::getValue(self::$canonCsTagsShort, $tag),
-            PelIfd::CANON_SHOT_INFO => self::getValue(self::$canonSiTagsShort, $tag),
-            PelIfd::CANON_PANORAMA => self::getValue(self::$canonPaTagsShort, $tag),
-            PelIfd::CANON_PICTURE_INFO => self::getValue(self::$canonPiTagsShort, $tag),
-            PelIfd::CANON_FILE_INFO => self::getValue(self::$canonFiTagsShort, $tag),
-            default => self::unknownTag($tag),
-        };
+        switch ($type) {
+            case PelIfd::IFD0:
+            case PelIfd::IFD1:
+            case PelIfd::EXIF:
+            case PelIfd::INTEROPERABILITY:
+                return self::getValue(self::$exifTagsShort, $tag);
+            case PelIfd::GPS:
+                return self::getValue(self::$gpsTagsShort, $tag);
+            case PelIfd::CANON_MAKER_NOTES:
+                return self::getValue(self::$canonTagsShort, $tag);
+            case PelIfd::CANON_CAMERA_SETTINGS:
+                return self::getValue(self::$canonCsTagsShort, $tag);
+            case PelIfd::CANON_SHOT_INFO:
+                return self::getValue(self::$canonSiTagsShort, $tag);
+            case PelIfd::CANON_PANORAMA:
+                return self::getValue(self::$canonPaTagsShort, $tag);
+            case PelIfd::CANON_PICTURE_INFO:
+                return self::getValue(self::$canonPiTagsShort, $tag);
+            case PelIfd::CANON_FILE_INFO:
+                return self::getValue(self::$canonFiTagsShort, $tag);
+        }
+
+        return self::unknownTag($tag);
     }
 
     /**
@@ -2515,37 +2557,35 @@ class PelTag
      *            or {@link PelIfd::INTEROPERABILITY}.
      * @param int $tag
      *            the tag.
-     *
      * @return string the title of the tag, e.g., 'Image Width' for the
      *         {@link IMAGE_WIDTH} tag. If the tag isn't known, the string
      *         'Unknown Tag: 0xTT' will be returned where 'TT' is the
      *         hexadecimal representation of the tag.
      */
-    public function getTitle(int $type, int $tag): string
+    public function getTitle($type, $tag)
     {
-        return match ($type) {
-            PelIfd::IFD0, PelIfd::IFD1, PelIfd::EXIF, PelIfd::INTEROPERABILITY => Pel::tra(self::getValue(self::$exifTagsTitle, $tag)),
-            PelIfd::GPS => Pel::tra(self::getValue(self::$gpsTagsShort, $tag)),
-            PelIfd::CANON_MAKER_NOTES => Pel::tra(self::getValue(self::$canonTagsTitle, $tag)),
-            PelIfd::CANON_CAMERA_SETTINGS => self::getValue(self::$canonCsTagsTitle, $tag),
-            PelIfd::CANON_SHOT_INFO => self::getValue(self::$canonSiTagsTitle, $tag),
-            PelIfd::CANON_PANORAMA => self::getValue(self::$canonPaTagsTitle, $tag),
-            PelIfd::CANON_PICTURE_INFO => self::getValue(self::$canonPiTagsTitle, $tag),
-            PelIfd::CANON_FILE_INFO => self::getValue(self::$canonFiTagsTitle, $tag),
-            default => self::unknownTag($tag),
-        };
-    }
+        switch ($type) {
+            case PelIfd::IFD0:
+            case PelIfd::IFD1:
+            case PelIfd::EXIF:
+            case PelIfd::INTEROPERABILITY:
+                return Pel::tra(self::getValue(self::$exifTagsTitle, $tag));
+            case PelIfd::GPS:
+                return Pel::tra(self::getValue(self::$gpsTagsShort, $tag));
+            case PelIfd::CANON_MAKER_NOTES:
+                return Pel::tra(self::getValue(self::$canonTagsTitle, $tag));
+            case PelIfd::CANON_CAMERA_SETTINGS:
+                return self::getValue(self::$canonCsTagsTitle, $tag);
+            case PelIfd::CANON_SHOT_INFO:
+                return self::getValue(self::$canonSiTagsTitle, $tag);
+            case PelIfd::CANON_PANORAMA:
+                return self::getValue(self::$canonPaTagsTitle, $tag);
+            case PelIfd::CANON_PICTURE_INFO:
+                return self::getValue(self::$canonPiTagsTitle, $tag);
+            case PelIfd::CANON_FILE_INFO:
+                return self::getValue(self::$canonFiTagsTitle, $tag);
+        }
 
-    /**
-     * Returns string defining unknown tag.
-     *
-     * @param int $tag
-     *            the tag.
-     *
-     * @return string description string.
-     */
-    protected static function unknownTag(int $tag): string
-    {
-        return Pel::fmt('Unknown: 0x%04X', $tag);
+        return self::unknownTag($tag);
     }
 }

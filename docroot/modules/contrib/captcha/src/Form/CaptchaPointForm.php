@@ -4,7 +4,6 @@ namespace Drupal\captcha\Form;
 
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\captcha\Entity\CaptchaPoint;
 use Drupal\captcha\Service\CaptchaService;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -75,7 +74,7 @@ class CaptchaPointForm extends EntityForm {
     $form['label'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Form ID'),
-      '#description' => $this->t('The internal ID of the form, for example <code>user_login_form</code> or <code>contact_message_feedback_form</code>. The base form ID, for example <code>contact_message_form</code>, also works. To find the ID of a form, check <em>Add CAPTCHA administration information to forms</em> on the CAPTCHA settings page and visit the form.'),
+      '#description' => $this->t('Also works with the base form ID.'),
       '#default_value' => $captcha_point->label(),
       '#required' => TRUE,
     ];
@@ -84,7 +83,7 @@ class CaptchaPointForm extends EntityForm {
       '#type' => 'machine_name',
       '#default_value' => $captcha_point->id(),
       '#machine_name' => [
-        'exists' => [CaptchaPoint::class, 'load'],
+        'exists' => 'captcha_point_load',
       ],
       '#disable' => !$captcha_point->isNew(),
       '#required' => TRUE,
@@ -106,17 +105,17 @@ class CaptchaPointForm extends EntityForm {
    * {@inheritdoc}
    */
   public function save(array $form, FormStateInterface $form_state) {
-    /** @var \Drupal\captcha\Entity\CaptchaPoint $captcha_point */
+    /** @var CaptchaPoint $captcha_point */
     $captcha_point = $this->entity;
     $status = $captcha_point->save();
 
     if ($status == SAVED_NEW) {
-      $this->messenger()->addMessage($this->t('CAPTCHA Point for %form_id form was created.', [
+      $this->messenger()->addMessage($this->t('Captcha Point for %form_id form was created.', [
         '%form_id' => $captcha_point->getFormId(),
       ]));
     }
     else {
-      $this->messenger()->addMessage($this->t('CAPTCHA Point for %form_id form was updated.', [
+      $this->messenger()->addMessage($this->t('Captcha Point for %form_id form was updated.', [
         '%form_id' => $captcha_point->getFormId(),
       ]));
     }

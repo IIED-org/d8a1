@@ -22,8 +22,6 @@ class VariantCollectionTraitTest extends UnitTestCase {
 
   use ProphecyTrait;
   /**
-   * The variant manager.
-   *
    * @var \Drupal\Component\Plugin\PluginManagerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $manager;
@@ -158,30 +156,23 @@ class VariantCollectionTraitTest extends UnitTestCase {
 
 }
 /**
- * Helper class for testing VariantCollectionTrait.
+ *
  */
 class TestVariantCollectionTrait {
   use VariantCollectionTrait;
 
   /**
-   * The variant configuration array.
-   *
    * @var array
    */
   protected $variantConfig = [];
 
   /**
-   * The UUID generator.
-   *
    * @var \Drupal\Component\Uuid\UuidInterface
    */
   protected $uuidGenerator;
 
   /**
-   * Sets the UUID generator.
-   *
    * @param \Drupal\Component\Uuid\UuidInterface $uuid_generator
-   *   The UUID generator.
    *
    * @return $this
    */

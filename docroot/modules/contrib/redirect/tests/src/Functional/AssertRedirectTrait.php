@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\redirect\Functional;
 
 use Drupal\Core\Url;
@@ -33,9 +31,8 @@ trait AssertRedirectTrait {
     /** @var \Psr\Http\Message\ResponseInterface $response */
     $url = $this->getAbsoluteUrl($path);
     try {
-      $response = $client->request($method, $url, ['allow_redirects' => FALSE]);
-    }
-    catch (ClientException $e) {
+      $response = $client->request($method, $url, ['allow_redirects' => false]);
+    } catch (ClientException $e) {
       $this->assertEquals($expected_ending_status, $e->getResponse()->getStatusCode());
       return $e->getResponse();
     }

@@ -16,7 +16,7 @@ abstract class SettingsBase implements SettingsInterface {
    *
    * @var \Drupal\Core\Config\ImmutableConfig
    */
-  protected ImmutableConfig $config;
+  protected $config;
 
   /**
    * Creates a new settings object.
@@ -31,14 +31,14 @@ abstract class SettingsBase implements SettingsInterface {
   /**
    * {@inheritdoc}
    */
-  public static function factory(ImmutableConfig $config): static {
+  public static function factory(ImmutableConfig $config) {
     return new static($config);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getConfig(): ImmutableConfig {
+  public function getConfig() {
     return $this->config;
   }
 

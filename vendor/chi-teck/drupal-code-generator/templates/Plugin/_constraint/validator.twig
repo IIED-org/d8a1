@@ -1,11 +1,9 @@
 {% import '@lib/di.twig' as di %}
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Drupal\{{ machine_name }}\Plugin\Validation\Constraint;
 
-{% apply sort_namespaces %}
+{% sort %}
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
   {% if input_type == 'item' %}
@@ -20,7 +18,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
   {% endif %}
-{% endapply %}
+{% endsort %}
 
 /**
  * Validates the {{ plugin_label }} constraint.

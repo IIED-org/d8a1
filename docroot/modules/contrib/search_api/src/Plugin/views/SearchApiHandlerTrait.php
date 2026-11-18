@@ -16,7 +16,8 @@ trait SearchApiHandlerTrait {
    * necessary nor possible, but we still want to stay as compatible as possible
    * to the default SQL query plugin.
    */
-  public function ensureMyTable() {}
+  public function ensureMyTable() {
+  }
 
   /**
    * Determines the entity type used by this handler.
@@ -59,7 +60,7 @@ trait SearchApiHandlerTrait {
    *   query.
    */
   public function getQuery() {
-    $query = $this->query ?? $this->view->query;
+    $query = $this->query ?? $this->view->query ?? NULL;
     return $query instanceof SearchApiQuery ? $query : NULL;
   }
 

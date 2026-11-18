@@ -9,8 +9,6 @@ use Drupal\commerce_order\Entity\OrderItem;
 use Drupal\commerce_price\Price;
 use Drupal\google_tag\Entity\TagContainer;
 use Drupal\Tests\commerce_order\Kernel\OrderKernelTestBase;
-use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests commerce refund event.
@@ -18,8 +16,6 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  * @requires module commerce_order
  * @group google_tag
  */
-#[Group('google_tag')]
-#[RunTestsInSeparateProcesses]
 final class CommerceRefundEventTest extends OrderKernelTestBase {
 
   /**

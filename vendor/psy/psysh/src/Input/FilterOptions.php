@@ -3,7 +3,7 @@
 /*
  * This file is part of Psy Shell.
  *
- * (c) 2012-2026 Justin Hileman
+ * (c) 2012-2023 Justin Hileman
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -21,10 +21,10 @@ use Symfony\Component\Console\Input\InputOption;
  */
 class FilterOptions
 {
-    private bool $filter = false;
-    private ?string $pattern = null;
-    private bool $insensitive = false;
-    private bool $invert = false;
+    private $filter = false;
+    private $pattern;
+    private $insensitive;
+    private $invert;
 
     /**
      * Get input option definitions for filtering.
@@ -82,16 +82,12 @@ class FilterOptions
     /**
      * Check whether a string matches the current filter options.
      *
-     * @param string     $string
-     * @param array|null $matches
+     * @param string $string
+     * @param array  $matches
      */
-    public function match(string $string, ?array &$matches = null): bool
+    public function match(string $string, array &$matches = null): bool
     {
-        if ($this->filter === false || $this->pattern === null) {
-            return true;
-        }
-
-        return \preg_match($this->pattern, $string, $matches) xor $this->invert;
+        return $this->filter === false || (\preg_match($this->pattern, $string, $matches) xor $this->invert);
     }
 
     /**
@@ -133,7 +129,6 @@ class FilterOptions
     {
         \set_error_handler([ErrorException::class, 'throwException']);
         try {
-            // @phan-suppress-next-line PhanParamSuspiciousOrder - intentionally testing regex against empty string
             \preg_match($pattern, '');
         } catch (ErrorException $e) {
             throw new RuntimeException(\str_replace('preg_match(): ', 'Invalid regular expression: ', $e->getRawMessage()));

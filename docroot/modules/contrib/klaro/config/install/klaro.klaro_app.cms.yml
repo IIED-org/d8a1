@@ -16,6 +16,3 @@ info_url: 'https://www.drupal.org'
 privacy_policy_url: ''
 javascripts: { }
 attachments: { }
-on_init: ''
-on_accept: ''
-on_decline: ''

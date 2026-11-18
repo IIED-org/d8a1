@@ -12,72 +12,116 @@ interface ImmutableAddressInterface extends AddressInterface
 {
     /**
      * Returns an instance with the specified two-letter country code.
+     *
+     * @param string $countryCode The two-letter country code.
+     *
+     * @return self A clone of $this.
      */
-    public function withCountryCode(string $countryCode): ImmutableAddressInterface;
+    public function withCountryCode($countryCode);
 
     /**
      * Returns an instance with the specified administrative area.
+     *
+     * @param string $administrativeArea The administrative area.
      */
-    public function withAdministrativeArea(string $administrativeArea);
+    public function withAdministrativeArea($administrativeArea);
 
     /**
      * Returns an instance with the specified locality.
+     *
+     * @param string $locality The locality.
+     *
+     * @return self A clone of $this.
      */
-    public function withLocality(string $locality): ImmutableAddressInterface;
+    public function withLocality($locality);
 
     /**
      * Returns an instance with the specified dependent locality.
      *
+     * @param string $dependentLocality The dependent locality.
+     *
+     * @return self A clone of $this.
      */
-    public function withDependentLocality(string $dependentLocality): ImmutableAddressInterface;
+    public function withDependentLocality($dependentLocality);
 
     /**
      * Returns an instance with the specified postal code.
+     *
+     * @param string $postalCode The postal code.
+     *
+     * @return self A clone of $this.
      */
-    public function withPostalCode(string $postalCode): ImmutableAddressInterface;
+    public function withPostalCode($postalCode);
 
     /**
      * Returns an instance with the specified sorting code.
+     *
+     * @param string $sortingCode The sorting code.
+     *
+     * @return self A clone of $this.
      */
-    public function withSortingCode(string $sortingCode): ImmutableAddressInterface;
+    public function withSortingCode($sortingCode);
 
     /**
      * Returns an instance with the specified first line of address block.
+     *
+     * @param string $addressLine1 The first line of the address block.
+     *
+     * @return self A clone of $this.
      */
-    public function withAddressLine1(string $addressLine1): ImmutableAddressInterface;
+    public function withAddressLine1($addressLine1);
 
     /**
      * Returns an instance with the specified second line of address block.
+     *
+     * @param string $addressLine2 The second line of the address block.
+     *
+     * @return self A clone of $this.
      */
-    public function withAddressLine2(string $addressLine2): ImmutableAddressInterface;
-
-    /**
-     * Returns an instance with the specified third line of address block.
-     */
-    public function withAddressLine3(string $addressLine3): ImmutableAddressInterface;
+    public function withAddressLine2($addressLine2);
 
     /**
      * Returns an instance with the specified organization.
+     *
+     * @param string $organization The organization.
+     *
+     * @return self A clone of $this.
      */
-    public function withOrganization(string $organization): ImmutableAddressInterface;
+    public function withOrganization($organization);
 
     /**
      * Returns an instance with the specified given name.
+     *
+     * @param string $givenName The given name.
+     *
+     * @return self A clone of $this.
      */
-    public function withGivenName(string $givenName): ImmutableAddressInterface;
+    public function withGivenName($givenName);
 
     /**
      * Returns an instance with the specified additional name.
+     *
+     * @param string $additionalName The additional name.
+     *
+     * @return self A clone of $this.
      */
-    public function withAdditionalName(string $additionalName): ImmutableAddressInterface;
+    public function withAdditionalName($additionalName);
 
     /**
      * Returns an instance with the specified family name.
+     *
+     * @param string $familyName The family name.
+     *
+     * @return self A clone of $this.
      */
-    public function withFamilyName(string $familyName): ImmutableAddressInterface;
+    public function withFamilyName($familyName);
 
     /**
      * Returns an instance with the specified locale.
+     *
+     * @param string $locale The locale.
+     *
+     * @return self A clone of $this.
      */
-    public function withLocale(string $locale): ImmutableAddressInterface;
+    public function withLocale($locale);
 }

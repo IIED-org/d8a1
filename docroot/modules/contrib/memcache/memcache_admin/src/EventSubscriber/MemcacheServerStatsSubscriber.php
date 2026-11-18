@@ -19,21 +19,20 @@ class MemcacheServerStatsSubscriber implements EventSubscriberInterface {
   /**
    * {@inheritdoc}
    */
-  public static function getSubscribedEvents(): array {
-    $events = [];
+  public static function getSubscribedEvents() {
     $events[MemcacheStatsEvent::BUILD_MEMCACHE_STATS][] = [
       'onPopulateStats',
-      100,
+      100
     ];
     $events[MemcacheStatsEvent::REPORT_MEMCACHE_STATS][] = [
       'onReportStats',
-      100,
+      100
     ];
     return $events;
   }
 
   /**
-   * Populates the Memcache Server Stats.
+   * Populates the Memcache Server Stats
    *
    * @param \Drupal\memcache_admin\Event\MemcacheStatsEvent $event
    *   The event being dispatched.
@@ -53,6 +52,7 @@ class MemcacheServerStatsSubscriber implements EventSubscriberInterface {
       return;
     }
     $servers = array_keys($raw_stats[$bin]);
+    $memcache_servers = [];
     foreach ($servers as $server) {
       // Memcache servers report libevent version, use that for detecting stats.
       if (isset($raw_stats[$bin][$server]['libevent'])) {
@@ -69,7 +69,6 @@ class MemcacheServerStatsSubscriber implements EventSubscriberInterface {
    * Populates the reporting of a stored set of stats.
    *
    * @param \Drupal\memcache_admin\Event\MemcacheStatsEvent $event
-   *   Memcache stats event.
    */
   public function onReportStats(MemcacheStatsEvent $event) {
     $stats = $event->getFormattedStats('memcache');
@@ -94,7 +93,10 @@ class MemcacheServerStatsSubscriber implements EventSubscriberInterface {
       return;
     }
 
-    $data = [];
+    /**
+     * @var string $server
+     * @var MemcacheStatsObject $statistics
+     */
     foreach ($stats[$bin] as $server => $statistics) {
       if (empty($statistics->getUptime())) {
         $this->messenger()
@@ -103,7 +105,7 @@ class MemcacheServerStatsSubscriber implements EventSubscriberInterface {
       else {
         $data['server_overview'][$server] = $this->t('v@version running @uptime', [
           '@version' => $statistics->getVersion(),
-          '@uptime' => $statistics->getUptime(),
+          '@uptime' => $statistics->getUptime()
         ]);
         $data['server_time'][$server] = $statistics->getServerTime();
         $data['server_connections'][$server] = $statistics->getConnections();
@@ -169,7 +171,7 @@ class MemcacheServerStatsSubscriber implements EventSubscriberInterface {
 
     // Don't display aggregate totals if there's only one server.
     if (count($stats[$bin]) > 1) {
-      /** @var \Drupal\memcache_admin\Stats\MemcacheStatsObject $totals */
+      /** @var MemcacheStatsObject $totals */
       $totals = $event->getTotals();
       $report['uptime']['uptime']['total'] = $this->t('n/a');
       $report['uptime']['time']['total'] = $this->t('n/a');
@@ -185,5 +187,4 @@ class MemcacheServerStatsSubscriber implements EventSubscriberInterface {
 
     $event->updateReport($report);
   }
-
 }

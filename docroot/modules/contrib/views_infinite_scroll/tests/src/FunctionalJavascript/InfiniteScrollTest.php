@@ -72,21 +72,6 @@ class InfiniteScrollTest extends WebDriverTestBase {
     ]);
     $this->drupalGet('initially-load-all', ['query' => ['page' => 1]]);
     $this->assertTotalNodes(6);
-    // Without a "Number of pages" limit, a page beyond the last one loads all
-    // results.
-    $this->drupalGet('initially-load-all', ['query' => ['page' => 100]]);
-    $this->assertTotalNodes(11);
-
-    // Test that "Number of pages" limits the initially loaded pages.
-    $this->createView('initially-load-all-limited', [
-      'button_text' => 'Load More',
-      'automatically_load_content' => FALSE,
-      'initially_load_all_pages' => TRUE,
-    ], 3, ['total_pages' => 2]);
-    $this->drupalGet('initially-load-all-limited', ['query' => ['page' => 1]]);
-    $this->assertTotalNodes(6);
-    $this->drupalGet('initially-load-all-limited', ['query' => ['page' => 100]]);
-    $this->assertTotalNodes(6);
 
     // Test the view automatically loading.
     $this->createView('automatic-load', [
@@ -161,10 +146,8 @@ class InfiniteScrollTest extends WebDriverTestBase {
    *   The VIS settings.
    * @param int $items_per_page
    *   The number of items per page to display.
-   * @param array $pager_options
-   *   Additional pager options, e.g. 'total_pages'.
    */
-  protected function createView($path, array $settings, $items_per_page = 3, array $pager_options = []) {
+  protected function createView($path, array $settings, $items_per_page = 3) {
     View::create([
       'label' => 'VIS Test',
       'id' => $this->randomMachineName(),
@@ -182,7 +165,7 @@ class InfiniteScrollTest extends WebDriverTestBase {
             ],
             'pager' => [
               'type' => 'infinite_scroll',
-              'options' => $pager_options + [
+              'options' => [
                 'items_per_page' => $items_per_page,
                 'offset' => 0,
                 'views_infinite_scroll' => $settings,

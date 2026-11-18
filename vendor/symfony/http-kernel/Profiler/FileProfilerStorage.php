@@ -42,27 +42,23 @@ class FileProfilerStorage implements ProfilerStorageInterface
         }
     }
 
-    public function find(?string $ip, ?string $url, ?int $limit, ?string $method, ?int $start = null, ?int $end = null, ?string $statusCode = null, ?\Closure $filter = null): array
+    /**
+     * @param \Closure|null $filter A filter to apply on the list of tokens
+     */
+    public function find(?string $ip, ?string $url, ?int $limit, ?string $method, ?int $start = null, ?int $end = null, ?string $statusCode = null/* , \Closure $filter = null */): array
     {
+        $filter = 7 < \func_num_args() ? func_get_arg(7) : null;
         $file = $this->getIndexFilename();
 
         if (!file_exists($file)) {
             return [];
         }
 
-        // the lines before this offset belong to expired profiles, whose files were already removed
-        $offset = is_file($file.'.offset') ? (int) file_get_contents($file.'.offset') : 0;
-
         $file = fopen($file, 'r');
         fseek($file, 0, \SEEK_END);
 
-        if (ftell($file) < $offset) {
-            // the index was recreated after the offset was saved
-            $offset = 0;
-        }
-
         $result = [];
-        while (\count($result) < $limit && ftell($file) > $offset && $line = $this->readLineFromFile($file)) {
+        while (\count($result) < $limit && $line = $this->readLineFromFile($file)) {
             $values = str_getcsv($line, ',', '"', '\\');
 
             if (7 > \count($values)) {
@@ -78,15 +74,15 @@ class FileProfilerStorage implements ProfilerStorageInterface
                 $urlFilter = str_starts_with($url, '!') ? str_contains($csvUrl, substr($url, 1)) : !str_contains($csvUrl, $url);
             }
 
-            if ($ip && !str_contains($csvIp, $ip) || $urlFilter || $method && !str_contains($csvMethod, $method) || null !== $statusCode && '' !== $statusCode && !str_contains($csvStatusCode, $statusCode)) {
+            if ($ip && !str_contains($csvIp, $ip) || $urlFilter || $method && !str_contains($csvMethod, $method) || $statusCode && !str_contains($csvStatusCode, $statusCode)) {
                 continue;
             }
 
-            if ($start && $csvTime < $start) {
+            if (!empty($start) && $csvTime < $start) {
                 continue;
             }
 
-            if ($end && $csvTime > $end) {
+            if (!empty($end) && $csvTime > $end) {
                 continue;
             }
 
@@ -113,7 +109,10 @@ class FileProfilerStorage implements ProfilerStorageInterface
         return array_values($result);
     }
 
-    public function purge(): void
+    /**
+     * @return void
+     */
+    public function purge()
     {
         $flags = \FilesystemIterator::SKIP_DOTS;
         $iterator = new \RecursiveDirectoryIterator($this->folder, $flags);
@@ -276,7 +275,10 @@ class FileProfilerStorage implements ProfilerStorageInterface
         return '' === $line ? null : $line;
     }
 
-    protected function createProfileFromData(string $token, array $data, ?Profile $parent = null): Profile
+    /**
+     * @return Profile
+     */
+    protected function createProfileFromData(string $token, array $data, ?Profile $parent = null)
     {
         $profile = new Profile($token);
         $profile->setIp($data['ip']);
@@ -334,11 +336,6 @@ class FileProfilerStorage implements ProfilerStorageInterface
         $handle = fopen($file, 'r');
 
         if ($offset = is_file($file.'.offset') ? (int) file_get_contents($file.'.offset') : 0) {
-            if ($offset > fstat($handle)['size']) {
-                // the index was recreated after the offset was saved
-                $offset = 0;
-            }
-
             fseek($handle, $offset);
         }
 
@@ -353,7 +350,7 @@ class FileProfilerStorage implements ProfilerStorageInterface
 
             [$csvToken, , , , $csvTime] = $values;
 
-            if ((int) $csvTime >= $minimalProfileTimestamp) {
+            if ($csvTime >= $minimalProfileTimestamp) {
                 break;
             }
 

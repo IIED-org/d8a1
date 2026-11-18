@@ -5,7 +5,7 @@ namespace Drupal\asset_injector\Form;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
- * Duplication form for css asset entities.
+ * Class AssetInjectorCsssDuplicateForm.
  *
  * @package Drupal\asset_injector\Form
  */

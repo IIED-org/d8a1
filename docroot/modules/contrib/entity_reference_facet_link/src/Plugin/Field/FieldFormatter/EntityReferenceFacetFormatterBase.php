@@ -2,13 +2,14 @@
 
 namespace Drupal\entity_reference_facet_link\Plugin\Field\FieldFormatter;
 
+
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
-use Drupal\Core\Field\Plugin\Field\FieldFormatter\EntityReferenceFormatterBase;
 use Drupal\Core\Field\TypedData\FieldItemDataDefinition;
+use Drupal\Core\Field\Plugin\Field\FieldFormatter\EntityReferenceFormatterBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Url;
@@ -16,9 +17,6 @@ use Drupal\facets\Result\Result;
 use Drupal\facets\UrlProcessor\UrlProcessorPluginManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-/**
- * Provides a base class for Entity Reference Facet Formatters.
- */
 abstract class EntityReferenceFacetFormatterBase extends EntityReferenceFormatterBase implements ContainerFactoryPluginInterface {
 
   /**

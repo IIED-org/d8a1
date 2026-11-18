@@ -60,7 +60,7 @@ class GlobalOptionsEventListener implements EventSubscriberInterface, ConfigAwar
     /**
      * {@inheritdoc}
      */
-    public static function getSubscribedEvents(): array
+    public static function getSubscribedEvents()
     {
         return [ConsoleEvents::COMMAND => 'handleCommandEvent'];
     }

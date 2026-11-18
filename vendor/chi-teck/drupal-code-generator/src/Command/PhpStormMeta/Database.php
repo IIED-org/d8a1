@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace DrupalCodeGenerator\Command\PhpStormMeta;
 
@@ -27,7 +25,7 @@ final class Database {
     $tables = [];
     // @todo Support PostgreSQL.
     if ($driver === 'mysql') {
-      /** @psalm-suppress PossiblyNullReference */
+      /** @psalm-suppress PossiblyNullReference, PossiblyInvalidMethodCall */
       $tables = $this->connection->query('SHOW TABLES')->fetchCol();
     }
     elseif ($driver === 'sqlite') {
@@ -37,7 +35,7 @@ final class Database {
         WHERE type ='table' AND name NOT LIKE 'sqlite_%'
         ORDER BY name
         SQL;
-      /** @psalm-suppress PossiblyNullReference */
+      /** @psalm-suppress PossiblyNullReference, PossiblyInvalidMethodCall */
       $tables = $this->connection->query($query)->fetchCol();
     }
     return File::create('.phpstorm.meta.php/database.php')

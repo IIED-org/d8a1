@@ -2,12 +2,10 @@
 
 namespace Drupal\Tests\ctools\Kernel\Plugin\Block;
 
-use Drupal\block\Entity\Block;
 use Drupal\Core\Plugin\Context\EntityContextDefinition;
 use Drupal\ctools\Plugin\Block\EntityView;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\node\Traits\NodeCreationTrait;
-use Drupal\Tests\SchemaCheckTestTrait;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 
 /**
@@ -21,7 +19,6 @@ class EntityViewTest extends KernelTestBase {
 
   use NodeCreationTrait;
   use UserCreationTrait;
-  use SchemaCheckTestTrait;
 
   /**
    * {@inheritdoc}
@@ -36,6 +33,13 @@ class EntityViewTest extends KernelTestBase {
   ];
 
   /**
+   * A page variant.
+   *
+   * @var \Drupal\page_manager\PageVariantInterface
+   */
+  protected $pageVariant;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
@@ -44,6 +48,7 @@ class EntityViewTest extends KernelTestBase {
     $this->installConfig(['filter']);
     $this->installEntitySchema('node');
     $this->installEntitySchema('user');
+    $this->installSchema('system', ['sequences']);
   }
 
   /**
@@ -74,31 +79,6 @@ class EntityViewTest extends KernelTestBase {
     $account = $this->createUser([], NULL, TRUE);
     $access = $block->access($account);
     $this->assertTrue($access);
-  }
-
-  /**
-   * Tests the entity_view block config schema.
-   */
-  public function testBlockConfigSchema(): void {
-    $id = strtolower($this->randomMachineName());
-    $block = Block::create([
-      'id' => $id,
-      'theme' => 'stark',
-      'weight' => 0,
-      'status' => TRUE,
-      'region' => 'content',
-      'plugin' => 'entity_view:node',
-      'settings' => [
-        'label' => $this->randomMachineName(),
-        'provider' => 'ctools',
-        'label_display' => FALSE,
-        'context_mapping' => ['entity' => '@node.node_route_context:node'],
-        'view_mode' => 'default',
-      ],
-      'visibility' => [],
-    ]);
-    $block->save();
-    $this->assertConfigSchemaByName("block.block.$id");
   }
 
 }
